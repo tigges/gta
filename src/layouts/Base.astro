@@ -149,28 +149,5 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       </div>
     </footer>
 
-    <!-- Scroll-aware nav: transparent over hero-bleed sections, solid otherwise -->
-    <script>
-      (function() {
-        const nav = document.getElementById('main-nav');
-        if (!nav) return;
-        const SOLID_BG    = 'rgba(14,14,17,0.95)';
-        const SOLID_BLUR  = 'blur(12px)';
-        const SOLID_BORDER = '';
-
-        function update() {
-          const hero = document.querySelector('.hero-bleed');
-          const overHero = hero && hero.getBoundingClientRect().bottom > nav.offsetHeight + 10;
-          nav.style.background      = overHero ? 'transparent'  : SOLID_BG;
-          nav.style.backdropFilter  = overHero ? 'none'         : SOLID_BLUR;
-          nav.style.webkitBackdropFilter = overHero ? 'none'    : SOLID_BLUR;
-          nav.style.borderBottomColor    = overHero ? 'transparent' : SOLID_BORDER;
-        }
-
-        window.addEventListener('scroll', update, { passive: true });
-        update();
-      })();
-    </script>
-
   </body>
 </html>
