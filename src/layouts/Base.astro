@@ -1,0 +1,83 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "GTA Intelligence",
+  description = "Data-driven intelligence across every GTA generation — and what it predicts about GTA VI.",
+} = Astro.props;
+
+const nav = [
+  { href: "/", label: "Dashboard" },
+  { href: "/predictions", label: "GTA VI Predictions" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en" class="bg-zinc-950 text-zinc-50 antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | GTA Intelligence</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen flex flex-col">
+
+    <!-- Nav -->
+    <header class="border-b border-zinc-800 sticky top-0 z-50 bg-zinc-950/90 backdrop-blur">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
+        <a href="/" class="flex items-center gap-2 group">
+          <span class="text-gta-gold font-mono font-bold tracking-widest text-sm uppercase">
+            GTA Intelligence
+          </span>
+        </a>
+        <nav class="flex items-center gap-1">
+          {nav.map(({ href, label }) => {
+            const active = currentPath === href || (href !== "/" && currentPath.startsWith(href));
+            return (
+              <a
+                href={href}
+                class={[
+                  "px-3 py-1.5 rounded text-xs font-mono font-medium transition-colors",
+                  active
+                    ? "bg-zinc-800 text-zinc-50"
+                    : "text-zinc-400 hover:text-zinc-50 hover:bg-zinc-900",
+                ].join(" ")}
+              >
+                {label}
+              </a>
+            );
+          })}
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-zinc-800 mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-xs text-zinc-600 font-mono">
+          GTA Intelligence — community data project. Not affiliated with Rockstar Games.
+        </p>
+        <p class="text-xs text-zinc-700 font-mono">
+          Data refreshed nightly via GitHub Actions
+        </p>
+      </div>
+    </footer>
+
+  </body>
+</html>
