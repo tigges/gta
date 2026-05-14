@@ -17,14 +17,39 @@ const gta5 = salesData.titles.find((t: any) => t.id === "gta-5");
 >
 
   <!-- Header -->
-  <section class="border-b border-[#1e1e23]" style="background:#0a0a0d">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+  <section class="relative border-b border-[#1e1e23] overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="/assets/gta6/locations/Port_Gellhorn_03.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 50%" aria-hidden="true" />
+      <div class="absolute inset-0" style="background:linear-gradient(to right, #0a0a0d 0%, #0a0a0dcc 55%, #0a0a0d88 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 0%, #0a0a0d 100%)"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Historical Context</div>
       <h1 class="text-3xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">Franchise</h1>
-      <p class="text-sm text-zinc-400 max-w-xl mb-6" style="font-family:'Inter',sans-serif">
+      <p class="text-sm text-zinc-400 max-w-xl mb-5" style="font-family:'Inter',sans-serif">
         30 years of GTA quantified. Sales, review scores, map growth and player history —
         the data that drives the GTA VI predictions.
       </p>
+      <!-- Game cover strip -->
+      <div class="flex items-center gap-2.5 mb-6">
+        {([
+          { id: "gta-3",  short: "GTA III", year: "2001" },
+          { id: "gta-vc", short: "GTA VC",  year: "2002" },
+          { id: "gta-sa", short: "GTA SA",  year: "2004" },
+          { id: "gta-4",  short: "GTA IV",  year: "2008" },
+          { id: "gta-5",  short: "GTA V",   year: "2013" },
+          { id: "gta-6",  short: "GTA VI",  year: "2026" },
+        ] as const).map(g => (
+          <div class="flex flex-col items-center gap-1 group">
+            <img
+              src={`/assets/covers/${g.id}.jpg`} alt={g.short}
+              class={`rounded border object-cover transition-all duration-200 group-hover:scale-105 group-hover:border-gta-gold/40 ${g.id === "gta-6" ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10" : "w-8 h-11 border-[#2a2a31]"}`}
+              loading="eager"
+            />
+            <span class={`text-[8px] font-mono tracking-widest ${g.id === "gta-6" ? "text-gta-gold" : "text-zinc-700"}`}>{g.year}</span>
+          </div>
+        ))}
+      </div>
 
       <!-- Key numbers -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
@@ -44,7 +69,7 @@ const gta5 = salesData.titles.find((t: any) => t.id === "gta-5");
     </div>
   </section>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12" style="background:#0e0e11">
 
     <!-- ── SALES VELOCITY ──────────────────────────────────────── -->
     <section>
@@ -88,13 +113,23 @@ const gta5 = salesData.titles.find((t: any) => t.id === "gta-5");
         </div>
         <div class="px-5 py-5 flex flex-col gap-3">
           {releasesData.games.filter(g => g.map_size_km2 != null || (g as any).map_size_km2_estimate != null).map(g => {
-            const km2 = g.map_size_km2 ?? (g as any).map_size_km2_estimate;
+            const km2    = g.map_size_km2 ?? (g as any).map_size_km2_estimate;
             const isPred = g.is_prediction;
             const maxKm2 = 150;
-            const pct = Math.round((km2 / maxKm2) * 100);
+            const pct    = Math.round((km2 / maxKm2) * 100);
+            const cover  = g.id === "gta-6" ? "/assets/covers/gta-6.jpg"
+                         : g.id === "gta-5" ? "/assets/covers/gta-5.jpg"
+                         : g.id === "gta-4" ? "/assets/covers/gta-4.jpg"
+                         : g.id === "gta-sa"? "/assets/covers/gta-sa.jpg"
+                         : g.id === "gta-vc"? "/assets/covers/gta-vc.jpg"
+                         : g.id === "gta-3" ? "/assets/covers/gta-3.jpg"
+                         : null;
             return (
               <div class="flex items-center gap-3">
-                <span class="text-[11px] font-mono text-zinc-500 w-14 shrink-0">{g.short}</span>
+                {cover && (
+                  <img src={cover} alt={g.short} class="w-7 h-10 object-cover rounded border border-[#2a2a31] shrink-0" loading="lazy" />
+                )}
+                <span class={`text-[11px] font-mono w-10 shrink-0 ${isPred ? "text-gta-gold" : "text-zinc-500"}`}>{g.short}</span>
                 <div class="flex-1 h-5 rounded bg-[#1e1e23] overflow-hidden relative">
                   <div
                     class={`h-full rounded transition-all ${isPred ? "bg-gta-gold/30 border border-gta-gold/30 border-dashed" : "bg-gta-gold/70"}`}
