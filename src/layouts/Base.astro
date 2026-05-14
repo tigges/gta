@@ -14,11 +14,12 @@ const {
 } = Astro.props;
 
 const nav = [
-  { href: "/vi-intel",  label: "VI Intel"  },
+  { href: "/vi-intel",  label: "Intel"     },
   { href: "/charts",    label: "Charts"    },
   { href: "/database",  label: "Database"  },
   { href: "/franchise", label: "Franchise" },
   { href: "/news",      label: "News"      },
+  { href: "/buy",       label: "Buy"       },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -73,9 +74,12 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
     <!-- Nav -->
     <header class="border-b border-[#1e1e23] sticky top-0 z-50" style="background:rgba(14,14,17,0.95);backdrop-filter:blur(12px)">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-12">
-        <a href="/" class="flex items-center gap-2.5 group">
-          <span class="text-gta-gold font-mono font-bold tracking-[0.18em] text-sm uppercase">GTA VI</span>
-          <span class="text-[10px] font-mono text-zinc-600 border border-[#1e1e23] rounded px-1 py-0.5 tracking-widest">.AI</span>
+        <a href="/" class="flex items-center gap-2 group" aria-label="GTA VI.AI — home">
+          <!-- Wordmark: GTA in zinc, VI in gold, tight compound -->
+          <span class="font-mono font-bold text-sm leading-none tracking-tight select-none">
+            <span class="text-zinc-400 group-hover:text-zinc-300 transition-colors">GTA</span><span class="text-gta-gold">VI</span>
+          </span>
+          <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] rounded px-1.5 py-0.5 tracking-widest group-hover:border-zinc-600 group-hover:text-zinc-500 transition-all">.AI</span>
         </a>
 
         <nav class="flex items-center gap-0.5">
@@ -112,7 +116,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
-            <div class="font-mono font-bold text-gta-gold tracking-[0.18em] text-sm uppercase mb-1">GTA VI.AI</div>
+            <div class="font-mono font-bold text-sm mb-1 leading-none tracking-tight"><span class="text-zinc-400">GTA</span><span class="text-gta-gold">VI</span><span class="text-zinc-600 text-[10px] ml-1">.AI</span></div>
             <p class="text-xs text-zinc-600 font-mono max-w-sm">
               Community data project. Not affiliated with Rockstar Games or Take-Two Interactive.<br />
               All game assets © Rockstar Games / Take-Two Interactive.
