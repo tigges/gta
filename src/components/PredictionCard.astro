@@ -18,6 +18,7 @@ interface Props {
   source_type?: "official" | "reported" | "predicted" | null;
   outcome_verified?: boolean;
   outcome_actual?: string | null;
+  thumbnail?: string | null;
 }
 
 const {
@@ -34,6 +35,7 @@ const {
   source_type,
   outcome_verified,
   outcome_actual,
+  thumbnail,
 } = Astro.props;
 
 // Tier styling driven by schema field, not computed from confidence number
@@ -70,11 +72,20 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
 ---
 
 <div
-  class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current`}
+  class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current group`}
   style="background:#131316"
 >
+  <!-- Thumbnail (if provided) -->
+  {thumbnail && (
+    <div class="relative h-28 overflow-hidden">
+      <img src={thumbnail} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 20%,#131316 100%)"></div>
+      <div class="absolute inset-0" style={`background:linear-gradient(to bottom, ${confidence_tier === 'confirmed' ? '#10b98108' : confidence_tier === 'reported' ? '#f59e0b08' : '#52525b08'} 0%, transparent 100%)`}></div>
+    </div>
+  )}
+
   <!-- Top: title + tier badge -->
-  <div class="flex items-start justify-between px-4 pt-4 pb-2">
+  <div class={`flex items-start justify-between px-4 pb-2 ${thumbnail ? "pt-2" : "pt-4"}`}>
     <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.18em] leading-snug">{title}</span>
     <span class={`text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ml-2 ${tier.badgeBg}`}>
       {tier.label}

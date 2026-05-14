@@ -27,6 +27,35 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
   const confirmedCount: number = trailer.events.filter((e: any) => e.confidence === "confirmed").length;
   return { ...trailer, byType, confirmedCount };
 });
+
+const PRED_THUMBS: Record<string,string> = {
+  "pred-release-window":  "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+  "pred-launch-price":    "/assets/gta6/locations/Ambrosia_01.jpg",
+  "pred-map-size":        "/assets/gta6/locations/Leonida_Keys_02.jpg",
+  "pred-vehicles-launch": "/assets/gta6/locations/Port_Gellhorn_04.jpg",
+};
+
+const CAT_THUMBS: Record<string,string> = {
+  regions:    "/assets/gta6/locations/Vice_City_06.jpg",
+  vehicles:   "/assets/gta6/locations/Port_Gellhorn_03.jpg",
+  characters: "/assets/gta6/characters/Lucia_Caminos_01.jpg",
+  weapons:    "/assets/gta6/locations/Grassrivers_03.jpg",
+  businesses: "/assets/gta6/locations/Ambrosia_02.jpg",
+  activities: "/assets/gta6/locations/Leonida_Keys_01.jpg",
+  wildlife:   "/assets/gta6/locations/Grassrivers_01.jpg",
+  online:     "/assets/gta6/locations/Vice_City_03.jpg",
+};
+
+const TRAILER_THUMBS: Record<string,string> = {
+  "2023-12-04": "QdBZY2fkU-0",
+  "2025-05-06": "VQRLujxTm3c",
+};
+
+const DELAY_THUMBS: Record<string,string> = {
+  date_confirmed: "/assets/gta6/locations/Vice_City_07.jpg",
+  date_set:       "/assets/gta6/locations/Ambrosia_01.jpg",
+  delay:          "/assets/gta6/locations/Port_Gellhorn_01.jpg",
+};
 ---
 
 <Base
@@ -36,40 +65,65 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
 >
 
   <!-- ═══════════════════════════════════════════════════════
-       HERO — Trailer 1 thumbnail (wider Leonida landscape)
+       HERO — Split character backdrop + trailer anchor
   ═══════════════════════════════════════════════════════ -->
-  <section class="relative overflow-hidden border-b border-[#1e1e23]" style="min-height:400px;display:flex;align-items:flex-end">
-    <div class="absolute inset-0">
-      <img
-        src="https://img.youtube.com/vi/QdBZY2fkU-0/maxresdefault.jpg"
-        alt="Grand Theft Auto VI — Trailer 1"
-        class="w-full h-full object-cover"
-        style="object-position:center 30%"
-        loading="eager"
-      />
-      <div class="absolute inset-0" style="background:linear-gradient(to top, #0e0e11 0%, #0e0e1190 45%, transparent 80%)"></div>
-      <div class="absolute inset-0" style="background:linear-gradient(to right, #0e0e11 0%, #0e0e1150 40%, transparent 70%)"></div>
+  <section class="relative overflow-hidden border-b border-[#1e1e23]" style="min-height:420px;display:flex;align-items:flex-end">
+    <!-- Split character backgrounds -->
+    <div class="absolute inset-0 flex">
+      <div class="flex-1 relative overflow-hidden">
+        <img src="/assets/gta6/characters/Lucia_Caminos_03.jpg" alt="Lucia Caminos"
+          class="w-full h-full object-cover object-top" loading="eager" />
+        <div class="absolute inset-0" style="background:linear-gradient(to right,#0e0e11 0%,transparent 35%,transparent 50%,#0e0e11 100%)"></div>
+      </div>
+      <div class="flex-1 relative overflow-hidden">
+        <img src="/assets/gta6/characters/Jason_Duval_02.jpg" alt="Jason Duval"
+          class="w-full h-full object-cover object-top" loading="eager" />
+        <div class="absolute inset-0" style="background:linear-gradient(to left,#0e0e11 0%,transparent 35%,transparent 50%,#0e0e11 100%)"></div>
+      </div>
     </div>
+    <!-- Top/bottom fades -->
+    <div class="absolute inset-0" style="background:linear-gradient(to bottom,#0e0e11 0%,transparent 20%,transparent 60%,#0e0e11 100%)"></div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-12 pt-20 w-full">
-      <div class="flex items-start justify-between flex-wrap gap-6">
-        <div>
+      <div class="flex items-end justify-between flex-wrap gap-6">
+        <div class="max-w-lg">
           <div class="flex items-center gap-2 mb-3">
             <span class="text-[9px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">Community estimates · not official</span>
           </div>
           <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">
             Grand Theft Auto VI
           </h1>
-          <p class="text-zinc-400 text-sm max-w-md leading-relaxed" style="font-family:'Inter',sans-serif">
+          <p class="text-zinc-400 text-sm max-w-sm leading-relaxed mb-5" style="font-family:'Inter',sans-serif">
             30 years of GTA data, distilled into confidence-scored predictions.
             Every number is derived from signal evidence — not speculation.
           </p>
-        </div>
-        <!-- Compact countdown -->
-        <div class="self-end pb-1">
-          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Time to launch</div>
           <Countdown variant="hero" />
         </div>
+        <!-- Latest trailer thumbnail card -->
+        {heroTrailer && (
+          <a href={`https://www.youtube.com/watch?v=${heroTrailer.youtube_id}`}
+            target="_blank" rel="noopener noreferrer"
+            class="group relative overflow-hidden rounded-xl border border-[#2a2a31] hover:border-gta-gold/40 transition-all shrink-0 hidden sm:block"
+            style="width:240px">
+            <img src={`https://img.youtube.com/vi/${heroTrailer.youtube_id}/mqdefault.jpg`}
+              alt={heroTrailer.title}
+              class="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              style="height:135px" loading="eager" />
+            <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 55%)"></div>
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <div class="w-10 h-10 rounded-full bg-black/60 border border-gta-gold/30 flex items-center justify-center">
+                <span class="text-white ml-0.5">▶</span>
+              </div>
+            </div>
+            <div class="absolute top-2 left-2">
+              <span class="text-[8px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Official</span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 px-3 pb-2.5">
+              <div class="text-[10px] font-semibold text-white leading-tight" style="font-family:'Inter',sans-serif">{heroTrailer.title}</div>
+              {heroTrailer.published_at && <div class="text-[9px] font-mono text-zinc-500 mt-0.5">{heroTrailer.published_at}</div>}
+            </div>
+          </a>
+        )}
       </div>
     </div>
   </section>
@@ -86,23 +140,26 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
         <span class="text-[10px] font-mono text-zinc-700">confidence-scored · data-derived</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {predictions.map((p) => (
-          <PredictionCard
-            title={p.title}
-            value={p.value}
-            confidence={p.confidence}
-            confidence_tier={p.confidence_tier}
-            basis={p.basis}
-            unit={p.unit}
-            trailer_timestamp={p.trailer_timestamp}
-            prediction_method={p.prediction_method}
-            prediction_range={p.prediction_range}
-            source={p.source}
-            source_type={p.source_type}
-            outcome_verified={p.outcome_verified}
-            outcome_actual={p.outcome_actual}
-          />
-        ))}
+        {predictions.map((p) => {
+          return (
+            <PredictionCard
+              title={p.title}
+              value={p.value}
+              confidence={p.confidence}
+              confidence_tier={p.confidence_tier}
+              basis={p.basis}
+              unit={p.unit}
+              trailer_timestamp={p.trailer_timestamp}
+              prediction_method={p.prediction_method}
+              prediction_range={p.prediction_range}
+              source={p.source}
+              source_type={p.source_type}
+              outcome_verified={p.outcome_verified}
+              outcome_actual={p.outcome_actual}
+              thumbnail={PRED_THUMBS[p.id] ?? null}
+            />
+          );
+        })}
       </div>
     </section>
 
@@ -371,40 +428,50 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
             <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-zinc-800 border border-zinc-700 inline-block"></span>Target</span>
           </div>
         </div>
-        <div class="divide-y divide-[#1e1e23]">
+        <!-- Visual category cards grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-[#1e1e23]">
           {featuresData.categories.map((cat) => {
-            const total = cat.confirmed + cat.reported + cat.indexed;
             const confirmedPct = Math.round((cat.confirmed / cat.target) * 100);
-            const reportedPct  = Math.round((cat.reported / cat.target) * 100);
-            const indexedPct   = Math.round((cat.indexed / cat.target) * 100);
+            const reportedPct  = Math.round((cat.reported  / cat.target) * 100);
+            const indexedPct   = Math.round((cat.indexed   / cat.target) * 100);
+            const thumb = CAT_THUMBS[cat.id];
             return (
-              <div class="px-5 py-4">
-                <div class="flex items-center justify-between mb-2">
-                  <div class="flex items-center gap-2">
-                    <span class="text-base">{cat.icon}</span>
-                    <span class="text-sm font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{cat.label}</span>
+              <div class="relative group overflow-hidden">
+                <!-- Background thumbnail -->
+                {thumb && (
+                  <div class="absolute inset-0">
+                    <img src={thumb} alt="" class="w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
+                    <div class="absolute inset-0" style="background:linear-gradient(to bottom,#131316 0%,transparent 40%,#131316 100%)"></div>
                   </div>
-                  <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-600">
-                    <span class="text-gta-gold">{cat.confirmed} confirmed</span>
-                    <span>{cat.reported} reported</span>
-                    <span class="text-zinc-700">/ {cat.target} target</span>
-                  </div>
-                </div>
-                <!-- Stacked progress bar -->
-                <div class="h-2 rounded-full overflow-hidden flex gap-0.5" style="background:#1e1e23">
-                  {confirmedPct > 0 && (
-                    <div class="h-full rounded-l bg-gta-gold" style={`width:${confirmedPct}%`} title={`${cat.confirmed} confirmed`}></div>
-                  )}
-                  {reportedPct > 0 && (
-                    <div class="h-full bg-zinc-500" style={`width:${reportedPct}%`} title={`${cat.reported} reported`}></div>
-                  )}
-                  {indexedPct > 0 && (
-                    <div class="h-full bg-zinc-700" style={`width:${indexedPct}%`} title={`${cat.indexed} indexed`}></div>
-                  )}
-                </div>
-                {cat.notes && (
-                  <p class="text-[10px] text-zinc-700 mt-1.5 leading-snug" style="font-family:'Inter',sans-serif">{cat.notes}</p>
                 )}
+                <div class="relative px-5 py-5">
+                  <!-- Icon + label -->
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="text-xl">{cat.icon}</span>
+                    <span class="text-sm font-bold text-zinc-200" style="font-family:'Inter',sans-serif">{cat.label}</span>
+                  </div>
+                  <!-- Stats -->
+                  <div class="flex items-baseline gap-1.5 mb-3">
+                    <span class="text-2xl font-mono font-bold text-gta-gold">{cat.confirmed}</span>
+                    <span class="text-[10px] font-mono text-zinc-600">confirmed</span>
+                    <span class="text-zinc-700 mx-1">·</span>
+                    <span class="text-base font-mono text-zinc-400">{cat.reported}</span>
+                    <span class="text-[10px] font-mono text-zinc-600">reported</span>
+                  </div>
+                  <!-- Progress bar -->
+                  <div class="h-1.5 rounded-full overflow-hidden flex" style="background:#1e1e23">
+                    {confirmedPct > 0 && <div class="h-full bg-gta-gold" style={`width:${confirmedPct}%`}></div>}
+                    {reportedPct  > 0 && <div class="h-full bg-zinc-500 ml-px" style={`width:${reportedPct}%`}></div>}
+                    {indexedPct   > 0 && <div class="h-full bg-zinc-700 ml-px" style={`width:${indexedPct}%`}></div>}
+                  </div>
+                  <div class="flex items-center justify-between mt-1">
+                    <span class="text-[9px] font-mono text-zinc-700">{confirmedPct}% of target</span>
+                    <span class="text-[9px] font-mono text-zinc-700">/ {cat.target}</span>
+                  </div>
+                  {cat.notes && (
+                    <p class="text-[10px] text-zinc-600 mt-2 leading-snug" style="font-family:'Inter',sans-serif">{cat.notes}</p>
+                  )}
+                </div>
               </div>
             );
           })}
@@ -444,21 +511,47 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
                 default: "bg-[#131316] border-[#2a2a31]",
               };
               return (delayData.timeline as any[]).map((event) => {
-              const dotClass = dotColors[event.type] ?? dotColors["default"];
+              const dotClass  = dotColors[event.type] ?? dotColors["default"];
               const textClass = typeColors[event.type] ?? "text-zinc-400";
+              const ytId      = event.type === "trailer" ? TRAILER_THUMBS[event.date.slice(0,10)] : null;
+              const sideThumb = ytId ? null : (DELAY_THUMBS[event.type] ?? null);
+              const isKey     = ["trailer","date_confirmed","delay"].includes(event.type);
               return (
-                <div class="relative flex items-start gap-4 pb-6 last:pb-0">
+                <div class={`relative flex items-start gap-4 pb-6 last:pb-0 ${isKey ? "group" : ""}`}>
                   <div class="w-24 shrink-0 text-right pt-0.5">
                     <span class="text-[10px] font-mono text-zinc-600">{event.date.slice(0,7)}</span>
                   </div>
                   <div class={`relative z-10 mt-1 shrink-0 w-2.5 h-2.5 rounded-full border ${dotClass}`}></div>
-                  <div class="flex-1 min-w-0">
-                    <p class={`text-[12px] font-medium leading-snug ${textClass}`} style="font-family:'Inter',sans-serif">{event.event}</p>
-                    <div class="flex items-center gap-2 mt-1">
-                      <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">{event.type.replace("_"," ")}</span>
-                      <span class="text-zinc-800">·</span>
-                      <span class="text-[9px] font-mono text-zinc-700">{event.source}</span>
+                  <div class="flex-1 min-w-0 flex items-start gap-3">
+                    <div class="flex-1">
+                      <p class={`text-[12px] font-medium leading-snug ${textClass}`} style="font-family:'Inter',sans-serif">{event.event}</p>
+                      <div class="flex items-center gap-2 mt-1">
+                        <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">{event.type.replace("_"," ")}</span>
+                        <span class="text-zinc-800">·</span>
+                        <span class="text-[9px] font-mono text-zinc-700">{event.source}</span>
+                      </div>
                     </div>
+                    {ytId && (
+                      <a href={`https://www.youtube.com/watch?v=${ytId}`} target="_blank" rel="noopener noreferrer"
+                        class="shrink-0 relative overflow-hidden rounded-lg border border-[#2a2a31] hover:border-gta-gold/30 transition-all group/yt">
+                        <img src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
+                          alt="Trailer" class="w-28 h-16 object-cover transition-transform duration-300 group-hover/yt:scale-105" loading="lazy" />
+                        <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 60%)"></div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover/yt:opacity-100 transition-opacity">
+                          <div class="w-6 h-6 rounded-full bg-black/60 flex items-center justify-center border border-gta-gold/30">
+                            <span class="text-white text-[8px] ml-px">▶</span>
+                          </div>
+                        </div>
+                        <div class="absolute bottom-1 left-1.5">
+                          <span class="text-[7px] font-mono text-gta-gold">Official Trailer</span>
+                        </div>
+                      </a>
+                    )}
+                    {sideThumb && isKey && (
+                      <div class="shrink-0 overflow-hidden rounded-lg border border-[#2a2a31] opacity-50 group-hover:opacity-80 transition-opacity">
+                        <img src={sideThumb} alt="" class="w-20 h-12 object-cover" loading="lazy" aria-hidden="true" />
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -482,22 +575,36 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
         <span class="text-[10px] font-mono text-zinc-700">{totalTrendPts} pts · {trendsSince}–{trendsUntil} · worldwide</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
-          <div>
-            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">GTA VI Search Interest Over Time</div>
-            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Google Trends · worldwide · 0–100 scale</div>
-          </div>
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
-            {gta6Trends.keywords.map((kw) => (
-              <button
-                class="gta6-trend-toggle flex items-center gap-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors"
-                data-keyword={kw.keyword}
-                data-active="true"
-              >
-                <span class="w-2.5 h-0.5 rounded inline-block" style={`background:${kw.color}`}></span>
-                {kw.keyword}
-              </button>
-            ))}
+        <!-- Visual header: Trailer thumbnails + keyword context -->
+        <div class="flex border-b border-[#1e1e23]">
+          {trailers.map((t: any, i: number) => (
+            <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
+              class="relative overflow-hidden group shrink-0" style="width:160px">
+              <img src={`https://img.youtube.com/vi/${t.youtube_id}/mqdefault.jpg`}
+                alt={t.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" style="height:90px" loading="lazy" />
+              <div class="absolute inset-0" style="background:linear-gradient(to right,transparent 50%,#131316 100%)"></div>
+              <div class="absolute bottom-2 left-2">
+                <span class="text-[7px] font-mono text-gta-gold uppercase tracking-widest">T{i+1}</span>
+              </div>
+            </a>
+          ))}
+          <div class="flex-1 px-5 py-4 flex items-start justify-between flex-wrap gap-3">
+            <div>
+              <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">GTA VI Search Interest Over Time</div>
+              <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Google Trends · worldwide · 0–100 scale</div>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+              {gta6Trends.keywords.map((kw) => (
+                <button
+                  class="gta6-trend-toggle flex items-center gap-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors"
+                  data-keyword={kw.keyword}
+                  data-active="true"
+                >
+                  <span class="w-2.5 h-0.5 rounded inline-block" style={`background:${kw.color}`}></span>
+                  {kw.keyword}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
         <div id="gta6-trends-chart" class="w-full h-64 px-4 py-2" data-keywords={JSON.stringify(gta6Trends.keywords)}></div>
