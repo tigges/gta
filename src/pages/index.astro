@@ -6,8 +6,8 @@ import ReleaseTimeline from "../components/ReleaseTimeline.astro";
 import predictionsData from "../../data/gta-6/predictions.json";
 import releasesData from "../../data/shared/releases.json";
 
-const gta6 = releasesData.games.find((g) => g.short === "GTA VI")!;
-const gta5 = releasesData.games.find((g) => g.short === "GTA V")!;
+const gta6 = releasesData.games.find((g) => g.short === "GTA VI") as any;
+const gta5 = releasesData.games.find((g) => g.short === "GTA V") as any;
 ---
 
 <Base
