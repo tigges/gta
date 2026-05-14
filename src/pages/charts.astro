@@ -58,6 +58,8 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           <!-- Game cover strip -->
           <div class="flex items-center gap-2.5 mt-5">
             {([
+              { id: "gta-1",  short: "GTA 1"  },
+              { id: "gta-2",  short: "GTA 2"  },
               { id: "gta-3",  short: "GTA III" },
               { id: "gta-vc", short: "GTA VC"  },
               { id: "gta-sa", short: "GTA SA"  },
@@ -928,6 +930,8 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
     // X axis — cover images instead of text labels
     const COVER_URLS: Record<string,string> = {
+      "GTA 1":  "/assets/covers/gta-1.jpg",
+      "GTA 2":  "/assets/covers/gta-2.jpg",
       "GTA III": "/assets/covers/gta-3.jpg",
       "GTA VC":  "/assets/covers/gta-vc.jpg",
       "GTA SA":  "/assets/covers/gta-sa.jpg",
