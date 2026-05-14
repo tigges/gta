@@ -3,7 +3,6 @@ import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   output: 'static',
-  site: 'https://tigges.github.io',
-  base: '/gta',
+  site: 'https://gtavi.ai',
   integrations: [tailwind()],
 });
