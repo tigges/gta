@@ -108,63 +108,82 @@ python3 scrapers/fetch_trailers.py
 | `fetch_steamdb.py` | `gta-5/meta/steamdb.json` | ❌ | SteamDB blocks server IPs; curated seed |
 | `fetch_spotify.py` | `franchise/spotify.json` | ✅ | Needs `SPOTIFY_CLIENT_ID` + `SPOTIFY_CLIENT_SECRET` |
 | `fetch_steamdb.py` | `gta-5/meta/steamdb.json` | ❌ | SteamDB blocks server IPs; curated seed |
-| `fetch_boxoffice.py` | `franchise/entertainment-comps.json` | ❌ | Curated seed |
-| `fetch_edgar.py` | `franchise/cpi.json`, `revenue-split.json` | ❌ | SEC EDGAR; run manually |
+| `fetch_spotify.py` | `franchise/spotify.json` | ❌ | Curated seed |
+| `fetch_boxoffice.py` | `franchise/entertainment-comps.json` | ✅ | Box Office Mojo scrape |
+| `fetch_edgar.py` | `franchise/cpi.json`, `revenue-split.json` | ✅ | SEC EDGAR |
 | `fetch_vgchartz.py` | `franchise/vgchartz.json` | ❌ | Run manually if data drift |
+| `fetch_leonida.py` | `gta-6/entities/leonida-intel.json` | ✅ | Leonida Intel public API; no auth |
 | `fetch_gta_wiki.py` | `gta-6/entities/*.json` | ❌ | Run manually after major reveals |
 | `fetch_press_assets.py` | `gta-6/press-assets.json` | ❌ | Run manually after press drops |
 
 ---
 
-## Version tagging — MANDATORY on every PR / release
+## Release process — MANDATORY, every session, no exceptions
 
-**This must happen on every merge to `main`, no exceptions.**
+Every agent session that ships code **must** complete all five steps below before the session ends.
+Do not wait to be asked. Do not leave main behind. Ship it.
 
-### Rule
+### Steps (execute in order)
 
-1. **Before starting work:** tag the current `main` tip with `release/v{current_version}` if that tag doesn't already exist.
+1. **Tag current `main`** with `release/v{current_version}` before creating a feature branch.
    ```bash
-   git tag release/v$(node -e "const v=require('./src/config/version.ts').SITE_VERSION??'';console.log(v)" 2>/dev/null || grep SITE_VERSION src/config/version.ts | head -1 | grep -oP '"\K[^"]+') origin/main
-   git push origin release/v<old-version>
+   git tag release/v1.X.Y origin/main && git push origin release/v1.X.Y
    ```
-   Or simply: `git tag release/v1.X.Y origin/main && git push origin release/v1.X.Y`
 
-2. **In the PR branch:** bump `src/config/version.ts` to the next version.
-   - Patch bump (`1.5.0 → 1.5.1`) for fixes, data-only changes, minor UI tweaks
-   - Minor bump (`1.5.0 → 1.6.0`) for new features, new pages, new charts, new scrapers
-   - Major bump (`1.x → 2.0`) for full redesigns
+2. **Create a feature branch**, do work, commit with clear messages.
 
-3. **Update the date** in `SITE_VERSION_DATE` to today (`YYYY-MM-DD`).
+3. **Bump `src/config/version.ts`** in the feature branch.
+   - Patch (`1.5.0 → 1.5.1`) — fixes, data-only, minor UI tweaks
+   - Minor (`1.5.0 → 1.6.0`) — new features, pages, charts, scrapers
+   - Major (`1.x → 2.0`) — full redesigns
+   - Also update `SITE_VERSION_DATE` to today (`YYYY-MM-DD`).
+   - Commit: `chore: bump version to v1.X.Y`
 
-4. **Commit** the version bump as a standalone commit: `chore: bump version to v1.6.0`
+4. **Merge to `main` and push** — this triggers GitHub Actions and puts the release live.
+   ```bash
+   git checkout main
+   git merge --no-ff <feature-branch> -m "<release title>"
+   git push origin main
+   ```
+   There is no branch protection on `main`. Do not create a draft PR and stop — always complete the merge.
 
-5. **Merge to main** — the GitHub Actions deploy workflow fires automatically.
+5. **Verify deploy** — run `gh run list --limit 3` and confirm the Pages deploy is queued or running.
 
-### Example
+### Example (full flow)
 
 ```bash
 # 1. Bookmark current main
-git tag release/v1.5.0 origin/main
-git push origin release/v1.5.0
+git tag release/v1.6.0 origin/main && git push origin release/v1.6.0
 
-# 2. In your feature branch, update src/config/version.ts
-#    SITE_VERSION = "1.6.0", SITE_VERSION_DATE = "2026-05-14"
+# 2. Feature branch
+git checkout -b cursor/my-feature-c815
 
-# 3. Commit
-git commit -m "chore: bump version to v1.6.0"
+# 3. ... do work, commit ...
+
+# 4. Bump version
+# src/config/version.ts: SITE_VERSION = "1.7.0", SITE_VERSION_DATE = "2026-05-14"
+git commit -m "chore: bump version to v1.7.0"
+
+# 5. Merge and deploy
+git checkout main
+git merge --no-ff cursor/my-feature-c815 -m "feat: v1.7.0 — description"
+git push origin main   # ← triggers GitHub Actions deploy automatically
+
+# 6. Verify
+gh run list --limit 3
 ```
 
-The version is displayed in the ops bar on every page (`Base.astro`) and in the footer, so it is always visible on the live site after deploy.
+The version is displayed in the ops bar on every page (`Base.astro`) and in the footer — it should read the new version immediately after deploy.
 
 ---
 
 ## Git & branch conventions
 
-- All agent branches use prefix `cursor/` and suffix `-38ec`
-  Example: `cursor/my-feature-38ec`
+- All agent branches use prefix `cursor/` and suffix `-c815`
+  Example: `cursor/my-feature-c815`
 - Branch names must be **lowercase**
 - One logical change per commit with a descriptive message
-- PRs are created as drafts targeting `main`
+- After merging to main, a PR can optionally be opened for record-keeping, but the merge to main always happens first
 - The nightly data bot commits with `[skip ci]` to avoid triggering redundant builds
 
 ---
