@@ -1,3 +1,127 @@
 ---
 import steamData from "../../data/gta-5/meta/steam-players.json";
 ---
+
+<div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+  <div class="flex items-start justify-between mb-4">
+    <div>
+      <h3 class="font-mono font-semibold text-zinc-50 text-sm uppercase tracking-wider">
+        GTA V — Steam Player Count
+      </h3>
+      <p class="text-xs text-zinc-500 mt-0.5">Monthly avg &amp; peak concurrent (PC)</p>
+    </div>
+    <div class="flex items-center gap-4 text-xs font-mono text-zinc-500">
+      <span class="flex items-center gap-1.5">
+        <span class="w-3 h-0.5 bg-amber-500 inline-block rounded"></span>Avg
+      </span>
+      <span class="flex items-center gap-1.5">
+        <span class="w-3 h-0.5 border-t border-dashed border-amber-500/50 inline-block"></span>Peak
+      </span>
+    </div>
+  </div>
+  <div
+    id="player-chart"
+    class="w-full h-64"
+    data-points={JSON.stringify(steamData.data)}
+  ></div>
+  <p class="text-xs text-zinc-700 font-mono mt-3">
+    Source: SteamCharts · Updated {new Date(steamData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
+  </p>
+</div>
+
+<script>
+  import * as d3 from "d3";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const el = document.getElementById("player-chart");
+    if (!el) return;
+
+    const raw = JSON.parse(el.dataset.points || "[]");
+    const MONTHS: Record<string, number> = {
+      January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
+      July: 6, August: 7, September: 8, October: 9, November: 10, December: 11,
+    };
+    const data = raw.map((d: any) => ({
+      date: new Date(d.year, MONTHS[d.month] ?? 0),
+      avg: d.avg_players,
+      peak: d.peak_players,
+    }));
+
+    const margin = { top: 10, right: 16, bottom: 32, left: 56 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3
+      .select(el)
+      .append("svg")
+      .attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleTime().domain(d3.extent(data, (d) => d.date) as [Date, Date]).range([0, W]);
+    const y = d3.scaleLinear().domain([0, (d3.max(data, (d) => d.peak) ?? 0) * 1.1]).range([H, 0]);
+
+    // Grid
+    svg.append("g")
+      .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
+      .call((g) => g.select(".domain").remove())
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#27272a").attr("stroke-dasharray", "3,3"));
+
+    // Gradient fill
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id", "pc-grad").attr("gradientUnits", "userSpaceOnUse").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", H);
+    grad.append("stop").attr("offset", "0%").attr("stop-color", "#f59e0b").attr("stop-opacity", 0.25);
+    grad.append("stop").attr("offset", "100%").attr("stop-color", "#f59e0b").attr("stop-opacity", 0.02);
+
+    // Area
+    svg.append("path")
+      .datum(data)
+      .attr("fill", "url(#pc-grad)")
+      .attr("d", d3.area<any>().x((d) => x(d.date)).y0(H).y1((d) => y(d.avg)).curve(d3.curveMonotoneX));
+
+    // Peak line (dashed)
+    svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "#f59e0b")
+      .attr("stroke-width", 1)
+      .attr("stroke-dasharray", "4,3")
+      .attr("opacity", 0.4)
+      .attr("d", d3.line<any>().x((d) => x(d.date)).y((d) => y(d.peak)).curve(d3.curveMonotoneX));
+
+    // Avg line
+    svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "#f59e0b")
+      .attr("stroke-width", 2)
+      .attr("d", d3.line<any>().x((d) => x(d.date)).y((d) => y(d.avg)).curve(d3.curveMonotoneX));
+
+    // COVID annotation
+    const covidDate = new Date(2020, 2);
+    svg.append("line")
+      .attr("x1", x(covidDate)).attr("x2", x(covidDate))
+      .attr("y1", 0).attr("y2", H)
+      .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "4,3").attr("opacity", 0.6);
+    svg.append("text")
+      .attr("x", x(covidDate) + 4).attr("y", 12)
+      .attr("fill", "#ef4444").attr("font-size", "10").attr("font-family", "monospace")
+      .text("COVID");
+
+    // X axis
+    svg.append("g")
+      .attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
+      .call((g) => g.select(".domain").attr("stroke", "#3f3f46"))
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#3f3f46"))
+      .call((g) => g.selectAll("text").attr("fill", "#71717a").attr("font-size", "11").attr("font-family", "monospace"));
+
+    // Y axis
+    svg.append("g")
+      .call(d3.axisLeft(y).ticks(5).tickFormat((d) => `${Math.round(+d / 1000)}k`))
+      .call((g) => g.select(".domain").attr("stroke", "#3f3f46"))
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#3f3f46"))
+      .call((g) => g.selectAll("text").attr("fill", "#71717a").attr("font-size", "11").attr("font-family", "monospace"));
+  });
+</script>
