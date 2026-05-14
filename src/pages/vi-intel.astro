@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import PredictionCard from "../components/PredictionCard.astro";
 import ReleaseTimeline from "../components/ReleaseTimeline.astro";
+import CrossLinks from "../components/CrossLinks.astro";
 import Countdown from "../components/Countdown.astro";
 
 import type { TrailersData, Prediction } from "../types/gta";
@@ -163,6 +164,8 @@ const DELAY_THUMBS: Record<string,string> = {
       </div>
     </section>
 
+    <CrossLinks context="vi-intel-predictions" />
+
     <!-- ═══════════════════════════════════════════════════════
          OFFICIAL TRAILERS
     ═══════════════════════════════════════════════════════ -->
@@ -270,6 +273,8 @@ const DELAY_THUMBS: Record<string,string> = {
       </div>
     </section>
 
+    <CrossLinks context="vi-intel-cast" />
+
     <!-- ═══════════════════════════════════════════════════════
          LEONIDA — LOCATIONS
     ═══════════════════════════════════════════════════════ -->
@@ -311,6 +316,8 @@ const DELAY_THUMBS: Record<string,string> = {
         ))}
       </div>
     </section>
+
+    <CrossLinks context="vi-intel-locations" />
 
     <!-- ═══════════════════════════════════════════════════════
          TRAILER ANALYSIS
@@ -404,6 +411,8 @@ const DELAY_THUMBS: Record<string,string> = {
       </section>
     )}
 
+    <CrossLinks context="vi-intel-trailers" />
+
     <!-- ═══════════════════════════════════════════════════════
          CONFIRMED FEATURE TRACKER
     ═══════════════════════════════════════════════════════ -->
@@ -481,6 +490,8 @@ const DELAY_THUMBS: Record<string,string> = {
         </div>
       </div>
     </section>
+
+    <CrossLinks context="vi-intel-features" />
 
     <!-- ═══════════════════════════════════════════════════════
          DELAY TIMELINE

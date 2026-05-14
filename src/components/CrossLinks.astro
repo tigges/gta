@@ -1,0 +1,205 @@
+---
+/**
+ * CrossLinks — contextual "Related Intelligence" bridge strips.
+ *
+ * Rendered at build time from live data counts, so labels stay accurate
+ * automatically as scrapers update JSON files nightly.
+ *
+ * Usage:
+ *   <CrossLinks context="vi-intel-predictions" />
+ *   <CrossLinks context="database" />
+ *   etc.
+ */
+
+import entityIndex  from "../../data/gta-6/entities/index.json";
+import leonidaData  from "../../data/gta-6/entities/leonida-intel.json";
+import newswireData from "../../data/feeds/newswire.json";
+import redditData   from "../../data/community/reddit.json";
+import vehicleData  from "../../data/gta-5/vehicles/performance.json";
+import trailerData  from "../../data/gta-6/trailers.json";
+import predData     from "../../data/gta-6/predictions.json";
+import featuresData from "../../data/gta-6/features.json";
+import salesData    from "../../data/franchise/sales.json";
+
+interface Props {
+  context: string;
+  class?: string;
+}
+const { context, class: extraClass = "" } = Astro.props;
+
+// ── Live counts — updated every build from nightly scraper output ──────────
+const gta6Entities   = entityIndex.total + (leonidaData as any).entity_stats.total;
+const newsItems      = (newswireData as any).items.length + ((redditData as any).recent_posts?.length ?? 0);
+const gta5Vehicles   = (vehicleData as any).vehicles.length;
+const trailerCount   = (trailerData as any).trailers.length;
+const predCount      = (predData as any).predictions.length;
+const featuresTotal  = (featuresData as any).categories.reduce(
+  (s: number, c: any) => s + c.confirmed + c.reported, 0
+);
+const franchiseTitles = (salesData as any).titles.length;
+
+// ── Link definitions per context ──────────────────────────────────────────
+interface CrossLink {
+  href: string;
+  label: string;
+  sub: string;
+  tier: string;
+  icon: string;
+  color: string;
+  border: string;
+}
+
+const ALL_LINKS: Record<string, CrossLink[]> = {
+
+  // After Signal Predictions on VI Intel
+  "vi-intel-predictions": [
+    { href: "/charts", icon: "📈", tier: "Charts", label: "Signal charts",
+      sub: `${predCount} predictions backed by live data`, color: "text-amber-400", border: "border-amber-500/20" },
+    { href: "/database", icon: "🗄", tier: "Database", label: "Entity database",
+      sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/franchise", icon: "📊", tier: "Franchise", label: "Historical context",
+      sub: `${franchiseTitles} titles · 30 years of data`, color: "text-zinc-400", border: "border-zinc-700" },
+    { href: "/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
+      sub: "Platforms, editions, retailers", color: "text-gta-gold", border: "border-gta-gold/20" },
+  ],
+
+  // After Cast strip (VI Intel + Home)
+  "vi-intel-cast": [
+    { href: "/database?type=character", icon: "👤", tier: "Database", label: "All characters",
+      sub: `${((leonidaData as any).by_category?.Characters ?? 0) + ((entityIndex as any).by_type?.character ?? 0)} indexed across both sources`,
+      color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/news", icon: "📰", tier: "News", label: "Character intel",
+      sub: `${newsItems} articles tracked nightly`, color: "text-zinc-400", border: "border-zinc-700" },
+    { href: "/vi-intel", icon: "🎬", tier: "Intel", label: "Trailer analysis",
+      sub: `${trailerCount} official trailers analysed`, color: "text-gta-gold", border: "border-gta-gold/20" },
+  ],
+
+  // After Location gallery (VI Intel)
+  "vi-intel-locations": [
+    { href: "/database?type=location", icon: "📍", tier: "Database", label: "All locations",
+      sub: `${((leonidaData as any).by_category?.Locations ?? 0)} Leonida Intel locations`,
+      color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/charts", icon: "🗺", tier: "Charts", label: "Region evidence heatmap",
+      sub: "Confidence density per location per source", color: "text-amber-400", border: "border-amber-500/20" },
+    { href: "/news", icon: "📰", tier: "News", label: "Location coverage",
+      sub: "Vice City, Port Gellhorn, Ambrosia in the news", color: "text-zinc-400", border: "border-zinc-700" },
+  ],
+
+  // After Feature Tracker (VI Intel)
+  "vi-intel-features": [
+    { href: "/database", icon: "🗄", tier: "Database", label: "Browse all entities",
+      sub: `${gta6Entities.toLocaleString()} entries · vehicle, character, weapon, mission`,
+      color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/charts", icon: "📈", tier: "Charts", label: "Franchise benchmarks",
+      sub: "How GTA V's features compare at launch", color: "text-amber-400", border: "border-amber-500/20" },
+  ],
+
+  // After Trailer Analysis (VI Intel)
+  "vi-intel-trailers": [
+    { href: "/database?type=vehicle", icon: "🚗", tier: "Database", label: "Vehicles spotted",
+      sub: `${(leonidaData as any).by_category?.Vehicles ?? 0} GTA VI vehicles indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/database?type=character", icon: "👤", tier: "Database", label: "Characters confirmed",
+      sub: "Lucia, Jason + supporting cast", color: "text-zinc-400", border: "border-zinc-700" },
+    { href: "/charts", icon: "📈", tier: "Charts", label: "Trailer view velocity",
+      sub: `${trailerCount} trailers · live view count tracking`, color: "text-amber-400", border: "border-amber-500/20" },
+  ],
+
+  // Database page
+  "database": [
+    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "GTA VI intelligence",
+      sub: `${predCount} predictions · cast · locations · trailer analysis`,
+      color: "text-gta-gold", border: "border-gta-gold/20" },
+    { href: "/news", icon: "📰", tier: "News", label: "Live news feed",
+      sub: `${newsItems} articles · press + Reddit r/GTA6`, color: "text-zinc-400", border: "border-zinc-700" },
+    { href: "/charts", icon: "📈", tier: "Charts", label: "GTA V performance data",
+      sub: `${gta5Vehicles} vehicles · Broughy benchmarks`, color: "text-amber-400", border: "border-amber-500/20" },
+  ],
+
+  // News page
+  "news": [
+    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "GTA VI predictions",
+      sub: `${predCount} confidence-scored signals`, color: "text-gta-gold", border: "border-gta-gold/20" },
+    { href: "/database", icon: "🗄", tier: "Database", label: "Entity database",
+      sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
+      sub: "PS5 · Xbox · retailer watch", color: "text-zinc-400", border: "border-zinc-700" },
+  ],
+
+  // Charts page
+  "charts": [
+    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "What the data predicts",
+      sub: `${predCount} confidence-scored GTA VI predictions`, color: "text-gta-gold", border: "border-gta-gold/20" },
+    { href: "/franchise", icon: "📊", tier: "Franchise", label: "30-year franchise history",
+      sub: `${franchiseTitles} titles · sales · scores · map growth`, color: "text-zinc-400", border: "border-zinc-700" },
+    { href: "/database", icon: "🚗", tier: "Database", label: "GTA V vehicle benchmarks",
+      sub: `${gta5Vehicles} vehicles · lap times · top speeds`, color: "text-gta-teal", border: "border-gta-teal/20" },
+  ],
+
+  // Franchise page
+  "franchise": [
+    { href: "/charts", icon: "📈", tier: "Charts", label: "Full chart suite",
+      sub: "Sales velocity, CPI pricing, Metacritic, revenue model", color: "text-amber-400", border: "border-amber-500/20" },
+    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "GTA VI predictions",
+      sub: "What 30 years of data says about VI", color: "text-gta-gold", border: "border-gta-gold/20" },
+    { href: "/database", icon: "🗄", tier: "Database", label: "GTA V + VI entities",
+      sub: `${gta5Vehicles} GTA V vehicles · ${gta6Entities.toLocaleString()} GTA VI entries`, color: "text-gta-teal", border: "border-gta-teal/20" },
+  ],
+
+  // Home page
+  "home": [
+    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "GTA VI intelligence",
+      sub: `${predCount} predictions · cast · locations · timelines`, color: "text-gta-gold", border: "border-gta-gold/20" },
+    { href: "/charts", icon: "📈", tier: "Charts", label: "Data visualised",
+      sub: "15+ live charts — franchise sales to search signal", color: "text-amber-400", border: "border-amber-500/20" },
+    { href: "/database", icon: "🗄", tier: "Database", label: "Entity database",
+      sub: `${gta6Entities.toLocaleString()} GTA VI · ${gta5Vehicles} GTA V`, color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/news", icon: "📰", tier: "News", label: "Live intelligence feed",
+      sub: `${newsItems} articles · updated nightly`, color: "text-zinc-400", border: "border-zinc-700" },
+    { href: "/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
+      sub: "Editions, platforms, retailer watch", color: "text-zinc-300", border: "border-zinc-600" },
+  ],
+
+  // Buy page
+  "buy": [
+    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "Intelligence backing these prices",
+      sub: `${predCount} predictions · ${trailerCount} trailers analysed`, color: "text-gta-gold", border: "border-gta-gold/20" },
+    { href: "/charts", icon: "📈", tier: "Charts", label: "CPI-adjusted pricing history",
+      sub: "Is $79.99 cheap vs every prior GTA at launch?", color: "text-amber-400", border: "border-amber-500/20" },
+    { href: "/news", icon: "📰", tier: "News", label: "Pre-order news",
+      sub: `Latest from ${newsItems} tracked sources`, color: "text-zinc-400", border: "border-zinc-700" },
+  ],
+};
+
+const links: CrossLink[] = ALL_LINKS[context] ?? [];
+---
+
+{links.length > 0 && (
+  <div class={`rounded-xl border border-[#1e1e23] overflow-hidden ${extraClass}`} style="background:#0e0e11">
+    <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2">
+      <span class="w-1 h-4 rounded-full bg-gta-gold/40 shrink-0"></span>
+      <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Related Intelligence</span>
+      <span class="text-[9px] font-mono text-zinc-800 ml-auto">auto-updated · builds nightly</span>
+    </div>
+    <div class={`grid gap-0 divide-[#1e1e23] ${links.length <= 2 ? "grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x" : links.length === 3 ? "grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x"}`}>
+      {links.map(link => (
+        <a href={link.href}
+          class={`group flex items-start gap-3 px-5 py-4 hover:bg-white/2 transition-all border-[#1e1e23]`}>
+          <span class="text-lg shrink-0 mt-0.5">{link.icon}</span>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest bg-transparent ${link.color} ${link.border}`}>
+                {link.tier}
+              </span>
+            </div>
+            <div class={`text-[12px] font-semibold group-hover:text-white transition-colors leading-snug mb-0.5 ${link.color}`}
+              style="font-family:'Inter',sans-serif">
+              {link.label}
+            </div>
+            <div class="text-[10px] font-mono text-zinc-600 leading-snug">{link.sub}</div>
+          </div>
+          <span class="text-zinc-700 group-hover:text-zinc-500 font-mono text-xs ml-auto shrink-0 mt-1 transition-colors">→</span>
+        </a>
+      ))}
+    </div>
+  </div>
+)}

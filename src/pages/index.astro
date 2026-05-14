@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import CrossLinks from "../components/CrossLinks.astro";
 import ReleaseTimeline from "../components/ReleaseTimeline.astro";
 import PredictionCard from "../components/PredictionCard.astro";
 import Countdown from "../components/Countdown.astro";
@@ -302,6 +303,8 @@ const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_pla
         </div>
       </div>
     </section>
+
+    <CrossLinks context="home" />
 
     <!-- ═══════════════════════════════════════════════════════
          GAME PAGES FOOTER NAV

@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import CrossLinks from "../components/CrossLinks.astro";
 
 import salesData      from "../../data/franchise/sales.json";
 import metacriticData from "../../data/franchise/metacritic.json";
@@ -255,6 +256,7 @@ const gta5 = salesData.titles.find((t: any) => t.id === "gta-5");
       </div>
     </section>
 
+    <CrossLinks context="franchise" />
   </div>
 </Base>
 
