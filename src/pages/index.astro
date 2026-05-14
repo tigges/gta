@@ -5,6 +5,7 @@ import ReleaseTimeline from "../components/ReleaseTimeline.astro";
 import PredictionCard from "../components/PredictionCard.astro";
 import Countdown from "../components/Countdown.astro";
 import NewsletterSignup from "../components/NewsletterSignup.astro";
+import ShareButton from "../components/ShareButton.astro";
 
 import type { TrailersData, Prediction } from "../types/gta";
 
@@ -20,6 +21,24 @@ const trailer1Id     = "QdBZY2fkU-0";
 
 const latestSteam    = steamData.data.at(-1);
 const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_players ? a : b);
+
+// Thumbnail art per prediction card
+const predThumbnails: Record<string, string> = {
+  "pred-release-window":  "/assets/gta6/characters/Lucia_Caminos_01.jpg",
+  "pred-launch-price":    "/assets/gta6/characters/Jason_Duval_02.jpg",
+  "pred-map-size":        "/assets/gta6/locations/Vice_City_01.jpg",
+  "pred-vehicles-launch": "/assets/gta6/locations/Port_Gellhorn_01.jpg",
+};
+
+// Cover art map for release timeline table
+const RELEASE_COVERS: Record<string, string> = {
+  "GTA III": "/assets/covers/gta-3.jpg",
+  "GTA VC":  "/assets/covers/gta-vc.jpg",
+  "GTA SA":  "/assets/covers/gta-sa.jpg",
+  "GTA IV":  "/assets/covers/gta-4.jpg",
+  "GTA V":   "/assets/covers/gta-5.jpg",
+  "GTA VI":  "/assets/covers/gta-6.jpg",
+};
 ---
 
 <Base
@@ -29,9 +48,9 @@ const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_pla
 >
 
   <!-- ═══════════════════════════════════════════════════════
-       HERO — full-bleed Trailer 2 with gradient overlay
+       HERO — split layout: left = text/CTA, right = trailer embed
   ═══════════════════════════════════════════════════════ -->
-  <section class="relative overflow-hidden" style="min-height:580px;display:flex;align-items:flex-end">
+  <section class="relative overflow-hidden" style="min-height:580px;display:flex;align-items:center">
 
     <!-- Background: official YouTube thumbnail (Trailer 2) -->
     <div class="absolute inset-0">
@@ -42,56 +61,74 @@ const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_pla
         style="object-position: center 18%"
         loading="eager"
       />
-      <!-- Gradient overlays: bottom-to-top dark fade + left vignette -->
       <div class="absolute inset-0" style="background:linear-gradient(to top, #0e0e11 0%, #0e0e1188 40%, transparent 75%)"></div>
       <div class="absolute inset-0" style="background:linear-gradient(to right, #0e0e11 0%, #0e0e1160 35%, transparent 65%)"></div>
-      <!-- Subtle noise texture -->
       <div class="absolute inset-0 opacity-30" style="background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.04%22/></svg>');background-size:300px"></div>
     </div>
 
-    <!-- Hero content -->
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-16 pt-24 w-full">
-      <div class="max-w-xl">
+    <!-- Hero content — two-column split on lg -->
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
-        <!-- Signal badge -->
-        <div class="inline-flex items-center gap-2 mb-5 border border-gta-gold/20 bg-gta-gold/6 rounded px-2.5 py-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse"></span>
-          <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em]">Live intelligence · updated nightly</span>
-        </div>
-
-        <!-- Wordmark -->
-        <div class="font-mono font-bold tracking-[0.25em] text-gta-gold mb-1 text-sm uppercase">GTA VI.AI</div>
-        <h1 class="text-4xl sm:text-5xl font-bold text-white leading-[1.1] mb-4" style="font-family:'Inter',sans-serif">
-          Every signal.<br/>
-          <span class="text-gta-bright">One source.</span>
-        </h1>
-        <p class="text-zinc-400 text-sm leading-relaxed mb-7 max-w-sm" style="font-family:'Inter',sans-serif">
-          30 years of GTA data, quantified. Live franchise analytics,
-          confidence-scored predictions, and everything the numbers say about GTA VI.
-        </p>
-
-        <!-- Countdown -->
-        <div class="mb-7">
-          <Countdown variant="hero" />
-        </div>
-
-        <!-- CTAs -->
-        <div class="flex flex-wrap gap-3">
-          <a href="/vi-intel"
-            class="inline-flex items-center gap-2 bg-gta-gold hover:bg-gta-bright text-black font-mono font-bold text-xs px-5 py-2.5 rounded transition-colors tracking-wide uppercase">
-            GTA VI Intel →
-          </a>
-          <a href="/gta-v"
-            class="inline-flex items-center gap-2 border border-[#2a2a31] hover:border-zinc-600 text-zinc-300 hover:text-white font-mono text-xs px-5 py-2.5 rounded transition-colors tracking-wide">
-            GTA V Data
-          </a>
-          {latestTrailer && (
-            <a href={`https://www.youtube.com/watch?v=${latestTrailer.youtube_id}`}
-              target="_blank" rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 border border-[#2a2a31] hover:border-zinc-600 text-zinc-300 hover:text-white font-mono text-xs px-5 py-2.5 rounded transition-colors tracking-wide">
-              ▶ Latest Trailer
+        <!-- Left: text + countdown + CTAs -->
+        <div class="max-w-xl">
+          <div class="inline-flex items-center gap-2 mb-5 border border-gta-gold/20 bg-gta-gold/6 rounded px-2.5 py-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse"></span>
+            <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em]">Live intelligence · updated nightly</span>
+          </div>
+          <div class="font-mono font-bold tracking-[0.25em] text-gta-gold mb-1 text-sm uppercase">GTA VI.AI</div>
+          <h1 class="text-4xl sm:text-5xl font-bold text-white leading-[1.1] mb-4" style="font-family:'Inter',sans-serif">
+            Every signal.<br/>
+            <span class="text-gta-bright">One source.</span>
+          </h1>
+          <p class="text-zinc-400 text-sm leading-relaxed mb-7 max-w-sm" style="font-family:'Inter',sans-serif">
+            30 years of GTA data, quantified. Live franchise analytics,
+            confidence-scored predictions, and everything the numbers say about GTA VI.
+          </p>
+          <div class="mb-7">
+            <Countdown variant="hero" />
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <a href="/vi-intel"
+              class="inline-flex items-center gap-2 bg-gta-gold hover:bg-gta-bright text-black font-mono font-bold text-xs px-5 py-2.5 rounded transition-colors tracking-wide uppercase">
+              GTA VI Intel →
             </a>
-          )}
+            <a href="/gta-v"
+              class="inline-flex items-center gap-2 border border-[#2a2a31] hover:border-zinc-600 text-zinc-300 hover:text-white font-mono text-xs px-5 py-2.5 rounded transition-colors tracking-wide">
+              GTA V Data
+            </a>
+            {latestTrailer && (
+              <a href={`https://www.youtube.com/watch?v=${latestTrailer.youtube_id}`}
+                target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 border border-[#2a2a31] hover:border-zinc-600 text-zinc-300 hover:text-white font-mono text-xs px-5 py-2.5 rounded transition-colors tracking-wide">
+                ▶ Latest Trailer
+              </a>
+            )}
+          </div>
+        </div>
+
+        <!-- Right: embedded Trailer 2 iframe -->
+        <div class="relative hidden lg:block">
+          <div class="absolute -inset-4 rounded-2xl opacity-20 blur-2xl pointer-events-none" style="background:radial-gradient(ellipse at center, #f59e0b40, transparent 70%)"></div>
+          <div class="relative rounded-xl overflow-hidden border border-[#2a2a31] shadow-2xl shadow-black/60">
+            <div class="absolute top-3 left-3 z-10">
+              <span class="text-[9px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest backdrop-blur-sm">Official · Trailer 2</span>
+            </div>
+            <div class="aspect-video">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${trailer2Id}?rel=0&modestbranding=1&color=white`}
+                title="Grand Theft Auto VI — Official Trailer 2"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+                class="w-full h-full"
+                loading="lazy"
+              ></iframe>
+            </div>
+            <div class="px-4 py-2.5 flex items-center justify-between" style="background:#0a0a0d;border-top:1px solid #1e1e23">
+              <span class="text-[10px] font-mono text-zinc-500">Grand Theft Auto VI — Official Trailer 2</span>
+              <span class="text-[9px] font-mono text-zinc-700">159M+ views</span>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -147,7 +184,36 @@ const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_pla
             source_type={p.source_type}
             outcome_verified={p.outcome_verified}
             outcome_actual={p.outcome_actual}
+            thumbnail={predThumbnails[(p as any).id]}
           />
+        ))}
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION NAV — visual deep links to all major sections
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Explore</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        {([
+          { href: "/vi-intel",  label: "VI Intel",   sub: "Cast · locations · predictions", img: "/assets/gta6/characters/Jason_Duval_01.jpg",    accent: "border-gta-gold/30",   badge: "text-gta-gold",   pos: "center top" },
+          { href: "/charts",    label: "Charts",     sub: "D3 analytics · live signals",    img: "/assets/gta6/locations/Vice_City_01.jpg",         accent: "border-indigo-500/30", badge: "text-indigo-300", pos: "center 30%" },
+          { href: "/database",  label: "Database",   sub: "1,715 entities · 665 vehicles",  img: "/assets/gta6/characters/Raul_Bautista_01.jpg",   accent: "border-teal-500/30",   badge: "text-teal-300",   pos: "center top" },
+          { href: "/franchise", label: "Franchise",  sub: "30yr history · DLC · sales",     img: "/assets/gta6/locations/Port_Gellhorn_03.jpg",    accent: "border-purple-500/30", badge: "text-purple-300", pos: "center 40%" },
+          { href: "/news",      label: "News",       sub: "Rockstar · community · live",    img: "/assets/gta6/locations/Leonida_Keys_01.jpg",     accent: "border-green-500/30",  badge: "text-green-300",  pos: "center 50%" },
+        ] as const).map(s => (
+          <a href={s.href} class={`group relative overflow-hidden rounded-xl border ${s.accent} hover:brightness-110 transition-all duration-300`} style="min-height:120px;background:#131316">
+            <img src={s.img} alt="" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-45 transition-opacity duration-500 scale-105 group-hover:scale-110 transition-transform duration-700" style={`object-position:${s.pos}`} loading="lazy" aria-hidden="true" />
+            <div class="absolute inset-0" style="background:linear-gradient(to top,#131316 20%,transparent 80%)"></div>
+            <div class="relative p-4 h-full flex flex-col justify-end">
+              <div class={`text-[10px] font-mono font-bold ${s.badge} mb-0.5 uppercase tracking-widest`}>{s.label}</div>
+              <div class="text-[10px] text-zinc-500 leading-snug" style="font-family:'Inter',sans-serif">{s.sub}</div>
+            </div>
+          </a>
         ))}
       </div>
     </section>
@@ -202,6 +268,10 @@ const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_pla
           </a>
         ))}
       </div>
+      <div class="mt-3 flex items-center justify-between">
+        <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+        <ShareButton text="GTA VI has two official trailers. Trailer 1: 475M+ views (YouTube 24h record). Trailer 2: 159M views. The hype is unlike anything in gaming." url="https://gtavi.ai" size="sm" label="Share" />
+      </div>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -211,7 +281,7 @@ const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_pla
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Cast</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/vi-intel" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full profiles →</a>
+        <span class="text-[10px] font-mono text-zinc-700">8 confirmed characters</span>
       </div>
       <div class="flex gap-3 overflow-x-auto pb-1">
         {([
@@ -244,6 +314,10 @@ const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_pla
             </div>
           </a>
         ))}
+      </div>
+      <div class="mt-3 flex items-center justify-between">
+        <a href="/vi-intel" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full profiles →</a>
+        <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI confirmed cast: Lucia Caminos and Jason Duval as leads, plus 6 supporting characters. Official character profiles." url="https://gtavi.ai/vi-intel" size="sm" label="Share" /></div>
       </div>
     </section>
 
@@ -282,11 +356,21 @@ const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_pla
                   const price    = g.price_usd_launch    ?? (g as any).price_usd_estimate;
                   const map      = g.map_size_km2        ?? (g as any).map_size_km2_estimate;
                   const vehicles = g.vehicle_count       ?? (g as any).vehicle_count_estimate;
+                  const cover    = RELEASE_COVERS[g.short] ?? null;
                   return (
                     <tr class={`border-b border-[#1e1e23]/50 transition-colors hover:bg-white/2 ${isPred ? "text-gta-gold" : "text-zinc-300"}`}>
-                      <td class="px-5 py-2.5 font-semibold">
-                        {g.short}
-                        {isPred && <span class="ml-1.5 text-[9px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1 py-0.5 rounded uppercase tracking-widest align-middle">est</span>}
+                      <td class="px-5 py-2 font-semibold">
+                        <div class="flex items-center gap-2.5">
+                          {cover ? (
+                            <img src={cover} alt={g.short} class={`rounded object-cover shrink-0 ${isPred ? "w-7 h-9 border border-gta-gold/40" : "w-6 h-8 border border-[#2a2a31]"}`} loading="lazy" />
+                          ) : (
+                            <div class="w-6 h-8 rounded border border-[#1e1e23] shrink-0" style="background:#0a0a0d"></div>
+                          )}
+                          <span>
+                            {g.short}
+                            {isPred && <span class="ml-1 text-[9px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1 py-0.5 rounded uppercase tracking-widest align-middle">est</span>}
+                          </span>
+                        </div>
                       </td>
                       <td class="px-4 py-2.5 text-right text-zinc-600">{year ?? "—"}</td>
                       <td class="px-4 py-2.5 text-right">{price ? `$${price.toFixed(0)}` : <span class="text-zinc-700">—</span>}</td>
@@ -298,8 +382,9 @@ const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_pla
               </tbody>
             </table>
           </div>
-          <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
             <span class="text-[10px] text-zinc-700 font-mono">est = estimated · sources: Rockstar, Broughy1322, community records</span>
+            <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA franchise history: GTA III in 2001 → GTA VI in 2026. 30 years of growth — vehicles, map size, price." url="https://gtavi.ai" size="sm" label="Share" /></div>
           </div>
         </div>
       </div>

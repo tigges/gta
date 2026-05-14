@@ -2,6 +2,15 @@
 import releaseData from "../../data/shared/releases.json";
 
 const games = releaseData.games;
+
+const COVERS: Record<string, string> = {
+  "GTA III": "/assets/covers/gta-3.jpg",
+  "GTA VC":  "/assets/covers/gta-vc.jpg",
+  "GTA SA":  "/assets/covers/gta-sa.jpg",
+  "GTA IV":  "/assets/covers/gta-4.jpg",
+  "GTA V":   "/assets/covers/gta-5.jpg",
+  "GTA VI":  "/assets/covers/gta-6.jpg",
+};
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -11,7 +20,7 @@ const games = releaseData.games;
   </div>
 
   <div class="relative p-5">
-    <!-- Vertical spine -->
+    <!-- Vertical spine — offset to sit behind covers for entries with art -->
     <div class="absolute left-[4.5rem] top-5 bottom-5 w-px bg-[#1e1e23]"></div>
 
     <div class="flex flex-col gap-0">
@@ -21,18 +30,19 @@ const games = releaseData.games;
         const gap = game.gap_years_from_prev ?? (game as any).gap_years_from_prev_estimate;
         const vehicles = game.vehicle_count ?? (game as any).vehicle_count_estimate;
         const mapSize = game.map_size_km2 ?? (game as any).map_size_km2_estimate;
+        const cover = COVERS[game.short] ?? null;
 
         return (
-          <div class="relative flex items-start gap-4 group pb-7 last:pb-0">
+          <div class="relative flex items-start gap-3 group pb-6 last:pb-0">
             <!-- Year label -->
-            <div class="w-14 shrink-0 text-right pt-0.5">
+            <div class="w-14 shrink-0 text-right pt-1">
               <span class={`text-[11px] font-mono font-bold ${isPred ? "text-gta-gold" : "text-zinc-500"}`}>
                 {year}{isPred ? "?" : ""}
               </span>
             </div>
 
             <!-- Dot -->
-            <div class="relative z-10 mt-1 shrink-0">
+            <div class="relative z-10 mt-1.5 shrink-0">
               <div class={`w-2.5 h-2.5 rounded-full border ${
                 isPred
                   ? "border-gta-gold bg-gta-gold/20"
@@ -40,8 +50,28 @@ const games = releaseData.games;
               } transition-colors`}></div>
             </div>
 
+            <!-- Cover thumbnail (mainline III+) -->
+            {cover ? (
+              <div class="shrink-0">
+                <img
+                  src={cover}
+                  alt={game.short}
+                  class={`object-cover rounded border transition-all duration-200 group-hover:scale-105 ${
+                    isPred
+                      ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10"
+                      : "w-9 h-12 border-[#2a2a31] group-hover:border-zinc-600"
+                  }`}
+                  loading="lazy"
+                />
+              </div>
+            ) : (
+              <div class={`shrink-0 rounded border border-[#1e1e23] flex items-center justify-center w-9 h-12 mt-0.5`} style="background:#0a0a0d">
+                <span class="text-[8px] font-mono text-zinc-700 leading-tight text-center px-0.5">{game.short}</span>
+              </div>
+            )}
+
             <!-- Content -->
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0 pt-0.5">
               <div class="flex items-baseline gap-2 flex-wrap">
                 <span class={`font-mono font-semibold text-sm ${isPred ? "text-gta-gold" : "text-zinc-200"}`}>
                   {game.short}
@@ -77,17 +107,19 @@ const games = releaseData.games;
 
   <!-- Gap trend chart -->
   <div class="mt-4 pt-4 border-t border-[#1e1e23]">
-    <p class="text-[10px] font-mono text-zinc-600 mb-3 uppercase tracking-[0.2em]">Release gap (years)</p>
+    <p class="text-[10px] font-mono text-zinc-600 mb-3 uppercase tracking-[0.2em] px-5">Release gap (years)</p>
     <div id="gap-chart" class="w-full h-24" data-games={JSON.stringify(
       games.filter((g) => (g.gap_years_from_prev ?? (g as any).gap_years_from_prev_estimate) != null)
         .map((g) => ({
           short: g.short,
           gap: g.gap_years_from_prev ?? (g as any).gap_years_from_prev_estimate,
           isPred: g.is_prediction,
+          cover: COVERS[g.short] ?? null,
         }))
     )}></div>
   </div>
   </div>
+
 </div>
 
 <script>
