@@ -110,6 +110,48 @@ python3 scrapers/fetch_trailers.py
 
 ---
 
+## Version tagging — MANDATORY on every PR / release
+
+**This must happen on every merge to `main`, no exceptions.**
+
+### Rule
+
+1. **Before starting work:** tag the current `main` tip with `release/v{current_version}` if that tag doesn't already exist.
+   ```bash
+   git tag release/v$(node -e "const v=require('./src/config/version.ts').SITE_VERSION??'';console.log(v)" 2>/dev/null || grep SITE_VERSION src/config/version.ts | head -1 | grep -oP '"\K[^"]+') origin/main
+   git push origin release/v<old-version>
+   ```
+   Or simply: `git tag release/v1.X.Y origin/main && git push origin release/v1.X.Y`
+
+2. **In the PR branch:** bump `src/config/version.ts` to the next version.
+   - Patch bump (`1.5.0 → 1.5.1`) for fixes, data-only changes, minor UI tweaks
+   - Minor bump (`1.5.0 → 1.6.0`) for new features, new pages, new charts, new scrapers
+   - Major bump (`1.x → 2.0`) for full redesigns
+
+3. **Update the date** in `SITE_VERSION_DATE` to today (`YYYY-MM-DD`).
+
+4. **Commit** the version bump as a standalone commit: `chore: bump version to v1.6.0`
+
+5. **Merge to main** — the GitHub Actions deploy workflow fires automatically.
+
+### Example
+
+```bash
+# 1. Bookmark current main
+git tag release/v1.5.0 origin/main
+git push origin release/v1.5.0
+
+# 2. In your feature branch, update src/config/version.ts
+#    SITE_VERSION = "1.6.0", SITE_VERSION_DATE = "2026-05-14"
+
+# 3. Commit
+git commit -m "chore: bump version to v1.6.0"
+```
+
+The version is displayed in the ops bar on every page (`Base.astro`) and in the footer, so it is always visible on the live site after deploy.
+
+---
+
 ## Git & branch conventions
 
 - All agent branches use prefix `cursor/` and suffix `-38ec`
