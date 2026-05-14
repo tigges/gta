@@ -3,23 +3,13 @@ Scrape GTA V PC concurrent player history from SteamCharts.
 URL: https://steamcharts.com/app/271590
 """
 
-import re
-import sys
-
-import requests
+import cloudscraper
 from bs4 import BeautifulSoup
 
 from utils import has_changed, now_iso, write_json
 
 URL = "https://steamcharts.com/app/271590"
 OUT_PATH = "meta/steam-players.json"
-
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (compatible; GTA-Intelligence-Bot/1.0; "
-        "+https://github.com/tigges/gta)"
-    )
-}
 
 
 def parse_number(raw: str) -> int | None:
@@ -31,7 +21,8 @@ def parse_number(raw: str) -> int | None:
 
 
 def fetch() -> list[dict]:
-    resp = requests.get(URL, headers=HEADERS, timeout=30)
+    scraper = cloudscraper.create_scraper(browser={"browser": "chrome", "platform": "windows"})
+    resp = scraper.get(URL, timeout=30)
     resp.raise_for_status()
 
     soup = BeautifulSoup(resp.text, "lxml")
