@@ -1,4 +1,6 @@
 ---
+import { SITE_VERSION_LABEL, SITE_VERSION_DATE } from "../config/version";
+
 interface Props {
   title?: string;
   description?: string;
@@ -59,7 +61,10 @@ const fullTitle = title === "GTAVI.AI" ? "GTAVI.AI" : `${title} — GTAVI.AI`;
           </span>
           <span class="hidden sm:block text-[10px] font-mono text-zinc-700">GTA VI · Nov 19 2026</span>
         </div>
-        <span class="text-[10px] font-mono text-zinc-700 tracking-widest">GTAVI.AI — data updated nightly</span>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono text-zinc-700 tracking-widest">GTAVI.AI</span>
+          <span class="text-[10px] font-mono text-zinc-700 border border-[#2a2a31] rounded px-1">{SITE_VERSION_LABEL}</span>
+        </div>
       </div>
     </div>
 
@@ -117,6 +122,7 @@ const fullTitle = title === "GTAVI.AI" ? "GTAVI.AI" : `${title} — GTAVI.AI`;
               <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">Data refreshed nightly</span>
             </div>
             <span class="text-[10px] font-mono text-zinc-700">GTA VI launches Nov 19, 2026</span>
+            <span class="text-[10px] font-mono text-zinc-800">{SITE_VERSION_LABEL} · {SITE_VERSION_DATE}</span>
           </div>
         </div>
       </div>
