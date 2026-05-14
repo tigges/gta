@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
+import ShareButton from "../components/ShareButton.astro";
 
 import salesData      from "../../data/franchise/sales.json";
 import metacriticData from "../../data/franchise/metacritic.json";
@@ -109,8 +110,9 @@ const dlcContentCount = dlcData.updates.filter((d: any) => d.category === "conte
         </div>
         <div id="franchise-sales-chart" class="w-full" style="height:300px"
           data-titles={JSON.stringify(salesData.titles)}></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Take-Two IR · NPD/ELSPA · DFC Intelligence (GTA VI projection)</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V sold 225M copies. Here's how every GTA title stacks up — franchise sales velocity charted." url="https://gtavi.ai/franchise" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -159,9 +161,9 @@ const dlcContentCount = dlcData.updates.filter((d: any) => d.category === "conte
             );
           })}
         </div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">~ = estimated · Sources: Rockstar, community analysis</span>
-        </div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI's map is estimated at ~150km² — 2× GTA V. Here's every GTA map size progression since 2001." url="https://gtavi.ai/franchise" size="sm" label="Share" /></div>
       </div>
     </section>
 
@@ -186,9 +188,9 @@ const dlcContentCount = dlcData.updates.filter((d: any) => d.category === "conte
         </div>
         <div id="review-chart" class="w-full" style="height:260px"
           data-scores={JSON.stringify(metacriticData.titles)}></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Metacritic.com · scores are permanent historical records</span>
-        </div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA SA had perfect critic/user alignment. GTA IV opened a 22-point gap that tracks directly with monetisation. Will GTA VI close it?" url="https://gtavi.ai/franchise" size="sm" label="Share" /></div>
       </div>
     </section>
 
@@ -209,8 +211,9 @@ const dlcContentCount = dlcData.updates.filter((d: any) => d.category === "conte
           data-players={JSON.stringify(steamData.data)}
           data-dlc={JSON.stringify(dlcData.updates.filter((d: any) => d.category === "major"))}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: SteamCharts · updated {new Date(steamData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V still pulls tens of thousands of Steam players daily, 11 years after launch. The audience GTA VI inherits." url="https://gtavi.ai/franchise" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
