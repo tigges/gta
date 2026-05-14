@@ -1,0 +1,631 @@
+---
+import Base from "../layouts/Base.astro";
+
+import salesData   from "../../data/franchise/sales.json";
+import steamData   from "../../data/gta-5/meta/steam-players.json";
+import dlcData     from "../../data/gta-5/dlc/timeline.json";
+import gta5Trends  from "../../data/gta-5/trends/search-interest.json";
+import gta6Trends  from "../../data/gta-6/trends/search-interest.json";
+import vehicleData from "../../data/gta-5/vehicles/performance.json";
+import velocityData from "../../data/gta-6/trailer-velocity.json";
+
+const CATEGORIES = ["All", "Franchise", "Performance", "Community"] as const;
+
+// Pre-compute stats for header strip
+const gta5 = salesData.titles.find(t => t.id === "gta-5");
+const gta6 = salesData.titles.find(t => t.id === "gta-6");
+const t1 = velocityData.trailers.find((t: any) => t.youtube_id === "QdBZY2fkU-0");
+const t2 = velocityData.trailers.find((t: any) => t.youtube_id === "VQRLujxTm3c");
+const t1Views = t1?.snapshots?.at(-1)?.views ?? 0;
+const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
+---
+
+<Base
+  title="Charts"
+  description="GTA franchise data visualised — sales velocity, player history, search hype, vehicle performance and more."
+>
+
+  <!-- Page header -->
+  <section class="border-b border-[#1e1e23]" style="background:#0a0a0d">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <div class="flex items-start justify-between flex-wrap gap-4">
+        <div>
+          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Data Intelligence</div>
+          <h1 class="text-3xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">Charts</h1>
+          <p class="text-sm text-zinc-400 max-w-lg" style="font-family:'Inter',sans-serif">
+            The GTA franchise quantified. Every chart is filterable, sourced, and updated nightly.
+            This is the primary differentiator — no other GTA site visualises this data.
+          </p>
+        </div>
+        <!-- Category filters -->
+        <div class="flex flex-wrap gap-2 self-end pb-1">
+          {CATEGORIES.map(cat => (
+            <button
+              class="chart-filter px-3 py-1.5 rounded text-[11px] font-mono border transition-all"
+              class:list={[
+                cat === "All"
+                  ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8"
+                  : "border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+              ]}
+              data-filter={cat}
+            >{cat}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-10">
+
+    <!-- ═══════════════════════════════════════════════════════
+         CHART 1 — Franchise Sales Velocity  [FRANCHISE]
+    ═══════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Franchise">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-600 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Franchise</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Franchise Sales Velocity</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">units sold · millions</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-4">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              Franchise Sales Velocity — GTA III to GTA VI
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Total units sold per title · launch week · year 1 where known</div>
+          </div>
+          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-gta-gold/80 inline-block"></span>Total</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-gta-teal/80 inline-block"></span>Year 1</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm border border-gta-gold/40 bg-gta-gold/10 inline-block"></span>Projected</span>
+          </div>
+        </div>
+        <div id="sales-chart" class="w-full" style="height:340px"
+          data-titles={JSON.stringify(salesData.titles)}></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
+          <span class="text-[10px] text-zinc-700 font-mono">Sources: Take-Two IR · DFC Intelligence (GTA VI projection)</span>
+          <span class="text-[10px] text-zinc-700 font-mono">{salesData.last_updated.slice(0,10)}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CHART 2 — Pre-launch Search Hype Overlay  [COMMUNITY]
+    ═══════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Community">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-green-900/30 text-green-500 border border-green-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Community</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Pre-launch Search Hype — GTA V vs GTA VI</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">months before launch · Google Trends 0–100</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-4">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              Pre-launch Search Hype — GTA V vs GTA VI
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Both series normalised to months before launch. GTA VI running 3–4× hotter.</div>
+          </div>
+          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-zinc-500 inline-block rounded"></span>GTA V (2013)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-gta-gold inline-block rounded"></span>GTA VI (2026)</span>
+          </div>
+        </div>
+        <div id="hype-chart" class="w-full" style="height:300px"
+          data-gta5={JSON.stringify(gta5Trends.keywords.find(k => k.keyword === "GTA V"))}
+          data-gta6={JSON.stringify(gta6Trends.keywords.find(k => k.keyword === "GTA 6"))}
+          data-gta5launch="2013-09-17"
+          data-gta6launch="2026-11-19"
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: Google Trends via pytrends · updated {new Date(gta5Trends.last_updated).toLocaleDateString("en-GB", {month:"short",year:"numeric"})}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CHART 3 — GTA V Player History + DLC  [COMMUNITY]
+    ═══════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Community">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-green-900/30 text-green-500 border border-green-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Community</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Player History</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{steamData.data.length} months · DLC events annotated</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-4">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              GTA V Steam Player History 2015–2026 + DLC Events
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Monthly avg concurrent · major GTA Online updates annotated · audience GTA VI inherits</div>
+          </div>
+          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-gta-gold inline-block rounded"></span>Avg players</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 border-t border-dashed border-gta-gold/40 inline-block"></span>Peak</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-3 border-l border-[#2a2a31] inline-block"></span>DLC</span>
+          </div>
+        </div>
+        <div id="dlc-player-chart" class="w-full" style="height:320px"
+          data-players={JSON.stringify(steamData.data)}
+          data-dlc={JSON.stringify(dlcData.updates)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <span class="text-[10px] text-zinc-700 font-mono">Sources: SteamCharts · Rockstar Games official announcements · updated {new Date(steamData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CHART 4 — Vehicle Performance Top 25  [PERFORMANCE]
+    ═══════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Performance">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-red-900/30 text-red-500 border border-red-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Performance</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Vehicle Performance Benchmarks</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{vehicleData.vehicles.length} vehicles · Broughy1322 test track</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              GTA V Vehicle Performance — The Benchmark GTA VI Must Beat
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Top 25 fastest vehicles by lap time · Broughy1322 Rockford Hills test circuit</div>
+          </div>
+          <!-- Class filter -->
+          <div class="flex flex-wrap gap-1.5" id="class-filter-btns">
+            {["All","Supers","Sports","Muscle","Off-Road"].map(cls => (
+              <button
+                class="class-btn px-2 py-1 rounded text-[10px] font-mono border transition-all"
+                class:list={[
+                  cls === "All"
+                    ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8"
+                    : "border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+                ]}
+                data-class={cls}
+              >{cls}</button>
+            ))}
+          </div>
+        </div>
+        <div id="perf-chart" class="w-full overflow-hidden px-5 py-3"
+          data-vehicles={JSON.stringify(vehicleData.vehicles)}></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: Broughy1322 GTA Vehicle Performance Spreadsheet · updated {new Date(vehicleData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CHART 5 — Trailer View Velocity  [FRANCHISE]
+    ═══════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Franchise">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-600 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Franchise</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Trailer View Velocity</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">cumulative views · live snapshots</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+            GTA VI Trailer View Counts — Live
+          </div>
+          <div class="text-[11px] text-zinc-500 font-mono">Polled via YouTube Data API · snapshots accumulate over time to build velocity curve</div>
+        </div>
+        <!-- Stat cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
+          {(velocityData.trailers as any[]).map((t, i) => {
+            const latest = t.snapshots?.at(-1);
+            const views = latest?.views ?? 0;
+            const likes = latest?.likes ?? 0;
+            return (
+              <div class="px-6 py-5">
+                <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-3">
+                  {i === 0 ? "Trailer 1 · Dec 4 2023" : "Trailer 2 · May 6 2025"}
+                </div>
+                <div class="text-3xl font-bold font-mono text-gta-bright mb-1">
+                  {(views / 1_000_000).toFixed(1)}M
+                </div>
+                <div class="text-[11px] text-zinc-500 font-mono">views</div>
+                <div class="mt-3 flex items-center gap-4 text-[11px] font-mono text-zinc-600">
+                  <span>👍 {(likes / 1_000_000).toFixed(2)}M likes</span>
+                  {i === 0 && <span class="text-gta-teal">24h record holder</span>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: YouTube Data API · polled {new Date(velocityData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Base>
+
+<script>
+  import * as d3 from "d3";
+
+  // ── Category filter ─────────────────────────────────────────
+  document.querySelectorAll<HTMLButtonElement>(".chart-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const filter = btn.dataset.filter!;
+      document.querySelectorAll<HTMLButtonElement>(".chart-filter").forEach(b => {
+        const active = b.dataset.filter === filter;
+        b.className = b.className
+          .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
+          .replace(/border-\[#2a2a31\]|text-zinc-500/g, "")
+          .trim();
+        b.classList.add(
+          ...(active
+            ? ["border-gta-gold/40", "text-gta-gold", "bg-gta-gold/8"]
+            : ["border-[#2a2a31]", "text-zinc-500"])
+        );
+      });
+      document.querySelectorAll<HTMLElement>(".chart-block").forEach(block => {
+        const cat = block.dataset.category!;
+        block.style.display = (filter === "All" || cat === filter) ? "" : "none";
+      });
+    });
+  });
+
+  // ── CHART 1 — Franchise Sales ────────────────────────────────
+  (function buildSalesChart() {
+    const el = document.getElementById("sales-chart");
+    if (!el) return;
+    const titles: any[] = JSON.parse(el.dataset.titles || "[]");
+
+    const margin = { top: 20, right: 30, bottom: 50, left: 60 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg")
+      .attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleBand()
+      .domain(titles.map(t => t.short))
+      .range([0, W]).padding(0.25);
+
+    const maxVal = d3.max(titles, t => t.total_units_m ?? t.year1_units_m ?? 0) ?? 1;
+    const y = d3.scaleLinear().domain([0, maxVal * 1.15]).range([H, 0]);
+
+    // Grid
+    svg.append("g")
+      .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(d => `${d}M`))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"))
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "11").attr("font-family", "monospace"));
+
+    // Bars — total (background)
+    titles.forEach(t => {
+      const totalH = H - y(t.total_units_m ?? 0);
+      const isPred = t.is_prediction;
+      const bx = x(t.short) ?? 0;
+      const bw = x.bandwidth();
+
+      if (t.total_units_m) {
+        svg.append("rect")
+          .attr("x", bx).attr("y", y(t.total_units_m))
+          .attr("width", bw).attr("height", totalH)
+          .attr("rx", 3)
+          .attr("fill", isPred ? "none" : "#f59e0b")
+          .attr("fill-opacity", isPred ? 0 : 0.75)
+          .attr("stroke", isPred ? "#f59e0b" : "none")
+          .attr("stroke-width", isPred ? 1.5 : 0)
+          .attr("stroke-dasharray", isPred ? "5,3" : "0");
+      }
+
+      // Year 1 overlay
+      if (t.year1_units_m) {
+        svg.append("rect")
+          .attr("x", bx + bw * 0.1).attr("y", y(t.year1_units_m))
+          .attr("width", bw * 0.8).attr("height", H - y(t.year1_units_m))
+          .attr("rx", 2)
+          .attr("fill", "#0d9488").attr("fill-opacity", isPred ? 0.5 : 0.85);
+      }
+
+      // Value label
+      const labelVal = t.total_units_m ?? t.year1_units_m;
+      if (labelVal) {
+        svg.append("text")
+          .attr("x", bx + bw / 2)
+          .attr("y", y(labelVal) - 5)
+          .attr("text-anchor", "middle")
+          .attr("fill", isPred ? "#f59e0b" : "#a1a1aa")
+          .attr("font-size", "11").attr("font-family", "monospace")
+          .text(isPred ? `~${labelVal}M*` : `${labelVal}M`);
+      }
+    });
+
+    // X axis
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x))
+      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll(".tick line").remove())
+      .call(g => g.selectAll("text").attr("fill", "#71717a").attr("font-size", "12").attr("font-family", "monospace").attr("dy", "1.2em"));
+  })();
+
+  // ── CHART 2 — Pre-launch Hype Overlay ───────────────────────
+  (function buildHypeChart() {
+    const el = document.getElementById("hype-chart");
+    if (!el) return;
+
+    const gta5kw: { data: {date:string;value:number}[] } | null = JSON.parse(el.dataset.gta5 || "null");
+    const gta6kw: { data: {date:string;value:number}[] } | null = JSON.parse(el.dataset.gta6 || "null");
+    const gta5Launch = new Date(el.dataset.gta5launch!);
+    const gta6Launch = new Date(el.dataset.gta6launch!);
+
+    if (!gta5kw || !gta6kw) return;
+
+    // Convert to months-before-launch
+    function toMonthsBefore(dateStr: string, launchDate: Date): number {
+      const d = new Date(dateStr);
+      const diffMs = launchDate.getTime() - d.getTime();
+      return -(diffMs / (1000 * 60 * 60 * 24 * 30.44));
+    }
+
+    const gta5Series = gta5kw.data
+      .map(d => ({ monthsBefore: toMonthsBefore(d.date, gta5Launch), value: d.value }))
+      .filter(d => d.monthsBefore >= -36 && d.monthsBefore <= 0);
+
+    const gta6Series = gta6kw.data
+      .map(d => ({ monthsBefore: toMonthsBefore(d.date, gta6Launch), value: d.value }))
+      .filter(d => d.monthsBefore >= -36 && d.monthsBefore <= 0);
+
+    const margin = { top: 16, right: 20, bottom: 36, left: 44 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg")
+      .attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const xDom: [number, number] = [-36, 0];
+    const x = d3.scaleLinear().domain(xDom).range([0, W]);
+    const y = d3.scaleLinear().domain([0, 100]).range([H, 0]);
+
+    // Grid
+    svg.append("g")
+      .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+
+    const line = d3.line<{monthsBefore:number;value:number}>()
+      .x(d => x(d.monthsBefore)).y(d => y(d.value)).curve(d3.curveMonotoneX);
+
+    // GTA V line (muted)
+    if (gta5Series.length > 0) {
+      svg.append("path").datum(gta5Series)
+        .attr("fill", "none").attr("stroke", "#71717a")
+        .attr("stroke-width", 1.5).attr("opacity", 0.7)
+        .attr("d", line as any);
+    }
+
+    // GTA VI line (gold)
+    if (gta6Series.length > 0) {
+      // Area fill under GTA VI
+      const area = d3.area<{monthsBefore:number;value:number}>()
+        .x(d => x(d.monthsBefore)).y0(H).y1(d => y(d.value)).curve(d3.curveMonotoneX);
+      svg.append("path").datum(gta6Series)
+        .attr("fill", "url(#hype-grad)").attr("d", area as any);
+
+      const defs = svg.append("defs");
+      const grad = defs.append("linearGradient").attr("id","hype-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
+      grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.2);
+      grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.01);
+
+      svg.append("path").datum(gta6Series)
+        .attr("fill", "none").attr("stroke", "#f59e0b")
+        .attr("stroke-width", 2).attr("d", line as any);
+    }
+
+    // Launch line (x=0)
+    svg.append("line")
+      .attr("x1", x(0)).attr("x2", x(0)).attr("y1", 0).attr("y2", H)
+      .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "4,3").attr("opacity", 0.5);
+    svg.append("text")
+      .attr("x", x(0) - 4).attr("y", 10)
+      .attr("text-anchor", "end").attr("fill", "#ef4444")
+      .attr("font-size", "9").attr("font-family", "monospace").text("Launch");
+
+    // Axes
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(9).tickFormat(d => `${Math.round(+d)}m`))
+      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
+
+    svg.append("g")
+      .call(d3.axisLeft(y).ticks(5))
+      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
+
+    svg.append("text").attr("x", x(-30)).attr("y", 14)
+      .attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace")
+      .text("← 36 months before launch");
+  })();
+
+  // ── CHART 3 — Player History + DLC ──────────────────────────
+  (function buildDLCChart() {
+    const el = document.getElementById("dlc-player-chart");
+    if (!el) return;
+
+    const MONTHS: Record<string,number> = {January:0,February:1,March:2,April:3,May:4,June:5,July:6,August:7,September:8,October:9,November:10,December:11};
+    const raw: any[] = JSON.parse(el.dataset.players || "[]");
+    const dlc: any[] = JSON.parse(el.dataset.dlc || "[]");
+
+    const data = raw.map(d => ({ date: new Date(d.year, MONTHS[d.month]??0), avg: d.avg_players, peak: d.peak_players }));
+    const majorDLC = dlc.filter(d => d.category === "major" || d.category === "launch");
+
+    const margin = { top: 20, right: 20, bottom: 32, left: 60 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg")
+      .attr("width", "100%").attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleTime().domain(d3.extent(data, d => d.date) as [Date,Date]).range([0, W]);
+    const y = d3.scaleLinear().domain([0, (d3.max(data, d => d.peak)??0)*1.1]).range([H, 0]);
+
+    // Grid
+    svg.append("g")
+      .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+
+    // DLC event lines (major only, no label clutter)
+    majorDLC.forEach(d => {
+      const dx = x(new Date(d.date));
+      svg.append("line")
+        .attr("x1", dx).attr("x2", dx).attr("y1", 0).attr("y2", H)
+        .attr("stroke", "#2a2a31").attr("stroke-width", 1).attr("stroke-dasharray", "2,4");
+    });
+
+    // Gradient
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id","pc-grad2").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
+    grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.2);
+    grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.02);
+
+    svg.append("path").datum(data)
+      .attr("fill", "url(#pc-grad2)")
+      .attr("d", d3.area<any>().x(d=>x(d.date)).y0(H).y1(d=>y(d.avg)).curve(d3.curveMonotoneX));
+
+    svg.append("path").datum(data)
+      .attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",1)
+      .attr("stroke-dasharray","4,3").attr("opacity",0.35)
+      .attr("d", d3.line<any>().x(d=>x(d.date)).y(d=>y(d.peak)).curve(d3.curveMonotoneX));
+
+    svg.append("path").datum(data)
+      .attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",2)
+      .attr("d", d3.line<any>().x(d=>x(d.date)).y(d=>y(d.avg)).curve(d3.curveMonotoneX));
+
+    // Annotate a few key DLC updates with labels
+    const labeled = ["The Cayo Perico Heist","The Diamond Casino & Resort","GTA Online Launch","Heists"];
+    majorDLC.filter(d => labeled.includes(d.title)).forEach(d => {
+      const dx = x(new Date(d.date));
+      svg.append("text")
+        .attr("x", dx + 3).attr("y", 12)
+        .attr("fill", "#3f3f46").attr("font-size", "8").attr("font-family", "monospace")
+        .text(d.label);
+    });
+
+    // Axes
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
+      .call(g => g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
+
+    svg.append("g")
+      .call(d3.axisLeft(y).ticks(5).tickFormat(d => `${Math.round(+d/1000)}k`))
+      .call(g => g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
+  })();
+
+  // ── CHART 4 — Vehicle Performance ───────────────────────────
+  (function buildPerfChart() {
+    const el = document.getElementById("perf-chart");
+    if (!el) return;
+
+    let all: any[] = JSON.parse(el.dataset.vehicles || "[]");
+    let activeClass = "All";
+
+    const CLASS_COLORS: Record<string,string> = {
+      Supers:"#f59e0b", Sports:"#22c55e", "Sports Classics":"#86efac",
+      Muscle:"#ef4444", Coupes:"#a78bfa", Sedans:"#38bdf8",
+      SUVs:"#fb923c", "Off-Road":"#a3e635", Military:"#6b7280",
+    };
+
+    function classColor(cls: string) {
+      return CLASS_COLORS[cls.replace(/ \(NR\)$/,"")] ?? "#71717a";
+    }
+
+    function render() {
+      el.innerHTML = "";
+      const filtered = all
+        .filter(v => v.lap_seconds !== null)
+        .filter(v => activeClass === "All" || v.class.replace(/ \(NR\)$/,"") === activeClass)
+        .sort((a,b) => (a.lap_seconds??999)-(b.lap_seconds??999))
+        .slice(0, 25);
+
+      if (!filtered.length) {
+        el.innerHTML = `<p class="text-xs text-zinc-600 font-mono py-4">No data for this class.</p>`;
+        return;
+      }
+
+      const barH = 24, gap = 3;
+      const margin = { top: 4, right: 100, bottom: 4, left: 150 };
+      const W = el.clientWidth - margin.left - margin.right;
+      const H = filtered.length * (barH + gap);
+
+      const svg = d3.select(el).append("svg")
+        .attr("width","100%")
+        .attr("viewBox", `0 0 ${el.clientWidth} ${H + margin.top + margin.bottom}`)
+        .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const minL = d3.min(filtered, d => d.lap_seconds) ?? 50;
+      const maxL = d3.max(filtered, d => d.lap_seconds) ?? 70;
+      const x = d3.scaleLinear().domain([minL-0.5, maxL+0.5]).range([W, 0]);
+
+      filtered.forEach((v, i) => {
+        const y = i*(barH+gap);
+        const bw = x(minL-0.5) - x(v.lap_seconds ?? maxL);
+        const color = classColor(v.class);
+
+        svg.append("rect").attr("x", x(v.lap_seconds??maxL)).attr("y",y)
+          .attr("width", Math.max(bw,2)).attr("height",barH).attr("rx",3)
+          .attr("fill",color).attr("opacity",0.85);
+
+        svg.append("text").attr("x",-8).attr("y",y+barH/2)
+          .attr("text-anchor","end").attr("dominant-baseline","middle")
+          .attr("fill","#d4d4d8").attr("font-size","11").attr("font-family","monospace")
+          .text(v.name.length > 20 ? v.name.slice(0,19)+"…" : v.name);
+
+        const lbl = v.top_speed_mph ? `${v.lap_time}  ${v.top_speed_mph}mph` : v.lap_time ?? "";
+        svg.append("text").attr("x", W+6).attr("y", y+barH/2)
+          .attr("dominant-baseline","middle")
+          .attr("fill",color).attr("font-size","10").attr("font-family","monospace").attr("font-weight","500")
+          .text(lbl);
+
+        if (i < 3) {
+          svg.append("rect").attr("x", x(v.lap_seconds??maxL)+6).attr("y",y+4)
+            .attr("width",18).attr("height",16).attr("rx",2).attr("fill","#09090b").attr("opacity",0.7);
+          svg.append("text").attr("x",x(v.lap_seconds??maxL)+15).attr("y",y+barH/2)
+            .attr("text-anchor","middle").attr("dominant-baseline","middle")
+            .attr("fill",color).attr("font-size","9").attr("font-family","monospace").attr("font-weight","700")
+            .text(`#${i+1}`);
+        }
+      });
+    }
+
+    render();
+
+    document.querySelectorAll<HTMLButtonElement>(".class-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll<HTMLButtonElement>(".class-btn").forEach(b => {
+          const act = b.dataset.class === btn.dataset.class!;
+          b.classList.toggle("border-gta-gold/40", act);
+          b.classList.toggle("text-gta-gold", act);
+          b.classList.toggle("bg-gta-gold/8", act);
+          b.classList.toggle("border-[#2a2a31]", !act);
+          b.classList.toggle("text-zinc-500", !act);
+        });
+        activeClass = btn.dataset.class!;
+        render();
+      });
+    });
+  })();
+</script>
