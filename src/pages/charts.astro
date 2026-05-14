@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
+import ShareButton from "../components/ShareButton.astro";
 
 import salesData   from "../../data/franchise/sales.json";
 import steamData   from "../../data/gta-5/meta/steam-players.json";
@@ -103,7 +104,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-600 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Franchise</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Franchise Sales Velocity</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">units sold · millions</span>
+        <ShareButton text="GTA V sold 225M copies. Here's how every GTA title stacks up — franchise sales velocity visualised." url="https://gtavi.ai/charts" size="sm" label="Share" />
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-4">
@@ -137,6 +138,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Take-Two IR · DFC Intelligence (GTA VI projection)</span>
           <span class="text-[10px] text-zinc-700 font-mono">{salesData.last_updated.slice(0,10)}</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -149,7 +151,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[9px] font-mono bg-green-900/30 text-green-500 border border-green-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Pre-launch Search Hype — GTA V vs GTA VI</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">months before launch · Google Trends 0–100</span>
+        <ShareButton text="GTA VI search interest is running 3–4× hotter than GTA V at the same point before launch. The data is remarkable." url="https://gtavi.ai/charts" size="sm" label="Share" />
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-4">
@@ -190,8 +192,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           data-gta5launch="2013-09-17"
           data-gta6launch="2026-11-19"
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Google Trends via pytrends · updated {new Date(gta5Trends.last_updated).toLocaleDateString("en-GB", {month:"short",year:"numeric"})}</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -224,8 +227,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           data-players={JSON.stringify(steamData.data)}
           data-dlc={JSON.stringify(dlcData.updates)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: SteamCharts · Rockstar Games official announcements · updated {new Date(steamData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -265,8 +269,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         </div>
         <div id="perf-chart" class="w-full overflow-hidden px-5 py-3"
           data-vehicles={JSON.stringify(vehicleData.vehicles)}></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Broughy1322 GTA Vehicle Performance Spreadsheet · updated {new Date(vehicleData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -279,7 +284,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-600 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Franchise</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Trailer View Velocity</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">cumulative views · live snapshots</span>
+        <ShareButton text="GTA VI Trailer 1 set the YouTube record in 24 hours. It now has 279M views. Trailer 2: 161M. The hype is unlike anything in gaming." url="https://gtavi.ai/charts" size="sm" label="Share" />
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23]">
@@ -329,8 +334,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
             );
           })}
         </div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: YouTube Data API · polled {new Date(velocityData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -369,6 +375,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: SEC EDGAR Take-Two 8-K filings · Rockstar Games official announcements</span>
           <span class="text-[10px] text-zinc-700 font-mono">Updated {new Date(delayData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -398,8 +405,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           data-milestones={JSON.stringify(redditData.historical_milestones)}
           data-trends={JSON.stringify(gta6Trends.keywords.find(k => k.keyword === "GTA 6"))}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: r/GrandTheftAutoVI community records · Google Trends via pytrends · {redditData.credentials_required ? "Live Reddit polling needs REDDIT_CLIENT_ID secret" : "Live polling active"}</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -423,8 +431,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         </div>
         <div id="entertainment-chart" class="w-full" style="height:420px"
           data-entries={JSON.stringify(entertainData.entries.slice(0, 14))}></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Box Office Mojo (worldwide lifetime) · Take-Two IR · Spotify IR · DFC Intelligence · *projected</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -474,8 +483,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           data-gta5launch="2013-09-17"
           data-gta6launch="2026-11-19"
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Google Trends via pytrends · r/GrandTheftAutoVI community records</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -519,8 +529,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           data-titles={JSON.stringify(cpiData.titles)}
           data-base-cpi={cpiData.base_cpi}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: US Bureau of Labor Statistics CPI-U · Nominal prices from Rockstar/Take-Two</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -565,8 +576,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div id="divergence-chart" class="w-full" style="height:300px"
           data-scores={JSON.stringify(metacriticScores)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Metacritic.com · GTA VI prediction based on franchise trajectory</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -607,8 +619,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div id="trailer-discovery-chart" class="w-full px-5 py-4"
           data-trailers={JSON.stringify(trailerAnalysis.trailers)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTA VI.AI frame-by-frame analysis · official Rockstar trailers</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -633,8 +646,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div id="dlc-cadence-chart" class="w-full" style="height:300px"
           data-dlc={JSON.stringify(dlcData.updates.filter((u: any) => u.category === "major" || u.category === "launch"))}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Rockstar Games official announcements · GTA Online update history 2013–2024</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -659,8 +673,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div id="region-heatmap" class="w-full overflow-x-auto"
           data-regions={JSON.stringify(regionsData.regions)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Rockstar press kit · Trailer analysis · Leonida Intel community mapping</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -692,8 +707,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div id="revenue-split-chart" class="w-full" style="height:320px"
           data-years={JSON.stringify(revenueSplit.years)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Take-Two IR quarterly earnings · Wedbush Securities analyst estimates · DFC Intelligence (GTA VI)</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -728,8 +744,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           data-prices={JSON.stringify(ttwoStock.prices)}
           data-annotations={JSON.stringify(ttwoStock.annotations)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Yahoo Finance (TTWO) · Not investment advice · Updated {new Date(ttwoStock.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -754,8 +771,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div id="competitors-chart" class="w-full" style="height:380px"
           data-games={JSON.stringify(competitorData.games)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Publisher earnings · VGChartz · Metacritic · Google Trends · DFC Intelligence (GTA VI) · *predicted</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>
@@ -780,8 +798,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div id="business-profit-chart" class="w-full overflow-hidden px-5 py-4"
           data-businesses={JSON.stringify(businessData.businesses)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Online community benchmarks — GTABase, GTA Fandom Wiki · Updated for 2024 patches</span>
+          <span class="text-[10px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
         </div>
       </div>
     </section>

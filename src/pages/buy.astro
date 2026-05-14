@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 import Countdown from "../components/Countdown.astro";
+import NewsletterSignup from "../components/NewsletterSignup.astro";
 
 const LAUNCH_DATE = "2026-11-19";
 const LAUNCH_DISPLAY = "November 19, 2026";
@@ -487,6 +488,8 @@ const RETAILERS = [
         ))}
       </div>
     </section>
+
+    <NewsletterSignup variant="compact" />
 
     <CrossLinks context="buy" />
 
