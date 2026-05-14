@@ -71,6 +71,19 @@ jobs:
       - name: Fetch intelligence news feeds
         run: python scrapers/fetch_newswire.py
 
+      # ── GTA VI entities ────────────────────────────────────────────────────
+
+      - name: Fetch Leonida Intel entity index
+        run: python scrapers/fetch_leonida.py
+
+      # ── Franchise (supplementary) ──────────────────────────────────────────
+
+      - name: Fetch SEC EDGAR delay timeline
+        run: python scrapers/fetch_edgar.py
+
+      - name: Fetch Box Office entertainment comparisons
+        run: python scrapers/fetch_boxoffice.py
+
       # ── Commit ─────────────────────────────────────────────────────────────
 
       - name: Commit updated data files
