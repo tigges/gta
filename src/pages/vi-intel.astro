@@ -12,6 +12,7 @@ import releaseData     from "../../data/shared/releases.json";
 import gta6Trends      from "../../data/gta-6/trends/search-interest.json";
 import featuresData    from "../../data/gta-6/features.json";
 import delayData       from "../../data/gta-6/delay-timeline.json";
+import trailerAnalysis from "../../data/gta-6/trailer-analysis.json";
 
 const predictions    = predictionsData.predictions as Prediction[];
 const trailersData   = trailersDataRaw as TrailersData;
@@ -20,6 +21,12 @@ const heroTrailer    = trailers[1] ?? trailers[0]; // prefer Trailer 2 for hero
 const trendsSince    = gta6Trends.keywords[0]?.data[0]?.date?.slice(0, 4) ?? "2020";
 const trendsUntil    = gta6Trends.keywords[0]?.data.at(-1)?.date?.slice(0, 4) ?? "2026";
 const totalTrendPts  = gta6Trends.keywords.reduce((s: number, k: any) => s + k.data.length, 0);
+const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trailer: any) => {
+  const byType: Record<string,number> = {};
+  for (const e of trailer.events) byType[e.type] = (byType[e.type] ?? 0) + 1;
+  const confirmedCount: number = trailer.events.filter((e: any) => e.confidence === "confirmed").length;
+  return { ...trailer, byType, confirmedCount };
+});
 ---
 
 <Base
@@ -144,6 +151,98 @@ const totalTrendPts  = gta6Trends.keywords.reduce((s: number, k: any) => s + k.d
               </div>
             </a>
           ))}
+        </div>
+      </section>
+    )}
+
+    <!-- ═══════════════════════════════════════════════════════
+         TRAILER ANALYSIS
+    ═══════════════════════════════════════════════════════ -->
+    {analysisTrailers.length > 0 && (
+      <section>
+        <div class="flex items-center gap-3 mb-7">
+          <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
+          <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Entity Analysis</span>
+          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <span class="text-[10px] font-mono text-zinc-700">Frame-by-frame · {analysisTrailers.reduce((s: number, t: any) => s + t.total_entities, 0)} reveals across {analysisTrailers.length} trailers</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {analysisTrailers.map((trailer: any) => {
+            const { byType, confirmedCount } = trailer;
+            return (
+              <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+                <!-- Trailer header -->
+                <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between gap-3 flex-wrap">
+                  <div>
+                    <div class="text-sm font-semibold text-zinc-200 mb-0.5" style="font-family:'Inter',sans-serif">{trailer.title}</div>
+                    <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-600">
+                      <span>{trailer.published_at}</span>
+                      <span class="text-zinc-800">·</span>
+                      <span>{Math.floor(trailer.duration_sec / 60)}:{String(trailer.duration_sec % 60).padStart(2,"0")} runtime</span>
+                      <span class="text-zinc-800">·</span>
+                      <span>{trailer.total_entities} entities</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 border-gta-gold/20 text-gta-gold">
+                      {confirmedCount} confirmed
+                    </span>
+                    <a
+                      href={`https://www.youtube.com/watch?v=${trailer.youtube_id}`}
+                      target="_blank" rel="noopener noreferrer"
+                      class="text-[10px] font-mono text-zinc-600 hover:text-gta-gold transition-colors"
+                    >↗ Watch</a>
+                  </div>
+                </div>
+
+                <!-- Type breakdown -->
+                <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-4 flex-wrap">
+                  {Object.entries(byType).map(([type, count]: [string, any]) => (
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-[10px]">
+                        {type === "vehicle" ? "🚗" : type === "character" ? "👤" : type === "location" ? "📍" : type === "weapon" ? "🔫" : type === "wildlife" ? "🐊" : type === "audio" ? "🎵" : type === "reveal" ? "⭐" : "•"}
+                      </span>
+                      <span class="text-[10px] font-mono text-zinc-500">{count} {type}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <!-- Event timeline -->
+                <div class="divide-y divide-[#1e1e23]">
+                  {(trailer.events as any[]).map((event: any) => {
+                    const confColor = event.confidence === "confirmed"
+                      ? "text-gta-gold border-gta-gold/20 bg-gta-gold/10"
+                      : "text-zinc-500 border-zinc-800 bg-zinc-900/50";
+                    const typeIcon = event.type === "vehicle" ? "🚗"
+                      : event.type === "character" ? "👤"
+                      : event.type === "location" ? "📍"
+                      : event.type === "weapon" ? "🔫"
+                      : event.type === "wildlife" ? "🐊"
+                      : event.type === "audio" ? "🎵"
+                      : event.type === "reveal" ? "⭐" : "•";
+                    const mins = Math.floor(event.t / 60);
+                    const secs = String(event.t % 60).padStart(2, "0");
+                    return (
+                      <div class="px-5 py-2.5 flex items-start gap-3">
+                        <span class="text-[10px] font-mono text-zinc-700 shrink-0 w-10">{mins}:{secs}</span>
+                        <span class="text-base shrink-0">{typeIcon}</span>
+                        <div class="flex-1 min-w-0">
+                          <div class="text-[11px] font-semibold text-zinc-300 leading-snug" style="font-family:'Inter',sans-serif">{event.entity}</div>
+                          {event.note && (
+                            <div class="text-[10px] text-zinc-600 mt-0.5 leading-relaxed">{event.note}</div>
+                          )}
+                        </div>
+                        <span class={`shrink-0 text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${confColor}`}>
+                          {event.confidence}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
     )}
