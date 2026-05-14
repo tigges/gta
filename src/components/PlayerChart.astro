@@ -2,31 +2,21 @@
 import steamData from "../../data/gta-5/meta/steam-players.json";
 ---
 
-<div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
-  <div class="flex items-start justify-between mb-4">
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+  <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
     <div>
-      <h3 class="font-mono font-semibold text-zinc-50 text-sm uppercase tracking-wider">
-        GTA V — Steam Player Count
-      </h3>
-      <p class="text-xs text-zinc-500 mt-0.5">Monthly avg &amp; peak concurrent (PC)</p>
+      <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">GTA V — Steam Player Count</div>
+      <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Monthly avg &amp; peak concurrent (PC)</div>
     </div>
-    <div class="flex items-center gap-4 text-xs font-mono text-zinc-500">
-      <span class="flex items-center gap-1.5">
-        <span class="w-3 h-0.5 bg-amber-500 inline-block rounded"></span>Avg
-      </span>
-      <span class="flex items-center gap-1.5">
-        <span class="w-3 h-0.5 border-t border-dashed border-amber-500/50 inline-block"></span>Peak
-      </span>
+    <div class="flex items-center gap-4 text-[11px] font-mono text-zinc-500">
+      <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-gta-gold inline-block rounded"></span>Avg</span>
+      <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 border-t border-dashed border-gta-gold/40 inline-block"></span>Peak</span>
     </div>
   </div>
-  <div
-    id="player-chart"
-    class="w-full h-64"
-    data-points={JSON.stringify(steamData.data)}
-  ></div>
-  <p class="text-xs text-zinc-700 font-mono mt-3">
-    Source: SteamCharts · Updated {new Date(steamData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
-  </p>
+  <div id="player-chart" class="w-full h-64 px-4 py-2" data-points={JSON.stringify(steamData.data)}></div>
+  <div class="px-5 py-3 border-t border-[#1e1e23]">
+    <span class="text-[10px] text-zinc-700 font-mono">Source: SteamCharts · Updated {new Date(steamData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
+  </div>
 </div>
 
 <script>
@@ -66,7 +56,7 @@ import steamData from "../../data/gta-5/meta/steam-players.json";
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
       .call((g) => g.select(".domain").remove())
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#27272a").attr("stroke-dasharray", "3,3"));
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
 
     // Gradient fill
     const defs = svg.append("defs");

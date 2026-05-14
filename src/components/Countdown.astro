@@ -1,0 +1,67 @@
+---
+// GTA VI launch: November 19, 2026 — confirmed by Rockstar Games
+const LAUNCH_DATE = "2026-11-19T00:00:00Z";
+interface Props {
+  variant?: "hero" | "compact";
+}
+const { variant = "hero" } = Astro.props;
+---
+
+{variant === "hero" ? (
+  <div id="countdown-hero" class="flex items-center gap-1 sm:gap-2 flex-wrap" data-launch={LAUNCH_DATE}>
+    {["days", "hrs", "min", "sec"].map((unit) => (
+      <div class="flex flex-col items-center min-w-[52px]">
+        <span
+          id={`cd-${unit}`}
+          class="text-2xl sm:text-3xl font-mono font-bold text-gta-bright tabular-nums"
+        >--</span>
+        <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-[0.2em] mt-0.5">{unit}</span>
+      </div>
+      <span class="text-zinc-700 font-mono text-xl pb-4 last:hidden">·</span>
+    ))}
+    <div class="ml-2 flex flex-col justify-center">
+      <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">until launch</span>
+      <span class="text-[9px] font-mono text-zinc-700">Nov 19 · 2026</span>
+    </div>
+  </div>
+) : (
+  <div id="countdown-compact" class="flex items-center gap-2" data-launch={LAUNCH_DATE}>
+    <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
+    <span id="cd-compact" class="text-[10px] font-mono text-zinc-400 tracking-wide">-- D · -- H · -- M</span>
+    <span class="text-[10px] font-mono text-zinc-700">to launch</span>
+  </div>
+)}
+
+<script>
+  const LAUNCH = new Date("2026-11-19T00:00:00Z").getTime();
+
+  function pad(n: number) { return String(Math.floor(n)).padStart(2, "0"); }
+
+  function tick() {
+    const now = Date.now();
+    const diff = Math.max(0, LAUNCH - now);
+
+    const totalSec = diff / 1000;
+    const days = Math.floor(totalSec / 86400);
+    const hrs  = Math.floor((totalSec % 86400) / 3600);
+    const min  = Math.floor((totalSec % 3600) / 60);
+    const sec  = Math.floor(totalSec % 60);
+
+    // Hero variant
+    const dEl = document.getElementById("cd-days");
+    const hEl = document.getElementById("cd-hrs");
+    const mEl = document.getElementById("cd-min");
+    const sEl = document.getElementById("cd-sec");
+    if (dEl) dEl.textContent = String(days);
+    if (hEl) hEl.textContent = pad(hrs);
+    if (mEl) mEl.textContent = pad(min);
+    if (sEl) sEl.textContent = pad(sec);
+
+    // Compact variant
+    const cEl = document.getElementById("cd-compact");
+    if (cEl) cEl.textContent = `${days} D · ${pad(hrs)} H · ${pad(min)} M`;
+  }
+
+  tick();
+  setInterval(tick, 1000);
+</script>

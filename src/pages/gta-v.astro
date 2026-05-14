@@ -8,11 +8,13 @@ import steamData   from "../../data/gta-5/meta/steam-players.json";
 import trendsData  from "../../data/gta-5/trends/search-interest.json";
 import vehicleData from "../../data/gta-5/vehicles/performance.json";
 
-const totalMonths  = steamData.data.length;
+const totalMonths   = steamData.data.length;
 const totalVehicles = vehicleData.vehicles.length;
+const trendsSince   = trendsData.keywords[0]?.data[0]?.date?.slice(0, 4) ?? "2013";
+const trendsUntil   = trendsData.keywords[0]?.data.at(-1)?.date?.slice(0, 4) ?? "2026";
 const totalTrendPts = trendsData.keywords.reduce((s, k) => s + k.data.length, 0);
-const trendsSince = trendsData.keywords[0]?.data[0]?.date?.slice(0, 4) ?? "2013";
-const trendsUntil = trendsData.keywords[0]?.data.at(-1)?.date?.slice(0, 4) ?? "2026";
+const latestSteam   = steamData.data.at(-1);
+const peakSteam     = steamData.data.reduce((a, b) => a.avg_players > b.avg_players ? a : b);
 ---
 
 <Base
@@ -21,49 +23,47 @@ const trendsUntil = trendsData.keywords[0]?.data.at(-1)?.date?.slice(0, 4) ?? "2
 >
 
   <!-- Page header -->
-  <section class="border-b border-zinc-800 bg-zinc-950/50">
+  <section class="border-b border-[#1e1e23]" style="background:#0a0a0d">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-xs font-mono bg-zinc-800 text-zinc-400 border border-zinc-700 px-2 py-0.5 rounded">
-          Grand Theft Auto V · 2013
-        </span>
-        <span class="text-xs font-mono text-zinc-600">Rockstar Games</span>
+      <div class="flex items-center gap-2 mb-5">
+        <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] rounded px-2 py-0.5 uppercase tracking-widest">Grand Theft Auto V</span>
+        <span class="text-[10px] font-mono text-zinc-700">2013 · Rockstar Games</span>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-bold font-mono text-zinc-50 mb-3">
-        GTA V — Live Data
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3" style="font-family:'Inter',sans-serif">
+        GTA V — Live Intelligence
       </h1>
-      <p class="text-zinc-400 max-w-xl leading-relaxed text-sm">
-        11 years of live intelligence: Steam player counts, worldwide search interest, and complete
-        vehicle performance benchmarks. This data also underpins the GTA VI predictions.
+      <p class="text-zinc-400 text-sm leading-relaxed mb-8 max-w-lg" style="font-family:'Inter',sans-serif">
+        11 years of live signals: Steam player counts, worldwide search interest, and
+        complete vehicle performance benchmarks. This data also drives the GTA VI predictions.
       </p>
 
       <!-- Stat strip -->
-      <div class="grid grid-cols-3 sm:grid-cols-3 gap-4 mt-8 max-w-lg">
-        <div class="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3">
-          <div class="text-xl font-bold font-mono text-gta-gold">{totalMonths}</div>
-          <div class="text-xs font-mono text-zinc-500 mt-0.5">months of player data</div>
-        </div>
-        <div class="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3">
-          <div class="text-xl font-bold font-mono text-gta-gold">{totalVehicles}</div>
-          <div class="text-xs font-mono text-zinc-500 mt-0.5">vehicles benchmarked</div>
-        </div>
-        <div class="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3">
-          <div class="text-xl font-bold font-mono text-gta-gold">{trendsSince}–{trendsUntil}</div>
-          <div class="text-xs font-mono text-zinc-500 mt-0.5">trends coverage</div>
-        </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
+        {[
+          { value: String(totalMonths), label: "months of player data", sub: `${steamData.data[0].year}–${latestSteam?.year}` },
+          { value: String(totalVehicles), label: "vehicles benchmarked", sub: "25 classes · Broughy1322" },
+          { value: `${totalTrendPts}`, label: "trend data points", sub: `${trendsSince}–${trendsUntil}` },
+          { value: `${(latestSteam?.avg_players ?? 0).toLocaleString()}`, label: "avg players · last month", sub: "Steam PC concurrent" },
+        ].map(s => (
+          <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
+            <div class="text-xl font-mono font-bold text-gta-bright">{s.value}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug" style="font-family:'Inter',sans-serif">{s.label}</div>
+            <div class="text-[10px] font-mono text-zinc-700 mt-0.5">{s.sub}</div>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
 
-    <!-- Steam player history -->
+    <!-- Steam players -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
-        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Steam — Player History</span>
-        <div class="flex-1 h-px bg-zinc-800"></div>
-        <span class="text-xs font-mono text-zinc-700">PC concurrent players</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-teal shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Steam — Player History</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">PC concurrent · monthly</span>
       </div>
       <PlayerChart />
     </section>
@@ -71,37 +71,37 @@ const trendsUntil = trendsData.keywords[0]?.data.at(-1)?.date?.slice(0, 4) ?? "2
     <!-- Google Trends -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
-        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Google Trends — Search Interest</span>
-        <div class="flex-1 h-px bg-zinc-800"></div>
-        <span class="text-xs font-mono text-zinc-700">{totalTrendPts} data points · worldwide</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Google Trends — Search Interest</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{totalTrendPts} data points · worldwide</span>
       </div>
       <TrendsChart />
     </section>
 
-    <!-- Vehicle performance -->
+    <!-- Vehicle benchmarks -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
-        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Broughy1322 — Vehicle Benchmarks</span>
-        <div class="flex-1 h-px bg-zinc-800"></div>
-        <span class="text-xs font-mono text-zinc-700">{totalVehicles} vehicles across 25 classes</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-red shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Broughy1322 — Vehicle Benchmarks</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{totalVehicles} vehicles · 25 classes</span>
       </div>
       <VehicleChart />
     </section>
 
-    <!-- Context note -->
-    <section class="border border-zinc-800 rounded-xl p-6 bg-zinc-900/50">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <!-- Link to GTA VI -->
+    <section class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="px-5 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h3 class="font-mono font-semibold text-zinc-300 text-sm mb-1">Why this data matters for GTA VI</h3>
-          <p class="text-xs text-zinc-500 font-mono max-w-xl">
-            GTA V's {totalMonths}-month player trajectory, search trends, and vehicle count growth are the
-            primary signal inputs for extrapolating GTA VI predictions. See the methodology on the GTA VI page.
+          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-1">// Why this data matters</div>
+          <p class="text-xs text-zinc-500 font-mono max-w-xl leading-relaxed" style="font-family:'Inter',sans-serif">
+            GTA V's {totalMonths}-month player trajectory, search trends, and vehicle count growth
+            are the primary signal inputs for extrapolating GTA VI predictions.
           </p>
         </div>
         <a href="/gta-vi"
-          class="shrink-0 text-xs font-mono text-amber-500 hover:text-amber-400 border border-amber-500/20 hover:border-amber-500/40 px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
+          class="shrink-0 text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold border border-gta-gold/20 hover:border-gta-gold/40 px-4 py-2 rounded transition-colors whitespace-nowrap uppercase tracking-widest">
           GTA VI Predictions →
         </a>
       </div>

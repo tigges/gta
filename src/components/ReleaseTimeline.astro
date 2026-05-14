@@ -4,17 +4,15 @@ import releaseData from "../../data/shared/releases.json";
 const games = releaseData.games;
 ---
 
-<div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
-  <div class="mb-5">
-    <h3 class="font-mono font-semibold text-zinc-50 text-sm uppercase tracking-wider">
-      GTA Release History
-    </h3>
-    <p class="text-xs text-zinc-500 mt-0.5">Time between mainline entries — gap trend extrapolated to VI</p>
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+  <div class="px-5 py-4 border-b border-[#1e1e23]">
+    <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// GTA Release History</div>
+    <p class="text-[11px] text-zinc-600 mt-1" style="font-family:'Inter',sans-serif">Time between mainline entries — gap trend extrapolated to VI</p>
   </div>
 
-  <div class="relative">
+  <div class="relative p-5">
     <!-- Vertical spine -->
-    <div class="absolute left-16 top-0 bottom-0 w-px bg-zinc-800"></div>
+    <div class="absolute left-[4.5rem] top-5 bottom-5 w-px bg-[#1e1e23]"></div>
 
     <div class="flex flex-col gap-0">
       {games.map((game, i) => {
@@ -25,63 +23,49 @@ const games = releaseData.games;
         const mapSize = game.map_size_km2 ?? (game as any).map_size_km2_estimate;
 
         return (
-          <div class="relative flex items-start gap-4 group pb-8 last:pb-0">
+          <div class="relative flex items-start gap-4 group pb-7 last:pb-0">
             <!-- Year label -->
-            <div class="w-14 shrink-0 text-right">
-              <span class={`text-xs font-mono font-bold ${isPred ? "text-amber-500" : "text-zinc-400"}`}>
+            <div class="w-14 shrink-0 text-right pt-0.5">
+              <span class={`text-[11px] font-mono font-bold ${isPred ? "text-gta-gold" : "text-zinc-500"}`}>
                 {year}{isPred ? "?" : ""}
               </span>
             </div>
 
             <!-- Dot -->
-            <div class="relative z-10 mt-0.5 shrink-0">
-              <div
-                class={`w-3 h-3 rounded-full border-2 ${
-                  isPred
-                    ? "border-amber-500 bg-amber-500/20"
-                    : "border-zinc-600 bg-zinc-900 group-hover:border-amber-500"
-                } transition-colors`}
-              ></div>
+            <div class="relative z-10 mt-1 shrink-0">
+              <div class={`w-2.5 h-2.5 rounded-full border ${
+                isPred
+                  ? "border-gta-gold bg-gta-gold/20"
+                  : "border-[#2a2a31] bg-[#131316] group-hover:border-gta-gold/50"
+              } transition-colors`}></div>
             </div>
 
             <!-- Content -->
-            <div class="flex-1 min-w-0 pt-0">
+            <div class="flex-1 min-w-0">
               <div class="flex items-baseline gap-2 flex-wrap">
-                <span class={`font-mono font-semibold text-sm ${isPred ? "text-amber-400" : "text-zinc-200"}`}>
+                <span class={`font-mono font-semibold text-sm ${isPred ? "text-gta-gold" : "text-zinc-200"}`}>
                   {game.short}
                 </span>
                 {isPred && (
-                  <span class="text-xs font-mono bg-amber-500/10 text-amber-500 border border-amber-500/20 px-1.5 py-0.5 rounded">
-                    prediction
+                  <span class="text-[9px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1.5 py-0.5 rounded uppercase tracking-widest">
+                    est
                   </span>
                 )}
                 {gap && (
-                  <span class="text-xs font-mono text-zinc-600">
-                    +{gap}yr gap
-                  </span>
+                  <span class="text-[10px] font-mono text-zinc-600">+{gap}yr</span>
                 )}
               </div>
-
-              <div class="flex flex-wrap gap-x-4 gap-y-0.5 mt-1">
+              <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-0.5">
                 {vehicles && (
-                  <span class="text-xs text-zinc-500 font-mono">
-                    {vehicles}{isPred ? "~ " : " "}vehicles
-                  </span>
+                  <span class="text-[11px] text-zinc-600 font-mono">{vehicles}{isPred ? "~" : ""} vehicles</span>
                 )}
                 {mapSize && (
-                  <span class="text-xs text-zinc-500 font-mono">
-                    {mapSize}{isPred ? "~ " : ""}km²
-                  </span>
+                  <span class="text-[11px] text-zinc-600 font-mono">{mapSize}{isPred ? "~" : ""} km²</span>
                 )}
                 {(game as any).trailer_youtube_id && (
-                  <a
-                    href={`https://www.youtube.com/watch?v=${(game as any).trailer_youtube_id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-xs font-mono text-zinc-600 hover:text-amber-500 transition-colors"
-                  >
-                    ▶ Trailer
-                  </a>
+                  <a href={`https://www.youtube.com/watch?v=${(game as any).trailer_youtube_id}`}
+                    target="_blank" rel="noopener noreferrer"
+                    class="text-[11px] font-mono text-zinc-700 hover:text-gta-gold transition-colors">▶ Trailer</a>
                 )}
               </div>
             </div>
@@ -92,8 +76,8 @@ const games = releaseData.games;
   </div>
 
   <!-- Gap trend chart -->
-  <div class="mt-6 pt-5 border-t border-zinc-800">
-    <p class="text-xs font-mono text-zinc-600 mb-3 uppercase tracking-wider">Gap between mainline releases</p>
+  <div class="mt-4 pt-4 border-t border-[#1e1e23]">
+    <p class="text-[10px] font-mono text-zinc-600 mb-3 uppercase tracking-[0.2em]">Release gap (years)</p>
     <div id="gap-chart" class="w-full h-24" data-games={JSON.stringify(
       games.filter((g) => (g.gap_years_from_prev ?? (g as any).gap_years_from_prev_estimate) != null)
         .map((g) => ({
@@ -102,6 +86,7 @@ const games = releaseData.games;
           isPred: g.is_prediction,
         }))
     )}></div>
+  </div>
   </div>
 </div>
 
@@ -134,14 +119,14 @@ const games = releaseData.games;
         .attr("width", x.bandwidth())
         .attr("height", H - y(d.gap))
         .attr("rx", 2)
-        .attr("fill", d.isPred ? "#f59e0b" : "#3f3f46")
-        .attr("opacity", d.isPred ? 0.8 : 0.6);
+        .attr("fill", d.isPred ? "#f59e0b" : "#27272a")
+        .attr("opacity", d.isPred ? 0.85 : 0.7);
 
       svg.append("text")
         .attr("x", (x(d.short) ?? 0) + x.bandwidth() / 2)
         .attr("y", H + 14)
         .attr("text-anchor", "middle")
-        .attr("fill", "#71717a")
+        .attr("fill", "#52525b")
         .attr("font-size", "9")
         .attr("font-family", "monospace")
         .text(d.short);
@@ -150,7 +135,7 @@ const games = releaseData.games;
         .attr("x", (x(d.short) ?? 0) + x.bandwidth() / 2)
         .attr("y", y(d.gap) - 3)
         .attr("text-anchor", "middle")
-        .attr("fill", d.isPred ? "#f59e0b" : "#71717a")
+        .attr("fill", d.isPred ? "#f59e0b" : "#52525b")
         .attr("font-size", "9")
         .attr("font-family", "monospace")
         .text(`${d.gap}yr`);

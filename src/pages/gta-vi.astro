@@ -2,64 +2,78 @@
 import Base from "../layouts/Base.astro";
 import PredictionCard from "../components/PredictionCard.astro";
 import ReleaseTimeline from "../components/ReleaseTimeline.astro";
+import Countdown from "../components/Countdown.astro";
 
 import predictionsData from "../../data/gta-6/predictions.json";
 import trailersData    from "../../data/gta-6/trailers.json";
 import releaseData     from "../../data/shared/releases.json";
 import gta6Trends      from "../../data/gta-6/trends/search-interest.json";
 
-const predictions  = predictionsData.predictions;
-const trailers     = (trailersData as any).trailers ?? [];
-const latestTrailer = trailers[0] ?? null;
-const trendsSince  = gta6Trends.keywords[0]?.data[0]?.date?.slice(0, 4) ?? "2020";
-const trendsUntil  = gta6Trends.keywords[0]?.data.at(-1)?.date?.slice(0, 4) ?? "2026";
-const totalTrendPts = gta6Trends.keywords.reduce((s: number, k: any) => s + k.data.length, 0);
+const predictions    = predictionsData.predictions;
+const trailers       = (trailersData as any).trailers ?? [];
+const heroTrailer    = trailers[1] ?? trailers[0]; // prefer Trailer 2 for hero
+const trendsSince    = gta6Trends.keywords[0]?.data[0]?.date?.slice(0, 4) ?? "2020";
+const trendsUntil    = gta6Trends.keywords[0]?.data.at(-1)?.date?.slice(0, 4) ?? "2026";
+const totalTrendPts  = gta6Trends.keywords.reduce((s: number, k: any) => s + k.data.length, 0);
 ---
 
 <Base
   title="GTA VI"
   description="Data-extrapolated predictions for GTA VI — release window, pricing, map size and vehicle count based on 30 years of GTA history."
+  ogImage={heroTrailer ? `https://img.youtube.com/vi/${heroTrailer.youtube_id}/maxresdefault.jpg` : undefined}
 >
 
-  <!-- Page header -->
-  <section class="border-b border-zinc-800 bg-zinc-950/50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-3 py-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-          <span class="text-xs font-mono text-amber-500 uppercase tracking-wider">Community estimates · not official</span>
-        </span>
+  <!-- ═══════════════════════════════════════════════════════
+       HERO — Trailer 1 thumbnail (wider Leonida landscape)
+  ═══════════════════════════════════════════════════════ -->
+  <section class="relative overflow-hidden border-b border-[#1e1e23]" style="min-height:400px;display:flex;align-items:flex-end">
+    <div class="absolute inset-0">
+      <img
+        src="https://img.youtube.com/vi/QdBZY2fkU-0/maxresdefault.jpg"
+        alt="Grand Theft Auto VI — Trailer 1"
+        class="w-full h-full object-cover"
+        style="object-position:center 30%"
+        loading="eager"
+      />
+      <div class="absolute inset-0" style="background:linear-gradient(to top, #0e0e11 0%, #0e0e1190 45%, transparent 80%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to right, #0e0e11 0%, #0e0e1150 40%, transparent 70%)"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-12 pt-20 w-full">
+      <div class="flex items-start justify-between flex-wrap gap-6">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-[9px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">Community estimates · not official</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">
+            Grand Theft Auto VI
+          </h1>
+          <p class="text-zinc-400 text-sm max-w-md leading-relaxed" style="font-family:'Inter',sans-serif">
+            30 years of GTA data, distilled into confidence-scored predictions.
+            Every number is derived from signal evidence — not speculation.
+          </p>
+        </div>
+        <!-- Compact countdown -->
+        <div class="self-end pb-1">
+          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Time to launch</div>
+          <Countdown variant="hero" />
+        </div>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-bold font-mono text-zinc-50 mb-3">
-        Grand Theft Auto VI
-      </h1>
-      <p class="text-zinc-400 max-w-xl leading-relaxed text-sm mb-6">
-        Extrapolated from 30 years of GTA data. Every prediction has a confidence score
-        derived from data signal strength — not wishful thinking.
-      </p>
-      {latestTrailer && (
-        <a
-          href={`https://www.youtube.com/watch?v=${latestTrailer.youtube_id}`}
-          target="_blank" rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 border border-zinc-700 hover:border-zinc-500 text-zinc-300 font-mono text-sm px-5 py-2.5 rounded-lg transition-colors"
-        >
-          ▶ {latestTrailer.title ?? "Watch latest trailer"}
-        </a>
-      )}
     </div>
   </section>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-14">
 
-    <!-- Predictions -->
+    <!-- ═══════════════════════════════════════════════════════
+         SIGNAL PREDICTIONS
+    ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
-        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Key Predictions</span>
-        <div class="flex-1 h-px bg-zinc-800"></div>
-        <span class="text-xs font-mono text-zinc-700">confidence-scored · not official</span>
+      <div class="flex items-center gap-3 mb-7">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Signal Predictions</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">confidence-scored · data-derived</span>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {predictions.map((p) => (
           <PredictionCard
             title={p.title}
@@ -73,33 +87,48 @@ const totalTrendPts = gta6Trends.keywords.reduce((s: number, k: any) => s + k.da
       </div>
     </section>
 
-    <!-- Trailers -->
+    <!-- ═══════════════════════════════════════════════════════
+         OFFICIAL TRAILERS
+    ═══════════════════════════════════════════════════════ -->
     {trailers.length > 0 && (
       <section>
-        <div class="flex items-center gap-3 mb-6">
-          <span class="w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
-          <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Official Trailers</span>
-          <div class="flex-1 h-px bg-zinc-800"></div>
-          <span class="text-xs font-mono text-zinc-700">{trailers.length} released</span>
+        <div class="flex items-center gap-3 mb-7">
+          <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Official Trailers</span>
+          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <span class="text-[10px] font-mono text-zinc-700">{trailers.length} released · Rockstar Games</span>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {trailers.map((t: any, i: number) => (
             <a
               href={`https://www.youtube.com/watch?v=${t.youtube_id}`}
               target="_blank" rel="noopener noreferrer"
-              class="group bg-zinc-900 border border-zinc-800 hover:border-zinc-600 rounded-xl p-5 flex items-start gap-4 transition-colors"
+              class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-gta-gold/30 transition-all duration-200"
             >
-              <div class="shrink-0 w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-400 group-hover:text-amber-400 group-hover:border-amber-500/40 transition-colors">
-                ▶
-              </div>
-              <div class="min-w-0">
-                <div class="font-mono font-semibold text-zinc-200 text-sm group-hover:text-amber-400 transition-colors">
-                  {t.title ?? `Trailer ${i + 1}`}
+              <div class="relative aspect-video overflow-hidden">
+                <img
+                  src={`https://img.youtube.com/vi/${t.youtube_id}/maxresdefault.jpg`}
+                  alt={t.title ?? `GTA VI Trailer ${i + 1}`}
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0" style="background:linear-gradient(to top, #0e0e11 0%, transparent 55%)"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="w-12 h-12 rounded-full bg-black/60 border border-white/20 flex items-center justify-center group-hover:bg-gta-gold/20 group-hover:border-gta-gold/40 transition-all">
+                    <span class="text-white ml-0.5">▶</span>
+                  </div>
                 </div>
-                {t.published_at && (
-                  <div class="text-xs font-mono text-zinc-600 mt-1">{t.published_at}</div>
-                )}
-                <div class="text-xs font-mono text-zinc-700 mt-0.5 truncate">{t.youtube_id}</div>
+                <div class="absolute top-3 left-3">
+                  <span class="text-[9px] font-mono bg-black/60 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">Official</span>
+                </div>
+              </div>
+              <div class="px-4 py-3 flex items-center justify-between" style="background:#131316">
+                <div>
+                  <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">{t.title ?? `Grand Theft Auto VI — Trailer ${i + 1}`}</div>
+                  {t.published_at && (
+                    <div class="text-[11px] text-zinc-600 font-mono mt-0.5">{t.published_at}</div>
+                  )}
+                </div>
+                <span class="text-zinc-600 group-hover:text-gta-gold transition-colors font-mono text-xs">↗</span>
               </div>
             </a>
           ))}
@@ -107,121 +136,123 @@ const totalTrendPts = gta6Trends.keywords.reduce((s: number, k: any) => s + k.da
       </section>
     )}
 
-    <!-- Search trends (GTA VI specific) -->
+    <!-- ═══════════════════════════════════════════════════════
+         GTA VI SEARCH TRENDS
+    ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
-        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">GTA VI Search Trends</span>
-        <div class="flex-1 h-px bg-zinc-800"></div>
-        <span class="text-xs font-mono text-zinc-700">{totalTrendPts} pts · {trendsSince}–{trendsUntil} · worldwide</span>
+      <div class="flex items-center gap-3 mb-7">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Search Signal</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{totalTrendPts} pts · {trendsSince}–{trendsUntil} · worldwide</span>
       </div>
-      <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
-        <div class="flex items-start justify-between flex-wrap gap-3 mb-4">
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
-            <h3 class="font-mono font-semibold text-zinc-50 text-sm uppercase tracking-wider">
-              GTA VI — Search Interest Over Time
-            </h3>
-            <p class="text-xs text-zinc-500 mt-0.5">Google Trends · worldwide (0–100 scale)</p>
+            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">GTA VI Search Interest Over Time</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Google Trends · worldwide · 0–100 scale</div>
           </div>
           <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
             {gta6Trends.keywords.map((kw) => (
               <button
-                class="gta6-trend-toggle flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-colors"
+                class="gta6-trend-toggle flex items-center gap-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors"
                 data-keyword={kw.keyword}
                 data-active="true"
               >
-                <span class="w-3 h-0.5 rounded inline-block" style={`background:${kw.color}`}></span>
+                <span class="w-2.5 h-0.5 rounded inline-block" style={`background:${kw.color}`}></span>
                 {kw.keyword}
               </button>
             ))}
           </div>
         </div>
-        <div
-          id="gta6-trends-chart"
-          class="w-full h-64"
-          data-keywords={JSON.stringify(gta6Trends.keywords)}
-        ></div>
-        <p class="text-xs text-zinc-700 font-mono mt-3">
-          Source: Google Trends via pytrends · Updated {new Date(gta6Trends.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
-        </p>
+        <div id="gta6-trends-chart" class="w-full h-64 px-4 py-2" data-keywords={JSON.stringify(gta6Trends.keywords)}></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: Google Trends via pytrends · updated {new Date(gta6Trends.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
+        </div>
       </div>
     </section>
 
-    <!-- Release context -->
+    <!-- ═══════════════════════════════════════════════════════
+         HISTORICAL CONTEXT
+    ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-2 h-2 rounded-full bg-zinc-500 shrink-0"></span>
-        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Historical Context</span>
-        <div class="flex-1 h-px bg-zinc-800"></div>
-        <span class="text-xs font-mono text-zinc-700">gap trend extrapolated to VI</span>
+      <div class="flex items-center gap-3 mb-7">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Historical Context</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">gap trend extrapolated to VI</span>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         <ReleaseTimeline />
-
-        <!-- Cross-gen table -->
-        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
-          <h3 class="font-mono font-semibold text-zinc-50 text-sm uppercase tracking-wider mb-4">
-            Cross-Generation Growth
-          </h3>
+        <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+          <div class="px-5 py-4 border-b border-[#1e1e23]">
+            <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Cross-Generation Growth</div>
+          </div>
           <table class="w-full text-xs font-mono">
             <thead>
-              <tr class="border-b border-zinc-800">
-                <th class="text-left pb-2 text-zinc-600 font-normal">Title</th>
-                <th class="text-right pb-2 text-zinc-600 font-normal">Price</th>
-                <th class="text-right pb-2 text-zinc-600 font-normal">Map km²</th>
-                <th class="text-right pb-2 text-zinc-600 font-normal">Vehicles</th>
+              <tr class="border-b border-[#1e1e23]">
+                <th class="text-left px-5 py-2.5 text-zinc-600 font-normal">Title</th>
+                <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Price</th>
+                <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Map km²</th>
+                <th class="text-right px-5 py-2.5 text-zinc-600 font-normal">Vehicles</th>
               </tr>
             </thead>
             <tbody>
               {releaseData.games.map((g) => {
                 const isPred = g.is_prediction;
-                const price    = g.price_usd_launch    ?? (g as any).price_usd_estimate;
-                const map      = g.map_size_km2        ?? (g as any).map_size_km2_estimate;
-                const vehicles = g.vehicle_count       ?? (g as any).vehicle_count_estimate;
+                const price    = g.price_usd_launch ?? (g as any).price_usd_estimate;
+                const map      = g.map_size_km2 ?? (g as any).map_size_km2_estimate;
+                const vehicles = g.vehicle_count ?? (g as any).vehicle_count_estimate;
                 return (
-                  <tr class={`border-b border-zinc-800/50 ${isPred ? "text-amber-400" : "text-zinc-300"}`}>
-                    <td class="py-2.5">
-                      {g.short}{isPred && <span class="ml-1 text-amber-600">*</span>}
+                  <tr class={`border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors ${isPred ? "text-gta-gold" : "text-zinc-300"}`}>
+                    <td class="px-5 py-2.5 font-semibold">
+                      {g.short}
+                      {isPred && <span class="ml-1.5 text-[9px] bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1 py-0.5 rounded uppercase tracking-widest align-middle">est</span>}
                     </td>
-                    <td class="text-right py-2.5">
-                      {price ? `$${price.toFixed(2)}` : <span class="text-zinc-700">—</span>}
-                    </td>
-                    <td class="text-right py-2.5">
-                      {map ? `${map}${isPred ? "~" : ""}` : <span class="text-zinc-700">—</span>}
-                    </td>
-                    <td class="text-right py-2.5">
-                      {vehicles ? `${vehicles}${isPred ? "~" : ""}` : <span class="text-zinc-700">—</span>}
-                    </td>
+                    <td class="px-4 py-2.5 text-right">{price ? `$${price.toFixed(0)}` : <span class="text-zinc-700">—</span>}</td>
+                    <td class="px-4 py-2.5 text-right">{map ?? <span class="text-zinc-700">—</span>}</td>
+                    <td class="px-5 py-2.5 text-right">{vehicles ?? <span class="text-zinc-700">—</span>}</td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
-          <p class="text-xs text-zinc-700 mt-4">* estimated · sources: Rockstar, Broughy1322, community records</p>
+          <div class="px-5 py-3 border-t border-[#1e1e23]">
+            <span class="text-[10px] text-zinc-700 font-mono">est = estimated · Rockstar, Broughy1322, community records</span>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Methodology -->
-    <section class="border border-zinc-800 rounded-xl p-6 bg-zinc-900/50">
-      <h3 class="font-mono font-semibold text-zinc-300 text-sm mb-3 uppercase tracking-wider">Methodology</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs text-zinc-500 font-mono leading-relaxed">
-        <div>
-          <div class="text-zinc-400 mb-1">Confidence scoring</div>
-          Confidence reflects how many independent signals agree. 80%+ = multiple corroborating
-          data sources. Below 50% = trailer evidence only or high-variance extrapolation.
-        </div>
-        <div>
-          <div class="text-zinc-400 mb-1">Data sources</div>
-          Release dates from Rockstar official announcements. Pricing from CPI-adjusted history.
-          Map/vehicle estimates from trailer analysis and community research.
-          <a href="/gta-v" class="text-amber-600 hover:text-amber-500 transition-colors">GTA V signal data →</a>
-        </div>
-        <div>
-          <div class="text-zinc-400 mb-1">Not official</div>
-          All predictions are community-derived. This site has no affiliation with Rockstar Games
-          or Take-Two Interactive. Treat every prediction as informed speculation.
-        </div>
+    <!-- ═══════════════════════════════════════════════════════
+         METHODOLOGY
+    ═══════════════════════════════════════════════════════ -->
+    <section class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="px-5 py-4 border-b border-[#1e1e23]">
+        <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Methodology & Signal Standards</div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
+        {[
+          {
+            label: "Confidence scoring",
+            body: "Confidence reflects how many independent signals agree. 80%+ = multiple corroborating data sources. Below 50% = trailer evidence only or high-variance extrapolation.",
+          },
+          {
+            label: "Data sources",
+            body: "Release dates from Rockstar announcements. Pricing from CPI-adjusted history. Map and vehicle estimates from trailer analysis and community research.",
+            link: { href: "/gta-v", text: "GTA V signal data →" },
+          },
+          {
+            label: "Not official",
+            body: "All predictions are community-derived. GTAVI.AI has no affiliation with Rockstar Games or Take-Two Interactive. Treat every prediction as informed speculation.",
+          },
+        ].map(m => (
+          <div class="px-5 py-5">
+            <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">{m.label}</div>
+            <p class="text-xs text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{m.body}</p>
+            {m.link && (
+              <a href={m.link.href} class="mt-2 inline-block text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest">{m.link.text}</a>
+            )}
+          </div>
+        ))}
       </div>
     </section>
 
@@ -243,7 +274,7 @@ const totalTrendPts = gta6Trends.keywords.reduce((s: number, k: any) => s + k.da
       data: kw.data.map((d) => ({ date: new Date(d.date), value: d.value })),
     }));
 
-    const margin = { top: 10, right: 16, bottom: 32, left: 40 };
+    const margin = { top: 10, right: 16, bottom: 28, left: 36 };
     const W = el.clientWidth - margin.left - margin.right;
     const H = el.clientHeight - margin.top - margin.bottom;
 
@@ -258,67 +289,50 @@ const totalTrendPts = gta6Trends.keywords.reduce((s: number, k: any) => s + k.da
     const y = d3.scaleLinear().domain([0, 100]).range([H, 0]);
 
     svg.append("g")
-      .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
+      .call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(() => ""))
       .call((g) => g.select(".domain").remove())
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#27272a").attr("stroke-dasharray", "3,3"));
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
 
     const lineGen = d3.line<{ date: Date; value: number }>()
-      .x((d) => x(d.date))
-      .y((d) => y(d.value))
-      .curve(d3.curveMonotoneX);
+      .x((d) => x(d.date)).y((d) => y(d.value)).curve(d3.curveMonotoneX);
 
     const paths: Record<string, any> = {};
     allSeries.forEach((kw) => {
       paths[kw.keyword] = svg.append("path")
-        .datum(kw.data)
-        .attr("fill", "none")
-        .attr("stroke", kw.color)
-        .attr("stroke-width", 2)
-        .attr("opacity", 0.9)
-        .attr("d", lineGen as any);
+        .datum(kw.data).attr("fill", "none").attr("stroke", kw.color)
+        .attr("stroke-width", 1.5).attr("opacity", 0.9).attr("d", lineGen as any);
     });
 
-    // Trailer 1 annotation
-    const t1Date = new Date("2023-12-04");
-    svg.append("line")
-      .attr("x1", x(t1Date)).attr("x2", x(t1Date))
-      .attr("y1", 0).attr("y2", H)
-      .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "4,3").attr("opacity", 0.5);
-    svg.append("text")
-      .attr("x", x(t1Date) + 4).attr("y", 12)
-      .attr("fill", "#ef4444").attr("font-size", "9").attr("font-family", "monospace")
-      .text("T1");
+    // Trailer annotations
+    [
+      { date: new Date("2023-12-04"), label: "T1" },
+      { date: new Date("2025-05-06"), label: "T2" },
+    ].forEach(({ date, label }) => {
+      svg.append("line")
+        .attr("x1", x(date)).attr("x2", x(date)).attr("y1", 0).attr("y2", H)
+        .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "3,3").attr("opacity", 0.4);
+      svg.append("text")
+        .attr("x", x(date) + 4).attr("y", 10)
+        .attr("fill", "#ef4444").attr("font-size", "9").attr("font-family", "monospace").text(label);
+    });
 
-    // Trailer 2 annotation
-    const t2Date = new Date("2025-05-06");
-    svg.append("line")
-      .attr("x1", x(t2Date)).attr("x2", x(t2Date))
-      .attr("y1", 0).attr("y2", H)
-      .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "4,3").attr("opacity", 0.5);
-    svg.append("text")
-      .attr("x", x(t2Date) + 4).attr("y", 12)
-      .attr("fill", "#ef4444").attr("font-size", "9").attr("font-family", "monospace")
-      .text("T2");
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(5).tickFormat(d3.timeFormat("%Y") as any))
+      .call((g) => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call((g) => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
 
-    svg.append("g")
-      .attr("transform", `translate(0,${H})`)
-      .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
-      .call((g) => g.select(".domain").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll("text").attr("fill", "#71717a").attr("font-size", "11").attr("font-family", "monospace"));
-
-    svg.append("g")
-      .call(d3.axisLeft(y).ticks(5))
-      .call((g) => g.select(".domain").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll("text").attr("fill", "#71717a").attr("font-size", "11").attr("font-family", "monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(4))
+      .call((g) => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call((g) => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
 
     document.querySelectorAll<HTMLButtonElement>(".gta6-trend-toggle").forEach((btn) => {
       btn.addEventListener("click", () => {
         const kw = btn.dataset.keyword!;
         const active = btn.dataset.active === "true";
         btn.dataset.active = active ? "false" : "true";
-        btn.style.opacity = active ? "0.35" : "1";
+        btn.style.opacity = active ? "0.3" : "1";
         paths[kw]?.attr("opacity", active ? 0 : 0.9);
       });
     });
