@@ -40,6 +40,9 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
+      - name: Fetch GTA VI search trends
+        run: python scrapers/gtavi/fetch_search_trends.py
+
       - name: Commit updated data files
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
