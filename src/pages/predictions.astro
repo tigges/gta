@@ -1,0 +1,156 @@
+---
+import Base from "../layouts/Base.astro";
+import PredictionCard from "../components/PredictionCard.astro";
+import ReleaseTimeline from "../components/ReleaseTimeline.astro";
+
+import releaseData from "../../data/history/releases.json";
+
+const predictions = [
+  {
+    title: "Release Window",
+    value: "2025–2026",
+    confidence: 82,
+    basis:
+      "Rockstar's official \"2025\" announcement, since pushed; trailer II timing and typical Rockstar marketing cycles suggest late 2025 or early 2026.",
+    trailerTimestamp: "0:04",
+  },
+  {
+    title: "Launch Price",
+    value: "$79.99",
+    unit: "USD",
+    confidence: 68,
+    basis:
+      "CPI inflation from GTA V's $59.99 (2013) projects ~$78–82 in 2025 dollars. PS5/XS standard pricing is already $69–79 across major titles.",
+  },
+  {
+    title: "Map Size",
+    value: "~150 km²",
+    unit: "estimated",
+    confidence: 38,
+    basis:
+      "Trailer I shows Miami-scale urban density plus visible Everglades-style wetlands. GTA V was 75 km²; 2× expansion is consistent with the SA → V jump. High uncertainty.",
+    trailerTimestamp: "0:22",
+  },
+  {
+    title: "Vehicle Count at Launch",
+    value: "~1,000",
+    unit: "estimated",
+    confidence: 71,
+    basis:
+      "GTA V launched with ~260 vehicles, grew to 737+ via GTA Online DLC. Extrapolating the GTA Online expansion rate and Rockstar's stated ambition yields ~1,000 at or shortly after VI launch.",
+  },
+];
+---
+
+<Base
+  title="GTA VI Predictions"
+  description="Data-extrapolated predictions for GTA VI — release window, pricing, map size and vehicle count based on 30 years of GTA history."
+>
+
+  <!-- Page header -->
+  <section class="border-b border-zinc-800 bg-zinc-950/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-3 py-1 mb-5">
+        <span class="text-xs font-mono text-amber-500 uppercase tracking-wider">Community estimates · not official</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold font-mono text-zinc-50 mb-3">
+        GTA VI Predictions
+      </h1>
+      <p class="text-zinc-400 max-w-xl leading-relaxed">
+        Extrapolated from 30 years of GTA data. Every prediction has a confidence score
+        derived from data signal strength — not wishful thinking.
+      </p>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+
+    <!-- Prediction cards -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Key Predictions</span>
+        <div class="flex-1 h-px bg-zinc-800"></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {predictions.map((p) => <PredictionCard {...p} />)}
+      </div>
+    </section>
+
+    <!-- Release timeline -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Release History</span>
+        <div class="flex-1 h-px bg-zinc-800"></div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <ReleaseTimeline />
+
+        <!-- Economy & size trends table -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+          <h3 class="font-mono font-semibold text-zinc-50 text-sm uppercase tracking-wider mb-4">
+            Cross-Generation Growth
+          </h3>
+          <table class="w-full text-xs font-mono">
+            <thead>
+              <tr class="border-b border-zinc-800">
+                <th class="text-left pb-2 text-zinc-600 font-normal">Title</th>
+                <th class="text-right pb-2 text-zinc-600 font-normal">Price</th>
+                <th class="text-right pb-2 text-zinc-600 font-normal">Map km²</th>
+                <th class="text-right pb-2 text-zinc-600 font-normal">Vehicles</th>
+              </tr>
+            </thead>
+            <tbody>
+              {releaseData.games.map((g) => {
+                const isPred = g.is_prediction;
+                const price = g.price_usd_launch ?? (g as any).price_usd_estimate;
+                const map = g.map_size_km2 ?? (g as any).map_size_km2_estimate;
+                const vehicles = g.vehicle_count ?? (g as any).vehicle_count_estimate;
+                return (
+                  <tr class={`border-b border-zinc-800/50 ${isPred ? "text-amber-400" : "text-zinc-300"}`}>
+                    <td class="py-2.5">
+                      {g.short}
+                      {isPred && <span class="ml-1 text-amber-600">*</span>}
+                    </td>
+                    <td class="text-right py-2.5">
+                      {price ? `$${price.toFixed(2)}` : <span class="text-zinc-700">—</span>}
+                    </td>
+                    <td class="text-right py-2.5">
+                      {map ? `${map}${isPred ? "~" : ""}` : <span class="text-zinc-700">—</span>}
+                    </td>
+                    <td class="text-right py-2.5">
+                      {vehicles ? `${vehicles}${isPred ? "~" : ""}` : <span class="text-zinc-700">—</span>}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <p class="text-xs text-zinc-700 mt-4">* estimated · sources: Rockstar, Broughy1322, community records</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Methodology note -->
+    <section class="border border-zinc-800 rounded-xl p-6 bg-zinc-900/50">
+      <h3 class="font-mono font-semibold text-zinc-300 text-sm mb-3 uppercase tracking-wider">Methodology</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs text-zinc-500 font-mono leading-relaxed">
+        <div>
+          <div class="text-zinc-400 mb-1">Confidence scoring</div>
+          Confidence reflects how many independent signals agree. 80%+ = multiple corroborating data
+          sources. Below 50% = trailer evidence only or extrapolation with high variance.
+        </div>
+        <div>
+          <div class="text-zinc-400 mb-1">Data sources</div>
+          Release dates from Rockstar official announcements. Pricing from CPI-adjusted historical data.
+          Map/vehicle estimates from trailer analysis and community research.
+        </div>
+        <div>
+          <div class="text-zinc-400 mb-1">Not official</div>
+          All predictions are community-derived. This site has no affiliation with Rockstar Games or
+          Take-Two Interactive. Treat every prediction as informed speculation.
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Base>
