@@ -23,12 +23,12 @@ HEADERS = {"User-Agent": "gtavi.ai/1.0 (data research; not affiliated with Fando
 
 # Entity types to scrape
 ENTITY_TYPES = [
-    {"type": "vehicle",   "category": "Vehicles_in_GTA_VI",       "icon": "🚗"},
-    {"type": "character", "category": "Characters_in_GTA_VI",      "icon": "👤"},
-    {"type": "weapon",    "category": "Weapons_in_GTA_VI",         "icon": "🔫"},
-    {"type": "business",  "category": "Businesses_in_GTA_VI",      "icon": "🏢"},
-    {"type": "animal",    "category": "Animals_in_GTA_VI",         "icon": "🐊"},
-    {"type": "location",  "category": "Locations_in_GTA_VI",       "icon": "📍"},
+    {"type": "vehicle",   "plural": "vehicles",   "category": "Vehicles_in_GTA_VI",    "icon": "🚗"},
+    {"type": "character", "plural": "characters", "category": "Characters_in_GTA_VI",  "icon": "👤"},
+    {"type": "weapon",    "plural": "weapons",    "category": "Weapons_in_GTA_VI",     "icon": "🔫"},
+    {"type": "business",  "plural": "businesses", "category": "Businesses_in_GTA_VI",  "icon": "🏢"},
+    {"type": "animal",    "plural": "animals",    "category": "Animals_in_GTA_VI",     "icon": "🐊"},
+    {"type": "location",  "plural": "locations",  "category": "Locations_in_GTA_VI",   "icon": "📍"},
 ]
 
 # Entities known to be officially confirmed by Rockstar (trailer / press kit)
@@ -144,7 +144,7 @@ def main() -> None:
                 "count": len(entities),
                 "entities": entities,
             }
-            write_json(f"gta-6/entities/{et['type']}s.json", per_type)
+            write_json(f"gta-6/entities/{et['plural']}.json", per_type)
             time.sleep(0.5)
 
         except Exception as e:
