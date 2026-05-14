@@ -93,7 +93,7 @@ const TYPE_META: Record<string,{icon:string;label:string}> = {
   <!-- Header -->
   <section class="relative border-b border-[#1e1e23] overflow-hidden">
     <div class="absolute inset-0">
-      <img src="/assets/screenshots/Vice_City_05.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 60%" aria-hidden="true" />
+      <img src="/assets/gta6/locations/Vice_City_05.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 60%" aria-hidden="true" />
       <div class="absolute inset-0" style="background:linear-gradient(to right, #0a0a0d 0%, #0a0a0dcc 55%, #0a0a0d88 100%)"></div>
       <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 0%, #0a0a0d 100%)"></div>
     </div>
@@ -329,22 +329,22 @@ const TYPE_META: Record<string,{icon:string;label:string}> = {
 
   // ── Press screenshot mapping ──────────────────────────────────────────────
   const PRESS_CHARS: Record<string,string> = {
-    "Lucia Caminos":  "Lucia_Caminos_01.jpg",
-    "Jason Duval":    "Jason_Duval_01.jpg",
-    "Raul Bautista":  "Raul_Bautista_01.jpg",
-    "Boobie Ike":     "Boobie_Ike_01.jpg",
-    "Brian Heder":    "Brian_Heder_01.jpg",
-    "Cal Hampton":    "Cal_Hampton_01.jpg",
-    "DreQuan Priest": "DreQuan_Priest_01.jpg",
-    "Real Dimez":     "Real_Dimez_01.jpg",
+    "Lucia Caminos":  "/assets/gta6/characters/Lucia_Caminos_01.jpg",
+    "Jason Duval":    "/assets/gta6/characters/Jason_Duval_01.jpg",
+    "Raul Bautista":  "/assets/gta6/characters/Raul_Bautista_01.jpg",
+    "Boobie Ike":     "/assets/gta6/characters/Boobie_Ike_01.jpg",
+    "Brian Heder":    "/assets/gta6/characters/Brian_Heder_01.jpg",
+    "Cal Hampton":    "/assets/gta6/characters/Cal_Hampton_01.jpg",
+    "DreQuan Priest": "/assets/gta6/characters/DreQuan_Priest_01.jpg",
+    "Real Dimez":     "/assets/gta6/characters/Real_Dimez_01.jpg",
   };
   const PRESS_LOCS: Record<string,string> = {
-    "Vice City":      "Vice_City_01.jpg",
-    "Ambrosia":       "Ambrosia_01.jpg",
-    "Grassrivers":    "Grassrivers_01.jpg",
-    "Leonida Keys":   "Leonida_Keys_01.jpg",
-    "Port Gellhorn":  "Port_Gellhorn_01.jpg",
-    "Mount Kalaga National Park": "Mount_Kalaga_National_Park_01.jpg",
+    "Vice City":      "/assets/gta6/locations/Vice_City_01.jpg",
+    "Ambrosia":       "/assets/gta6/locations/Ambrosia_01.jpg",
+    "Grassrivers":    "/assets/gta6/locations/Grassrivers_01.jpg",
+    "Leonida Keys":   "/assets/gta6/locations/Leonida_Keys_01.jpg",
+    "Port Gellhorn":  "/assets/gta6/locations/Port_Gellhorn_01.jpg",
+    "Mount Kalaga National Park": "/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg",
   };
 
   // ── Card builders ─────────────────────────────────────────────────────────
@@ -365,7 +365,7 @@ const TYPE_META: Record<string,{icon:string;label:string}> = {
                    : e.type === "location"  ? PRESS_LOCS[e.name]
                    : null;
     const wikiImg  = !pressImg && e.image_url ? e.image_url : null;
-    const thumbImg = pressImg ? `/assets/screenshots/${pressImg}` : wikiImg;
+    const thumbImg = pressImg ?? wikiImg;
 
     if (thumbImg) {
       const isPress = !!pressImg;
