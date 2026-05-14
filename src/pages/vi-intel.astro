@@ -8,6 +8,8 @@ import predictionsData from "../../data/gta-6/predictions.json";
 import trailersData    from "../../data/gta-6/trailers.json";
 import releaseData     from "../../data/shared/releases.json";
 import gta6Trends      from "../../data/gta-6/trends/search-interest.json";
+import featuresData    from "../../data/gta-6/features.json";
+import delayData       from "../../data/gta-6/delay-timeline.json";
 
 const predictions    = predictionsData.predictions;
 const trailers       = (trailersData as any).trailers ?? [];
@@ -135,6 +137,131 @@ const totalTrendPts  = gta6Trends.keywords.reduce((s: number, k: any) => s + k.d
         </div>
       </section>
     )}
+
+    <!-- ═══════════════════════════════════════════════════════
+         CONFIRMED FEATURE TRACKER
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-7">
+        <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Confirmed Feature Tracker</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">Rockstar official + community tracking</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+              What's confirmed, reported and indexed so far
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Progress toward estimated full-game totals · {featuresData.categories.reduce((s, c) => s + c.confirmed + c.reported, 0)} entries tracked</div>
+          </div>
+          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-gta-gold inline-block"></span>Confirmed</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-zinc-500 inline-block"></span>Reported</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-zinc-800 border border-zinc-700 inline-block"></span>Target</span>
+          </div>
+        </div>
+        <div class="divide-y divide-[#1e1e23]">
+          {featuresData.categories.map((cat) => {
+            const total = cat.confirmed + cat.reported + cat.indexed;
+            const confirmedPct = Math.round((cat.confirmed / cat.target) * 100);
+            const reportedPct  = Math.round((cat.reported / cat.target) * 100);
+            const indexedPct   = Math.round((cat.indexed / cat.target) * 100);
+            return (
+              <div class="px-5 py-4">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="text-base">{cat.icon}</span>
+                    <span class="text-sm font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{cat.label}</span>
+                  </div>
+                  <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-600">
+                    <span class="text-gta-gold">{cat.confirmed} confirmed</span>
+                    <span>{cat.reported} reported</span>
+                    <span class="text-zinc-700">/ {cat.target} target</span>
+                  </div>
+                </div>
+                <!-- Stacked progress bar -->
+                <div class="h-2 rounded-full overflow-hidden flex gap-0.5" style="background:#1e1e23">
+                  {confirmedPct > 0 && (
+                    <div class="h-full rounded-l bg-gta-gold" style={`width:${confirmedPct}%`} title={`${cat.confirmed} confirmed`}></div>
+                  )}
+                  {reportedPct > 0 && (
+                    <div class="h-full bg-zinc-500" style={`width:${reportedPct}%`} title={`${cat.reported} reported`}></div>
+                  )}
+                  {indexedPct > 0 && (
+                    <div class="h-full bg-zinc-700" style={`width:${indexedPct}%`} title={`${cat.indexed} indexed`}></div>
+                  )}
+                </div>
+                {cat.notes && (
+                  <p class="text-[10px] text-zinc-700 mt-1.5 leading-snug" style="font-family:'Inter',sans-serif">{cat.notes}</p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <span class="text-[10px] text-zinc-700 font-mono">Sources: {featuresData.source}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         DELAY TIMELINE
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-7">
+        <span class="w-2 h-2 rounded-full bg-gta-red shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Development + Delay Timeline</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{delayData.total_delays} delay · {delayData.timeline.length} events · SEC EDGAR sourced</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="relative p-5">
+          <div class="absolute left-[120px] top-5 bottom-5 w-px bg-[#1e1e23]"></div>
+          <div class="flex flex-col gap-0">
+            {(() => {
+              const typeColors: {[k:string]:string} = {
+                milestone: "text-zinc-500", development: "text-zinc-400",
+                leak: "text-gta-red", trailer: "text-gta-gold",
+                date_set: "text-gta-teal", delay: "text-gta-red",
+                date_confirmed: "text-gta-teal",
+              };
+              const dotColors: {[k:string]:string} = {
+                trailer: "bg-gta-gold border-gta-gold",
+                delay: "bg-gta-red/20 border-gta-red",
+                date_confirmed: "bg-gta-teal/20 border-gta-teal",
+                date_set: "bg-gta-teal/10 border-gta-teal/50",
+                default: "bg-[#131316] border-[#2a2a31]",
+              };
+              return (delayData.timeline as any[]).map((event) => {
+              const dotClass = dotColors[event.type] ?? dotColors["default"];
+              const textClass = typeColors[event.type] ?? "text-zinc-400";
+              return (
+                <div class="relative flex items-start gap-4 pb-6 last:pb-0">
+                  <div class="w-24 shrink-0 text-right pt-0.5">
+                    <span class="text-[10px] font-mono text-zinc-600">{event.date.slice(0,7)}</span>
+                  </div>
+                  <div class={`relative z-10 mt-1 shrink-0 w-2.5 h-2.5 rounded-full border ${dotClass}`}></div>
+                  <div class="flex-1 min-w-0">
+                    <p class={`text-[12px] font-medium leading-snug ${textClass}`} style="font-family:'Inter',sans-serif">{event.event}</p>
+                    <div class="flex items-center gap-2 mt-1">
+                      <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">{event.type.replace("_"," ")}</span>
+                      <span class="text-zinc-800">·</span>
+                      <span class="text-[9px] font-mono text-zinc-700">{event.source}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            });
+            })()}
+          </div>
+        </div>
+        <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <span class="text-[10px] text-zinc-700 font-mono">Sources: SEC EDGAR Take-Two 8-K filings + official announcements</span>
+        </div>
+      </div>
+    </section>
 
     <!-- ═══════════════════════════════════════════════════════
          GTA VI SEARCH TRENDS
