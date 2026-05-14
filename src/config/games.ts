@@ -14,7 +14,7 @@ export const GAMES: Game[] = [
   { id: 'gta-vc', title: 'Grand Theft Auto: Vice City',   short: 'GTA VC', year: 2002, published: false, dataDir: 'gta-vc' },
   { id: 'gta-sa', title: 'Grand Theft Auto: San Andreas', short: 'GTA SA', year: 2004, published: false, dataDir: 'gta-sa' },
   { id: 'gta-4',  title: 'Grand Theft Auto IV',           short: 'GTA IV', year: 2008, published: false, dataDir: 'gta-4'  },
-  { id: 'gta-5',  title: 'Grand Theft Auto V',            short: 'GTA V',  year: 2013, published: false, dataDir: 'gta-5'  },
+  { id: 'gta-5',  title: 'Grand Theft Auto V',            short: 'GTA V',  year: 2013, published: true,  dataDir: 'gta-5'  },
   { id: 'gta-6',  title: 'Grand Theft Auto VI',           short: 'GTA VI', year: null, published: true,  dataDir: 'gta-6'  },
 ];
 

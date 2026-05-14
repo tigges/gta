@@ -1,20 +1,43 @@
 ---
 import Base from "../layouts/Base.astro";
-import PredictionCard from "../components/PredictionCard.astro";
 import ReleaseTimeline from "../components/ReleaseTimeline.astro";
+import PredictionCard from "../components/PredictionCard.astro";
 
+import releasesData    from "../../data/shared/releases.json";
 import predictionsData from "../../data/gta-6/predictions.json";
-import releasesData from "../../data/shared/releases.json";
-import trailersData from "../../data/gta-6/trailers.json";
+import trailersData    from "../../data/gta-6/trailers.json";
 
-const gta6 = releasesData.games.find((g) => g.short === "GTA VI") as any;
-const gta5 = releasesData.games.find((g) => g.short === "GTA V") as any;
 const latestTrailer = (trailersData as any).trailers?.[0] ?? null;
+const publishedGames = [
+  {
+    id: "gta-v",
+    short: "GTA V",
+    title: "Grand Theft Auto V",
+    year: 2013,
+    href: "/gta-v",
+    desc: "Steam players · Google Trends · 665 vehicle benchmarks",
+    color: "border-amber-800/40 hover:border-amber-500/60",
+    badge: "bg-amber-900/30 text-amber-600",
+    dot: "bg-amber-700",
+  },
+  {
+    id: "gta-vi",
+    short: "GTA VI",
+    title: "Grand Theft Auto VI",
+    year: null,
+    href: "/gta-vi",
+    desc: "Predictions · Trailers · Search trends · Methodology",
+    color: "border-amber-500/40 hover:border-amber-400/80",
+    badge: "bg-amber-500/10 text-amber-400",
+    dot: "bg-amber-500",
+    pulse: true,
+  },
+];
 ---
 
 <Base
-  title="GTA VI Intelligence"
-  description="Data-driven predictions for GTA VI — extrapolated from 30 years of GTA history."
+  title="GTA Intelligence"
+  description="Data-driven intelligence across every GTA generation — and what it predicts about GTA VI."
 >
 
   <!-- Hero -->
@@ -27,26 +50,30 @@ const latestTrailer = (trailersData as any).trailers?.[0] ?? null;
       <div class="max-w-2xl">
         <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-3 py-1 mb-6">
           <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-          <span class="text-xs font-mono text-amber-500 uppercase tracking-wider">Live intelligence · updated nightly</span>
+          <span class="text-xs font-mono text-amber-500 uppercase tracking-wider">30 years of GTA data · updated nightly</span>
         </div>
         <h1 class="text-4xl sm:text-5xl font-bold font-mono text-zinc-50 leading-tight mb-4">
-          GTA VI —<br/>
-          <span class="text-gta-gold">What the data says</span>
+          GTA Intelligence
         </h1>
         <p class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-8 max-w-xl">
-          30 years of GTA history distilled into confidence-scored predictions.
-          Every number is derived from data, not speculation.
+          Every mainline GTA game, clearly separated.
+          Live data, confidence-scored predictions, and 30 years of release history
+          distilled into one place.
         </p>
         <div class="flex flex-wrap gap-3">
-          <a href="#predictions"
+          <a href="/gta-vi"
             class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-mono font-bold text-sm px-5 py-2.5 rounded-lg transition-colors">
-            View predictions ↓
+            GTA VI Predictions →
+          </a>
+          <a href="/gta-v"
+            class="inline-flex items-center gap-2 border border-zinc-700 hover:border-zinc-500 text-zinc-300 font-mono text-sm px-5 py-2.5 rounded-lg transition-colors">
+            GTA V Data →
           </a>
           {latestTrailer && (
             <a href={`https://www.youtube.com/watch?v=${latestTrailer.youtube_id}`}
               target="_blank" rel="noopener noreferrer"
               class="inline-flex items-center gap-2 border border-zinc-700 hover:border-zinc-500 text-zinc-300 font-mono text-sm px-5 py-2.5 rounded-lg transition-colors">
-              ▶ Watch trailer
+              ▶ Latest trailer
             </a>
           )}
         </div>
@@ -54,16 +81,28 @@ const latestTrailer = (trailersData as any).trailers?.[0] ?? null;
     </div>
   </section>
 
-  <!-- Key numbers strip -->
+  <!-- Published game cards -->
   <section class="border-b border-zinc-800 bg-zinc-950">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-zinc-800">
-        {predictionsData.predictions.map((p) => (
-          <div class="px-6 py-5">
-            <div class="text-2xl font-bold font-mono text-gta-gold">{p.value}</div>
-            <div class="text-xs font-mono text-zinc-400 mt-0.5">{p.title}</div>
-            <div class="text-xs font-mono text-zinc-700 mt-0.5">{p.confidence}% confidence</div>
-          </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <p class="text-xs font-mono text-zinc-600 uppercase tracking-widest mb-6">Game pages with live data</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
+        {publishedGames.map((g) => (
+          <a
+            href={g.href}
+            class={`group bg-zinc-900 border ${g.color} rounded-xl p-5 flex items-start gap-4 transition-colors`}
+          >
+            <div class={`shrink-0 mt-0.5 w-2 h-2 rounded-full ${g.dot} ${g.pulse ? "animate-pulse" : ""}`}></div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="font-mono font-bold text-zinc-100 text-sm">{g.short}</span>
+                <span class={`text-xs font-mono px-1.5 py-0.5 rounded ${g.badge}`}>
+                  {g.year ?? "2026"}
+                </span>
+              </div>
+              <div class="text-xs text-zinc-400 font-mono">{g.title}</div>
+              <div class="text-xs text-zinc-600 font-mono mt-1">{g.desc}</div>
+            </div>
+          </a>
         ))}
       </div>
     </div>
@@ -71,14 +110,17 @@ const latestTrailer = (trailersData as any).trailers?.[0] ?? null;
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
 
-    <!-- Prediction cards -->
-    <section id="predictions">
+    <!-- GTA VI prediction strip (teaser) -->
+    <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Predictions</span>
+        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse shrink-0"></span>
+        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">GTA VI — Key Predictions</span>
         <div class="flex-1 h-px bg-zinc-800"></div>
-        <span class="text-xs font-mono text-zinc-700">community estimates · not official</span>
+        <a href="/gta-vi" class="text-xs font-mono text-amber-600 hover:text-amber-500 transition-colors">
+          Full analysis →
+        </a>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {predictionsData.predictions.map((p) => (
           <PredictionCard
             title={p.title}
@@ -92,11 +134,13 @@ const latestTrailer = (trailersData as any).trailers?.[0] ?? null;
       </div>
     </section>
 
-    <!-- Release timeline -->
+    <!-- Release history -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Historical Context</span>
+        <span class="w-2 h-2 rounded-full bg-zinc-500 shrink-0"></span>
+        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Release History — All Games</span>
         <div class="flex-1 h-px bg-zinc-800"></div>
+        <span class="text-xs font-mono text-zinc-700">GTA I → GTA VI</span>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         <ReleaseTimeline />
@@ -110,6 +154,7 @@ const latestTrailer = (trailersData as any).trailers?.[0] ?? null;
             <thead>
               <tr class="border-b border-zinc-800">
                 <th class="text-left pb-2 text-zinc-600 font-normal">Title</th>
+                <th class="text-right pb-2 text-zinc-600 font-normal">Year</th>
                 <th class="text-right pb-2 text-zinc-600 font-normal">Price</th>
                 <th class="text-right pb-2 text-zinc-600 font-normal">Map km²</th>
                 <th class="text-right pb-2 text-zinc-600 font-normal">Vehicles</th>
@@ -117,22 +162,26 @@ const latestTrailer = (trailersData as any).trailers?.[0] ?? null;
             </thead>
             <tbody>
               {releasesData.games.map((g) => {
-                const isPred = g.is_prediction;
-                const price = g.price_usd_launch ?? (g as any).price_usd_estimate;
-                const map = g.map_size_km2 ?? (g as any).map_size_km2_estimate;
-                const vehicles = g.vehicle_count ?? (g as any).vehicle_count_estimate;
+                const isPred   = g.is_prediction;
+                const year     = g.release_year ?? (g as any).release_date_estimate;
+                const price    = g.price_usd_launch    ?? (g as any).price_usd_estimate;
+                const map      = g.map_size_km2        ?? (g as any).map_size_km2_estimate;
+                const vehicles = g.vehicle_count       ?? (g as any).vehicle_count_estimate;
                 return (
                   <tr class={`border-b border-zinc-800/50 ${isPred ? "text-amber-400" : "text-zinc-300"}`}>
-                    <td class="py-2.5">
-                      {g.short}{isPred && <span class="ml-1 text-amber-600">*</span>}
+                    <td class="py-2 font-semibold">
+                      {g.short}{isPred && <span class="ml-1 text-amber-600 font-normal">*</span>}
                     </td>
-                    <td class="text-right py-2.5">
+                    <td class="text-right py-2 text-zinc-500">
+                      {year ?? <span class="text-zinc-700">—</span>}
+                    </td>
+                    <td class="text-right py-2">
                       {price ? `$${price.toFixed(2)}` : <span class="text-zinc-700">—</span>}
                     </td>
-                    <td class="text-right py-2.5">
+                    <td class="text-right py-2">
                       {map ? `${map}${isPred ? "~" : ""}` : <span class="text-zinc-700">—</span>}
                     </td>
-                    <td class="text-right py-2.5">
+                    <td class="text-right py-2">
                       {vehicles ? `${vehicles}${isPred ? "~" : ""}` : <span class="text-zinc-700">—</span>}
                     </td>
                   </tr>
@@ -145,20 +194,31 @@ const latestTrailer = (trailersData as any).trailers?.[0] ?? null;
       </div>
     </section>
 
-    <!-- Data sources note -->
+    <!-- Footer links -->
     <section class="border border-zinc-800 rounded-xl p-6 bg-zinc-900/50">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <h3 class="font-mono font-semibold text-zinc-300 text-sm mb-1">Powered by live GTA data</h3>
-          <p class="text-xs text-zinc-500 font-mono">
-            Predictions are extrapolated from 113 months of Steam player data,
-            737 vehicle benchmarks, 5-keyword search trend analysis, and 30 years of release history.
+          <h3 class="font-mono font-semibold text-zinc-300 text-sm mb-1">GTA V — Live Data</h3>
+          <p class="text-xs text-zinc-500 font-mono mb-3">
+            133 months of Steam player history · 665 Broughy-tested vehicles ·
+            Google Trends from 2013 to today.
           </p>
+          <a href="/gta-v"
+            class="text-xs font-mono text-amber-600 hover:text-amber-500 border border-amber-600/20 hover:border-amber-500/40 px-3 py-1.5 rounded transition-colors">
+            Explore GTA V data →
+          </a>
         </div>
-        <a href="/predictions"
-          class="shrink-0 text-xs font-mono text-amber-500 hover:text-amber-400 border border-amber-500/20 hover:border-amber-500/40 px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
-          Detailed methodology →
-        </a>
+        <div>
+          <h3 class="font-mono font-semibold text-zinc-300 text-sm mb-1">GTA VI — Predictions</h3>
+          <p class="text-xs text-zinc-500 font-mono mb-3">
+            Release window, launch price, map size, and vehicle count —
+            confidence-scored from 30 years of GTA history.
+          </p>
+          <a href="/gta-vi"
+            class="text-xs font-mono text-amber-500 hover:text-amber-400 border border-amber-500/20 hover:border-amber-500/40 px-3 py-1.5 rounded transition-colors">
+            View GTA VI predictions →
+          </a>
+        </div>
       </div>
     </section>
 
