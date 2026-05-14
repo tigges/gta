@@ -24,6 +24,8 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
+      # ── GTA V ──────────────────────────────────────────────────────────────
+
       - name: Fetch vehicle performance data
         run: python scrapers/fetch_vehicles.py
         env:
@@ -35,6 +37,8 @@ jobs:
       - name: Fetch Google Trends data
         run: python scrapers/fetch_trends.py
 
+      # ── GTA VI ─────────────────────────────────────────────────────────────
+
       - name: Fetch GTA VI trailer data
         run: python scrapers/gtavi/fetch_trailers.py
         env:
@@ -42,6 +46,32 @@ jobs:
 
       - name: Fetch GTA VI search trends
         run: python scrapers/gtavi/fetch_search_trends.py
+
+      - name: Fetch trailer view velocity
+        run: python scrapers/fetch_youtube_velocity.py
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+
+      # ── Franchise ──────────────────────────────────────────────────────────
+
+      - name: Fetch Take-Two stock price history
+        run: python scrapers/fetch_ttwo_stock.py
+
+      - name: Fetch franchise sales data
+        run: python scrapers/fetch_franchise_sales.py
+
+      # ── Community & News ───────────────────────────────────────────────────
+
+      - name: Fetch Reddit community data
+        run: python scrapers/fetch_reddit.py
+        env:
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+
+      - name: Fetch intelligence news feeds
+        run: python scrapers/fetch_newswire.py
+
+      # ── Commit ─────────────────────────────────────────────────────────────
 
       - name: Commit updated data files
         uses: stefanzweifel/git-auto-commit-action@v5

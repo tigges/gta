@@ -1,32 +1,87 @@
 ---
+interface PredictionRange {
+  low: string;
+  high: string;
+}
+
 interface Props {
   title: string;
   value: string;
-  confidence: number; // 0–100
+  confidence: number;
+  confidence_tier: "confirmed" | "reported" | "predicted";
   basis: string;
-  unit?: string;
-  trailerTimestamp?: string;
+  unit?: string | null;
+  trailer_timestamp?: string | null;
+  prediction_method?: string | null;
+  prediction_range?: PredictionRange | null;
+  source?: string | null;
+  source_type?: "official" | "reported" | "predicted" | null;
+  outcome_verified?: boolean;
+  outcome_actual?: string | null;
 }
 
-const { title, value, confidence, basis, unit, trailerTimestamp } = Astro.props;
+const {
+  title,
+  value,
+  confidence,
+  confidence_tier,
+  basis,
+  unit,
+  trailer_timestamp,
+  prediction_method,
+  prediction_range,
+  source,
+  source_type,
+  outcome_verified,
+  outcome_actual,
+} = Astro.props;
 
-const tier =
-  confidence >= 70 ? { label: "HIGH",   color: "text-gta-gold",  bar: "bg-gta-gold",  border: "border-l-gta-gold",  bg: "bg-gta-gold/5"  } :
-  confidence >= 45 ? { label: "MID",    color: "text-amber-600", bar: "bg-amber-600", border: "border-l-amber-600", bg: "bg-amber-600/5" } :
-                     { label: "LOW",    color: "text-zinc-500",  bar: "bg-zinc-600",  border: "border-l-zinc-600",  bg: "bg-zinc-600/5"  };
+// Tier styling driven by schema field, not computed from confidence number
+const TIER_STYLES = {
+  confirmed: {
+    label: "CONFIRMED",
+    color: "text-emerald-400",
+    bar: "bg-emerald-500",
+    border: "border-l-emerald-500",
+    bg: "bg-emerald-500/5",
+    badgeBg: "bg-emerald-900/30 border-emerald-800/40 text-emerald-400",
+  },
+  reported: {
+    label: "REPORTED",
+    color: "text-gta-gold",
+    bar: "bg-gta-gold",
+    border: "border-l-gta-gold",
+    bg: "bg-gta-gold/5",
+    badgeBg: "bg-amber-900/30 border-amber-800/40 text-amber-400",
+  },
+  predicted: {
+    label: "PREDICTED",
+    color: "text-zinc-400",
+    bar: "bg-zinc-500",
+    border: "border-l-zinc-600",
+    bg: "bg-zinc-600/5",
+    badgeBg: "bg-zinc-800/50 border-zinc-700/40 text-zinc-400",
+  },
+};
+
+const tier = TIER_STYLES[confidence_tier] ?? TIER_STYLES.predicted;
+
+const showRange = prediction_range && prediction_range.low !== prediction_range.high;
 ---
 
-<div class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current`} style="background:#131316">
-
-  <!-- Top: title + confidence tier label -->
+<div
+  class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current`}
+  style="background:#131316"
+>
+  <!-- Top: title + tier badge -->
   <div class="flex items-start justify-between px-4 pt-4 pb-2">
     <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.18em] leading-snug">{title}</span>
-    <span class={`text-[9px] font-mono ${tier.color} border border-current/20 px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ml-2`}>
+    <span class={`text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ml-2 ${tier.badgeBg}`}>
       {tier.label}
     </span>
   </div>
 
-  <!-- Value -->
+  <!-- Value + unit -->
   <div class="px-4 pb-3 flex items-baseline gap-1.5">
     <span class="text-3xl font-bold font-mono text-white leading-none">{value}</span>
     {unit && <span class="text-sm font-mono text-zinc-500">{unit}</span>}
@@ -43,22 +98,52 @@ const tier =
     </div>
   </div>
 
-  <!-- Basis text -->
-  <div class="px-4 pb-4 flex-1">
-    <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{basis}</p>
-  </div>
-
-  <!-- Evidence link if present -->
-  {trailerTimestamp && (
-    <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5">
+  <!-- Range (if low ≠ high) -->
+  {showRange && (
+    <div class="px-4 pb-2">
       <span class="text-[10px] font-mono text-zinc-600">
-        ▶ Trailer evidence @ <span class="text-zinc-500">{trailerTimestamp}</span>
+        Range: <span class="text-zinc-500">{prediction_range!.low}</span>
+        <span class="text-zinc-700"> – </span>
+        <span class="text-zinc-500">{prediction_range!.high}</span>
       </span>
     </div>
   )}
 
-  <!-- Estimated badge bottom-right -->
-  <div class="absolute bottom-3 right-3 opacity-20">
-    <span class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">est.</span>
+  <!-- Basis text -->
+  <div class="px-4 pb-3 flex-1">
+    <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{basis}</p>
   </div>
+
+  <!-- Method (if present) -->
+  {prediction_method && (
+    <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5">
+      <div class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest mb-0.5">Method</div>
+      <p class="text-[10px] font-mono text-zinc-600 leading-snug">{prediction_method}</p>
+    </div>
+  )}
+
+  <!-- Footer row: source + trailer timestamp -->
+  {(source || trailer_timestamp) && (
+    <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5 flex items-start justify-between gap-2">
+      {source && (
+        <span class="text-[10px] font-mono text-zinc-700 truncate">
+          {source_type === "official" && <span class="text-emerald-600">● </span>}
+          {source_type === "reported" && <span class="text-amber-700">● </span>}
+          {source_type === "predicted" && <span class="text-zinc-600">● </span>}
+          {source}
+        </span>
+      )}
+      {trailer_timestamp && (
+        <span class="text-[10px] font-mono text-zinc-700 shrink-0">▶ {trailer_timestamp}</span>
+      )}
+    </div>
+  )}
+
+  <!-- Outcome banner (post-launch) -->
+  {outcome_verified && outcome_actual && (
+    <div class="px-4 py-2 border-t border-emerald-900/30" style="background:#0a1a0e">
+      <div class="text-[9px] font-mono text-emerald-600 uppercase tracking-widest mb-0.5">Actual</div>
+      <p class="text-[11px] font-mono text-emerald-400 font-semibold">{outcome_actual}</p>
+    </div>
+  )}
 </div>
