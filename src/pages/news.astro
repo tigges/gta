@@ -1,0 +1,201 @@
+---
+import Base from "../layouts/Base.astro";
+import feedData from "../../data/feeds/newswire.json";
+
+const items = feedData.items as any[];
+
+// Source config
+const SOURCE_META: Record<string, { color: string; badge: string; tier: string }> = {
+  "rockstar-newswire": { color: "text-gta-gold",  badge: "bg-gta-gold/10 border-gta-gold/20",   tier: "OFFICIAL" },
+  "rockstar-intel":    { color: "text-amber-400", badge: "bg-amber-500/10 border-amber-500/20",  tier: "PRESS"    },
+  "kotaku":            { color: "text-zinc-300",  badge: "bg-zinc-800 border-zinc-700",           tier: "PRESS"    },
+  "eurogamer":         { color: "text-zinc-300",  badge: "bg-zinc-800 border-zinc-700",           tier: "PRESS"    },
+  "insider-gaming":    { color: "text-gta-teal",  badge: "bg-gta-teal/10 border-gta-teal/20",    tier: "PRESS"    },
+};
+
+function sourceMeta(id: string) {
+  return SOURCE_META[id] ?? { color: "text-zinc-400", badge: "bg-zinc-800/50 border-zinc-700", tier: "PRESS" };
+}
+
+function relativeTime(iso: string | null): string {
+  if (!iso) return "";
+  const diff = Date.now() - new Date(iso).getTime();
+  const hours = Math.floor(diff / 3_600_000);
+  const days  = Math.floor(hours / 24);
+  if (hours < 1)   return "just now";
+  if (hours < 24)  return `${hours}h ago`;
+  if (days === 1)  return "yesterday";
+  if (days < 7)    return `${days}d ago`;
+  return new Date(iso).toLocaleDateString("en-GB", { day:"numeric", month:"short" });
+}
+
+// Group by source for the breakdown
+const bySource = items.reduce<Record<string, number>>((acc, i) => {
+  acc[i.source_name] = (acc[i.source_name] ?? 0) + 1;
+  return acc;
+}, {});
+
+const updatedAt = feedData.last_updated;
+---
+
+<Base
+  title="News"
+  description="GTA VI intelligence feed — aggregated from Rockstar Intel, Kotaku, Eurogamer and Insider Gaming. Updated nightly."
+>
+
+  <!-- Header -->
+  <section class="border-b border-[#1e1e23]" style="background:#0a0a0d">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <div class="flex items-start justify-between flex-wrap gap-4">
+        <div>
+          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Intelligence Feed</div>
+          <h1 class="text-3xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">News</h1>
+          <p class="text-sm text-zinc-400 max-w-lg" style="font-family:'Inter',sans-serif">
+            GTA VI press coverage aggregated from {Object.keys(bySource).length} sources.
+            Ranked by credibility, tagged by tier. Updated nightly.
+          </p>
+        </div>
+        <!-- Source breakdown -->
+        <div class="flex flex-col gap-1.5 self-end">
+          {Object.entries(bySource).map(([name, count]) => (
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-mono text-zinc-600 w-28 truncate">{name}</span>
+              <div class="h-1 rounded-full bg-gta-gold/20" style={`width:${Math.round((count as number)/items.length*120)}px`}></div>
+              <span class="text-[10px] font-mono text-zinc-600">{count}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Stats strip -->
+      <div class="flex items-center gap-6 mt-6 flex-wrap">
+        <div class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse"></span>
+          <span class="text-[10px] font-mono text-zinc-500">{items.length} items tracked</span>
+        </div>
+        <span class="text-[10px] font-mono text-zinc-700">
+          Updated: {new Date(updatedAt).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" })}
+        </span>
+        <span class="text-[10px] font-mono text-zinc-700">Sources: {feedData.sources.length} RSS feeds</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Main feed -->
+      <div class="lg:col-span-2 flex flex-col gap-3">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Latest Intel</span>
+          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <span class="text-[10px] font-mono text-zinc-700">newest first</span>
+        </div>
+
+        {items.map((item) => {
+          const meta = sourceMeta(item.source_id);
+          return (
+            <a
+              href={item.url}
+              target="_blank" rel="noopener noreferrer"
+              class="group rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] p-4 flex items-start gap-3 transition-all"
+              style="background:#131316"
+            >
+              <!-- Tier badge -->
+              <div class="shrink-0 mt-0.5">
+                <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}`}>
+                  {meta.tier}
+                </span>
+              </div>
+
+              <div class="min-w-0 flex-1">
+                <div class={`text-sm leading-snug mb-1 group-hover:text-white transition-colors ${meta.color}`}
+                  style="font-family:'Inter',sans-serif">
+                  {item.title}
+                </div>
+                {item.summary && (
+                  <p class="text-[11px] text-zinc-600 leading-relaxed line-clamp-2 mb-2" style="font-family:'Inter',sans-serif">
+                    {item.summary}
+                  </p>
+                )}
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-[10px] font-mono text-zinc-600">{item.source_name}</span>
+                  {item.published_at && (
+                    <>
+                      <span class="text-zinc-800">·</span>
+                      <span class="text-[10px] font-mono text-zinc-700">{relativeTime(item.published_at)}</span>
+                    </>
+                  )}
+                  <span class="text-zinc-800">·</span>
+                  <span class="text-[10px] font-mono text-zinc-800 group-hover:text-zinc-600 transition-colors">↗</span>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+
+      <!-- Sidebar: source info + add more -->
+      <div class="flex flex-col gap-4">
+
+        <!-- Source reliability key -->
+        <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+          <div class="px-4 py-3 border-b border-[#1e1e23]">
+            <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Source Tiers</div>
+          </div>
+          <div class="divide-y divide-[#1e1e23]">
+            {[
+              { tier: "OFFICIAL", color: "text-gta-gold", badge: "bg-gta-gold/10 border-gta-gold/20", desc: "Rockstar Games or Take-Two direct announcements." },
+              { tier: "PRESS", color: "text-amber-400",  badge: "bg-amber-500/10 border-amber-500/20", desc: "Specialist and mainstream gaming press. Credibility varies by outlet." },
+              { tier: "COMMUNITY", color: "text-gta-teal", badge: "bg-gta-teal/10 border-gta-teal/20", desc: "Reddit, GTAForums, verified community sources. (Coming soon)" },
+            ].map(s => (
+              <div class="px-4 py-3">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${s.badge} ${s.color}`}>{s.tier}</span>
+                </div>
+                <p class="text-[11px] text-zinc-600 leading-relaxed" style="font-family:'Inter',sans-serif">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Active sources -->
+        <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+          <div class="px-4 py-3 border-b border-[#1e1e23]">
+            <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Active Sources</div>
+          </div>
+          <div class="divide-y divide-[#1e1e23]">
+            {[
+              { name: "Rockstar Intel",  id: "rockstar-intel",  items: bySource["Rockstar Intel"] ?? 0,  status: "live" },
+              { name: "Kotaku",          id: "kotaku",          items: bySource["Kotaku"] ?? 0,          status: "live" },
+              { name: "Eurogamer",       id: "eurogamer",       items: bySource["Eurogamer"] ?? 0,       status: "live" },
+              { name: "Insider Gaming",  id: "insider-gaming",  items: bySource["Insider Gaming"] ?? 0,  status: "live" },
+              { name: "Reddit r/GTAVI",  id: "reddit",          items: 0,                                status: "soon" },
+              { name: "GTAForums",       id: "gtaforums",       items: 0,                                status: "soon" },
+            ].map(s => (
+              <div class="px-4 py-2.5 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class={`w-1.5 h-1.5 rounded-full ${s.status === "live" ? "bg-gta-teal" : "bg-zinc-700"}`}></span>
+                  <span class="text-[11px] font-mono text-zinc-400">{s.name}</span>
+                </div>
+                <span class={`text-[10px] font-mono ${s.status === "live" ? "text-zinc-600" : "text-zinc-800"}`}>
+                  {s.status === "live" ? `${s.items} items` : "soon"}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Methodology note -->
+        <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
+          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Note</div>
+          <p class="text-[11px] text-zinc-600 leading-relaxed" style="font-family:'Inter',sans-serif">
+            GTAVI.AI aggregates public RSS feeds. All articles link to their original source.
+            Not affiliated with any outlet listed. Community (Reddit / GTAForums) integration coming in v2.0.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Base>
