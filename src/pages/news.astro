@@ -6,6 +6,37 @@ import redditData from "../../data/community/reddit.json";
 const pressItems = feedData.items as any[];
 const redditPosts = (redditData.recent_posts as any[]) ?? [];
 
+// Keyword → thumbnail mapping for article cards
+function getArticleThumb(title: string): string | null {
+  const t = title.toLowerCase();
+  if (t.includes("lucia"))                                return "/assets/gta6/characters/Lucia_Caminos_02.jpg";
+  if (t.includes("jason"))                                return "/assets/gta6/characters/Jason_Duval_02.jpg";
+  if (t.includes("boobie") || t.includes(" ike"))         return "/assets/gta6/characters/Boobie_Ike_01.jpg";
+  if (t.includes("raul") || t.includes("bautista"))       return "/assets/gta6/characters/Raul_Bautista_01.jpg";
+  if (t.includes("brian heder"))                          return "/assets/gta6/characters/Brian_Heder_01.jpg";
+  if (t.includes("cal hampton"))                          return "/assets/gta6/characters/Cal_Hampton_01.jpg";
+  if (t.includes("real dimez"))                           return "/assets/gta6/characters/Real_Dimez_01.jpg";
+  if (t.includes("vice city"))                            return "/assets/gta6/locations/Vice_City_02.jpg";
+  if (t.includes("leonida keys"))                         return "/assets/gta6/locations/Leonida_Keys_01.jpg";
+  if (t.includes("port gellhorn"))                        return "/assets/gta6/locations/Port_Gellhorn_01.jpg";
+  if (t.includes("ambrosia"))                             return "/assets/gta6/locations/Ambrosia_01.jpg";
+  if (t.includes("grassriver"))                           return "/assets/gta6/locations/Grassrivers_01.jpg";
+  if (t.includes("mount kalaga") || t.includes("kalaga")) return "/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg";
+  if (t.includes("trailer") || t.includes("reveal") || t.includes("footage"))
+    return "https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg";
+  if (t.includes("preorder") || t.includes("pre-order") || t.includes("best buy") || t.includes("release date"))
+    return "/assets/gta6/locations/Vice_City_05.jpg";
+  if (t.includes("map") || t.includes("leonida") || t.includes("region") || t.includes("yanis"))
+    return "/assets/gta6/locations/Leonida_Keys_03.jpg";
+  if (t.includes("online") || t.includes("shark") || t.includes("gta+"))
+    return "/assets/gta6/locations/Port_Gellhorn_01.jpg";
+  if (t.includes("take-two") || t.includes("take two") || t.includes("rockstar") || t.includes("earnings"))
+    return "/assets/gta6/locations/Vice_City_09.jpg";
+  if (t.includes("delay") || t.includes("pushed") || t.includes("launch"))
+    return "/assets/gta6/locations/Ambrosia_03.jpg";
+  return null;
+}
+
 // Normalise Reddit posts into the same shape as press items
 const redditItems = redditPosts.map((p: any) => ({
   title:        p.title,
@@ -67,7 +98,7 @@ const updatedAt = feedData.last_updated;
   <!-- Header -->
   <section class="relative border-b border-[#1e1e23] overflow-hidden">
     <div class="absolute inset-0">
-      <img src="/assets/screenshots/Vice_City_03.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 40%" aria-hidden="true" />
+      <img src="/assets/gta6/locations/Vice_City_03.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 40%" aria-hidden="true" />
       <div class="absolute inset-0" style="background:linear-gradient(to right, #0a0a0d 0%, #0a0a0dcc 50%, #0a0a0d88 100%)"></div>
       <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 0%, #0a0a0d 100%)"></div>
     </div>
@@ -128,41 +159,57 @@ const updatedAt = feedData.last_updated;
         </div>
 
         {allItems.map((item) => {
-          const meta = sourceMeta(item.source_id);
+          const meta  = sourceMeta(item.source_id);
+          const thumb = getArticleThumb(item.title ?? "");
           return (
             <a
               href={item.url}
               target="_blank" rel="noopener noreferrer"
-              class="group rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] p-4 flex items-start gap-3 transition-all"
+              class="group rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] overflow-hidden flex items-stretch transition-all"
               style="background:#131316"
             >
-              <!-- Tier badge -->
-              <div class="shrink-0 mt-0.5">
-                <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}`}>
-                  {meta.tier}
-                </span>
-              </div>
-
-              <div class="min-w-0 flex-1">
-                <div class={`text-sm leading-snug mb-1 group-hover:text-white transition-colors ${meta.color}`}
-                  style="font-family:'Inter',sans-serif">
-                  {item.title}
+              <!-- Thumbnail (if matched) -->
+              {thumb && (
+                <div class="shrink-0 w-20 sm:w-24 overflow-hidden relative">
+                  <img
+                    src={thumb}
+                    alt=""
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                    aria-hidden="true"
+                  />
+                  <div class="absolute inset-0" style="background:linear-gradient(to right,transparent 60%,#131316 100%)"></div>
                 </div>
-                {item.summary && (
-                  <p class="text-[11px] text-zinc-600 leading-relaxed line-clamp-2 mb-2" style="font-family:'Inter',sans-serif">
-                    {item.summary}
-                  </p>
-                )}
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="text-[10px] font-mono text-zinc-600">{item.source_name}</span>
-                  {item.published_at && (
-                    <>
-                      <span class="text-zinc-800">·</span>
-                      <span class="text-[10px] font-mono text-zinc-700">{relativeTime(item.published_at)}</span>
-                    </>
+              )}
+
+              <div class={`flex items-start gap-3 p-4 flex-1 min-w-0 ${!thumb ? "" : ""}`}>
+                <!-- Tier badge -->
+                <div class="shrink-0 mt-0.5">
+                  <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}`}>
+                    {meta.tier}
+                  </span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class={`text-sm leading-snug mb-1 group-hover:text-white transition-colors ${meta.color}`}
+                    style="font-family:'Inter',sans-serif">
+                    {item.title}
+                  </div>
+                  {item.summary && (
+                    <p class="text-[11px] text-zinc-600 leading-relaxed line-clamp-2 mb-2" style="font-family:'Inter',sans-serif">
+                      {item.summary}
+                    </p>
                   )}
-                  <span class="text-zinc-800">·</span>
-                  <span class="text-[10px] font-mono text-zinc-800 group-hover:text-zinc-600 transition-colors">↗</span>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-[10px] font-mono text-zinc-600">{item.source_name}</span>
+                    {item.published_at && (
+                      <>
+                        <span class="text-zinc-800">·</span>
+                        <span class="text-[10px] font-mono text-zinc-700">{relativeTime(item.published_at)}</span>
+                      </>
+                    )}
+                    <span class="text-zinc-800">·</span>
+                    <span class="text-[10px] font-mono text-zinc-800 group-hover:text-zinc-600 transition-colors">↗</span>
+                  </div>
                 </div>
               </div>
             </a>

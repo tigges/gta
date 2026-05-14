@@ -167,24 +167,32 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         {([
-          { name: "Lucia Caminos",  role: "Protagonist", img: "Lucia_Caminos_01.jpg"  },
-          { name: "Jason Duval",    role: "Protagonist", img: "Jason_Duval_01.jpg"    },
-          { name: "Raul Bautista",  role: "Supporting",  img: "Raul_Bautista_01.jpg"  },
-          { name: "Boobie Ike",     role: "Supporting",  img: "Boobie_Ike_01.jpg"     },
-          { name: "Brian Heder",    role: "Supporting",  img: "Brian_Heder_01.jpg"    },
-          { name: "Cal Hampton",    role: "Supporting",  img: "Cal_Hampton_01.jpg"    },
-          { name: "DreQuan Priest", role: "Supporting",  img: "DreQuan_Priest_01.jpg" },
-          { name: "Real Dimez",     role: "Supporting",  img: "Real_Dimez_01.jpg"     },
+          { name: "Lucia Caminos",  role: "Protagonist", img: "Lucia_Caminos_01.jpg",   video: "Lucia_Caminos_Video_Clip.mp4"   },
+          { name: "Jason Duval",    role: "Protagonist", img: "Jason_Duval_01.jpg",     video: "Jason_Duval_Video_Clip.mp4"     },
+          { name: "Raul Bautista",  role: "Supporting",  img: "Raul_Bautista_01.jpg",   video: "Raul_Bautista_Video_Clip.mp4"   },
+          { name: "Boobie Ike",     role: "Supporting",  img: "Boobie_Ike_01.jpg",      video: "Boobie_Ike_Video_Clip.mp4"      },
+          { name: "Brian Heder",    role: "Supporting",  img: "Brian_Heder_01.jpg",     video: "Brian_Heder_Video_Clip.mp4"     },
+          { name: "Cal Hampton",    role: "Supporting",  img: "Cal_Hampton_01.jpg",     video: "Cal_Hampton_Video_Clip.mp4"     },
+          { name: "DreQuan Priest", role: "Supporting",  img: "DreQuan_Priest_01.jpg",  video: "DreQuan_Priest_Video_Clip.mp4"  },
+          { name: "Real Dimez",     role: "Supporting",  img: "Real_Dimez_01.jpg",      video: "Real_Dimez_Video_Clip.mp4"      },
         ] as const).map(c => (
-          <div class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-gta-gold/30 transition-all duration-300 cursor-default">
-            <!-- Portrait photo -->
+          <div class="char-card group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-gta-gold/30 transition-all duration-300 cursor-default"
+            data-video={`/assets/gta6/videos/${c.video}`}>
+            <!-- Still photo (shown by default) -->
             <div class="aspect-[3/4] overflow-hidden">
               <img
-                src={`/assets/screenshots/${c.img}`}
+                src={`/assets/gta6/characters/${c.img}`}
                 alt={c.name}
-                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                class="char-still w-full h-full object-cover object-top transition-all duration-500 group-hover:scale-105"
                 loading="lazy"
               />
+              <!-- Video clip (plays on hover) -->
+              <video
+                class="char-video absolute inset-0 w-full h-full object-cover object-top opacity-0 transition-opacity duration-300"
+                muted loop playsinline preload="none"
+              >
+                <source src={`/assets/gta6/videos/${c.video}`} type="video/mp4" />
+              </video>
               <div class="absolute inset-0" style="background:linear-gradient(to top, #0e0e11 0%, #0e0e1180 35%, transparent 60%)"></div>
             </div>
             <!-- Name overlay -->
@@ -195,6 +203,10 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
             <!-- Confirmed badge -->
             <div class="absolute top-2 right-2">
               <span class="text-[7px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">✓</span>
+            </div>
+            <!-- Play indicator -->
+            <div class="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span class="text-[7px] font-mono bg-black/60 text-white border border-white/20 px-1.5 py-0.5 rounded uppercase tracking-widest">▶ clip</span>
             </div>
           </div>
         ))}
@@ -213,17 +225,17 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {([
-          { name: "Vice City",      desc: "Urban hub — streets, nightlife, coast",  img: "Vice_City_01.jpg"                 },
-          { name: "Ambrosia",       desc: "Affluent waterfront district",            img: "Ambrosia_01.jpg"                  },
-          { name: "Grassrivers",    desc: "Wetlands — Leonida Everglades analog",   img: "Grassrivers_01.jpg"               },
-          { name: "Leonida Keys",   desc: "Island chain south of Vice City",         img: "Leonida_Keys_01.jpg"              },
-          { name: "Port Gellhorn",  desc: "Industrial port district",                img: "Port_Gellhorn_01.jpg"             },
-          { name: "Mount Kalaga",   desc: "National park — mountainous interior",    img: "Mount_Kalaga_National_Park_01.jpg" },
+          { name: "Vice City",      desc: "Urban hub — streets, nightlife, coast",   img: "Vice_City_04.jpg",                  shots: 9  },
+          { name: "Ambrosia",       desc: "Affluent waterfront district",             img: "Ambrosia_02.jpg",                   shots: 5  },
+          { name: "Grassrivers",    desc: "Wetlands — Leonida Everglades analog",    img: "Grassrivers_02.jpg",                shots: 4  },
+          { name: "Leonida Keys",   desc: "Island chain south of Vice City",          img: "Leonida_Keys_03.jpg",               shots: 5  },
+          { name: "Port Gellhorn",  desc: "Industrial port district",                 img: "Port_Gellhorn_02.jpg",              shots: 5  },
+          { name: "Mount Kalaga",   desc: "National park — mountainous interior",     img: "Mount_Kalaga_National_Park_03.jpg", shots: 6  },
         ] as const).map(loc => (
           <div class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-gta-teal/30 transition-all duration-300 cursor-default">
             <div class="aspect-video overflow-hidden">
               <img
-                src={`/assets/screenshots/${loc.img}`}
+                src={`/assets/gta6/locations/${loc.img}`}
                 alt={loc.name}
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
@@ -233,6 +245,7 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
             <div class="absolute bottom-0 left-0 right-0 px-4 pb-4">
               <div class="flex items-center gap-2 mb-0.5">
                 <span class="text-[8px] font-mono text-gta-teal border border-gta-teal/20 bg-gta-teal/10 px-1.5 py-0.5 rounded uppercase tracking-widest">Confirmed</span>
+                <span class="text-[8px] font-mono text-zinc-700">{loc.shots} official shots</span>
               </div>
               <div class="text-sm font-bold text-white leading-tight" style="font-family:'Inter',sans-serif">{loc.name}</div>
               <div class="text-[11px] text-zinc-400 mt-0.5" style="font-family:'Inter',sans-serif">{loc.desc}</div>
@@ -658,6 +671,26 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
         btn.style.opacity = active ? "0.3" : "1";
         paths[kw]?.attr("opacity", active ? 0 : 0.9);
       });
+    });
+  });
+
+  // ── Character card video hover ────────────────────────────────────────────
+  document.querySelectorAll<HTMLElement>(".char-card").forEach(card => {
+    const video = card.querySelector<HTMLVideoElement>(".char-video");
+    const still = card.querySelector<HTMLImageElement>(".char-still");
+    if (!video) return;
+
+    card.addEventListener("mouseenter", () => {
+      video.src = card.dataset.video ?? "";
+      video.load();
+      video.play().catch(() => {});
+      video.style.opacity = "1";
+      if (still) still.style.opacity = "0";
+    });
+    card.addEventListener("mouseleave", () => {
+      video.pause();
+      video.style.opacity = "0";
+      if (still) still.style.opacity = "1";
     });
   });
 </script>
