@@ -25,7 +25,7 @@ CSV_URL = os.getenv(
     f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid=0",
 )
 
-OUT_PATH = "vehicles/performance.json"
+OUT_PATH = "gta-5/vehicles/performance.json"
 
 # Column names vary between sheet versions — adjust if scrape breaks
 COL_MAP = {

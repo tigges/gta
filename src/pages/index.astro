@@ -1,119 +1,164 @@
 ---
 import Base from "../layouts/Base.astro";
-import PlayerChart from "../components/PlayerChart.astro";
-import TrendsChart from "../components/TrendsChart.astro";
-import VehicleChart from "../components/VehicleChart.astro";
+import PredictionCard from "../components/PredictionCard.astro";
+import ReleaseTimeline from "../components/ReleaseTimeline.astro";
 
-import vehicleData from "../../data/vehicles/performance.json";
-import steamData from "../../data/meta/steam-players.json";
+import predictionsData from "../../data/gta-6/predictions.json";
+import releasesData from "../../data/shared/releases.json";
 
-const latestSteam = steamData.data[steamData.data.length - 1];
-const peakSteam = Math.max(...steamData.data.map((d) => d.peak_players));
+const gta6 = releasesData.games.find((g) => g.short === "GTA VI")!;
+const gta5 = releasesData.games.find((g) => g.short === "GTA V")!;
 ---
 
 <Base
-  title="Dashboard"
-  description="GTA Intelligence — data-driven insights across every GTA generation."
+  title="GTA VI Intelligence"
+  description="Data-driven predictions for GTA VI — extrapolated from 30 years of GTA history."
 >
 
   <!-- Hero -->
   <section class="relative overflow-hidden border-b border-zinc-800">
     <div class="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-950"></div>
-    <!-- Subtle grid overlay -->
     <div class="absolute inset-0 opacity-10"
       style="background-image: linear-gradient(#f59e0b22 1px, transparent 1px), linear-gradient(90deg, #f59e0b22 1px, transparent 1px); background-size: 40px 40px;">
     </div>
-
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
       <div class="max-w-2xl">
         <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-3 py-1 mb-6">
           <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-          <span class="text-xs font-mono text-amber-500 uppercase tracking-wider">GTA VI Intelligence</span>
+          <span class="text-xs font-mono text-amber-500 uppercase tracking-wider">Live intelligence · updated nightly</span>
         </div>
         <h1 class="text-4xl sm:text-5xl font-bold font-mono text-zinc-50 leading-tight mb-4">
-          The data behind<br />
-          <span class="text-gta-gold">every GTA generation</span>
+          GTA VI —<br/>
+          <span class="text-gta-gold">What the data says</span>
         </h1>
         <p class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-8 max-w-xl">
-          30 years of GTA data — player counts, vehicle performance, search trends —
-          visualised and extrapolated to predict what GTA VI will look like.
+          30 years of GTA history distilled into confidence-scored predictions.
+          Every number is derived from data, not speculation.
         </p>
         <div class="flex flex-wrap gap-3">
-          <a
-            href="/predictions"
-            class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-mono font-bold text-sm px-5 py-2.5 rounded-lg transition-colors"
-          >
-            GTA VI Predictions →
+          <a href="#predictions"
+            class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-mono font-bold text-sm px-5 py-2.5 rounded-lg transition-colors">
+            View predictions ↓
           </a>
-          <a
-            href="#charts"
-            class="inline-flex items-center gap-2 border border-zinc-700 hover:border-zinc-500 text-zinc-300 font-mono text-sm px-5 py-2.5 rounded-lg transition-colors"
-          >
-            Explore data ↓
-          </a>
+          {gta6.trailer_youtube_id && (
+            <a href={`https://www.youtube.com/watch?v=${gta6.trailer_youtube_id}`}
+              target="_blank" rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 border border-zinc-700 hover:border-zinc-500 text-zinc-300 font-mono text-sm px-5 py-2.5 rounded-lg transition-colors">
+              ▶ Watch trailer
+            </a>
+          )}
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Stat strip -->
+  <!-- Key numbers strip -->
   <section class="border-b border-zinc-800 bg-zinc-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-zinc-800">
-        {[
-          { label: "Vehicles tracked", value: vehicleData.vehicles.length.toString(), sub: "GTA V (Broughy)" },
-          { label: "Steam peak (PC)", value: `${Math.round(peakSteam / 1000)}k`, sub: "concurrent players" },
-          { label: "GTA generations", value: "7", sub: "1997 → 2026?" },
-          { label: "Years in the making", value: "12+", sub: "V → VI gap" },
-        ].map(({ label, value, sub }) => (
+        {predictionsData.predictions.map((p) => (
           <div class="px-6 py-5">
-            <div class="text-2xl font-bold font-mono text-gta-gold">{value}</div>
-            <div class="text-xs font-mono text-zinc-400 mt-0.5">{label}</div>
-            <div class="text-xs font-mono text-zinc-600 mt-0.5">{sub}</div>
+            <div class="text-2xl font-bold font-mono text-gta-gold">{p.value}</div>
+            <div class="text-xs font-mono text-zinc-400 mt-0.5">{p.title}</div>
+            <div class="text-xs font-mono text-zinc-700 mt-0.5">{p.confidence}% confidence</div>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- Charts -->
-  <section id="charts" class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
 
-    <!-- Section label -->
-    <div class="flex items-center gap-3">
-      <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Community Signals</span>
-      <div class="flex-1 h-px bg-zinc-800"></div>
-    </div>
-
-    <!-- Trends + Steam side by side on large screens -->
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-      <TrendsChart />
-      <PlayerChart />
-    </div>
-
-    <!-- Vehicles full width -->
-    <div class="flex items-center gap-3">
-      <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Vehicle Intelligence</span>
-      <div class="flex-1 h-px bg-zinc-800"></div>
-    </div>
-
-    <VehicleChart />
-
-    <!-- CTA to predictions -->
-    <div class="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/5 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div>
-        <h2 class="font-mono font-bold text-zinc-50 text-base">What does this mean for GTA VI?</h2>
-        <p class="text-sm text-zinc-500 mt-1">
-          See how 30 years of data points to vehicle counts, map size, pricing and release windows.
-        </p>
+    <!-- Prediction cards -->
+    <section id="predictions">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Predictions</span>
+        <div class="flex-1 h-px bg-zinc-800"></div>
+        <span class="text-xs font-mono text-zinc-700">community estimates · not official</span>
       </div>
-      <a
-        href="/predictions"
-        class="shrink-0 inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-mono font-bold text-sm px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap"
-      >
-        View Predictions →
-      </a>
-    </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {predictionsData.predictions.map((p) => (
+          <PredictionCard
+            title={p.title}
+            value={p.value}
+            confidence={p.confidence}
+            basis={p.basis}
+            unit={p.unit ?? undefined}
+            trailerTimestamp={p.trailer_timestamp ?? undefined}
+          />
+        ))}
+      </div>
+    </section>
 
-  </section>
+    <!-- Release timeline -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Historical Context</span>
+        <div class="flex-1 h-px bg-zinc-800"></div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <ReleaseTimeline />
+
+        <!-- Cross-gen table -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+          <h3 class="font-mono font-semibold text-zinc-50 text-sm uppercase tracking-wider mb-4">
+            Cross-Generation Growth
+          </h3>
+          <table class="w-full text-xs font-mono">
+            <thead>
+              <tr class="border-b border-zinc-800">
+                <th class="text-left pb-2 text-zinc-600 font-normal">Title</th>
+                <th class="text-right pb-2 text-zinc-600 font-normal">Price</th>
+                <th class="text-right pb-2 text-zinc-600 font-normal">Map km²</th>
+                <th class="text-right pb-2 text-zinc-600 font-normal">Vehicles</th>
+              </tr>
+            </thead>
+            <tbody>
+              {releasesData.games.map((g) => {
+                const isPred = g.is_prediction;
+                const price = g.price_usd_launch ?? (g as any).price_usd_estimate;
+                const map = g.map_size_km2 ?? (g as any).map_size_km2_estimate;
+                const vehicles = g.vehicle_count ?? (g as any).vehicle_count_estimate;
+                return (
+                  <tr class={`border-b border-zinc-800/50 ${isPred ? "text-amber-400" : "text-zinc-300"}`}>
+                    <td class="py-2.5">
+                      {g.short}{isPred && <span class="ml-1 text-amber-600">*</span>}
+                    </td>
+                    <td class="text-right py-2.5">
+                      {price ? `$${price.toFixed(2)}` : <span class="text-zinc-700">—</span>}
+                    </td>
+                    <td class="text-right py-2.5">
+                      {map ? `${map}${isPred ? "~" : ""}` : <span class="text-zinc-700">—</span>}
+                    </td>
+                    <td class="text-right py-2.5">
+                      {vehicles ? `${vehicles}${isPred ? "~" : ""}` : <span class="text-zinc-700">—</span>}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <p class="text-xs text-zinc-700 mt-4">* estimated · sources: Rockstar, Broughy1322, community records</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data sources note -->
+    <section class="border border-zinc-800 rounded-xl p-6 bg-zinc-900/50">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="font-mono font-semibold text-zinc-300 text-sm mb-1">Powered by live GTA data</h3>
+          <p class="text-xs text-zinc-500 font-mono">
+            Predictions are extrapolated from 113 months of Steam player data,
+            737 vehicle benchmarks, 5-keyword search trend analysis, and 30 years of release history.
+          </p>
+        </div>
+        <a href="/predictions"
+          class="shrink-0 text-xs font-mono text-amber-500 hover:text-amber-400 border border-amber-500/20 hover:border-amber-500/40 px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
+          Detailed methodology →
+        </a>
+      </div>
+    </section>
+
+  </div>
 </Base>
