@@ -156,6 +156,93 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
     )}
 
     <!-- ═══════════════════════════════════════════════════════
+         CONFIRMED CAST
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Cast</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">Official press kit · Rockstar Games</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+        {([
+          { name: "Lucia Caminos",  role: "Protagonist", img: "Lucia_Caminos_01.jpg"  },
+          { name: "Jason Duval",    role: "Protagonist", img: "Jason_Duval_01.jpg"    },
+          { name: "Raul Bautista",  role: "Supporting",  img: "Raul_Bautista_01.jpg"  },
+          { name: "Boobie Ike",     role: "Supporting",  img: "Boobie_Ike_01.jpg"     },
+          { name: "Brian Heder",    role: "Supporting",  img: "Brian_Heder_01.jpg"    },
+          { name: "Cal Hampton",    role: "Supporting",  img: "Cal_Hampton_01.jpg"    },
+          { name: "DreQuan Priest", role: "Supporting",  img: "DreQuan_Priest_01.jpg" },
+          { name: "Real Dimez",     role: "Supporting",  img: "Real_Dimez_01.jpg"     },
+        ] as const).map(c => (
+          <div class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-gta-gold/30 transition-all duration-300 cursor-default">
+            <!-- Portrait photo -->
+            <div class="aspect-[3/4] overflow-hidden">
+              <img
+                src={`/assets/screenshots/${c.img}`}
+                alt={c.name}
+                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0" style="background:linear-gradient(to top, #0e0e11 0%, #0e0e1180 35%, transparent 60%)"></div>
+            </div>
+            <!-- Name overlay -->
+            <div class="absolute bottom-0 left-0 right-0 px-2.5 pb-2.5">
+              <div class="text-[11px] font-semibold text-white leading-tight mb-0.5" style="font-family:'Inter',sans-serif">{c.name}</div>
+              <span class={`text-[8px] font-mono uppercase tracking-widest ${c.role === "Protagonist" ? "text-gta-gold" : "text-zinc-500"}`}>{c.role}</span>
+            </div>
+            <!-- Confirmed badge -->
+            <div class="absolute top-2 right-2">
+              <span class="text-[7px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">✓</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         LEONIDA — LOCATIONS
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida — Confirmed Locations</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">Official press kit · Rockstar Games</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {([
+          { name: "Vice City",      desc: "Urban hub — streets, nightlife, coast",  img: "Vice_City_01.jpg"                 },
+          { name: "Ambrosia",       desc: "Affluent waterfront district",            img: "Ambrosia_01.jpg"                  },
+          { name: "Grassrivers",    desc: "Wetlands — Leonida Everglades analog",   img: "Grassrivers_01.jpg"               },
+          { name: "Leonida Keys",   desc: "Island chain south of Vice City",         img: "Leonida_Keys_01.jpg"              },
+          { name: "Port Gellhorn",  desc: "Industrial port district",                img: "Port_Gellhorn_01.jpg"             },
+          { name: "Mount Kalaga",   desc: "National park — mountainous interior",    img: "Mount_Kalaga_National_Park_01.jpg" },
+        ] as const).map(loc => (
+          <div class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-gta-teal/30 transition-all duration-300 cursor-default">
+            <div class="aspect-video overflow-hidden">
+              <img
+                src={`/assets/screenshots/${loc.img}`}
+                alt={loc.name}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0" style="background:linear-gradient(to top, #0e0e11 0%, #0e0e1170 40%, transparent 70%)"></div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 px-4 pb-4">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-[8px] font-mono text-gta-teal border border-gta-teal/20 bg-gta-teal/10 px-1.5 py-0.5 rounded uppercase tracking-widest">Confirmed</span>
+              </div>
+              <div class="text-sm font-bold text-white leading-tight" style="font-family:'Inter',sans-serif">{loc.name}</div>
+              <div class="text-[11px] text-zinc-400 mt-0.5" style="font-family:'Inter',sans-serif">{loc.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
          TRAILER ANALYSIS
     ═══════════════════════════════════════════════════════ -->
     {analysisTrailers.length > 0 && (
