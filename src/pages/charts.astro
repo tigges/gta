@@ -38,16 +38,41 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 >
 
   <!-- Page header -->
-  <section class="border-b border-[#1e1e23]" style="background:#0a0a0d">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+  <section class="relative border-b border-[#1e1e23] overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="/assets/screenshots/Ambrosia_01.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 55%" aria-hidden="true" />
+      <div class="absolute inset-0" style="background:linear-gradient(to right, #0a0a0d 0%, #0a0a0dcc 55%, #0a0a0d88 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 0%, #0a0a0d 100%)"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-start justify-between flex-wrap gap-4">
         <div>
           <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Data Intelligence</div>
           <h1 class="text-3xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">Charts</h1>
           <p class="text-sm text-zinc-400 max-w-lg" style="font-family:'Inter',sans-serif">
             The GTA franchise quantified. Every chart is filterable, sourced, and updated nightly.
-            This is the primary differentiator — no other GTA site visualises this data.
           </p>
+          <!-- Game cover strip -->
+          <div class="flex items-center gap-2.5 mt-5">
+            {([
+              { id: "gta-3",  short: "GTA III" },
+              { id: "gta-vc", short: "GTA VC"  },
+              { id: "gta-sa", short: "GTA SA"  },
+              { id: "gta-4",  short: "GTA IV"  },
+              { id: "gta-5",  short: "GTA V"   },
+              { id: "gta-6",  short: "GTA VI"  },
+            ] as const).map(g => (
+              <div class="flex flex-col items-center gap-1 group">
+                <img
+                  src={`/assets/covers/${g.id}.jpg`}
+                  alt={g.short}
+                  class={`rounded border object-cover transition-all duration-200 group-hover:scale-105 group-hover:border-gta-gold/40 ${g.id === "gta-6" ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10" : "w-9 h-12 border-[#2a2a31]"}`}
+                  loading="eager"
+                />
+                <span class={`text-[8px] font-mono tracking-widest ${g.id === "gta-6" ? "text-gta-gold" : "text-zinc-700"}`}>{g.short}</span>
+              </div>
+            ))}
+          </div>
         </div>
         <!-- Category filters -->
         <div class="flex flex-wrap gap-2 self-end pb-1">
@@ -93,7 +118,20 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
             <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm border border-gta-gold/40 bg-gta-gold/10 inline-block"></span>Projected</span>
           </div>
         </div>
-        <div id="sales-chart" class="w-full" style="height:340px"
+        <!-- Game cover + stat row -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-4 overflow-x-auto">
+          {salesData.titles.map((t: any) => (
+            <div class="flex items-center gap-2.5 shrink-0">
+              <img src={`/assets/covers/${t.id}.jpg`} alt={t.short}
+                class={`rounded object-cover border ${t.is_prediction ? "border-gta-gold/40 w-8 h-11" : "border-[#2a2a31] w-8 h-11"}`} loading="lazy" />
+              <div>
+                <div class={`text-[10px] font-mono font-bold ${t.is_prediction ? "text-gta-gold" : "text-zinc-300"}`}>{t.short}</div>
+                <div class="text-[9px] font-mono text-zinc-600">{t.total_units_m ? `${t.total_units_m}M` : "projected"} · {t.year}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div id="sales-chart" class="w-full" style="height:320px"
           data-titles={JSON.stringify(salesData.titles)}></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Take-Two IR · DFC Intelligence (GTA VI projection)</span>
@@ -125,7 +163,27 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
             <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-gta-gold inline-block rounded"></span>GTA VI (2026)</span>
           </div>
         </div>
-        <div id="hype-chart" class="w-full" style="height:300px"
+        <!-- GTA V vs GTA VI visual comparison -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-6">
+          <div class="flex items-center gap-3">
+            <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="w-10 h-14 object-cover rounded border border-[#2a2a31]" loading="lazy" />
+            <div>
+              <div class="text-[11px] font-mono font-bold text-zinc-300">GTA V (2013)</div>
+              <div class="text-[10px] font-mono text-zinc-600">baseline · 100 pts peak</div>
+            </div>
+          </div>
+          <div class="flex-1 flex items-center justify-center">
+            <span class="text-[10px] font-mono text-zinc-700 border border-[#2a2a31] rounded px-2 py-0.5">vs</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="w-10 h-14 object-cover rounded border border-gta-gold/40 shadow-lg shadow-gta-gold/10" loading="lazy" />
+            <div>
+              <div class="text-[11px] font-mono font-bold text-gta-gold">GTA VI (2026)</div>
+              <div class="text-[10px] font-mono text-zinc-600">running 3–4× hotter</div>
+            </div>
+          </div>
+        </div>
+        <div id="hype-chart" class="w-full" style="height:280px"
           data-gta5={JSON.stringify(gta5Trends.keywords.find(k => k.keyword === "GTA V"))}
           data-gta6={JSON.stringify(gta6Trends.keywords.find(k => k.keyword === "GTA 6"))}
           data-gta5launch="2013-09-17"
@@ -229,24 +287,42 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           </div>
           <div class="text-[11px] text-zinc-500 font-mono">Polled via YouTube Data API · snapshots accumulate over time to build velocity curve</div>
         </div>
-        <!-- Stat cards -->
+        <!-- Trailer thumbnail + stat cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
           {(velocityData.trailers as any[]).map((t, i) => {
             const latest = t.snapshots?.at(-1);
             const views = latest?.views ?? 0;
             const likes = latest?.likes ?? 0;
             return (
-              <div class="px-6 py-5">
-                <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-3">
-                  {i === 0 ? "Trailer 1 · Dec 4 2023" : "Trailer 2 · May 6 2025"}
-                </div>
-                <div class="text-3xl font-bold font-mono text-gta-bright mb-1">
-                  {(views / 1_000_000).toFixed(1)}M
-                </div>
-                <div class="text-[11px] text-zinc-500 font-mono">views</div>
-                <div class="mt-3 flex items-center gap-4 text-[11px] font-mono text-zinc-600">
-                  <span>👍 {(likes / 1_000_000).toFixed(2)}M likes</span>
-                  {i === 0 && <span class="text-gta-teal">24h record holder</span>}
+              <div class="flex items-stretch">
+                <!-- YouTube thumbnail -->
+                <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
+                  class="relative shrink-0 w-36 overflow-hidden group">
+                  <img
+                    src={`https://img.youtube.com/vi/${t.youtube_id}/hqdefault.jpg`}
+                    alt={t.title}
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div class="absolute inset-0" style="background:linear-gradient(to right, transparent 60%, #131316 100%)"></div>
+                  <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div class="w-8 h-8 rounded-full bg-black/60 border border-gta-gold/30 flex items-center justify-center">
+                      <span class="text-white text-sm ml-0.5">▶</span>
+                    </div>
+                  </div>
+                </a>
+                <!-- Stats -->
+                <div class="px-5 py-5 flex-1">
+                  <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-2">
+                    {i === 0 ? "Trailer 1 · Dec 4 2023" : "Trailer 2 · May 6 2025"}
+                  </div>
+                  <div class="text-3xl font-bold font-mono text-gta-bright mb-0.5">
+                    {(views / 1_000_000).toFixed(1)}M
+                  </div>
+                  <div class="text-[11px] text-zinc-500 font-mono mb-3">views</div>
+                  <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-600">
+                    <span>👍 {(likes / 1_000_000).toFixed(2)}M</span>
+                    {i === 0 && <span class="text-gta-teal">24h record</span>}
+                  </div>
                 </div>
               </div>
             );
@@ -420,7 +496,25 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           </div>
           <div class="text-[11px] text-zinc-500 font-mono">GTA III's $49.99 in 2001 = $90.38 in 2026 dollars. GTA VI at $79.99 is cheaper in real terms than every PS2-era title.</div>
         </div>
-        <div id="cpi-chart" class="w-full" style="height:300px"
+        <!-- Cover + price row -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-4 overflow-x-auto">
+          {cpiData.titles.map((t: any) => {
+            const adjusted = t.price_nominal && t.cpi_year
+              ? (t.price_nominal * (cpiData.base_cpi / t.cpi_year)).toFixed(2)
+              : null;
+            return (
+              <div class="flex items-center gap-2 shrink-0">
+                <img src={`/assets/covers/${t.id}.jpg`} alt={t.short}
+                  class={`rounded object-cover border w-8 h-11 ${t.id === "gta-6" ? "border-gta-gold/40" : "border-[#2a2a31]"}`} loading="lazy" />
+                <div>
+                  <div class={`text-[10px] font-mono font-bold ${t.id === "gta-6" ? "text-gta-gold" : "text-zinc-300"}`}>{t.short}</div>
+                  <div class="text-[9px] font-mono text-zinc-600">${t.price_nominal} → <span class="text-zinc-400">${adjusted}</span></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div id="cpi-chart" class="w-full" style="height:280px"
           data-titles={JSON.stringify(cpiData.titles)}
           data-base-cpi={cpiData.base_cpi}
         ></div>
@@ -454,7 +548,20 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
             <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-gta-red inline-block"></span>Gap (divergence)</span>
           </div>
         </div>
-        <div id="divergence-chart" class="w-full" style="height:320px"
+        <!-- Metacritic cover + score row -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-4 overflow-x-auto">
+          {metacriticScores.map((t: any) => (
+            <div class="flex items-center gap-2.5 shrink-0">
+              <img src={`/assets/covers/${t.id}.jpg`} alt={t.short}
+                class={`rounded object-cover border w-8 h-11 ${t.id === "gta-6" ? "border-gta-gold/40" : "border-[#2a2a31]"}`} loading="lazy" />
+              <div>
+                <div class={`text-[10px] font-mono font-bold ${t.id === "gta-6" ? "text-gta-gold" : "text-zinc-300"}`}>{t.short}</div>
+                <div class="text-[9px] font-mono text-zinc-600">{t.critic_score} critic · {t.user_score}×10 user</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div id="divergence-chart" class="w-full" style="height:300px"
           data-scores={JSON.stringify(metacriticScores)}
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23]">
@@ -474,11 +581,27 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-700">{trailerAnalysis.trailers[0].total_entities + trailerAnalysis.trailers[1].total_entities} entities discovered across both trailers</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23]">
-          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
-            Frame-by-Frame: Information Density Across Both Official Trailers
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-center gap-5 flex-wrap">
+          <div class="flex-1">
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              Frame-by-Frame: Information Density Across Both Official Trailers
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Each marker = a new entity confirmed. Colour = entity type. Trailer 2 is information-denser at every quartile.</div>
           </div>
-          <div class="text-[11px] text-zinc-500 font-mono">Each marker = a new entity confirmed. Colour = entity type. Trailer 2 is information-denser at every quartile.</div>
+          <!-- Trailer thumbnails -->
+          <div class="flex items-center gap-3 shrink-0">
+            {(trailerAnalysis.trailers as any[]).map((t: any, i: number) => (
+              <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
+                class="group relative overflow-hidden rounded-lg border border-[#2a2a31] hover:border-gta-gold/30 transition-all">
+                <img src={`https://img.youtube.com/vi/${t.youtube_id}/mqdefault.jpg`}
+                  alt={t.title} class="w-28 h-16 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 50%)"></div>
+                <div class="absolute bottom-1 left-2">
+                  <span class="text-[8px] font-mono text-gta-gold">T{i + 1}</span>
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
         <div id="trailer-discovery-chart" class="w-full px-5 py-4"
           data-trailers={JSON.stringify(trailerAnalysis.trailers)}
@@ -697,7 +820,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     if (!el) return;
     const titles: any[] = JSON.parse(el.dataset.titles || "[]");
 
-    const margin = { top: 20, right: 30, bottom: 50, left: 60 };
+    const margin = { top: 20, right: 30, bottom: 80, left: 60 };
     const W = el.clientWidth - margin.left - margin.right;
     const H = el.clientHeight - margin.top - margin.bottom;
 
@@ -761,12 +884,47 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       }
     });
 
-    // X axis
-    svg.append("g").attr("transform", `translate(0,${H})`)
-      .call(d3.axisBottom(x))
+    // X axis — cover images instead of text labels
+    const COVER_URLS: Record<string,string> = {
+      "GTA III": "/assets/covers/gta-3.jpg",
+      "GTA VC":  "/assets/covers/gta-vc.jpg",
+      "GTA SA":  "/assets/covers/gta-sa.jpg",
+      "GTA IV":  "/assets/covers/gta-4.jpg",
+      "GTA V":   "/assets/covers/gta-5.jpg",
+      "GTA VI":  "/assets/covers/gta-6.jpg",
+    };
+
+    const xAxisG = svg.append("g").attr("transform", `translate(0,${H})`);
+    xAxisG.call(d3.axisBottom(x))
       .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
       .call(g => g.selectAll(".tick line").remove())
-      .call(g => g.selectAll("text").attr("fill", "#71717a").attr("font-size", "12").attr("font-family", "monospace").attr("dy", "1.2em"));
+      .call(g => g.selectAll("text").remove());
+
+    // Add cover art images as tick marks
+    const imgW = Math.min(x.bandwidth() * 0.75, 48);
+    const imgH = Math.round(imgW * 1.4);
+    titles.forEach(t => {
+      const cx = (x(t.short) ?? 0) + x.bandwidth() / 2;
+      const src = COVER_URLS[t.short];
+      if (!src) return;
+      xAxisG.append("image")
+        .attr("href", src)
+        .attr("x", cx - imgW / 2)
+        .attr("y", 8)
+        .attr("width", imgW)
+        .attr("height", imgH)
+        .attr("clip-path", `inset(0 round 4px)`)
+        .style("border-radius", "4px");
+      xAxisG.append("text")
+        .attr("x", cx).attr("y", imgH + 22)
+        .attr("text-anchor", "middle")
+        .attr("fill", t.is_prediction ? "#f59e0b" : "#71717a")
+        .attr("font-size", "10").attr("font-family", "monospace")
+        .text(t.short);
+    });
+
+    // Increase bottom margin by extending chart area
+    svg.attr("transform", `translate(${margin.left},${margin.top})`);
   })();
 
   // ── CHART 2 — Pre-launch Hype Overlay ───────────────────────
