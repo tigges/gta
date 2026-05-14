@@ -23,8 +23,13 @@ const peakSteam     = steamData.data.reduce((a, b) => a.avg_players > b.avg_play
 >
 
   <!-- Page header -->
-  <section class="border-b border-[#1e1e23]" style="background:#0a0a0d">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+  <section class="relative border-b border-[#1e1e23] overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="/assets/covers/gta-5.jpg" alt="" class="absolute right-0 top-0 h-full w-auto object-cover opacity-12" aria-hidden="true" style="filter:saturate(0.5);max-width:50%" />
+      <div class="absolute inset-0" style="background:linear-gradient(to right,#0a0a0d 40%,transparent 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,#0a0a0d 100%)"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-5">
         <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] rounded px-2 py-0.5 uppercase tracking-widest">Grand Theft Auto V</span>
         <span class="text-[10px] font-mono text-zinc-700">2013 · Rockstar Games</span>
