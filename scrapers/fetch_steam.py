@@ -20,31 +20,56 @@ def parse_number(raw: str) -> int | None:
         return None
 
 
+def find_col_index(headers: list[str], *candidates: str) -> int | None:
+    """Return the index of the first header cell matching any candidate (case-insensitive)."""
+    normalised = [h.strip().lower() for h in headers]
+    for candidate in candidates:
+        c = candidate.strip().lower()
+        if c in normalised:
+            return normalised.index(c)
+    return None
+
+
 def fetch() -> list[dict]:
     scraper = cloudscraper.create_scraper(browser={"browser": "chrome", "platform": "windows"})
     resp = scraper.get(URL, timeout=30)
     resp.raise_for_status()
 
     soup = BeautifulSoup(resp.text, "lxml")
-    table = soup.find("table", {"id": "main-chart-table"})
-    if not table:
-        # Fallback: find any table with month/average columns
-        table = soup.find("table")
+
+    # Try the known table ID first, then fall back to the first table on the page
+    table = soup.find("table", {"id": "main-chart-table"}) or soup.find("table")
     if not table:
         raise ValueError("Could not find player data table on SteamCharts page")
 
     rows = table.find_all("tr")
-    data = []
+    if not rows:
+        raise ValueError("Player data table is empty")
 
-    for row in rows[1:]:  # skip header
+    # Detect column positions from the header row
+    header_cells = [c.get_text(strip=True) for c in rows[0].find_all(["th", "td"])]
+    print(f"  Table headers: {header_cells}")
+
+    month_idx = find_col_index(header_cells, "Month", "Date")
+    avg_idx   = find_col_index(header_cells, "Avg. Players", "Avg Players", "Average")
+    peak_idx  = find_col_index(header_cells, "Peak Players", "Peak", "Max Players")
+
+    if month_idx is None or avg_idx is None or peak_idx is None:
+        raise ValueError(
+            f"Could not locate required columns in headers: {header_cells}"
+        )
+
+    data = []
+    for row in rows[1:]:
         cells = row.find_all("td")
-        if len(cells) < 4:
+        if len(cells) <= max(month_idx, avg_idx, peak_idx):
             continue
 
-        month_year = cells[0].get_text(strip=True)  # e.g. "March 2020"
-        avg_raw = cells[1].get_text(strip=True)
-        peak_raw = cells[2].get_text(strip=True)
+        month_year = cells[month_idx].get_text(strip=True)  # e.g. "March 2020"
+        avg_raw    = cells[avg_idx].get_text(strip=True)
+        peak_raw   = cells[peak_idx].get_text(strip=True)
 
+        # Skip summary / incomplete rows (e.g. "Last 30 Days")
         parts = month_year.rsplit(" ", 1)
         if len(parts) != 2:
             continue
@@ -54,11 +79,15 @@ def fetch() -> list[dict]:
         except ValueError:
             continue
 
-        avg = parse_number(avg_raw)
+        avg  = parse_number(avg_raw)
         peak = parse_number(peak_raw)
 
         if avg is None:
             continue
+
+        # Sanity-check: peak must be positive and >= avg
+        if peak is not None and peak < 0:
+            peak = None
 
         data.append(
             {

@@ -2,35 +2,29 @@
 import trendsData from "../../data/gta-5/trends/search-interest.json";
 ---
 
-<div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
-  <div class="flex items-start justify-between flex-wrap gap-3 mb-4">
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+  <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
     <div>
-      <h3 class="font-mono font-semibold text-zinc-50 text-sm uppercase tracking-wider">
-        Search Interest Over Time
-      </h3>
-      <p class="text-xs text-zinc-500 mt-0.5">Google Trends — all GTA keywords, worldwide (0–100)</p>
+      <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Search Interest Over Time</div>
+      <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Google Trends — all GTA keywords, worldwide (0–100)</div>
     </div>
     <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
       {trendsData.keywords.map((kw) => (
         <button
-          class="trend-toggle flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-colors"
+          class="trend-toggle flex items-center gap-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors"
           data-keyword={kw.keyword}
           data-active="true"
         >
-          <span class="w-3 h-0.5 rounded inline-block" style={`background:${kw.color}`}></span>
+          <span class="w-2.5 h-0.5 rounded inline-block" style={`background:${kw.color}`}></span>
           {kw.keyword}
         </button>
       ))}
     </div>
   </div>
-  <div
-    id="trends-chart"
-    class="w-full h-64"
-    data-keywords={JSON.stringify(trendsData.keywords)}
-  ></div>
-  <p class="text-xs text-zinc-700 font-mono mt-3">
-    Source: Google Trends via pytrends · Updated {new Date(trendsData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
-  </p>
+  <div id="trends-chart" class="w-full h-64 px-4 py-2" data-keywords={JSON.stringify(trendsData.keywords)}></div>
+  <div class="px-5 py-3 border-t border-[#1e1e23]">
+    <span class="text-[10px] text-zinc-700 font-mono">Source: Google Trends via pytrends · Updated {new Date(trendsData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
+  </div>
 </div>
 
 <script>
@@ -67,7 +61,7 @@ import trendsData from "../../data/gta-5/trends/search-interest.json";
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
       .call((g) => g.select(".domain").remove())
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#27272a").attr("stroke-dasharray", "3,3"));
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
 
     // Lines
     const lineGen = d3.line<{ date: Date; value: number }>()

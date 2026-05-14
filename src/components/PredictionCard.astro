@@ -10,37 +10,55 @@ interface Props {
 
 const { title, value, confidence, basis, unit, trailerTimestamp } = Astro.props;
 
-const barColor =
-  confidence >= 70 ? "bg-amber-500" :
-  confidence >= 45 ? "bg-amber-600" :
-  "bg-zinc-600";
+const tier =
+  confidence >= 70 ? { label: "HIGH",   color: "text-gta-gold",  bar: "bg-gta-gold",  border: "border-l-gta-gold",  bg: "bg-gta-gold/5"  } :
+  confidence >= 45 ? { label: "MID",    color: "text-amber-600", bar: "bg-amber-600", border: "border-l-amber-600", bg: "bg-amber-600/5" } :
+                     { label: "LOW",    color: "text-zinc-500",  bar: "bg-zinc-600",  border: "border-l-zinc-600",  bg: "bg-zinc-600/5"  };
 ---
 
-<div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5 flex flex-col gap-3">
-  <div class="text-xs font-mono text-zinc-500 uppercase tracking-widest">{title}</div>
+<div class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current`} style="background:#131316">
 
-  <div class="flex items-baseline gap-1.5">
-    <span class="text-3xl font-bold font-mono text-zinc-50">{value}</span>
-    {unit && <span class="text-sm text-zinc-500 font-mono">{unit}</span>}
+  <!-- Top: title + confidence tier label -->
+  <div class="flex items-start justify-between px-4 pt-4 pb-2">
+    <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.18em] leading-snug">{title}</span>
+    <span class={`text-[9px] font-mono ${tier.color} border border-current/20 px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ml-2`}>
+      {tier.label}
+    </span>
   </div>
 
-  <div>
-    <div class="flex justify-between text-xs font-mono text-zinc-600 mb-1">
-      <span>Confidence</span>
-      <span class={confidence >= 70 ? "text-amber-500" : confidence >= 45 ? "text-amber-600" : "text-zinc-500"}>
-        {confidence}%
+  <!-- Value -->
+  <div class="px-4 pb-3 flex items-baseline gap-1.5">
+    <span class="text-3xl font-bold font-mono text-white leading-none">{value}</span>
+    {unit && <span class="text-sm font-mono text-zinc-500">{unit}</span>}
+  </div>
+
+  <!-- Confidence bar -->
+  <div class="px-4 pb-3">
+    <div class="flex items-center justify-between mb-1.5">
+      <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">Confidence</span>
+      <span class={`text-[11px] font-mono font-semibold ${tier.color}`}>{confidence}%</span>
+    </div>
+    <div class="h-0.5 rounded-full" style="background:#1e1e23">
+      <div class={`h-full rounded-full ${tier.bar} transition-all duration-700`} style={`width:${confidence}%`}></div>
+    </div>
+  </div>
+
+  <!-- Basis text -->
+  <div class="px-4 pb-4 flex-1">
+    <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{basis}</p>
+  </div>
+
+  <!-- Evidence link if present -->
+  {trailerTimestamp && (
+    <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5">
+      <span class="text-[10px] font-mono text-zinc-600">
+        ▶ Trailer evidence @ <span class="text-zinc-500">{trailerTimestamp}</span>
       </span>
     </div>
-    <div class="h-1 bg-zinc-800 rounded-full overflow-hidden">
-      <div class={`h-full rounded-full ${barColor}`} style={`width: ${confidence}%`}></div>
-    </div>
-  </div>
-
-  <p class="text-xs text-zinc-500 leading-relaxed">{basis}</p>
-
-  {trailerTimestamp && (
-    <div class="text-xs font-mono text-zinc-600">
-      Evidence: VI Trailer @ {trailerTimestamp}
-    </div>
   )}
+
+  <!-- Estimated badge bottom-right -->
+  <div class="absolute bottom-3 right-3 opacity-20">
+    <span class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">est.</span>
+  </div>
 </div>
