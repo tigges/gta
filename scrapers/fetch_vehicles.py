@@ -1,15 +1,18 @@
 """
 Fetch Broughy1322 GTA V vehicle performance data from the public Google Sheet CSV export.
 
-Sheet: search "Broughy1322 GTA vehicle spreadsheet" for the current public URL.
-Set BROUGHY_SHEET_ID env var to the Google Sheets document ID, or override
-BROUGHY_CSV_URL with the full export URL.
+Sheet: https://docs.google.com/spreadsheets/d/1nQND3ikiLzS3Ij9kuV-rVkRtoYetb79c52JWyafb4m4
+Override BROUGHY_SHEET_ID or BROUGHY_CSV_URL env vars to point to a different export.
+
+The main performance sheet (gid=1299124236) has a two-row header:
+  Row 1: Class | Vehicle | Tier | Lap Time (m:ss.000) | Lap Time Position | | Top Speed (mph) | ...
+  Row 2:       |         |      |                     | In Class | Overall |               | ...
+Data starts at row 3.
 """
 
 import csv
 import io
 import os
-import sys
 
 import requests
 
@@ -17,55 +20,46 @@ from utils import has_changed, now_iso, write_json
 
 SHEET_ID = os.getenv(
     "BROUGHY_SHEET_ID",
-    "1nQND3ikiLzS3Ij9kuV-rVkAtoJMwDIhuHHMnpFCRR-k",
+    "1nQND3ikiLzS3Ij9kuV-rVkRtoYetb79c52JWyafb4m4",
 )
-# GID 0 = first sheet (lap times). Adjust if Broughy restructures the sheet.
+# GID 1299124236 = "Times, Speeds & Tiers" sheet (by class, then race tier, then lap time)
 CSV_URL = os.getenv(
     "BROUGHY_CSV_URL",
-    f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid=0",
+    f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid=1299124236",
 )
 
 OUT_PATH = "gta-5/vehicles/performance.json"
 
-# Column names vary between sheet versions — adjust if scrape breaks
-COL_MAP = {
-    "name": ["Name", "Vehicle", "Car"],
-    "class": ["Class"],
-    "lap_time": ["Lap Time", "Lap", "Best Lap"],
-    "top_speed_mph": ["Top Speed (mph)", "Top Speed", "Speed (mph)"],
-    "drivetrain": ["Drive", "Drivetrain", "DR"],
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    )
 }
 
-
-def find_col(header_row: list[str], candidates: list[str]) -> int | None:
-    for c in candidates:
-        for i, h in enumerate(header_row):
-            if h.strip().lower() == c.lower():
-                return i
-    return None
+# Fixed column indices for this sheet layout (stable across Broughy's updates)
+COL_CLASS     = 0
+COL_VEHICLE   = 1
+COL_TIER      = 2
+COL_LAP_TIME  = 3
+COL_TOP_SPEED = 6  # "Top Speed (mph)"
 
 
 def lap_to_seconds(lap: str) -> float | None:
     lap = lap.strip()
-    if not lap or lap == "N/A":
+    if not lap or lap in ("-", "N/A", ""):
         return None
     try:
         parts = lap.split(":")
         if len(parts) == 2:
-            return float(parts[0]) * 60 + float(parts[1])
-        return float(lap)
+            return round(float(parts[0]) * 60 + float(parts[1]), 3)
+        return round(float(lap), 3)
     except ValueError:
         return None
 
 
 def fetch() -> list[dict]:
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-        )
-    }
-    resp = requests.get(CSV_URL, headers=headers, timeout=30)
+    resp = requests.get(CSV_URL, headers=HEADERS, timeout=30)
     resp.raise_for_status()
 
     reader = csv.reader(io.StringIO(resp.text))
@@ -74,50 +68,52 @@ def fetch() -> list[dict]:
     if not rows:
         raise ValueError("Empty CSV response")
 
-    # Find the header row (first row with "Name" or "Vehicle")
-    header_idx = 0
+    # Find the header row (first row whose second cell is "Vehicle")
+    header_idx = 1  # default based on known sheet structure
     for i, row in enumerate(rows[:10]):
-        if any(c.strip().lower() in ("name", "vehicle", "car") for c in row):
+        if len(row) > 1 and row[1].strip().lower() in ("vehicle", "name", "car"):
             header_idx = i
             break
 
-    header = rows[header_idx]
-    cols = {
-        key: find_col(header, candidates)
-        for key, candidates in COL_MAP.items()
-    }
+    # Data starts one row after the (two-part) header
+    data_start = header_idx + 2
 
     vehicles = []
-    for row in rows[header_idx + 1 :]:
-        if not row or not row[0].strip():
+    current_class = ""
+    for row in rows[data_start:]:
+        if not row or len(row) <= COL_TOP_SPEED:
             continue
+
+        # Class column may repeat only at the first vehicle in each class
+        raw_class = row[COL_CLASS].strip()
+        if raw_class:
+            current_class = raw_class
+
+        name = row[COL_VEHICLE].strip()
+        if not name:
+            continue
+
+        lap_raw   = row[COL_LAP_TIME].strip()
+        lap_sec   = lap_to_seconds(lap_raw)
+
+        speed_raw = row[COL_TOP_SPEED].strip()
         try:
-            name_idx = cols["name"]
-            name = row[name_idx].strip() if name_idx is not None else ""
-            if not name:
-                continue
+            speed = round(float(speed_raw), 2)
+        except (ValueError, TypeError):
+            speed = None
 
-            lap_raw = row[cols["lap_time"]].strip() if cols["lap_time"] is not None else ""
-            lap_sec = lap_to_seconds(lap_raw)
+        tier = row[COL_TIER].strip() if len(row) > COL_TIER else ""
 
-            speed_raw = row[cols["top_speed_mph"]].strip() if cols["top_speed_mph"] is not None else ""
-            try:
-                speed = float(speed_raw)
-            except (ValueError, TypeError):
-                speed = None
-
-            vehicles.append(
-                {
-                    "name": name,
-                    "class": row[cols["class"]].strip() if cols["class"] is not None else "",
-                    "lap_time": lap_raw,
-                    "lap_seconds": lap_sec,
-                    "top_speed_mph": speed,
-                    "drivetrain": row[cols["drivetrain"]].strip() if cols["drivetrain"] is not None else "",
-                }
-            )
-        except IndexError:
-            continue
+        vehicles.append(
+            {
+                "name": name,
+                "class": current_class,
+                "tier": tier if tier and tier != "-" else None,
+                "lap_time": lap_raw if lap_raw and lap_raw != "-" else None,
+                "lap_seconds": lap_sec,
+                "top_speed_mph": speed,
+            }
+        )
 
     return vehicles
 
@@ -129,7 +125,7 @@ def main() -> None:
 
     payload = {
         "last_updated": now_iso(),
-        "source": "Broughy1322 GTA Vehicle Performance Spreadsheet",
+        "source": "Broughy1322 GTA Vehicle Performance Spreadsheet — https://broughy.com/testing",
         "vehicles": vehicles,
     }
 
