@@ -5,13 +5,27 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogPage?: string; // slug matching src/pages/og/[page].png.ts config
 }
+
+// Derive base URL from SITE env or fall back to canonical domain
+const SITE_BASE = import.meta.env.SITE ?? "https://gtavi.ai";
 
 const {
   title = "GTA VI.AI",
   description = "Data-driven intelligence across every GTA generation — live signals, franchise analytics, and what the numbers say about GTA VI.",
-  ogImage = `https://img.youtube.com/vi/VQRLujxTm3c/maxresdefault.jpg`,
+  ogImage,
+  ogPage,
 } = Astro.props;
+
+// OG image resolution order:
+//   1. Explicit ogImage prop (remote URL or path)
+//   2. Auto-generated per-page PNG via ogPage slug
+//   3. Default: GTA VI Trailer 2 YouTube thumbnail
+const resolvedOgImage =
+  ogImage ??
+  (ogPage ? `${SITE_BASE}/og/${ogPage}.png` : null) ??
+  `https://img.youtube.com/vi/VQRLujxTm3c/maxresdefault.jpg`;
 
 const nav = [
   { href: "/vi-intel",  label: "Intel"     },
@@ -37,9 +51,10 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
     <!-- Open Graph -->
     <meta property="og:title"       content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:image"       content={ogImage} />
+    <meta property="og:image"       content={resolvedOgImage} />
     <meta property="og:type"        content="website" />
     <meta name="twitter:card"       content="summary_large_image" />
+    <meta name="twitter:image"      content={resolvedOgImage} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 

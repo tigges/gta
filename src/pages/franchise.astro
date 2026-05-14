@@ -10,11 +10,26 @@ import dlcData        from "../../data/gta-5/dlc/timeline.json";
 
 const totalSales = salesData.titles.reduce((s: number, t: any) => s + (t.total_units_m ?? 0), 0);
 const gta5 = salesData.titles.find((t: any) => t.id === "gta-5");
+
+// Pre-group DLC updates by year for the timeline section
+const dlcByYear: Array<{ year: string; updates: typeof dlcData.updates }> = [];
+for (const u of dlcData.updates) {
+  const y = u.date.slice(0, 4);
+  const existing = dlcByYear.find(g => g.year === y);
+  if (existing) {
+    existing.updates.push(u);
+  } else {
+    dlcByYear.push({ year: y, updates: [u] });
+  }
+}
+const dlcMajorCount   = dlcData.updates.filter((d: any) => d.category === "major").length;
+const dlcContentCount = dlcData.updates.filter((d: any) => d.category === "content").length;
 ---
 
 <Base
   title="Franchise"
   description="30 years of GTA franchise data — sales velocity, review scores, map progression, DLC history and the economics behind GTA VI."
+  ogPage="franchise"
 >
 
   <!-- Header -->
@@ -196,6 +211,71 @@ const gta5 = salesData.titles.find((t: any) => t.id === "gta-5");
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23]">
           <span class="text-[10px] text-zinc-700 font-mono">Source: SteamCharts · updated {new Date(steamData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── GTA ONLINE DLC TIMELINE ──────────────────────────────── -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-teal-900/30 text-teal-400 border border-teal-800/40 px-2 py-0.5 rounded uppercase tracking-widest">DLC</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Content Timeline</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{dlcData.updates.length} updates · 2013–2024</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">GTA Online — 11 Years of Content Drops</div>
+          <div class="text-[11px] text-zinc-500 font-mono mt-0.5">
+            {dlcMajorCount} major updates · {dlcContentCount} content drops · benchmark for GTA VI post-launch support
+          </div>
+        </div>
+
+        <!-- Year-grouped timeline -->
+        <div class="px-5 py-5 flex flex-col gap-6">
+          {dlcByYear.map(({ year, updates }) => (
+            <div>
+              <div class="flex items-center gap-2 mb-2.5">
+                <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest w-10 shrink-0">{year}</span>
+                <div class="flex-1 h-px bg-[#1e1e23]"></div>
+              </div>
+              <div class="flex flex-wrap gap-2 pl-12">
+                {updates.map((u: any) => {
+                  const isMajor     = u.category === "major";
+                  const isLaunch    = u.category === "launch";
+                  const isMilestone = u.category === "milestone";
+                  return (
+                    <div
+                      title={`${u.title} — ${u.date}`}
+                      class={[
+                        "flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-mono border",
+                        isLaunch    ? "bg-gta-gold/10 border-gta-gold/30 text-gta-gold" :
+                        isMajor     ? "bg-teal-900/25 border-teal-700/30 text-teal-300" :
+                        isMilestone ? "bg-purple-900/25 border-purple-700/30 text-purple-300" :
+                                      "bg-[#1a1a1e] border-[#2a2a31] text-zinc-500",
+                      ].join(" ")}
+                    >
+                      {isLaunch && <span class="w-1.5 h-1.5 rounded-full bg-gta-gold shrink-0 inline-block"></span>}
+                      {isMajor  && <span class="w-1.5 h-1.5 rounded-full bg-teal-400 shrink-0 inline-block"></span>}
+                      {u.label}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Legend + source -->
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex flex-wrap items-center gap-5">
+          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-600">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gta-gold inline-block"></span>Launch</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-teal-400 inline-block"></span>Major update</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded border border-purple-500/60 inline-block"></span>Milestone</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-[#2a2a31] inline-block"></span>Content drop</span>
+          </div>
+          <div class="flex-1"></div>
+          <span class="text-[10px] text-zinc-700 font-mono">Source: Rockstar Games · GTA Wiki</span>
         </div>
       </div>
     </section>
