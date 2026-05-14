@@ -1,4 +1,6 @@
 ---
+import ShareButton from "./ShareButton.astro";
+
 interface PredictionRange {
   low: string;
   high: string;
@@ -149,6 +151,17 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
       )}
     </div>
   )}
+
+  <!-- Share strip -->
+  <div class="px-4 pb-3 flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
+    <span class="text-[9px] font-mono text-zinc-800 tracking-widest">gtavi.ai</span>
+    <ShareButton
+      text={`GTA VI ${title}: ${value}${unit ? " " + unit : ""} — ${confidence}% confidence. Data-driven, not speculation.`}
+      url="https://gtavi.ai/vi-intel"
+      size="sm"
+      label="Share"
+    />
+  </div>
 
   <!-- Outcome banner (post-launch) -->
   {outcome_verified && outcome_actual && (

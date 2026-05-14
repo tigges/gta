@@ -1,0 +1,68 @@
+---
+/**
+ * NewsletterSignup — weekly GTA VI intelligence digest CTA.
+ * Replace BEEHIIV_URL with your actual Beehiiv publication URL once set up.
+ * Until then, falls back to a mailto: form that collects interest.
+ */
+
+interface Props {
+  variant?: "full" | "compact";
+}
+const { variant = "full" } = Astro.props;
+
+const BEEHIIV_URL = "https://gtavi.ai/newsletter";   // swap for live Beehiiv embed URL
+---
+
+{variant === "compact" ? (
+  <!-- Compact: one-line strip for sidebars -->
+  <div class="rounded-xl border border-gta-gold/20 bg-gta-gold/5 px-4 py-3 flex items-center gap-3 flex-wrap">
+    <span class="text-base shrink-0">📬</span>
+    <div class="flex-1 min-w-0">
+      <div class="text-[11px] font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">Weekly Intel Digest</div>
+      <div class="text-[10px] font-mono text-zinc-600">One email. Top signals + any prediction changes.</div>
+    </div>
+    <a href={BEEHIIV_URL} target="_blank" rel="noopener noreferrer"
+      class="shrink-0 inline-flex items-center gap-1.5 text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 hover:bg-gta-gold/15 px-3 py-1.5 rounded uppercase tracking-widest transition-all">
+      Subscribe →
+    </a>
+  </div>
+) : (
+  <!-- Full: standalone section card -->
+  <div class="rounded-xl border border-gta-gold/20 overflow-hidden" style="background:#131316">
+    <!-- Header with background -->
+    <div class="relative px-6 py-8 text-center overflow-hidden">
+      <div class="absolute inset-0">
+        <img src="/assets/gta6/locations/Vice_City_07.jpg" alt="" class="w-full h-full object-cover opacity-10" aria-hidden="true" />
+        <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,#131316 100%)"></div>
+      </div>
+      <div class="relative">
+        <div class="text-2xl mb-3">📬</div>
+        <h3 class="text-lg font-bold text-white mb-2" style="font-family:'Inter',sans-serif">Weekly Intel Digest</h3>
+        <p class="text-[12px] text-zinc-400 max-w-xs mx-auto leading-relaxed mb-5" style="font-family:'Inter',sans-serif">
+          One email per week. Top signals, any prediction changes, and what the data says about GTA VI launch week.
+        </p>
+        <a href={BEEHIIV_URL} target="_blank" rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 bg-gta-gold hover:bg-gta-bright text-black font-mono font-bold text-xs px-6 py-3 rounded transition-colors tracking-wide uppercase">
+          Subscribe free →
+        </a>
+        <div class="text-[9px] font-mono text-zinc-700 mt-3">No spam · unsubscribe anytime · gtavi.ai/newsletter</div>
+      </div>
+    </div>
+    <!-- What you get -->
+    <div class="border-t border-[#1e1e23] grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
+      {[
+        { icon: "📊", label: "Signal update", desc: "Predictions and confidence changes" },
+        { icon: "📰", label: "Top intel",     desc: "3 best press + community stories" },
+        { icon: "🛒", label: "Launch watch",  desc: "Pre-order + edition news as it breaks" },
+      ].map(item => (
+        <div class="px-5 py-3 flex items-start gap-3">
+          <span class="text-base shrink-0">{item.icon}</span>
+          <div>
+            <div class="text-[11px] font-semibold text-zinc-300" style="font-family:'Inter',sans-serif">{item.label}</div>
+            <div class="text-[10px] font-mono text-zinc-600">{item.desc}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}

@@ -4,6 +4,7 @@ import CrossLinks from "../components/CrossLinks.astro";
 import ReleaseTimeline from "../components/ReleaseTimeline.astro";
 import PredictionCard from "../components/PredictionCard.astro";
 import Countdown from "../components/Countdown.astro";
+import NewsletterSignup from "../components/NewsletterSignup.astro";
 
 import type { TrailersData, Prediction } from "../types/gta";
 
@@ -303,6 +304,8 @@ const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_pla
         </div>
       </div>
     </section>
+
+    <NewsletterSignup variant="full" />
 
     <CrossLinks context="home" />
 

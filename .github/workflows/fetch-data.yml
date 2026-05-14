@@ -93,3 +93,9 @@ jobs:
           file_pattern: "data/**/*.json"
           commit_user_name: gta-intelligence-bot
           commit_user_email: bot@gtavi.ai
+
+      - name: Post nightly digest to Discord
+        run: python scrapers/post_discord_digest.py
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        continue-on-error: true
