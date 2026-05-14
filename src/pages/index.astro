@@ -4,12 +4,15 @@ import ReleaseTimeline from "../components/ReleaseTimeline.astro";
 import PredictionCard from "../components/PredictionCard.astro";
 import Countdown from "../components/Countdown.astro";
 
+import type { TrailersData, Prediction } from "../types/gta";
+
 import releasesData    from "../../data/shared/releases.json";
 import predictionsData from "../../data/gta-6/predictions.json";
-import trailersData    from "../../data/gta-6/trailers.json";
+import trailersDataRaw from "../../data/gta-6/trailers.json";
 import steamData       from "../../data/gta-5/meta/steam-players.json";
 
-const latestTrailer  = (trailersData as any).trailers?.[0] ?? null;
+const trailersData   = trailersDataRaw as TrailersData;
+const latestTrailer  = trailersData.trailers[0] ?? null;
 const trailer2Id     = "VQRLujxTm3c";
 const trailer1Id     = "QdBZY2fkU-0";
 
@@ -127,14 +130,21 @@ const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_pla
         <a href="/vi-intel" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full analysis →</a>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {predictionsData.predictions.map((p) => (
+        {(predictionsData.predictions as Prediction[]).map((p) => (
           <PredictionCard
             title={p.title}
             value={p.value}
             confidence={p.confidence}
+            confidence_tier={p.confidence_tier}
             basis={p.basis}
-            unit={p.unit ?? undefined}
-            trailerTimestamp={p.trailer_timestamp ?? undefined}
+            unit={p.unit}
+            trailer_timestamp={p.trailer_timestamp}
+            prediction_method={p.prediction_method}
+            prediction_range={p.prediction_range}
+            source={p.source}
+            source_type={p.source_type}
+            outcome_verified={p.outcome_verified}
+            outcome_actual={p.outcome_actual}
           />
         ))}
       </div>

@@ -4,15 +4,18 @@ import PredictionCard from "../components/PredictionCard.astro";
 import ReleaseTimeline from "../components/ReleaseTimeline.astro";
 import Countdown from "../components/Countdown.astro";
 
+import type { TrailersData, Prediction } from "../types/gta";
+
 import predictionsData from "../../data/gta-6/predictions.json";
-import trailersData    from "../../data/gta-6/trailers.json";
+import trailersDataRaw from "../../data/gta-6/trailers.json";
 import releaseData     from "../../data/shared/releases.json";
 import gta6Trends      from "../../data/gta-6/trends/search-interest.json";
 import featuresData    from "../../data/gta-6/features.json";
 import delayData       from "../../data/gta-6/delay-timeline.json";
 
-const predictions    = predictionsData.predictions;
-const trailers       = (trailersData as any).trailers ?? [];
+const predictions    = predictionsData.predictions as Prediction[];
+const trailersData   = trailersDataRaw as TrailersData;
+const trailers       = trailersData.trailers;
 const heroTrailer    = trailers[1] ?? trailers[0]; // prefer Trailer 2 for hero
 const trendsSince    = gta6Trends.keywords[0]?.data[0]?.date?.slice(0, 4) ?? "2020";
 const trendsUntil    = gta6Trends.keywords[0]?.data.at(-1)?.date?.slice(0, 4) ?? "2026";
@@ -81,9 +84,16 @@ const totalTrendPts  = gta6Trends.keywords.reduce((s: number, k: any) => s + k.d
             title={p.title}
             value={p.value}
             confidence={p.confidence}
+            confidence_tier={p.confidence_tier}
             basis={p.basis}
-            unit={p.unit ?? undefined}
-            trailerTimestamp={p.trailer_timestamp ?? undefined}
+            unit={p.unit}
+            trailer_timestamp={p.trailer_timestamp}
+            prediction_method={p.prediction_method}
+            prediction_range={p.prediction_range}
+            source={p.source}
+            source_type={p.source_type}
+            outcome_verified={p.outcome_verified}
+            outcome_actual={p.outcome_actual}
           />
         ))}
       </div>
