@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import CrossLinks from "../components/CrossLinks.astro";
 
 import salesData   from "../../data/franchise/sales.json";
 import steamData   from "../../data/gta-5/meta/steam-players.json";
@@ -785,6 +786,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       </div>
     </section>
 
+    <CrossLinks context="charts" />
   </div>
 </Base>
 
@@ -813,6 +815,29 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       });
     });
   });
+
+  // ── Watermark: stamped on all chart SVGs after D3 renders ────
+  // Runs once after all chart builders complete via requestAnimationFrame.
+  function stampChartWatermarks() {
+    document.querySelectorAll<SVGSVGElement>("[id$='-chart'] svg, #trailer-discovery-chart svg, #region-heatmap svg").forEach(svg => {
+      if (svg.querySelector(".gtavi-wm")) return; // already stamped
+      const vb = svg.getAttribute("viewBox")?.split(" ").map(Number);
+      if (!vb || vb.length < 4) return;
+      const [,, vw, vh] = vb;
+      const txt = document.createElementNS("http://www.w3.org/2000/svg","text");
+      txt.setAttribute("class","gtavi-wm");
+      txt.setAttribute("x",String(vw - 6));
+      txt.setAttribute("y",String(vh - 5));
+      txt.setAttribute("text-anchor","end");
+      txt.setAttribute("font-size","8");
+      txt.setAttribute("font-family","monospace");
+      txt.setAttribute("fill","#3f3f46");
+      txt.setAttribute("letter-spacing","0.08em");
+      txt.textContent = "GTAVI.AI — gtavi.ai";
+      svg.appendChild(txt);
+    });
+  }
+  requestAnimationFrame(() => requestAnimationFrame(stampChartWatermarks));
 
   // ── CHART 1 — Franchise Sales ────────────────────────────────
   (function buildSalesChart() {

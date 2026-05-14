@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import CrossLinks from "../components/CrossLinks.astro";
 import entityIndex    from "../../data/gta-6/entities/index.json";
 import leonidaRaw     from "../../data/gta-6/entities/leonida-intel.json";
 import vehiclesRaw    from "../../data/gta-5/vehicles/performance.json";
@@ -266,6 +267,8 @@ const TYPE_META: Record<string,{icon:string;label:string}> = {
         </p>
       </div>
     </div>
+
+    <CrossLinks context="database" class="mt-8" />
   </div>
 </Base>
 

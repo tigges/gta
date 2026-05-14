@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import CrossLinks from "../components/CrossLinks.astro";
 import Countdown from "../components/Countdown.astro";
 
 const LAUNCH_DATE = "2026-11-19";
@@ -486,6 +487,8 @@ const RETAILERS = [
         ))}
       </div>
     </section>
+
+    <CrossLinks context="buy" />
 
     <!-- ══════════════════════════════════════════════════════
          INTELLIGENCE NOTE

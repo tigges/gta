@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import CrossLinks from "../components/CrossLinks.astro";
 import feedData from "../../data/feeds/newswire.json";
 import redditData from "../../data/community/reddit.json";
 
@@ -305,5 +306,9 @@ const updatedAt = feedData.last_updated;
       </div>
 
     </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
+    <CrossLinks context="news" />
   </div>
 </Base>
