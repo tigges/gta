@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from utils import has_changed, now_iso, write_json
 
 URL = "https://steamcharts.com/app/271590"
-OUT_PATH = "meta/steam-players.json"
+OUT_PATH = "gta-5/meta/steam-players.json"
 
 
 def parse_number(raw: str) -> int | None:

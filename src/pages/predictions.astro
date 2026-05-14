@@ -2,44 +2,14 @@
 import Base from "../layouts/Base.astro";
 import PredictionCard from "../components/PredictionCard.astro";
 import ReleaseTimeline from "../components/ReleaseTimeline.astro";
+import PlayerChart from "../components/PlayerChart.astro";
+import TrendsChart from "../components/TrendsChart.astro";
+import VehicleChart from "../components/VehicleChart.astro";
 
-import releaseData from "../../data/history/releases.json";
+import releaseData from "../../data/shared/releases.json";
+import predictionsData from "../../data/gta-6/predictions.json";
 
-const predictions = [
-  {
-    title: "Release Window",
-    value: "2025–2026",
-    confidence: 82,
-    basis:
-      "Rockstar's official \"2025\" announcement, since pushed; trailer II timing and typical Rockstar marketing cycles suggest late 2025 or early 2026.",
-    trailerTimestamp: "0:04",
-  },
-  {
-    title: "Launch Price",
-    value: "$79.99",
-    unit: "USD",
-    confidence: 68,
-    basis:
-      "CPI inflation from GTA V's $59.99 (2013) projects ~$78–82 in 2025 dollars. PS5/XS standard pricing is already $69–79 across major titles.",
-  },
-  {
-    title: "Map Size",
-    value: "~150 km²",
-    unit: "estimated",
-    confidence: 38,
-    basis:
-      "Trailer I shows Miami-scale urban density plus visible Everglades-style wetlands. GTA V was 75 km²; 2× expansion is consistent with the SA → V jump. High uncertainty.",
-    trailerTimestamp: "0:22",
-  },
-  {
-    title: "Vehicle Count at Launch",
-    value: "~1,000",
-    unit: "estimated",
-    confidence: 71,
-    basis:
-      "GTA V launched with ~260 vehicles, grew to 737+ via GTA Online DLC. Extrapolating the GTA Online expansion rate and Rockstar's stated ambition yields ~1,000 at or shortly after VI launch.",
-  },
-];
+const predictions = predictionsData.predictions;
 ---
 
 <Base
@@ -72,7 +42,16 @@ const predictions = [
         <div class="flex-1 h-px bg-zinc-800"></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {predictions.map((p) => <PredictionCard {...p} />)}
+        {predictions.map((p) => (
+          <PredictionCard
+            title={p.title}
+            value={p.value}
+            confidence={p.confidence}
+            basis={p.basis}
+            unit={p.unit ?? undefined}
+            trailerTimestamp={p.trailer_timestamp ?? undefined}
+          />
+        ))}
       </div>
     </section>
 
@@ -127,6 +106,22 @@ const predictions = [
           </table>
           <p class="text-xs text-zinc-700 mt-4">* estimated · sources: Rockstar, Broughy1322, community records</p>
         </div>
+      </div>
+    </section>
+
+    <!-- Evidence: GTA V signal data -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">Supporting Evidence — GTA V Data</span>
+        <div class="flex-1 h-px bg-zinc-800"></div>
+        <span class="text-xs font-mono text-zinc-700">used to extrapolate VI predictions</span>
+      </div>
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <TrendsChart />
+        <PlayerChart />
+      </div>
+      <div class="mt-6">
+        <VehicleChart />
       </div>
     </section>
 

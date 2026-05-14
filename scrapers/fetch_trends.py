@@ -15,7 +15,7 @@ from utils import has_changed, now_iso, write_json
 KEYWORDS = ["GTA Online", "GTA money glitch", "GTA weekly update", "GTA V", "GTA 6"]
 TIMEFRAME = "2013-01-01 2025-12-31"
 GEO = ""  # worldwide
-OUT_PATH = "trends/search-interest.json"
+OUT_PATH = "gta-5/trends/search-interest.json"
 
 # Colour palette — matches the chart component
 COLORS = {
