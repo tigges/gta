@@ -5,9 +5,11 @@ import ReleaseTimeline from "../components/ReleaseTimeline.astro";
 
 import predictionsData from "../../data/gta-6/predictions.json";
 import releasesData from "../../data/shared/releases.json";
+import trailersData from "../../data/gta-6/trailers.json";
 
 const gta6 = releasesData.games.find((g) => g.short === "GTA VI") as any;
 const gta5 = releasesData.games.find((g) => g.short === "GTA V") as any;
+const latestTrailer = (trailersData as any).trailers?.[0] ?? null;
 ---
 
 <Base
@@ -40,8 +42,8 @@ const gta5 = releasesData.games.find((g) => g.short === "GTA V") as any;
             class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-mono font-bold text-sm px-5 py-2.5 rounded-lg transition-colors">
             View predictions ↓
           </a>
-          {gta6.trailer_youtube_id && (
-            <a href={`https://www.youtube.com/watch?v=${gta6.trailer_youtube_id}`}
+          {latestTrailer && (
+            <a href={`https://www.youtube.com/watch?v=${latestTrailer.youtube_id}`}
               target="_blank" rel="noopener noreferrer"
               class="inline-flex items-center gap-2 border border-zinc-700 hover:border-zinc-500 text-zinc-300 font-mono text-sm px-5 py-2.5 rounded-lg transition-colors">
               ▶ Watch trailer
