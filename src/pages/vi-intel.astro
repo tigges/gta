@@ -4,6 +4,7 @@ import PredictionCard from "../components/PredictionCard.astro";
 import ReleaseTimeline from "../components/ReleaseTimeline.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 import Countdown from "../components/Countdown.astro";
+import ShareButton from "../components/ShareButton.astro";
 
 import type { TrailersData, Prediction } from "../types/gta";
 
@@ -485,8 +486,9 @@ const DELAY_THUMBS: Record<string,string> = {
             );
           })}
         </div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: {featuresData.source}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text={`GTA VI Feature Tracker: ${featuresData.categories.reduce((s, c) => s + c.confirmed + c.reported, 0)} entries tracked — vehicles, characters, locations, weapons and more confirmed so far.`} url="https://gtavi.ai/vi-intel" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
