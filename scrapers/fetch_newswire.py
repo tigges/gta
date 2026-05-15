@@ -159,6 +159,7 @@ def fetch_rockstar_newswire() -> list[dict]:
                 "url":          full_url,
                 "published_at": None,
                 "summary":      "",
+                "img_url":      None,
             })
 
         # Deduplicate by URL

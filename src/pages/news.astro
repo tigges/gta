@@ -163,7 +163,7 @@ const updatedAt = feedData.last_updated;
 
         {allItems.map((item) => {
           const meta  = sourceMeta(item.source_id);
-          const thumb = getArticleThumb(item.title ?? "");
+          const thumb = (item as any).img_url ?? getArticleThumb(item.title ?? "");
           return (
             <a
               href={item.url}
