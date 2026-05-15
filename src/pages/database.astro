@@ -108,29 +108,37 @@ tiers.forEach((t: any) => t.sources.forEach((s: any) => { TIER_MAP[s.id] = t.tie
 
 // Business thumbnail map
 // ASSET RULE: Only use assets from the correct game title.
-// GTA Online / GTA V → /assets/gta5/dlc/{name}.jpg (official Rockstar DLC thumbnails via YouTube API)
-// GTA VI → /assets/gta6/ ONLY
+// GTA Online / GTA V → /assets/gta5/dlc/{name}.jpg (official Rockstar DLC thumbnails)
+// GTA VI → /assets/gta6/ ONLY. GTA V story → /assets/gta5/characters/ + story/
 const BIZ_THUMBS: Record<string, string | null> = {
-  "cayo-perico":          "/assets/gta5/dlc/cayo-perico.jpg",
-  "acid-lab":             "/assets/gta5/dlc/acid-lab.jpg",
-  "nightclub":            "/assets/gta5/dlc/after-hours.jpg",
-  "bunker":               "/assets/gta5/dlc/gunrunning.jpg",
-  "vehicle-warehouse":    "/assets/gta5/dlc/auto-shop.jpg",
-  "diamond-casino-heist": "/assets/gta5/dlc/diamond-casino-heist.jpg",
-  "auto-shop":            "/assets/gta5/dlc/auto-shop.jpg",
-  "hangar":               "/assets/gta5/story/gta-v-cover.jpg",
-  "cocaine-lockup":       "/assets/gta5/story/gta-v-cover.jpg",
-  "ceo-crates":           "/assets/gta5/story/gta-v-cover.jpg",
-  "vip-work":             "/assets/gta5/dlc/the-contract.jpg",
-  "agency-vip-contract":  "/assets/gta5/dlc/agency.jpg",
-  "garment-factory":      "/assets/gta5/dlc/chop-shop.jpg",
-  "methamphetamine-lab":  "/assets/gta5/characters/trevor.jpg",
-  "weed-farm":            "/assets/gta5/story/gta-v-cover.jpg",
-  "counterfeit-cash":     "/assets/gta5/story/gta-v-cover.jpg",
-  "document-forgery":     "/assets/gta5/story/gta-v-cover.jpg",
-  "contact-missions":     "/assets/gta5/story/gta-v-launch.jpg",
-  "special-cargo":        "/assets/gta5/story/gta-v-cover.jpg",
-};
+  // GOD / S+ tier
+  "cayo-perico":           "/assets/gta5/dlc/cayo-perico.jpg",
+  "kosatka-nightclub-stack":"/assets/gta5/dlc/cayo-perico.jpg",
+  // S tier
+  "diamond-casino-heist":  "/assets/gta5/dlc/diamond-casino-heist.jpg",
+  "agency-vip-contract":   "/assets/gta5/dlc/agency.jpg",
+  "payphone-hits":         "/assets/gta5/dlc/the-contract.jpg",
+  "special-cargo":         "/assets/gta5/dlc/import-export.jpg",
+  "acid-lab":              "/assets/gta5/dlc/acid-lab.jpg",
+  "auto-shop":             "/assets/gta5/dlc/auto-shop.jpg",
+  "terrorbyte-oppressor":  "/assets/gta5/dlc/terrorbyte.jpg",
+  // A tier
+  "garment-factory":       "/assets/gta5/dlc/chop-shop.jpg",
+  "nightclub":             "/assets/gta5/dlc/after-hours.jpg",
+  "bunker":                "/assets/gta5/dlc/gunrunning.jpg",
+  "salvage-yard":          "/assets/gta5/dlc/salvage-yard.jpg",
+  "vehicle-warehouse":     "/assets/gta5/dlc/import-export.jpg",
+  // B / C tier
+  "vip-work":              "/assets/gta5/dlc/the-contract.jpg",
+  "mc-cocaine":            "/assets/gta5/dlc/bikers.jpg",
+  "methamphetamine-lab":   "/assets/gta5/dlc/bikers.jpg",
+  "weed-farm":             "/assets/gta5/dlc/bikers.jpg",
+  "counterfeit-cash":      "/assets/gta5/dlc/bikers.jpg",
+  "document-forgery":      "/assets/gta5/dlc/bikers.jpg",
+  "contact-missions":      "/assets/gta5/story/gta-v-launch.jpg",
+  "hangar":                "/assets/gta5/dlc/smugglers-run.jpg",
+  "ceo-crates":            "/assets/gta5/dlc/finance-felony.jpg",
+}
 
 // Difficulty mapping
 const DIFF_MAP: Record<string, number> = {
