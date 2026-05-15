@@ -51,6 +51,14 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
+      - name: Fetch GTA V story/character assets (YouTube API + GTA Wiki)
+        run: python scrapers/fetch_gta5_assets.py
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+
+      - name: Fetch Newswire article hero images
+        run: python scrapers/fetch_newswire_images.py
+
       # ── GTA VI ─────────────────────────────────────────────────────────────
 
       - name: Fetch GTA VI trailer data
