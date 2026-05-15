@@ -107,61 +107,72 @@ const TIER_MAP: Record<string, "S"|"A"|"B"|"C"|"D"> = {};
 tiers.forEach((t: any) => t.sources.forEach((s: any) => { TIER_MAP[s.id] = t.tier; }));
 
 // Business thumbnail map
-// ASSET RULE: Only use assets from the correct game title.
-// GTA Online / GTA V → /assets/gta5/dlc/{name}.jpg (official Rockstar DLC thumbnails)
-// GTA VI → /assets/gta6/ ONLY. GTA V story → /assets/gta5/characters/ + story/
+// Difficulty mapping (1=very easy → 5=very hard)
+const DIFF_MAP: Record<string, number> = {
+  "cayo-perico":1, "acid-lab":1, "nightclub":1, "kosatka-nightclub-stack":1,
+  "bunker":2, "vehicle-warehouse":2, "auto-shop":2, "garment-factory":2,
+  "salvage-yard":2, "security-contracts":2, "exotic-exports":2, "casino-missions":2,
+  "diamond-casino-heist":3, "ceo-crates":4, "vip-work":2, "mc-cocaine":2,
+  "terrorbyte-oppressor":2, "payphone-hits":2, "special-cargo":4,
+  "agency-vip-contract":2, "hangar":2, "premium-races":4, "arena-war":3,
+  "freemode-events":2, "methamphetamine-lab":2, "weed-farm":1, "counterfeit-cash":1,
+  "document-forgery":1, "contact-missions":2,
+};
+
+// ASSET RULE: GTA Online → /assets/gta5/dlc/  |  GTA VI → /assets/gta6/ ONLY
 const BIZ_THUMBS: Record<string, string | null> = {
   // GOD / S+ tier
-  "cayo-perico":           "/assets/gta5/dlc/cayo-perico.jpg",
+  "cayo-perico":            "/assets/gta5/dlc/cayo-perico.jpg",
   "kosatka-nightclub-stack":"/assets/gta5/dlc/cayo-perico.jpg",
   // S tier
-  "diamond-casino-heist":  "/assets/gta5/dlc/diamond-casino-heist.jpg",
-  "agency-vip-contract":   "/assets/gta5/dlc/agency.jpg",
-  "payphone-hits":         "/assets/gta5/dlc/the-contract.jpg",
-  "special-cargo":         "/assets/gta5/dlc/import-export.jpg",
-  "acid-lab":              "/assets/gta5/dlc/acid-lab.jpg",
-  "auto-shop":             "/assets/gta5/dlc/auto-shop.jpg",
-  "terrorbyte-oppressor":  "/assets/gta5/dlc/terrorbyte.jpg",
+  "diamond-casino-heist":   "/assets/gta5/dlc/diamond-casino-heist.jpg",
+  "agency-vip-contract":    "/assets/gta5/dlc/agency.jpg",
+  "payphone-hits":          "/assets/gta5/dlc/the-contract.jpg",
+  "special-cargo":          "/assets/gta5/dlc/import-export.jpg",
+  "acid-lab":               "/assets/gta5/dlc/acid-lab.jpg",
+  "auto-shop":              "/assets/gta5/dlc/auto-shop.jpg",
+  "terrorbyte-oppressor":   "/assets/gta5/dlc/terrorbyte.jpg",
   // A tier
-  "garment-factory":       "/assets/gta5/dlc/chop-shop.jpg",
-  "nightclub":             "/assets/gta5/dlc/after-hours.jpg",
-  "bunker":                "/assets/gta5/dlc/gunrunning.jpg",
-  "salvage-yard":          "/assets/gta5/dlc/salvage-yard.jpg",
-  "vehicle-warehouse":     "/assets/gta5/dlc/import-export.jpg",
+  "garment-factory":        "/assets/gta5/dlc/chop-shop.jpg",
+  "nightclub":              "/assets/gta5/dlc/after-hours.jpg",
+  "bunker":                 "/assets/gta5/dlc/gunrunning.jpg",
+  "salvage-yard":           "/assets/gta5/dlc/salvage-yard.jpg",
+  "security-contracts":     "/assets/gta5/dlc/security-contracts.jpg",
+  "exotic-exports":         "/assets/gta5/dlc/exotic-exports.jpg",
+  "vehicle-warehouse":      "/assets/gta5/dlc/import-export.jpg",
   // B / C tier
-  "vip-work":              "/assets/gta5/dlc/the-contract.jpg",
-  "mc-cocaine":            "/assets/gta5/dlc/bikers.jpg",
-  "methamphetamine-lab":   "/assets/gta5/dlc/bikers.jpg",
-  "weed-farm":             "/assets/gta5/dlc/bikers.jpg",
-  "counterfeit-cash":      "/assets/gta5/dlc/bikers.jpg",
-  "document-forgery":      "/assets/gta5/dlc/bikers.jpg",
-  "contact-missions":      "/assets/gta5/story/gta-v-launch.jpg",
-  "hangar":                "/assets/gta5/dlc/smugglers-run.jpg",
-  "ceo-crates":            "/assets/gta5/dlc/finance-felony.jpg",
+  "vip-work":               "/assets/gta5/dlc/the-contract.jpg",
+  "mc-cocaine":             "/assets/gta5/dlc/bikers.jpg",
+  "methamphetamine-lab":    "/assets/gta5/dlc/bikers.jpg",
+  "weed-farm":              "/assets/gta5/dlc/bikers.jpg",
+  "counterfeit-cash":       "/assets/gta5/dlc/bikers.jpg",
+  "document-forgery":       "/assets/gta5/dlc/bikers.jpg",
+  "contact-missions":       "/assets/gta5/story/gta-v-launch.jpg",
+  "hangar":                 "/assets/gta5/dlc/smugglers-run.jpg",
+  "ceo-crates":             "/assets/gta5/dlc/finance-felony.jpg",
+  "casino-missions":        "/assets/gta5/dlc/casino-work.jpg",
+  "premium-races":          "/assets/gta5/dlc/premium-races.jpg",
+  "arena-war":              "/assets/gta5/dlc/arena-war.jpg",
+  "freemode-events":        "/assets/gta5/dlc/freemode-events.jpg",
 }
-
-// Difficulty mapping
-const DIFF_MAP: Record<string, number> = {
-  "cayo-perico":1, "acid-lab":1, "nightclub":1, "bunker":2, "vehicle-warehouse":2,
-  "diamond-casino-heist":3, "auto-shop":2, "hangar":2, "cocaine-lockup":2,
-  "ceo-crates":4, "vip-work":2, "methamphetamine-lab":2, "weed-farm":1,
-  "counterfeit-cash":1, "document-forgery":1,
-};
 
 // Online heist thumbnails
 const HEIST_THUMBS: Record<string, string> = {
+  // Online heists
   "cayo-perico":           "/assets/gta5/dlc/cayo-perico.jpg",
   "diamond-casino-heist":  "/assets/gta5/dlc/diamond-casino-heist.jpg",
-  "doomsday-act-3":        "/assets/gta5/story/gta-v-launch.jpg",
-  "pacific-standard":      "/assets/gta5/story/heists.jpg",
-  "fleeca-job":            "/assets/gta5/story/heists.jpg",
+  "doomsday-act-3":        "/assets/gta5/dlc/doomsday-heist.jpg",
+  "pacific-standard":      "/assets/gta5/dlc/pacific-standard.jpg",
+  "fleeca-job":            "/assets/gta5/dlc/pacific-standard.jpg",
+  "humane-labs-raid":      "/assets/gta5/dlc/doomsday-heist.jpg",
+  "series-a-funding":      "/assets/gta5/dlc/finance-felony.jpg",
   // Story heists
-  "the-big-score":         "/assets/gta5/story/heists.jpg",
-  "jewel-store-job":       "/assets/gta5/characters/michael.jpg",
+  "the-big-score":         "/assets/gta5/story/the-big-score.jpg",
+  "jewel-store-job":       "/assets/gta5/story/jewel-store-job.jpg",
   "merryweather-heist":    "/assets/gta5/characters/trevor.jpg",
-  "blitz-play":            "/assets/gta5/story/gta-v-launch.jpg",
-  "bureau-raid":           "/assets/gta5/characters/michael.jpg",
-};
+  "blitz-play":            "/assets/gta5/story/blitz-play.jpg",
+  "bureau-raid":           "/assets/gta5/story/bureau-raid.jpg",
+}
 ---
 
 <Base
