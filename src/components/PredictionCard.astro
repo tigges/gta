@@ -21,6 +21,7 @@ interface Props {
   outcome_verified?: boolean;
   outcome_actual?: string | null;
   thumbnail?: string | null;
+  compact?: boolean; // homepage teaser mode: hides method/basis/source
 }
 
 const {
@@ -38,6 +39,7 @@ const {
   outcome_verified,
   outcome_actual,
   thumbnail,
+  compact = false,
 } = Astro.props;
 
 // Tier styling driven by schema field, not computed from confidence number
@@ -123,12 +125,14 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
   )}
 
   <!-- Basis text -->
+  {!compact && (
   <div class="px-4 pb-3 flex-1">
     <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{basis}</p>
   </div>
+  )}
 
   <!-- Method (if present) -->
-  {prediction_method && (
+  {!compact && prediction_method && (
     <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5">
       <div class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest mb-0.5">Method</div>
       <p class="text-[10px] font-mono text-zinc-600 leading-snug">{prediction_method}</p>
@@ -136,7 +140,7 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
   )}
 
   <!-- Footer row: source + trailer timestamp -->
-  {(source || trailer_timestamp) && (
+  {!compact && (source || trailer_timestamp) && (
     <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5 flex items-start justify-between gap-2">
       {source && (
         <span class="text-[10px] font-mono text-zinc-700 truncate">
