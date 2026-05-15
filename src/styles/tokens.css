@@ -1,0 +1,68 @@
+/**
+ * GTAVI.AI — Design Token System
+ *
+ * Single source of truth for all colors, typography scales, and surface values.
+ * Tailwind config reads these vars. D3 charts will read them via chartColors.ts
+ * once Layer 3 is implemented.
+ *
+ * To change the entire brand color: edit --c-brand below. Done.
+ */
+
+:root {
+  /* ── Brand palette ─────────────────────────────────────── */
+  --c-brand:         #f59e0b;  /* primary gold  — identity, CTAs, predictions */
+  --c-brand-bright:  #fbbf24;  /* bright amber  — hero h1, large value display */
+  --c-live:          #0d9488;  /* teal          — confirmed / live / verified */
+  --c-alert:         #ef4444;  /* red           — breaking news, delay alerts */
+
+  /* ── Surface stack ─────────────────────────────────────── */
+  --c-bg:            #0e0e11;  /* page background */
+  --c-bg-deep:       #0a0a0d;  /* ops bar, footer — deepest layer */
+  --c-card:          #131316;  /* card / panel background */
+  --c-card-raised:   #1a1a1e;  /* elevated card, hover state */
+
+  /* ── Border scale ──────────────────────────────────────── */
+  --c-border-1:      #1e1e23;  /* subtle   — card edges, dividers */
+  --c-border-2:      #2a2a31;  /* visible  — section separators, input borders */
+
+  /* ── Text hierarchy (8 steps, warm near-black base) ────── */
+  --c-text-0:        #fafafa;  /* level 0  — hero headings, white-on-dark */
+  --c-text-1:        #e4e4e7;  /* level 1  — card titles, primary values */
+  --c-text-2:        #d4d4d8;  /* level 2  — strong secondary body */
+  --c-text-3:        #a1a1aa;  /* level 3  — body text, descriptions */
+  --c-text-4:        #71717a;  /* level 4  — muted labels, metadata */
+  --c-text-5:        #52525b;  /* level 5  — section labels (// UPPERCASE) */
+  --c-text-6:        #3f3f46;  /* level 6  — source footnotes */
+  --c-text-7:        #27272a;  /* level 7  — watermarks (GTAVI.AI credit) */
+
+  /* ── Category / badge colors ───────────────────────────── */
+  --c-cat-franchise:   #f59e0b;  /* amber  — franchise, sales, history */
+  --c-cat-community:   #22c55e;  /* green  — community, live, reddit */
+  --c-cat-performance: #ef4444;  /* red    — vehicles, benchmarks */
+  --c-cat-economy:     #818cf8;  /* indigo — economy, revenue, stocks */
+  --c-cat-intel:       #0d9488;  /* teal   — VI intel, confirmed data */
+  --c-cat-news:        #22c55e;  /* green  — news feed */
+
+  /* ── Chart / D3 internals (consumed by chartColors.ts) ─── */
+  --c-chart-axis:    #52525b;  /* = text-5 — axis tick labels */
+  --c-chart-grid:    #1e1e23;  /* = border-1 — grid lines */
+  --c-chart-bar:     #f59e0b;  /* = brand — primary bar fill */
+  --c-chart-bar-dim: rgba(245,158,11,0.35); /* secondary / projected */
+  --c-chart-teal:    #0d9488;  /* = live — secondary bar (year-1 etc) */
+  --c-chart-purple:  #a78bfa;  /* user scores, divergence charts */
+  --c-chart-green:   #22c55e;  /* community growth */
+  --c-chart-red:     #ef4444;  /* delay events, alerts */
+  --c-chart-indigo:  #818cf8;  /* economy / revenue charts */
+
+  /* ── Typography scale ───────────────────────────────────── */
+  --font-sans:  'Inter', 'Inter var', system-ui, sans-serif;
+  --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Semantic size names (used in comments/docs; Tailwind uses px classes) */
+  --fs-badge:    9px;   /* tier badges, micro labels */
+  --fs-label:   10px;   /* section labels, footnotes */
+  --fs-data:    11px;   /* data sub-labels, chart annotations */
+  --fs-body:    12px;   /* body/xs */
+  --fs-ui:      14px;   /* nav, UI text/sm */
+  --fs-card:    16px;   /* card headings/base */
+}
