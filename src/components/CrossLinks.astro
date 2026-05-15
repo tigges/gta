@@ -70,7 +70,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/news", icon: "📰", tier: "News", label: "Character intel",
       sub: `${newsItems} articles tracked nightly`, color: "text-zinc-400", border: "border-zinc-700" },
-    { href: "/vi-intel", icon: "🎬", tier: "Intel", label: "Trailer analysis",
+    { href: "/vi-intel", icon: "🎬", tier: "GTA VI", label: "Trailer analysis",
       sub: `${trailerCount} official trailers analysed`, color: "text-gta-gold", border: "border-gta-gold/20" },
   ],
 
@@ -106,7 +106,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // Database page
   "database": [
-    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "GTA VI intelligence",
+    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
       sub: `${predCount} predictions · cast · locations · trailer analysis`,
       color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/news", icon: "📰", tier: "News", label: "Live news feed",
@@ -117,7 +117,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // News page
   "news": [
-    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "GTA VI predictions",
+    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "GTA VI predictions",
       sub: `${predCount} confidence-scored signals`, color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/database", icon: "🗄", tier: "Database", label: "Entity database",
       sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
@@ -127,7 +127,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // Charts page
   "charts": [
-    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "What the data predicts",
+    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "What the data predicts",
       sub: `${predCount} confidence-scored GTA VI predictions`, color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/franchise", icon: "📊", tier: "Franchise", label: "30-year franchise history",
       sub: `${franchiseTitles} titles · sales · scores · map growth`, color: "text-zinc-400", border: "border-zinc-700" },
@@ -139,7 +139,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
   "franchise": [
     { href: "/charts", icon: "📈", tier: "Charts", label: "Full chart suite",
       sub: "Sales velocity, CPI pricing, Metacritic, revenue model", color: "text-amber-400", border: "border-amber-500/20" },
-    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "GTA VI predictions",
+    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "GTA VI predictions",
       sub: "What 30 years of data says about VI", color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/database", icon: "🗄", tier: "Database", label: "GTA V + VI entities",
       sub: `${gta5Vehicles} GTA V vehicles · ${gta6Entities.toLocaleString()} GTA VI entries`, color: "text-gta-teal", border: "border-gta-teal/20" },
@@ -147,7 +147,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // Home page
   "home": [
-    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "GTA VI intelligence",
+    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
       sub: `${predCount} predictions · cast · locations · timelines`, color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/charts", icon: "📈", tier: "Charts", label: "Data visualised",
       sub: "15+ live charts — franchise sales to search signal", color: "text-amber-400", border: "border-amber-500/20" },
@@ -161,7 +161,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // Buy page
   "buy": [
-    { href: "/vi-intel", icon: "🎯", tier: "Intel", label: "Intelligence backing these prices",
+    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "Intelligence backing these prices",
       sub: `${predCount} predictions · ${trailerCount} trailers analysed`, color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/charts", icon: "📈", tier: "Charts", label: "CPI-adjusted pricing history",
       sub: "Is $79.99 cheap vs every prior GTA at launch?", color: "text-amber-400", border: "border-amber-500/20" },

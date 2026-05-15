@@ -56,6 +56,10 @@ interface Props {
 
   // Share
   share_url?: string;
+
+  // Patch history
+  last_nerfed?: string | null;
+  last_nerfed_notes?: string | null;
 }
 
 const {
@@ -239,6 +243,15 @@ const shareText = `${name} — ${tier}-tier, $${Math.round(net_profit_per_hr/100
     <!-- Notes -->
     {notes && (
       <p class="text-[10px] text-zinc-500 leading-snug line-clamp-2" style="font-family:'Inter',sans-serif">{notes}</p>
+    )}
+
+    <!-- Patch history badge -->
+    {Astro.props.last_nerfed && (
+      <div class="text-[9px] font-mono text-amber-600/80 border-t border-[#1e1e23] pt-2 flex items-center gap-1.5">
+        <span>⚡</span>
+        <span>Nerfed {new Date(Astro.props.last_nerfed).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+        {Astro.props.last_nerfed_notes && <span class="text-zinc-700">— {Astro.props.last_nerfed_notes.split('.')[0]}</span>}
+      </div>
     )}
 
     <!-- Prerequisites -->

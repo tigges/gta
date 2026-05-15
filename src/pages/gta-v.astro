@@ -56,7 +56,7 @@ const RETURN_COLOR = (pct: number) =>
 
 <Base
   title="GTA V Data"
-  description="GTA V complete intelligence — Steam players, vehicle benchmarks, story mission earnings, assassination stock guide, heist payouts, and GTA Online economics."
+  description="GTA V & GTA Online complete economic intelligence — $1.2M/hr income methods, assassination stock guide, 28 activities ranked, personalised income adviser and $2B story mode calculator."
   ogPage="gta-v"
 >
 
@@ -80,13 +80,13 @@ const RETURN_COLOR = (pct: number) =>
         assassination stock guide, heist payouts, and GTA Online economics. The complete data blueprint for GTA VI.
       </p>
 
-      <!-- Stat strip -->
+      <!-- Stat strip — economics-first -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
         {[
-          { value: String(totalMonths), label: "months of player data", sub: `${steamData.data[0].year}–${latestSteam?.year}` },
-          { value: String(totalVehicles), label: "vehicles benchmarked", sub: "25 classes · Broughy1322" },
-          { value: `$${(totalEarnings / 1_000_000).toFixed(1)}M`, label: "max story earnings", sub: "incl. The Big Score" },
-          { value: `$2B+`, label: "with stock strategy", sub: "assassination missions" },
+          { value: "$1.2M",    label: "best method $/hr", sub: "Cayo Perico · solo" },
+          { value: "$2B+",     label: "assassination strategy", sub: "stock market guide →" },
+          { value: `${bizProfiles.length}`,  label: "activities ranked", sub: "S+/S/A/B tier system" },
+          { value: String(totalMonths), label: "months live data", sub: `Steam ${steamData.data[0].year}–${latestSteam?.year}` },
         ].map(s => (
           <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
             <div class="text-xl font-mono font-bold text-gta-bright">{s.value}</div>

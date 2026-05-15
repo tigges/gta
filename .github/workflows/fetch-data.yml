@@ -46,6 +46,15 @@ jobs:
       - name: Fetch GTABase business and heist data
         run: python scrapers/fetch_gtabase.py
 
+      - name: Fetch community validation data (OnlyFarms/GTABase cross-check)
+        run: python scrapers/fetch_onlyfarms.py
+
+      - name: Monitor r/gtaonline for nerf/buff meta signals
+        run: python scrapers/fetch_reddit_meta.py
+        env:
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+
       - name: Fetch GTA Online DLC trailer thumbnails (YouTube API)
         run: python scrapers/fetch_gtaonline_dlc_art.py
         env:
