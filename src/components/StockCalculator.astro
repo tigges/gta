@@ -1,0 +1,183 @@
+---
+/**
+ * StockCalculator.astro
+ * Interactive GTA V story mode stock market calculator.
+ * Shows the Lester assassination sequence as a visual timeline,
+ * with a portfolio calculator that projects the $2B playthrough.
+ */
+import ShareButton from "./ShareButton.astro";
+
+interface Props {
+  steps: any[];  // assassination-stocks.json guide_order
+}
+const { steps } = Astro.props;
+---
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+  <!-- Header -->
+  <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+    <div>
+      <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+        Story Mode Stock Market Calculator — $2B Playthrough
+      </div>
+      <div class="text-[11px] text-zinc-500 font-mono mt-0.5">
+        Enter your cash after The Big Score → see projected total after all 5 Lester missions
+      </div>
+    </div>
+    <div class="flex items-center gap-2 text-[10px] font-mono text-zinc-500">
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-gta-gold/80 inline-block"></span>BUY</span>
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-gta-teal/80 inline-block"></span>SELL / Recovery</span>
+    </div>
+  </div>
+
+  <!-- Portfolio input -->
+  <div class="px-5 py-4 border-b border-[#1e1e23]" style="background:#0e0e11">
+    <div class="flex items-center gap-4 flex-wrap">
+      <div>
+        <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Your cash after The Big Score (GTA$)</label>
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500 font-mono text-sm">$</span>
+          <input
+            id="stock-calc-input"
+            type="number"
+            value="41664000"
+            min="1000000"
+            max="2000000000"
+            step="1000000"
+            class="w-48 px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-gold/40"
+          />
+          <span class="text-[10px] font-mono text-zinc-600">(per character × 3)</span>
+        </div>
+      </div>
+      <div class="flex-1 text-right">
+        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Projected Final Total</div>
+        <div id="stock-calc-result" class="text-2xl font-mono font-bold text-gta-gold">$—</div>
+        <div id="stock-calc-multiplier" class="text-[10px] font-mono text-zinc-600 mt-0.5"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline steps -->
+  <div class="px-5 py-4">
+    <!-- Progress line -->
+    <div class="relative">
+      <div class="absolute left-6 top-6 bottom-6 w-px bg-[#1e1e23]"></div>
+
+      <div class="flex flex-col gap-0" id="stock-steps-list">
+        {steps.map((step: any, i: number) => (
+          <div class="stock-step relative flex items-start gap-4 pb-6 last:pb-0"
+            data-step={step.step}
+            data-return={step.combined_return_pct}>
+            <!-- Step number -->
+            <div class="relative z-10 w-12 h-12 rounded-full flex items-center justify-center shrink-0 font-mono font-bold text-sm border"
+              style="background:#0e0e11;border-color:#2a2a31">
+              {step.step}
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1">
+              <div class="flex items-center gap-2 mb-1 flex-wrap">
+                <span class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">{step.title}</span>
+                {i === 0 && <span class="text-[8px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Do FIRST (early game)</span>}
+                {i > 0  && <span class="text-[8px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">After Big Score</span>}
+              </div>
+
+              <!-- Buy/sell chips -->
+              <div class="flex flex-wrap gap-1.5 mb-2">
+                {step.strategy.map((s: any) => (
+                  <div class={`flex items-center gap-1.5 px-2 py-1 rounded text-[9px] font-mono border ${
+                    s.action === 'buy' ? 'bg-gta-gold/8 border-gta-gold/25 text-gta-gold' : 'bg-gta-teal/8 border-gta-teal/25 text-gta-teal'
+                  }`}>
+                    <span class="font-bold">{s.action === 'buy' ? '▲' : '▼'} {s.ticker}</span>
+                    <span class="text-zinc-600">{s.exchange}</span>
+                    {s.expected_return_pct && <span class="font-bold">+{s.expected_return_pct}%</span>}
+                  </div>
+                ))}
+              </div>
+
+              <!-- Projected balance after this step -->
+              <div class="flex items-center gap-3">
+                <span class="text-[9px] font-mono text-zinc-600">Combined return:</span>
+                <span class="text-[11px] font-mono font-bold" style={`color:${step.combined_return_pct >= 300 ? '#22c55e' : step.combined_return_pct >= 80 ? '#f59e0b' : '#0d9488'}`}>
+                  +{step.combined_return_pct}%
+                </span>
+                <span class="text-[9px] font-mono text-zinc-700 ml-2">Balance after: </span>
+                <span class="stock-step-balance text-[11px] font-mono text-zinc-400 font-bold">$—</span>
+              </div>
+            </div>
+
+            <!-- Payout direct -->
+            <div class="shrink-0 text-right pt-1">
+              <div class="text-[9px] font-mono text-zinc-700">Mission pay</div>
+              <div class="text-[10px] font-mono text-zinc-500">${(step.payout_direct ?? 0).toLocaleString()}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Final result bar -->
+  <div class="px-5 py-4 border-t border-[#1e1e23]" style="background:#0e0e11">
+    <div class="flex items-center justify-between flex-wrap gap-3">
+      <div>
+        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Total projected (3 characters combined)</div>
+        <div id="stock-calc-total-combined" class="text-2xl font-mono font-bold text-gta-gold">$—</div>
+        <div class="text-[10px] font-mono text-zinc-600 mt-0.5">Do Hotel early, rest after Big Score. Reinvest between each mission.</div>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+        <ShareButton
+          text="GTA V story mode stock guide: $41.6M from Big Score becomes $2B+ with Lester assassination missions. The complete timeline."
+          url="https://gtavi.ai/database"
+          size="sm"
+          label="Share"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ steps }}>
+  function formatM(n) {
+    if (n >= 1e9) return `$${(n/1e9).toFixed(2)}B`;
+    if (n >= 1e6) return `$${(n/1e6).toFixed(1)}M`;
+    if (n >= 1e3) return `$${Math.round(n/1e3)}K`;
+    return `$${Math.round(n)}`;
+  }
+
+  function recalculate() {
+    const input = document.getElementById('stock-calc-input');
+    const perChar = Math.max(0, parseFloat(input.value) || 0);
+
+    let balance = perChar * 3; // all 3 characters combined
+    const stepEls = document.querySelectorAll('.stock-step');
+    const stepBalances = document.querySelectorAll('.stock-step-balance');
+
+    steps.forEach((step, i) => {
+      // Step 1 (Hotel) done early with minimal cash (~$1M combined) — don't apply full return
+      if (i === 0) {
+        // Hotel done early game — use small pre-Big Score cash (~$1M per char estimate)
+        const earlyBalance = 3000000; // rough estimate: ~$1M per character early game
+        const hotelReturn = earlyBalance * (step.combined_return_pct / 100);
+        balance += hotelReturn; // small addition
+        if (stepBalances[i]) stepBalances[i].textContent = `${formatM(balance)}`;
+      } else {
+        balance = balance * (1 + step.combined_return_pct / 100);
+        balance += (step.payout_direct ?? 0) * 3;
+        if (stepBalances[i]) stepBalances[i].textContent = `${formatM(balance)}`;
+      }
+    });
+
+    const result = document.getElementById('stock-calc-result');
+    const multiplier = document.getElementById('stock-calc-multiplier');
+    const combined = document.getElementById('stock-calc-total-combined');
+
+    if (result) result.textContent = formatM(balance / 3);
+    if (multiplier) multiplier.textContent = `${(balance / (perChar * 3 || 1)).toFixed(1)}× your Big Score take`;
+    if (combined) combined.textContent = `${formatM(balance)} (${(balance/1e9).toFixed(2)}B)`;
+  }
+
+  document.getElementById('stock-calc-input')?.addEventListener('input', recalculate);
+  recalculate();
+</script>

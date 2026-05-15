@@ -1,0 +1,244 @@
+---
+/**
+ * IncomeAdviser.astro
+ * Personalised GTA Online income stack adviser.
+ * Player selects what they own + budget → tool calculates their
+ * current $/hr stack and recommends next best purchase by ROI.
+ * Entirely client-side, no backend needed.
+ */
+import ShareButton from "./ShareButton.astro";
+
+interface Props {
+  businesses: any[];  // business-profiles.json businesses
+}
+const { businesses } = Astro.props;
+
+// Only show ownable businesses (not stacks or story mode)
+const ownableBusinesses = businesses.filter(b =>
+  !['kosatka-nightclub-stack'].includes(b.id)
+);
+---
+
+<div class="rounded-xl border border-gta-gold/20 overflow-hidden" style="background:#131316">
+  <!-- Header -->
+  <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+    <div>
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-[9px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Adviser</span>
+        <span class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Personalised Income Stack Builder</span>
+      </div>
+      <div class="text-[11px] text-zinc-500 font-mono">Select what you own → get your personalised $/hr total + best next purchase</div>
+    </div>
+  </div>
+
+  <div class="p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Left: ownership checklist -->
+    <div>
+      <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-3">What do you own?</div>
+      <div class="flex flex-col gap-2" id="adviser-checklist">
+        {ownableBusinesses.map((b: any) => (
+          <label class="flex items-center gap-3 cursor-pointer group">
+            <input
+              type="checkbox"
+              class="adviser-checkbox w-4 h-4 rounded accent-gta-gold cursor-pointer"
+              data-id={b.id}
+              data-profit={b.net_profit_per_hr}
+              data-setup={b.setup_cost_full ?? 0}
+              data-breakeven={b.break_even_hrs ?? 0}
+              data-name={b.name}
+              data-type={b.play_type}
+            />
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono text-zinc-300 group-hover:text-zinc-100 transition-colors truncate">{b.name}</span>
+                <span class="text-[9px] font-mono shrink-0" style={`color:${b.play_type === 'passive' ? '#22c55e' : b.play_type === 'semi-passive' ? '#f59e0b' : b.play_type === 'heist' || b.category === 'heist' || b.category === 'contract' ? '#818cf8' : '#ef4444'}`}>
+                  ${Math.round(b.net_profit_per_hr/1000)}k/hr
+                </span>
+              </div>
+              <div class="text-[9px] font-mono text-zinc-700">{b.play_type} · {b.solo ? "solo" : `${b.min_players}p min`}</div>
+            </div>
+          </label>
+        ))}
+      </div>
+
+      <!-- Budget input -->
+      <div class="mt-4 pt-4 border-t border-[#1e1e23]">
+        <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Your current budget (GTA$)</label>
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500 font-mono text-sm">$</span>
+          <input
+            id="adviser-budget"
+            type="number"
+            value="5000000"
+            min="0"
+            step="500000"
+            class="w-40 px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-gold/40"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: results panel -->
+    <div>
+      <!-- Current stack -->
+      <div class="rounded-lg border border-[#2a2a31] p-4 mb-4" style="background:#0e0e11">
+        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Your current $/hr stack</div>
+        <div id="adviser-current-total" class="text-3xl font-mono font-bold text-gta-gold mb-1">$0/hr</div>
+        <div id="adviser-stack-breakdown" class="flex flex-col gap-1 mt-2 text-[10px] font-mono text-zinc-500">
+          <span class="text-zinc-700">Select your businesses to see your stack →</span>
+        </div>
+      </div>
+
+      <!-- Recommendations -->
+      <div>
+        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Best next purchase (by ROI)</div>
+        <div id="adviser-recommendations" class="flex flex-col gap-2">
+          <span class="text-[10px] font-mono text-zinc-700">Enter your budget to see recommendations →</span>
+        </div>
+      </div>
+
+      <!-- Synergy notes -->
+      <div id="adviser-synergy" class="mt-4 hidden">
+        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Synergy detected</div>
+        <div id="adviser-synergy-content" class="text-[10px] font-mono text-gta-teal leading-relaxed"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3" style="background:#0e0e11">
+    <span class="text-[10px] text-zinc-700 font-mono">Personalised recommendations · based on what you own and your budget</span>
+    <div class="flex items-center gap-3 shrink-0">
+      <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <ShareButton text="Built my personalised GTA Online income stack on GTAVI.AI — shows my current $/hr total and best next purchase by ROI." url="https://gtavi.ai/database" size="sm" label="Share" />
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ ownableBusinesses }}>
+  function formatK(n) {
+    if (n >= 1e6) return `$${(n/1e6).toFixed(1)}M`;
+    return `$${Math.round(n/1000)}k`;
+  }
+
+  // Synergy bonuses
+  const SYNERGIES = [
+    {
+      requires: ['cayo-perico', 'nightclub'],
+      bonus: 170000,
+      label: "Kosatka + Nightclub stack: +$170k/hr passive while running Cayo"
+    },
+    {
+      requires: ['bunker', 'nightclub'],
+      bonus: 50000,
+      label: "Bunker + Nightclub: technician covering Sporting Goods slot"
+    },
+    {
+      requires: ['acid-lab', 'nightclub'],
+      bonus: 40000,
+      label: "Acid Lab + Nightclub: technician slot adds ~$40k/hr passive"
+    },
+    {
+      requires: ['mc-cocaine', 'nightclub'],
+      bonus: 30000,
+      label: "Cocaine + Nightclub: Pharmaceutical Research tech active"
+    },
+  ];
+
+  function recalculate() {
+    const checked = [...document.querySelectorAll('.adviser-checkbox:checked')];
+    const ownedIds = new Set(checked.map(c => c.dataset.id));
+    const budget = parseFloat(document.getElementById('adviser-budget').value) || 0;
+
+    // Current stack total
+    let stackTotal = 0;
+    const stackItems = [];
+    checked.forEach(c => {
+      const profit = parseInt(c.dataset.profit) || 0;
+      stackTotal += profit;
+      stackItems.push({ name: c.dataset.name, profit, type: c.dataset.type });
+    });
+
+    // Add synergy bonuses
+    let synergyTotal = 0;
+    const activeSynergies = [];
+    SYNERGIES.forEach(s => {
+      if (s.requires.every(id => ownedIds.has(id))) {
+        synergyTotal += s.bonus;
+        activeSynergies.push(s.label);
+      }
+    });
+
+    const grandTotal = stackTotal + synergyTotal;
+
+    // Update current total
+    const totalEl = document.getElementById('adviser-current-total');
+    if (totalEl) totalEl.textContent = `${formatK(grandTotal)}/hr`;
+
+    // Update breakdown
+    const breakdownEl = document.getElementById('adviser-stack-breakdown');
+    if (breakdownEl) {
+      if (stackItems.length === 0) {
+        breakdownEl.innerHTML = '<span class="text-zinc-700">Select your businesses to see your stack →</span>';
+      } else {
+        const sorted = [...stackItems].sort((a, b) => b.profit - a.profit);
+        breakdownEl.innerHTML = sorted.map(item => {
+          const typeColor = item.type === 'passive' ? '#22c55e' : item.type === 'semi-passive' ? '#f59e0b' : item.type === 'heist' ? '#818cf8' : '#ef4444';
+          return `<div class="flex items-center justify-between"><span class="text-zinc-400">${item.name}</span><span style="color:${typeColor};font-weight:bold">${formatK(item.profit)}/hr</span></div>`;
+        }).join('') + (synergyTotal > 0 ? `<div class="flex items-center justify-between text-gta-teal"><span>Synergy bonuses</span><span>+${formatK(synergyTotal)}/hr</span></div>` : '');
+      }
+    }
+
+    // Recommendations — what's affordable and not owned, sorted by ROI
+    const notOwned = ownableBusinesses
+      .filter(b => !ownedIds.has(b.id))
+      .filter(b => (b.setup_cost_full ?? 0) <= budget)
+      .sort((a, b) => {
+        const roiA = a.net_profit_per_hr / Math.max(a.setup_cost_full ?? 1, 1);
+        const roiB = b.net_profit_per_hr / Math.max(b.setup_cost_full ?? 1, 1);
+        return roiB - roiA;
+      });
+
+    const recsEl = document.getElementById('adviser-recommendations');
+    if (recsEl) {
+      if (notOwned.length === 0 && ownableBusinesses.filter(b => !ownedIds.has(b.id)).length > 0) {
+        recsEl.innerHTML = '<span class="text-[10px] font-mono text-zinc-600">Increase your budget to unlock more recommendations</span>';
+      } else if (notOwned.length === 0) {
+        recsEl.innerHTML = '<span class="text-[10px] font-mono text-gta-teal">You own everything — you\'re at maximum efficiency!</span>';
+      } else {
+        recsEl.innerHTML = notOwned.slice(0, 3).map((b, i) => {
+          const roi = b.setup_cost_full > 0 ? Math.round(b.setup_cost_full / b.net_profit_per_hr) : 0;
+          const highlight = i === 0 ? 'border-gta-gold/30' : 'border-[#2a2a31]';
+          return `<div class="rounded-lg border ${highlight} p-3" style="background:#0e0e11">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[11px] font-mono text-zinc-200 font-semibold">${b.name}</span>
+              <span class="text-[11px] font-mono text-gta-gold font-bold">${formatK(b.net_profit_per_hr)}/hr</span>
+            </div>
+            <div class="flex items-center gap-3 text-[9px] font-mono text-zinc-600">
+              <span>Setup: $${(b.setup_cost_full/1e6).toFixed(1)}M</span>
+              ${roi > 0 ? `<span>Break-even: ${roi}h</span>` : '<span>Free</span>'}
+              <span>${b.solo ? 'Solo ✓' : `${b.min_players}p min`}</span>
+            </div>
+          </div>`;
+        }).join('');
+      }
+    }
+
+    // Synergy notes
+    const synergyEl = document.getElementById('adviser-synergy');
+    const synergyContent = document.getElementById('adviser-synergy-content');
+    if (synergyEl && synergyContent) {
+      if (activeSynergies.length > 0) {
+        synergyEl.classList.remove('hidden');
+        synergyContent.innerHTML = activeSynergies.map(s => `<div>▶ ${s}</div>`).join('');
+      } else {
+        synergyEl.classList.add('hidden');
+      }
+    }
+  }
+
+  document.querySelectorAll('.adviser-checkbox').forEach(cb => cb.addEventListener('change', recalculate));
+  document.getElementById('adviser-budget')?.addEventListener('input', recalculate);
+  recalculate();
+</script>

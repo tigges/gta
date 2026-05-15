@@ -15,6 +15,9 @@ import onlineMissions    from "../../data/gta-5/missions/online-top.json";
 import businessProfiles  from "../../data/gta-5/economy/business-profiles.json";
 import onlineHeists      from "../../data/gta-5/economy/online-heists.json";
 import revenueTiers      from "../../data/gta-5/economy/revenue-tiers.json";
+import metaHistory       from "../../data/gta-5/economy/meta-history.json";
+import StockCalculator   from "../components/StockCalculator.astro";
+import IncomeAdviser     from "../components/IncomeAdviser.astro";
 
 const totalMonths   = steamData.data.length;
 const totalVehicles = vehicleData.vehicles.length;
@@ -129,86 +132,16 @@ const RETURN_COLOR = (pct: number) =>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         ASSASSINATION STOCK GUIDE
+         STOCK MARKET CALCULATOR
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Lester's Assassination Stock Guide</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mode Stock Market Calculator</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-gta-gold/70">$2B+ theoretical maximum</span>
+        <span class="text-[10px] font-mono text-gta-gold/70">$2B+ visual playthrough</span>
       </div>
-
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <!-- Header -->
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
-          <div>
-            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">The $2 Billion Strategy — 5 Missions, Maximum Profit</div>
-            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Complete Hotel Assassination early (forced). Do all others AFTER The Big Score. Reinvest between each.</div>
-          </div>
-          <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500">
-            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-gta-gold/80 inline-block"></span>Buy before</span>
-            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-gta-teal/80 inline-block"></span>Sell / recovery</span>
-          </div>
-        </div>
-
-        <!-- Step cards -->
-        <div class="divide-y divide-[#1e1e23]">
-          {(stocksData as any).guide_order.map((step: any, i: number) => (
-            <div class="px-5 py-4 flex flex-col sm:flex-row gap-4">
-              <!-- Step number + mission -->
-              <div class="shrink-0 sm:w-64">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="text-[9px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Step {step.step}</span>
-                  {i === 0 && <span class="text-[8px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Do FIRST</span>}
-                </div>
-                <div class="text-sm font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{step.title}</div>
-                <div class="text-[10px] font-mono text-zinc-600 mt-0.5">{step.when}</div>
-                <div class="text-[10px] font-mono text-zinc-700 mt-1">Mission payout: <span class="text-zinc-500">${(step.payout_direct ?? 0).toLocaleString()}</span></div>
-              </div>
-
-              <!-- Stock steps -->
-              <div class="flex-1 flex flex-col gap-2">
-                {step.strategy.map((s: any) => (
-                  <div class="flex items-start gap-3 rounded-lg px-3 py-2.5" style={`background:${s.action === 'buy' ? 'rgba(245,158,11,0.06)' : 'rgba(13,148,136,0.06)'}`}>
-                    <div class="shrink-0 mt-0.5">
-                      <span class={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded uppercase tracking-widest ${s.action === 'buy' ? 'bg-gta-gold/20 text-gta-gold' : 'bg-gta-teal/20 text-gta-teal'}`}>
-                        {s.action === 'buy' ? '▲ BUY' : '▼ SELL'}
-                      </span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-baseline gap-2 flex-wrap">
-                        <span class="text-sm font-mono font-bold text-zinc-200">{s.ticker}</span>
-                        <span class="text-[10px] text-zinc-400" style="font-family:'Inter',sans-serif">{s.stock}</span>
-                        <span class="text-[9px] font-mono text-zinc-600">{s.exchange}</span>
-                        {s.expected_return_pct && (
-                          <span class="text-[10px] font-mono font-bold ml-auto" style={`color:${RETURN_COLOR(s.expected_return_pct)}`}>+{s.expected_return_pct}%</span>
-                        )}
-                      </div>
-                      <div class="text-[10px] text-zinc-500 mt-0.5 leading-snug" style="font-family:'Inter',sans-serif">{s.timing}</div>
-                      {s.note && <div class="text-[9px] font-mono text-zinc-700 mt-0.5">{s.note}</div>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <!-- Combined return -->
-              <div class="sm:w-24 flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-1">
-                <div class="text-right">
-                  <div class="text-xl font-mono font-bold" style={`color:${RETURN_COLOR(step.combined_return_pct)}`}>+{step.combined_return_pct}%</div>
-                  <div class="text-[9px] font-mono text-zinc-600">total return</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <!-- Footer -->
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3" style="background:#0e0e11">
-          <span class="text-[10px] text-zinc-700 font-mono">Sources: GTA Wiki · community guides · optimal sequence = ~$2B across all 3 characters</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="The GTA V assassination stock guide. 5 missions, optimal order, $2B+ theoretical maximum. Multi-Target + Redwood Cigarettes is the best single play in the game." url="https://gtavi.ai/gta-v" size="sm" label="Share" /></div>
-        </div>
-      </div>
+      <StockCalculator steps={(stocksData as any).guide_order} />
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -377,6 +310,19 @@ const RETURN_COLOR = (pct: number) =>
           <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text={`Best GTA Online solo missions ranked by GTA$/hr. #1: ${topOnline[0]?.title} at $${Math.round(topOnline[0]?.gta_per_hr/1000)}k/hr. Full ranking.`} url="https://gtavi.ai/gta-v" size="sm" label="Share" /></div>
         </div>
       </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         INCOME STACK ADVISER
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-[9px] font-mono bg-teal-900/30 text-teal-400 border border-teal-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Adviser</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Personalised Income Stack Builder</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">select what you own → get your $/hr + next best purchase</span>
+      </div>
+      <IncomeAdviser businesses={bizProfiles} />
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -616,6 +562,31 @@ const RETURN_COLOR = (pct: number) =>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
+         META SHIFT HISTORY
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-[9px] font-mono bg-indigo-900/30 text-indigo-400 border border-indigo-800/40 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// $/hr Meta History — How the Top Earner Changed Across Patches</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{(metaHistory as any).meta_history.length} DLC milestones · 2013→2026</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">GTA Online Top Earner by DLC — The Economic History in One Chart</div>
+          <div class="text-[11px] text-zinc-500 font-mono mt-0.5">How $/hr for the #1 method changed with each major update. Cayo Perico was nerfed 40% in Jan 2022 — still stayed #1.</div>
+        </div>
+        <div id="meta-shift-chart" class="w-full" style="height:280px"
+          data-history={JSON.stringify((metaHistory as any).meta_history)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTAForums · community archives · manual research · patch notes</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="The history of GTA Online money: from $250K Contact Missions (2013) to $1.2M/hr Cayo Perico (2022+). Every meta shift charted." url="https://gtavi.ai/gta-v" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
          GTA VI ECONOMICS PLACEHOLDER
     ═══════════════════════════════════════════════════════ -->
     <section class="rounded-xl border border-gta-gold/20 overflow-hidden" style="background:#131316">
@@ -746,5 +717,57 @@ const RETURN_COLOR = (pct: number) =>
     svg.append("text").attr("x",W-4).attr("y",H-6)
       .attr("text-anchor","end").attr("fill","#27272a").attr("font-size","8").attr("font-family","monospace")
       .text("GTAVI.AI");
+  })();
+
+  // ── Meta Shift History Chart ─────────────────────────────────
+  (function() {
+    const el = document.getElementById("meta-shift-chart");
+    if (!el) return;
+    const history: any[] = JSON.parse(el.dataset.history || "[]");
+    const margin = { top:16, right:24, bottom:60, left:80 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+    const dates = history.map((d:any) => new Date(d.date));
+    const x = d3.scaleTime().domain([dates[0], dates[dates.length-1]]).range([0,W]);
+    const y = d3.scaleLinear().domain([0, (d3.max(history,(d:any)=>d.top_gta_per_hr)??2000000)*1.1]).range([H,0]);
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+    // Area
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id","msh-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
+    grad.append("stop").attr("offset","0%").attr("stop-color","#818cf8").attr("stop-opacity",0.2);
+    grad.append("stop").attr("offset","100%").attr("stop-color","#818cf8").attr("stop-opacity",0.01);
+    svg.append("path").datum(history).attr("fill","url(#msh-grad)")
+      .attr("d",d3.area<any>().x((d:any)=>x(new Date(d.date))).y0(H).y1((d:any)=>y(d.top_gta_per_hr)).curve(d3.curveStepAfter));
+    svg.append("path").datum(history).attr("fill","none").attr("stroke","#818cf8").attr("stroke-width",2)
+      .attr("d",d3.line<any>().x((d:any)=>x(new Date(d.date))).y((d:any)=>y(d.top_gta_per_hr)).curve(d3.curveStepAfter));
+    // Key event dots
+    history.forEach((d:any) => {
+      const cx = x(new Date(d.date)), cy = y(d.top_gta_per_hr);
+      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",4)
+        .attr("fill","#818cf8").attr("stroke","#131316").attr("stroke-width",2);
+      // Label on notable patches (every other to avoid crowding)
+      if (history.indexOf(d) % 2 === 0) {
+        svg.append("text").attr("x",cx).attr("y",cy-8).attr("text-anchor","middle")
+          .attr("fill","#9090a8").attr("font-size","8").attr("font-family","monospace")
+          .text(d.patch.split(" ")[0].slice(0,10));
+      }
+    });
+    // Axes
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d:any)=>`$${Math.round(+d/1000)}k`))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+    svg.append("text").attr("x",W-4).attr("y",H-6)
+      .attr("text-anchor","end").attr("fill","#27272a").attr("font-size","8").attr("font-family","monospace").text("GTAVI.AI");
   })();
 </script>
