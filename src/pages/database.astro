@@ -107,18 +107,22 @@ const TIER_MAP: Record<string, "S"|"A"|"B"|"C"|"D"> = {};
 tiers.forEach((t: any) => t.sources.forEach((s: any) => { TIER_MAP[s.id] = t.tier; }));
 
 // Business thumbnail map
-const BIZ_THUMBS: Record<string, string> = {
-  "cayo-perico":         "/assets/gta6/locations/Leonida_Keys_01.jpg",
-  "acid-lab":            "/assets/gta6/locations/Grassrivers_01.jpg",
-  "nightclub":           "/assets/gta6/locations/Ambrosia_02.jpg",
-  "bunker":              "/assets/gta6/locations/Grassrivers_02.jpg",
-  "vehicle-warehouse":   "/assets/gta6/locations/Port_Gellhorn_01.jpg",
-  "diamond-casino-heist":"/assets/gta6/locations/Vice_City_01.jpg",
-  "auto-shop":           "/assets/gta6/locations/Port_Gellhorn_03.jpg",
-  "hangar":              "/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg",
-  "cocaine-lockup":      "/assets/gta6/locations/Ambrosia_01.jpg",
-  "ceo-crates":          "/assets/gta6/locations/Vice_City_03.jpg",
-  "vip-work":            "/assets/gta6/locations/Vice_City_04.jpg",
+// ASSET RULE: Only use images from the correct game title.
+// GTA Online / GTA V → /assets/covers/gta-5.jpg (correct) or /assets/gta5/dlc/{name}.jpg once sourced
+// GTA VI → /assets/gta6/ ONLY
+// TODO: Replace gta-5.jpg cover with per-DLC key art from Rockstar Newswire (/assets/gta5/dlc/)
+const BIZ_THUMBS: Record<string, string | null> = {
+  "cayo-perico":          "/assets/covers/gta-5.jpg",
+  "acid-lab":             "/assets/covers/gta-5.jpg",
+  "nightclub":            "/assets/covers/gta-5.jpg",
+  "bunker":               "/assets/covers/gta-5.jpg",
+  "vehicle-warehouse":    "/assets/covers/gta-5.jpg",
+  "diamond-casino-heist": "/assets/covers/gta-5.jpg",
+  "auto-shop":            "/assets/covers/gta-5.jpg",
+  "hangar":               "/assets/covers/gta-5.jpg",
+  "cocaine-lockup":       "/assets/covers/gta-5.jpg",
+  "ceo-crates":           "/assets/covers/gta-5.jpg",
+  "vip-work":             "/assets/covers/gta-5.jpg",
 };
 
 // Difficulty mapping
@@ -131,11 +135,11 @@ const DIFF_MAP: Record<string, number> = {
 
 // Online heist thumbnails
 const HEIST_THUMBS: Record<string, string> = {
-  "cayo-perico":           "/assets/gta6/locations/Leonida_Keys_01.jpg",
-  "diamond-casino-heist":  "/assets/gta6/locations/Vice_City_01.jpg",
-  "doomsday-act-3":        "/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg",
-  "pacific-standard":      "/assets/gta6/locations/Port_Gellhorn_02.jpg",
-  "fleeca-job":            "/assets/gta6/locations/Leonida_Keys_02.jpg",
+  "cayo-perico":           "/assets/covers/gta-5.jpg",
+  "diamond-casino-heist":  "/assets/covers/gta-5.jpg",
+  "doomsday-act-3":        "/assets/covers/gta-5.jpg",
+  "pacific-standard":      "/assets/covers/gta-5.jpg",
+  "fleeca-job":            "/assets/covers/gta-5.jpg",
 };
 ---
 
