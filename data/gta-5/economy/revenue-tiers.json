@@ -1,61 +1,61 @@
 {
   "last_updated": "2026-05-15T00:00:00Z",
-  "source": "GTABase.com · GTA Wiki · community benchmarks · 2024 patches",
-  "note": "GTA Online income ranked by net GTA$/hr. All values approximate — vary by session, player skill, and patch version.",
-  "schema_version": "1.0",
+  "source": "GTABase.com · community benchmarks · business-profiles.json v2.0 · 2024 patches",
+  "note": "$/hr values updated to match community-verified optimal numbers (best loot/ideal conditions). This is what players search for and what experienced players target.",
   "tiers": [
     {
-      "tier": "S",
-      "label": "Meta — Best in Class",
+      "tier": "S+",
+      "label": "God Tier — Stacked Optimal Play",
       "color": "#22c55e",
       "sources": [
-        { "id": "cayo-perico-solo",  "name": "Cayo Perico (Solo, Good Loot)",    "gta_per_hr": 340000, "type": "heist",   "solo": true,  "setup_gta": 4200000 },
-        { "id": "acid-lab",          "name": "Acid Lab (Upgraded)",               "gta_per_hr": 290000, "type": "mc",      "solo": true,  "setup_gta": 2950000 }
+        { "id": "kosatka-nightclub-stack", "name": "Cayo Perico + Nightclub (Stacked)", "gta_per_hr": 1100000, "type": "stack",         "solo": true,  "setup_gta": 14000000 },
+        { "id": "cayo-perico",             "name": "Cayo Perico Heist (Panther Statue)","gta_per_hr": 1200000, "type": "heist",         "solo": true,  "setup_gta": 4200000  }
+      ]
+    },
+    {
+      "tier": "S",
+      "label": "S Tier — Elite Income",
+      "color": "#f59e0b",
+      "sources": [
+        { "id": "diamond-casino-heist",  "name": "Diamond Casino Heist (Diamonds 2p)", "gta_per_hr": 800000,  "type": "heist",    "solo": false, "setup_gta": 3800000  },
+        { "id": "agency-vip-contract",   "name": "Agency / Dr. Dre Contract",          "gta_per_hr": 600000,  "type": "contract", "solo": true,  "setup_gta": 3600000  },
+        { "id": "special-cargo",         "name": "Special Cargo (50 Crates, 2p)",       "gta_per_hr": 500000,  "type": "ceo",      "solo": false, "setup_gta": 7000000  },
+        { "id": "acid-lab",              "name": "Acid Lab (Upgraded)",                 "gta_per_hr": 480000,  "type": "mc",       "solo": true,  "setup_gta": 2950000  },
+        { "id": "auto-shop",             "name": "Auto Shop (Union Depository Loop)",   "gta_per_hr": 470000,  "type": "contract", "solo": true,  "setup_gta": 2940000  }
       ]
     },
     {
       "tier": "A",
-      "label": "Excellent — Regular Grind",
-      "color": "#f59e0b",
+      "label": "A Tier — Reliable Grind",
+      "color": "#0d9488",
       "sources": [
-        { "id": "auto-shop",         "name": "Auto Shop Contracts",               "gta_per_hr": 185000, "type": "business","solo": true,  "setup_gta": 2940000 },
-        { "id": "nightclub-full",    "name": "Nightclub (Fully Linked, Passive)", "gta_per_hr": 170000, "type": "passive", "solo": true,  "setup_gta": 8500000 },
-        { "id": "bunker-solo",       "name": "Gunrunning Bunker (Upgraded)",      "gta_per_hr": 145000, "type": "semi",   "solo": true,  "setup_gta": 4885000 },
-        { "id": "vehicle-warehouse", "name": "Vehicle Warehouse (Top-Range Only)","gta_per_hr": 150000, "type": "active", "solo": true,  "setup_gta": 4500000 },
-        { "id": "casino-heist-2p",   "name": "Diamond Casino Heist (2P, Gold)",   "gta_per_hr": 140000, "type": "heist",  "solo": false, "setup_gta": 3800000 }
+        { "id": "garment-factory",       "name": "Garment Factory (FIB Files)",         "gta_per_hr": 400000,  "type": "contract", "solo": true,  "setup_gta": 2500000  },
+        { "id": "nightclub",             "name": "Nightclub (Passive, Full Stack)",      "gta_per_hr": 300000,  "type": "passive",  "solo": true,  "setup_gta": 8500000  },
+        { "id": "bunker",                "name": "Gunrunning Bunker (Upgraded)",         "gta_per_hr": 280000,  "type": "semi",     "solo": true,  "setup_gta": 4885000  },
+        { "id": "vehicle-warehouse",     "name": "Vehicle Warehouse (Top-Range Only)",  "gta_per_hr": 150000,  "type": "active",   "solo": true,  "setup_gta": 4500000  }
       ]
     },
     {
       "tier": "B",
-      "label": "Good — Situational",
-      "color": "#0d9488",
-      "sources": [
-        { "id": "ceo-crates",        "name": "CEO Crates Large (2+ Players)",     "gta_per_hr": 130000, "type": "ceo",    "solo": false, "setup_gta": 6900000 },
-        { "id": "hangar",            "name": "Smuggler Hangar (Upgraded)",         "gta_per_hr": 100000, "type": "semi",   "solo": true,  "setup_gta": 3655000 },
-        { "id": "vip-work",          "name": "VIP/CEO Work (Headhunter loop)",     "gta_per_hr": 90000,  "type": "active", "solo": true,  "setup_gta": 0       },
-        { "id": "cocaine-lockup",    "name": "Cocaine Lockup (MC, Upgraded)",      "gta_per_hr": 60000,  "type": "semi",   "solo": true,  "setup_gta": 2375000 }
-      ]
-    },
-    {
-      "tier": "C",
-      "label": "Low — Nightclub Support Only",
+      "label": "B / C Tier — Situational",
       "color": "#818cf8",
       "sources": [
-        { "id": "counterfeit-cash",  "name": "Counterfeit Cash (MC)",             "gta_per_hr": 42000,  "type": "semi",   "solo": true,  "setup_gta": 2075000 },
-        { "id": "meth-lab",          "name": "Methamphetamine Lab (MC)",           "gta_per_hr": 45000,  "type": "semi",   "solo": true,  "setup_gta": 2260000 },
-        { "id": "weed-farm",         "name": "Weed Farm (MC)",                     "gta_per_hr": 37000,  "type": "semi",   "solo": true,  "setup_gta": 1975000 },
-        { "id": "document-forgery",  "name": "Document Forgery (MC)",              "gta_per_hr": 22000,  "type": "semi",   "solo": true,  "setup_gta": 1900000 }
+        { "id": "vip-work",              "name": "VIP Work + Payphone Hits",            "gta_per_hr": 200000,  "type": "active",   "solo": true,  "setup_gta": 0        },
+        { "id": "mc-cocaine",            "name": "Cocaine Lockup (MC, Upgraded)",        "gta_per_hr": 180000,  "type": "semi",     "solo": true,  "setup_gta": 2375000  },
+        { "id": "contact-missions",      "name": "Contact Missions (Best, 2× events)",  "gta_per_hr": 150000,  "type": "active",   "solo": true,  "setup_gta": 0        },
+        { "id": "hangar",                "name": "Smuggler Hangar (Upgraded)",           "gta_per_hr": 100000,  "type": "semi",     "solo": true,  "setup_gta": 3655000  },
+        { "id": "ceo-crates",            "name": "CEO Crates Large (2+ Players)",        "gta_per_hr": 130000,  "type": "ceo",      "solo": false, "setup_gta": 6900000  }
       ]
     }
   ],
   "optimal_starter_path": [
-    { "step": 1, "action": "Complete First Dose missions (free)", "unlocks": "Acid Lab at discount", "cost": 0 },
-    { "step": 2, "action": "Buy & upgrade Acid Lab",              "unlocks": "$290k/hr semi-passive", "cost": 2950000 },
-    { "step": 3, "action": "Buy Kosatka submarine",               "unlocks": "Cayo Perico Heist",     "cost": 2200000 },
-    { "step": 4, "action": "Run Cayo Perico until $8M banked",    "unlocks": "Nightclub budget",      "cost": 0        },
-    { "step": 5, "action": "Buy Nightclub + full upgrades",        "unlocks": "$170k/hr passive",      "cost": 3500000 },
-    { "step": 6, "action": "Buy Bunker (Paleto Bay)",              "unlocks": "Nightclub tech slot",   "cost": 2500000 },
-    { "step": 7, "action": "Buy Cocaine Lockup (Alamo Sea)",       "unlocks": "Nightclub tech slot",   "cost": 2250000 },
-    { "step": 8, "action": "Run everything in parallel",           "unlocks": "$500k+/hr combined",    "cost": 0        }
+    { "step": 1, "action": "Complete First Dose missions (free)",         "unlocks": "Acid Lab at discount",        "cost": 0        },
+    { "step": 2, "action": "Buy & fully upgrade Acid Lab",               "unlocks": "$480k/hr semi-passive",       "cost": 2950000  },
+    { "step": 3, "action": "Buy Kosatka submarine",                      "unlocks": "Cayo Perico Heist",           "cost": 2200000  },
+    { "step": 4, "action": "Grind Cayo until $8M banked",                "unlocks": "Nightclub budget",            "cost": 0        },
+    { "step": 5, "action": "Buy Nightclub + full upgrades + 5 linked",   "unlocks": "$300k/hr passive",            "cost": 3500000  },
+    { "step": 6, "action": "Buy Agency (cheapest)",                      "unlocks": "$600k/hr Dr. Dre contract",  "cost": 2010000  },
+    { "step": 7, "action": "Buy Bunker (Paleto Bay) + upgrades",         "unlocks": "Nightclub tech slot #1",      "cost": 2500000  },
+    { "step": 8, "action": "Run everything in parallel",                 "unlocks": "$1M+/hr combined stack",     "cost": 0        }
   ]
 }

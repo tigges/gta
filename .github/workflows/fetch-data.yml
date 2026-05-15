@@ -40,6 +40,17 @@ jobs:
       - name: Fetch GTA V mission payouts (GTA Wiki)
         run: python scrapers/fetch_missions.py
 
+      - name: Fetch GTA Online weekly bonus events (Rockstar Newswire)
+        run: python scrapers/fetch_weekly_bonuses.py
+
+      - name: Fetch GTABase business and heist data
+        run: python scrapers/fetch_gtabase.py
+
+      - name: Fetch GTA Online DLC trailer thumbnails (YouTube API)
+        run: python scrapers/fetch_gtaonline_dlc_art.py
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+
       # ── GTA VI ─────────────────────────────────────────────────────────────
 
       - name: Fetch GTA VI trailer data

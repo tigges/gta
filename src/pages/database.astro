@@ -107,22 +107,23 @@ const TIER_MAP: Record<string, "S"|"A"|"B"|"C"|"D"> = {};
 tiers.forEach((t: any) => t.sources.forEach((s: any) => { TIER_MAP[s.id] = t.tier; }));
 
 // Business thumbnail map
-// ASSET RULE: Only use images from the correct game title.
-// GTA Online / GTA V → /assets/covers/gta-5.jpg (correct) or /assets/gta5/dlc/{name}.jpg once sourced
+// ASSET RULE: Only use assets from the correct game title.
+// GTA Online / GTA V → /assets/gta5/dlc/{name}.jpg (official Rockstar DLC thumbnails via YouTube API)
 // GTA VI → /assets/gta6/ ONLY
-// TODO: Replace gta-5.jpg cover with per-DLC key art from Rockstar Newswire (/assets/gta5/dlc/)
 const BIZ_THUMBS: Record<string, string | null> = {
-  "cayo-perico":          "/assets/covers/gta-5.jpg",
-  "acid-lab":             "/assets/covers/gta-5.jpg",
-  "nightclub":            "/assets/covers/gta-5.jpg",
-  "bunker":               "/assets/covers/gta-5.jpg",
+  "cayo-perico":          "/assets/gta5/dlc/cayo-perico.jpg",
+  "acid-lab":             "/assets/gta5/dlc/acid-lab.jpg",
+  "nightclub":            "/assets/gta5/dlc/after-hours.jpg",
+  "bunker":               "/assets/gta5/dlc/gunrunning.jpg",
   "vehicle-warehouse":    "/assets/covers/gta-5.jpg",
-  "diamond-casino-heist": "/assets/covers/gta-5.jpg",
-  "auto-shop":            "/assets/covers/gta-5.jpg",
+  "diamond-casino-heist": "/assets/gta5/dlc/diamond-casino-heist.jpg",
+  "auto-shop":            "/assets/gta5/dlc/auto-shop.jpg",
   "hangar":               "/assets/covers/gta-5.jpg",
   "cocaine-lockup":       "/assets/covers/gta-5.jpg",
   "ceo-crates":           "/assets/covers/gta-5.jpg",
-  "vip-work":             "/assets/covers/gta-5.jpg",
+  "vip-work":             "/assets/gta5/dlc/the-contract.jpg",
+  "agency-vip-contract":  "/assets/gta5/dlc/agency.jpg",
+  "garment-factory":      "/assets/gta5/dlc/chop-shop.jpg",
 };
 
 // Difficulty mapping
@@ -135,8 +136,8 @@ const DIFF_MAP: Record<string, number> = {
 
 // Online heist thumbnails
 const HEIST_THUMBS: Record<string, string> = {
-  "cayo-perico":           "/assets/covers/gta-5.jpg",
-  "diamond-casino-heist":  "/assets/covers/gta-5.jpg",
+  "cayo-perico":           "/assets/gta5/dlc/cayo-perico.jpg",
+  "diamond-casino-heist":  "/assets/gta5/dlc/diamond-casino-heist.jpg",
   "doomsday-act-3":        "/assets/covers/gta-5.jpg",
   "pacific-standard":      "/assets/covers/gta-5.jpg",
   "fleeca-job":            "/assets/covers/gta-5.jpg",
