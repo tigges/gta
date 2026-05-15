@@ -83,7 +83,12 @@ def main() -> None:
         return
 
     print("Fetching Spotify GTA data...")
-    token = get_token(client_id, client_secret)
+    try:
+        token = get_token(client_id, client_secret)
+    except Exception as e:
+        print(f"  Spotify auth failed: {e}")
+        print("  → Check SPOTIFY_CLIENT_ID + SPOTIFY_CLIENT_SECRET are correct.")
+        return
     playlists = []
 
     for query in GTA5_STATION_QUERIES:

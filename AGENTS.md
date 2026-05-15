@@ -71,6 +71,10 @@ python3 scrapers/fetch_newswire.py
 |--------|---------|----------|
 | `BROUGHY_SHEET_ID` | `fetch_vehicles.py` | Yes (vehicle data) |
 | `YOUTUBE_API_KEY` | `fetch_trailers.py`, `fetch_youtube_velocity.py` | Yes (trailer/velocity data) |
+| `TWITCH_CLIENT_ID` | `fetch_igdb.py` | Yes (IGDB franchise metadata) |
+| `TWITCH_CLIENT_SECRET` | `fetch_igdb.py` | Yes (IGDB franchise metadata) |
+| `SPOTIFY_CLIENT_ID` | `fetch_spotify.py` | Yes (GTA radio playlists) |
+| `SPOTIFY_CLIENT_SECRET` | `fetch_spotify.py` | Yes (GTA radio playlists) |
 | `REDDIT_CLIENT_ID` | `fetch_reddit.py` | No — RSS fallback active |
 | `REDDIT_CLIENT_SECRET` | `fetch_reddit.py` | No — RSS fallback active |
 | `DISCORD_WEBHOOK_URL` | `post_discord_digest.py` | No — digest skipped if absent |
@@ -100,7 +104,10 @@ python3 scrapers/fetch_trailers.py
 | `fetch_reddit.py` | `community/reddit.json` | ✅ | Needs Reddit creds for live count; RSS fallback for posts |
 | `fetch_newswire.py` | `feeds/newswire.json` | ✅ | RSS scrape; no API key |
 | `fetch_metacritic.py` | `franchise/metacritic.json` | ❌ | Curated seed — run manually if scores change |
-| `fetch_igdb.py` | `franchise/igdb.json` | ❌ | Needs IGDB client creds |
+| `fetch_igdb.py` | `franchise/igdb.json` | ✅ | Needs `TWITCH_CLIENT_ID` + `TWITCH_CLIENT_SECRET` |
+| `fetch_spotify.py` | `franchise/spotify.json` | ✅ | Needs `SPOTIFY_CLIENT_ID` + `SPOTIFY_CLIENT_SECRET` |
+| `fetch_steamdb.py` | `gta-5/meta/steamdb.json` | ❌ | SteamDB blocks server IPs; curated seed |
+| `fetch_spotify.py` | `franchise/spotify.json` | ✅ | Needs `SPOTIFY_CLIENT_ID` + `SPOTIFY_CLIENT_SECRET` |
 | `fetch_steamdb.py` | `gta-5/meta/steamdb.json` | ❌ | SteamDB blocks server IPs; curated seed |
 | `fetch_spotify.py` | `franchise/spotify.json` | ❌ | Curated seed |
 | `fetch_boxoffice.py` | `franchise/entertainment-comps.json` | ✅ | Box Office Mojo scrape |

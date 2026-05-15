@@ -60,6 +60,18 @@ jobs:
       - name: Fetch franchise sales data
         run: python scrapers/fetch_franchise_sales.py
 
+      - name: Fetch IGDB franchise metadata
+        run: python scrapers/fetch_igdb.py
+        env:
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
+
+      - name: Fetch Spotify GTA playlist data
+        run: python scrapers/fetch_spotify.py
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+
       # ── Community & News ───────────────────────────────────────────────────
 
       - name: Fetch Reddit community data
