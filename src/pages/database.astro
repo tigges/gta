@@ -363,6 +363,41 @@ const HEIST_THUMBS: Record<string, string> = {
       ))}
     </div>
 
+      <!-- Contact Missions section inside GTA Online -->
+      <div class="mt-6 online-tier-section" data-tier="contact">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="font-mono font-black text-xl leading-none text-zinc-500">B</span>
+          <span class="text-[10px] font-mono text-zinc-500">Contact Missions — Solo Farming</span>
+          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <span class="text-[10px] font-mono text-zinc-700">{onlineMissionList.length} missions · net after costs</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {onlineMissionList.slice(0, 8).map((m: any) => (
+            <div class="online-card" data-category="active">
+              <ProfitCard
+                id={m.id}
+                name={m.title}
+                game="gta-online"
+                category="active"
+                tier={m.gta_per_hr >= 40000 ? "B" : "C"}
+                net_profit_per_hr={m.gta_per_hr}
+                max_profit_per_hr={maxProfitHr}
+                play_type="active"
+                difficulty={m.difficulty === "Hard" ? 4 : m.difficulty === "Medium" ? 3 : 2}
+                min_players={m.min_players ?? 1}
+                max_players={m.min_players ?? 1}
+                solo={true}
+                payout_per_run_max={m.payout}
+                avg_run_time_min={m.avg_completion_min}
+                notes={`${m.contact} · ${m.difficulty} · ${m.avg_completion_min}min avg`}
+                share_url="https://gtavi.ai/database"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
     <!-- GTA V Economy section -->
     <div id="db-section-gta5eco" class="hidden">
       <div class="flex items-center gap-2 mb-5 flex-wrap">
