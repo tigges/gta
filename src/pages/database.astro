@@ -408,7 +408,6 @@ const HEIST_THUMBS: Record<string, string> = {
           </div>
         </div>
       ))}
-    </div>
 
       <!-- Contact Missions section inside GTA Online -->
       <div class="mt-6 online-tier-section" data-tier="contact">
@@ -455,19 +454,6 @@ const HEIST_THUMBS: Record<string, string> = {
 
     <!-- GTA V Economy section -->
     <div id="db-section-gta5eco" class="hidden">
-      <div class="flex items-center gap-2 mb-5 flex-wrap">
-        <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mr-1">Category</span>
-        {[
-          { id: "all",     label: "All" },
-          { id: "mission", label: "🎯 Story Missions" },
-          { id: "heist",   label: "🏦 Heists" },
-          { id: "stocks",  label: "📈 Stock Guide" },
-        ].map(f => (
-          <button class="gta5eco-cat-filter px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
-            class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
-            data-cat={f.id}>{f.label}</button>
-        ))}
-      </div>
 
       <!-- Story Heists -->
       <div class="mb-6 gta5eco-section" data-category="heist">
@@ -534,18 +520,7 @@ const HEIST_THUMBS: Record<string, string> = {
     </div>
 
 
-    <!-- GTA V Economy sectionmy section -->
-    
-    <!-- Franchise placeholder -->
-    <div id="db-section-franchise" class="hidden">
-      <div class="rounded-xl border border-[#1e1e23] p-8 text-center" style="background:#131316">
-        <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Franchise Database</div>
-        <div class="font-semibold text-zinc-300 mb-2" style="font-family:'Inter',sans-serif">GTA III · Vice City · San Andreas · GTA IV</div>
-        <p class="text-[11px] text-zinc-600 max-w-md mx-auto" style="font-family:'Inter',sans-serif">
-          Historical franchise economic data coming soon. GTA V and Online are the reference model — franchise titles will follow the same profile card schema.
-        </p>
-      </div>
-    </div>
+
 
     <!-- No results -->
     <div id="db-empty" class="hidden py-16 text-center">
