@@ -20,6 +20,7 @@ import businessData     from "../../data/gta-5/businesses/profit-per-hour.json";
 import regionsData      from "../../data/franchise/regions-evidence.json";
 import missionsData     from "../../data/gta-5/missions/story-missions.json";
 import stocksData       from "../../data/gta-5/economy/assassination-stocks.json";
+import revenueTiersData from "../../data/gta-5/economy/revenue-tiers.json";
 
 import metacriticData   from "../../data/franchise/metacritic.json";
 import ttwoStock        from "../../data/franchise/ttwo-stock.json";
@@ -932,6 +933,44 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki · community guides · LCN/BAWSAQ exchange data · 2024 verified</span>
           <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V assassination missions ranked by combined stock return. Multi-Target (Debonaire + Redwood) delivers 380% combined — the best single play in the game." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         NEW CHART K — GTA Online Income Leaderboard
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-600 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Income Leaderboard — All Sources Ranked</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/database" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full profiles →</a>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-7 h-10" loading="lazy" />
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-gta-gold/40 shadow shadow-gta-gold/10 w-8 h-11" loading="lazy" />
+        </div>
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Every GTA Online Income Source — S to C Tier by Net GTA$/hr</div>
+            <div class="text-[11px] text-zinc-500 font-mono">Net profit after resupply costs. Click any bar → full profile card in Database.</div>
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Passive</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gta-gold inline-block"></span>Semi</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span>Active</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-400 inline-block"></span>Heist</span>
+          </div>
+        </div>
+        <div id="income-leaderboard-chart" class="w-full" style="min-height:380px"
+          data-tiers={JSON.stringify((revenueTiersData as any).tiers)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTABase.com · community benchmarks · net after costs · 2024 patches</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online income ranked S→C tier by net GTA$/hr. Cayo Perico $340k solo. Full profiles and tips in the Database." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -2522,5 +2561,52 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+  })();
+
+  // ── CHART K — Income Leaderboard ────────────────────────────
+  (function() {
+    const el = document.getElementById("income-leaderboard-chart");
+    if (!el) return;
+    const tiers: any[] = JSON.parse(el.dataset.tiers || "[]");
+    const sources: any[] = [];
+    tiers.forEach((t: any) => t.sources.forEach((s: any) => sources.push({ ...s, tierColor: t.color, tier: t.tier })));
+    sources.sort((a: any, b: any) => b.gta_per_hr - a.gta_per_hr);
+    const PLAY_COLOR: Record<string,string> = {
+      heist:"#818cf8", passive:"#22c55e", semi:"#f59e0b", active:"#ef4444",
+      mc:"#f59e0b", ceo:"#f59e0b", business:"#0d9488", smuggling:"#0d9488",
+    };
+    const margin = { top:8, right:120, bottom:8, left:190 };
+    const rowH = 34;
+    const totalH = sources.length * rowH + margin.top + margin.bottom;
+    const W = el.clientWidth - margin.left - margin.right;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${totalH}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+    const x = d3.scaleLinear().domain([0, d3.max(sources,(s:any)=>s.gta_per_hr)??1]).range([0,W]);
+    svg.append("g").call(d3.axisBottom(x).ticks(4).tickSize(sources.length*rowH).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+    let lastTier = "";
+    sources.forEach((s:any) => {
+      const yt = sources.indexOf(s) * rowH;
+      const bh = rowH * 0.7;
+      const yOff = rowH * 0.15;
+      const barColor = PLAY_COLOR[s.type] ?? "#71717a";
+      if (s.tier !== lastTier) {
+        svg.append("text").attr("x",-margin.left+4).attr("y",yt+bh/2+yOff+3)
+          .attr("fill",s.tierColor).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold").text(s.tier);
+        lastTier = s.tier;
+      }
+      svg.append("rect").attr("x",0).attr("y",yt+yOff).attr("width",x(s.gta_per_hr)).attr("height",bh)
+        .attr("rx",3).attr("fill",barColor).attr("opacity",0.8);
+      svg.append("text").attr("x",-6).attr("y",yt+bh/2+yOff+4).attr("text-anchor","end")
+        .attr("fill","#b8b8c4").attr("font-size","10").attr("font-family","monospace")
+        .text(s.name.length>24 ? s.name.slice(0,23)+"…" : s.name);
+      svg.append("text").attr("x",x(s.gta_per_hr)+6).attr("y",yt+bh/2+yOff+4)
+        .attr("fill",barColor).attr("font-size","10").attr("font-family","monospace").attr("font-weight","bold")
+        .text(`$${Math.round(s.gta_per_hr/1000)}k/hr`);
+      if (s.solo) svg.append("text").attr("x",x(s.gta_per_hr)+64).attr("y",yt+bh/2+yOff+4)
+        .attr("fill","#0d9488").attr("font-size","8").attr("font-family","monospace").text("solo");
+    });
   })();
 </script>

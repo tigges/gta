@@ -1,0 +1,270 @@
+---
+/**
+ * ProfitCard.astro — Mission / Business / Heist profile card
+ *
+ * The core reusable unit for the GTA economic intelligence database.
+ * Designed to render identically for GTA V, GTA Online, and GTA VI content.
+ * Schema-driven: populate from business-profiles.json, online-heists.json,
+ * story-missions.json, or future gta-6/missions/*.json files.
+ */
+import ShareButton from "./ShareButton.astro";
+
+interface LootTier {
+  loot: string;
+  value: number;
+  frequency?: string;
+}
+
+interface Props {
+  // Identity
+  id: string;
+  name: string;
+  game: "gta-6" | "gta-online" | "gta-5";
+  category: string;         // "heist" | "mc" | "passive" | "active" | "mission" | "ceo" ...
+
+  // Tier
+  tier: "S" | "A" | "B" | "C" | "D";
+
+  // Revenue
+  net_profit_per_hr: number;
+  max_profit_per_hr?: number;  // for context in bar scaling
+
+  // Setup
+  setup_cost_full?: number;
+  setup_cost_min?: number;
+  break_even_hrs?: number;
+
+  // Gameplay
+  play_type?: string;        // "active" | "semi-passive" | "passive" | "heist"
+  difficulty?: number;       // 1–5
+  min_players?: number;
+  max_players?: number;
+  solo?: boolean;
+  dlc?: string;
+  prerequisite?: string;
+
+  // Content
+  payout_per_run_min?: number;
+  payout_per_run_max?: number;
+  avg_run_time_min?: number;
+  loot_tiers?: LootTier[];
+  tips?: string[];
+  notes?: string;
+
+  // Visuals
+  thumbnail?: string;         // path or URL
+
+  // Share
+  share_url?: string;
+}
+
+const {
+  id, name, game, category,
+  tier = "B",
+  net_profit_per_hr,
+  max_profit_per_hr = 340000,
+  setup_cost_full, setup_cost_min, break_even_hrs,
+  play_type, difficulty = 3, min_players = 1, max_players = 4, solo = true, dlc,
+  prerequisite,
+  payout_per_run_min, payout_per_run_max, avg_run_time_min,
+  loot_tiers, tips, notes,
+  thumbnail,
+  share_url = "https://gtavi.ai/database",
+} = Astro.props;
+
+// Tier styling
+const TIER_STYLES = {
+  S: { color: "#22c55e", bg: "rgba(34,197,94,0.12)", border: "rgba(34,197,94,0.3)" },
+  A: { color: "#f59e0b", bg: "rgba(245,158,11,0.12)", border: "rgba(245,158,11,0.3)" },
+  B: { color: "#0d9488", bg: "rgba(13,148,136,0.12)", border: "rgba(13,148,136,0.3)" },
+  C: { color: "#818cf8", bg: "rgba(129,140,248,0.12)", border: "rgba(129,140,248,0.3)" },
+  D: { color: "#71717a", bg: "rgba(113,113,122,0.12)", border: "rgba(113,113,122,0.3)" },
+};
+const ts = TIER_STYLES[tier] ?? TIER_STYLES.B;
+
+// Play type badge color
+const PLAY_COLORS: Record<string,string> = {
+  passive:       "#22c55e",
+  "semi-passive": "#f59e0b",
+  active:        "#ef4444",
+  heist:         "#818cf8",
+  mission:       "#0d9488",
+};
+const playColor = PLAY_COLORS[play_type ?? category] ?? "#71717a";
+
+// $/hr bar width (relative to max in the tier)
+const barPct = Math.round((net_profit_per_hr / max_profit_per_hr) * 100);
+
+// Difficulty dots (1–5)
+const diffDots = Array.from({ length: 5 }, (_, i) => i < difficulty);
+
+// Game label
+const GAME_LABELS: Record<string, string> = {
+  "gta-online": "GTA Online",
+  "gta-5":      "GTA V",
+  "gta-6":      "GTA VI",
+};
+
+// Share text
+const shareText = `${name} — ${tier}-tier, $${Math.round(net_profit_per_hr/1000)}k/hr${solo ? " (solo)" : ""}. GTA economic intelligence.`;
+---
+
+<div class="profit-card group relative flex flex-col rounded-xl border overflow-hidden transition-all duration-200 hover:brightness-110"
+  style={`background:#131316;border-color:${ts.border}`}
+  data-profit-id={id}
+  data-game={game}
+  data-category={category}
+  data-tier={tier}
+  data-profit={net_profit_per_hr}
+>
+  <!-- Thumbnail -->
+  {thumbnail ? (
+    <div class="relative overflow-hidden" style="height:140px">
+      <img src={thumbnail} alt={name}
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        loading="lazy" />
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 30%,#131316 100%)"></div>
+      <!-- Tier badge -->
+      <div class="absolute top-3 left-3 flex items-center gap-2">
+        <span class="font-mono font-black text-xl leading-none" style={`color:${ts.color}`}>{tier}</span>
+      </div>
+      <!-- Game badge -->
+      <div class="absolute top-3 right-3">
+        <span class="text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+          style={`color:${playColor};background:${playColor}18;border-color:${playColor}35`}>
+          {GAME_LABELS[game]}
+        </span>
+      </div>
+    </div>
+  ) : (
+    <!-- No thumbnail: compact tier header -->
+    <div class="px-4 pt-4 pb-2 flex items-center justify-between">
+      <span class="font-mono font-black text-2xl leading-none" style={`color:${ts.color}`}>{tier}</span>
+      <span class="text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+        style={`color:${playColor};background:${playColor}18;border-color:${playColor}35`}>
+        {GAME_LABELS[game]}
+      </span>
+    </div>
+  )}
+
+  <!-- Main content -->
+  <div class="px-4 pt-3 pb-2 flex-1 flex flex-col gap-2.5">
+
+    <!-- Title + type -->
+    <div>
+      <div class="font-semibold text-zinc-200 text-sm leading-snug" style="font-family:'Inter',sans-serif">{name}</div>
+      <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+        <span class="text-[9px] font-mono uppercase tracking-widest" style={`color:${playColor}`}>
+          {play_type ?? category}
+        </span>
+        {solo && <span class="text-[8px] font-mono text-gta-teal border border-gta-teal/25 bg-gta-teal/8 px-1 py-0.5 rounded">Solo ✓</span>}
+        {!solo && min_players && <span class="text-[8px] font-mono text-zinc-600">{min_players}–{max_players}p</span>}
+      </div>
+    </div>
+
+    <!-- Revenue bar -->
+    <div>
+      <div class="flex items-baseline justify-between mb-1">
+        <span class="text-xl font-mono font-bold" style={`color:${ts.color}`}>
+          ${Math.round(net_profit_per_hr / 1000)}k
+          <span class="text-[10px] font-normal text-zinc-600 ml-0.5">/hr</span>
+        </span>
+        {avg_run_time_min && (
+          <span class="text-[9px] font-mono text-zinc-600">{avg_run_time_min}min avg</span>
+        )}
+      </div>
+      <div class="h-1.5 rounded-full bg-[#1e1e23] overflow-hidden">
+        <div class="h-full rounded-full" style={`width:${barPct}%;background:${ts.color};opacity:0.85`}></div>
+      </div>
+    </div>
+
+    <!-- Setup + ROI -->
+    {setup_cost_full && (
+      <div class="grid grid-cols-2 gap-x-3 text-[10px] font-mono">
+        <div>
+          <div class="text-zinc-600 uppercase tracking-widest text-[8px] mb-0.5">Setup</div>
+          <div class="text-zinc-300">${(setup_cost_full / 1_000_000).toFixed(1)}M</div>
+        </div>
+        {break_even_hrs && (
+          <div>
+            <div class="text-zinc-600 uppercase tracking-widest text-[8px] mb-0.5">Break-even</div>
+            <div class="text-zinc-300">{break_even_hrs}h</div>
+          </div>
+        )}
+      </div>
+    )}
+
+    <!-- Payout per run (heists) -->
+    {(payout_per_run_min || payout_per_run_max) && (
+      <div class="text-[10px] font-mono">
+        <span class="text-zinc-600 uppercase tracking-widest text-[8px]">Per run: </span>
+        {payout_per_run_min && payout_per_run_max && payout_per_run_min !== payout_per_run_max ? (
+          <span class="text-zinc-300">${(payout_per_run_min/1_000_000).toFixed(1)}M–${(payout_per_run_max/1_000_000).toFixed(1)}M</span>
+        ) : (
+          <span class="text-zinc-300">${((payout_per_run_max ?? payout_per_run_min ?? 0)/1_000_000).toFixed(1)}M</span>
+        )}
+      </div>
+    )}
+
+    <!-- Difficulty -->
+    <div class="flex items-center gap-2">
+      <div class="flex gap-0.5">
+        {diffDots.map((filled: boolean) => (
+          <div class={`w-2 h-2 rounded-full ${filled ? "" : "opacity-20"}`}
+            style={filled ? `background:${ts.color}` : "background:#52525b"}></div>
+        ))}
+      </div>
+      <span class="text-[9px] font-mono text-zinc-600">
+        {difficulty <= 1 ? "Very Easy" : difficulty === 2 ? "Easy" : difficulty === 3 ? "Medium" : difficulty === 4 ? "Hard" : "Very Hard"}
+      </span>
+    </div>
+
+    <!-- Loot tiers (heists) -->
+    {loot_tiers && loot_tiers.length > 0 && (
+      <div class="flex flex-col gap-1">
+        <div class="text-[8px] font-mono text-zinc-600 uppercase tracking-widest">Loot tiers</div>
+        {loot_tiers.slice(0, 3).map((l: LootTier) => {
+          const pct = Math.round((l.value / (loot_tiers?.[0]?.value ?? 1)) * 100);
+          return (
+            <div class="flex items-center gap-2">
+              <div class="w-1 h-1 rounded-full bg-zinc-600 shrink-0"></div>
+              <span class="text-[9px] font-mono text-zinc-400 truncate flex-1">{l.loot}</span>
+              <span class="text-[9px] font-mono font-bold shrink-0" style={`color:${ts.color}`}>${(l.value/1_000_000).toFixed(2)}M</span>
+            </div>
+          );
+        })}
+      </div>
+    )}
+
+    <!-- Notes -->
+    {notes && (
+      <p class="text-[10px] text-zinc-500 leading-snug line-clamp-2" style="font-family:'Inter',sans-serif">{notes}</p>
+    )}
+
+    <!-- Prerequisites -->
+    {prerequisite && (
+      <div class="text-[9px] font-mono text-zinc-600 border-t border-[#1e1e23] pt-2">
+        <span class="text-zinc-700 uppercase tracking-widest text-[8px]">Requires: </span>
+        {prerequisite}
+      </div>
+    )}
+
+    <!-- Top tip -->
+    {tips && tips[0] && (
+      <div class="rounded-lg px-2.5 py-2 text-[9px] font-mono text-zinc-400 border-t border-[#1e1e23] pt-2 flex gap-1.5 items-start">
+        <span class="text-gta-gold shrink-0">▶</span>
+        <span class="leading-snug">{tips[0]}</span>
+      </div>
+    )}
+
+  </div>
+
+  <!-- Footer: DLC + share -->
+  <div class="px-4 py-2.5 border-t flex items-center justify-between gap-2" style="border-color:#1e1e23;background:#0e0e11">
+    <span class="text-[8px] font-mono text-zinc-700 truncate">{dlc?.split("(")[0]?.trim() ?? GAME_LABELS[game]}</span>
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="text-[8px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <ShareButton text={shareText} url={share_url} size="sm" label="Share" />
+    </div>
+  </div>
+</div>
