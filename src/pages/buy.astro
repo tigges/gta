@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 import Countdown from "../components/Countdown.astro";
-import NewsletterSignup from "../components/NewsletterSignup.astro";
+import ShareButton from "../components/ShareButton.astro";
 
 const LAUNCH_DATE = "2026-11-19";
 const LAUNCH_DISPLAY = "November 19, 2026";
@@ -10,219 +10,176 @@ const LAUNCH_DISPLAY = "November 19, 2026";
 // ── Platforms ─────────────────────────────────────────────────────────────
 const PLATFORMS = [
   {
-    id:        "ps5",
-    name:      "PlayStation 5",
-    short:     "PS5",
-    confirmed: true,
+    id: "ps5", name: "PlayStation 5", short: "PS5", confirmed: true,
     official_url: "https://www.playstation.com/en-us/games/grand-theft-auto-vi/",
-    store:     "PlayStation Store",
-    color:     "text-blue-400",
-    border:    "border-blue-500/30",
-    bg:        "bg-blue-500/5",
-    dot:       "bg-blue-400",
+    store: "PlayStation Store",
+    color: "text-blue-400", border: "border-blue-500/30", bg: "bg-blue-500/5", dot: "bg-blue-400",
+    logoBg: "#003087", logoText: "PS",
+    desc: "Primary launch platform. Native PS5 version confirmed by Rockstar.",
   },
   {
-    id:        "xbox",
-    name:      "Xbox Series X|S",
-    short:     "Xbox",
-    confirmed: true,
+    id: "xbox", name: "Xbox Series X|S", short: "Xbox", confirmed: true,
     official_url: "https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9nl3wwnzlzzn",
-    store:     "Xbox Store",
-    color:     "text-green-400",
-    border:    "border-green-500/30",
-    bg:        "bg-green-500/5",
-    dot:       "bg-green-400",
+    store: "Microsoft Store",
+    color: "text-green-400", border: "border-green-500/30", bg: "bg-green-500/5", dot: "bg-green-400",
+    logoBg: "#107C10", logoText: "X",
+    desc: "Co-primary platform. Xbox Series X|S confirmed alongside PS5.",
   },
   {
-    id:        "pc",
-    name:      "PC (Steam / Epic)",
-    short:     "PC",
-    confirmed: false,
-    official_url: null,
-    store:     "Steam · Epic Games",
-    color:     "text-zinc-500",
-    border:    "border-zinc-700/40",
-    bg:        "bg-zinc-800/20",
-    dot:       "bg-zinc-600",
+    id: "pc", name: "PC (Steam / Epic)", short: "PC", confirmed: false,
+    official_url: null, store: "Steam · Epic Games",
+    color: "text-zinc-500", border: "border-zinc-700/40", bg: "bg-zinc-800/20", dot: "bg-zinc-600",
+    logoBg: "#1a1a1e", logoText: "PC",
+    desc: "Not announced. GTA V came to PC ~18 months post-console. Similar window expected.",
   },
 ] as const;
 
 // ── Editions ──────────────────────────────────────────────────────────────
 const EDITIONS = [
   {
-    id:         "standard",
-    name:       "Standard Edition",
-    price_usd:  79.99,
-    confirmed:  false,
-    tier:       "SPECULATIVE",
-    tier_color: "text-zinc-400",
-    tier_bg:    "bg-zinc-800/60 border-zinc-700",
-    platforms:  ["PS5","Xbox"],
-    highlight:  false,
-    includes: [
-      "Base game — Grand Theft Auto VI",
-      "Access to GTA Online successor at launch",
-    ],
-    preorder_bonus: [
-      "Speculated: small GTA Online cash bonus (GTA V precedent)",
-    ],
-    basis: "Industry standard entry-point. Consistent with GTA V at $59.99 adjusted for 2026 pricing.",
+    id: "standard", name: "Standard Edition", price_usd: 79.99, confirmed: false,
+    tier: "SPECULATIVE", tier_color: "text-zinc-400", tier_bg: "bg-zinc-800/60 border-zinc-700",
+    platforms: ["PS5","Xbox"], highlight: false,
+    includes: ["Base game — Grand Theft Auto VI", "Access to GTA Online successor at launch"],
+    preorder_bonus: ["Speculated: small GTA Online cash bonus (GTA V precedent)"],
+    basis: "Industry standard entry-point. Consistent with GTA V adjusted for 2026 pricing.",
   },
   {
-    id:         "special",
-    name:       "Special Edition",
-    price_usd:  89.99,
-    confirmed:  false,
-    tier:       "SPECULATIVE",
-    tier_color: "text-zinc-400",
-    tier_bg:    "bg-zinc-800/60 border-zinc-700",
-    platforms:  ["PS5","Xbox"],
-    highlight:  false,
-    includes: [
-      "Base game",
-      "Speculated: Story Mode cash bonus",
-      "Speculated: exclusive weapon skin set",
-      "Speculated: exclusive outfit for Lucia or Jason",
-    ],
-    preorder_bonus: [
-      "Speculated: early-access cosmetic weapon or vehicle",
-    ],
+    id: "special", name: "Special Edition", price_usd: 89.99, confirmed: false,
+    tier: "SPECULATIVE", tier_color: "text-zinc-400", tier_bg: "bg-zinc-800/60 border-zinc-700",
+    platforms: ["PS5","Xbox"], highlight: false,
+    includes: ["Base game", "Speculated: Story Mode cash bonus", "Speculated: exclusive weapon skin set", "Speculated: exclusive outfit for Lucia or Jason"],
+    preorder_bonus: ["Speculated: early-access cosmetic weapon or vehicle"],
     basis: "Mirrors RDR2 Special Edition. Standard premium $10 step.",
   },
   {
-    id:         "digital-deluxe",
-    name:       "Digital Deluxe",
-    price_usd:  99.99,
-    confirmed:  false,
-    tier:       "SPECULATIVE",
-    tier_color: "text-amber-400",
-    tier_bg:    "bg-amber-900/20 border-amber-700/30",
-    platforms:  ["PS5","Xbox","PC"],
-    highlight:  true,
-    includes: [
-      "Base game",
-      "Speculated: Story Mode bonus cash + weapons package",
-      "Speculated: GTA Online successor starter pack",
-      "Speculated: digital soundtrack sampler",
-      "Speculated: digital artbook",
-    ],
-    preorder_bonus: [
-      "Speculated: early access to one GTA Online activity",
-    ],
+    id: "digital-deluxe", name: "Digital Deluxe", price_usd: 99.99, confirmed: false,
+    tier: "SPECULATIVE", tier_color: "text-amber-400", tier_bg: "bg-amber-900/20 border-amber-700/30",
+    platforms: ["PS5","Xbox","PC"], highlight: true,
+    includes: ["Base game", "Speculated: Story Mode bonus cash + weapons package", "Speculated: GTA Online successor starter pack", "Speculated: digital soundtrack sampler", "Speculated: digital artbook"],
+    preorder_bonus: ["Speculated: early access to one GTA Online activity"],
     basis: "Digital-only premium tier. $20 step over Standard, mirrors RDR2 Digital Deluxe.",
   },
   {
-    id:         "ultimate",
-    name:       "Ultimate Edition",
-    price_usd:  109.99,
-    confirmed:  false,
-    tier:       "SPECULATIVE",
-    tier_color: "text-amber-400",
-    tier_bg:    "bg-amber-900/20 border-amber-700/30",
-    platforms:  ["PS5","Xbox","PC"],
-    highlight:  false,
-    includes: [
-      "Base game",
-      "Speculated: full Story Mode bonus package",
-      "Speculated: GTA Online successor premium starter pack",
-      "Speculated: exclusive vehicle set (2–3 cars)",
-      "Speculated: outfit set — both protagonists",
-    ],
-    preorder_bonus: [
-      "Speculated: top-tier pre-order bundle",
-    ],
+    id: "ultimate", name: "Ultimate Edition", price_usd: 109.99, confirmed: false,
+    tier: "SPECULATIVE", tier_color: "text-amber-400", tier_bg: "bg-amber-900/20 border-amber-700/30",
+    platforms: ["PS5","Xbox","PC"], highlight: false,
+    includes: ["Base game", "Speculated: full Story Mode bonus package", "Speculated: GTA Online successor premium starter pack", "Speculated: exclusive vehicle set (2–3 cars)", "Speculated: outfit set — both protagonists"],
+    preorder_bonus: ["Speculated: top-tier pre-order bundle"],
     basis: "Top digital tier. Mirrors RDR2 Ultimate. Primarily for Online launch-week players.",
   },
   {
-    id:         "collectors",
-    name:       "Collector's Box",
-    price_usd:  149.99,
-    confirmed:  false,
-    tier:       "SPECULATIVE",
-    tier_color: "text-zinc-400",
-    tier_bg:    "bg-zinc-800/60 border-zinc-700",
-    platforms:  ["PS5","Xbox"],
-    highlight:  false,
-    physical:   true,
-    includes: [
-      "Physical collector's box (no game disc — per RDR2 precedent)",
-      "Game purchased separately or redeemed via code",
-      "Speculated: Leonida state map (physical print)",
-      "Speculated: Vice City challenge coin",
-      "Speculated: enamel pin set",
-      "Speculated: lithograph art print set",
-      "Speculated: sticker / patch pack",
-    ],
-    preorder_bonus: [
-      "Limited allocation — early pre-order recommended",
-    ],
+    id: "collectors", name: "Collector's Box", price_usd: 149.99, confirmed: false,
+    tier: "SPECULATIVE", tier_color: "text-zinc-400", tier_bg: "bg-zinc-800/60 border-zinc-700",
+    platforms: ["PS5","Xbox"], highlight: false, physical: true,
+    includes: ["Physical collector's box (no game disc — per RDR2 precedent)", "Speculated: Leonida state map (physical print)", "Speculated: Vice City challenge coin", "Speculated: enamel pin set", "Speculated: lithograph art print set"],
+    preorder_bonus: ["Limited allocation — early pre-order recommended"],
     basis: "Follows exact RDR2 Collector's Box format. Physical-only, limited run.",
   },
 ] as const;
 
-// ── Retailers ─────────────────────────────────────────────────────────────
-const RETAILERS = [
+// ── Country / locale-aware store data ────────────────────────────────────
+interface StoreEntry {
+  name: string; initials: string; logoBg: string; type: string;
+  platform: string; url: string; color: string; border: string;
+  status?: string; note?: string;
+}
+interface Country {
+  locale: string; localePrefix: string; flag: string; short: string;
+  name: string; currency: string; symbol: string; rate: number;
+  stores: StoreEntry[];
+}
+
+const COUNTRIES: Country[] = [
   {
-    name:       "PlayStation Store",
-    platform:   "PS5",
-    type:       "Digital · Official",
-    status:     "Wishlist live",
-    url:        "https://www.playstation.com/en-us/games/grand-theft-auto-vi/",
-    affiliate:  false,
-    color:      "text-blue-400",
-    border:     "border-blue-500/20",
+    locale: "en-US", localePrefix: "en-US", flag: "🇺🇸", short: "US", name: "United States",
+    currency: "USD", symbol: "$", rate: 1.0,
+    stores: [
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-us/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
+      { name: "Amazon",            initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.com/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "Best Buy",          initials: "BB", logoBg: "#003B8E", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.bestbuy.com/site/searchpage.jsp?st=grand+theft+auto+vi", color: "text-yellow-300", border: "border-yellow-400/20", status: "Pre-orders imminent" },
+      { name: "GameStop",          initials: "GS", logoBg: "#1C1B1B", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.gamestop.com/search/#q=grand%20theft%20auto%20vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
+      { name: "Walmart",           initials: "W",  logoBg: "#0071CE", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.walmart.com/search?q=grand+theft+auto+vi", color: "text-blue-300", border: "border-blue-400/20", status: "Check for listings" },
+    ],
   },
   {
-    name:       "Xbox Store",
-    platform:   "Xbox",
-    type:       "Digital · Official",
-    status:     "Wishlist live",
-    url:        "https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9nl3wwnzlzzn",
-    affiliate:  false,
-    color:      "text-green-400",
-    border:     "border-green-500/20",
+    locale: "en-GB", localePrefix: "en-GB", flag: "🇬🇧", short: "UK", name: "United Kingdom",
+    currency: "GBP", symbol: "£", rate: 0.79,
+    stores: [
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-gb/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-GB/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
+      { name: "GAME",              initials: "G",  logoBg: "#00673A", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.game.co.uk/search?q=grand+theft+auto+vi", color: "text-emerald-400", border: "border-emerald-500/20", status: "Pre-orders imminent" },
+      { name: "Amazon UK",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.co.uk/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "Argos",             initials: "Ar", logoBg: "#C41230", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.argos.co.uk/search/grand-theft-auto-vi/", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
+      { name: "ShopTo",            initials: "ST", logoBg: "#333333", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.shopto.net/video-games/PS5/search/grand+theft+auto+vi", color: "text-zinc-300", border: "border-zinc-600/20", status: "Check for listings" },
+    ],
   },
   {
-    name:       "Amazon",
-    platform:   "PS5 · Xbox",
-    type:       "Physical · Retailer",
-    status:     "Pre-orders imminent",
-    url:        "https://www.amazon.com/s?k=Grand+Theft+Auto+VI",
-    affiliate:  true,
-    color:      "text-amber-400",
-    border:     "border-amber-500/20",
+    locale: "de-DE", localePrefix: "de", flag: "🇩🇪", short: "DE", name: "Germany",
+    currency: "EUR", symbol: "€", rate: 0.92,
+    stores: [
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Offiziell", platform: "PS5", url: "https://www.playstation.com/de-de/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wunschliste aktiv" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Offiziell", platform: "Xbox", url: "https://www.xbox.com/de-DE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wunschliste aktiv" },
+      { name: "MediaMarkt",        initials: "MM", logoBg: "#CC0000", type: "Physisch · Händler", platform: "PS5 · Xbox", url: "https://www.mediamarkt.de/search.html?query=Grand+Theft+Auto+VI", color: "text-red-400", border: "border-red-500/20", status: "Demnächst" },
+      { name: "Amazon.de",         initials: "a",  logoBg: "#131921", type: "Physisch · Händler", platform: "PS5 · Xbox", url: "https://www.amazon.de/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Demnächst" },
+      { name: "Saturn",            initials: "Sa", logoBg: "#CC0000", type: "Physisch · Händler", platform: "PS5 · Xbox", url: "https://www.saturn.de/search.html?query=Grand+Theft+Auto+VI", color: "text-red-300", border: "border-red-400/20", status: "Überprüfen" },
+    ],
   },
   {
-    name:       "Best Buy",
-    platform:   "PS5 · Xbox",
-    type:       "Physical · Retailer",
-    status:     "Pre-orders imminent",
-    url:        "https://www.bestbuy.com/site/searchpage.jsp?st=grand+theft+auto+vi",
-    affiliate:  true,
-    color:      "text-yellow-400",
-    border:     "border-yellow-500/20",
+    locale: "fr-FR", localePrefix: "fr", flag: "🇫🇷", short: "FR", name: "France",
+    currency: "EUR", symbol: "€", rate: 0.92,
+    stores: [
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Numérique · Officiel", platform: "PS5", url: "https://www.playstation.com/fr-fr/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Liste de souhaits" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Numérique · Officiel", platform: "Xbox", url: "https://www.xbox.com/fr-FR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Liste de souhaits" },
+      { name: "Fnac",              initials: "fn", logoBg: "#E5A000", type: "Physique · Revendeur", platform: "PS5 · Xbox", url: "https://www.fnac.com/SearchResult/ResultList.aspx?Search=Grand+Theft+Auto+VI", color: "text-yellow-400", border: "border-yellow-500/20", status: "Bientôt" },
+      { name: "Amazon.fr",         initials: "a",  logoBg: "#131921", type: "Physique · Revendeur", platform: "PS5 · Xbox", url: "https://www.amazon.fr/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Bientôt" },
+      { name: "Cdiscount",         initials: "CD", logoBg: "#E3001B", type: "Physique · Revendeur", platform: "PS5 · Xbox", url: "https://www.cdiscount.com/search/10/grand+theft+auto+vi.html", color: "text-red-400", border: "border-red-500/20", status: "Vérifier" },
+    ],
   },
   {
-    name:       "GameStop",
-    platform:   "PS5 · Xbox",
-    type:       "Physical · Retailer",
-    status:     "Check for listings",
-    url:        "https://www.gamestop.com/search/#q=grand%20theft%20auto%20vi&t=productType%3Agame",
-    affiliate:  true,
-    color:      "text-red-400",
-    border:     "border-red-500/20",
+    locale: "pt-BR", localePrefix: "pt", flag: "🇧🇷", short: "BR", name: "Brazil",
+    currency: "BRL", symbol: "R$", rate: 5.25,
+    stores: [
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Oficial", platform: "PS5", url: "https://www.playstation.com/pt-br/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Lista de desejos" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Oficial", platform: "Xbox", url: "https://www.xbox.com/pt-BR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Lista de desejos" },
+      { name: "Amazon Brasil",     initials: "a",  logoBg: "#131921", type: "Físico · Varejista", platform: "PS5 · Xbox", url: "https://www.amazon.com.br/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Em breve" },
+      { name: "Nuuvem",            initials: "Nu", logoBg: "#6B21A8", type: "Digital · Varejista", platform: "PS5 · Xbox", url: "https://www.nuuvem.com/catalog/search/q/grand+theft+auto+vi", color: "text-purple-400", border: "border-purple-500/20", status: "Em breve" },
+      { name: "Kabum",             initials: "KB", logoBg: "#FF6600", type: "Físico · Varejista", platform: "PS5 · Xbox", url: "https://www.kabum.com.br/busca/grand-theft-auto-vi", color: "text-orange-300", border: "border-orange-400/20", status: "Verificar" },
+    ],
   },
   {
-    name:       "Walmart",
-    platform:   "PS5 · Xbox",
-    type:       "Physical · Retailer",
-    status:     "Check for listings",
-    url:        "https://www.walmart.com/search?q=grand+theft+auto+vi",
-    affiliate:  true,
-    color:      "text-blue-300",
-    border:     "border-blue-400/20",
+    locale: "ja-JP", localePrefix: "ja", flag: "🇯🇵", short: "JP", name: "Japan",
+    currency: "JPY", symbol: "¥", rate: 155,
+    stores: [
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "デジタル · 公式", platform: "PS5", url: "https://www.playstation.com/ja-jp/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "ウィッシュリスト" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "デジタル · 公式", platform: "Xbox", url: "https://www.xbox.com/ja-JP/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "ウィッシュリスト" },
+      { name: "Amazon.co.jp",      initials: "a",  logoBg: "#131921", type: "フィジカル", platform: "PS5 · Xbox", url: "https://www.amazon.co.jp/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "近日公開" },
+      { name: "Yodobashi",         initials: "Yo", logoBg: "#C8000A", type: "フィジカル", platform: "PS5 · Xbox", url: "https://www.yodobashi.com/?void=true&words=Grand+Theft+Auto+VI", color: "text-red-400", border: "border-red-500/20", status: "近日公開" },
+      { name: "Tsukumo",           initials: "Ts", logoBg: "#0073BB", type: "フィジカル · PC", platform: "PC", url: "https://www.tsukumo.co.jp/search/?keyword=Grand+Theft+Auto+VI", color: "text-blue-300", border: "border-blue-400/20", status: "確認" },
+    ],
   },
-] as const;
+  {
+    locale: "en-AU", localePrefix: "en-AU", flag: "🇦🇺", short: "AU", name: "Australia",
+    currency: "AUD", symbol: "A$", rate: 1.55,
+    stores: [
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-au/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-AU/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
+      { name: "JB Hi-Fi",          initials: "JB", logoBg: "#D91E18", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.jbhifi.com.au/search?q=Grand+Theft+Auto+VI", color: "text-red-400", border: "border-red-500/20", status: "Coming soon" },
+      { name: "EB Games",          initials: "EB", logoBg: "#E31837", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.ebgames.com.au/Search?query=Grand+Theft+Auto+VI", color: "text-red-300", border: "border-red-400/20", status: "Coming soon" },
+      { name: "Amazon AU",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.com.au/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Check listings" },
+    ],
+  },
+  {
+    locale: "zh-CN", localePrefix: "zh", flag: "🇨🇳", short: "CN", name: "China",
+    currency: "CNY", symbol: "¥", rate: 7.25,
+    stores: [
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "数字 · 官方", platform: "PS5", url: "https://www.playstation.com/zh-hans-cn/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "愿望单", note: "Availability subject to local certification" },
+      { name: "JD.com",            initials: "JD", logoBg: "#CC0000", type: "实体 · 零售商", platform: "PS5 · Xbox", url: "https://search.jd.com/Search?keyword=Grand+Theft+Auto+VI", color: "text-red-400", border: "border-red-500/20", status: "关注发售", note: "Availability subject to local certification" },
+      { name: "Tmall",             initials: "TM", logoBg: "#FF6A00", type: "实体 · 零售商", platform: "PS5 · Xbox", url: "https://list.tmall.com/search_product.htm?q=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "关注发售" },
+    ],
+  },
+];
 ---
 
 <Base
@@ -281,25 +238,30 @@ const RETAILERS = [
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {PLATFORMS.map(p => (
-          <div class={`rounded-xl border p-5 ${p.border} ${p.bg}`} style="background:#131316">
-            <div class="flex items-center justify-between mb-3">
-              <div class="flex items-center gap-2">
-                <span class={`w-2 h-2 rounded-full ${p.dot} ${!p.confirmed ? "opacity-40" : ""}`}></span>
-                <span class={`text-xs font-mono font-bold ${p.color}`}>{p.short}</span>
+          <div class={`rounded-xl border p-5 ${p.border} ${p.bg} relative overflow-hidden`} style="background:#131316">
+            <!-- Platform logo mark -->
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 font-mono font-black text-white text-sm" style={`background:${p.logoBg};border:1px solid ${p.logoBg}40`}>
+                {p.logoText}
               </div>
-              <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${p.confirmed ? "bg-gta-teal/10 text-gta-teal border-gta-teal/20" : "bg-zinc-800/60 text-zinc-600 border-zinc-700"}`}>
-                {p.confirmed ? "Confirmed" : "Not Confirmed"}
-              </span>
+              <div>
+                <div class={`text-sm font-bold leading-tight ${p.color}`} style="font-family:'Inter',sans-serif">{p.name}</div>
+                <div class="text-[10px] font-mono text-zinc-600 mt-0.5">{p.store}</div>
+              </div>
+              <div class="ml-auto shrink-0">
+                <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${p.confirmed ? "bg-gta-teal/10 text-gta-teal border-gta-teal/20" : "bg-zinc-800/60 text-zinc-600 border-zinc-700"}`}>
+                  {p.confirmed ? "✓ Confirmed" : "TBC"}
+                </span>
+              </div>
             </div>
-            <div class="text-sm font-semibold text-zinc-200 mb-1" style="font-family:'Inter',sans-serif">{p.name}</div>
-            <div class="text-[11px] font-mono text-zinc-600 mb-4">{p.store}</div>
+            <p class="text-[11px] text-zinc-500 leading-snug mb-4" style="font-family:'Inter',sans-serif">{p.desc}</p>
             {p.official_url ? (
               <a href={p.official_url} target="_blank" rel="noopener noreferrer"
                 class={`inline-flex items-center gap-2 text-[10px] font-mono border px-3 py-1.5 rounded uppercase tracking-widest transition-all hover:bg-white/5 ${p.color} ${p.border}`}>
                 Official page ↗
               </a>
             ) : (
-              <span class="text-[10px] font-mono text-zinc-700">No page available yet</span>
+              <span class="text-[10px] font-mono text-zinc-700">No official page yet</span>
             )}
           </div>
         ))}
@@ -307,14 +269,31 @@ const RETAILERS = [
     </section>
 
     <!-- ══════════════════════════════════════════════════════
-         WHERE TO BUY
+         WHERE TO BUY — locale-aware
     ══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
+      <div class="flex items-center gap-3 mb-5">
         <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Where to Buy</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-700">Digital + Physical · Pre-orders imminent</span>
+      </div>
+
+      <!-- Country selector strip -->
+      <div class="flex items-center gap-2 mb-5 overflow-x-auto pb-1 scrollbar-none">
+        <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest shrink-0 mr-1">Region:</span>
+        {COUNTRIES.map((c, i) => (
+          <button
+            class="country-btn shrink-0 text-[11px] font-mono border rounded px-2.5 py-1.5 transition-all"
+            class:list={[i === 0 ? "border-gta-gold/40 bg-gta-gold/8 text-gta-gold" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-200 hover:border-zinc-500"]}
+            data-locale={c.localePrefix}
+          >{c.flag} {c.short}</button>
+        ))}
+      </div>
+
+      <!-- Active country label -->
+      <div id="country-label" class="text-[10px] font-mono text-zinc-500 mb-4">
+        🇺🇸 Showing stores for United States · Prices in USD · <span class="text-zinc-700">Detected via browser locale</span>
       </div>
 
       <!-- Status alert -->
@@ -323,38 +302,44 @@ const RETAILERS = [
         <div>
           <div class="text-[11px] font-semibold text-gta-teal mb-0.5" style="font-family:'Inter',sans-serif">Pre-orders imminent</div>
           <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">
-            Tom Henderson confirmed Best Buy pre-orders starting imminently (May 2026). Official PS Store and Xbox Store wishlist links are live. Physical retailer pre-orders expected to open in lockstep.
+            Tom Henderson confirmed Best Buy pre-orders starting imminently (May 2026). Official PS Store and Xbox Store wishlist links are live. Physical retailer pre-orders expected in lockstep.
           </p>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {RETAILERS.map(r => (
-          <a href={r.url} target="_blank" rel="noopener noreferrer"
-            class={`group rounded-xl border p-4 hover:bg-white/3 transition-all flex items-start gap-4 ${r.border}`}
-            style="background:#131316">
-            <!-- Icon placeholder -->
-            <div class={`shrink-0 w-9 h-9 rounded-lg border ${r.border} flex items-center justify-center`} style="background:#0e0e11">
-              <span class={`text-[11px] font-mono font-bold ${r.color}`}>{r.name.slice(0,2).toUpperCase()}</span>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2 mb-0.5">
-                <span class={`text-sm font-semibold group-hover:text-white transition-colors ${r.color}`} style="font-family:'Inter',sans-serif">{r.name}</span>
-                <span class="text-zinc-800 group-hover:text-zinc-600 font-mono text-xs transition-colors">↗</span>
-              </div>
-              <div class="text-[10px] font-mono text-zinc-600 mb-1">{r.type}</div>
-              <div class="flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-gta-teal/60 shrink-0"></span>
-                <span class="text-[10px] font-mono text-zinc-500">{r.status}</span>
-              </div>
-              <div class="text-[9px] font-mono text-zinc-700 mt-1">{r.platform}</div>
-            </div>
-          </a>
-        ))}
-      </div>
+      <!-- Per-country store grids (all rendered, JS shows the right one) -->
+      {COUNTRIES.map((c, i) => (
+        <div class={`country-stores${i === 0 ? "" : " hidden"}`} data-locale={c.localePrefix}>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {c.stores.map((r: StoreEntry) => (
+              <a href={r.url} target="_blank" rel="noopener noreferrer"
+                class={`group rounded-xl border p-4 hover:bg-white/3 transition-all flex items-start gap-3 ${r.border}`}
+                style="background:#131316">
+                <!-- Logo mark -->
+                <div class="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center font-mono font-black text-white text-[11px] border" style={`background:${r.logoBg};border-color:${r.logoBg}60`}>
+                  {r.initials}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2 mb-0.5">
+                    <span class={`text-sm font-semibold group-hover:text-white transition-colors truncate ${r.color}`} style="font-family:'Inter',sans-serif">{r.name}</span>
+                    <span class="text-zinc-700 group-hover:text-zinc-400 font-mono text-xs transition-colors shrink-0">↗</span>
+                  </div>
+                  <div class="text-[10px] font-mono text-zinc-600">{r.type}</div>
+                  <div class="flex items-center gap-1.5 mt-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-gta-teal/60 shrink-0"></span>
+                    <span class="text-[10px] font-mono text-zinc-500">{r.status ?? "Check for listings"}</span>
+                  </div>
+                  <div class="text-[9px] font-mono text-zinc-700 mt-0.5">{r.platform}</div>
+                  {r.note && <div class="text-[9px] font-mono text-amber-700/70 mt-1">⚠ {r.note}</div>}
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
 
       <p class="text-[10px] font-mono text-zinc-700 mt-4">
-        * Some retailer links may be affiliate links. GTA VI.AI may earn a commission on qualifying purchases at no extra cost to you.
+        * Some retailer links may be affiliate links. GTA VI.AI may earn a commission on qualifying purchases at no extra cost to you. Currency conversions are estimates.
       </p>
     </section>
 
@@ -380,7 +365,8 @@ const RETAILERS = [
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {EDITIONS.map((ed) => (
           <div class={`rounded-xl border overflow-hidden flex flex-col transition-all ${ed.highlight ? "border-gta-gold/30 shadow-lg shadow-gta-gold/5" : "border-[#1e1e23]"}`}
-            style="background:#131316">
+            style="background:#131316"
+            data-price-usd={ed.price_usd}>
 
             <!-- Edition header -->
             {ed.highlight && (
@@ -396,10 +382,11 @@ const RETAILERS = [
               </div>
 
               <!-- Price -->
-              <div class={`text-2xl font-mono font-bold mb-1 ${ed.highlight ? "text-gta-gold" : "text-gta-bright"}`}>
-                ${ed.price_usd.toFixed(2)}
+              <div class={`text-2xl font-mono font-bold mb-0.5 ${ed.highlight ? "text-gta-gold" : "text-gta-bright"}`}>
+                <span class="edition-price-usd">${ed.price_usd.toFixed(2)}</span>
               </div>
-              <div class="text-[10px] font-mono text-zinc-700 mb-4">USD · not announced</div>
+              <div class="edition-price-local hidden text-sm font-mono text-zinc-500 mb-0.5"></div>
+              <div class="text-[10px] font-mono text-zinc-700 mb-4">USD · <span class="edition-price-note">not announced</span></div>
 
               <!-- Platforms -->
               <div class="flex items-center gap-1.5 mb-4 flex-wrap">
@@ -489,8 +476,6 @@ const RETAILERS = [
       </div>
     </section>
 
-    <NewsletterSignup variant="compact" />
-
     <CrossLinks context="buy" />
 
     <!-- ══════════════════════════════════════════════════════
@@ -518,3 +503,76 @@ const RETAILERS = [
 
   </div>
 </Base>
+
+<script define:vars={{ COUNTRIES }}>
+(function() {
+  // ── Detect locale and match to a country ──────────────────────────────
+  const lang = (navigator.language || navigator.languages?.[0] || 'en-US').toLowerCase();
+
+  function matchLocale(lang) {
+    const prefixes = [
+      { test: s => s.startsWith('en-us') || s === 'en', key: 'en-US' },
+      { test: s => s.startsWith('en-gb') || s.startsWith('en-au') || s.startsWith('en-nz') || s.startsWith('en-ie'), key: s => s.startsWith('en-au') ? 'en-AU' : 'en-GB' },
+      { test: s => s.startsWith('de'),   key: 'de' },
+      { test: s => s.startsWith('fr'),   key: 'fr' },
+      { test: s => s.startsWith('pt'),   key: 'pt' },
+      { test: s => s.startsWith('ja'),   key: 'ja' },
+      { test: s => s.startsWith('zh'),   key: 'zh' },
+      { test: s => s.startsWith('en-au'),key: 'en-AU' },
+    ];
+    for (const p of prefixes) {
+      if (p.test(lang)) return typeof p.key === 'function' ? p.key(lang) : p.key;
+    }
+    return 'en-US';
+  }
+
+  const detectedLocale = matchLocale(lang);
+
+  // ── Activate correct country ───────────────────────────────────────────
+  function setCountry(localePrefix) {
+    // Store grids
+    document.querySelectorAll('.country-stores').forEach(el => {
+      el.classList.toggle('hidden', el.dataset.locale !== localePrefix);
+    });
+    // Buttons
+    document.querySelectorAll('.country-btn').forEach(btn => {
+      const active = btn.dataset.locale === localePrefix;
+      btn.classList.toggle('border-gta-gold/40', active);
+      btn.classList.toggle('bg-gta-gold/8', active);
+      btn.classList.toggle('text-gta-gold', active);
+      btn.classList.toggle('border-[#2a2a31]', !active);
+      btn.classList.toggle('text-zinc-500', !active);
+    });
+    // Country label
+    const country = COUNTRIES.find(c => c.localePrefix === localePrefix);
+    const label = document.getElementById('country-label');
+    if (country && label) {
+      label.innerHTML = `${country.flag} Showing stores for <strong style="color:#a1a1aa">${country.name}</strong> · Prices in <strong style="color:#a1a1aa">${country.currency}</strong> · <span style="color:#3f3f46">Detected via browser locale · <button id="change-region" style="color:#f59e0b;cursor:pointer;background:none;border:none;font:inherit">Change</button></span>`;
+      document.getElementById('change-region')?.addEventListener('click', () => {
+        document.querySelector('.country-btn')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
+    // Edition prices: show local currency estimate
+    const rate = country?.rate ?? 1;
+    const symbol = country?.symbol ?? '$';
+    document.querySelectorAll('[data-price-usd]').forEach(card => {
+      const usd = parseFloat(card.dataset.priceUsd ?? '0');
+      const local = (usd * rate).toFixed(0);
+      const priceEl = card.querySelector('.edition-price-local');
+      const noteEl = card.querySelector('.edition-price-note');
+      if (priceEl && rate !== 1) {
+        priceEl.textContent = `~${symbol}${local} ${country?.currency}`;
+        priceEl.classList.remove('hidden');
+      }
+      if (noteEl && rate !== 1) noteEl.textContent = 'not announced · converted estimate';
+    });
+  }
+
+  setCountry(detectedLocale);
+
+  // ── Manual country buttons ─────────────────────────────────────────────
+  document.querySelectorAll('.country-btn').forEach(btn => {
+    btn.addEventListener('click', () => setCountry(btn.dataset.locale));
+  });
+})();
+</script>
