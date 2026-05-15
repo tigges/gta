@@ -553,7 +553,7 @@ const HEIST_THUMBS: Record<string, string> = {
     </div>
 
     <!-- Source note -->
-    <div class="mt-8 border border-[#1e1e23] rounded-xl p-4" style="background:#131316">
+    <div id="source-note-wrapper" class="mt-8 border border-[#1e1e23] rounded-xl p-4" style="background:#131316">
       <div id="source-note-gta6">
         <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Source Standard — GTA VI</div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-3">
@@ -835,7 +835,8 @@ const HEIST_THUMBS: Record<string, string> = {
 
       // Source notes
       noteGta6.classList.toggle("hidden", !isGta6);
-      noteGta5.classList.toggle("hidden", isGta6);
+      noteGta5.classList.toggle("hidden", !isGta5Eco);
+      document.getElementById("source-note-wrapper")?.classList.toggle("hidden", isOnline);
 
       // Count label
       const labels: Record<string,string> = {
