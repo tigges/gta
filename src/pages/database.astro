@@ -65,7 +65,7 @@ const fandByType  = (entityIndex as any).by_type as Record<string,number>;
 const fandByConf  = (entityIndex as any).by_confidence as Record<string,number>;
 const leonidaStats = (leonidaRaw as any).entity_stats as {total:number;confirmed:number;indexed:number};
 
-const GTA6_TYPES = ["vehicle","character","weapon","location","business","animal","mission","activity","property"] as const;
+const GTA6_TYPES = ["character","location","business","mission","activity","property","vehicle","weapon","animal"] as const;
 const GTA5_TIER_LABELS: Record<string,string> = {
   S:"S — Tier",A:"A — Tier",B:"B — Tier",C:"C — Tier",
   D:"D — Tier",E:"E — Tier",F:"F — Tier",G:"G — Tier",
@@ -115,15 +115,21 @@ const BIZ_THUMBS: Record<string, string | null> = {
   "acid-lab":             "/assets/gta5/dlc/acid-lab.jpg",
   "nightclub":            "/assets/gta5/dlc/after-hours.jpg",
   "bunker":               "/assets/gta5/dlc/gunrunning.jpg",
-  "vehicle-warehouse":    "/assets/covers/gta-5.jpg",
+  "vehicle-warehouse":    "/assets/gta5/dlc/auto-shop.jpg",
   "diamond-casino-heist": "/assets/gta5/dlc/diamond-casino-heist.jpg",
   "auto-shop":            "/assets/gta5/dlc/auto-shop.jpg",
-  "hangar":               "/assets/covers/gta-5.jpg",
-  "cocaine-lockup":       "/assets/covers/gta-5.jpg",
-  "ceo-crates":           "/assets/covers/gta-5.jpg",
+  "hangar":               "/assets/gta5/story/gta-v-cover.jpg",
+  "cocaine-lockup":       "/assets/gta5/story/gta-v-cover.jpg",
+  "ceo-crates":           "/assets/gta5/story/gta-v-cover.jpg",
   "vip-work":             "/assets/gta5/dlc/the-contract.jpg",
   "agency-vip-contract":  "/assets/gta5/dlc/agency.jpg",
   "garment-factory":      "/assets/gta5/dlc/chop-shop.jpg",
+  "methamphetamine-lab":  "/assets/gta5/characters/trevor.jpg",
+  "weed-farm":            "/assets/gta5/story/gta-v-cover.jpg",
+  "counterfeit-cash":     "/assets/gta5/story/gta-v-cover.jpg",
+  "document-forgery":     "/assets/gta5/story/gta-v-cover.jpg",
+  "contact-missions":     "/assets/gta5/story/gta-v-launch.jpg",
+  "special-cargo":        "/assets/gta5/story/gta-v-cover.jpg",
 };
 
 // Difficulty mapping
@@ -138,9 +144,15 @@ const DIFF_MAP: Record<string, number> = {
 const HEIST_THUMBS: Record<string, string> = {
   "cayo-perico":           "/assets/gta5/dlc/cayo-perico.jpg",
   "diamond-casino-heist":  "/assets/gta5/dlc/diamond-casino-heist.jpg",
-  "doomsday-act-3":        "/assets/covers/gta-5.jpg",
-  "pacific-standard":      "/assets/covers/gta-5.jpg",
-  "fleeca-job":            "/assets/covers/gta-5.jpg",
+  "doomsday-act-3":        "/assets/gta5/story/gta-v-launch.jpg",
+  "pacific-standard":      "/assets/gta5/story/heists.jpg",
+  "fleeca-job":            "/assets/gta5/story/heists.jpg",
+  // Story heists
+  "the-big-score":         "/assets/gta5/story/heists.jpg",
+  "jewel-store-job":       "/assets/gta5/characters/michael.jpg",
+  "merryweather-heist":    "/assets/gta5/characters/trevor.jpg",
+  "blitz-play":            "/assets/gta5/story/gta-v-launch.jpg",
+  "bureau-raid":           "/assets/gta5/characters/michael.jpg",
 };
 ---
 
@@ -172,9 +184,7 @@ const HEIST_THUMBS: Record<string, string> = {
         <button id="tab-gta5" class="db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-game="gta-5">
           GTA V
         </button>
-        <button id="tab-franchise" class="db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-game="franchise">
-          Franchise
-        </button>
+
       </div>
 
       <!-- GTA VI stats -->
@@ -273,6 +283,38 @@ const HEIST_THUMBS: Record<string, string> = {
           placeholder="Search GTA V vehicles..."
           class="px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-300 text-[11px] font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-gold/40 w-44"
         />
+      </div>
+
+      <!-- GTA Online category filters -->
+      <div id="filters-online" class="hidden flex items-center gap-3 flex-wrap w-full">
+        <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest mr-1">Category</span>
+        {([
+          { id: "all",      label: "All" },
+          { id: "heist",    label: "🏦 Heists" },
+          { id: "passive",  label: "💤 Passive" },
+          { id: "mc",       label: "🏍 MC" },
+          { id: "contract", label: "📋 Contracts" },
+          { id: "active",   label: "⚡ Active" },
+        ] as const).map(f => (
+          <button class="online-cat-filter-top px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
+            class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
+            data-cat={f.id}>{f.label}</button>
+        ))}
+      </div>
+
+      <!-- GTA V Economy filters -->
+      <div id="filters-gta5eco" class="hidden flex items-center gap-3 flex-wrap w-full">
+        <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest mr-1">Category</span>
+        {([
+          { id: "all",     label: "All" },
+          { id: "mission", label: "🎯 Story Missions" },
+          { id: "heist",   label: "🏦 Heists" },
+          { id: "stocks",  label: "📈 Stock Guide" },
+        ] as const).map(f => (
+          <button class="gta5eco-cat-filter-top px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
+            class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
+            data-cat={f.id}>{f.label}</button>
+        ))}
       </div>
 
     </div>
@@ -395,6 +437,14 @@ const HEIST_THUMBS: Record<string, string> = {
                 payout_per_run_max={m.payout}
                 avg_run_time_min={m.avg_completion_min}
                 notes={`${m.contact} · ${m.difficulty} · ${m.avg_completion_min}min avg`}
+                thumbnail={
+                  m.contact === "Trevor" ? "/assets/gta5/characters/trevor.jpg" :
+                  m.contact === "Martin Madrazo" ? "/assets/gta5/dlc/the-contract.jpg" :
+                  m.contact === "Ron" ? "/assets/gta5/characters/trevor.jpg" :
+                  m.contact === "Simeon" ? "/assets/gta5/story/gta-v-launch.jpg" :
+                  m.contact === "Lester" ? "/assets/gta5/story/heists.jpg" :
+                  "/assets/gta5/story/gta-v-cover.jpg"
+                }
                 share_url="https://gtavi.ai/database"
               />
             </div>
@@ -483,6 +533,9 @@ const HEIST_THUMBS: Record<string, string> = {
       </div>
     </div>
 
+
+    <!-- GTA V Economy sectionmy section -->
+    
     <!-- Franchise placeholder -->
     <div id="db-section-franchise" class="hidden">
       <div class="rounded-xl border border-[#1e1e23] p-8 text-center" style="background:#131316">
@@ -763,26 +816,22 @@ const HEIST_THUMBS: Record<string, string> = {
       const isGta6    = activeGame === "gta-6";
       const isOnline  = activeGame === "gta-online";
       const isGta5Eco = activeGame === "gta-5";
-      const isFranchise = activeGame === "franchise";
 
       // Grid / pane visibility
       gridGta6.classList.toggle("hidden", !isGta6);
-      gridGta5.classList.toggle("hidden",  !isGta5Eco || isOnline || isFranchise);
+      gridGta5.classList.add("hidden");
       document.getElementById("db-section-online")?.classList.toggle("hidden", !isOnline);
       document.getElementById("db-section-gta5eco")?.classList.toggle("hidden", !isGta5Eco);
-      document.getElementById("db-section-franchise")?.classList.toggle("hidden", !isFranchise);
 
-      // GTA V vehicles grid: show only when gta-5 tab is active (vehicles sub-tab)
-      // For gta-5 tab we show the economy section, not vehicles grid
-      gridGta5.classList.add("hidden");
-
-      // Filter bars
+      // Filter bars — show the right one in sticky bar
       filtersGta6.classList.toggle("hidden", !isGta6);
-      filtersGta5.classList.toggle("hidden", true); // always hide vehicle filters — economy section has own filters
+      filtersGta5.classList.add("hidden");
+      document.getElementById("filters-online")?.classList.toggle("hidden", !isOnline);
+      document.getElementById("filters-gta5eco")?.classList.toggle("hidden", !isGta5Eco);
 
       // Headers
       headerGta6.classList.toggle("hidden", !isGta6);
-      headerGta5.classList.toggle("hidden", isGta6 || isOnline || isFranchise);
+      headerGta5.classList.toggle("hidden", isGta6 || isOnline);
 
       // Source notes
       noteGta6.classList.toggle("hidden", !isGta6);
@@ -793,7 +842,6 @@ const HEIST_THUMBS: Record<string, string> = {
         "gta-6": "GTA VI · Fandom Wiki + Leonida Intel",
         "gta-online": "GTA Online · Economic Intelligence",
         "gta-5": "GTA V · Story + Heists + Stocks",
-        "franchise": "Franchise · Historical data",
       };
       srcLabel.textContent = labels[activeGame] ?? "";
 
@@ -911,4 +959,64 @@ const HEIST_THUMBS: Record<string, string> = {
 
   // ── Initial render ────────────────────────────────────────────────────────
   renderGta6();
+
+  // ── GTA Online top category filter ───────────────────────────────────────
+  function applyOnlineCatFilter(cat: string) {
+    document.querySelectorAll<HTMLElement>(".online-tier-section").forEach(s => {
+      const tier = s.dataset.tier!;
+      if (cat === "all") { s.style.display = ""; return; }
+      // Check if any cards in this tier match
+      const cards = s.querySelectorAll<HTMLElement>(".online-card");
+      let anyVisible = false;
+      cards.forEach(card => {
+        const cardCat = card.dataset.category ?? "";
+        const show = cat === "all" || cardCat === cat ||
+          (cat === "mc" && cardCat === "mc") ||
+          (cat === "heist" && (cardCat === "heist" || tier === "heist")) ||
+          (cat === "passive" && cardCat === "passive") ||
+          (cat === "contract" && (cardCat === "contract" || cardCat === "ceo")) ||
+          (cat === "active" && (cardCat === "active" || cardCat === "ceo"));
+        card.style.display = show ? "" : "none";
+        if (show) anyVisible = true;
+      });
+      s.style.display = anyVisible ? "" : "none";
+    });
+  }
+
+  // Wire both the top and inline online category filters
+  document.querySelectorAll<HTMLButtonElement>(".online-cat-filter-top, .online-cat-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const cat = btn.dataset.cat!;
+      // Update active state for all buttons of this class
+      const cls = btn.classList.contains("online-cat-filter-top") ? ".online-cat-filter-top" : ".online-cat-filter";
+      document.querySelectorAll<HTMLButtonElement>(cls).forEach(b => {
+        const active = b.dataset.cat === cat;
+        b.className = b.className
+          .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
+          .replace(/border-\[#2a2a31\]|text-zinc-500/g, "")
+          .trim();
+        b.classList.add(...(active ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"] : ["border-[#2a2a31]","text-zinc-500"]));
+      });
+      applyOnlineCatFilter(cat);
+    });
+  });
+
+  // ── GTA V Economy top category filter ────────────────────────────────────
+  document.querySelectorAll<HTMLButtonElement>(".gta5eco-cat-filter-top, .gta5eco-cat-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const cat = btn.dataset.cat!;
+      const cls = btn.classList.contains("gta5eco-cat-filter-top") ? ".gta5eco-cat-filter-top" : ".gta5eco-cat-filter";
+      document.querySelectorAll<HTMLButtonElement>(cls).forEach(b => {
+        const active = b.dataset.cat === cat;
+        b.className = b.className
+          .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
+          .replace(/border-\[#2a2a31\]|text-zinc-500/g, "")
+          .trim();
+        b.classList.add(...(active ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"] : ["border-[#2a2a31]","text-zinc-500"]));
+      });
+      document.querySelectorAll<HTMLElement>(".gta5eco-section").forEach(s => {
+        s.style.display = (cat === "all" || s.dataset.category === cat) ? "" : "none";
+      });
+    });
+  });
 </script>
