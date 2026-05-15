@@ -246,6 +246,11 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-700">{vehicleData.vehicles.length} vehicles · Broughy1322 test track</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-7 h-10" loading="lazy" />
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
@@ -253,6 +258,11 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
             </div>
             <div class="text-[11px] text-zinc-500 font-mono">Top 25 fastest vehicles by lap time · Broughy1322 Rockford Hills test circuit</div>
           </div>
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-8 h-11" loading="lazy" />
+              <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
           <!-- Class filter -->
           <div class="flex flex-wrap gap-1.5" id="class-filter-btns">
             {["All","Supers","Sports","Muscle","Off-Road"].map(cls => (
@@ -287,6 +297,22 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Trailer thumbnail strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <a href="https://www.youtube.com/watch?v=QdBZY2fkU-0" target="_blank" rel="noopener noreferrer" class="shrink-0 relative group overflow-hidden rounded border border-[#2a2a31] hover:border-gta-gold/30 transition-all">
+            <img src="https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg" alt="GTA VI Trailer 1" class="w-20 h-12 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+            <span class="absolute bottom-1 left-1.5 text-[7px] font-mono text-gta-gold">T1</span>
+          </a>
+          <a href="https://www.youtube.com/watch?v=VQRLujxTm3c" target="_blank" rel="noopener noreferrer" class="shrink-0 relative group overflow-hidden rounded border border-gta-gold/30 hover:border-gta-gold/60 transition-all">
+            <img src="https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg" alt="GTA VI Trailer 2" class="w-20 h-12 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+            <span class="absolute bottom-1 left-1.5 text-[7px] font-mono text-gta-gold">T2</span>
+          </a>
+        </div>
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg" alt="GTA VI Trailer 1" class="rounded border object-cover border-[#2a2a31] w-20 h-12" loading="lazy" />
+          <img src="https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg" alt="GTA VI Trailer 2" class="rounded border object-cover border-[#2a2a31] w-20 h-12 border-gta-gold/30" loading="lazy" />
+        </div>
         <div class="px-5 py-4 border-b border-[#1e1e23]">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
             GTA VI Trailer View Counts — Live
@@ -352,6 +378,14 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-700">{delayData.total_delays} delay · {delayData.timeline.length} events · SEC EDGAR sourced</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-4">
           <div>
             <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
@@ -391,6 +425,14 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-700">Reddit r/GTAVI subscriber growth · Google Trends overlay</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Community Anticipation — r/GrandTheftAutoVI Growth</div>
@@ -423,6 +465,14 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-700">revenue billions USD</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">GTA VI Projected Revenue vs Global Entertainment</div>
@@ -449,6 +499,16 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-700">both normalised to months before launch</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-8 h-11" loading="lazy" />
+              <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-7 h-10" loading="lazy" />
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
         <div class="px-5 py-4 border-b border-[#1e1e23]">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
             Pre-launch Hype — GTA V (2013) vs GTA VI (2026) at the Same Moment
@@ -637,6 +697,16 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-700">{dlcData.updates.filter((u: any) => u.category === "major").length} major updates · pattern extrapolated</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-8 h-11" loading="lazy" />
+              <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-7 h-10" loading="lazy" />
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
         <div class="px-5 py-4 border-b border-[#1e1e23]">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
             How Long Between Each GTA Online Major Update — and What It Predicts for GTA VI
@@ -664,6 +734,24 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-700">{regionsData.regions.filter((r: any) => r.confirmed).length} confirmed regions · evidence per source type</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/gta6/locations/Vice_City_01.jpg" alt="Vice City" class="rounded border object-cover border-[#2a2a31] w-16 h-10 object-cover rounded" loading="lazy" />
+              <img src="/assets/gta6/locations/Port_Gellhorn_01.jpg" alt="Port Gellhorn" class="rounded border object-cover border-[#2a2a31] w-16 h-10 object-cover rounded" loading="lazy" />
+              <img src="/assets/gta6/locations/Leonida_Keys_01.jpg" alt="Leonida Keys" class="rounded border object-cover border-[#2a2a31] w-16 h-10 object-cover rounded" loading="lazy" />
+              <img src="/assets/gta6/locations/Ambrosia_01.jpg" alt="Ambrosia" class="rounded border object-cover border-[#2a2a31] w-16 h-10 object-cover rounded" loading="lazy" />
+              <img src="/assets/gta6/locations/Grassrivers_01.jpg" alt="Grassrivers" class="rounded border object-cover border-[#2a2a31] w-16 h-10 object-cover rounded" loading="lazy" />
+              <img src="/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg" alt="Mount Kalaga" class="rounded border object-cover border-[#2a2a31] w-16 h-10 object-cover rounded" loading="lazy" />
+        </div>
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/gta6/locations/Vice_City_01.jpg" alt="Vice City" class="rounded border object-cover border-[#2a2a31] w-16 h-10" loading="lazy" />
+          <img src="/assets/gta6/locations/Port_Gellhorn_01.jpg" alt="Port Gellhorn" class="rounded border object-cover border-[#2a2a31] w-16 h-10" loading="lazy" />
+          <img src="/assets/gta6/locations/Leonida_Keys_01.jpg" alt="Leonida Keys" class="rounded border object-cover border-[#2a2a31] w-16 h-10" loading="lazy" />
+          <img src="/assets/gta6/locations/Ambrosia_01.jpg" alt="Ambrosia" class="rounded border object-cover border-[#2a2a31] w-16 h-10" loading="lazy" />
+          <img src="/assets/gta6/locations/Grassrivers_01.jpg" alt="Grassrivers" class="rounded border object-cover border-[#2a2a31] w-16 h-10" loading="lazy" />
+          <img src="/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg" alt="Mount Kalaga" class="rounded border object-cover border-[#2a2a31] w-16 h-10" loading="lazy" />
+        </div>
         <div class="px-5 py-4 border-b border-[#1e1e23]">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
             How Much Does Rockstar Actually Want You to Know?
@@ -691,6 +779,16 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-700">13 fiscal years · game → recurrent shift</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-8 h-11" loading="lazy" />
+              <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-7 h-10" loading="lazy" />
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
@@ -789,6 +887,18 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-700">{businessData.businesses.length} businesses · solo optimal efficiency</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-8 h-11" loading="lazy" />
+              <img src="/assets/gta6/locations/Ambrosia_02.jpg" alt="Ambrosia" class="rounded border object-cover border-[#2a2a31] w-14 h-9 object-cover rounded" loading="lazy" />
+              <img src="/assets/gta6/locations/Port_Gellhorn_03.jpg" alt="Port Gellhorn" class="rounded border object-cover border-[#2a2a31] w-14 h-9 object-cover rounded" loading="lazy" />
+        </div>
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-7 h-10" loading="lazy" />
+          <img src="/assets/gta6/locations/Ambrosia_02.jpg" alt="Ambrosia" class="rounded border object-cover border-[#2a2a31] w-16 h-10" loading="lazy" />
+          <img src="/assets/gta6/locations/Port_Gellhorn_03.jpg" alt="Port Gellhorn" class="rounded border object-cover border-[#2a2a31] w-16 h-10" loading="lazy" />
+        </div>
         <div class="px-5 py-4 border-b border-[#1e1e23]">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
             The Economy GTA VI Online Needs to Beat
