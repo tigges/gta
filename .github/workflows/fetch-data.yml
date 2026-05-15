@@ -37,6 +37,9 @@ jobs:
       - name: Fetch Google Trends data
         run: python scrapers/fetch_trends.py
 
+      - name: Fetch GTA V mission payouts (GTA Wiki)
+        run: python scrapers/fetch_missions.py
+
       # ── GTA VI ─────────────────────────────────────────────────────────────
 
       - name: Fetch GTA VI trailer data

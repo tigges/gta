@@ -18,12 +18,18 @@ import trailerAnalysis  from "../../data/gta-6/trailer-analysis.json";
 import revenueSplit     from "../../data/franchise/revenue-split.json";
 import businessData     from "../../data/gta-5/businesses/profit-per-hour.json";
 import regionsData      from "../../data/franchise/regions-evidence.json";
+import missionsData     from "../../data/gta-5/missions/story-missions.json";
+import stocksData       from "../../data/gta-5/economy/assassination-stocks.json";
 
 import metacriticData   from "../../data/franchise/metacritic.json";
 import ttwoStock        from "../../data/franchise/ttwo-stock.json";
 import competitorData   from "../../data/franchise/competitors.json";
 const metacriticScores = metacriticData.titles;
 const CATEGORIES = ["All", "Franchise", "Performance", "Community", "Economy"] as const;
+
+// Economy data
+const storyMissions  = (missionsData as any).missions as any[];
+const assassinGuide  = (stocksData as any).guide_order as any[];
 
 // Pre-compute stats for header strip
 const gta5 = salesData.titles.find(t => t.id === "gta-5");
@@ -855,6 +861,77 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Online community benchmarks — GTABase, GTA Fandom Wiki · Updated for 2024 patches</span>
           <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Best GTA Online business by profit/hour? The community-verified data ranking, updated for 2024 patches." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         NEW CHART I — Story Mission Earnings Curve
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-600 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Story Mission Earnings — Full Arc</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/gta-v" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full guide →</a>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-7 h-10" loading="lazy" />
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-gta-gold/40 shadow shadow-gta-gold/10 w-8 h-11" loading="lazy" />
+        </div>
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              $250 to $41.6M — The GTA V Earnings Curve
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Every story mission plotted by payout. Gold diamonds = Lester stock missions. The Big Score is the only real inflection point.</div>
+          </div>
+          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="inline-block w-0 h-0 border-l-4 border-r-4 border-b-6 border-transparent border-b-gta-gold/80" style="border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:6px solid #f59e0b66;width:0;height:0"></span>Stock mission</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-gta-gold inline-block rounded"></span>Earnings line</span>
+          </div>
+        </div>
+        <div id="mission-earnings-chart-2" class="w-full" style="height:280px"
+          data-missions={JSON.stringify(storyMissions.filter((m: any) => m.payout >= 0))}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki (Fandom) · community records · updated nightly by fetch_missions.py</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V story earnings from $250 (Repossession) to $41.6M (The Big Score). The earning curve reveals why the assassination missions are the real endgame." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         NEW CHART J — Assassination Stock Strategy
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-600 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Assassination Stock Returns — Optimal Sequence</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/gta-v" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full stock guide →</a>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-7 h-10" loading="lazy" />
+        </div>
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              The $2 Billion Strategy — Combined Return Per Mission
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Each bar = combined return % from both the pre-buy and competitor recovery plays. Multi-Target + Redwood is the standout.</div>
+          </div>
+        </div>
+        <div id="assassination-returns-chart" class="w-full" style="height:220px"
+          data-steps={JSON.stringify(assassinGuide)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki · community guides · LCN/BAWSAQ exchange data · 2024 verified</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V assassination missions ranked by combined stock return. Multi-Target (Debonaire + Redwood) delivers 380% combined — the best single play in the game." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -2359,5 +2436,91 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+  })();
+
+  // ── CHART I — Mission Earnings Curve ────────────────────────
+  (function() {
+    const el = document.getElementById("mission-earnings-chart-2");
+    if (!el) return;
+    const missions: any[] = JSON.parse(el.dataset.missions || "[]");
+    const paying = missions.filter(m => m.payout >= 0);
+    const margin = { top: 16, right: 24, bottom: 40, left: 72 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+    const x = d3.scaleLinear().domain([0, paying.length-1]).range([0,W]);
+    const y = d3.scaleLog().domain([100, Math.max(...paying.map((m:any) => m.payout||100))]).range([H,0]).clamp(true);
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id","mei-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
+    grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.15);
+    grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.01);
+    svg.append("path").datum(paying).attr("fill","url(#mei-grad)")
+      .attr("d",d3.area<any>().x((_d:any,i:number)=>x(i)).y0(H).y1((d:any)=>y(Math.max(d.payout||0,100))).curve(d3.curveMonotoneX));
+    svg.append("path").datum(paying).attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",1.5)
+      .attr("d",d3.line<any>().x((_d:any,i:number)=>x(i)).y((d:any)=>y(Math.max(d.payout||0,100))).curve(d3.curveMonotoneX));
+    paying.forEach((m:any,i:number) => {
+      if (m.stock_mission) {
+        svg.append("polygon").attr("points","0,-6 6,0 0,6 -6,0")
+          .attr("transform",`translate(${x(i)},${y(Math.max(m.payout,100))})`)
+          .attr("fill","#f59e0b").attr("opacity",0.9);
+      }
+    });
+    const bigScore = paying.find((m:any) => m.id==="the-big-score");
+    if (bigScore) {
+      const bi = paying.indexOf(bigScore), bx=x(bi), by=y(bigScore.payout);
+      svg.append("line").attr("x1",bx).attr("x2",bx).attr("y1",by+8).attr("y2",H)
+        .attr("stroke","#f59e0b").attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
+      svg.append("text").attr("x",bx+4).attr("y",by-4).attr("fill","#f59e0b")
+        .attr("font-size","9").attr("font-family","monospace").text("The Big Score");
+    }
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(5).tickFormat((d:any)=>`M${d}`))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>+d>=1000000?`$${(+d/1000000).toFixed(0)}M`:+d>=1000?`$${(+d/1000).toFixed(0)}k`:`$${d}`))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+  })();
+
+  // ── CHART J — Assassination Returns ─────────────────────────
+  (function() {
+    const el = document.getElementById("assassination-returns-chart");
+    if (!el) return;
+    const steps: any[] = JSON.parse(el.dataset.steps || "[]");
+    const margin = { top: 20, right: 24, bottom: 56, left: 160 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+    const x = d3.scaleLinear().domain([0, d3.max(steps,(s:any)=>s.combined_return_pct)||400]).range([0,W]);
+    const y = d3.scaleBand().domain(steps.map((s:any)=>s.title)).range([0,H]).padding(0.3);
+    svg.append("g").call(d3.axisLeft(y))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill","#a1a1aa").attr("font-size","10").attr("font-family","monospace").attr("text-anchor","end"));
+    steps.forEach((s:any) => {
+      const pct = s.combined_return_pct;
+      const color = pct >= 200 ? "#22c55e" : pct >= 80 ? "#f59e0b" : "#0d9488";
+      svg.append("rect")
+        .attr("x",0).attr("y",y(s.title)??0)
+        .attr("width",x(pct)).attr("height",y.bandwidth())
+        .attr("rx",3).attr("fill",color).attr("opacity",0.8);
+      svg.append("text")
+        .attr("x",x(pct)+6).attr("y",(y(s.title)??0)+y.bandwidth()/2+4)
+        .attr("fill",color).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold")
+        .text(`+${pct}%`);
+    });
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(5).tickFormat((d:any)=>`+${d}%`))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
   })();
 </script>
