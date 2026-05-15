@@ -31,7 +31,7 @@
   --c-text-2:        #d4d4d8;  /* level 2  — strong secondary body */
   --c-text-3:        #a1a1aa;  /* level 3  — body text, descriptions */
   --c-text-4:        #71717a;  /* level 4  — muted labels, metadata */
-  --c-text-5:        #52525b;  /* level 5  — section labels (// UPPERCASE) */
+  --c-text-5:        #9090a8;  /* level 5  — section labels (// UPPERCASE) */
   --c-text-6:        #3f3f46;  /* level 6  — source footnotes */
   --c-text-7:        #27272a;  /* level 7  — watermarks (GTAVI.AI credit) */
 
@@ -44,7 +44,7 @@
   --c-cat-news:        #22c55e;  /* green  — news feed */
 
   /* ── Chart / D3 internals (consumed by chartColors.ts) ─── */
-  --c-chart-axis:    #52525b;  /* = text-5 — axis tick labels */
+  --c-chart-axis:    #9090a8;  /* = text-5 — axis tick labels */
   --c-chart-grid:    #1e1e23;  /* = border-1 — grid lines */
   --c-chart-bar:     #f59e0b;  /* = brand — primary bar fill */
   --c-chart-bar-dim: rgba(245,158,11,0.35); /* secondary / projected */
@@ -65,4 +65,15 @@
   --fs-body:    12px;   /* body/xs */
   --fs-ui:      14px;   /* nav, UI text/sm */
   --fs-card:    16px;   /* card headings/base */
+}
+
+/* ── Reusable utility classes ──────────────────────────────────────────── */
+
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--c-text-5);
+  border-left: 2px solid var(--c-brand);
+  padding-left: 8px;
+  letter-spacing: 0.03em;
 }
