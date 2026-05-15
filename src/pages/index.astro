@@ -160,27 +160,36 @@ const TIER_COLOR: Record<string,string> = {
           </div>
         </div>
 
-        <!-- Right: compact Trailer 2 embed card (Intel-page style) -->
-        <div class="hidden sm:block shrink-0 w-64 lg:w-72">
-          <div class="rounded-xl overflow-hidden border border-[#2a2a31] shadow-2xl shadow-black/70">
-            <div class="relative">
-              <span class="absolute top-2 left-2 z-10 text-[8px] font-mono bg-gta-gold/20 text-gta-gold border border-gta-gold/30 px-1.5 py-0.5 rounded uppercase tracking-widest">Official · T2</span>
-              <div class="aspect-video">
-                <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${trailer2Id}?rel=0&modestbranding=1&color=white`}
-                  title="Grand Theft Auto VI — Official Trailer 2"
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                  class="w-full h-full"
-                  loading="lazy"
-                ></iframe>
+        <!-- Right: Trailer 2 thumbnail card (VI Intel style, bigger) -->
+        <div class="hidden sm:block shrink-0 w-72 lg:w-80">
+          <a href={`https://www.youtube.com/watch?v=${trailer2Id}`}
+            target="_blank" rel="noopener noreferrer"
+            class="group relative overflow-hidden rounded-xl border border-[#2a2a31] hover:border-gta-gold/30 shadow-2xl shadow-black/70 block transition-all duration-200">
+            <div class="relative aspect-video overflow-hidden">
+              <img
+                src={`https://img.youtube.com/vi/${trailer2Id}/maxresdefault.jpg`}
+                alt="Grand Theft Auto VI — Official Trailer 2"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="eager"
+              />
+              <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 60%)"></div>
+              <!-- Play button -->
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-black/50 border border-gta-gold/30 flex items-center justify-center group-hover:bg-gta-gold/20 group-hover:border-gta-gold/60 transition-all duration-300">
+                  <span class="text-white text-lg ml-0.5">▶</span>
+                </div>
+              </div>
+              <!-- Official badge -->
+              <div class="absolute top-2.5 left-2.5">
+                <span class="text-[8px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Official · Trailer 2</span>
+              </div>
+              <!-- Title overlay -->
+              <div class="absolute bottom-0 left-0 right-0 px-3 pb-3">
+                <div class="text-xs font-semibold text-white leading-tight" style="font-family:'Inter',sans-serif">Grand Theft Auto VI — Trailer 2</div>
+                <div class="text-[9px] font-mono text-zinc-500 mt-0.5">May 6, 2025 · 159M+ views</div>
               </div>
             </div>
-            <div class="px-3 py-2 flex items-center justify-between" style="background:#0a0a0d;border-top:1px solid #1e1e23">
-              <span class="text-[9px] font-mono text-zinc-500 truncate">GTA VI — Trailer 2</span>
-              <span class="text-[9px] font-mono text-zinc-700 shrink-0 ml-2">159M+</span>
-            </div>
-          </div>
+          </a>
         </div>
 
       </div>
