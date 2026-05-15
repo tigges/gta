@@ -1,9 +1,17 @@
 ---
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
+import ProfitCard from "../components/ProfitCard.astro";
 import entityIndex    from "../../data/gta-6/entities/index.json";
 import leonidaRaw     from "../../data/gta-6/entities/leonida-intel.json";
 import vehiclesRaw    from "../../data/gta-5/vehicles/performance.json";
+import businessProfiles from "../../data/gta-5/economy/business-profiles.json";
+import onlineHeists     from "../../data/gta-5/economy/online-heists.json";
+import revenueTiers     from "../../data/gta-5/economy/revenue-tiers.json";
+import storyMissions    from "../../data/gta-5/missions/story-missions.json";
+import onlineMissions   from "../../data/gta-5/missions/online-top.json";
+import stocksData       from "../../data/gta-5/economy/assassination-stocks.json";
+import heistsData        from "../../data/gta-5/missions/heists.json";
 
 // ── GTA VI entities ────────────────────────────────────────────────────────
 const fandomEntities = (entityIndex as any).entities as any[];
@@ -84,6 +92,51 @@ const TYPE_META: Record<string,{icon:string;label:string}> = {
   activity:  { icon:"🎮", label:"Activities" },
   property:  { icon:"🏠", label:"Properties" },
 };
+
+// ── Economy data ────────────────────────────────────────────────────────────
+const bizProfiles    = (businessProfiles as any).businesses as any[];
+const heistList      = (onlineHeists as any).heists as any[];
+const tiers          = (revenueTiers as any).tiers as any[];
+const storyMissionList = (storyMissions as any).missions as any[];
+const onlineMissionList = (onlineMissions as any).missions as any[];
+const assassinGuide  = (stocksData as any).guide_order as any[];
+const maxProfitHr    = 340000; // Cayo Perico — S-tier ceiling
+
+// Tier assignment from revenue tiers data
+const TIER_MAP: Record<string, "S"|"A"|"B"|"C"|"D"> = {};
+tiers.forEach((t: any) => t.sources.forEach((s: any) => { TIER_MAP[s.id] = t.tier; }));
+
+// Business thumbnail map
+const BIZ_THUMBS: Record<string, string> = {
+  "cayo-perico":         "/assets/gta6/locations/Leonida_Keys_01.jpg",
+  "acid-lab":            "/assets/gta6/locations/Grassrivers_01.jpg",
+  "nightclub":           "/assets/gta6/locations/Ambrosia_02.jpg",
+  "bunker":              "/assets/gta6/locations/Grassrivers_02.jpg",
+  "vehicle-warehouse":   "/assets/gta6/locations/Port_Gellhorn_01.jpg",
+  "diamond-casino-heist":"/assets/gta6/locations/Vice_City_01.jpg",
+  "auto-shop":           "/assets/gta6/locations/Port_Gellhorn_03.jpg",
+  "hangar":              "/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg",
+  "cocaine-lockup":      "/assets/gta6/locations/Ambrosia_01.jpg",
+  "ceo-crates":          "/assets/gta6/locations/Vice_City_03.jpg",
+  "vip-work":            "/assets/gta6/locations/Vice_City_04.jpg",
+};
+
+// Difficulty mapping
+const DIFF_MAP: Record<string, number> = {
+  "cayo-perico":1, "acid-lab":1, "nightclub":1, "bunker":2, "vehicle-warehouse":2,
+  "diamond-casino-heist":3, "auto-shop":2, "hangar":2, "cocaine-lockup":2,
+  "ceo-crates":4, "vip-work":2, "methamphetamine-lab":2, "weed-farm":1,
+  "counterfeit-cash":1, "document-forgery":1,
+};
+
+// Online heist thumbnails
+const HEIST_THUMBS: Record<string, string> = {
+  "cayo-perico":           "/assets/gta6/locations/Leonida_Keys_01.jpg",
+  "diamond-casino-heist":  "/assets/gta6/locations/Vice_City_01.jpg",
+  "doomsday-act-3":        "/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg",
+  "pacific-standard":      "/assets/gta6/locations/Port_Gellhorn_02.jpg",
+  "fleeca-job":            "/assets/gta6/locations/Leonida_Keys_02.jpg",
+};
 ---
 
 <Base
@@ -104,12 +157,18 @@ const TYPE_META: Record<string,{icon:string;label:string}> = {
       <h1 class="text-3xl font-bold text-white mb-4" style="font-family:'Inter',sans-serif">Database</h1>
 
       <!-- Game version tabs -->
-      <div class="flex items-center gap-2 mb-6">
+      <div class="flex items-center gap-2 mb-6 flex-wrap">
         <button id="tab-gta6" class="db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all" data-game="gta-6">
           GTA VI
         </button>
+        <button id="tab-online" class="db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-game="gta-online">
+          GTA Online
+        </button>
         <button id="tab-gta5" class="db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-game="gta-5">
           GTA V
+        </button>
+        <button id="tab-franchise" class="db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-game="franchise">
+          Franchise
         </button>
       </div>
 
@@ -231,6 +290,168 @@ const TYPE_META: Record<string,{icon:string;label:string}> = {
     <!-- GTA V vehicle grid -->
     <div id="db-grid-gta5" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2"
       data-vehicles={JSON.stringify(gta5Vehicles)}>
+    </div>
+
+    <!-- GTA Online economy section -->
+    <div id="db-section-online" class="hidden">
+      <!-- Category filters -->
+      <div class="flex items-center gap-2 mb-5 flex-wrap">
+        <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mr-1">Category</span>
+        {[
+          { id: "all",      label: "All" },
+          { id: "heist",    label: "🏦 Heists" },
+          { id: "business", label: "🏢 Businesses" },
+          { id: "mc",       label: "🏍 MC Businesses" },
+          { id: "active",   label: "⚡ Active" },
+          { id: "passive",  label: "💤 Passive" },
+        ].map(f => (
+          <button class="online-cat-filter px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
+            class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
+            data-cat={f.id}>{f.label}</button>
+        ))}
+        <div class="flex-1"></div>
+        <span class="text-[9px] font-mono text-zinc-700">Sort by $/hr · fully upgraded · 2024 patches</span>
+      </div>
+
+      <!-- Tier sections -->
+      {tiers.map((tier: any) => (
+        <div class="mb-8 online-tier-section" data-tier={tier.tier}>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="font-mono font-black text-xl leading-none" style={`color:${tier.color}`}>{tier.tier}</span>
+            <span class="text-[10px] font-mono text-zinc-500">{tier.label}</span>
+            <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {tier.sources.map((src: any) => {
+              const biz = bizProfiles.find((b: any) => b.id === src.id)
+                       || heistList.find((h: any) => h.id === src.id);
+              if (!biz) return null;
+              const isHeist = heistList.some((h: any) => h.id === src.id);
+              return (
+                <div class="online-card" data-category={biz.category ?? (isHeist ? "heist" : "business")}>
+                  <ProfitCard
+                    id={biz.id ?? src.id}
+                    name={biz.name ?? biz.title}
+                    game="gta-online"
+                    category={biz.category ?? (isHeist ? "heist" : "business")}
+                    tier={tier.tier as "S"|"A"|"B"|"C"|"D"}
+                    net_profit_per_hr={src.gta_per_hr}
+                    max_profit_per_hr={maxProfitHr}
+                    setup_cost_full={biz.setup_cost_full ?? undefined}
+                    break_even_hrs={biz.break_even_hrs ?? (biz.setup_cost_full ? Math.round(biz.setup_cost_full / src.gta_per_hr) : undefined)}
+                    play_type={biz.play_type ?? (isHeist ? "heist" : "active")}
+                    difficulty={DIFF_MAP[src.id] ?? 3}
+                    min_players={biz.min_players ?? 1}
+                    max_players={biz.max_players ?? 4}
+                    solo={biz.solo ?? true}
+                    dlc={biz.dlc ?? undefined}
+                    prerequisite={biz.prerequisite ?? undefined}
+                    payout_per_run_min={biz.payout_per_run_min ?? undefined}
+                    payout_per_run_max={biz.payout_per_run_max ?? undefined}
+                    avg_run_time_min={biz.avg_run_time_min ?? undefined}
+                    loot_tiers={biz.loot_tiers ?? undefined}
+                    tips={biz.tips ?? undefined}
+                    notes={biz.notes ?? undefined}
+                    thumbnail={BIZ_THUMBS[src.id] ?? HEIST_THUMBS[src.id] ?? undefined}
+                    share_url="https://gtavi.ai/database"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- GTA V Economy section -->
+    <div id="db-section-gta5eco" class="hidden">
+      <div class="flex items-center gap-2 mb-5 flex-wrap">
+        <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mr-1">Category</span>
+        {[
+          { id: "all",     label: "All" },
+          { id: "mission", label: "🎯 Story Missions" },
+          { id: "heist",   label: "🏦 Heists" },
+          { id: "stocks",  label: "📈 Stock Guide" },
+        ].map(f => (
+          <button class="gta5eco-cat-filter px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
+            class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
+            data-cat={f.id}>{f.label}</button>
+        ))}
+      </div>
+
+      <!-- Story Heists -->
+      <div class="mb-6 gta5eco-section" data-category="heist">
+        <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-4 flex items-center gap-3">
+          <span>// Story Heists</span><div class="flex-1 h-px bg-[#1e1e23]"></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {(heistsData as any).heists.filter((h: any) => h.approaches?.[0]?.player_max_cut > 0).map((h: any) => (
+            <div class="gta5eco-card" data-category="heist">
+              <ProfitCard
+                id={h.id}
+                name={h.title}
+                game="gta-5"
+                category="heist"
+                tier={h.id === "the-big-score" ? "S" : "C"}
+                net_profit_per_hr={Math.round((h.approaches?.[0]?.player_max_cut ?? 0) / ((h as any).avg_time_hr ?? 2))}
+                max_profit_per_hr={42000000}
+                setup_cost_full={0}
+                play_type="heist"
+                difficulty={h.difficulty === "Hard" ? 4 : h.difficulty === "Medium" ? 3 : 2}
+                min_players={h.min_players ?? 2}
+                max_players={h.max_players ?? 4}
+                solo={h.min_players === 1}
+                payout_per_run_max={h.approaches?.[0]?.player_max_cut}
+                notes={h.notes ?? undefined}
+                share_url="https://gtavi.ai/database"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Assassination Stock Guide -->
+      <div class="mb-6 gta5eco-section" data-category="stocks">
+        <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-4 flex items-center gap-3">
+          <span>// Assassination Stock Guide — LCN / BAWSAQ</span><div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <span class="text-zinc-700">$2B+ theoretical maximum</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {assassinGuide.map((step: any) => (
+            <div class="gta5eco-card" data-category="stocks">
+              <ProfitCard
+                id={step.mission_id}
+                name={step.title}
+                game="gta-5"
+                category="mission"
+                tier={step.combined_return_pct >= 300 ? "S" : step.combined_return_pct >= 100 ? "A" : "B"}
+                net_profit_per_hr={Math.round(step.combined_return_pct * 1000000 / 100)}
+                max_profit_per_hr={380 * 1000000 / 100}
+                play_type="mission"
+                difficulty={2}
+                min_players={1}
+                max_players={1}
+                solo={true}
+                payout_per_run_max={Math.round(step.combined_return_pct * 2000000 / 100)}
+                notes={`Combined return: +${step.combined_return_pct}%. ${step.max_profit_note ?? ""}`}
+                tips={step.strategy?.slice(0,2).map((s: any) => `${s.action.toUpperCase()} ${s.ticker} (${s.exchange})${s.expected_return_pct ? ` → +${s.expected_return_pct}%` : ''}`)}
+                share_url="https://gtavi.ai/database"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Franchise placeholder -->
+    <div id="db-section-franchise" class="hidden">
+      <div class="rounded-xl border border-[#1e1e23] p-8 text-center" style="background:#131316">
+        <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Franchise Database</div>
+        <div class="font-semibold text-zinc-300 mb-2" style="font-family:'Inter',sans-serif">GTA III · Vice City · San Andreas · GTA IV</div>
+        <p class="text-[11px] text-zinc-600 max-w-md mx-auto" style="font-family:'Inter',sans-serif">
+          Historical franchise economic data coming soon. GTA V and Online are the reference model — franchise titles will follow the same profile card schema.
+        </p>
+      </div>
     </div>
 
     <!-- No results -->
@@ -499,17 +720,44 @@ const TYPE_META: Record<string,{icon:string;label:string}> = {
       activeGame = btn.dataset.game!;
       currentPage = 0;
 
-      const isGta6 = activeGame === "gta-6";
-      gridGta6.classList.toggle("hidden", !isGta6);
-      gridGta5.classList.toggle("hidden",  isGta6);
-      filtersGta6.classList.toggle("hidden", !isGta6);
-      filtersGta5.classList.toggle("hidden",  isGta6);
-      headerGta6.classList.toggle("hidden", !isGta6);
-      headerGta5.classList.toggle("hidden",  isGta6);
-      noteGta6.classList.toggle("hidden", !isGta6);
-      noteGta5.classList.toggle("hidden",  isGta6);
-      srcLabel.textContent = isGta6 ? "GTA VI · Fandom Wiki + Leonida Intel" : "GTA V · Broughy1322 benchmarks";
+      const isGta6    = activeGame === "gta-6";
+      const isOnline  = activeGame === "gta-online";
+      const isGta5Eco = activeGame === "gta-5";
+      const isFranchise = activeGame === "franchise";
 
+      // Grid / pane visibility
+      gridGta6.classList.toggle("hidden", !isGta6);
+      gridGta5.classList.toggle("hidden",  !isGta5Eco || isOnline || isFranchise);
+      document.getElementById("db-section-online")?.classList.toggle("hidden", !isOnline);
+      document.getElementById("db-section-gta5eco")?.classList.toggle("hidden", !isGta5Eco);
+      document.getElementById("db-section-franchise")?.classList.toggle("hidden", !isFranchise);
+
+      // GTA V vehicles grid: show only when gta-5 tab is active (vehicles sub-tab)
+      // For gta-5 tab we show the economy section, not vehicles grid
+      gridGta5.classList.add("hidden");
+
+      // Filter bars
+      filtersGta6.classList.toggle("hidden", !isGta6);
+      filtersGta5.classList.toggle("hidden", true); // always hide vehicle filters — economy section has own filters
+
+      // Headers
+      headerGta6.classList.toggle("hidden", !isGta6);
+      headerGta5.classList.toggle("hidden", isGta6 || isOnline || isFranchise);
+
+      // Source notes
+      noteGta6.classList.toggle("hidden", !isGta6);
+      noteGta5.classList.toggle("hidden", isGta6);
+
+      // Count label
+      const labels: Record<string,string> = {
+        "gta-6": "GTA VI · Fandom Wiki + Leonida Intel",
+        "gta-online": "GTA Online · Economic Intelligence",
+        "gta-5": "GTA V · Story + Heists + Stocks",
+        "franchise": "Franchise · Historical data",
+      };
+      srcLabel.textContent = labels[activeGame] ?? "";
+
+      // Tab button styles
       document.querySelectorAll<HTMLButtonElement>(".db-game-tab").forEach(b => {
         const active = b.dataset.game === activeGame;
         b.className = active
@@ -518,7 +766,7 @@ const TYPE_META: Record<string,{icon:string;label:string}> = {
       });
 
       document.getElementById("db-pager")?.remove();
-      renderActive();
+      if (isGta6) renderActive();
     });
   });
 
