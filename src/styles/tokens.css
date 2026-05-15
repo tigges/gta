@@ -69,6 +69,36 @@
 
 /* ── Reusable utility classes ──────────────────────────────────────────── */
 
+/* Base element styles — makes existing content inherit token colours
+   without needing to change any individual class on any page           */
+body {
+  color: var(--c-text-3);
+}
+
+h1, h2, h3 {
+  color: var(--c-text-0);
+}
+
+h4, h5, h6 {
+  color: var(--c-text-1);
+}
+
+p, li, td, th {
+  color: var(--c-text-3);
+}
+
+/* text-white and text-zinc-50 become pure white via this override */
+.text-white { color: var(--c-text-0) !important; }
+
+/* Brighten the common zinc text steps to match new token values */
+.text-zinc-200, .text-zinc-100 { color: var(--c-text-1) !important; }
+.text-zinc-300                  { color: var(--c-text-2) !important; }
+.text-zinc-400                  { color: var(--c-text-3) !important; }
+.text-zinc-500                  { color: var(--c-text-4) !important; }
+.text-zinc-600                  { color: var(--c-text-5) !important; }
+.text-zinc-700                  { color: var(--c-text-6) !important; }
+.text-zinc-800                  { color: var(--c-text-7) !important; }
+
 .section-label {
   font-size: 11px;
   font-weight: 500;
