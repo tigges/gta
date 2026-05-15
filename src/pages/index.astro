@@ -329,6 +329,10 @@ const TIER_COLOR: Record<string,string> = {
           );
         })}
       </div>
+      <div class="mt-3 flex items-center justify-between">
+        <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+        <ShareButton text={`GTA VI has ${totalTracked}+ entries tracked: ${featCats.map((c: any) => `${c.confirmed} ${c.label.toLowerCase()} confirmed`).join(', ')}. Full feature tracker.`} url="https://gtavi.ai/vi-intel" size="sm" label="Share" />
+      </div>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
