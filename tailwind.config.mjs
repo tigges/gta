@@ -4,17 +4,39 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Brand palette
-        'gta-gold':   '#f59e0b',   // primary amber — GTA identity
-        'gta-bright': '#fbbf24',   // brighter amber for large headings
-        'gta-teal':   '#0d9488',   // secondary — live / verified states
-        'gta-red':    '#ef4444',   // alerts, breaking news
-        // Surface system — replaces generic zinc-9xx values
-        'surface':    '#0e0e11',   // page background (warm near-black)
-        'surface-1':  '#131316',   // card background
-        'surface-2':  '#1a1a1e',   // elevated card / hover state
-        'border-dim': '#1e1e23',   // subtle borders
-        'border-mid': '#2a2a31',   // visible borders, section dividers
+        // ── Brand (mapped to CSS vars — change var to update everywhere) ──
+        'gta-gold':   'var(--c-brand)',
+        'gta-bright': 'var(--c-brand-bright)',
+        'gta-teal':   'var(--c-live)',
+        'gta-red':    'var(--c-alert)',
+
+        // ── Surfaces ───────────────────────────────────────────────────────
+        'surface':    'var(--c-bg)',
+        'surface-deep':'var(--c-bg-deep)',
+        'surface-1':  'var(--c-card)',
+        'surface-2':  'var(--c-card-raised)',
+
+        // ── Borders ─────────────────────────────────────────────────────────
+        'border-dim': 'var(--c-border-1)',
+        'border-mid': 'var(--c-border-2)',
+
+        // ── Semantic text tokens (new — use these going forward) ────────────
+        //    Replaces raw text-zinc-* values with meaningful names
+        'content-0':  'var(--c-text-0)',   // hero headings
+        'content-1':  'var(--c-text-1)',   // card titles, primary values
+        'content-2':  'var(--c-text-2)',   // strong secondary
+        'content-3':  'var(--c-text-3)',   // body text
+        'content-4':  'var(--c-text-4)',   // muted labels
+        'content-5':  'var(--c-text-5)',   // section labels
+        'content-6':  'var(--c-text-6)',   // footnotes
+        'content-7':  'var(--c-text-7)',   // watermarks
+
+        // ── Category colors ──────────────────────────────────────────────────
+        'cat-franchise':   'var(--c-cat-franchise)',
+        'cat-community':   'var(--c-cat-community)',
+        'cat-performance': 'var(--c-cat-performance)',
+        'cat-economy':     'var(--c-cat-economy)',
+        'cat-intel':       'var(--c-cat-intel)',
       },
       fontFamily: {
         sans: ['"Inter"', '"Inter var"', 'system-ui', 'sans-serif'],
