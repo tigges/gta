@@ -16,8 +16,10 @@ import businessProfiles  from "../../data/gta-5/economy/business-profiles.json";
 import onlineHeists      from "../../data/gta-5/economy/online-heists.json";
 import revenueTiers      from "../../data/gta-5/economy/revenue-tiers.json";
 import metaHistory       from "../../data/gta-5/economy/meta-history.json";
+import weeklyBonuses     from "../../data/gta-5/economy/weekly-bonuses.json";
 import StockCalculator   from "../components/StockCalculator.astro";
 import IncomeAdviser     from "../components/IncomeAdviser.astro";
+import SocialClubConnector from "../components/SocialClubConnector.astro";
 
 const totalMonths   = steamData.data.length;
 const totalVehicles = vehicleData.vehicles.length;
@@ -322,7 +324,7 @@ const RETURN_COLOR = (pct: number) =>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-700">select what you own → get your $/hr + next best purchase</span>
       </div>
-      <IncomeAdviser businesses={bizProfiles} />
+      <IncomeAdviser businesses={bizProfiles} weeklyBonuses={(weeklyBonuses as any).bonuses} />
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -584,6 +586,19 @@ const RETURN_COLOR = (pct: number) =>
           <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="The history of GTA Online money: from $250K Contact Missions (2013) to $1.2M/hr Cayo Perico (2022+). Every meta shift charted." url="https://gtavi.ai/gta-v" size="sm" label="Share" /></div>
         </div>
       </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SOCIAL CLUB CONNECTOR
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-[9px] font-mono bg-teal-900/30 text-teal-400 border border-teal-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Profile</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Your Stats vs Community</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">Rockstar Social Club · Phase 1</span>
+      </div>
+      <SocialClubConnector />
     </section>
 
     <!-- ═══════════════════════════════════════════════════════

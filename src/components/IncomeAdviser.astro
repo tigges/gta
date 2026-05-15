@@ -9,9 +9,10 @@
 import ShareButton from "./ShareButton.astro";
 
 interface Props {
-  businesses: any[];  // business-profiles.json businesses
+  businesses: any[];
+  weeklyBonuses?: { activity_id: string; multiplier: number; keyword_found: string }[];
 }
-const { businesses } = Astro.props;
+const { businesses, weeklyBonuses = [] } = Astro.props;
 
 // Only show ownable businesses (not stacks or story mode)
 const ownableBusinesses = businesses.filter(b =>
@@ -30,6 +31,21 @@ const ownableBusinesses = businesses.filter(b =>
       <div class="text-[11px] text-zinc-500 font-mono">Select what you own → get your personalised $/hr total + best next purchase</div>
     </div>
   </div>
+
+  <!-- Weekly bonuses banner -->
+  {weeklyBonuses.length > 0 && (
+    <div class="px-5 py-3 border-b border-gta-gold/20 flex items-center gap-3 flex-wrap" style="background:rgba(245,158,11,0.06)">
+      <span class="text-[9px] font-mono text-gta-gold border border-gta-gold/25 bg-gta-gold/10 px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0">This Week</span>
+      <div class="flex flex-wrap gap-2">
+        {weeklyBonuses.map((b: any) => (
+          <span class="text-[10px] font-mono text-gta-gold/80">
+            {b.multiplier}× {b.keyword_found}
+          </span>
+        ))}
+      </div>
+      <span class="text-[9px] font-mono text-zinc-600 ml-auto">Bonuses applied to recommendations ↓</span>
+    </div>
+  )}
 
   <div class="p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
 
@@ -116,8 +132,13 @@ const ownableBusinesses = businesses.filter(b =>
   </div>
 </div>
 
-<script define:vars={{ ownableBusinesses }}>
-  function formatK(n) {
+<script define:vars={{ ownableBusinesses, weeklyBonuses }}>
+  // Build weekly multiplier map
+  const WEEKLY_MULT = {};
+  (weeklyBonuses || []).forEach(b => { WEEKLY_MULT[b.activity_id] = b.multiplier; });
+
+  function boosted(biz) { return (WEEKLY_MULT[biz.id] ?? 1) > 1; }
+  function effectiveHr(biz) { return biz.net_profit_per_hr * (WEEKLY_MULT[biz.id] ?? 1); }  function formatK(n) {
     if (n >= 1e6) return `$${(n/1e6).toFixed(1)}M`;
     return `$${Math.round(n/1000)}k`;
   }
@@ -151,13 +172,15 @@ const ownableBusinesses = businesses.filter(b =>
     const ownedIds = new Set(checked.map(c => c.dataset.id));
     const budget = parseFloat(document.getElementById('adviser-budget').value) || 0;
 
-    // Current stack total
+    // Current stack total (with weekly multipliers applied)
     let stackTotal = 0;
     const stackItems = [];
     checked.forEach(c => {
-      const profit = parseInt(c.dataset.profit) || 0;
-      stackTotal += profit;
-      stackItems.push({ name: c.dataset.name, profit, type: c.dataset.type });
+      const biz = ownableBusinesses.find(b => b.id === c.dataset.id);
+      if (!biz) return;
+      const eff = effectiveHr(biz);
+      stackTotal += eff;
+      stackItems.push({ name: c.dataset.name, profit: eff, base: biz.net_profit_per_hr, type: c.dataset.type, boosted: boosted(biz) });
     });
 
     // Add synergy bonuses
@@ -184,8 +207,9 @@ const ownableBusinesses = businesses.filter(b =>
       } else {
         const sorted = [...stackItems].sort((a, b) => b.profit - a.profit);
         breakdownEl.innerHTML = sorted.map(item => {
-          const typeColor = item.type === 'passive' ? '#22c55e' : item.type === 'semi-passive' ? '#f59e0b' : item.type === 'heist' ? '#818cf8' : '#ef4444';
-          return `<div class="flex items-center justify-between"><span class="text-zinc-400">${item.name}</span><span style="color:${typeColor};font-weight:bold">${formatK(item.profit)}/hr</span></div>`;
+          const typeColor = item.type === 'passive' ? '#22c55e' : item.type === 'semi-passive' ? '#f59e0b' : '#ef4444';
+          const boostBadge = item.boosted ? ` <span style="color:#f59e0b;font-size:8px">★ 2×</span>` : '';
+          return `<div class="flex items-center justify-between"><span class="text-zinc-400">${item.name}${boostBadge}</span><span style="color:${typeColor};font-weight:bold">${formatK(item.profit)}/hr</span></div>`;
         }).join('') + (synergyTotal > 0 ? `<div class="flex items-center justify-between text-gta-teal"><span>Synergy bonuses</span><span>+${formatK(synergyTotal)}/hr</span></div>` : '');
       }
     }
@@ -195,8 +219,8 @@ const ownableBusinesses = businesses.filter(b =>
       .filter(b => !ownedIds.has(b.id))
       .filter(b => (b.setup_cost_full ?? 0) <= budget)
       .sort((a, b) => {
-        const roiA = a.net_profit_per_hr / Math.max(a.setup_cost_full ?? 1, 1);
-        const roiB = b.net_profit_per_hr / Math.max(b.setup_cost_full ?? 1, 1);
+        const roiA = effectiveHr(a) / Math.max(a.setup_cost_full ?? 1, 1);
+        const roiB = effectiveHr(b) / Math.max(b.setup_cost_full ?? 1, 1);
         return roiB - roiA;
       });
 
@@ -208,12 +232,13 @@ const ownableBusinesses = businesses.filter(b =>
         recsEl.innerHTML = '<span class="text-[10px] font-mono text-gta-teal">You own everything — you\'re at maximum efficiency!</span>';
       } else {
         recsEl.innerHTML = notOwned.slice(0, 3).map((b, i) => {
-          const roi = b.setup_cost_full > 0 ? Math.round(b.setup_cost_full / b.net_profit_per_hr) : 0;
+          const roi = b.setup_cost_full > 0 ? Math.round(b.setup_cost_full / effectiveHr(b)) : 0;
           const highlight = i === 0 ? 'border-gta-gold/30' : 'border-[#2a2a31]';
+          const boostBadge = boosted(b) ? ` <span style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);padding:0 4px;border-radius:3px;font-size:8px">★ ${WEEKLY_MULT[b.id]}× this week</span>` : '';
           return `<div class="rounded-lg border ${highlight} p-3" style="background:#0e0e11">
             <div class="flex items-center justify-between mb-1">
-              <span class="text-[11px] font-mono text-zinc-200 font-semibold">${b.name}</span>
-              <span class="text-[11px] font-mono text-gta-gold font-bold">${formatK(b.net_profit_per_hr)}/hr</span>
+              <span class="text-[11px] font-mono text-zinc-200 font-semibold">${b.name}${boostBadge}</span>
+              <span class="text-[11px] font-mono text-gta-gold font-bold">${formatK(effectiveHr(b))}/hr</span>
             </div>
             <div class="flex items-center gap-3 text-[9px] font-mono text-zinc-600">
               <span>Setup: $${(b.setup_cost_full/1e6).toFixed(1)}M</span>

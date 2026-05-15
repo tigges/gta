@@ -1,0 +1,202 @@
+---
+/**
+ * SocialClubConnector.astro — Phase 1
+ *
+ * Lets players enter their Rockstar Social Club username to:
+ * - Get a direct link to their public profile
+ * - See their stats framed against community benchmarks
+ * - Get a personalised income recommendation based on their level/cash
+ *
+ * Phase 2: scrape public profile page for rank/cash/missions data
+ * Phase 3: full leaderboard with opt-in community ranking
+ */
+import ShareButton from "./ShareButton.astro";
+
+// Community benchmarks (from aggregate community data)
+const BENCHMARKS = {
+  avg_criminal_rank:    500,
+  avg_cash_bank:        5_000_000,
+  top10_cash:          200_000_000,
+  top1_cash:         2_000_000_000,
+  avg_missions:         1_200,
+  top10_missions:      10_000,
+};
+---
+
+<div class="rounded-xl border border-gta-teal/20 overflow-hidden" id="social-connector" style="background:#131316">
+  <!-- Header -->
+  <div class="px-5 py-4 border-b border-[#1e1e23] flex items-center gap-3">
+    <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style="background:#003087">
+      <span class="font-mono font-black text-white text-xs">R★</span>
+    </div>
+    <div>
+      <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Rockstar Social Club — Connect Your Stats</div>
+      <div class="text-[11px] text-zinc-500 font-mono">Enter your username → see how you compare to the community</div>
+    </div>
+    <div class="ml-auto">
+      <span class="text-[9px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Phase 1</span>
+    </div>
+  </div>
+
+  <div class="p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Left: username input + manual stats -->
+    <div>
+      <div class="mb-4">
+        <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1.5">Your Social Club Username</label>
+        <div class="flex items-center gap-2">
+          <input
+            id="sc-username"
+            type="text"
+            placeholder="YourUsername"
+            class="flex-1 px-3 py-2 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-teal/40"
+          />
+          <a id="sc-profile-link" href="https://socialclub.rockstargames.com" target="_blank" rel="noopener noreferrer"
+            class="shrink-0 px-3 py-2 rounded border border-gta-teal/30 text-gta-teal text-[10px] font-mono hover:bg-gta-teal/8 transition-colors uppercase tracking-widest">
+            View Profile ↗
+          </a>
+        </div>
+        <div class="text-[9px] font-mono text-zinc-700 mt-1">Opens your public Social Club profile where you can copy your stats</div>
+      </div>
+
+      <!-- Manual stat entry -->
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <div>
+          <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Criminal Rank</label>
+          <input id="sc-rank" type="number" placeholder="500" min="1" max="8000"
+            class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
+        </div>
+        <div>
+          <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Cash in Bank (GTA$)</label>
+          <input id="sc-cash" type="number" placeholder="5000000" min="0"
+            class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
+        </div>
+        <div>
+          <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Missions Played</label>
+          <input id="sc-missions" type="number" placeholder="1200" min="0"
+            class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
+        </div>
+        <div>
+          <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Hours Played</label>
+          <input id="sc-hours" type="number" placeholder="300" min="0"
+            class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
+        </div>
+      </div>
+
+      <button id="sc-analyse"
+        class="w-full py-2 rounded border border-gta-teal/30 text-gta-teal text-[11px] font-mono hover:bg-gta-teal/8 transition-colors uppercase tracking-widest">
+        Analyse My Stats →
+      </button>
+    </div>
+
+    <!-- Right: comparison results -->
+    <div id="sc-results" class="hidden">
+      <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-3">Your Stats vs Community</div>
+
+      <div class="flex flex-col gap-3" id="sc-stats-grid">
+        <!-- Populated by JS -->
+      </div>
+
+      <div id="sc-recommendation" class="mt-4 rounded-lg border border-gta-gold/25 p-3" style="background:#0e0e11">
+        <div class="text-[9px] font-mono text-gta-gold uppercase tracking-widest mb-1">Recommendation for your level</div>
+        <div id="sc-rec-text" class="text-[11px] text-zinc-300" style="font-family:'Inter',sans-serif"></div>
+      </div>
+    </div>
+
+    <!-- Right: empty state -->
+    <div id="sc-empty" class="flex items-center justify-center text-zinc-700 text-[10px] font-mono">
+      Enter your stats to see your community ranking →
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3" style="background:#0e0e11">
+    <div class="text-[10px] text-zinc-700 font-mono">
+      Phase 2 coming: auto-fetch from Social Club public profile · No login required
+    </div>
+    <div class="flex items-center gap-3 shrink-0">
+      <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <ShareButton text="Just checked my GTA Online stats on GTAVI.AI — see how you compare to the community. Income adviser + weekly bonus tracker included." url="https://gtavi.ai/gta-v" size="sm" label="Share" />
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ BENCHMARKS }}>
+  // Update profile link when username changes
+  document.getElementById('sc-username')?.addEventListener('input', (e) => {
+    const username = (e.target as HTMLInputElement).value.trim();
+    const link = document.getElementById('sc-profile-link') as HTMLAnchorElement;
+    if (link) {
+      link.href = username
+        ? `https://socialclub.rockstargames.com/member/${encodeURIComponent(username)}/`
+        : 'https://socialclub.rockstargames.com';
+    }
+  });
+
+  document.getElementById('sc-analyse')?.addEventListener('click', () => {
+    const rank     = parseInt((document.getElementById('sc-rank') as HTMLInputElement).value) || 0;
+    const cash     = parseInt((document.getElementById('sc-cash') as HTMLInputElement).value) || 0;
+    const missions = parseInt((document.getElementById('sc-missions') as HTMLInputElement).value) || 0;
+    const hours    = parseInt((document.getElementById('sc-hours') as HTMLInputElement).value) || 0;
+
+    if (!rank && !cash) {
+      alert('Enter at least your rank or cash balance to analyse.');
+      return;
+    }
+
+    function pctBar(value: number, avg: number, top10: number) {
+      const pctOfTop = Math.min(100, Math.round((value / top10) * 100));
+      const color = pctOfTop >= 80 ? '#22c55e' : pctOfTop >= 40 ? '#f59e0b' : '#818cf8';
+      const label = pctOfTop >= 90 ? 'Top 10%' : pctOfTop >= 50 ? 'Above avg' : value >= avg ? 'Average' : 'Below avg';
+      return `
+        <div class="flex items-center gap-2 text-[10px] font-mono">
+          <div class="flex-1 h-1.5 rounded-full bg-[#1e1e23] overflow-hidden">
+            <div style="width:${pctOfTop}%;background:${color}" class="h-full rounded-full"></div>
+          </div>
+          <span style="color:${color}" class="shrink-0 w-20 text-right">${label}</span>
+        </div>`;
+    }
+
+    function formatCash(n: number) {
+      if (n >= 1e9) return `$${(n/1e9).toFixed(1)}B`;
+      if (n >= 1e6) return `$${(n/1e6).toFixed(0)}M`;
+      return `$${Math.round(n/1000)}K`;
+    }
+
+    const statsGrid = document.getElementById('sc-stats-grid')!;
+    const stats = [
+      { label: 'Criminal Rank',   value: rank,     fmt: `Rank ${rank.toLocaleString()}`,   avg: BENCHMARKS.avg_criminal_rank,  top10: 8000 },
+      { label: 'Cash in Bank',    value: cash,     fmt: formatCash(cash),                  avg: BENCHMARKS.avg_cash_bank,      top10: BENCHMARKS.top10_cash },
+      { label: 'Missions Played', value: missions, fmt: `${missions.toLocaleString()} missions`, avg: BENCHMARKS.avg_missions, top10: BENCHMARKS.top10_missions },
+    ].filter(s => s.value > 0);
+
+    statsGrid.innerHTML = stats.map(s => `
+      <div class="rounded-lg border border-[#2a2a31] px-3 py-2.5" style="background:#0a0a0d">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-[10px] font-mono text-zinc-500">${s.label}</span>
+          <span class="text-[11px] font-mono font-bold text-zinc-200">${s.fmt}</span>
+        </div>
+        ${pctBar(s.value, s.avg, s.top10)}
+        <div class="text-[8px] font-mono text-zinc-700 mt-1">Community avg: ${s.label === 'Cash in Bank' ? formatCash(s.avg) : s.avg.toLocaleString()}</div>
+      </div>
+    `).join('');
+
+    // Personalised recommendation
+    const recEl = document.getElementById('sc-rec-text')!;
+    if (cash < 2_200_000) {
+      recEl.textContent = 'Priority: Complete First Dose missions (free) → buy Kosatka ($2.2M). At your cash level, Cayo Perico is your fastest path to financial growth.';
+    } else if (cash < 5_000_000) {
+      recEl.textContent = 'You can afford Cayo Perico setup now. Run it until $10M+ before investing in passive businesses like Nightclub.';
+    } else if (cash < 15_000_000) {
+      recEl.textContent = 'Buy the Agency ($2M). Dr. Dre contract pays $1M flat with no cooldown — highest $/hr in your budget. Stack with Cayo Perico.';
+    } else if (cash < 50_000_000) {
+      recEl.textContent = 'Add Nightclub ($3.5M fully upgraded). Passive income while you run Cayo Perico sessions. Combined stack: $1.5M+/hr.';
+    } else {
+      recEl.textContent = "You're in the top tier. Stack optimization: Cayo Perico + Agency contracts + Nightclub passive = $1.5-2M+/hr combined. Focus on Payphone Hits between heist cooldowns.";
+    }
+
+    document.getElementById('sc-results')!.classList.remove('hidden');
+    document.getElementById('sc-empty')!.classList.add('hidden');
+  });
+</script>

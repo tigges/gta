@@ -1,0 +1,129 @@
+---
+// SEO landing page: /gta-v/cayo-perico
+// Target queries: "cayo perico heist guide", "best solo money gta online", "cayo perico $/hr"
+import Base from "../../layouts/Base.astro";
+import ProfitCard from "../../components/ProfitCard.astro";
+import StockCalculator from "../../components/StockCalculator.astro";
+import ShareButton from "../../components/ShareButton.astro";
+import businessProfiles from "../../../data/gta-5/economy/business-profiles.json";
+import weeklyBonuses    from "../../../data/gta-5/economy/weekly-bonuses.json";
+
+const cayo = (businessProfiles as any).businesses.find((b: any) => b.id === "cayo-perico");
+const bonuses = (weeklyBonuses as any).bonuses as any[];
+const cayoBonus = bonuses.find((b: any) => b.activity_id === "cayo-perico");
+const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
+---
+
+<Base
+  title="Cayo Perico Heist Guide — Best Solo Money GTA Online"
+  description={`Cayo Perico Heist: $${(cayo.net_profit_per_hr/1000).toFixed(0)}k/hr solo. Full guide — loot tiers, optimal strategy, setup cost, break-even. The #1 solo money method in GTA Online.`}
+  ogPage="gta-v"
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-[10px] font-mono text-zinc-600 mb-6">
+      <a href="/gta-v" class="hover:text-zinc-400 transition-colors">GTA V Data</a>
+      <span>›</span>
+      <span class="text-zinc-400">Cayo Perico Heist Guide</span>
+    </div>
+
+    <!-- Hero -->
+    <div class="flex items-start gap-6 mb-10 flex-wrap sm:flex-nowrap">
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-[9px] font-mono bg-green-900/30 text-green-400 border border-green-800/40 px-1.5 py-0.5 rounded uppercase tracking-widest">S+ Tier</span>
+          {cayoBonus && <span class="text-[9px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">★ {cayoBonus.multiplier}× This Week</span>}
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3" style="font-family:'Inter',sans-serif">
+          Cayo Perico Heist — Best Solo Money Guide
+        </h1>
+        <p class="text-zinc-400 leading-relaxed mb-4" style="font-family:'Inter',sans-serif">
+          The Cayo Perico Heist is the most efficient solo money method in GTA Online history.
+          With Panther Statue as primary loot, it yields <strong class="text-gta-gold">${(effectiveHr/1000).toFixed(0)}k/hr</strong> —
+          {cayoBonus ? `boosted ${cayoBonus.multiplier}× this week.` : "the highest sustained income of any solo activity."}
+        </p>
+        <div class="flex items-center gap-3 flex-wrap text-[11px] font-mono">
+          <span class="text-zinc-500">Setup: ${(cayo.setup_cost_full/1_000_000).toFixed(1)}M GTA$</span>
+          <span class="text-zinc-700">·</span>
+          <span class="text-zinc-500">Break-even: {cayo.break_even_hrs} hours</span>
+          <span class="text-zinc-700">·</span>
+          <span class="text-gta-teal">Solo ✓</span>
+        </div>
+      </div>
+      <div class="shrink-0 w-full sm:w-64">
+        <ProfitCard
+          id="cayo-perico"
+          name="Cayo Perico Heist"
+          game="gta-online"
+          category="heist"
+          tier="S"
+          net_profit_per_hr={effectiveHr}
+          max_profit_per_hr={1400000}
+          setup_cost_full={cayo.setup_cost_full}
+          break_even_hrs={cayo.break_even_hrs}
+          play_type="active"
+          difficulty={1}
+          solo={true}
+          dlc={cayo.dlc}
+          loot_tiers={cayo.loot_tiers}
+          tips={cayo.tips}
+          notes={cayo.notes}
+          thumbnail="/assets/gta5/dlc/cayo-perico.jpg"
+          share_url="https://gtavi.ai/gta-v/cayo-perico"
+        />
+      </div>
+    </div>
+
+    <!-- Loot tiers -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-zinc-200 mb-4" style="font-family:'Inter',sans-serif">Loot Tiers — What to Target</h2>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <table class="w-full text-xs font-mono">
+          <thead><tr class="border-b border-[#1e1e23]">
+            <th class="text-left px-5 py-2.5 text-zinc-600 font-normal">Primary Loot</th>
+            <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Value</th>
+            <th class="text-right px-5 py-2.5 text-zinc-600 font-normal">Frequency</th>
+          </tr></thead>
+          <tbody>
+            {cayo.loot_tiers?.map((l: any) => (
+              <tr class="border-b border-[#1e1e23]/50">
+                <td class="px-5 py-2.5 font-semibold text-zinc-200">{l.loot}</td>
+                <td class="px-4 py-2.5 text-right text-gta-gold font-bold">${(l.value/1_000_000).toFixed(2)}M</td>
+                <td class="px-5 py-2.5 text-right text-zinc-500">{l.frequency}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
+          <span class="text-[10px] text-zinc-700 font-mono">Only run for Panther Statue, Pink Diamond, or Bearer Bonds. Abort if primary is Cash.</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Cayo Perico loot tiers: Panther Statue $2.09M vs Cash $90K. Always check before running. Full guide." url="https://gtavi.ai/gta-v/cayo-perico" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tips -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-zinc-200 mb-4" style="font-family:'Inter',sans-serif">Strategy Tips</h2>
+      <div class="flex flex-col gap-3">
+        {cayo.tips?.map((tip: string, i: number) => (
+          <div class="flex items-start gap-3 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:#131316">
+            <span class="text-gta-gold font-mono font-bold shrink-0">{i+1}</span>
+            <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">{tip}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Link back -->
+    <div class="flex items-center justify-between flex-wrap gap-3">
+      <a href="/gta-v" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold border border-gta-gold/20 hover:border-gta-gold/40 px-4 py-2 rounded transition-colors uppercase tracking-widest">
+        ← All GTA V / Online income methods
+      </a>
+      <a href="/database" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 border border-[#2a2a31] hover:border-zinc-600 px-4 py-2 rounded transition-colors uppercase tracking-widest">
+        Database: Full Profit Cards →
+      </a>
+    </div>
+
+  </div>
+</Base>
