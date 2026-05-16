@@ -41,10 +41,14 @@ jobs:
       - name: Fetch GTA V mission payouts (GTA Wiki)
         run: python scrapers/fetch_missions.py
 
+      - name: Fetch GTA Online item price catalogue (GTA Fandom Wiki store pages)
+        continue-on-error: true
+        run: python scrapers/fetch_gta_prices.py
+
       - name: Compute GTA-PPI purchasing power index
         run: python scrapers/fetch_gta_ppi.py
 
-      - name: Fetch GTA Online weekly bonus events (Rockstar Newswire)
+      - name: Fetch GTA Online weekly bonus events + sales (Rockstar Newswire)
         run: python scrapers/fetch_weekly_bonuses.py
 
       - name: Fetch GTABase business and heist data

@@ -1,11 +1,13 @@
 {
   "schema_version": "1.0",
-  "last_updated": "2026-05-16T12:04:55+00:00",
+  "last_updated": "2026-05-16T15:03:12+00:00",
   "source": "Computed from price-basket.json + meta-history.json",
   "note": "GTA-PPI = hours_to_buy_basket = basket_cost / top_hourly_yield. Base 100 = launch era. Lower is better. Rising = hidden inflation via payout nerfs.",
   "methodology": "GTA-PPI = sum(item_price × weight) / top_hourly_yield. Rising index = players need more hours to buy the same basket = real-terms inflation. Nominal prices are largely unchanged across eras; inflation is driven by payout nerfs on the wage side.",
   "base_period": "2013-10-01",
   "base_hours": 10.72,
+  "current_basket_live": 8880250,
+  "price_drift": [],
   "series": [
     {
       "patch": "GTA Online Launch",
@@ -66,89 +68,89 @@
       "patch": "After Hours",
       "date": "2018-07-24",
       "top_yield": 400000,
-      "basket_cost": 6770250,
-      "hours_to_basket": 16.93,
-      "ppi": 157.9,
+      "basket_cost": 8880000,
+      "hours_to_basket": 22.2,
+      "ppi": 207.1,
       "event": "buff",
       "note": "Oppressor Mk II added — basket cost more than doubled overnight",
-      "ppi_yoy": 81.1
+      "ppi_yoy": 130.3
     },
     {
       "patch": "Diamond Casino Heist",
       "date": "2019-12-12",
       "top_yield": 900000,
-      "basket_cost": 6770250,
-      "hours_to_basket": 7.52,
-      "ppi": 70.1,
+      "basket_cost": 8880000,
+      "hours_to_basket": 9.87,
+      "ppi": 92.1,
       "event": "buff",
       "note": "Wages tripled vs 2017 trough; Oppressor still the dominant aspirational item",
-      "ppi_yoy": -87.8
+      "ppi_yoy": -115.0
     },
     {
       "patch": "Cayo Perico Heist",
       "date": "2020-12-15",
       "top_yield": 2000000,
-      "basket_cost": 6770250,
-      "hours_to_basket": 3.39,
-      "ppi": 31.6,
+      "basket_cost": 8880000,
+      "hours_to_basket": 4.44,
+      "ppi": 41.4,
       "event": null,
       "note": "GTA-PPI all-time low — Cayo launch $2M/hr vs $6.77M basket = 3.4 hours",
-      "ppi_yoy": -38.5
+      "ppi_yoy": -50.7
     },
     {
       "patch": "The Contract",
       "date": "2021-12-15",
       "top_yield": 1400000,
-      "basket_cost": 6770250,
-      "hours_to_basket": 4.84,
-      "ppi": 45.1,
+      "basket_cost": 8880000,
+      "hours_to_basket": 6.34,
+      "ppi": 59.1,
       "event": null,
       "note": "Prices unchanged; Agency/Contract adds new income stream",
-      "ppi_yoy": 13.5
+      "ppi_yoy": 17.7
     },
     {
       "patch": "Cayo Nerf",
       "date": "2022-01-20",
       "top_yield": 1200000,
-      "basket_cost": 6770250,
-      "hours_to_basket": 5.64,
-      "ppi": 52.6,
+      "basket_cost": 8880000,
+      "hours_to_basket": 7.4,
+      "ppi": 69.0,
       "event": "nerf",
       "note": "40% Cayo payout nerf — real wages cut without any price change",
-      "ppi_yoy": 7.5
+      "ppi_yoy": 9.9
     },
     {
       "patch": "Criminal Enterprises",
       "date": "2022-07-26",
       "top_yield": 1500000,
-      "basket_cost": 6770250,
-      "hours_to_basket": 4.51,
-      "ppi": 42.1,
+      "basket_cost": 8880000,
+      "hours_to_basket": 5.92,
+      "ppi": 55.2,
       "event": "buff",
       "note": "Across-the-board payout increase for most missions and businesses",
-      "ppi_yoy": -10.5
+      "ppi_yoy": -13.8
     },
     {
       "patch": "Los Santos Drug Wars",
       "date": "2022-12-13",
       "top_yield": 1600000,
-      "basket_cost": 6770250,
-      "hours_to_basket": 4.23,
-      "ppi": 39.5,
+      "basket_cost": 8880000,
+      "hours_to_basket": 5.55,
+      "ppi": 51.8,
       "event": null,
       "note": "Acid Lab launches at $480K/hr — new passive income leader",
-      "ppi_yoy": -2.6
+      "ppi_yoy": -3.4
     },
     {
       "patch": "The Chop Shop",
       "date": "2023-12-13",
       "top_yield": 1700000,
-      "basket_cost": 6770250,
-      "hours_to_basket": 3.98,
-      "ppi": 37.1,
+      "basket_cost": 8880000,
+      "hours_to_basket": 5.22,
+      "ppi": 48.7,
       "event": null,
       "note": "Salvage Yard adds contract variety; wages incrementally improving",
-      "ppi_yoy": -2.4
+      "ppi_yoy": -3.1
     }
   ]
 }
