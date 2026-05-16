@@ -957,6 +957,32 @@ const HEIST_THUMBS: Record<string, string> = {
   // ── Initial render ────────────────────────────────────────────────────────
   renderGta6();
 
+  // ── Deep-link handler — ?game=gta-online#profit-{id} ─────────────────────
+  // Charts page bars link here; we auto-switch tab and scroll to the card.
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    const game = params.get("game");
+    if (!game) return;
+    const tab = document.querySelector<HTMLButtonElement>(`.db-game-tab[data-game="${game}"]`);
+    if (!tab) return;
+    tab.click();
+    const hash = window.location.hash;
+    if (!hash) return;
+    // Give Astro-rendered HTML time to be visible before scrolling
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const target = document.querySelector(hash);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "center" });
+          // Brief highlight pulse
+          (target as HTMLElement).style.transition = "box-shadow 0.3s";
+          (target as HTMLElement).style.boxShadow = "0 0 0 2px #f59e0b66";
+          setTimeout(() => { (target as HTMLElement).style.boxShadow = ""; }, 1800);
+        }
+      }, 120);
+    });
+  })();
+
   // ── GTA Online top category filter ───────────────────────────────────────
   function applyOnlineCatFilter(cat: string) {
     document.querySelectorAll<HTMLElement>(".online-tier-section").forEach(s => {
