@@ -22,10 +22,11 @@ SHEET_ID = os.getenv(
     "BROUGHY_SHEET_ID",
     "1nQND3ikiLzS3Ij9kuV-rVkRtoYetb79c52JWyafb4m4",
 )
-# GID 1299124236 = "Times, Speeds & Tiers" sheet (by class, then race tier, then lap time)
+# GID 1399962921 = simplified export (Position, Car, Class, Position in class, Time)
+# GID 1299124236 = legacy "Times, Speeds & Tiers" multi-header format
 CSV_URL = os.getenv(
     "BROUGHY_CSV_URL",
-    f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid=1299124236",
+    f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid=1399962921",
 )
 
 OUT_PATH = "gta-5/vehicles/performance.json"
@@ -37,12 +38,12 @@ HEADERS = {
     )
 }
 
-# Fixed column indices for this sheet layout (stable across Broughy's updates)
+# Column indices — resolved at runtime via header detection (see fetch())
 COL_CLASS     = 0
 COL_VEHICLE   = 1
 COL_TIER      = 2
 COL_LAP_TIME  = 3
-COL_TOP_SPEED = 6  # "Top Speed (mph)"
+COL_TOP_SPEED = 6  # optional — may not exist in simplified export
 
 
 def lap_to_seconds(lap: str) -> float | None:
@@ -68,52 +69,82 @@ def fetch() -> list[dict]:
     if not rows:
         raise ValueError("Empty CSV response")
 
-    # Find the header row (first row whose second cell is "Vehicle")
-    header_idx = 1  # default based on known sheet structure
+    # Auto-detect column positions from the header row
+    # Supports both the simplified export and the legacy multi-header format
+    header_idx = 0
     for i, row in enumerate(rows[:10]):
         if len(row) > 1 and row[1].strip().lower() in ("vehicle", "name", "car"):
             header_idx = i
             break
 
-    # Data starts one row after the (two-part) header
-    data_start = header_idx + 2
+    header = [h.strip().lower() for h in rows[header_idx]]
+
+    def col(names):
+        for name in names:
+            for i, h in enumerate(header):
+                if name in h:
+                    return i
+        return None
+
+    c_vehicle   = col(["car", "vehicle", "name"])
+    c_class     = col(["class"])
+    c_tier      = col(["tier"])
+    c_lap       = col(["time", "lap time"])
+    c_speed     = col(["top speed", "speed"])
+    c_pos_class = col(["position in class", "pos in class"])
+
+    # Data starts the row after the header (simplified format: +1, legacy: +2)
+    # Check if next row looks like data or a second header row
+    data_start = header_idx + 1
+    if data_start < len(rows):
+        sample = rows[data_start]
+        # If second row has no numbers it's likely a sub-header — skip it
+        if all(not any(c.isdigit() for c in cell) for cell in sample[:4] if cell):
+            data_start += 1
 
     vehicles = []
     current_class = ""
     for row in rows[data_start:]:
-        if not row or len(row) <= COL_TOP_SPEED:
+        if not row or len(row) < 3:
             continue
 
-        # Class column may repeat only at the first vehicle in each class
-        raw_class = row[COL_CLASS].strip()
-        if raw_class:
+        # Class — use detected column, fall back to tracking current class
+        raw_class = row[c_class].strip() if c_class is not None and c_class < len(row) else ""
+        if raw_class and raw_class.lower() not in ("class", ""):
             current_class = raw_class
 
-        name = row[COL_VEHICLE].strip()
-        if not name:
+        name = row[c_vehicle].strip() if c_vehicle is not None and c_vehicle < len(row) else ""
+        if not name or name.lower() in ("car", "vehicle", "name", ""):
             continue
 
-        lap_raw   = row[COL_LAP_TIME].strip()
-        lap_sec   = lap_to_seconds(lap_raw)
+        lap_raw = row[c_lap].strip() if c_lap is not None and c_lap < len(row) else ""
+        lap_sec = lap_to_seconds(lap_raw)
 
-        speed_raw = row[COL_TOP_SPEED].strip()
+        speed_raw = row[c_speed].strip() if c_speed is not None and c_speed < len(row) else ""
         try:
             speed = round(float(speed_raw), 2)
         except (ValueError, TypeError):
             speed = None
 
-        tier = row[COL_TIER].strip() if len(row) > COL_TIER else ""
+        tier = row[c_tier].strip() if c_tier is not None and c_tier < len(row) else ""
 
-        vehicles.append(
-            {
-                "name": name,
-                "class": current_class,
-                "tier": tier if tier and tier != "-" else None,
-                "lap_time": lap_raw if lap_raw and lap_raw != "-" else None,
-                "lap_seconds": lap_sec,
-                "top_speed_mph": speed,
-            }
-        )
+        # Position in class (if available)
+        pos_class = None
+        if c_pos_class is not None and c_pos_class < len(row):
+            try:
+                pos_class = int(row[c_pos_class].strip())
+            except (ValueError, TypeError):
+                pass
+
+        vehicles.append({
+            "name": name,
+            "class": current_class,
+            "tier": tier if tier and tier not in ("-", "") else None,
+            "lap_time": lap_raw if lap_raw and lap_raw != "-" else None,
+            "lap_seconds": lap_sec,
+            "top_speed_mph": speed,
+            "position_in_class": pos_class,
+        })
 
     return vehicles
 
