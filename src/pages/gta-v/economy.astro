@@ -694,9 +694,28 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 
 <script>
   import * as d3 from "d3";
-  import { cc, playColor } from "../../assets/chartColors";
+  import { cc } from "../../assets/chartColors";
 
-  // ── Tab switching ─────────────────────────────────────────────────
+  // ── Fixed chart dimensions (matches style="height:Xpx" on each container) ──
+  const CHART_H: Record<string, number> = {
+    "chart-wages":       220,
+    "chart-spending":    220,
+    "chart-savings":     220,
+    "chart-sharkcards":  220,
+    "chart-investment":  200,
+    "chart-ppi":         280,
+    "chart-health":      280,
+  };
+
+  // ── Lazy init registry ────────────────────────────────────────────────────
+  const pendingInits: Record<string, Array<()=>void>> = { flows: [], health: [] };
+  const doneInits = new Set<string>();
+  function defer(tab: string, fn: () => void) { pendingInits[tab]?.push(fn); }
+  function runPending(tab: string) {
+    (pendingInits[tab] ?? []).forEach(fn => { if (!doneInits.has(fn.name)) { fn(); doneInits.add(fn.name); } });
+  }
+
+  // ── Tab switching ─────────────────────────────────────────────────────────
   document.querySelectorAll<HTMLButtonElement>(".eco-tab").forEach(btn => {
     btn.addEventListener("click", () => {
       const id = btn.dataset.tab!;
@@ -704,453 +723,298 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       document.getElementById(`tab-${id}`)?.classList.remove("hidden");
       document.querySelectorAll<HTMLButtonElement>(".eco-tab").forEach(b => {
         const active = b.dataset.tab === id;
-        b.className = b.className.replace(/border-gta-gold|text-gta-gold/g,"").trim();
-        b.classList.add(...(active ? ["border-gta-gold","text-gta-gold"] : ["border-transparent","text-zinc-500"]));
+        b.style.borderBottomColor = active ? "var(--c-brand)" : "transparent";
+        b.style.color = active ? "var(--c-brand)" : "";
+        b.className = b.className.replace(/text-gta-gold|text-zinc-500/g,"").trim();
+        b.classList.add(active ? "text-gta-gold" : "text-zinc-500");
       });
+      // Lazy-init charts for this tab on first show
+      if (!doneInits.has(`tab-${id}`)) {
+        doneInits.add(`tab-${id}`);
+        runPending(id);
+      }
     });
   });
 
-  // ── Actor filter highlight ────────────────────────────────────────
+  // ── Actor filter buttons ──────────────────────────────────────────────────
   document.querySelectorAll<HTMLButtonElement>(".actor-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const actor = btn.dataset.actor!;
       document.querySelectorAll<HTMLButtonElement>(".actor-btn").forEach(b => {
         const active = b.dataset.actor === actor;
-        b.classList.toggle("border-gta-gold/50",active);
-        b.classList.toggle("bg-gta-gold/10",active);
-        b.classList.toggle("text-gta-gold",active);
-        b.classList.toggle("border-[#2a2a31]",!active);
-        b.classList.toggle("text-zinc-400",!active);
+        b.style.borderColor     = active ? "rgba(245,158,11,0.5)" : "#2a2a31";
+        b.style.backgroundColor = active ? "rgba(245,158,11,0.08)" : "";
+        b.style.color           = active ? "var(--c-brand)" : "var(--c-text-4)";
       });
-      // Highlight matching flow cards in Four Flows tab
+      // Highlight matching flow cards
       document.querySelectorAll<HTMLElement>(".flow-card").forEach(card => {
         const actors = card.dataset.actors?.split(",") ?? [];
         const match = actors.includes(actor);
         card.style.boxShadow = match ? "0 0 0 1px var(--c-brand)" : "";
-        card.style.opacity = match ? "1" : "0.5";
+        card.style.opacity   = match ? "1" : "0.45";
       });
-      // Switch to flows tab if on model
-      const activeTab = document.querySelector<HTMLButtonElement>(".eco-tab.text-gta-gold");
-      if (activeTab?.dataset.tab === "model") {
-        document.querySelector<HTMLButtonElement>('[data-tab="flows"]')?.click();
-      }
+      // Switch to flows tab
+      document.querySelector<HTMLButtonElement>('[data-tab="flows"]')?.click();
     });
   });
 
-  // ── CHART ① — Wages (line + area + dots) ─────────────────────────
-  (function() {
-    const el = document.getElementById("chart-wages");
+  // ── D3 chart helpers ──────────────────────────────────────────────────────
+  function getDims(id: string, ml:number, mr:number, mt:number, mb:number) {
+    const el = document.getElementById(id)!;
+    const totalH = CHART_H[id] ?? 220;
+    const totalW = el.clientWidth || 600;
+    const W = totalW - ml - mr;
+    const H = totalH - mt - mb;
+    return { el, W: Math.max(W,10), H: Math.max(H,10), totalW, totalH };
+  }
+
+  // ── CHART ① — Wages ───────────────────────────────────────────────────────
+  function initWagesChart() {
+    const { el, W, H, totalW, totalH } = getDims("chart-wages", 68, 60, 16, 36);
     if (!el) return;
     const series: any[] = JSON.parse(el.dataset.series || "[]");
-    const margin = { top:16, right:60, bottom:36, left:68 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = el.clientHeight - margin.top - margin.bottom;
+    const ml=68,mr=60,mt=16,mb=36;
     const svg = d3.select(el).append("svg").attr("width","100%")
-      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-
-    const x = d3.scaleTime()
-      .domain([new Date("2013-01-01"), new Date("2026-01-01")]).range([0, W]);
-    const y = d3.scaleLinear()
-      .domain([0, (d3.max(series,(d:any)=>d.top_gta_per_hr) ?? 2e6) * 1.2]).range([H,0]);
-
-    // Grid
+      .attr("viewBox",`0 0 ${totalW} ${totalH}`)
+      .append("g").attr("transform",`translate(${ml},${mt})`);
+    const x = d3.scaleTime().domain([new Date("2013-01-01"),new Date("2026-01-01")]).range([0,W]);
+    const y = d3.scaleLinear().domain([0,(d3.max(series,(d:any)=>d.top_gta_per_hr)??2e6)*1.2]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
       .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
-
-    // Area fill
-    const areaFn = d3.area<any>()
-      .x(d=>x(new Date(d.date))).y0(H).y1(d=>y(d.top_gta_per_hr)).curve(d3.curveMonotoneX);
-    const defs = svg.append("defs");
-    const grad = defs.append("linearGradient").attr("id","wage-grad").attr("x1","0").attr("y1","0").attr("x2","0").attr("y2","1");
+    const defs=svg.append("defs");
+    const grad=defs.append("linearGradient").attr("id","wage-grad2").attr("x1","0").attr("y1","0").attr("x2","0").attr("y2","1");
     grad.append("stop").attr("offset","0%").attr("stop-color",cc.bar).attr("stop-opacity",0.25);
     grad.append("stop").attr("offset","100%").attr("stop-color",cc.bar).attr("stop-opacity",0.02);
-    svg.append("path").datum(series).attr("fill","url(#wage-grad)").attr("d",areaFn as any);
-
-    // Line
-    const lineFn = d3.line<any>()
-      .x(d=>x(new Date(d.date))).y(d=>y(d.top_gta_per_hr)).curve(d3.curveMonotoneX);
+    const areaFn=d3.area<any>().x(d=>x(new Date(d.date))).y0(H).y1(d=>y(d.top_gta_per_hr)).curve(d3.curveMonotoneX);
+    svg.append("path").datum(series).attr("fill","url(#wage-grad2)").attr("d",areaFn as any);
+    const lineFn=d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d.top_gta_per_hr)).curve(d3.curveMonotoneX);
     svg.append("path").datum(series).attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",2).attr("d",lineFn as any);
-
-    // Dots + labels
-    series.forEach((d:any, i:number) => {
-      const cx = x(new Date(d.date)), cy = y(d.top_gta_per_hr);
-      const isLast = i === series.length - 1;
-      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3)
-        .attr("fill",isLast?cc.bar:cc.bg).attr("stroke",cc.bar).attr("stroke-width",isLast?0:1.5);
-      if (isLast) {
-        svg.append("text").attr("x",cx+8).attr("y",cy+4)
-          .attr("fill",cc.bar).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold")
-          .text(`$${Math.round(d.top_gta_per_hr/1000)}K/hr`);
-      }
+    series.forEach((d:any,i:number)=>{
+      const cx=x(new Date(d.date)),cy=y(d.top_gta_per_hr),isLast=i===series.length-1;
+      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3).attr("fill",isLast?cc.bar:cc.bg).attr("stroke",cc.bar).attr("stroke-width",1.5);
+      if(isLast) svg.append("text").attr("x",cx+8).attr("y",cy+4).attr("fill",cc.bar).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold").text(`$${Math.round(d.top_gta_per_hr/1000)}K/hr`);
     });
-
-    // Key annotation lines
-    const annotations = [
-      { date:"2020-12-15", label:"Cayo", color:cc.green },
-      { date:"2022-01-20", label:"Nerf", color:cc.red },
-      { date:"2022-12-13", label:"Acid Lab", color:cc.teal },
-    ];
-    annotations.forEach(a => {
-      const xPos = x(new Date(a.date));
-      svg.append("line").attr("x1",xPos).attr("x2",xPos).attr("y1",0).attr("y2",H)
-        .attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.6);
-      svg.append("text").attr("x",xPos+3).attr("y",12)
-        .attr("fill",a.color).attr("font-size","8").attr("font-family","monospace").text(a.label);
+    [{date:"2020-12-15",label:"Cayo",color:cc.green},{date:"2022-01-20",label:"Nerf",color:cc.red},{date:"2022-12-13",label:"Acid Lab",color:cc.teal}].forEach(a=>{
+      const xp=x(new Date(a.date));
+      svg.append("line").attr("x1",xp).attr("x2",xp).attr("y1",0).attr("y2",H).attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.6);
+      svg.append("text").attr("x",xp+3).attr("y",12).attr("fill",a.color).attr("font-size","8").attr("font-family","monospace").text(a.label);
     });
-
-    // Axes
-    svg.append("g").attr("transform",`translate(0,${H})`)
-      .call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
-      .call(g=>g.select(".domain").attr("stroke",cc.border2))
-      .call(g=>g.selectAll(".tick line").remove())
+    svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2)).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
-    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${+d/1e6 >= 1 ? (+d/1e6).toFixed(1)+"M" : (+d/1e3)+"K"}`))
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${+d>=1e6?(+d/1e6).toFixed(1)+"M":(+d/1e3)+"K"}`))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
-  })();
+  }
 
-  // ── CHART ② — Spending Distribution (stacked bar by era) ─────────
-  (function() {
-    const el = document.getElementById("chart-spending");
-    if (!el) return;
-    const eras: any[] = JSON.parse(el.dataset.eras || "[]");
-    const margin = { top:16, right:24, bottom:48, left:48 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = el.clientHeight - margin.top - margin.bottom;
-    const svg = d3.select(el).append("svg").attr("width","100%")
-      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-
-    const cats: { key:string; color:string }[] = [
-      { key:"vehicles_pct",   color:cc.bar    },
-      { key:"properties_pct", color:cc.indigo },
-      { key:"weapons_pct",    color:cc.teal   },
-    ];
-
-    const x = d3.scaleBand().domain(eras.map(e=>e.label)).range([0,W]).padding(0.25);
-    const y = d3.scaleLinear().domain([0,100]).range([H,0]);
-
-    // Stacked bars
-    eras.forEach(era => {
-      let yOff = 0;
-      cats.forEach(cat => {
-        const val = era[cat.key] as number;
-        svg.append("rect")
-          .attr("x", x(era.label)??0).attr("y", y(yOff+val)).attr("rx",2)
-          .attr("width", x.bandwidth()).attr("height", y(yOff)-y(yOff+val))
-          .attr("fill", cat.color).attr("opacity",0.85);
-        yOff += val;
+  // ── CHART ② — Spending Distribution ──────────────────────────────────────
+  function initSpendingChart() {
+    const {el,W,H,totalW,totalH}=getDims("chart-spending",48,24,16,48);
+    if(!el) return;
+    const eras:any[]=JSON.parse(el.dataset.eras||"[]");
+    const ml=48,mr=24,mt=16,mb=48;
+    const svg=d3.select(el).append("svg").attr("width","100%").attr("viewBox",`0 0 ${totalW} ${totalH}`).append("g").attr("transform",`translate(${ml},${mt})`);
+    const x=d3.scaleBand().domain(eras.map(e=>e.label)).range([0,W]).padding(0.25);
+    const y=d3.scaleLinear().domain([0,100]).range([H,0]);
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+    const cats=[{key:"vehicles_pct",color:cc.bar},{key:"properties_pct",color:cc.indigo},{key:"weapons_pct",color:cc.teal}];
+    eras.forEach(era=>{
+      let yOff=0;
+      cats.forEach(cat=>{
+        const val=era[cat.key] as number;
+        svg.append("rect").attr("x",x(era.label)??0).attr("y",y(yOff+val)).attr("rx",2)
+          .attr("width",x.bandwidth()).attr("height",Math.max(0,y(yOff)-y(yOff+val))).attr("fill",cat.color).attr("opacity",0.85);
+        yOff+=val;
       });
     });
-
-    // X labels
-    svg.append("g").attr("transform",`translate(0,${H})`)
-      .call(d3.axisBottom(x))
-      .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace")
-        .attr("transform","rotate(-30)").attr("text-anchor","end").attr("dy","0.5em"));
-
+    svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace").attr("transform","rotate(-30)").attr("text-anchor","end").attr("dy","0.5em"));
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`${d}%`))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+  }
 
-    // Grid
+  // ── CHART ③ — Savings Profile ─────────────────────────────────────────────
+  function initSavingsChart() {
+    const {el,W,H,totalW,totalH}=getDims("chart-savings",72,24,16,32);
+    if(!el) return;
+    const stages:any[]=JSON.parse(el.dataset.stages||"[]");
+    const ml=72,mr=24,mt=16,mb=32;
+    const svg=d3.select(el).append("svg").attr("width","100%").attr("viewBox",`0 0 ${totalW} ${totalH}`).append("g").attr("transform",`translate(${ml},${mt})`);
+    const x=d3.scalePoint().domain(stages.map(s=>s.stage)).range([0,W]);
+    const y=d3.scaleLinear().domain([0,(d3.max(stages,(s:any)=>s.estimated_balance)??1)*1.15]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
-      .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
-  })();
-
-  // ── CHART ③ — Savings Profile (area curve S1→S100) ───────────────
-  (function() {
-    const el = document.getElementById("chart-savings");
-    if (!el) return;
-    const stages: any[] = JSON.parse(el.dataset.stages || "[]");
-    const margin = { top:16, right:24, bottom:32, left:72 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = el.clientHeight - margin.top - margin.bottom;
-    const svg = d3.select(el).append("svg").attr("width","100%")
-      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-
-    const x = d3.scalePoint().domain(stages.map(s=>s.stage)).range([0,W]);
-    const y = d3.scaleLinear().domain([0,(d3.max(stages,(s:any)=>s.estimated_balance)??1)*1.15]).range([H,0]);
-
-    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
-      .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
-
-    const defs = svg.append("defs");
-    const grad = defs.append("linearGradient").attr("id","sav-grad").attr("x1","0").attr("y1","0").attr("x2","0").attr("y2","1");
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+    const defs=svg.append("defs");
+    const grad=defs.append("linearGradient").attr("id","sav-grad2").attr("x1","0").attr("y1","0").attr("x2","0").attr("y2","1");
     grad.append("stop").attr("offset","0%").attr("stop-color",cc.green).attr("stop-opacity",0.25);
     grad.append("stop").attr("offset","100%").attr("stop-color",cc.green).attr("stop-opacity",0.02);
-
-    const areaFn = d3.area<any>().x(d=>x(d.stage)??0).y0(H).y1(d=>y(d.estimated_balance)).curve(d3.curveBasis);
-    svg.append("path").datum(stages).attr("fill","url(#sav-grad)").attr("d",areaFn as any);
-    const lineFn = d3.line<any>().x(d=>x(d.stage)??0).y(d=>y(d.estimated_balance)).curve(d3.curveBasis);
+    const areaFn=d3.area<any>().x(d=>x(d.stage)??0).y0(H).y1(d=>y(d.estimated_balance)).curve(d3.curveBasis);
+    svg.append("path").datum(stages).attr("fill","url(#sav-grad2)").attr("d",areaFn as any);
+    const lineFn=d3.line<any>().x(d=>x(d.stage)??0).y(d=>y(d.estimated_balance)).curve(d3.curveBasis);
     svg.append("path").datum(stages).attr("fill","none").attr("stroke",cc.green).attr("stroke-width",2).attr("d",lineFn as any);
-
-    stages.forEach((s:any,i:number) => {
-      const cx = x(s.stage)??0, cy = y(s.estimated_balance);
-      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",3)
-        .attr("fill",cc.bg).attr("stroke",cc.green).attr("stroke-width",1.5);
-    });
-    // Cap annotation
-    svg.append("text").attr("x",x("S100")??W).attr("y",y(stages.at(-1).estimated_balance)-8)
-      .attr("text-anchor","end").attr("fill",cc.green).attr("font-size","9").attr("font-family","monospace")
-      .text(`$${Math.round(stages.at(-1).estimated_balance/1e6*10)/10}B est.`);
-
-    svg.append("g").attr("transform",`translate(0,${H})`)
-      .call(d3.axisBottom(x))
-      .call(g=>g.select(".domain").attr("stroke",cc.border2))
-      .call(g=>g.selectAll(".tick line").remove())
+    stages.forEach((s:any)=>{ const cx=x(s.stage)??0,cy=y(s.estimated_balance); svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",3).attr("fill",cc.bg).attr("stroke",cc.green).attr("stroke-width",1.5); });
+    svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2)).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${+d>=1e6?(+d/1e6).toFixed(0)+"M":(+d/1e3)+"K"}`))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
-  })();
+  }
 
-  // ── CHART ④ — Shark Card injections (bar) ────────────────────────
-  (function() {
-    const el = document.getElementById("chart-sharkcards");
-    if (!el) return;
-    const years: any[] = JSON.parse(el.dataset.years || "[]");
-    const margin = { top:16, right:24, bottom:36, left:48 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = el.clientHeight - margin.top - margin.bottom;
-    const svg = d3.select(el).append("svg").attr("width","100%")
-      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-
-    const x = d3.scaleBand().domain(years.map(y=>String(y.calendar_year))).range([0,W]).padding(0.2);
-    const yMax = (d3.max(years,(y:any)=>y.recurrent_bn) ?? 2) * 1.2;
-    const y = d3.scaleLinear().domain([0,yMax]).range([H,0]);
-
+  // ── CHART ④ — Shark Cards ─────────────────────────────────────────────────
+  function initSharkChart() {
+    const {el,W,H,totalW,totalH}=getDims("chart-sharkcards",48,24,16,36);
+    if(!el) return;
+    const years:any[]=JSON.parse(el.dataset.years||"[]");
+    const ml=48,mr=24,mt=16,mb=36;
+    const svg=d3.select(el).append("svg").attr("width","100%").attr("viewBox",`0 0 ${totalW} ${totalH}`).append("g").attr("transform",`translate(${ml},${mt})`);
+    const x=d3.scaleBand().domain(years.map(y=>String(y.calendar_year))).range([0,W]).padding(0.2);
+    const yMax=(d3.max(years,(y:any)=>y.recurrent_bn)??2)*1.2;
+    const y=d3.scaleLinear().domain([0,yMax]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
-      .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
-
-    years.forEach((yr:any) => {
-      const bx = x(String(yr.calendar_year))??0;
-      const bh = H - y(yr.recurrent_bn);
-      svg.append("rect").attr("x",bx).attr("y",y(yr.recurrent_bn))
-        .attr("width",x.bandwidth()).attr("height",bh).attr("rx",2)
-        .attr("fill",cc.indigo).attr("opacity",0.8);
-    });
-    // Peak annotation
-    const peak = years.reduce((a:any,b:any)=>b.recurrent_bn>a.recurrent_bn?b:a);
-    const px = (x(String(peak.calendar_year))??0) + x.bandwidth()/2;
-    svg.append("text").attr("x",px).attr("y",y(peak.recurrent_bn)-5).attr("text-anchor","middle")
-      .attr("fill",cc.indigo).attr("font-size","9").attr("font-family","monospace").attr("font-weight","bold")
-      .text(`$${peak.recurrent_bn}B`);
-
-    svg.append("g").attr("transform",`translate(0,${H})`)
-      .call(d3.axisBottom(x).tickValues(years.filter((_:any,i:number)=>i%3===0).map((y:any)=>String(y.calendar_year))))
-      .call(g=>g.select(".domain").attr("stroke",cc.border2))
-      .call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+    years.forEach((yr:any)=>{ const bx=x(String(yr.calendar_year))??0,bh=Math.max(0,H-y(yr.recurrent_bn)); svg.append("rect").attr("x",bx).attr("y",y(yr.recurrent_bn)).attr("width",x.bandwidth()).attr("height",bh).attr("rx",2).attr("fill",cc.indigo).attr("opacity",0.8); });
+    const peak=years.reduce((a:any,b:any)=>b.recurrent_bn>a.recurrent_bn?b:a);
+    const px=(x(String(peak.calendar_year))??0)+x.bandwidth()/2;
+    svg.append("text").attr("x",px).attr("y",y(peak.recurrent_bn)-5).attr("text-anchor","middle").attr("fill",cc.indigo).attr("font-size","9").attr("font-family","monospace").attr("font-weight","bold").text(`$${peak.recurrent_bn}B`);
+    svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).tickValues(years.filter((_:any,i:number)=>i%3===0).map((y:any)=>String(y.calendar_year))))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2)).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${+d}B`))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
-  })();
+  }
 
-  // ── CHART ⑤ — Passive stack (stacked area) ───────────────────────
-  (function() {
-    const el = document.getElementById("chart-investment");
-    if (!el) return;
-    const series: any[] = JSON.parse(el.dataset.series || "[]");
-    const margin = { top:12, right:100, bottom:36, left:68 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = el.clientHeight - margin.top - margin.bottom;
-    const svg = d3.select(el).append("svg").attr("width","100%")
-      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-
-    const x = d3.scaleTime()
-      .domain([new Date("2013-01-01"), new Date("2026-01-01")]).range([0,W]);
-    const yMax = (d3.max(series,(s:any)=>s.total) ?? 1) * 1.2;
-    const y = d3.scaleLinear().domain([0,yMax]).range([H,0]);
-
+  // ── CHART ⑤ — Passive Stack ───────────────────────────────────────────────
+  function initPassiveChart() {
+    const {el,W,H,totalW,totalH}=getDims("chart-investment",68,100,12,36);
+    if(!el) return;
+    const series:any[]=JSON.parse(el.dataset.series||"[]");
+    const ml=68,mr=100,mt=12,mb=36;
+    const svg=d3.select(el).append("svg").attr("width","100%").attr("viewBox",`0 0 ${totalW} ${totalH}`).append("g").attr("transform",`translate(${ml},${mt})`);
+    const x=d3.scaleTime().domain([new Date("2016-01-01"),new Date("2026-01-01")]).range([0,W]);
+    const yMax=(d3.max(series,(s:any)=>s.total)??1)*1.2;
+    const y=d3.scaleLinear().domain([0,yMax]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
-      .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
-
-    const lines: {key:string;color:string;label:string}[] = [
-      { key:"bunker",    color:cc.bar,    label:"Bunker" },
-      { key:"nightclub", color:cc.teal,   label:"Nightclub" },
-      { key:"mc_cocaine",color:cc.indigo, label:"MC Cocaine" },
-      { key:"acid_lab",  color:cc.green,  label:"Acid Lab" },
-    ];
-
-    lines.forEach(l => {
-      const filtered = series.filter((s:any)=>s[l.key]>0);
-      if (!filtered.length) return;
-      const lineFn = d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d[l.key])).curve(d3.curveStepAfter);
-      svg.append("path").datum(filtered).attr("fill","none").attr("stroke",l.color)
-        .attr("stroke-width",1.5).attr("stroke-dasharray",l.key==="mc_cocaine"?"4,2":"0").attr("d",lineFn as any);
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+    const lines:[string,string][]=[["bunker",cc.bar],["nightclub",cc.teal],["mc_cocaine",cc.indigo],["acid_lab",cc.green]];
+    lines.forEach(([key,color])=>{
+      const filtered=series.filter((s:any)=>s[key]>0);
+      if(!filtered.length) return;
+      const lf=d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d[key])).curve(d3.curveStepAfter);
+      svg.append("path").datum(filtered).attr("fill","none").attr("stroke",color).attr("stroke-width",1.5).attr("d",lf as any);
     });
-
-    // Total line
-    const totalFn = d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d.total)).curve(d3.curveStepAfter);
-    svg.append("path").datum(series).attr("fill","none").attr("stroke","white")
-      .attr("stroke-width",2).attr("opacity",0.4).attr("d",totalFn as any);
-    // Total label
-    const last = series.at(-1);
-    svg.append("text").attr("x",x(new Date(last.date))+6).attr("y",y(last.total)+4)
-      .attr("fill","white").attr("font-size","9").attr("font-family","monospace").attr("opacity",0.6)
-      .text(`$${Math.round(last.total/1000)}K/hr`);
-
-    svg.append("g").attr("transform",`translate(0,${H})`)
-      .call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
-      .call(g=>g.select(".domain").attr("stroke",cc.border2))
-      .call(g=>g.selectAll(".tick line").remove())
+    const lf=d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d.total)).curve(d3.curveStepAfter);
+    svg.append("path").datum(series).attr("fill","none").attr("stroke","white").attr("stroke-width",2).attr("opacity",0.35).attr("d",lf as any);
+    const last=series.at(-1);
+    if(last) svg.append("text").attr("x",x(new Date(last.date))+6).attr("y",y(last.total)+4).attr("fill","white").attr("font-size","9").attr("font-family","monospace").attr("opacity",0.6).text(`$${Math.round(last.total/1000)}K/hr`);
+    svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(5).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2)).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${Math.round(+d/1000)}K`))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
-  })();
+  }
 
-  // ── CHART — GTA-PPI line chart ────────────────────────────────────
-  (function() {
-    const el = document.getElementById("chart-ppi");
-    if (!el) return;
-    const series: any[] = JSON.parse(el.dataset.series || "[]");
-    const margin = { top:16, right:60, bottom:48, left:56 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = el.clientHeight - margin.top - margin.bottom;
-    const svg = d3.select(el).append("svg").attr("width","100%")
-      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-
-    const x = d3.scaleTime()
-      .domain([new Date("2013-01-01"), new Date("2026-01-01")]).range([0,W]);
-    const y = d3.scaleLinear()
-      .domain([0, (d3.max(series,(s:any)=>s.ppi)??200)*1.2]).range([H,0]);
-
+  // ── CHART — GTA-PPI ───────────────────────────────────────────────────────
+  function initPpiChart() {
+    const {el,W,H,totalW,totalH}=getDims("chart-ppi",56,60,16,48);
+    if(!el) return;
+    const series:any[]=JSON.parse(el.dataset.series||"[]");
+    const ml=56,mr=60,mt=16,mb=48;
+    const svg=d3.select(el).append("svg").attr("width","100%").attr("viewBox",`0 0 ${totalW} ${totalH}`).append("g").attr("transform",`translate(${ml},${mt})`);
+    const x=d3.scaleTime().domain([new Date("2013-01-01"),new Date("2026-01-01")]).range([0,W]);
+    const y=d3.scaleLinear().domain([0,(d3.max(series,(s:any)=>s.ppi)??200)*1.2]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
-      .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
-
-    // Baseline 100 reference line
-    svg.append("line").attr("x1",0).attr("x2",W).attr("y1",y(100)).attr("y2",y(100))
-      .attr("stroke",cc.text6).attr("stroke-width",1).attr("stroke-dasharray","4,2");
-    svg.append("text").attr("x",W+4).attr("y",y(100)+4)
-      .attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace").text("100");
-
-    // Area
-    const defs = svg.append("defs");
-    const grad = defs.append("linearGradient").attr("id","ppi-grad").attr("x1","0").attr("y1","0").attr("x2","0").attr("y2","1");
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+    svg.append("line").attr("x1",0).attr("x2",W).attr("y1",y(100)).attr("y2",y(100)).attr("stroke",cc.text6).attr("stroke-width",1).attr("stroke-dasharray","4,2");
+    svg.append("text").attr("x",W+4).attr("y",y(100)+4).attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace").text("100");
+    const defs=svg.append("defs");
+    const grad=defs.append("linearGradient").attr("id","ppi-grad2").attr("x1","0").attr("y1","0").attr("x2","0").attr("y2","1");
     grad.append("stop").attr("offset","0%").attr("stop-color",cc.red).attr("stop-opacity",0.2);
     grad.append("stop").attr("offset","100%").attr("stop-color",cc.red).attr("stop-opacity",0.01);
-    const areaFn = d3.area<any>().x(d=>x(new Date(d.date))).y0(H).y1(d=>y(d.ppi)).curve(d3.curveMonotoneX);
-    svg.append("path").datum(series).attr("fill","url(#ppi-grad)").attr("d",areaFn as any);
-    const lineFn = d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d.ppi)).curve(d3.curveMonotoneX);
+    const areaFn=d3.area<any>().x(d=>x(new Date(d.date))).y0(H).y1(d=>y(d.ppi)).curve(d3.curveMonotoneX);
+    svg.append("path").datum(series).attr("fill","url(#ppi-grad2)").attr("d",areaFn as any);
+    const lineFn=d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d.ppi)).curve(d3.curveMonotoneX);
     svg.append("path").datum(series).attr("fill","none").attr("stroke",cc.red).attr("stroke-width",2).attr("d",lineFn as any);
-
-    // Dots + event labels
-    series.forEach((s:any,i:number) => {
-      const cx = x(new Date(s.date)), cy = y(s.ppi);
-      const isLast = i === series.length - 1;
-      const dotColor = s.event==="nerf"?cc.red : s.event==="buff"?cc.green : s.event==="basket_expansion"?cc.purple : cc.bar;
-      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3.5)
-        .attr("fill",isLast?cc.red:cc.bg).attr("stroke",dotColor).attr("stroke-width",1.5);
-      if (isLast) {
-        svg.append("text").attr("x",cx+7).attr("y",cy+4)
-          .attr("fill",cc.red).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold")
-          .text(`PPI ${s.ppi}`);
-      }
+    series.forEach((s:any,i:number)=>{
+      const cx=x(new Date(s.date)),cy=y(s.ppi),isLast=i===series.length-1;
+      const dotColor=s.event==="nerf"?cc.red:s.event==="buff"?cc.green:s.event==="basket_expansion"?cc.purple:cc.bar;
+      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3.5).attr("fill",isLast?cc.red:cc.bg).attr("stroke",dotColor).attr("stroke-width",1.5);
+      if(isLast) svg.append("text").attr("x",cx+7).attr("y",cy+4).attr("fill",cc.red).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold").text(`PPI ${s.ppi}`);
     });
-
-    // Key annotations
-    [
-      { date:"2018-07-24", label:"Oppressor\nbasket+153%", color:cc.purple },
-      { date:"2020-12-15", label:"Cayo all-time\nbest →",   color:cc.green },
-      { date:"2022-01-20", label:"Cayo nerf",               color:cc.red   },
-    ].forEach(a => {
-      const xp = x(new Date(a.date));
-      svg.append("line").attr("x1",xp).attr("x2",xp).attr("y1",0).attr("y2",H)
-        .attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.5);
-      a.label.split("\n").forEach((line,li) => {
-        svg.append("text").attr("x",xp+3).attr("y",16+li*10)
-          .attr("fill",a.color).attr("font-size","7.5").attr("font-family","monospace").text(line);
-      });
+    [{date:"2018-07-24",label:"Oppressor +153%",color:cc.purple},{date:"2020-12-15",label:"Cayo all-time low",color:cc.green},{date:"2022-01-20",label:"Cayo nerf",color:cc.red}].forEach(a=>{
+      const xp=x(new Date(a.date));
+      svg.append("line").attr("x1",xp).attr("x2",xp).attr("y1",0).attr("y2",H).attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.5);
+      svg.append("text").attr("x",xp+3).attr("y",16).attr("fill",a.color).attr("font-size","7.5").attr("font-family","monospace").text(a.label);
     });
-
-    svg.append("g").attr("transform",`translate(0,${H})`)
-      .call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
-      .call(g=>g.select(".domain").attr("stroke",cc.border2))
-      .call(g=>g.selectAll(".tick line").remove())
+    svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2)).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(5))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
-  })();
+  }
 
-  // ── CHART — Health Monitor (multi-line normalised) ────────────────
-  (function() {
-    const el = document.getElementById("chart-health");
-    if (!el) return;
-    const ppiSeries:  any[] = JSON.parse(el.dataset.ppi      || "[]");
-    const yieldData:  any[] = JSON.parse(el.dataset.yields   || "[]");
-    const revenue:    any[] = JSON.parse(el.dataset.revenue  || "[]");
-    const passive:    any[] = JSON.parse(el.dataset.passive  || "[]");
-
-    const margin = { top:16, right:24, bottom:48, left:40 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = el.clientHeight - margin.top - margin.bottom;
-    const svg = d3.select(el).append("svg").attr("width","100%")
-      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-
-    const x = d3.scaleTime()
-      .domain([new Date("2013-01-01"), new Date("2026-01-01")]).range([0,W]);
-    const y = d3.scaleLinear().domain([0,6]).range([H,0]);
-
+  // ── CHART — Health Monitor ────────────────────────────────────────────────
+  function initHealthChart() {
+    const {el,W,H,totalW,totalH}=getDims("chart-health",40,24,16,48);
+    if(!el) return;
+    const ppiSeries:any[]=JSON.parse(el.dataset.ppi||"[]");
+    const yieldData:any[]=JSON.parse(el.dataset.yields||"[]");
+    const revenue:any[]=JSON.parse(el.dataset.revenue||"[]");
+    const passive:any[]=JSON.parse(el.dataset.passive||"[]");
+    const ml=40,mr=24,mt=16,mb=48;
+    const svg=d3.select(el).append("svg").attr("width","100%").attr("viewBox",`0 0 ${totalW} ${totalH}`).append("g").attr("transform",`translate(${ml},${mt})`);
+    const x=d3.scaleTime().domain([new Date("2013-01-01"),new Date("2026-01-01")]).range([0,W]);
+    const y=d3.scaleLinear().domain([0,6]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(6).tickSize(-W).tickFormat(()=>""))
-      .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
-
-    // Normalise each series to 0–5 scale
-    const maxYield = d3.max(yieldData,(d:any)=>d.top_gta_per_hr) ?? 1;
-    const maxRev   = d3.max(revenue,(d:any)=>d.recurrent_bn) ?? 1;
-    const maxPass  = d3.max(passive,(d:any)=>d.total) ?? 1;
-
-    function drawLine(data: any[], dateKey:string, valFn:(d:any)=>number, color:string, dashed=false) {
-      const lineFn = d3.line<any>()
-        .x(d=>x(new Date(d[dateKey]))).y(d=>y(valFn(d)))
-        .curve(d3.curveMonotoneX);
-      svg.append("path").datum(data).attr("fill","none").attr("stroke",color)
-        .attr("stroke-width",2).attr("stroke-dasharray",dashed?"6,3":"0").attr("d",lineFn as any);
-      const last = data.at(-1);
-      if (last) {
-        const lx = x(new Date(last[dateKey])), ly = y(valFn(last));
-        svg.append("circle").attr("cx",lx).attr("cy",ly).attr("r",4)
-          .attr("fill",color).attr("stroke",cc.bg).attr("stroke-width",1.5);
-        svg.append("text").attr("x",lx+7).attr("y",ly+4)
-          .attr("fill",color).attr("font-size","9").attr("font-family","monospace").attr("font-weight","bold")
-          .text(valFn(last).toFixed(1));
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+    const maxYield=d3.max(yieldData,(d:any)=>d.top_gta_per_hr)??1;
+    const maxRev=d3.max(revenue,(d:any)=>d.recurrent_bn)??1;
+    const maxPass=d3.max(passive,(d:any)=>d.total)??1;
+    const maxPPI=d3.max(ppiSeries,(s:any)=>s.ppi)??1;
+    function dl(data:any[],dateKey:string,valFn:(d:any)=>number,color:string,dashed=false){
+      if(!data.length) return;
+      const lf=d3.line<any>().x(d=>x(new Date(String(d[dateKey])))).y(d=>y(Math.min(6,Math.max(0,valFn(d))))).curve(d3.curveMonotoneX);
+      svg.append("path").datum(data).attr("fill","none").attr("stroke",color).attr("stroke-width",2).attr("stroke-dasharray",dashed?"6,3":"0").attr("d",lf as any);
+      const last=data.at(-1);
+      if(last){
+        const lx=x(new Date(String(last[dateKey]))),ly=y(Math.min(6,Math.max(0,valFn(last))));
+        svg.append("circle").attr("cx",lx).attr("cy",ly).attr("r",4).attr("fill",color).attr("stroke",cc.bg).attr("stroke-width",1.5);
+        svg.append("text").attr("x",lx+7).attr("y",ly+4).attr("fill",color).attr("font-size","9").attr("font-family","monospace").attr("font-weight","bold").text(valFn(last).toFixed(1));
       }
     }
-
-    // Yield (amber)
-    drawLine(yieldData, "date", d=>(d.top_gta_per_hr/maxYield)*5, cc.bar);
-    // Shark Card reliance (orange)
-    drawLine(revenue, "calendar_year", d=>(d.recurrent_bn/maxRev)*4, "#fb923c");
-    // Passive stack (green)
-    drawLine(passive.filter((s:any)=>s.total>0), "date", d=>(d.total/maxPass)*3, cc.green);
-    // GTA-PPI inverted (indigo dashed — lower is better, so invert)
-    const maxPPI = d3.max(ppiSeries,(s:any)=>s.ppi) ?? 1;
-    drawLine(ppiSeries, "date", d=>((maxPPI-d.ppi)/maxPPI)*5, cc.indigo, true);
-
-    svg.append("g").attr("transform",`translate(0,${H})`)
-      .call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
-      .call(g=>g.select(".domain").attr("stroke",cc.border2))
-      .call(g=>g.selectAll(".tick line").remove())
+    dl(yieldData,"date",d=>(d.top_gta_per_hr/maxYield)*5,cc.bar);
+    dl(revenue.filter((d:any)=>d.calendar_year>=2013),"calendar_year",d=>(d.recurrent_bn/maxRev)*4,"#fb923c");
+    dl(passive.filter((s:any)=>s.total>0),"date",d=>(d.total/maxPass)*3,cc.green);
+    dl(ppiSeries,"date",d=>((maxPPI-d.ppi)/maxPPI)*5,cc.indigo,true);
+    svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2)).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(6))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
-  })();
+  }
+
+  // ── Register deferred inits by tab ────────────────────────────────────────
+  defer("flows",  initWagesChart);
+  defer("flows",  initSpendingChart);
+  defer("flows",  initSavingsChart);
+  defer("flows",  initSharkChart);
+  defer("flows",  initPassiveChart);
+  defer("health", initPpiChart);
+  defer("health", initHealthChart);
+
+  // Init flows tab immediately (it may be activated by actor-btn click)
+  // Use requestAnimationFrame to ensure DOM is laid out
+  requestAnimationFrame(() => {
+    document.querySelector<HTMLButtonElement>('[data-tab="flows"]')?.click();
+    // Restore model tab as default
+    document.querySelector<HTMLButtonElement>('[data-tab="model"]')?.click();
+  });
 </script>
