@@ -1,0 +1,1156 @@
+---
+import Base from "../../layouts/Base.astro";
+import CrossLinks from "../../components/CrossLinks.astro";
+import ShareButton from "../../components/ShareButton.astro";
+
+import ppiData          from "../../../data/gta-5/economy/gta-ppi.json";
+import metaHistory      from "../../../data/gta-5/economy/meta-history.json";
+import spendingData     from "../../../data/gta-5/economy/spending-distribution.json";
+import savingsData      from "../../../data/gta-5/economy/savings-profile.json";
+import passiveData      from "../../../data/gta-5/economy/passive-stack.json";
+import revenueData      from "../../../data/franchise/revenue-split.json";
+import priceBasket      from "../../../data/gta-5/economy/price-basket.json";
+
+const ppiSeries     = (ppiData as any).series as any[];
+const metaSeries    = (metaHistory as any).meta_history as any[];
+const spendEras     = (spendingData as any).eras as any[];
+const passiveSeries = (passiveData as any).series as any[];
+const revYears      = (revenueData as any).years as any[];
+const basketItems   = (priceBasket as any).items as any[];
+const basketEras    = (priceBasket as any).era_prices as any[];
+const savingsStages = (savingsData as any).stages as any[];
+const savingsRate   = (savingsData as any).savings_rate_history as any[];
+
+// Derived headline stats
+const latestPPI     = ppiSeries.at(-1);
+const peakPPI       = ppiSeries.reduce((a:any,b:any) => b.ppi > a.ppi ? b : a);
+const troughPPI     = ppiSeries.reduce((a:any,b:any) => b.ppi < a.ppi ? b : a);
+const latestYield   = metaSeries.at(-1);
+const latestRecurr  = revYears.filter((y:any) => y.recurrent_bn > 0).at(-1);
+const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
+---
+
+<Base
+  title="GTA Online Economy Model"
+  description="A macroeconomic analysis of GTA Online's in-game circular economy — wages, spending, savings, Shark Card injections, and the GTA-PPI purchasing power index."
+  ogPage="gta-v"
+>
+
+  <!-- ── Page header ──────────────────────────────────────── -->
+  <section class="relative border-b border-[#1e1e23] overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="/assets/gta5/story/gta-v-cover.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 40%" aria-hidden="true" />
+      <div class="absolute inset-0" style="background:linear-gradient(to right,#0a0a0d 0%,#0a0a0dcc 55%,#0a0a0d88 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,#0a0a0d 100%)"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <div class="flex items-start justify-between flex-wrap gap-6">
+        <div>
+          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">// CIRCULAR FLOW · 3-ACTOR MODEL</div>
+          <h1 class="text-4xl sm:text-5xl font-black text-white leading-tight mb-1" style="font-family:'Inter',sans-serif">
+            Five Flows.<br/>One Economy.
+          </h1>
+          <p class="text-sm text-zinc-400 max-w-sm mt-3" style="font-family:'Inter',sans-serif">
+            One chart per arrow in the circular flow. GTA Online data 2013–2025. Each chart tracks a single money flow between actors.
+          </p>
+        </div>
+        <!-- Actor selector -->
+        <div class="flex flex-col gap-2 shrink-0">
+          <div class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest mb-1">// ACTORS</div>
+          <div class="flex items-stretch gap-1.5">
+            <button id="actor-businesses" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-gta-gold/50 bg-gta-gold/10 text-gta-gold transition-all" data-actor="businesses">
+              <span class="text-[11px] font-black tracking-wider">BUSINESSES</span>
+              <span class="text-[9px] font-mono text-gta-gold/60 mt-0.5">produce · contract</span>
+              <div class="flex flex-col items-center gap-0.5 mt-2 text-[9px] font-mono">
+                <span class="text-gta-gold/80">① WAGES →</span>
+                <span class="text-zinc-600">← SPENDING ②</span>
+              </div>
+            </button>
+            <button id="actor-players" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-[#2a2a31] text-zinc-400 transition-all hover:border-zinc-600" data-actor="players">
+              <span class="text-[11px] font-black tracking-wider">PLAYERS</span>
+              <span class="text-[9px] font-mono text-zinc-600 mt-0.5">earn · spend · save</span>
+              <div class="flex flex-col items-center gap-0.5 mt-2 text-[9px] font-mono">
+                <span class="text-zinc-500">③ SAVINGS →</span>
+                <span class="text-zinc-500">← SHARK CARDS ④</span>
+              </div>
+            </button>
+            <button id="actor-mazebank" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-[#2a2a31] text-zinc-400 transition-all hover:border-zinc-600" data-actor="mazebank">
+              <span class="text-[11px] font-black tracking-wider">MAZE BANK</span>
+              <span class="text-[9px] font-mono text-zinc-600 mt-0.5">hold · (no real lend)</span>
+              <div class="flex flex-col items-center gap-0.5 mt-2 text-[9px] font-mono">
+                <span class="text-zinc-700">decorative</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Main tab nav ─────────────────────────────────────── -->
+  <div class="sticky top-12 z-40 border-b border-[#1e1e23]" style="background:rgba(14,14,17,0.97);backdrop-filter:blur(12px)">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center gap-0 overflow-x-auto">
+        {[
+          { id:"model",    label:"Model"              },
+          { id:"flows",    label:"Four Flows"         },
+          { id:"health",   label:"Health Monitor"     },
+          { id:"basket",   label:"Price Basket"       },
+          { id:"sources",  label:"Sources"            },
+        ].map((t,i) => (
+          <button
+            class={`eco-tab shrink-0 px-5 py-3.5 text-[11px] font-mono tracking-wider border-b-2 transition-colors ${i===0 ? "border-gta-gold text-gta-gold" : "border-transparent text-zinc-500 hover:text-zinc-300"}`}
+            data-tab={t.id}>{t.label}</button>
+        ))}
+        <div class="flex-1"></div>
+        <span class="text-[9px] font-mono text-zinc-700 shrink-0 hidden sm:block">GTA Online · 2013–2025</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB: MODEL
+    ══════════════════════════════════════════════════════════ -->
+    <div id="tab-model" class="eco-panel">
+
+      <!-- Sovereign box -->
+      <div class="rounded-xl border border-indigo-900/60 bg-indigo-950/20 p-5 mb-4">
+        <div class="text-center mb-3">
+          <div class="text-[9px] font-mono text-indigo-400 uppercase tracking-[0.25em] mb-1">SOVEREIGN MONETARY AUTHORITY</div>
+          <div class="text-2xl font-black text-indigo-300" style="font-family:'Inter',sans-serif">Rockstar / Take-Two</div>
+          <div class="text-[11px] text-zinc-500 font-mono mt-1">Currency issuer · Price setter · Employer · Legislature</div>
+        </div>
+        <div class="flex flex-wrap justify-center gap-2 mt-3">
+          {["Money supply (Shark Cards)","Wage floors (mission payouts)","Price level (DLC costs)","Patch law (nerfs/buffs)","Bonus rates (weekly events)"].map(p => (
+            <span class="text-[10px] font-mono border border-indigo-800/60 bg-indigo-900/30 text-indigo-300 px-2.5 py-1 rounded-full">{p}</span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Policy interface arrow -->
+      <div class="flex justify-center my-2 text-zinc-600 font-mono text-xs">↕ policy interface</div>
+
+      <!-- In-game circular economy -->
+      <div class="rounded-xl border border-[#2a2a31] p-5 mb-4" style="background:#0e0e11">
+        <div class="text-center mb-4">
+          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-[0.2em]">IN-GAME CIRCULAR ECONOMY · UNIT OF ANALYSIS</div>
+        </div>
+        <!-- Three actors row -->
+        <div class="flex items-center justify-center gap-2 sm:gap-4 flex-wrap">
+          <!-- Businesses -->
+          <div class="flex flex-col items-center gap-1">
+            <div class="rounded-xl border border-gta-gold/50 bg-gta-gold/8 px-5 py-3 text-center min-w-[110px]">
+              <div class="text-sm font-black text-gta-gold tracking-wide">Businesses</div>
+              <div class="text-[9px] font-mono text-gta-gold/50 mt-0.5">produce · contract</div>
+            </div>
+          </div>
+
+          <!-- Arrows left side -->
+          <div class="flex flex-col items-center gap-2 text-[10px] font-mono">
+            <div class="flex items-center gap-1 text-gta-gold/80">
+              <span class="text-gta-gold/40">①</span>
+              <span>wages →</span>
+            </div>
+            <div class="flex items-center gap-1 text-zinc-500">
+              <span class="text-zinc-700">②</span>
+              <span>← spending</span>
+              <span class="text-zinc-700">⓶</span>
+            </div>
+          </div>
+
+          <!-- Players -->
+          <div class="flex flex-col items-center gap-1">
+            <div class="rounded-xl border border-[#2a2a31] bg-[#1a1a1e] px-5 py-3 text-center min-w-[120px]">
+              <div class="text-sm font-black text-zinc-200 tracking-wide">Players</div>
+              <div class="text-[9px] font-mono text-zinc-600 mt-0.5">earn · spend · hold</div>
+            </div>
+          </div>
+
+          <!-- Arrows right side -->
+          <div class="flex flex-col items-center gap-2 text-[10px] font-mono">
+            <div class="flex items-center gap-1 text-gta-teal/80">
+              <span class="text-gta-teal/40">③</span>
+              <span>savings →</span>
+            </div>
+            <div class="flex items-center gap-1 text-blue-400/70">
+              <span class="text-blue-400/40">④</span>
+              <span>← loans</span>
+              <span class="text-blue-400/40">ⓘ</span>
+            </div>
+          </div>
+
+          <!-- Maze Bank -->
+          <div class="flex flex-col items-center gap-1">
+            <div class="rounded-xl border border-blue-900/50 bg-blue-950/20 px-5 py-3 text-center min-w-[110px]">
+              <div class="text-sm font-black text-blue-300 tracking-wide">Maze Bank</div>
+              <div class="text-[9px] font-mono text-blue-400/50 mt-0.5">hold · (no real lend)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Investment flow note -->
+        <div class="text-center mt-4 text-[10px] font-mono text-zinc-600">
+          ⑤ Investment flow: Players → Businesses (buy passive income properties: Bunker, Acid Lab, Nightclub, MC)
+        </div>
+      </div>
+
+      <!-- Key departures -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+        {[
+          {
+            label: "Maze Bank ≠ real bank",
+            body: "Holds savings but creates no credit. It is NOT equivalent to a commercial bank. The real 'bank' function is Rockstar — they inject GTA$ via Shark Cards."
+          },
+          {
+            label: "Shark Cards = QE, not loans",
+            body: "Real GBP/USD enters the system as GTA$ with no repayment obligation. Closer to central bank QE or colonial currency board issuance than consumer credit."
+          },
+          {
+            label: "Inflation is hidden",
+            body: "Nominal DLC prices can stay flat while real purchasing power collapses via payout nerfs. The GTA-PPI captures this. Track wage/price ratio, not prices alone."
+          },
+          {
+            label: "Rockstar's incentive",
+            body: "Engineering real-terms inflation (via nerfs) increases Shark Card demand → Take-Two revenue. Track as the key political economy dynamic of the Online ecosystem."
+          },
+        ].map(d => (
+          <div class="rounded-lg border border-[#1e1e23] p-4" style="background:#131316">
+            <div class="text-[11px] font-bold text-zinc-200 mb-1.5" style="font-family:'Inter',sans-serif">{d.label}</div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{d.body}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Academic framework table -->
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-3 border-b border-[#1e1e23]">
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">// ACADEMIC FRAMEWORK</div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-[11px] font-mono">
+            <thead>
+              <tr class="border-b border-[#1e1e23]">
+                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Framework</th>
+                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Real-world source</th>
+                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">GTA application</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["MMT / Sovereign money",    "Wray (2015), Mosler (2010)",      "Rockstar as monopoly currency issuer"],
+                ["CPI basket method",        "ONS CPI; BLS CPI methodology",    "Fixed basket of in-game goods tracked per patch"],
+                ["Labour-time / Big Mac",     "Ricardo; The Economist",          "Minutes of top-activity grind per basket unit"],
+                ["Price-wage spiral",        "Phillips Curve; ONS real wages",  "Δ DLC price vs Δ mission payout per patch cycle"],
+                ["Virtual economy theory",   "Lehdonvirta (2014) MIT Press",    "Foundational framework for in-game economic analysis"],
+              ].map(([f,s,g]) => (
+                <tr class="border-b border-[#1e1e23]/50 hover:bg-white/[0.02] transition-colors">
+                  <td class="px-4 py-2.5 text-gta-gold/80">{f}</td>
+                  <td class="px-4 py-2.5 text-zinc-500">{s}</td>
+                  <td class="px-4 py-2.5 text-zinc-400">{g}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-model -->
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB: FOUR FLOWS
+    ══════════════════════════════════════════════════════════ -->
+    <div id="tab-flows" class="eco-panel hidden">
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+        <!-- Flow ① — Hourly GTA$ Yield (Wages) -->
+        <div class="rounded-xl border border-[#1e1e23] overflow-hidden flow-card" data-flow="wages" data-actors="businesses,players" style="background:#131316">
+          <div class="px-5 py-4 border-b border-[#1e1e23]">
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-[9px] font-mono text-gta-gold/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
+                <span class="text-gta-gold/40">①</span> BUSINESSES → PLAYERS
+              </div>
+              <span class="text-[9px] font-mono border border-gta-gold/40 bg-gta-gold/10 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">WAGES</span>
+            </div>
+            <div class="text-lg font-bold text-white" style="font-family:'Inter',sans-serif">Hourly GTA$ Yield</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Top-tier activity $/hr at each major patch. The in-game "real wage."</div>
+          </div>
+          <div id="chart-wages" class="w-full" style="height:220px"
+            data-series={JSON.stringify(metaSeries)}
+          ></div>
+          <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-2 gap-4">
+            <div>
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">CURRENT</div>
+              <div class="text-2xl font-black" style={`color:var(--c-chart-bar);font-family:'Inter',sans-serif`}>${Math.round((latestYield?.top_gta_per_hr ?? 0)/1000)}K/hr</div>
+              <div class="text-[10px] font-mono text-zinc-600">{latestYield?.top_method ?? "—"}</div>
+            </div>
+            <div>
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">ALL-TIME PEAK</div>
+              <div class="text-2xl font-black text-green-400" style="font-family:'Inter',sans-serif">$2,000K/hr</div>
+              <div class="text-[10px] font-mono text-zinc-600">Cayo Perico launch 2020</div>
+            </div>
+          </div>
+          <div class="px-5 pb-4">
+            <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+              <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">
+                <span class="font-semibold text-zinc-200">Read it:</span> When the line dips after a major DLC, Rockstar has nerfed the previous meta activity to push players toward new content. The 2021 Cayo nerf cut wages 40% in a single patch — prices unchanged.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flow ② — Spending Distribution -->
+        <div class="rounded-xl border border-[#1e1e23] overflow-hidden flow-card" data-flow="spending" data-actors="players,businesses" style="background:#131316">
+          <div class="px-5 py-4 border-b border-[#1e1e23]">
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-[9px] font-mono text-zinc-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
+                <span class="text-zinc-600">②</span> PLAYERS → BUSINESSES
+              </div>
+              <span class="text-[9px] font-mono border border-orange-600/40 bg-orange-900/20 text-orange-400 px-2 py-0.5 rounded uppercase tracking-widest">SPENDING (C)</span>
+            </div>
+            <div class="text-lg font-bold text-white" style="font-family:'Inter',sans-serif">Spending Distribution</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Where GTA$ flows after it's earned. Community-estimated by DLC era.</div>
+          </div>
+          <div id="chart-spending" class="w-full" style="height:220px"
+            data-eras={JSON.stringify(spendEras)}
+          ></div>
+          <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-3 gap-3">
+            {[
+              { label:"VEHICLES",       val:`${spendEras.at(-1)?.vehicles_pct ?? 0}%`,  sub:"consumer goods",   color:"var(--c-chart-bar)" },
+              { label:"PROPERTIES/BIZ", val:`${spendEras.at(-1)?.properties_pct ?? 0}%`,sub:"capital investment",color:"var(--c-cat-economy)" },
+              { label:"WEAPONS/MODS",   val:`${spendEras.at(-1)?.weapons_pct ?? 0}%`,   sub:"recurring costs",  color:"var(--c-chart-teal)" },
+            ].map(s => (
+              <div>
+                <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">{s.label}</div>
+                <div class="text-xl font-black" style={`color:${s.color};font-family:'Inter',sans-serif`}>{s.val}</div>
+                <div class="text-[10px] font-mono text-zinc-600">{s.sub}</div>
+              </div>
+            ))}
+          </div>
+          <div class="px-5 pb-4">
+            <div class="border-l-2 border-orange-600/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+              <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">
+                <span class="font-semibold text-zinc-200">Read it:</span> Vehicles are the dominant consumer good — equivalent to housing in the real economy. Every DLC that adds desirable cars drives a consumer spending spike. The Oppressor Mk II alone moved the needle in 2018.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flow ③ — Savings -->
+        <div class="rounded-xl border border-[#1e1e23] overflow-hidden flow-card" data-flow="savings" data-actors="players,mazebank" style="background:#131316">
+          <div class="px-5 py-4 border-b border-[#1e1e23]">
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-[9px] font-mono text-green-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
+                <span class="text-green-500/40">③</span> PLAYERS → MAZE BANK
+              </div>
+              <span class="text-[9px] font-mono border border-green-700/40 bg-green-900/20 text-green-400 px-2 py-0.5 rounded uppercase tracking-widest">SAVINGS</span>
+            </div>
+            <div class="text-lg font-bold text-white" style="font-family:'Inter',sans-serif">Idle GTA$ Balance</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Estimated held balance by player progression stage.</div>
+          </div>
+          <div id="chart-savings" class="w-full" style="height:220px"
+            data-stages={JSON.stringify(savingsStages)}
+          ></div>
+          <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-2 gap-4">
+            <div>
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">TOP SAVER CAP</div>
+              <div class="text-2xl font-black text-green-400" style="font-family:'Inter',sans-serif">$2.1B</div>
+              <div class="text-[10px] font-mono text-zinc-600">transaction screen ceiling</div>
+            </div>
+            <div>
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">EST. AVG RATE</div>
+              <div class="text-2xl font-black text-green-400" style="font-family:'Inter',sans-serif">8.9%</div>
+              <div class="text-[10px] font-mono text-zinc-600">of earnings held idle</div>
+            </div>
+          </div>
+          <div class="px-5 pb-4">
+            <div class="border-l-2 border-green-700/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+              <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">
+                <span class="font-semibold text-zinc-200">Read it:</span> High savings = money not flowing back to businesses. The $2.1B cap on the transaction screen is GTA's version of a savings ceiling. The 2020 Covid spike (29%) was forced saving — Cayo Perico compounded balances with nowhere to spend.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flow ④ — Shark Card Injections -->
+        <div class="rounded-xl border border-[#1e1e23] overflow-hidden flow-card" data-flow="sharkcards" data-actors="mazebank,players" style="background:#131316">
+          <div class="px-5 py-4 border-b border-[#1e1e23]">
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-[9px] font-mono text-blue-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
+                <span class="text-blue-500/40">④</span> ROCKSTAR → PLAYERS
+              </div>
+              <span class="text-[9px] font-mono border border-blue-700/40 bg-blue-900/20 text-blue-400 px-2 py-0.5 rounded uppercase tracking-widest">SHARK CARDS</span>
+            </div>
+            <div class="text-lg font-bold text-white" style="font-family:'Inter',sans-serif">Shark Card Injections</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Take-Two recurrent consumer spending as Shark Card proxy (USD billion).</div>
+          </div>
+          <div id="chart-sharkcards" class="w-full" style="height:220px"
+            data-years={JSON.stringify(revYears.filter((y:any) => y.calendar_year >= 2014 && y.calendar_year <= 2025))}
+          ></div>
+          <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-2 gap-4">
+            <div>
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">PEAK YEAR</div>
+              <div class="text-2xl font-black text-blue-400" style="font-family:'Inter',sans-serif">$1.62B</div>
+              <div class="text-[10px] font-mono text-zinc-600">FY2022 (2021 calendar year)</div>
+            </div>
+            <div>
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">LATEST</div>
+              <div class="text-2xl font-black text-blue-400" style="font-family:'Inter',sans-serif">${latestRecurr?.recurrent_bn ?? "—"}B</div>
+              <div class="text-[10px] font-mono text-zinc-600">recurrent consumer spending</div>
+            </div>
+          </div>
+          <div class="px-5 pb-4">
+            <div class="border-l-2 border-blue-700/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+              <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">
+                <span class="font-semibold text-zinc-200">Read it:</span> Shark Cards are exogenous money — real GBP/USD enters as GTA$. Spikes correlate with payout nerfs (players cash-bridging the gap) and major DLC releases. This is the real credit channel, not Maze Bank.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /2-col grid -->
+
+      <!-- Flow ⑤ — Passive Income Stack (full width) -->
+      <div class="mt-5 rounded-xl border border-[#1e1e23] overflow-hidden flow-card" data-flow="investment" data-actors="players,businesses" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="flex items-center justify-between mb-2 gap-4">
+              <div class="text-[9px] font-mono text-indigo-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
+                <span class="text-indigo-400/40">⑤</span> PLAYERS → BUSINESSES (Investment)
+              </div>
+              <span class="text-[9px] font-mono border border-indigo-700/40 bg-indigo-900/20 text-indigo-400 px-2 py-0.5 rounded uppercase tracking-widest">INVESTMENT</span>
+            </div>
+            <div class="text-lg font-bold text-white" style="font-family:'Inter',sans-serif">Passive Income Stack Returns</div>
+            <div class="text-[11px] text-zinc-500 font-mono">GTA$/hr generated by fully upgraded passive businesses over time.</div>
+          </div>
+          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500 shrink-0">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 bg-gta-gold inline-block rounded"></span>Bunker</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 bg-gta-teal inline-block rounded"></span>Nightclub</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 bg-indigo-400 inline-block rounded"></span>MC Cocaine</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 bg-green-400 inline-block rounded"></span>Acid Lab</span>
+          </div>
+        </div>
+        <div id="chart-investment" class="w-full" style="height:200px"
+          data-series={JSON.stringify(passiveSeries)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between flex-wrap gap-4">
+          <div class="flex items-center gap-6">
+            <div>
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">FULL STACK PASSIVE</div>
+              <div class="text-xl font-black text-indigo-400" style="font-family:'Inter',sans-serif">$1.24M/hr</div>
+              <div class="text-[10px] font-mono text-zinc-600">Bunker + Nightclub + MC + Acid Lab</div>
+            </div>
+            <div>
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">SETUP COST</div>
+              <div class="text-xl font-black text-zinc-400" style="font-family:'Inter',sans-serif">$18.7M</div>
+              <div class="text-[10px] font-mono text-zinc-600">~15h break-even at $1.24M/hr</div>
+            </div>
+          </div>
+          <div class="border-l-2 border-indigo-700/40 pl-3 py-1 rounded-r max-w-lg" style="background:#1a1a1e">
+            <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">
+              <span class="font-semibold text-zinc-200">Read it:</span> The 2022 Criminal Enterprises patch tripled the value of the passive stack overnight. The Acid Lab addition in Dec 2022 pushed passive yield above $1M/hr — meaning veterans with the full stack now earn more passively than most active grind methods.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tab-flows -->
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB: HEALTH MONITOR
+    ══════════════════════════════════════════════════════════ -->
+    <div id="tab-health" class="eco-panel hidden">
+
+      <!-- Headline stats row -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
+          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">CURRENT GTA-PPI</div>
+          <div class="text-3xl font-black" style={`color:${latestPPI?.ppi <= 50 ? 'var(--c-chart-green)' : latestPPI?.ppi <= 80 ? 'var(--c-chart-bar)' : 'var(--c-chart-red)'};font-family:'Inter',sans-serif`}>
+            {latestPPI?.ppi}
+          </div>
+          <div class="text-[10px] font-mono text-zinc-600">{latestPPI?.hours_to_basket}h to buy basket</div>
+        </div>
+        <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
+          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">ALL-TIME BEST (lowest PPI)</div>
+          <div class="text-3xl font-black text-green-400" style="font-family:'Inter',sans-serif">{troughPPI?.ppi}</div>
+          <div class="text-[10px] font-mono text-zinc-600">{troughPPI?.patch} · {troughPPI?.hours_to_basket}h</div>
+        </div>
+        <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
+          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">ALL-TIME WORST (highest PPI)</div>
+          <div class="text-3xl font-black text-red-400" style="font-family:'Inter',sans-serif">{peakPPI?.ppi}</div>
+          <div class="text-[10px] font-mono text-zinc-600">{peakPPI?.patch} · {peakPPI?.hours_to_basket}h</div>
+        </div>
+      </div>
+
+      <!-- GTA-PPI chart -->
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden mb-5" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">// ALL THREE ACTORS · COMPOSITE</div>
+            <div class="text-lg font-bold text-white" style="font-family:'Inter',sans-serif">GTA-PPI — Purchasing Power Index</div>
+            <div class="text-[11px] text-zinc-500 font-mono">Hours to buy the fixed reference basket at current top hourly yield. Base 100 = Oct 2013 launch.</div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button id="health-view-btn" class="text-[9px] font-mono border border-[#2a2a31] text-zinc-500 px-3 py-1.5 rounded hover:border-zinc-500 hover:text-zinc-300 transition-all" data-view="ppi">Full loop</button>
+          </div>
+        </div>
+        <div id="chart-ppi" class="w-full" style="height:280px"
+          data-series={JSON.stringify(ppiSeries)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+            <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">
+              <span class="font-semibold text-zinc-200">Read it:</span> When PPI spikes, Rockstar has either nerfed wages or added an expensive new aspirational item to the basket. The 2018 spike (Oppressor Mk II launch) was a structural break — basket cost doubled overnight with no wage change. The 2021 nerf reversed Cayo Perico's golden era.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Composite health monitor (multi-line) -->
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">// ALL THREE ACTORS · COMPOSITE</div>
+            <div class="text-lg font-bold text-white" style="font-family:'Inter',sans-serif">Circular Flow Health Monitor</div>
+            <div class="text-[11px] text-zinc-500 font-mono">Normalised index: hourly yield, Shark Card reliance, passive investment returns.</div>
+          </div>
+        </div>
+        <div id="chart-health" class="w-full" style="height:280px"
+          data-ppi={JSON.stringify(ppiSeries)}
+          data-yields={JSON.stringify(metaSeries)}
+          data-revenue={JSON.stringify(revYears.filter((y:any) => y.calendar_year >= 2013 && y.calendar_year <= 2025))}
+          data-passive={JSON.stringify(passiveSeries)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <div class="flex items-center gap-6 mb-3 flex-wrap text-[10px] font-mono">
+            <span class="flex items-center gap-1.5"><span class="w-8 h-0.5 bg-gta-gold inline-block"></span>Hourly yield</span>
+            <span class="flex items-center gap-1.5"><span class="w-8 h-0.5 bg-orange-400 inline-block"></span>Shark Card reliance</span>
+            <span class="flex items-center gap-1.5"><span class="w-8 h-0.5 bg-green-400 inline-block"></span>Passive stack</span>
+            <span class="flex items-center gap-1.5"><span class="w-8 h-0.5 border-t-2 border-dashed border-indigo-400 inline-block"></span>GTA-PPI (inverted)</span>
+          </div>
+          <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+            <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">
+              <span class="font-semibold text-zinc-200">Read it:</span> When hourly yield (amber) falls after a nerf while Shark Card reliance (orange) rises, the economy is running on real-money credit, not earned income. Unsustainable. The Cayo Perico nerf (2022) shows exactly this pattern.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tab-health -->
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB: PRICE BASKET
+    ══════════════════════════════════════════════════════════ -->
+    <div id="tab-basket" class="eco-panel hidden">
+
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden mb-5" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between gap-4">
+          <div>
+            <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">// GTA-CPI BASKET</div>
+            <div class="text-lg font-bold text-white" style="font-family:'Inter',sans-serif">Fixed Reference Basket</div>
+            <div class="text-[11px] text-zinc-500 font-mono">Prices tracked in GTA$ per major patch era. Base index 100 = Oct 2013 launch.</div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="text-[9px] font-mono text-zinc-700">Methodology</div>
+            <div class="text-[10px] font-mono text-zinc-500">GTA-PPI = Σ(price × weight) ÷ top hourly yield</div>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-[11px] font-mono">
+            <thead>
+              <tr class="border-b border-[#1e1e23]">
+                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Item</th>
+                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Category</th>
+                <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Weight</th>
+                <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Current Price (GTA$)</th>
+                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Available from</th>
+                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Rationale</th>
+              </tr>
+            </thead>
+            <tbody>
+              {basketItems.map((item:any) => (
+                <tr class="border-b border-[#1e1e23]/50 hover:bg-white/[0.02] transition-colors">
+                  <td class="px-4 py-2.5 text-zinc-200 font-semibold">{item.name}</td>
+                  <td class="px-4 py-2.5">
+                    <span class="border px-1.5 py-0.5 rounded text-[9px] uppercase tracking-widest"
+                      style={`color:${item.category==="vehicle"?"var(--c-chart-bar)":item.category==="property"?"var(--c-cat-economy)":"var(--c-chart-teal)"};border-color:currentColor;opacity:0.8`}>
+                      {item.category}
+                    </span>
+                  </td>
+                  <td class="px-4 py-2.5 text-right text-gta-gold">{Math.round(item.weight*100)}%</td>
+                  <td class="px-4 py-2.5 text-right text-zinc-300">{item.current_price ? `$${item.current_price.toLocaleString()}` : "—"}</td>
+                  <td class="px-4 py-2.5 text-zinc-600">{item.available_from}</td>
+                  <td class="px-4 py-2.5 text-zinc-500 max-w-xs">{item.rationale}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center gap-4 flex-wrap">
+          <div>
+            <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">CURRENT BASKET COST</span>
+            <span class="text-[13px] font-bold text-gta-gold ml-3 font-mono">$6,770,250</span>
+          </div>
+          <div>
+            <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">AT CURRENT YIELD</span>
+            <span class="text-[13px] font-bold text-zinc-400 ml-3 font-mono">{latestPPI?.hours_to_basket}h to buy</span>
+          </div>
+          <div>
+            <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">GTA-PPI</span>
+            <span class="text-[13px] font-bold text-zinc-400 ml-3 font-mono">{latestPPI?.ppi} / 100</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Price stability note -->
+      <div class="rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
+        <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// KEY INSIGHT — PRICE STABILITY</div>
+        <p class="text-[12px] text-zinc-400 leading-relaxed mb-3" style="font-family:'Inter',sans-serif">
+          GTA Online nominal prices are remarkably stable. The Zentorno has cost $725,000 since 2013. The Buzzard has cost $1,750,000 since 2014. Rockstar has never raised the price of an existing vehicle or property.
+        </p>
+        <p class="text-[12px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">
+          <span class="text-gta-gold font-semibold">The inflation is entirely on the wage side.</span> Payout nerfs reduce mission and heist payouts without touching sticker prices. This is hidden inflation — real purchasing power collapses while nominal prices appear unchanged. The GTA-PPI is the only metric that captures this.
+        </p>
+      </div>
+
+    </div><!-- /tab-basket -->
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         TAB: SOURCES
+    ══════════════════════════════════════════════════════════ -->
+    <div id="tab-sources" class="eco-panel hidden">
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        <div class="rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em] mb-3">// PRIMARY SOURCES (free, crowd-sourced)</div>
+          {[
+            { name:"GTABase.com", url:"https://gtabase.com/gta-online/missions/", desc:"Mission payout database, GTA$/hr by activity. Use for: Flow ① wage series." },
+            { name:"GTA Wiki (Fandom)", url:"https://gta.fandom.com/wiki/", desc:"Full price history for all DLC vehicles, properties, weapons. Use for: CPI basket price series." },
+            { name:"Rockstar Newswire", url:"https://newswire.rockstargames.com", desc:"Official weekly bonus event announcements (2×/3× multipliers). Use for: bonus event annotation." },
+            { name:"GTAForums", url:"https://gtaforums.com", desc:"Community tracking of payout changes — often faster than databases. Good for consumable prices and nerf detection." },
+          ].map(s => (
+            <div class="mb-4 last:mb-0">
+              <a href={s.url} target="_blank" rel="noopener" class="text-[11px] font-semibold text-gta-gold/80 hover:text-gta-gold transition-colors" style="font-family:'Inter',sans-serif">{s.name} ↗</a>
+              <p class="text-[11px] text-zinc-500 mt-0.5 leading-relaxed" style="font-family:'Inter',sans-serif">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div class="rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em] mb-3">// OFFICIAL / FINANCIAL</div>
+          {[
+            { name:"Take-Two Interactive Earnings", url:"https://ir.take2games.com", desc:"Quarterly 'recurrent consumer spending' figures. GTA Online revenue as a segment. Back to ~2014. Use for: Flow ④ Shark Card injection proxy." },
+            { name:"Steam Charts", url:"https://steamcharts.com/app/271590", desc:"GTA Online active player count over time. Needed to normalise Shark Card revenue per active player." },
+          ].map(s => (
+            <div class="mb-4 last:mb-0">
+              <a href={s.url} target="_blank" rel="noopener" class="text-[11px] font-semibold text-gta-gold/80 hover:text-gta-gold transition-colors" style="font-family:'Inter',sans-serif">{s.name} ↗</a>
+              <p class="text-[11px] text-zinc-500 mt-0.5 leading-relaxed" style="font-family:'Inter',sans-serif">{s.desc}</p>
+            </div>
+          ))}
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em] mt-4 mb-3">// ACADEMIC</div>
+          {[
+            { name:"Lehdonvirta & Castronova (2014)", url:"https://mitpress.mit.edu/9780262527538/virtual-economies/", desc:"Virtual Economies: Design and Analysis. MIT Press. Primary academic framework for in-game economic analysis." },
+            { name:"ONS CPI Methodology", url:"https://www.ons.gov.uk/economy/inflationandpriceindices/methodologies/consumerpriceinflation", desc:"Basket construction and weighting methodology reference. Applied to GTA-CPI design." },
+          ].map(s => (
+            <div class="mb-4 last:mb-0">
+              <a href={s.url} target="_blank" rel="noopener" class="text-[11px] font-semibold text-gta-gold/80 hover:text-gta-gold transition-colors" style="font-family:'Inter',sans-serif">{s.name} ↗</a>
+              <p class="text-[11px] text-zinc-500 mt-0.5 leading-relaxed" style="font-family:'Inter',sans-serif">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div class="sm:col-span-2 rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em] mb-3">// DATA CONFIDENCE STANDARDS</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { tier:"Measured", color:"text-gta-gold", badge:"bg-gta-gold/10 border-gta-gold/25", desc:"Directly observable: mission payout rates from GTABase, item prices from GTA Wiki, Take-Two quarterly earnings from SEC filings." },
+              { tier:"Community-verified", color:"text-green-400", badge:"bg-green-900/20 border-green-800/40", desc:"Confirmed by multiple independent community sources: GTAForums patch tracking, GTABase hourly yield benchmarks, GTABase.com data." },
+              { tier:"Modelled", color:"text-zinc-400", badge:"bg-zinc-800 border-zinc-700", desc:"Informed estimates: spending distribution, savings rates, player balance curves. Based on community surveys and Lehdonvirta framework. Explicitly labelled." },
+            ].map(t => (
+              <div class="flex items-start gap-2">
+                <span class={`shrink-0 text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest mt-0.5 ${t.badge} ${t.color}`}>{t.tier}</span>
+                <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{t.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /tab-sources -->
+
+    <CrossLinks context="gta-v" class="mt-8" />
+
+  </div>
+
+</Base>
+
+<script>
+  import * as d3 from "d3";
+  import { cc, playColor } from "../../assets/chartColors";
+
+  // ── Tab switching ─────────────────────────────────────────────────
+  document.querySelectorAll<HTMLButtonElement>(".eco-tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.tab!;
+      document.querySelectorAll(".eco-panel").forEach(p => (p as HTMLElement).classList.add("hidden"));
+      document.getElementById(`tab-${id}`)?.classList.remove("hidden");
+      document.querySelectorAll<HTMLButtonElement>(".eco-tab").forEach(b => {
+        const active = b.dataset.tab === id;
+        b.className = b.className.replace(/border-gta-gold|text-gta-gold/g,"").trim();
+        b.classList.add(...(active ? ["border-gta-gold","text-gta-gold"] : ["border-transparent","text-zinc-500"]));
+      });
+    });
+  });
+
+  // ── Actor filter highlight ────────────────────────────────────────
+  document.querySelectorAll<HTMLButtonElement>(".actor-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const actor = btn.dataset.actor!;
+      document.querySelectorAll<HTMLButtonElement>(".actor-btn").forEach(b => {
+        const active = b.dataset.actor === actor;
+        b.classList.toggle("border-gta-gold/50",active);
+        b.classList.toggle("bg-gta-gold/10",active);
+        b.classList.toggle("text-gta-gold",active);
+        b.classList.toggle("border-[#2a2a31]",!active);
+        b.classList.toggle("text-zinc-400",!active);
+      });
+      // Highlight matching flow cards in Four Flows tab
+      document.querySelectorAll<HTMLElement>(".flow-card").forEach(card => {
+        const actors = card.dataset.actors?.split(",") ?? [];
+        const match = actors.includes(actor);
+        card.style.boxShadow = match ? "0 0 0 1px var(--c-brand)" : "";
+        card.style.opacity = match ? "1" : "0.5";
+      });
+      // Switch to flows tab if on model
+      const activeTab = document.querySelector<HTMLButtonElement>(".eco-tab.text-gta-gold");
+      if (activeTab?.dataset.tab === "model") {
+        document.querySelector<HTMLButtonElement>('[data-tab="flows"]')?.click();
+      }
+    });
+  });
+
+  // ── CHART ① — Wages (line + area + dots) ─────────────────────────
+  (function() {
+    const el = document.getElementById("chart-wages");
+    if (!el) return;
+    const series: any[] = JSON.parse(el.dataset.series || "[]");
+    const margin = { top:16, right:60, bottom:36, left:68 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleTime()
+      .domain([new Date("2013-01-01"), new Date("2026-01-01")]).range([0, W]);
+    const y = d3.scaleLinear()
+      .domain([0, (d3.max(series,(d:any)=>d.top_gta_per_hr) ?? 2e6) * 1.2]).range([H,0]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+
+    // Area fill
+    const areaFn = d3.area<any>()
+      .x(d=>x(new Date(d.date))).y0(H).y1(d=>y(d.top_gta_per_hr)).curve(d3.curveMonotoneX);
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id","wage-grad").attr("x1","0").attr("y1","0").attr("x2","0").attr("y2","1");
+    grad.append("stop").attr("offset","0%").attr("stop-color",cc.bar).attr("stop-opacity",0.25);
+    grad.append("stop").attr("offset","100%").attr("stop-color",cc.bar).attr("stop-opacity",0.02);
+    svg.append("path").datum(series).attr("fill","url(#wage-grad)").attr("d",areaFn as any);
+
+    // Line
+    const lineFn = d3.line<any>()
+      .x(d=>x(new Date(d.date))).y(d=>y(d.top_gta_per_hr)).curve(d3.curveMonotoneX);
+    svg.append("path").datum(series).attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",2).attr("d",lineFn as any);
+
+    // Dots + labels
+    series.forEach((d:any, i:number) => {
+      const cx = x(new Date(d.date)), cy = y(d.top_gta_per_hr);
+      const isLast = i === series.length - 1;
+      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3)
+        .attr("fill",isLast?cc.bar:cc.bg).attr("stroke",cc.bar).attr("stroke-width",isLast?0:1.5);
+      if (isLast) {
+        svg.append("text").attr("x",cx+8).attr("y",cy+4)
+          .attr("fill",cc.bar).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold")
+          .text(`$${Math.round(d.top_gta_per_hr/1000)}K/hr`);
+      }
+    });
+
+    // Key annotation lines
+    const annotations = [
+      { date:"2020-12-15", label:"Cayo", color:cc.green },
+      { date:"2022-01-20", label:"Nerf", color:cc.red },
+      { date:"2022-12-13", label:"Acid Lab", color:cc.teal },
+    ];
+    annotations.forEach(a => {
+      const xPos = x(new Date(a.date));
+      svg.append("line").attr("x1",xPos).attr("x2",xPos).attr("y1",0).attr("y2",H)
+        .attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.6);
+      svg.append("text").attr("x",xPos+3).attr("y",12)
+        .attr("fill",a.color).attr("font-size","8").attr("font-family","monospace").text(a.label);
+    });
+
+    // Axes
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${+d/1e6 >= 1 ? (+d/1e6).toFixed(1)+"M" : (+d/1e3)+"K"}`))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+  })();
+
+  // ── CHART ② — Spending Distribution (stacked bar by era) ─────────
+  (function() {
+    const el = document.getElementById("chart-spending");
+    if (!el) return;
+    const eras: any[] = JSON.parse(el.dataset.eras || "[]");
+    const margin = { top:16, right:24, bottom:48, left:48 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const cats: { key:string; color:string }[] = [
+      { key:"vehicles_pct",   color:cc.bar    },
+      { key:"properties_pct", color:cc.indigo },
+      { key:"weapons_pct",    color:cc.teal   },
+    ];
+
+    const x = d3.scaleBand().domain(eras.map(e=>e.label)).range([0,W]).padding(0.25);
+    const y = d3.scaleLinear().domain([0,100]).range([H,0]);
+
+    // Stacked bars
+    eras.forEach(era => {
+      let yOff = 0;
+      cats.forEach(cat => {
+        const val = era[cat.key] as number;
+        svg.append("rect")
+          .attr("x", x(era.label)??0).attr("y", y(yOff+val)).attr("rx",2)
+          .attr("width", x.bandwidth()).attr("height", y(yOff)-y(yOff+val))
+          .attr("fill", cat.color).attr("opacity",0.85);
+        yOff += val;
+      });
+    });
+
+    // X labels
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace")
+        .attr("transform","rotate(-30)").attr("text-anchor","end").attr("dy","0.5em"));
+
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`${d}%`))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+  })();
+
+  // ── CHART ③ — Savings Profile (area curve S1→S100) ───────────────
+  (function() {
+    const el = document.getElementById("chart-savings");
+    if (!el) return;
+    const stages: any[] = JSON.parse(el.dataset.stages || "[]");
+    const margin = { top:16, right:24, bottom:32, left:72 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const x = d3.scalePoint().domain(stages.map(s=>s.stage)).range([0,W]);
+    const y = d3.scaleLinear().domain([0,(d3.max(stages,(s:any)=>s.estimated_balance)??1)*1.15]).range([H,0]);
+
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id","sav-grad").attr("x1","0").attr("y1","0").attr("x2","0").attr("y2","1");
+    grad.append("stop").attr("offset","0%").attr("stop-color",cc.green).attr("stop-opacity",0.25);
+    grad.append("stop").attr("offset","100%").attr("stop-color",cc.green).attr("stop-opacity",0.02);
+
+    const areaFn = d3.area<any>().x(d=>x(d.stage)??0).y0(H).y1(d=>y(d.estimated_balance)).curve(d3.curveBasis);
+    svg.append("path").datum(stages).attr("fill","url(#sav-grad)").attr("d",areaFn as any);
+    const lineFn = d3.line<any>().x(d=>x(d.stage)??0).y(d=>y(d.estimated_balance)).curve(d3.curveBasis);
+    svg.append("path").datum(stages).attr("fill","none").attr("stroke",cc.green).attr("stroke-width",2).attr("d",lineFn as any);
+
+    stages.forEach((s:any,i:number) => {
+      const cx = x(s.stage)??0, cy = y(s.estimated_balance);
+      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",3)
+        .attr("fill",cc.bg).attr("stroke",cc.green).attr("stroke-width",1.5);
+    });
+    // Cap annotation
+    svg.append("text").attr("x",x("S100")??W).attr("y",y(stages.at(-1).estimated_balance)-8)
+      .attr("text-anchor","end").attr("fill",cc.green).attr("font-size","9").attr("font-family","monospace")
+      .text(`$${Math.round(stages.at(-1).estimated_balance/1e6*10)/10}B est.`);
+
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${+d>=1e6?(+d/1e6).toFixed(0)+"M":(+d/1e3)+"K"}`))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+  })();
+
+  // ── CHART ④ — Shark Card injections (bar) ────────────────────────
+  (function() {
+    const el = document.getElementById("chart-sharkcards");
+    if (!el) return;
+    const years: any[] = JSON.parse(el.dataset.years || "[]");
+    const margin = { top:16, right:24, bottom:36, left:48 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleBand().domain(years.map(y=>String(y.calendar_year))).range([0,W]).padding(0.2);
+    const yMax = (d3.max(years,(y:any)=>y.recurrent_bn) ?? 2) * 1.2;
+    const y = d3.scaleLinear().domain([0,yMax]).range([H,0]);
+
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+
+    years.forEach((yr:any) => {
+      const bx = x(String(yr.calendar_year))??0;
+      const bh = H - y(yr.recurrent_bn);
+      svg.append("rect").attr("x",bx).attr("y",y(yr.recurrent_bn))
+        .attr("width",x.bandwidth()).attr("height",bh).attr("rx",2)
+        .attr("fill",cc.indigo).attr("opacity",0.8);
+    });
+    // Peak annotation
+    const peak = years.reduce((a:any,b:any)=>b.recurrent_bn>a.recurrent_bn?b:a);
+    const px = (x(String(peak.calendar_year))??0) + x.bandwidth()/2;
+    svg.append("text").attr("x",px).attr("y",y(peak.recurrent_bn)-5).attr("text-anchor","middle")
+      .attr("fill",cc.indigo).attr("font-size","9").attr("font-family","monospace").attr("font-weight","bold")
+      .text(`$${peak.recurrent_bn}B`);
+
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).tickValues(years.filter((_:any,i:number)=>i%3===0).map((y:any)=>String(y.calendar_year))))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${+d}B`))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+  })();
+
+  // ── CHART ⑤ — Passive stack (stacked area) ───────────────────────
+  (function() {
+    const el = document.getElementById("chart-investment");
+    if (!el) return;
+    const series: any[] = JSON.parse(el.dataset.series || "[]");
+    const margin = { top:12, right:100, bottom:36, left:68 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleTime()
+      .domain([new Date("2013-01-01"), new Date("2026-01-01")]).range([0,W]);
+    const yMax = (d3.max(series,(s:any)=>s.total) ?? 1) * 1.2;
+    const y = d3.scaleLinear().domain([0,yMax]).range([H,0]);
+
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+
+    const lines: {key:string;color:string;label:string}[] = [
+      { key:"bunker",    color:cc.bar,    label:"Bunker" },
+      { key:"nightclub", color:cc.teal,   label:"Nightclub" },
+      { key:"mc_cocaine",color:cc.indigo, label:"MC Cocaine" },
+      { key:"acid_lab",  color:cc.green,  label:"Acid Lab" },
+    ];
+
+    lines.forEach(l => {
+      const filtered = series.filter((s:any)=>s[l.key]>0);
+      if (!filtered.length) return;
+      const lineFn = d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d[l.key])).curve(d3.curveStepAfter);
+      svg.append("path").datum(filtered).attr("fill","none").attr("stroke",l.color)
+        .attr("stroke-width",1.5).attr("stroke-dasharray",l.key==="mc_cocaine"?"4,2":"0").attr("d",lineFn as any);
+    });
+
+    // Total line
+    const totalFn = d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d.total)).curve(d3.curveStepAfter);
+    svg.append("path").datum(series).attr("fill","none").attr("stroke","white")
+      .attr("stroke-width",2).attr("opacity",0.4).attr("d",totalFn as any);
+    // Total label
+    const last = series.at(-1);
+    svg.append("text").attr("x",x(new Date(last.date))+6).attr("y",y(last.total)+4)
+      .attr("fill","white").attr("font-size","9").attr("font-family","monospace").attr("opacity",0.6)
+      .text(`$${Math.round(last.total/1000)}K/hr`);
+
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${Math.round(+d/1000)}K`))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+  })();
+
+  // ── CHART — GTA-PPI line chart ────────────────────────────────────
+  (function() {
+    const el = document.getElementById("chart-ppi");
+    if (!el) return;
+    const series: any[] = JSON.parse(el.dataset.series || "[]");
+    const margin = { top:16, right:60, bottom:48, left:56 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleTime()
+      .domain([new Date("2013-01-01"), new Date("2026-01-01")]).range([0,W]);
+    const y = d3.scaleLinear()
+      .domain([0, (d3.max(series,(s:any)=>s.ppi)??200)*1.2]).range([H,0]);
+
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+
+    // Baseline 100 reference line
+    svg.append("line").attr("x1",0).attr("x2",W).attr("y1",y(100)).attr("y2",y(100))
+      .attr("stroke",cc.text6).attr("stroke-width",1).attr("stroke-dasharray","4,2");
+    svg.append("text").attr("x",W+4).attr("y",y(100)+4)
+      .attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace").text("100");
+
+    // Area
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id","ppi-grad").attr("x1","0").attr("y1","0").attr("x2","0").attr("y2","1");
+    grad.append("stop").attr("offset","0%").attr("stop-color",cc.red).attr("stop-opacity",0.2);
+    grad.append("stop").attr("offset","100%").attr("stop-color",cc.red).attr("stop-opacity",0.01);
+    const areaFn = d3.area<any>().x(d=>x(new Date(d.date))).y0(H).y1(d=>y(d.ppi)).curve(d3.curveMonotoneX);
+    svg.append("path").datum(series).attr("fill","url(#ppi-grad)").attr("d",areaFn as any);
+    const lineFn = d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d.ppi)).curve(d3.curveMonotoneX);
+    svg.append("path").datum(series).attr("fill","none").attr("stroke",cc.red).attr("stroke-width",2).attr("d",lineFn as any);
+
+    // Dots + event labels
+    series.forEach((s:any,i:number) => {
+      const cx = x(new Date(s.date)), cy = y(s.ppi);
+      const isLast = i === series.length - 1;
+      const dotColor = s.event==="nerf"?cc.red : s.event==="buff"?cc.green : s.event==="basket_expansion"?cc.purple : cc.bar;
+      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3.5)
+        .attr("fill",isLast?cc.red:cc.bg).attr("stroke",dotColor).attr("stroke-width",1.5);
+      if (isLast) {
+        svg.append("text").attr("x",cx+7).attr("y",cy+4)
+          .attr("fill",cc.red).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold")
+          .text(`PPI ${s.ppi}`);
+      }
+    });
+
+    // Key annotations
+    [
+      { date:"2018-07-24", label:"Oppressor\nbasket+153%", color:cc.purple },
+      { date:"2020-12-15", label:"Cayo all-time\nbest →",   color:cc.green },
+      { date:"2022-01-20", label:"Cayo nerf",               color:cc.red   },
+    ].forEach(a => {
+      const xp = x(new Date(a.date));
+      svg.append("line").attr("x1",xp).attr("x2",xp).attr("y1",0).attr("y2",H)
+        .attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.5);
+      a.label.split("\n").forEach((line,li) => {
+        svg.append("text").attr("x",xp+3).attr("y",16+li*10)
+          .attr("fill",a.color).attr("font-size","7.5").attr("font-family","monospace").text(line);
+      });
+    });
+
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(5))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+  })();
+
+  // ── CHART — Health Monitor (multi-line normalised) ────────────────
+  (function() {
+    const el = document.getElementById("chart-health");
+    if (!el) return;
+    const ppiSeries:  any[] = JSON.parse(el.dataset.ppi      || "[]");
+    const yieldData:  any[] = JSON.parse(el.dataset.yields   || "[]");
+    const revenue:    any[] = JSON.parse(el.dataset.revenue  || "[]");
+    const passive:    any[] = JSON.parse(el.dataset.passive  || "[]");
+
+    const margin = { top:16, right:24, bottom:48, left:40 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleTime()
+      .domain([new Date("2013-01-01"), new Date("2026-01-01")]).range([0,W]);
+    const y = d3.scaleLinear().domain([0,6]).range([H,0]);
+
+    svg.append("g").call(d3.axisLeft(y).ticks(6).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+
+    // Normalise each series to 0–5 scale
+    const maxYield = d3.max(yieldData,(d:any)=>d.top_gta_per_hr) ?? 1;
+    const maxRev   = d3.max(revenue,(d:any)=>d.recurrent_bn) ?? 1;
+    const maxPass  = d3.max(passive,(d:any)=>d.total) ?? 1;
+
+    function drawLine(data: any[], dateKey:string, valFn:(d:any)=>number, color:string, dashed=false) {
+      const lineFn = d3.line<any>()
+        .x(d=>x(new Date(d[dateKey]))).y(d=>y(valFn(d)))
+        .curve(d3.curveMonotoneX);
+      svg.append("path").datum(data).attr("fill","none").attr("stroke",color)
+        .attr("stroke-width",2).attr("stroke-dasharray",dashed?"6,3":"0").attr("d",lineFn as any);
+      const last = data.at(-1);
+      if (last) {
+        const lx = x(new Date(last[dateKey])), ly = y(valFn(last));
+        svg.append("circle").attr("cx",lx).attr("cy",ly).attr("r",4)
+          .attr("fill",color).attr("stroke",cc.bg).attr("stroke-width",1.5);
+        svg.append("text").attr("x",lx+7).attr("y",ly+4)
+          .attr("fill",color).attr("font-size","9").attr("font-family","monospace").attr("font-weight","bold")
+          .text(valFn(last).toFixed(1));
+      }
+    }
+
+    // Yield (amber)
+    drawLine(yieldData, "date", d=>(d.top_gta_per_hr/maxYield)*5, cc.bar);
+    // Shark Card reliance (orange)
+    drawLine(revenue, "calendar_year", d=>(d.recurrent_bn/maxRev)*4, "#fb923c");
+    // Passive stack (green)
+    drawLine(passive.filter((s:any)=>s.total>0), "date", d=>(d.total/maxPass)*3, cc.green);
+    // GTA-PPI inverted (indigo dashed — lower is better, so invert)
+    const maxPPI = d3.max(ppiSeries,(s:any)=>s.ppi) ?? 1;
+    drawLine(ppiSeries, "date", d=>((maxPPI-d.ppi)/maxPPI)*5, cc.indigo, true);
+
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(6))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+  })();
+</script>
