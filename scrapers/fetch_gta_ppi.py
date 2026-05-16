@@ -189,12 +189,65 @@ def compute_ppi(basket_data: dict, meta_data: dict) -> dict:
     }
 
 
+def get_live_top_yield() -> int | None:
+    """Derive current top yield from revenue-tiers.json (same source as IncomeAdviser)."""
+    tiers_path = DATA_DIR / "gta-5/economy/revenue-tiers.json"
+    if not tiers_path.exists():
+        return None
+    with open(tiers_path) as f:
+        data = json.load(f)
+    sources = [s for t in data.get("tiers", []) for s in t.get("sources", [])]
+    if not sources:
+        return None
+    return max(s["gta_per_hr"] for s in sources)
+
+
 def main() -> None:
     print("[gta-ppi] Loading source data…")
     basket_data = load("gta-5/economy/price-basket.json")
     meta_data   = load("gta-5/economy/meta-history.json")
 
+    # Extend meta-history with a live current point from revenue-tiers.json
+    live_yield = get_live_top_yield()
+    if live_yield:
+        from datetime import date
+        today = date.today().isoformat()
+        last_date = max(m["date"] for m in meta_data["meta_history"])
+        if today > last_date:
+            meta_data = dict(meta_data)
+            meta_data["meta_history"] = meta_data["meta_history"] + [{
+                "patch": "Current",
+                "date": today,
+                "top_method": "Full meta stack (revenue-tiers.json)",
+                "top_gta_per_hr": live_yield,
+                "notes": "Auto-derived from revenue-tiers.json — same source as IncomeAdviser"
+            }]
+            print(f"[gta-ppi] Live top yield from revenue-tiers: ${live_yield:,}/hr")
+
     result  = compute_ppi(basket_data, meta_data)
+
+    # Append live current endpoint from revenue-tiers.json if newer than last series entry
+    if live_yield and result["series"]:
+        from datetime import date
+        today_str = date.today().isoformat()
+        last_series_date = result["series"][-1]["date"]
+        if today_str > last_series_date:
+            last_basket = result["series"][-1]["basket_cost"]
+            base_hours  = result["base_hours"] or 1
+            hours = round(last_basket / live_yield, 2)
+            ppi   = round((hours / base_hours) * 100, 1)
+            result["series"].append({
+                "patch":           "Current",
+                "date":            today_str,
+                "top_yield":       live_yield,
+                "basket_cost":     last_basket,
+                "hours_to_basket": hours,
+                "ppi":             ppi,
+                "ppi_yoy":         round(ppi - result["series"][-1]["ppi"], 1),
+                "event":           None,
+                "note":            "Live — derived from revenue-tiers.json (same source as IncomeAdviser)",
+            })
+            print(f"[gta-ppi] Appended live endpoint: PPI {ppi} ({hours}h) at ${live_yield:,}/hr")
     out_rel = "gta-5/economy/gta-ppi.json"
 
     if has_changed(result, out_rel):

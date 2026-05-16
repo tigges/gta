@@ -9,12 +9,25 @@ import spendingData     from "../../../data/gta-5/economy/spending-distribution.
 import savingsData      from "../../../data/gta-5/economy/savings-profile.json";
 import passiveData      from "../../../data/gta-5/economy/passive-stack.json";
 import revenueData      from "../../../data/franchise/revenue-split.json";
+import revenueTiersData from "../../../data/gta-5/economy/revenue-tiers.json";
 import priceBasket      from "../../../data/gta-5/economy/price-basket.json";
 import weeklyBonuses    from "../../../data/gta-5/economy/weekly-bonuses.json";
 import itemCatalogue    from "../../../data/gta-5/economy/item-catalogue.json";
 
 const ppiSeries     = (ppiData as any).series as any[];
 const metaSeries    = (metaHistory as any).meta_history as any[];
+
+// Derive live top yield from revenue-tiers.json — same source as IncomeAdviser
+// Extends the historical series with a live current endpoint automatically
+const tierSources   = ((revenueTiersData as any).tiers as any[]).flatMap((t:any) => t.sources);
+const liveTopYield  = Math.max(...tierSources.map((s:any) => s.gta_per_hr as number));
+const liveTopName   = tierSources.find((s:any) => s.gta_per_hr === liveTopYield)?.name ?? "Current meta stack";
+const lastMeta      = [...metaSeries].sort((a:any,b:any) => a.date.localeCompare(b.date)).at(-1);
+const today         = new Date().toISOString().slice(0,10);
+// Append live data point if it differs from the last historical entry
+const liveMetaSeries = lastMeta?.date === today
+  ? metaSeries
+  : [...metaSeries, { date: today, patch: "Current", top_method: liveTopName, top_gta_per_hr: liveTopYield, notes: "Live — from revenue-tiers.json" }];
 const spendEras     = (spendingData as any).eras as any[];
 const passiveSeries = (passiveData as any).series as any[];
 const revYears      = (revenueData as any).years as any[];
@@ -60,7 +73,7 @@ if (!liveComplete) {
   }, 0);
 }
 
-const latestYieldValue = metaSeries.at(-1)?.top_gta_per_hr ?? 1700000;
+const latestYieldValue = liveTopYield;  // from revenue-tiers.json (same as IncomeAdviser)
 const livePPI   = Math.round((liveBasketCost / latestYieldValue) * 100) / 10;
 const salePPI   = hasSales ? Math.round((saleBasketCost / latestYieldValue) * 100) / 10 : null;
 const liveHours = Math.round(liveBasketCost / latestYieldValue * 10) / 10;
@@ -70,7 +83,7 @@ const saleHours = salePPI ? Math.round(saleBasketCost / latestYieldValue * 10) /
 const latestPPI     = ppiSeries.at(-1);
 const peakPPI       = ppiSeries.reduce((a:any,b:any) => b.ppi > a.ppi ? b : a);
 const troughPPI     = ppiSeries.reduce((a:any,b:any) => b.ppi < a.ppi ? b : a);
-const latestYield   = metaSeries.at(-1);
+const latestYield   = { top_gta_per_hr: liveTopYield, top_method: liveTopName };
 const latestRecurr  = revYears.filter((y:any) => y.recurrent_bn > 0).at(-1);
 const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 ---
@@ -323,7 +336,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Top-tier activity $/hr at each major patch. The in-game "real wage."</div>
           </div>
           <div id="chart-wages" class="w-full" style="height:220px"
-            data-series={JSON.stringify(metaSeries)}
+            data-series={JSON.stringify(liveMetaSeries)}
           ></div>
           <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-2 gap-4">
             <div>
