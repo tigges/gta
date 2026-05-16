@@ -1092,14 +1092,14 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Setup Cost vs $/hr — What's Actually Worth Buying?</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/database" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full profiles →</a>
+        <a href="/database?game=gta-online" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full profiles →</a>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23]">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
             The ROI Bubble Chart — Which Businesses Are Worth the Investment?
           </div>
-          <div class="text-[11px] text-zinc-500 font-mono">X = setup cost · Y = net $/hr · bubble size = time to break even. Top-right = expensive but worth it. Bottom-right = expensive traps.</div>
+          <div class="text-[11px] text-zinc-500 font-mono">X = setup cost · Y = net $/hr · bubble size = time to break even. Click any bubble → full profile card. Top-right = expensive but worth it.</div>
         </div>
         <div id="roi-scatter-chart" class="w-full" style="height:380px"
           data-businesses={JSON.stringify((bizProfilesData as any).businesses.filter((b: any) => b.setup_cost_full > 0 && b.net_profit_per_hr > 0))}
@@ -1188,7 +1188,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       txt.setAttribute("text-anchor","end");
       txt.setAttribute("font-size","8");
       txt.setAttribute("font-family","monospace");
-      txt.setAttribute("fill","#3f3f46");
+      txt.setAttribute("fill",cc.text6);
       txt.setAttribute("letter-spacing","0.08em");
       txt.textContent = "GTAVI.AI";
       svg.appendChild(txt);
@@ -1222,8 +1222,8 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(d => `${d}M`))
       .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"))
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "11").attr("font-family", "monospace"));
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.grid).attr("stroke-dasharray", "3,3"))
+      .call(g => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "11").attr("font-family", "monospace"));
 
     // Bars — total (background)
     titles.forEach(t => {
@@ -1237,9 +1237,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           .attr("x", bx).attr("y", y(t.total_units_m))
           .attr("width", bw).attr("height", totalH)
           .attr("rx", 3)
-          .attr("fill", isPred ? "none" : "#f59e0b")
+          .attr("fill", isPred ? "none" : cc.bar)
           .attr("fill-opacity", isPred ? 0 : 0.75)
-          .attr("stroke", isPred ? "#f59e0b" : "none")
+          .attr("stroke", isPred ? cc.bar : "none")
           .attr("stroke-width", isPred ? 1.5 : 0)
           .attr("stroke-dasharray", isPred ? "5,3" : "0");
       }
@@ -1250,7 +1250,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           .attr("x", bx + bw * 0.1).attr("y", y(t.year1_units_m))
           .attr("width", bw * 0.8).attr("height", H - y(t.year1_units_m))
           .attr("rx", 2)
-          .attr("fill", "#0d9488").attr("fill-opacity", isPred ? 0.5 : 0.85);
+          .attr("fill", cc.teal).attr("fill-opacity", isPred ? 0.5 : 0.85);
       }
 
       // Value label
@@ -1260,7 +1260,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           .attr("x", bx + bw / 2)
           .attr("y", y(labelVal) - 5)
           .attr("text-anchor", "middle")
-          .attr("fill", isPred ? "#f59e0b" : "#a1a1aa")
+          .attr("fill", isPred ? cc.bar : cc.text4)
           .attr("font-size", "11").attr("font-family", "monospace")
           .text(isPred ? `~${labelVal}M*` : `${labelVal}M`);
       }
@@ -1280,7 +1280,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
     const xAxisG = svg.append("g").attr("transform", `translate(0,${H})`);
     xAxisG.call(d3.axisBottom(x))
-      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.select(".domain").attr("stroke", cc.border2))
       .call(g => g.selectAll(".tick line").remove())
       .call(g => g.selectAll("text").remove());
 
@@ -1302,7 +1302,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       xAxisG.append("text")
         .attr("x", cx).attr("y", imgH + 22)
         .attr("text-anchor", "middle")
-        .attr("fill", t.is_prediction ? "#f59e0b" : "#71717a")
+        .attr("fill", t.is_prediction ? cc.bar : cc.text6)
         .attr("font-size", "10").attr("font-family", "monospace")
         .text(t.short);
     });
@@ -1355,7 +1355,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
       .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.grid).attr("stroke-dasharray", "3,3"));
 
     const line = d3.line<{monthsBefore:number;value:number}>()
       .x(d => x(d.monthsBefore)).y(d => y(d.value)).curve(d3.curveMonotoneX);
@@ -1363,7 +1363,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     // GTA V line (muted)
     if (gta5Series.length > 0) {
       svg.append("path").datum(gta5Series)
-        .attr("fill", "none").attr("stroke", "#71717a")
+        .attr("fill", "none").attr("stroke", cc.text6)
         .attr("stroke-width", 1.5).attr("opacity", 0.7)
         .attr("d", line as any);
     }
@@ -1378,38 +1378,38 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
       const defs = svg.append("defs");
       const grad = defs.append("linearGradient").attr("id","hype-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-      grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.2);
-      grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.01);
+      grad.append("stop").attr("offset","0%").attr("stop-color",cc.bar).attr("stop-opacity",0.2);
+      grad.append("stop").attr("offset","100%").attr("stop-color",cc.bar).attr("stop-opacity",0.01);
 
       svg.append("path").datum(gta6Series)
-        .attr("fill", "none").attr("stroke", "#f59e0b")
+        .attr("fill", "none").attr("stroke", cc.bar)
         .attr("stroke-width", 2).attr("d", line as any);
     }
 
     // Launch line (x=0)
     svg.append("line")
       .attr("x1", x(0)).attr("x2", x(0)).attr("y1", 0).attr("y2", H)
-      .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "4,3").attr("opacity", 0.5);
+      .attr("stroke", cc.red).attr("stroke-width", 1).attr("stroke-dasharray", "4,3").attr("opacity", 0.5);
     svg.append("text")
       .attr("x", x(0) - 4).attr("y", 10)
-      .attr("text-anchor", "end").attr("fill", "#ef4444")
+      .attr("text-anchor", "end").attr("fill", cc.red)
       .attr("font-size", "9").attr("font-family", "monospace").text("Launch");
 
     // Axes
     svg.append("g").attr("transform", `translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(9).tickFormat(d => `${Math.round(+d)}m`))
-      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
+      .call(g => g.select(".domain").attr("stroke", cc.border2))
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call(g => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "10").attr("font-family", "monospace"));
 
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5))
-      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
+      .call(g => g.select(".domain").attr("stroke", cc.border2))
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call(g => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "10").attr("font-family", "monospace"));
 
     svg.append("text").attr("x", x(-30)).attr("y", 14)
-      .attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace")
+      .attr("fill", cc.text6).attr("font-size", "9").attr("font-family", "monospace")
       .text("← 36 months before launch");
   })();
 
@@ -1440,33 +1440,33 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.grid).attr("stroke-dasharray", "3,3"));
 
     // DLC event lines (major only, no label clutter)
     majorDLC.forEach(d => {
       const dx = x(new Date(d.date));
       svg.append("line")
         .attr("x1", dx).attr("x2", dx).attr("y1", 0).attr("y2", H)
-        .attr("stroke", "#2a2a31").attr("stroke-width", 1).attr("stroke-dasharray", "2,4");
+        .attr("stroke", cc.border2).attr("stroke-width", 1).attr("stroke-dasharray", "2,4");
     });
 
     // Gradient
     const defs = svg.append("defs");
     const grad = defs.append("linearGradient").attr("id","pc-grad2").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-    grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.2);
-    grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.02);
+    grad.append("stop").attr("offset","0%").attr("stop-color",cc.bar).attr("stop-opacity",0.2);
+    grad.append("stop").attr("offset","100%").attr("stop-color",cc.bar).attr("stop-opacity",0.02);
 
     svg.append("path").datum(data)
       .attr("fill", "url(#pc-grad2)")
       .attr("d", d3.area<any>().x(d=>x(d.date)).y0(H).y1(d=>y(d.avg)).curve(d3.curveMonotoneX));
 
     svg.append("path").datum(data)
-      .attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",1)
+      .attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",1)
       .attr("stroke-dasharray","4,3").attr("opacity",0.35)
       .attr("d", d3.line<any>().x(d=>x(d.date)).y(d=>y(d.peak)).curve(d3.curveMonotoneX));
 
     svg.append("path").datum(data)
-      .attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",2)
+      .attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",2)
       .attr("d", d3.line<any>().x(d=>x(d.date)).y(d=>y(d.avg)).curve(d3.curveMonotoneX));
 
     // Annotate a few key DLC updates with labels
@@ -1475,22 +1475,22 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       const dx = x(new Date(d.date));
       svg.append("text")
         .attr("x", dx + 3).attr("y", 12)
-        .attr("fill", "#3f3f46").attr("font-size", "8").attr("font-family", "monospace")
+        .attr("fill", cc.text6).attr("font-size", "8").attr("font-family", "monospace")
         .text(d.label);
     });
 
     // Axes
     svg.append("g").attr("transform", `translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
-      .call(g => g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
+      .call(g => g.select(".domain").attr("stroke",cc.border2))
+      .call(g => g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g => g.selectAll("text").attr("fill",cc.text6).attr("font-size","11").attr("font-family","monospace"));
 
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5).tickFormat(d => `${Math.round(+d/1000)}k`))
-      .call(g => g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
+      .call(g => g.select(".domain").attr("stroke",cc.border2))
+      .call(g => g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g => g.selectAll("text").attr("fill",cc.text6).attr("font-size","11").attr("font-family","monospace"));
   })();
 
   // ── CHART 4 — Vehicle Performance ───────────────────────────
@@ -1502,13 +1502,13 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     let activeClass = "All";
 
     const CLASS_COLORS: Record<string,string> = {
-      Supers:"#f59e0b", Sports:"#22c55e", "Sports Classics":"#86efac",
-      Muscle:"#ef4444", Coupes:"#a78bfa", Sedans:"#38bdf8",
+      Supers:cc.bar, Sports:cc.green, "Sports Classics":"#86efac",
+      Muscle:cc.red, Coupes:cc.purple, Sedans:"#38bdf8",
       SUVs:"#fb923c", "Off-Road":"#a3e635", Military:"#6b7280",
     };
 
     function classColor(cls: string) {
-      return CLASS_COLORS[cls.replace(/ \(NR\)$/,"")] ?? "#71717a";
+      return CLASS_COLORS[cls.replace(/ \(NR\)$/,"")] ?? cc.text6;
     }
 
     function render() {
@@ -1549,7 +1549,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
         svg.append("text").attr("x",-8).attr("y",y+barH/2)
           .attr("text-anchor","end").attr("dominant-baseline","middle")
-          .attr("fill","#d4d4d8").attr("font-size","11").attr("font-family","monospace")
+          .attr("fill",cc.text2).attr("font-size","11").attr("font-family","monospace")
           .text(v.name.length > 20 ? v.name.slice(0,19)+"…" : v.name);
 
         const lbl = v.top_speed_mph ? `${v.lap_time}  ${v.top_speed_mph}mph` : v.lap_time ?? "";
@@ -1560,7 +1560,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
         if (i < 3) {
           svg.append("rect").attr("x", x(v.lap_seconds??maxL)+6).attr("y",y+4)
-            .attr("width",18).attr("height",16).attr("rx",2).attr("fill","#09090b").attr("opacity",0.7);
+            .attr("width",18).attr("height",16).attr("rx",2).attr("fill",cc.bg).attr("opacity",0.7);
           svg.append("text").attr("x",x(v.lap_seconds??maxL)+15).attr("y",y+barH/2)
             .attr("text-anchor","middle").attr("dominant-baseline","middle")
             .attr("fill",color).attr("font-size","9").attr("font-family","monospace").attr("font-weight","700")
@@ -1609,7 +1609,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     // Grid
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
     // Annotation vertical lines
     annotations.forEach(a => {
@@ -1621,12 +1621,12 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     // Gradient fill
     const defs = svg.append("defs");
     const grad = defs.append("linearGradient").attr("id","ttwo-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-    grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.2);
-    grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.02);
+    grad.append("stop").attr("offset","0%").attr("stop-color",cc.bar).attr("stop-opacity",0.2);
+    grad.append("stop").attr("offset","100%").attr("stop-color",cc.bar).attr("stop-opacity",0.02);
 
     svg.append("path").datum(data).attr("fill","url(#ttwo-grad)")
       .attr("d",d3.area<any>().x(d=>x(d.date)).y0(H).y1(d=>y(d.close)).curve(d3.curveMonotoneX));
-    svg.append("path").datum(data).attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",2)
+    svg.append("path").datum(data).attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",2)
       .attr("d",d3.line<any>().x(d=>x(d.date)).y(d=>y(d.close)).curve(d3.curveMonotoneX));
 
     // Annotation labels (alternating above/below)
@@ -1637,7 +1637,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       const ay = nearby ? y(nearby.close) : H/2;
       const above = i % 2 === 0;
       svg.append("circle").attr("cx",ax).attr("cy",ay).attr("r",4)
-        .attr("fill",a.color).attr("stroke","#0e0e11").attr("stroke-width",1.5);
+        .attr("fill",a.color).attr("stroke",cc.bg).attr("stroke-width",1.5);
       svg.append("text").attr("x",ax).attr("y",above?ay-10:ay+18)
         .attr("text-anchor","middle").attr("fill",a.color).attr("font-size","8").attr("font-family","monospace")
         .text(a.label);
@@ -1646,13 +1646,13 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     // Axes
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","11").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>`$${d}`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","11").attr("font-family","monospace"));
   })();
 
   // ── Competitors Bubble/Bar Chart ─────────────────────────────
@@ -1678,7 +1678,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     // Grid
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
     games.forEach(g => {
       const bx = x(g.id) ?? 0, bw = x.bandwidth();
@@ -1699,47 +1699,47 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           .attr("width",bw*0.8).attr("height",y(lo)-y(hi)).attr("rx",2)
           .attr("fill",g.color).attr("opacity",0.12);
         svg.append("text").attr("x",bx+bw/2).attr("y",y(hi)-4)
-          .attr("text-anchor","middle").attr("fill","#71717a").attr("font-size","8").attr("font-family","monospace")
+          .attr("text-anchor","middle").attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace")
           .text(`${g.prediction_range.low}–${g.prediction_range.high}M`);
       }
 
       // Units label
       svg.append("text").attr("x",bx+bw/2).attr("y",y(units)-(isPred?24:5))
-        .attr("text-anchor","middle").attr("fill",isPred?g.color:"#a1a1aa")
+        .attr("text-anchor","middle").attr("fill",isPred?g.color:cc.text4)
         .attr("font-size",isPred?"11":"10").attr("font-family","monospace").attr("font-weight",isPred?"700":"400")
         .text(isPred?`~${units}M*`:`${units}M`);
 
       // Search dot on right axis
       if (g.search_t12) {
         svg.append("circle").attr("cx",bx+bw/2).attr("cy",y2(g.search_t12)).attr("r",isPred?7:5)
-          .attr("fill",isPred?g.color:"#0d9488").attr("opacity",isPred?0.9:0.7)
-          .attr("stroke","#0e0e11").attr("stroke-width",1);
+          .attr("fill",isPred?g.color:cc.teal).attr("opacity",isPred?0.9:0.7)
+          .attr("stroke",cc.bg).attr("stroke-width",1);
         svg.append("text").attr("x",bx+bw/2).attr("y",y2(g.search_t12)-8)
-          .attr("text-anchor","middle").attr("fill","#0d9488").attr("font-size","8").attr("font-family","monospace")
+          .attr("text-anchor","middle").attr("fill",cc.teal).attr("font-size","8").attr("font-family","monospace")
           .text(`${g.search_t12}`);
       }
 
       // Title label
       svg.append("text").attr("x",-8).attr("y",H+30).attr("text-anchor","end")
         .attr("transform",`translate(${bx+bw/2},0) rotate(-35,0,${H+30})`)
-        .attr("fill",isPred?g.color:"#71717a").attr("font-size","10").attr("font-family","monospace")
+        .attr("fill",isPred?g.color:cc.text6).attr("font-size","10").attr("font-family","monospace")
         .text(g.title.length>16?g.title.slice(0,15)+"…":g.title);
     });
 
     // Right axis — search index
     svg.append("g").attr("transform",`translate(${W},0)`)
       .call(d3.axisRight(y2).ticks(5))
-      .call(g=>g.select(".domain").attr("stroke","#0d9488"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#0d9488").attr("opacity",0.2))
-      .call(g=>g.selectAll("text").attr("fill","#0d9488").attr("font-size","9").attr("font-family","monospace").attr("dx","3"));
+      .call(g=>g.select(".domain").attr("stroke",cc.teal))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.teal).attr("opacity",0.2))
+      .call(g=>g.selectAll("text").attr("fill",cc.teal).attr("font-size","9").attr("font-family","monospace").attr("dx","3"));
     svg.append("text").attr("x",W+44).attr("y",-8)
-      .attr("fill","#0d9488").attr("font-size","8").attr("font-family","monospace").text("search");
+      .attr("fill",cc.teal).attr("font-size","8").attr("font-family","monospace").text("search");
 
     // Left axis
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>`${d}M`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
   })();
 
   // ── CHART A — Pre-launch Signal Comparison ──────────────────
@@ -1785,12 +1785,12 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       const g = svg.append("g").attr("transform",`translate(0,${yOffset})`);
       g.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
         .call((gg: any) => gg.select(".domain").remove())
-        .call((gg: any) => gg.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+        .call((gg: any) => gg.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
       const line = d3.line<any>().x(d => x(d.m)).y(d => y(d.v)).curve(d3.curveMonotoneX);
 
       // GTA V (muted grey)
-      g.append("path").datum(gta5data).attr("fill","none").attr("stroke","#52525b")
+      g.append("path").datum(gta5data).attr("fill","none").attr("stroke",cc.text6)
         .attr("stroke-width",1.5).attr("d",line as any);
 
       // GTA VI (gold + area fill)
@@ -1798,37 +1798,37 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       const defs = svg.append("defs");
       const gid = `pg-grad-${yOffset}`;
       const grad = defs.append("linearGradient").attr("id",gid).attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",panelH);
-      grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.25);
-      grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.02);
+      grad.append("stop").attr("offset","0%").attr("stop-color",cc.bar).attr("stop-opacity",0.25);
+      grad.append("stop").attr("offset","100%").attr("stop-color",cc.bar).attr("stop-opacity",0.02);
       g.append("path").datum(gta6data).attr("fill",`url(#${gid})`).attr("d",area);
-      g.append("path").datum(gta6data).attr("fill","none").attr("stroke","#f59e0b")
+      g.append("path").datum(gta6data).attr("fill","none").attr("stroke",cc.bar)
         .attr("stroke-width",2).attr("d",line as any);
 
       // Launch line
       g.append("line").attr("x1",x(0)).attr("x2",x(0)).attr("y1",0).attr("y2",panelH)
-        .attr("stroke","#ef4444").attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.4);
+        .attr("stroke",cc.red).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.4);
 
       // Panel label
-      g.append("text").attr("x",6).attr("y",12).attr("fill","#52525b")
+      g.append("text").attr("x",6).attr("y",12).attr("fill",cc.text6)
         .attr("font-size","9").attr("font-family","monospace").text(label);
 
       // Axis
       g.append("g").attr("transform",`translate(0,${panelH})`)
         .call(d3.axisBottom(x).ticks(9).tickFormat(d => `${d}m`))
-        .call((gg: any)=>gg.select(".domain").attr("stroke","#2a2a31"))
-        .call((gg: any)=>gg.selectAll(".tick line").attr("stroke","#2a2a31"))
-        .call((gg: any)=>gg.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+        .call((gg: any)=>gg.select(".domain").attr("stroke",cc.border2))
+        .call((gg: any)=>gg.selectAll(".tick line").attr("stroke",cc.border2))
+        .call((gg: any)=>gg.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
       g.append("g").call(d3.axisLeft(y).ticks(4))
-        .call((gg: any)=>gg.select(".domain").attr("stroke","#2a2a31"))
-        .call((gg: any)=>gg.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+        .call((gg: any)=>gg.select(".domain").attr("stroke",cc.border2))
+        .call((gg: any)=>gg.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     }
 
     drawPanel(0, g5, g6, "Google Trends search interest (0–100)");
     drawPanel(panelH + 20, g5reddit, g6reddit, "Reddit subscriber index (normalised to 100 at launch)");
 
     // Legend
-    svg.append("text").attr("x", W - 100).attr("y", 10).attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace").text("━ GTA V (2013)");
-    svg.append("text").attr("x", W - 100).attr("y", 22).attr("fill","#f59e0b").attr("font-size","9").attr("font-family","monospace").text("━ GTA VI (2026)");
+    svg.append("text").attr("x", W - 100).attr("y", 10).attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace").text("━ GTA V (2013)");
+    svg.append("text").attr("x", W - 100).attr("y", 22).attr("fill",cc.bar).attr("font-size","9").attr("font-family","monospace").text("━ GTA VI (2026)");
   })();
 
   // ── CHART B — CPI Adjusted Pricing ──────────────────────────
@@ -1855,13 +1855,13 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(d=>`$${d}`))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
 
     // $80 reference line
     svg.append("line").attr("x1",0).attr("x2",W).attr("y1",y(80)).attr("y2",y(80))
-      .attr("stroke","#f59e0b").attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
-    svg.append("text").attr("x",4).attr("y",y(80)-4).attr("fill","#f59e0b")
+      .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
+    svg.append("text").attr("x",4).attr("y",y(80)-4).attr("fill",cc.bar)
       .attr("font-size","9").attr("font-family","monospace").text("$80 GTA VI price");
 
     withReal.forEach(t => {
@@ -1870,35 +1870,35 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       // Real price bar (behind, lighter)
       svg.append("rect").attr("x",bx).attr("y",y(t.price_real))
         .attr("width",bw).attr("height",H-y(t.price_real)).attr("rx",3)
-        .attr("fill",isVI?"#f59e0b":"#52525b").attr("opacity",isVI?0.15:0.25);
+        .attr("fill",isVI?cc.bar:cc.text6).attr("opacity",isVI?0.15:0.25);
 
       // Nominal price bar (front, solid)
       svg.append("rect").attr("x",bx+bw*0.15).attr("y",y(t.price_nominal))
         .attr("width",bw*0.7).attr("height",H-y(t.price_nominal)).attr("rx",2)
-        .attr("fill",isVI?"#f59e0b":"#3f3f46").attr("opacity",isVI?0.9:0.85);
+        .attr("fill",isVI?cc.bar:cc.text6).attr("opacity",isVI?0.9:0.85);
 
       // Real price label
       svg.append("text").attr("x",bx+bw/2).attr("y",y(t.price_real)-5)
-        .attr("text-anchor","middle").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace")
+        .attr("text-anchor","middle").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace")
         .text(`$${t.price_real}`);
 
       // Nominal price label
       svg.append("text").attr("x",bx+bw/2).attr("y",y(t.price_nominal)-5)
-        .attr("text-anchor","middle").attr("fill",isVI?"#f59e0b":"#a1a1aa").attr("font-size","10").attr("font-family","monospace").attr("font-weight","600")
+        .attr("text-anchor","middle").attr("fill",isVI?cc.bar:cc.text4).attr("font-size","10").attr("font-family","monospace").attr("font-weight","600")
         .text(`$${t.price_nominal}`);
     });
 
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
       .call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#71717a").attr("font-size","12").attr("font-family","monospace").attr("dy","1.2em"));
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","12").attr("font-family","monospace").attr("dy","1.2em"));
 
     // Legend
-    svg.append("rect").attr("x",W-130).attr("y",-18).attr("width",10).attr("height",10).attr("fill","#3f3f46").attr("opacity",0.9);
-    svg.append("text").attr("x",W-116).attr("y",-10).attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace").text("Nominal price");
-    svg.append("rect").attr("x",W-130).attr("y",-4).attr("width",10).attr("height",10).attr("fill","#52525b").attr("opacity",0.25);
-    svg.append("text").attr("x",W-116).attr("y",4).attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace").text("2026 real price");
+    svg.append("rect").attr("x",W-130).attr("y",-18).attr("width",10).attr("height",10).attr("fill",cc.text6).attr("opacity",0.9);
+    svg.append("text").attr("x",W-116).attr("y",-10).attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace").text("Nominal price");
+    svg.append("rect").attr("x",W-130).attr("y",-4).attr("width",10).attr("height",10).attr("fill",cc.text6).attr("opacity",0.25);
+    svg.append("text").attr("x",W-116).attr("y",4).attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace").text("2026 real price");
   })();
 
   // ── CHART C — Divergence ────────────────────────────────────
@@ -1927,11 +1927,11 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
     svg.append("g").call(d3.axisLeft(y).ticks(7).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
     svg.append("g").call(d3.axisLeft(y).ticks(7))
       .call(g=>g.select(".domain").remove())
       .call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
 
     withPred.forEach(s => {
       const cx = (x(s.short) ?? 0) + x.bandwidth() / 2;
@@ -1941,42 +1941,42 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
       // Connecting line
       svg.append("line").attr("x1",cx).attr("x2",cx).attr("y1",cy).attr("y2",uy)
-        .attr("stroke", isPred?"#ef4444":"#52525b")
+        .attr("stroke", isPred?cc.red:cc.text6)
         .attr("stroke-width", isPred?2:1.5)
         .attr("stroke-dasharray", isPred?"5,3":"0")
         .attr("opacity",0.7);
 
       // Critic dot (gold)
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isPred?7:6)
-        .attr("fill",isPred?"none":"#f59e0b").attr("stroke","#f59e0b").attr("stroke-width",isPred?1.5:0);
+        .attr("fill",isPred?"none":cc.bar).attr("stroke",cc.bar).attr("stroke-width",isPred?1.5:0);
       svg.append("text").attr("x",cx).attr("y",cy-10).attr("text-anchor","middle")
-        .attr("fill","#f59e0b").attr("font-size","10").attr("font-family","monospace").attr("font-weight","600")
+        .attr("fill",cc.bar).attr("font-size","10").attr("font-family","monospace").attr("font-weight","600")
         .text(s.critic_score);
 
       // User dot (purple)
       svg.append("circle").attr("cx",cx).attr("cy",uy).attr("r",isPred?7:6)
-        .attr("fill",isPred?"none":"#a78bfa").attr("stroke","#a78bfa").attr("stroke-width",isPred?1.5:0);
+        .attr("fill",isPred?"none":cc.purple).attr("stroke",cc.purple).attr("stroke-width",isPred?1.5:0);
       svg.append("text").attr("x",cx).attr("y",uy+18).attr("text-anchor","middle")
-        .attr("fill","#a78bfa").attr("font-size","10").attr("font-family","monospace")
+        .attr("fill",cc.purple).attr("font-size","10").attr("font-family","monospace")
         .text((s.user_score * 10).toFixed(0));
 
       // Delta label
       const delta = s.critic_user_delta;
       svg.append("text").attr("x",cx+x.bandwidth()/2+2).attr("y",(cy+uy)/2+4)
-        .attr("fill",delta>15?"#ef4444":"#52525b").attr("font-size","9").attr("font-family","monospace")
+        .attr("fill",delta>15?cc.red:cc.text6).attr("font-size","9").attr("font-family","monospace")
         .text(`+${delta}`);
     });
 
     // "Monetisation opens here" annotation
     const gta4x = (x("GTA IV") ?? 0) + x.bandwidth() / 2;
     svg.append("text").attr("x",gta4x).attr("y",H+36).attr("text-anchor","middle")
-      .attr("fill","#ef4444").attr("font-size","8").attr("font-family","monospace").text("← gap opens here");
+      .attr("fill",cc.red).attr("font-size","8").attr("font-family","monospace").text("← gap opens here");
 
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
       .call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#71717a").attr("font-size","11").attr("font-family","monospace").attr("dy","1.2em"));
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","11").attr("font-family","monospace").attr("dy","1.2em"));
   })();
 
   // ── CHART D — Trailer Discovery Timeline ────────────────────
@@ -1986,8 +1986,8 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     const trailers: any[] = JSON.parse(el.dataset.trailers || "[]");
 
     const TYPE_COLORS: Record<string,string> = {
-      vehicle:"#f59e0b", character:"#22c55e", location:"#38bdf8",
-      wildlife:"#a3e635", weapon:"#ef4444", audio:"#a78bfa", reveal:"#ffffff",
+      vehicle:cc.bar, character:cc.green, location:"#38bdf8",
+      wildlife:"#a3e635", weapon:cc.red, audio:cc.purple, reveal:"#ffffff",
     };
 
     trailers.forEach((trailer, ti) => {
@@ -2014,7 +2014,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
       // Background strip
       svg.append("rect").attr("x",0).attr("y",16).attr("width",W).attr("height",stripH).attr("rx",4)
-        .attr("fill","#1a1a1e");
+        .attr("fill",cc.card);
 
       // Density heatmap (count events per 10-second bucket)
       const buckets = Math.ceil(dur / 8);
@@ -2026,13 +2026,13 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         const bx = x(i * 8);
         const bw = x(8) - x(0);
         svg.append("rect").attr("x",bx).attr("y",16).attr("width",bw).attr("height",stripH).attr("rx",2)
-          .attr("fill","#f59e0b").attr("opacity", 0.05 + (c / maxCount) * 0.25);
+          .attr("fill",cc.bar).attr("opacity", 0.05 + (c / maxCount) * 0.25);
       });
 
       // Event markers
       trailer.events.forEach((ev: any, i: number) => {
         const ex = x(ev.t);
-        const color = TYPE_COLORS[ev.type] ?? "#71717a";
+        const color = TYPE_COLORS[ev.type] ?? cc.text6;
         const above = i % 2 === 0;
         const markerY = above ? 16 : 16 + stripH - 10;
 
@@ -2040,7 +2040,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           .attr("stroke",color).attr("stroke-width",1).attr("opacity",0.6);
 
         svg.append("circle").attr("cx",ex).attr("cy",markerY+5).attr("r",4)
-          .attr("fill",color).attr("stroke","#0e0e11").attr("stroke-width",1);
+          .attr("fill",color).attr("stroke",cc.bg).attr("stroke-width",1);
 
         // Key reveals get labels
         if (ev.type === "reveal" || ev.type === "character" || (i < 3) || ev.confidence === "confirmed") {
@@ -2056,7 +2056,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         const tx = pct * W;
         const tSec = Math.round(pct * dur);
         svg.append("text").attr("x",tx).attr("y",totalH+16)
-          .attr("text-anchor","middle").attr("fill","#3f3f46").attr("font-size","9").attr("font-family","monospace")
+          .attr("text-anchor","middle").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace")
           .text(`${Math.floor(tSec/60)}:${String(tSec%60).padStart(2,"0")}`);
       });
     });
@@ -2110,9 +2110,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
     // Average line
     svg.append("line").attr("x1",0).attr("x2",W).attr("y1",y(avgGap)).attr("y2",y(avgGap))
-      .attr("stroke","#52525b").attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.5);
+      .attr("stroke",cc.text6).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.5);
     svg.append("text").attr("x",4).attr("y",y(avgGap)-4)
-      .attr("fill","#52525b").attr("font-size","8").attr("font-family","monospace")
+      .attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace")
       .text(`avg: ${avgGap.toFixed(1)}mo`);
 
     // GTA VI divider
@@ -2120,36 +2120,36 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     if (viStartIdx > 0) {
       const divX = (x(String(viStartIdx)) ?? 0) - x.bandwidth()*0.3;
       svg.append("line").attr("x1",divX).attr("x2",divX).attr("y1",0).attr("y2",H)
-        .attr("stroke","#f59e0b").attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.4);
+        .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.4);
       svg.append("text").attr("x",divX+4).attr("y",10)
-        .attr("fill","#f59e0b").attr("font-size","8").attr("font-family","monospace").text("GTA VI →");
+        .attr("fill",cc.bar).attr("font-size","8").attr("font-family","monospace").text("GTA VI →");
     }
 
     gaps.forEach((g, i) => {
       const bx = x(String(i)) ?? 0, bw = x.bandwidth();
       svg.append("rect").attr("x",bx).attr("y",y(g.gap))
         .attr("width",bw).attr("height",H-y(g.gap)).attr("rx",2)
-        .attr("fill", g.isPred?"none":"#3f3f46")
-        .attr("stroke", g.isPred?"#f59e0b":"none").attr("stroke-width",1).attr("stroke-dasharray",g.isPred?"5,3":"0")
+        .attr("fill", g.isPred?"none":cc.text6)
+        .attr("stroke", g.isPred?cc.bar:"none").attr("stroke-width",1).attr("stroke-dasharray",g.isPred?"5,3":"0")
         .attr("opacity",0.8);
       svg.append("text").attr("x",bx+bw/2).attr("y",y(g.gap)-4)
         .attr("text-anchor","middle")
-        .attr("fill",g.isPred?"#f59e0b":"#71717a")
+        .attr("fill",g.isPred?cc.bar:cc.text6)
         .attr("font-size","8").attr("font-family","monospace")
         .text(`${g.gap}mo`);
       // Label every 4th + VI ones
       if (i % 4 === 0 || g.isPred) {
         svg.append("text").attr("x",bx+bw/2).attr("y",H+14)
           .attr("text-anchor","middle").attr("transform",`rotate(-45,${bx+bw/2},${H+14})`)
-          .attr("fill",g.isPred?"#f59e0b":"#52525b").attr("font-size","8").attr("font-family","monospace")
+          .attr("fill",g.isPred?cc.bar:cc.text6).attr("font-size","8").attr("font-family","monospace")
           .text(g.isPred?g.name:g.date.slice(0,7));
       }
     });
 
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>`${d}mo`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
   })();
 
   // ── CHART F — Region Evidence Heatmap ───────────────────────
@@ -2203,7 +2203,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
                 const bg = r.confirmed ? `rgba(245,158,11,${opacity})` : `rgba(82,82,91,${opacity*0.4})`;
                 return `<td class="px-3 py-2.5 text-center">
                   <div class="inline-flex items-center justify-center w-8 h-6 rounded text-[10px] font-mono font-bold"
-                       style="background:${bg};color:${v>0?(r.confirmed?"#f59e0b":"#71717a"):"#3f3f46"}">
+                       style="background:${bg};color:${v>0?(r.confirmed?cc.bar:cc.text6):cc.text6}">
                     ${v > 0 ? v : "—"}
                   </div>
                 </td>`;
@@ -2245,7 +2245,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     // Grid
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
     years.forEach(yr => {
       const bx = x(yr.fy) ?? 0, bw = x.bandwidth();
@@ -2254,44 +2254,44 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       // Game sales (bottom, gold)
       svg.append("rect").attr("x",bx).attr("y",y(yr.game_sales_bn))
         .attr("width",bw).attr("height",H-y(yr.game_sales_bn)).attr("rx",isPred?2:0)
-        .attr("fill","#f59e0b").attr("opacity",isPred?0.3:0.85)
-        .attr("stroke",isPred?"#f59e0b":"none").attr("stroke-dasharray",isPred?"5,3":"0").attr("stroke-width",1);
+        .attr("fill",cc.bar).attr("opacity",isPred?0.3:0.85)
+        .attr("stroke",isPred?cc.bar:"none").attr("stroke-dasharray",isPred?"5,3":"0").attr("stroke-width",1);
 
       // Recurrent (top, teal)
       svg.append("rect").attr("x",bx).attr("y",y(yr.total_bn))
         .attr("width",bw).attr("height",y(yr.game_sales_bn)-y(yr.total_bn)).attr("rx",isPred?2:0)
-        .attr("fill","#0d9488").attr("opacity",isPred?0.3:0.8)
-        .attr("stroke",isPred?"#0d9488":"none").attr("stroke-dasharray",isPred?"5,3":"0").attr("stroke-width",1);
+        .attr("fill",cc.teal).attr("opacity",isPred?0.3:0.8)
+        .attr("stroke",isPred?cc.teal:"none").attr("stroke-dasharray",isPred?"5,3":"0").attr("stroke-width",1);
 
       // % recurrent line dot
       svg.append("circle").attr("cx",bx+bw/2).attr("cy",y2(yr.pct_recurrent)).attr("r",2.5)
-        .attr("fill",isPred?"none":"#ef4444").attr("stroke","#ef4444").attr("stroke-width",isPred?1:0);
+        .attr("fill",isPred?"none":cc.red).attr("stroke",cc.red).attr("stroke-width",isPred?1:0);
     });
 
     // % recurrent line
     const lineData = years.filter(y => !y.is_prediction);
     svg.append("path").datum(lineData)
-      .attr("fill","none").attr("stroke","#ef4444").attr("stroke-width",1.5).attr("opacity",0.6)
+      .attr("fill","none").attr("stroke",cc.red).attr("stroke-width",1.5).attr("opacity",0.6)
       .attr("d",d3.line<any>().x(d=>(x(d.fy)??0)+x.bandwidth()/2).y(d=>y2(d.pct_recurrent)).curve(d3.curveMonotoneX) as any);
 
     // Right axis for % recurrent
     svg.append("g").attr("transform",`translate(${W},0)`)
       .call(d3.axisRight(y2).ticks(5).tickFormat(d=>`${d}%`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#ef4444").attr("font-size","9").attr("font-family","monospace").attr("dx","4"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.red).attr("font-size","9").attr("font-family","monospace").attr("dx","4"));
 
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).tickValues(years.filter((_,i)=>i%2===0).map(y=>y.fy)))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
       .call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace")
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace")
         .attr("transform","rotate(-30)").attr("text-anchor","end").attr("dy","0.5em"));
 
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>`$${d}B`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
   })();
 
   // ── CHART H — Business Profit/Hour ──────────────────────────
@@ -2302,8 +2302,8 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .sort((a: any, b: any) => b.profit_per_hour - a.profit_per_hour);
 
     const CAT_COLORS: Record<string,string> = {
-      heist:"#f59e0b", passive:"#22c55e", business:"#38bdf8",
-      ceo:"#a78bfa", mc:"#fb923c", gunrunning:"#ef4444", smuggling:"#6b7280",
+      heist:cc.bar, passive:cc.green, business:"#38bdf8",
+      ceo:cc.purple, mc:"#fb923c", gunrunning:cc.red, smuggling:"#6b7280",
     };
 
     const barH = 26, gap = 4;
@@ -2320,7 +2320,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
     businesses.forEach((b: any, i: number) => {
       const y = i * (barH + gap);
-      const color = CAT_COLORS[b.category] ?? "#52525b";
+      const color = CAT_COLORS[b.category] ?? cc.text6;
 
       svg.append("rect").attr("x",0).attr("y",y)
         .attr("width",x(b.profit_per_hour)).attr("height",barH).attr("rx",3)
@@ -2328,7 +2328,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
       svg.append("text").attr("x",-8).attr("y",y+barH/2)
         .attr("text-anchor","end").attr("dominant-baseline","middle")
-        .attr("fill","#d4d4d8").attr("font-size","11").attr("font-family","monospace")
+        .attr("fill",cc.text2).attr("font-size","11").attr("font-family","monospace")
         .text(b.name.length>22?b.name.slice(0,21)+"…":b.name);
 
       const label = `$${(b.profit_per_hour/1000).toFixed(0)}k/hr`;
@@ -2339,13 +2339,13 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
       // Category pill
       svg.append("text").attr("x",6).attr("y",y+barH/2)
-        .attr("dominant-baseline","middle").attr("fill","#09090b")
+        .attr("dominant-baseline","middle").attr("fill",cc.bg)
         .attr("font-size","7").attr("font-family","monospace").attr("font-weight","700")
         .text(b.category.toUpperCase());
 
       if (i < 3) {
         svg.append("rect").attr("x",x(b.profit_per_hour)-28).attr("y",y+4)
-          .attr("width",22).attr("height",18).attr("rx",2).attr("fill","#09090b").attr("opacity",0.7);
+          .attr("width",22).attr("height",18).attr("rx",2).attr("fill",cc.bg).attr("opacity",0.7);
         svg.append("text").attr("x",x(b.profit_per_hour)-17).attr("y",y+barH/2)
           .attr("text-anchor","middle").attr("dominant-baseline","middle")
           .attr("fill",color).attr("font-size","9").attr("font-family","monospace").attr("font-weight","700")
@@ -2364,22 +2364,22 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     const launchDate = new Date(el.dataset.launch || "2026-11-19");
 
     const TYPE_COLORS: Record<string,string> = {
-      milestone:      "#3f3f46",
-      development:    "#52525b",
-      leak:           "#ef4444",
-      trailer:        "#f59e0b",
-      date_set:       "#0d9488",
-      delay:          "#ef4444",
-      date_confirmed: "#0d9488",
+      milestone:      cc.text6,
+      development:    cc.text6,
+      leak:           cc.red,
+      trailer:        cc.bar,
+      date_set:       cc.teal,
+      delay:          cc.red,
+      date_confirmed: cc.teal,
     };
     const TYPE_FILL: Record<string,string> = {
-      trailer:        "#f59e0b",
-      delay:          "#ef4444",
-      date_confirmed: "#0d9488",
-      date_set:       "#0d9488",
-      leak:           "#ef4444",
-      development:    "#3f3f46",
-      milestone:      "#3f3f46",
+      trailer:        cc.bar,
+      delay:          cc.red,
+      date_confirmed: cc.teal,
+      date_set:       cc.teal,
+      leak:           cc.red,
+      development:    cc.text6,
+      milestone:      cc.text6,
     };
 
     // Focus on 2022–2027 (where the story is)
@@ -2405,37 +2405,37 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .attr("x", x(promisedStart)).attr("y", MID - 28)
       .attr("width", x(promisedEnd) - x(promisedStart)).attr("height", 56)
       .attr("rx", 4)
-      .attr("fill", "#0d9488").attr("fill-opacity", 0.08)
-      .attr("stroke", "#0d9488").attr("stroke-opacity", 0.2).attr("stroke-width", 1)
+      .attr("fill", cc.teal).attr("fill-opacity", 0.08)
+      .attr("stroke", cc.teal).attr("stroke-opacity", 0.2).attr("stroke-width", 1)
       .attr("stroke-dasharray", "4,3");
     svg.append("text")
       .attr("x", x(new Date("2025-07-01"))).attr("y", MID - 33)
       .attr("text-anchor","middle")
-      .attr("fill","#0d9488").attr("font-size","9").attr("font-family","monospace").attr("opacity",0.6)
+      .attr("fill",cc.teal).attr("font-size","9").attr("font-family","monospace").attr("opacity",0.6)
       .text("promised 2025 window");
 
     // ── Confirmed Nov 19, 2026 band ──────────────────────────
     svg.append("rect")
       .attr("x", x(launchDate) - 1).attr("y", MID - 28)
       .attr("width", 2).attr("height", 56)
-      .attr("fill","#f59e0b").attr("opacity",0.9);
+      .attr("fill",cc.bar).attr("opacity",0.9);
     svg.append("text")
       .attr("x", x(launchDate) + 5).attr("y", MID - 30)
-      .attr("fill","#f59e0b").attr("font-size","9").attr("font-family","monospace").attr("font-weight","700")
+      .attr("fill",cc.bar).attr("font-size","9").attr("font-family","monospace").attr("font-weight","700")
       .text("Nov 19, 2026");
 
     // ── Main spine ───────────────────────────────────────────
     svg.append("line")
       .attr("x1",0).attr("x2",W).attr("y1",MID).attr("y2",MID)
-      .attr("stroke","#2a2a31").attr("stroke-width",1.5);
+      .attr("stroke",cc.border2).attr("stroke-width",1.5);
 
     // ── Events ───────────────────────────────────────────────
     const visibleEvents = events.filter(e => new Date(e.date) >= startDate);
 
     visibleEvents.forEach((ev, i) => {
       const ex = x(new Date(ev.date));
-      const color = TYPE_COLORS[ev.type] ?? "#52525b";
-      const fill  = TYPE_FILL[ev.type] ?? "#3f3f46";
+      const color = TYPE_COLORS[ev.type] ?? cc.text6;
+      const fill  = TYPE_FILL[ev.type] ?? cc.text6;
       const above = i % 2 === 0; // alternate above/below
       const labelY = above ? MID - 52 : MID + 70;
       const tickY1 = above ? MID - 12 : MID + 12;
@@ -2448,7 +2448,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
       // Dot on spine
       svg.append("circle").attr("cx",ex).attr("cy",MID).attr("r", ev.type === "delay" ? 7 : 5)
-        .attr("fill", ev.type === "delay" || ev.type === "date_confirmed" || ev.type === "trailer" ? fill : "#131316")
+        .attr("fill", ev.type === "delay" || ev.type === "date_confirmed" || ev.type === "trailer" ? fill : cc.card)
         .attr("stroke",color).attr("stroke-width",ev.type === "delay" ? 2 : 1.5);
 
       // Short event label (2-3 words)
@@ -2466,7 +2466,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       svg.append("text")
         .attr("x",ex).attr("y",labelY)
         .attr("text-anchor","middle")
-        .attr("fill", ev.type === "delay" ? "#ef4444" : ev.type === "date_confirmed" ? "#0d9488" : ev.type === "trailer" ? "#f59e0b" : "#71717a")
+        .attr("fill", ev.type === "delay" ? cc.red : ev.type === "date_confirmed" ? cc.teal : ev.type === "trailer" ? cc.bar : cc.text6)
         .attr("font-size",ev.type === "delay" ? "11" : "9")
         .attr("font-family","monospace")
         .attr("font-weight", ev.type === "delay" || ev.type === "date_confirmed" ? "700" : "400")
@@ -2476,16 +2476,16 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       svg.append("text")
         .attr("x",ex).attr("y",above ? MID - 40 : MID + 84)
         .attr("text-anchor","middle")
-        .attr("fill","#3f3f46").attr("font-size","8").attr("font-family","monospace")
+        .attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace")
         .text(ev.date.slice(0,7));
     });
 
     // ── X axis (year ticks) ──────────────────────────────────
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(d3.timeYear.every(1)).tickFormat(d3.timeFormat("%Y") as any))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","11").attr("font-family","monospace"));
 
     // ── Delay annotation arrow ───────────────────────────────
     const delayEv = events.find(e => e.type === "delay");
@@ -2495,14 +2495,14 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       const x2 = x(new Date(confirmEv.date)) - 8;
       const ay = MID + 4;
       svg.append("line").attr("x1",x1).attr("x2",x2).attr("y1",ay).attr("y2",ay)
-        .attr("stroke","#ef4444").attr("stroke-width",1.5).attr("opacity",0.35)
+        .attr("stroke",cc.red).attr("stroke-width",1.5).attr("opacity",0.35)
         .attr("marker-end","url(#arrow-red)");
       // Arrow marker
       const defs = svg.append("defs");
       const marker = defs.append("marker").attr("id","arrow-red")
         .attr("viewBox","0 -5 10 10").attr("refX",6).attr("refY",0)
         .attr("markerWidth",6).attr("markerHeight",6).attr("orient","auto");
-      marker.append("path").attr("d","M0,-5L10,0L0,5").attr("fill","#ef4444").attr("opacity",0.35);
+      marker.append("path").attr("d","M0,-5L10,0L0,5").attr("fill",cc.red).attr("opacity",0.35);
     }
   })();
 
@@ -2533,21 +2533,21 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     // Grid
     svg.append("g").call(d3.axisLeft(y1).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
     // Key event annotations
     msData.filter(d => d.event).forEach(d => {
       svg.append("line").attr("x1",x(d.date)).attr("x2",x(d.date)).attr("y1",0).attr("y2",H)
-        .attr("stroke","#2a2a31").attr("stroke-width",1).attr("stroke-dasharray","3,3");
+        .attr("stroke",cc.border2).attr("stroke-width",1).attr("stroke-dasharray","3,3");
       svg.append("text").attr("x",x(d.date)+3).attr("y",10)
-        .attr("fill","#3f3f46").attr("font-size","8").attr("font-family","monospace")
+        .attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace")
         .text((d.event ?? "").split(" ").slice(0,3).join(" "));
     });
 
     // Trends overlay (right axis)
     if (trendsKw && trendsKw.data.length > 0) {
       const tData = trendsKw.data.map(d => ({ date: new Date(d.date), value: d.value }));
-      svg.append("path").datum(tData).attr("fill","none").attr("stroke","#f59e0b")
+      svg.append("path").datum(tData).attr("fill","none").attr("stroke",cc.bar)
         .attr("stroke-width",1).attr("opacity",0.4)
         .attr("d",d3.line<any>().x(d=>x(d.date)).y(d=>y2(d.value)).curve(d3.curveMonotoneX));
     }
@@ -2556,32 +2556,32 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     const area = d3.area<any>().x(d=>x(d.date)).y0(H).y1(d=>y1(d.subs)).curve(d3.curveMonotoneX);
     const defs = svg.append("defs");
     const grad = defs.append("linearGradient").attr("id","comm-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-    grad.append("stop").attr("offset","0%").attr("stop-color","#22c55e").attr("stop-opacity",0.2);
-    grad.append("stop").attr("offset","100%").attr("stop-color","#22c55e").attr("stop-opacity",0.01);
+    grad.append("stop").attr("offset","0%").attr("stop-color",cc.green).attr("stop-opacity",0.2);
+    grad.append("stop").attr("offset","100%").attr("stop-color",cc.green).attr("stop-opacity",0.01);
     svg.append("path").datum(msData).attr("fill","url(#comm-grad)").attr("d",area);
-    svg.append("path").datum(msData).attr("fill","none").attr("stroke","#22c55e").attr("stroke-width",2)
+    svg.append("path").datum(msData).attr("fill","none").attr("stroke",cc.green).attr("stroke-width",2)
       .attr("d",d3.line<any>().x(d=>x(d.date)).y(d=>y1(d.subs)).curve(d3.curveMonotoneX));
     // Dots at milestones
     msData.forEach(d => {
       svg.append("circle").attr("cx",x(d.date)).attr("cy",y1(d.subs)).attr("r",3)
-        .attr("fill","#22c55e").attr("stroke","#0e0e11").attr("stroke-width",1.5);
+        .attr("fill",cc.green).attr("stroke",cc.bg).attr("stroke-width",1.5);
     });
 
     // Axes
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y1).ticks(5).tickFormat(d => `${(+d/1_000_000).toFixed(1)}M`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
     svg.append("g").attr("transform",`translate(${W},0)`)
       .call(d3.axisRight(y2).ticks(5))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").attr("dx","3"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace").attr("dx","3"));
   })();
 
   // ── CHART 7 — Entertainment Comparison ─────────────────────
@@ -2592,8 +2592,8 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       JSON.parse(el.dataset.entries || "[]");
 
     const TYPE_COLORS: Record<string,string> = {
-      film: "#60a5fa", game: "#f59e0b", concert: "#a78bfa",
-      platform: "#22c55e", other: "#71717a",
+      film: "#60a5fa", game: cc.bar, concert: cc.purple,
+      platform: cc.green, other: cc.text6,
     };
 
     const margin = { top: 8, right: 80, bottom: 32, left: 220 };
@@ -2610,7 +2610,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
     entries.forEach((e, i) => {
       const y = i * (barH + gap);
-      const color = TYPE_COLORS[e.type] ?? "#71717a";
+      const color = TYPE_COLORS[e.type] ?? cc.text6;
       const isPred = e.is_prediction;
 
       svg.append("rect").attr("x", 0).attr("y", y)
@@ -2622,7 +2622,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       // Name label (left)
       svg.append("text").attr("x", -8).attr("y", y + barH/2)
         .attr("text-anchor","end").attr("dominant-baseline","middle")
-        .attr("fill", isPred ? color : "#d4d4d8").attr("font-size","11").attr("font-family","monospace")
+        .attr("fill", isPred ? color : cc.text2).attr("font-size","11").attr("font-family","monospace")
         .text(e.name.length > 28 ? e.name.slice(0,27)+"…" : e.name);
 
       // Value label (right)
@@ -2634,15 +2634,15 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       // Type badge
       svg.append("text").attr("x", 6).attr("y", y + barH/2)
         .attr("dominant-baseline","middle")
-        .attr("fill","#09090b").attr("font-size","8").attr("font-family","monospace").attr("font-weight","700")
+        .attr("fill",cc.bg).attr("font-size","8").attr("font-family","monospace").attr("font-weight","700")
         .text(e.type.toUpperCase());
     });
 
     svg.append("g").attr("transform",`translate(0,${H+4})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat(d => `$${d}B`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
   })();
 
   // ── CHART I — Mission Earnings Curve ────────────────────────
@@ -2661,38 +2661,38 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     const y = d3.scaleLog().domain([100, Math.max(...paying.map((m:any) => m.payout||100))]).range([H,0]).clamp(true);
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
     const defs = svg.append("defs");
     const grad = defs.append("linearGradient").attr("id","mei-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-    grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.15);
-    grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.01);
+    grad.append("stop").attr("offset","0%").attr("stop-color",cc.bar).attr("stop-opacity",0.15);
+    grad.append("stop").attr("offset","100%").attr("stop-color",cc.bar).attr("stop-opacity",0.01);
     svg.append("path").datum(paying).attr("fill","url(#mei-grad)")
       .attr("d",d3.area<any>().x((_d:any,i:number)=>x(i)).y0(H).y1((d:any)=>y(Math.max(d.payout||0,100))).curve(d3.curveMonotoneX));
-    svg.append("path").datum(paying).attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",1.5)
+    svg.append("path").datum(paying).attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",1.5)
       .attr("d",d3.line<any>().x((_d:any,i:number)=>x(i)).y((d:any)=>y(Math.max(d.payout||0,100))).curve(d3.curveMonotoneX));
     paying.forEach((m:any,i:number) => {
       if (m.stock_mission) {
         svg.append("polygon").attr("points","0,-6 6,0 0,6 -6,0")
           .attr("transform",`translate(${x(i)},${y(Math.max(m.payout,100))})`)
-          .attr("fill","#f59e0b").attr("opacity",0.9);
+          .attr("fill",cc.bar).attr("opacity",0.9);
       }
     });
     const bigScore = paying.find((m:any) => m.id==="the-big-score");
     if (bigScore) {
       const bi = paying.indexOf(bigScore), bx=x(bi), by=y(bigScore.payout);
       svg.append("line").attr("x1",bx).attr("x2",bx).attr("y1",by+8).attr("y2",H)
-        .attr("stroke","#f59e0b").attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
-      svg.append("text").attr("x",bx+4).attr("y",by-4).attr("fill","#f59e0b")
+        .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
+      svg.append("text").attr("x",bx+4).attr("y",by-4).attr("fill",cc.bar)
         .attr("font-size","9").attr("font-family","monospace").text("The Big Score");
     }
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat((d:any)=>`M${d}`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>+d>=1000000?`$${(+d/1000000).toFixed(0)}M`:+d>=1000?`$${(+d/1000).toFixed(0)}k`:`$${d}`))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
   })();
 
   // ── CHART J — Assassination Returns ─────────────────────────
@@ -2711,10 +2711,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     svg.append("g").call(d3.axisLeft(y))
       .call(g=>g.select(".domain").remove())
       .call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#a1a1aa").attr("font-size","10").attr("font-family","monospace").attr("text-anchor","end"));
+      .call(g=>g.selectAll("text").attr("fill",cc.text4).attr("font-size","10").attr("font-family","monospace").attr("text-anchor","end"));
     steps.forEach((s:any) => {
       const pct = s.combined_return_pct;
-      const color = pct >= 200 ? "#22c55e" : pct >= 80 ? "#f59e0b" : "#0d9488";
+      const color = pct >= 200 ? cc.green : pct >= 80 ? cc.bar : cc.teal;
       svg.append("rect")
         .attr("x",0).attr("y",y(s.title)??0)
         .attr("width",x(pct)).attr("height",y.bandwidth())
@@ -2726,9 +2726,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     });
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat((d:any)=>`+${d}%`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
   })();
 
   // ── CHART K — Income Leaderboard ────────────────────────────
@@ -2740,8 +2740,8 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     tiers.forEach((t: any) => t.sources.forEach((s: any) => sources.push({ ...s, tierColor: t.color, tier: t.tier })));
     sources.sort((a: any, b: any) => b.gta_per_hr - a.gta_per_hr);
     const PLAY_COLOR: Record<string,string> = {
-      heist:"#818cf8", passive:"#22c55e", semi:"#f59e0b", active:"#ef4444",
-      mc:"#f59e0b", ceo:"#f59e0b", business:"#0d9488", smuggling:"#0d9488",
+      heist:cc.indigo, passive:cc.green, semi:cc.bar, active:cc.red,
+      mc:cc.bar, ceo:cc.bar, business:cc.teal, smuggling:cc.teal,
     };
     const margin = { top:8, right:120, bottom:8, left:190 };
     const rowH = 34;
@@ -2753,13 +2753,13 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     const x = d3.scaleLinear().domain([0, d3.max(sources,(s:any)=>s.gta_per_hr)??1]).range([0,W]);
     svg.append("g").call(d3.axisBottom(x).ticks(4).tickSize(sources.length*rowH).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
     let lastTier = "";
     sources.forEach((s:any) => {
       const yt = sources.indexOf(s) * rowH;
       const bh = rowH * 0.7;
       const yOff = rowH * 0.15;
-      const barColor = PLAY_COLOR[s.type] ?? "#71717a";
+      const barColor = PLAY_COLOR[s.type] ?? cc.text6;
       if (s.tier !== lastTier) {
         svg.append("text").attr("x",-margin.left+4).attr("y",yt+bh/2+yOff+3)
           .attr("fill",s.tierColor).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold").text(s.tier);
@@ -2768,13 +2768,13 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       svg.append("rect").attr("x",0).attr("y",yt+yOff).attr("width",x(s.gta_per_hr)).attr("height",bh)
         .attr("rx",3).attr("fill",barColor).attr("opacity",0.8);
       svg.append("text").attr("x",-6).attr("y",yt+bh/2+yOff+4).attr("text-anchor","end")
-        .attr("fill","#b8b8c4").attr("font-size","10").attr("font-family","monospace")
+        .attr("fill",cc.text3).attr("font-size","10").attr("font-family","monospace")
         .text(s.name.length>24 ? s.name.slice(0,23)+"…" : s.name);
       svg.append("text").attr("x",x(s.gta_per_hr)+6).attr("y",yt+bh/2+yOff+4)
         .attr("fill",barColor).attr("font-size","10").attr("font-family","monospace").attr("font-weight","bold")
         .text(`$${Math.round(s.gta_per_hr/1000)}k/hr`);
       if (s.solo) svg.append("text").attr("x",x(s.gta_per_hr)+64).attr("y",yt+bh/2+yOff+4)
-        .attr("fill","#0d9488").attr("font-size","8").attr("font-family","monospace").text("solo");
+        .attr("fill",cc.teal).attr("font-size","8").attr("font-family","monospace").text("solo");
     });
   })();
 
@@ -2784,8 +2784,8 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     if (!el) return;
     const bizs: any[] = JSON.parse(el.dataset.businesses || "[]");
     const PLAY_COLOR: Record<string,string> = {
-      heist:"#818cf8", passive:"#22c55e", "semi-passive":"#f59e0b", active:"#ef4444",
-      mc:"#f59e0b", ceo:"#0d9488", contract:"#0d9488", gunrunning:"#f59e0b"
+      heist:cc.indigo, passive:cc.green, "semi-passive":cc.bar, active:cc.red,
+      mc:cc.bar, ceo:cc.teal, contract:cc.teal, gunrunning:cc.bar
     };
     const margin={top:24,right:24,bottom:48,left:80};
     const W=el.clientWidth-margin.left-margin.right;
@@ -2798,30 +2798,30 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     const rScale=d3.scaleSqrt().domain([0,d3.max(bizs,(b:any)=>b.break_even_hrs??0)??50]).range([4,22]);
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
     bizs.forEach((b:any) => {
       const cx=x(b.setup_cost_full), cy=y(b.net_profit_per_hr);
       const r=rScale(b.break_even_hrs??20);
-      const col=PLAY_COLOR[b.play_type??b.category]??"#71717a";
+      const col=PLAY_COLOR[b.play_type??b.category]??cc.text6;
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",r)
         .attr("fill",col).attr("opacity",0.7).attr("stroke",col).attr("stroke-width",1).attr("stroke-opacity",0.9);
       svg.append("text").attr("x",cx).attr("y",cy-r-3).attr("text-anchor","middle")
-        .attr("fill","#b8b8c4").attr("font-size","8").attr("font-family","monospace")
+        .attr("fill",cc.text3).attr("font-size","8").attr("font-family","monospace")
         .text(b.name.split(" ")[0].slice(0,10));
     });
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat((d:any)=>`$${(+d/1e6).toFixed(0)}M`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d:any)=>`$${Math.round(+d/1000)}k`))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     // Labels
     svg.append("text").attr("x",W/2).attr("y",H+40).attr("text-anchor","middle")
-      .attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Setup Cost ($)");
+      .attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace").text("Setup Cost ($)");
     svg.append("text").attr("transform","rotate(-90)").attr("x",-H/2).attr("y",-64).attr("text-anchor","middle")
-      .attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Net $/hr");
+      .attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace").text("Net $/hr");
   })();
 
   // ── CHART O — Meta Shift History ────────────────────────────
@@ -2839,34 +2839,34 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     const y=d3.scaleLinear().domain([0,(d3.max(history,(d:any)=>d.top_gta_per_hr)??2000000)*1.1]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
     const defs=svg.append("defs");
     const grad=defs.append("linearGradient").attr("id","mshc-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-    grad.append("stop").attr("offset","0%").attr("stop-color","#818cf8").attr("stop-opacity",0.2);
-    grad.append("stop").attr("offset","100%").attr("stop-color","#818cf8").attr("stop-opacity",0.01);
+    grad.append("stop").attr("offset","0%").attr("stop-color",cc.indigo).attr("stop-opacity",0.2);
+    grad.append("stop").attr("offset","100%").attr("stop-color",cc.indigo).attr("stop-opacity",0.01);
     svg.append("path").datum(history).attr("fill","url(#mshc-grad)")
       .attr("d",d3.area<any>().x((d:any)=>x(new Date(d.date))).y0(H).y1((d:any)=>y(d.top_gta_per_hr)).curve(d3.curveStepAfter));
-    svg.append("path").datum(history).attr("fill","none").attr("stroke","#818cf8").attr("stroke-width",2)
+    svg.append("path").datum(history).attr("fill","none").attr("stroke",cc.indigo).attr("stroke-width",2)
       .attr("d",d3.line<any>().x((d:any)=>x(new Date(d.date))).y((d:any)=>y(d.top_gta_per_hr)).curve(d3.curveStepAfter));
     history.forEach((d:any,i:number) => {
       const cx=x(new Date(d.date)),cy=y(d.top_gta_per_hr);
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",4)
-        .attr("fill","#818cf8").attr("stroke","#131316").attr("stroke-width",2);
+        .attr("fill",cc.indigo).attr("stroke",cc.card).attr("stroke-width",2);
       if(i%2===0){
         svg.append("text").attr("x",cx).attr("y",cy-8).attr("text-anchor","middle")
-          .attr("fill","#9090a8").attr("font-size","8").attr("font-family","monospace")
+          .attr("fill",cc.text4).attr("font-size","8").attr("font-family","monospace")
           .text(d.patch.length>12?d.patch.slice(0,11)+"…":d.patch);
       }
     });
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d:any)=>`$${Math.round(+d/1000)}k`))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     svg.append("text").attr("x",W-4).attr("y",H-6).attr("text-anchor","end")
-      .attr("fill","#27272a").attr("font-size","8").attr("font-family","monospace").text("GTAVI.AI");
+      .attr("fill",cc.text7).attr("font-size","8").attr("font-family","monospace").text("GTAVI.AI");
   })();
 </script>
