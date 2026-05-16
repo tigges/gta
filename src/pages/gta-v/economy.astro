@@ -137,11 +137,10 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="flex items-center gap-0 overflow-x-auto">
         {[
-          { id:"model",    label:"Model"              },
-          { id:"flows",    label:"Four Flows"         },
-          { id:"health",   label:"Health Monitor"     },
-          { id:"basket",   label:"Price Basket"       },
-          { id:"sources",  label:"Sources"            },
+          { id:"model",    label:"Model"          },
+          { id:"flows",    label:"Four Flows"     },
+          { id:"health",   label:"Health Monitor" },
+          { id:"basket",   label:"Price Basket"   },
         ].map((t,i) => (
           <button
             class={`eco-tab shrink-0 px-5 py-3.5 text-[11px] font-mono tracking-wider border-b-2 transition-colors ${i===0 ? "border-gta-gold text-gta-gold" : "border-transparent text-zinc-500 hover:text-zinc-300"}`}
@@ -670,74 +669,30 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </p>
       </div>
 
+
+      <!-- Data confidence standards (moved from Sources tab) -->
+      <div class="rounded-xl border border-[#1e1e23] p-5 mt-4" style="background:#131316">
+        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em] mb-3">// DATA CONFIDENCE STANDARDS</div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            { tier:"Measured", color:"text-gta-gold", badge:"bg-gta-gold/10 border-gta-gold/25", desc:"Directly observable: mission payout rates from GTABase, item prices from GTA Wiki, Take-Two quarterly earnings from SEC filings." },
+            { tier:"Community-verified", color:"text-green-400", badge:"bg-green-900/20 border-green-800/40", desc:"Confirmed by multiple independent community sources: GTAForums patch tracking, GTABase hourly yield benchmarks, GTABase.com data." },
+            { tier:"Modelled", color:"text-zinc-400", badge:"bg-zinc-800 border-zinc-700", desc:"Informed estimates: spending distribution, savings rates, player balance curves. Based on community surveys and Lehdonvirta framework. Explicitly labelled." },
+          ].map(t => (
+            <div class="flex items-start gap-2">
+              <span class={`shrink-0 text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest mt-0.5 ${t.badge} ${t.color}`}>{t.tier}</span>
+              <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{t.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div><!-- /tab-basket -->
 
 
     <!-- ═══════════════════════════════════════════════════════
          TAB: SOURCES
     ══════════════════════════════════════════════════════════ -->
-    <div id="tab-sources" class="eco-panel hidden">
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-        <div class="rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
-          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em] mb-3">// PRIMARY SOURCES (free, crowd-sourced)</div>
-          {[
-            { name:"GTABase.com", url:"https://gtabase.com/gta-online/missions/", desc:"Mission payout database, GTA$/hr by activity. Use for: Flow ① wage series." },
-            { name:"GTA Wiki (Fandom)", url:"https://gta.fandom.com/wiki/", desc:"Full price history for all DLC vehicles, properties, weapons. Use for: CPI basket price series." },
-            { name:"Rockstar Newswire", url:"https://newswire.rockstargames.com", desc:"Official weekly bonus event announcements (2×/3× multipliers). Use for: bonus event annotation." },
-            { name:"GTAForums", url:"https://gtaforums.com", desc:"Community tracking of payout changes — often faster than databases. Good for consumable prices and nerf detection." },
-          ].map(s => (
-            <div class="mb-4 last:mb-0">
-              <a href={s.url} target="_blank" rel="noopener" class="text-[11px] font-semibold text-gta-gold/80 hover:text-gta-gold transition-colors" style="font-family:'Inter',sans-serif">{s.name} ↗</a>
-              <p class="text-[11px] text-zinc-500 mt-0.5 leading-relaxed" style="font-family:'Inter',sans-serif">{s.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        <div class="rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
-          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em] mb-3">// OFFICIAL / FINANCIAL</div>
-          {[
-            { name:"Take-Two Interactive Earnings", url:"https://ir.take2games.com", desc:"Quarterly 'recurrent consumer spending' figures. GTA Online revenue as a segment. Back to ~2014. Use for: Flow ④ Shark Card injection proxy." },
-            { name:"Steam Charts", url:"https://steamcharts.com/app/271590", desc:"GTA Online active player count over time. Needed to normalise Shark Card revenue per active player." },
-          ].map(s => (
-            <div class="mb-4 last:mb-0">
-              <a href={s.url} target="_blank" rel="noopener" class="text-[11px] font-semibold text-gta-gold/80 hover:text-gta-gold transition-colors" style="font-family:'Inter',sans-serif">{s.name} ↗</a>
-              <p class="text-[11px] text-zinc-500 mt-0.5 leading-relaxed" style="font-family:'Inter',sans-serif">{s.desc}</p>
-            </div>
-          ))}
-          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em] mt-4 mb-3">// ACADEMIC</div>
-          {[
-            { name:"Lehdonvirta & Castronova (2014)", url:"https://mitpress.mit.edu/9780262527538/virtual-economies/", desc:"Virtual Economies: Design and Analysis. MIT Press. Primary academic framework for in-game economic analysis." },
-            { name:"ONS CPI Methodology", url:"https://www.ons.gov.uk/economy/inflationandpriceindices/methodologies/consumerpriceinflation", desc:"Basket construction and weighting methodology reference. Applied to GTA-CPI design." },
-          ].map(s => (
-            <div class="mb-4 last:mb-0">
-              <a href={s.url} target="_blank" rel="noopener" class="text-[11px] font-semibold text-gta-gold/80 hover:text-gta-gold transition-colors" style="font-family:'Inter',sans-serif">{s.name} ↗</a>
-              <p class="text-[11px] text-zinc-500 mt-0.5 leading-relaxed" style="font-family:'Inter',sans-serif">{s.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        <div class="sm:col-span-2 rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
-          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em] mb-3">// DATA CONFIDENCE STANDARDS</div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              { tier:"Measured", color:"text-gta-gold", badge:"bg-gta-gold/10 border-gta-gold/25", desc:"Directly observable: mission payout rates from GTABase, item prices from GTA Wiki, Take-Two quarterly earnings from SEC filings." },
-              { tier:"Community-verified", color:"text-green-400", badge:"bg-green-900/20 border-green-800/40", desc:"Confirmed by multiple independent community sources: GTAForums patch tracking, GTABase hourly yield benchmarks, GTABase.com data." },
-              { tier:"Modelled", color:"text-zinc-400", badge:"bg-zinc-800 border-zinc-700", desc:"Informed estimates: spending distribution, savings rates, player balance curves. Based on community surveys and Lehdonvirta framework. Explicitly labelled." },
-            ].map(t => (
-              <div class="flex items-start gap-2">
-                <span class={`shrink-0 text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest mt-0.5 ${t.badge} ${t.color}`}>{t.tier}</span>
-                <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{t.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-      </div>
-
-    </div><!-- /tab-sources -->
-
     <CrossLinks context="gta-v" class="mt-8" />
 
   </div>
