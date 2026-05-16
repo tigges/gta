@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0",
+  "source": "GTABase.com · business-profiles.json · GTAForums patch notes compilation",
+  "note": "GTA$/hr from the fully upgraded passive income stack per major patch era. Tracks the 'investment return' flow — money generated without active heist participation. Bunker and Nightclub stacking is the established optimal passive strategy.",
+  "businesses": [
+    { "id": "bunker",    "name": "Gunrunning Bunker",   "color_token": "--c-chart-bar",    "launched": "2017-06-13" },
+    { "id": "nightclub", "name": "Nightclub (passive)",  "color_token": "--c-chart-teal",   "launched": "2018-07-24" },
+    { "id": "mc_cocaine","name": "Cocaine Lockup (MC)",  "color_token": "--c-chart-indigo",  "launched": "2016-09-13" },
+    { "id": "acid_lab",  "name": "Acid Lab",             "color_token": "--c-chart-green",  "launched": "2022-12-13" }
+  ],
+  "series": [
+    {
+      "patch": "GTA Online Launch",
+      "date": "2013-10-01",
+      "bunker": 0, "nightclub": 0, "mc_cocaine": 0, "acid_lab": 0,
+      "total": 0,
+      "note": "No passive businesses available. All income requires active play."
+    },
+    {
+      "patch": "Bikers",
+      "date": "2016-09-13",
+      "bunker": 0, "nightclub": 0, "mc_cocaine": 30000, "acid_lab": 0,
+      "total": 30000,
+      "note": "MC Businesses launch. Cocaine Lockup: ~$30K/hr net (pre-2022 buff)."
+    },
+    {
+      "patch": "Gunrunning",
+      "date": "2017-06-13",
+      "bunker": 250000, "nightclub": 0, "mc_cocaine": 30000, "acid_lab": 0,
+      "total": 280000,
+      "note": "Bunker launches at $250K/hr passive. Dominant investment for 12 months."
+    },
+    {
+      "patch": "After Hours",
+      "date": "2018-07-24",
+      "bunker": 250000, "nightclub": 150000, "mc_cocaine": 30000, "acid_lab": 0,
+      "total": 430000,
+      "note": "Nightclub adds $150K/hr via warehouse technicians. Stack begins."
+    },
+    {
+      "patch": "Diamond Casino Heist",
+      "date": "2019-12-12",
+      "bunker": 250000, "nightclub": 180000, "mc_cocaine": 40000, "acid_lab": 0,
+      "total": 470000,
+      "note": "Incremental optimisation. Nightclub payout improved via community meta."
+    },
+    {
+      "patch": "Cayo Perico Heist",
+      "date": "2020-12-15",
+      "bunker": 250000, "nightclub": 200000, "mc_cocaine": 40000, "acid_lab": 0,
+      "total": 490000,
+      "note": "Active heist income dwarfs passive stack. Passive still runs in background."
+    },
+    {
+      "patch": "Criminal Enterprises",
+      "date": "2022-07-26",
+      "bunker": 280000, "nightclub": 300000, "mc_cocaine": 180000, "acid_lab": 0,
+      "total": 760000,
+      "note": "Major passive buff patch. Nightclub and MC businesses significantly improved."
+    },
+    {
+      "patch": "Los Santos Drug Wars",
+      "date": "2022-12-13",
+      "bunker": 280000, "nightclub": 300000, "mc_cocaine": 180000, "acid_lab": 480000,
+      "total": 1240000,
+      "note": "Acid Lab launches at $480K/hr. Total passive stack crosses $1M/hr for first time."
+    },
+    {
+      "patch": "The Chop Shop",
+      "date": "2023-12-13",
+      "bunker": 280000, "nightclub": 300000, "mc_cocaine": 180000, "acid_lab": 480000,
+      "total": 1240000,
+      "note": "Passive rates unchanged. Active Salvage Yard contracts add ~$200K/hr on top."
+    },
+    {
+      "patch": "2025 (current)",
+      "date": "2025-01-01",
+      "bunker": 280000, "nightclub": 300000, "mc_cocaine": 180000, "acid_lab": 480000,
+      "total": 1240000,
+      "note": "Passive stack stable. Full stack ($16.3M setup) generates $1.24M/hr — 13h break-even."
+    }
+  ],
+  "optimal_stack_note": "Full stack setup cost: Bunker $4.885M + Nightclub $8.5M + MC Cocaine $2.375M + Acid Lab $2.95M = $18.71M. At $1.24M/hr passive: ~15 hours to break even.",
+  "setup_cost_total": 18710000
+}

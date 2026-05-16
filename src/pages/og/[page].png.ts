@@ -98,6 +98,15 @@ const PAGES: Record<string, PageConfig> = {
     image: "assets/gta6/locations/Ambrosia_01.jpg",
     accent: "#0d9488",
   },
+  "economy": {
+    badge: "Macro Model",
+    badgeColor: "#818cf8",
+    badgeBg: "rgba(129,140,248,0.15)",
+    title: "Five Flows. One Economy.",
+    desc: "The GTA Online circular economy model — wages, spending, savings, Shark Card injections and the GTA-PPI purchasing power index.",
+    image: "assets/gta5/story/gta-v-cover.jpg",
+    accent: "#818cf8",
+  },
 };
 
 // ── Font loading (cached) ────────────────────────────────────────────────────
