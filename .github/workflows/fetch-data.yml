@@ -28,6 +28,7 @@ jobs:
 
       - name: Fetch vehicle performance data
         run: python scrapers/fetch_vehicles.py
+        continue-on-error: true
         env:
           BROUGHY_SHEET_ID: ${{ secrets.BROUGHY_SHEET_ID }}
 
@@ -44,18 +45,22 @@ jobs:
         run: python scrapers/fetch_weekly_bonuses.py
 
       - name: Fetch GTABase business and heist data
+        continue-on-error: true
         run: python scrapers/fetch_gtabase.py
 
       - name: Fetch community validation data (OnlyFarms/GTABase cross-check)
+        continue-on-error: true
         run: python scrapers/fetch_onlyfarms.py
 
       - name: Monitor r/gtaonline for nerf/buff meta signals
+        continue-on-error: true
         run: python scrapers/fetch_reddit_meta.py
         env:
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
 
       - name: Fetch GTA Online DLC trailer thumbnails (YouTube API)
+        continue-on-error: true
         run: python scrapers/fetch_gtaonline_dlc_art.py
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
@@ -66,6 +71,7 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
       - name: Fetch Newswire article hero images
+        continue-on-error: true
         run: python scrapers/fetch_newswire_images.py
 
       # ── GTA VI ─────────────────────────────────────────────────────────────
@@ -92,12 +98,14 @@ jobs:
         run: python scrapers/fetch_franchise_sales.py
 
       - name: Fetch IGDB franchise metadata
+        continue-on-error: true
         run: python scrapers/fetch_igdb.py
         env:
           TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
           TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
 
       - name: Fetch Spotify GTA playlist data
+        continue-on-error: true
         run: python scrapers/fetch_spotify.py
         env:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
