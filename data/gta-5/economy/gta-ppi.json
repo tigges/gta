@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "last_updated": "2026-05-16T15:03:12+00:00",
+  "last_updated": "2026-05-16T19:40:27+00:00",
   "source": "Computed from price-basket.json + meta-history.json",
   "note": "GTA-PPI = hours_to_buy_basket = basket_cost / top_hourly_yield. Base 100 = launch era. Lower is better. Rising = hidden inflation via payout nerfs.",
   "methodology": "GTA-PPI = sum(item_price × weight) / top_hourly_yield. Rising index = players need more hours to buy the same basket = real-terms inflation. Nominal prices are largely unchanged across eras; inflation is driven by payout nerfs on the wage side.",
@@ -151,6 +151,17 @@
       "event": null,
       "note": "Salvage Yard adds contract variety; wages incrementally improving",
       "ppi_yoy": -3.1
+    },
+    {
+      "patch": "Current",
+      "date": "2026-05-16",
+      "top_yield": 1700000,
+      "basket_cost": 8880000,
+      "hours_to_basket": 5.22,
+      "ppi": 48.7,
+      "ppi_yoy": 0.0,
+      "event": null,
+      "note": "Live — derived from revenue-tiers.json (same source as IncomeAdviser)"
     }
   ]
 }
