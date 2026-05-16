@@ -232,16 +232,23 @@ const ownableBusinesses = businesses.filter(b =>
         recsEl.innerHTML = '<span class="text-[10px] font-mono text-gta-teal">You own everything — you\'re at maximum efficiency!</span>';
       } else {
         recsEl.innerHTML = notOwned.slice(0, 3).map((b, i) => {
-          const roi = b.setup_cost_full > 0 ? Math.round(b.setup_cost_full / effectiveHr(b)) : 0;
+          const sale = WEEKLY_SALE[b.id];
+          const setupFull = b.setup_cost_full ?? 0;
+          const setupEffective = sale ? Math.round(setupFull * (1 - sale.discount_pct / 100)) : setupFull;
+          const roi = setupEffective > 0 ? Math.round(setupEffective / effectiveHr(b)) : 0;
           const highlight = i === 0 ? 'border-gta-gold/30' : 'border-[#2a2a31]';
           const boostBadge = boosted(b) ? ` <span style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);padding:0 4px;border-radius:3px;font-size:8px">★ ${WEEKLY_MULT[b.id]}× this week</span>` : '';
+          const saleBadge = sale ? ` <span style="background:rgba(34,197,94,0.12);color:#22c55e;border:1px solid rgba(34,197,94,0.3);padding:0 4px;border-radius:3px;font-size:8px">🏷 -${sale.discount_pct}% this week</span>` : '';
+          const setupDisplay = sale
+            ? `<span style="color:#22c55e">$${(setupEffective/1e6).toFixed(1)}M</span> <span style="color:#3f3f46;text-decoration:line-through;font-size:9px">$${(setupFull/1e6).toFixed(1)}M</span>`
+            : `$${(setupFull/1e6).toFixed(1)}M`;
           return `<div class="rounded-lg border ${highlight} p-3" style="background:#0e0e11">
             <div class="flex items-center justify-between mb-1">
-              <span class="text-[11px] font-mono text-zinc-200 font-semibold">${b.name}${boostBadge}</span>
+              <span class="text-[11px] font-mono text-zinc-200 font-semibold">${b.name}${boostBadge}${saleBadge}</span>
               <span class="text-[11px] font-mono text-gta-gold font-bold">${formatK(effectiveHr(b))}/hr</span>
             </div>
             <div class="flex items-center gap-3 text-[9px] font-mono text-zinc-600">
-              <span>Setup: $${(b.setup_cost_full/1e6).toFixed(1)}M</span>
+              <span>Setup: ${setupDisplay}</span>
               ${roi > 0 ? `<span>Break-even: ${roi}h</span>` : '<span>Free</span>'}
               <span>${b.solo ? 'Solo ✓' : `${b.min_players}p min`}</span>
             </div>

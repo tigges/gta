@@ -10,6 +10,8 @@ import savingsData      from "../../../data/gta-5/economy/savings-profile.json";
 import passiveData      from "../../../data/gta-5/economy/passive-stack.json";
 import revenueData      from "../../../data/franchise/revenue-split.json";
 import priceBasket      from "../../../data/gta-5/economy/price-basket.json";
+import weeklyBonuses    from "../../../data/gta-5/economy/weekly-bonuses.json";
+import itemCatalogue    from "../../../data/gta-5/economy/item-catalogue.json";
 
 const ppiSeries     = (ppiData as any).series as any[];
 const metaSeries    = (metaHistory as any).meta_history as any[];
@@ -21,7 +23,50 @@ const basketEras    = (priceBasket as any).era_prices as any[];
 const savingsStages = (savingsData as any).stages as any[];
 const savingsRate   = (savingsData as any).savings_rate_history as any[];
 
-// Derived headline stats
+// ── Weekly sales data ─────────────────────────────────────────────────────────
+const weeklySales      = (weeklyBonuses as any).sales as any[] ?? [];
+const weekBonuses      = (weeklyBonuses as any).bonuses as any[] ?? [];
+const weekStart        = (weeklyBonuses as any).week_start as string ?? "";
+const hasSales         = weeklySales.length > 0;
+
+// Build sale map: catalogue item_id → discount_pct
+const saleDiscountMap: Record<string, number> = {};
+weeklySales.forEach((s: any) => {
+  if (s.item_id) saleDiscountMap[s.item_id] = s.discount_pct;
+});
+
+// Live basket cost from catalogue + sale-adjusted basket cost
+const catalogueBySlug: Record<string, number> = {};
+((itemCatalogue as any).items as any[]).forEach((item: any) => {
+  if (item.price) catalogueBySlug[item.id] = item.price;
+});
+
+let liveBasketCost = 0;
+let saleBasketCost = 0;
+let liveComplete = true;
+basketItems.forEach((item: any) => {
+  const livePrice = catalogueBySlug[item.id] ?? item.current_price ?? null;
+  if (!livePrice) { liveComplete = false; return; }
+  liveBasketCost += livePrice;
+  const discount = saleDiscountMap[item.id] ?? 0;
+  saleBasketCost += livePrice * (1 - discount / 100);
+});
+if (!liveComplete) {
+  // Fallback to seeded prices
+  liveBasketCost = basketItems.reduce((s: number, i: any) => s + (i.current_price ?? 0), 0);
+  saleBasketCost = basketItems.reduce((s: number, i: any) => {
+    const d = saleDiscountMap[i.id] ?? 0;
+    return s + (i.current_price ?? 0) * (1 - d / 100);
+  }, 0);
+}
+
+const latestYieldValue = metaSeries.at(-1)?.top_gta_per_hr ?? 1700000;
+const livePPI   = Math.round((liveBasketCost / latestYieldValue) * 100) / 10;
+const salePPI   = hasSales ? Math.round((saleBasketCost / latestYieldValue) * 100) / 10 : null;
+const liveHours = Math.round(liveBasketCost / latestYieldValue * 10) / 10;
+const saleHours = salePPI ? Math.round(saleBasketCost / latestYieldValue * 10) / 10 : null;
+
+// ── Derived headline stats ──────────────────────────────────────────────────
 const latestPPI     = ppiSeries.at(-1);
 const peakPPI       = ppiSeries.reduce((a:any,b:any) => b.ppi > a.ppi ? b : a);
 const troughPPI     = ppiSeries.reduce((a:any,b:any) => b.ppi < a.ppi ? b : a);
@@ -593,17 +638,24 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center gap-4 flex-wrap">
           <div>
-            <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">CURRENT BASKET COST</span>
-            <span class="text-[13px] font-bold text-gta-gold ml-3 font-mono">$6,770,250</span>
+            <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">BASKET COST (live)</span>
+            <span class="text-[13px] font-bold text-gta-gold ml-3 font-mono">${liveBasketCost.toLocaleString()}</span>
           </div>
           <div>
             <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">AT CURRENT YIELD</span>
-            <span class="text-[13px] font-bold text-zinc-400 ml-3 font-mono">{latestPPI?.hours_to_basket}h to buy</span>
+            <span class="text-[13px] font-bold text-zinc-400 ml-3 font-mono">{liveHours}h to buy</span>
           </div>
           <div>
             <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">GTA-PPI</span>
-            <span class="text-[13px] font-bold text-zinc-400 ml-3 font-mono">{latestPPI?.ppi} / 100</span>
+            <span class="text-[13px] font-bold text-zinc-400 ml-3 font-mono">{livePPI} / 100</span>
           </div>
+          {hasSales && saleHours && (
+            <div class="ml-auto border border-green-700/40 bg-green-900/20 rounded-lg px-3 py-2 flex items-center gap-3">
+              <span class="text-[8px] font-mono font-bold text-green-400 uppercase tracking-widest">🏷 With this week's sales</span>
+              <span class="text-[12px] font-bold text-green-400 font-mono">{saleHours}h to buy</span>
+              <span class="text-[11px] font-bold text-green-400 font-mono">PPI {salePPI}</span>
+            </div>
+          )}
         </div>
       </div>
 
