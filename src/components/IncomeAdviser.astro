@@ -337,7 +337,26 @@ const ownableBusinesses = businesses.filter(b =>
       const data = await res.json();
 
       if (data.ok) {
-        result.innerHTML = `<span style="color:#22c55e">✓ ${data.message} · <a href="/leaderboard" style="text-decoration:underline">View leaderboard →</a></span>`;
+        // Persist username so the leaderboard page can highlight the user's row
+        try { localStorage.setItem('gtaviai_lb_username', data.username); } catch {}
+
+        const rank      = data.rank;
+        const scoreStr  = data.total_hr >= 1e6
+          ? `$${(data.total_hr / 1e6).toFixed(1)}M`
+          : `$${Math.round(data.total_hr / 1000)}K`;
+        const tierEmoji = rank === 1 ? '🥇' : rank <= 3 ? '🥈' : rank <= 10 ? '🏆' : `#${rank}`;
+        const tweetText = `${tierEmoji} I'm rank #${rank} with ${scoreStr}/hr on the GTAVI.AI community income leaderboard. Can you beat me? gtavi.ai/leaderboard`;
+        const tweetUrl  = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+
+        result.innerHTML = `
+          <span style="color:#22c55e;font-weight:700">${tierEmoji} Rank #${rank} — ${scoreStr}/hr</span>
+          <a href="${tweetUrl}" target="_blank" rel="noopener noreferrer"
+            style="display:inline-flex;align-items:center;gap:4px;margin-left:8px;padding:2px 8px;border-radius:4px;border:1px solid rgba(245,158,11,0.3);color:#f59e0b;font-size:10px;text-decoration:none;letter-spacing:0.1em;text-transform:uppercase">
+            Tweet rank
+          </a>
+          <a href="/leaderboard" style="margin-left:6px;color:#0d9488;text-decoration:underline;font-size:10px">
+            View leaderboard →
+          </a>`;
         btn.textContent = 'Submitted ✓';
       } else {
         result.innerHTML = `<span style="color:#ef4444">Error: ${data.error}</span>`;
