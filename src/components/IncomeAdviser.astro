@@ -122,12 +122,33 @@ const ownableBusinesses = businesses.filter(b =>
     </div>
   </div>
 
+  <!-- Leaderboard opt-in -->
+  <div id="adviser-leaderboard-bar" class="hidden px-5 py-3 border-t border-[#1e1e23]" style="background:#0a0a0d">
+    <div class="flex items-center gap-3 flex-wrap">
+      <div class="flex-1 min-w-0">
+        <div class="text-[10px] font-mono text-zinc-500 mb-1">Share your stack to the community leaderboard</div>
+        <div class="flex items-center gap-2">
+          <input id="adviser-display-name" type="text" placeholder="Display name (e.g. GTA_Player_69)" maxlength="40"
+            class="flex-1 px-2.5 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-[11px] font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-teal/40 min-w-0 max-w-xs" />
+          <button id="adviser-submit-lb"
+            class="shrink-0 px-3 py-1.5 rounded border border-gta-teal/30 text-gta-teal text-[10px] font-mono hover:bg-gta-teal/8 transition-colors uppercase tracking-widest">
+            Submit →
+          </button>
+        </div>
+      </div>
+      <div id="adviser-lb-result" class="text-[10px] font-mono text-zinc-600 shrink-0"></div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3" style="background:#0e0e11">
-    <span class="text-[10px] text-zinc-700 font-mono">Personalised recommendations · based on what you own and your budget</span>
+    <div class="flex items-center gap-3">
+      <span class="text-[10px] text-zinc-700 font-mono">Personalised recommendations · based on what you own and your budget</span>
+      <a href="/leaderboard" class="text-[10px] font-mono text-gta-teal/60 hover:text-gta-teal transition-colors tracking-widest uppercase shrink-0">Community →</a>
+    </div>
     <div class="flex items-center gap-3 shrink-0">
       <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-      <ShareButton text="Built my personalised GTA Online income stack on GTAVI.AI — shows my current $/hr total and best next purchase by ROI." url="https://gtavi.ai/database" size="sm" label="Share" />
+      <ShareButton text="Built my personalised GTA Online income stack on GTAVI.AI — shows my current $/hr total and best next purchase by ROI." url="https://gtavi.ai/gta-v#income-adviser" size="sm" label="Share" />
     </div>
   </div>
 </div>
@@ -270,7 +291,63 @@ const ownableBusinesses = businesses.filter(b =>
     }
   }
 
-  document.querySelectorAll('.adviser-checkbox').forEach(cb => cb.addEventListener('change', recalculate));
+  document.querySelectorAll('.adviser-checkbox').forEach(cb => cb.addEventListener('change', () => {
+    recalculate();
+    // Show leaderboard bar once the user has selected at least one business
+    const anyChecked = document.querySelectorAll('.adviser-checkbox:checked').length > 0;
+    document.getElementById('adviser-leaderboard-bar')?.classList.toggle('hidden', !anyChecked);
+  }));
   document.getElementById('adviser-budget')?.addEventListener('input', recalculate);
   recalculate();
+
+  // ── Leaderboard submit ───────────────────────────────────────────────────
+  const WORKER_URL = 'https://gtavi-leaderboard.workers.dev';
+
+  document.getElementById('adviser-submit-lb')?.addEventListener('click', async () => {
+    const display = (document.getElementById('adviser-display-name') as HTMLInputElement)?.value?.trim();
+    if (!display) {
+      alert('Enter a display name before submitting.');
+      return;
+    }
+
+    const checked = [...document.querySelectorAll('.adviser-checkbox:checked')];
+    const stack = checked.map(c => ({
+      id:        (c as HTMLElement).dataset.id,
+      name:      (c as HTMLElement).dataset.name,
+      profit_hr: parseInt((c as HTMLElement).dataset.profit || '0') * (WEEKLY_MULT[(c as HTMLElement).dataset.id!] ?? 1),
+    })).filter(s => s.profit_hr > 0);
+
+    if (stack.length === 0) {
+      alert('Select at least one business first.');
+      return;
+    }
+
+    const btn    = document.getElementById('adviser-submit-lb') as HTMLButtonElement;
+    const result = document.getElementById('adviser-lb-result')!;
+    btn.textContent = 'Submitting…';
+    btn.disabled = true;
+    result.textContent = '';
+
+    try {
+      const res = await fetch(`${WORKER_URL}/submit`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ username: display, display, stack }),
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        result.innerHTML = `<span style="color:#22c55e">✓ ${data.message} · <a href="/leaderboard" style="text-decoration:underline">View leaderboard →</a></span>`;
+        btn.textContent = 'Submitted ✓';
+      } else {
+        result.innerHTML = `<span style="color:#ef4444">Error: ${data.error}</span>`;
+        btn.textContent = 'Submit →';
+        btn.disabled = false;
+      }
+    } catch (e) {
+      result.innerHTML = `<span style="color:#ef4444">Could not reach leaderboard. Try again.</span>`;
+      btn.textContent = 'Submit →';
+      btn.disabled = false;
+    }
+  });
 </script>
