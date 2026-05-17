@@ -1039,4 +1039,44 @@ const HEIST_THUMBS: Record<string, string> = {
       });
     });
   });
+
+  // ── Deep-link handler: /database?game=gta-online#profit-{id} ─────────────
+  // Used by share/copy URLs from ProfitCard and from the income leaderboard
+  // chart click-through. Switches the correct tab and scrolls to the card.
+  (function handleDeepLink() {
+    const params    = new URLSearchParams(window.location.search);
+    const gameParam = params.get("game");     // "gta-online" | "gta-5" | "gta-6"
+    const hash      = window.location.hash;   // "#profit-terrorbyte-oppressor"
+    const profitId  = hash.startsWith("#profit-") ? hash.slice("#profit-".length) : null;
+
+    if (!gameParam && !profitId) return;
+
+    // 1. Switch to the correct tab by triggering its click handler
+    const targetGame = gameParam ?? (profitId ? "gta-online" : null);
+    if (targetGame && targetGame !== "gta-6") {
+      const tabBtn = document.querySelector<HTMLButtonElement>(
+        `.db-game-tab[data-game="${targetGame}"]`
+      );
+      if (tabBtn) tabBtn.click();
+    }
+
+    // 2. Scroll to and highlight the card (rAF lets the tab-switch DOM paint first)
+    if (profitId) {
+      requestAnimationFrame(() => {
+        const card = document.querySelector<HTMLElement>(`[data-profit-id="${profitId}"]`);
+        if (!card) return;
+
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        // Gold highlight pulse — fades out after 2.5s
+        card.style.transition = "outline 0.3s ease, box-shadow 0.3s ease";
+        card.style.outline    = "2px solid #f59e0b";
+        card.style.boxShadow  = "0 0 0 4px rgba(245,158,11,0.2), 0 0 24px rgba(245,158,11,0.15)";
+        setTimeout(() => {
+          card.style.outline   = "";
+          card.style.boxShadow = "";
+        }, 2500);
+      });
+    }
+  })();
 </script>
