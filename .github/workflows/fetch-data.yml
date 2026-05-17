@@ -134,6 +134,10 @@ jobs:
       - name: Fetch Leonida Intel entity index
         run: python scrapers/fetch_leonida.py
 
+      - name: Fetch GTA VI story missions (Day-1 ready — auto-populates at launch)
+        continue-on-error: true
+        run: python scrapers/fetch_gta6_missions.py
+
       # ── Franchise (supplementary) ──────────────────────────────────────────
 
       - name: Fetch SEC EDGAR delay timeline

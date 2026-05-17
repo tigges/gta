@@ -111,9 +111,16 @@ const GAME_LABELS: Record<string, string> = {
 };
 
 // Share text + deep-link URL (includes ?game=tab#profit-id for GTA Online cards)
-const shareText = `${name} — ${tier}-tier, $${Math.round(net_profit_per_hr/1000)}k/hr${solo ? " (solo)" : ""}. Full profile on GTAVI.AI.`;
+const khr = Math.round(net_profit_per_hr / 1000);
+const shareText = game === "gta-online"
+  ? `${name} — ${tier}-tier · $${khr}k/hr${solo ? " · solo" : ""}. Can you beat it? Full profile + tips on GTAVI.AI`
+  : game === "gta-5"
+  ? `${name} · ${tier}-tier · $${khr}k/hr${solo ? " · solo" : ""}. GTA V economic intelligence on GTAVI.AI`
+  : `${name} — ${tier}-tier · $${khr}k/hr. GTA economic intelligence on GTAVI.AI`;
+// GTA Online cards get a dedicated share page with unique OG image
+// GTA V / VI cards keep the page-level deep-link
 const deepLinkUrl = game === "gta-online"
-  ? `${share_url}?game=gta-online#profit-${id}`
+  ? `https://gtavi.ai/gta-v/online/${id}`
   : game === "gta-5"
   ? `${share_url}?game=gta-5`
   : share_url;

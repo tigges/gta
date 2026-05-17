@@ -12,6 +12,10 @@ id      = "867caad43fa4411ab389cd684eb6485e"
 [vars]
 ALLOWED_ORIGIN = "https://gtavi.ai"
 
+# Weekly snapshot: every Monday at 00:05 UTC
+[triggers]
+crons = ["5 0 * * 1"]
+
 # Custom domain route (configure in Cloudflare dashboard after first deploy)
 # [[routes]]
 # pattern = "api.gtavi.ai/leaderboard"
