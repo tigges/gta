@@ -154,6 +154,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           { id:"flows",    label:"Four Flows"     },
           { id:"health",   label:"Health Monitor" },
           { id:"basket",   label:"Price Basket"   },
+          { id:"gta6",     label:"GTA VI"         },
         ].map((t,i) => (
           <button
             class={`eco-tab shrink-0 px-5 py-3.5 text-[11px] font-mono tracking-wider border-b-2 transition-colors ${i===0 ? "border-gta-gold text-gta-gold" : "border-transparent text-zinc-500 hover:text-zinc-300"}`}
@@ -704,8 +705,96 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 
 
     <!-- ═══════════════════════════════════════════════════════
-         TAB: SOURCES
+         TAB: GTA VI — Day-1 Ready
     ══════════════════════════════════════════════════════════ -->
+    <div id="tab-gta6" class="eco-panel hidden">
+
+      <!-- Hero -->
+      <div class="rounded-xl border border-gta-gold/20 overflow-hidden mb-6" style="background:linear-gradient(135deg,#131316 0%,#1a1a0e 100%)">
+        <div class="px-6 py-8 text-center">
+          <div class="text-[9px] font-mono text-gta-gold/60 uppercase tracking-[0.3em] mb-3">// GTA VI ECONOMY · DAY-1 READY</div>
+          <h2 class="text-3xl font-black text-white mb-3" style="font-family:'Inter',sans-serif">
+            Five Flows.<br/><span class="text-gta-gold">New Economy.</span>
+          </h2>
+          <p class="text-sm text-zinc-400 max-w-lg mx-auto leading-relaxed mb-6" style="font-family:'Inter',sans-serif">
+            The same circular flow model — adapted for GTA VI Online.
+            Scrapers are live. Schema is ready. Data populates at launch.
+          </p>
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gta-gold/30 bg-gta-gold/8">
+            <span class="w-2 h-2 rounded-full bg-gta-gold animate-pulse inline-block"></span>
+            <span class="text-[11px] font-mono text-gta-gold">Monitoring GTA VI launch — data arrives automatically</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Five flows — day-1 state -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        {[
+          { flow:"①", label:"Wages",         color:"var(--c-chart-bar)",    desc:"Top heist/mission $/hr. Auto-derived from community benchmarks within 24h of launch.", ready:true  },
+          { flow:"②", label:"Spending",      color:"var(--c-cat-economy)",  desc:"GTA VI Online spending distribution by category. Community-modelled, updated each DLC cycle.", ready:false },
+          { flow:"③", label:"Savings",       color:"var(--c-chart-green)",  desc:"Idle Maze Bank balance by player progression stage. Community-modelled.", ready:false },
+          { flow:"④", label:"Shark Cards",   color:"var(--c-chart-indigo)", desc:"Take-Two recurrent consumer spending. Live from SEC EDGAR — updates with each quarterly filing.", ready:true  },
+          { flow:"⑤", label:"Passive Stack", color:"var(--c-chart-purple)", desc:"GTA VI Online passive business $/hr stack. Populated as businesses are confirmed post-launch.", ready:false },
+          { flow:"⊕", label:"GTA VI PPI",    color:"var(--c-chart-bar)",    desc:"Purchasing power index — basket cost ÷ top yield. Auto-computes once wage data is available.", ready:true  },
+        ].map(f => (
+          <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-black text-lg" style={`color:${f.color}`}>{f.flow}</span>
+                <span class="text-[11px] font-semibold text-zinc-300" style="font-family:'Inter',sans-serif">{f.label}</span>
+              </div>
+              {f.ready
+                ? <span class="text-[8px] font-mono border border-gta-gold/30 bg-gta-gold/10 text-gta-gold px-1.5 py-0.5 rounded uppercase tracking-widest">Ready</span>
+                : <span class="text-[8px] font-mono border border-zinc-700 bg-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded uppercase tracking-widest">At launch</span>
+              }
+            </div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{f.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Pipeline status -->
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-3 border-b border-[#1e1e23]">
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">// GTA VI DATA PIPELINE — NIGHTLY CI</div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-[11px] font-mono">
+            <thead>
+              <tr class="border-b border-[#1e1e23]">
+                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Scraper</th>
+                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Output</th>
+                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { scraper:"fetch_gta6_missions.py",    output:"gta-6/missions/story-missions.json", status:"ready",  note:"Watches Category:Missions_in_GTA_VI" },
+                { scraper:"fetch_gta_prices.py",       output:"gta-5/economy/item-catalogue.json",  status:"live",   note:"Extends to GTA VI store pages at launch" },
+                { scraper:"fetch_gta_ppi.py",          output:"gta-6/economy/gta-vi-ppi.json",      status:"ready",  note:"Computes PPI once wage data exists" },
+                { scraper:"gtavi/fetch_trailers.py",   output:"gta-6/trailers.json",                status:"live",   note:"YouTube API — active now" },
+                { scraper:"gtavi/fetch_search_trends.py", output:"gta-6/trends/search-interest.json", status:"live", note:"Google Trends — active now" },
+                { scraper:"fetch_edgar.py",            output:"franchise/revenue-split.json",        status:"live",   note:"Take-Two earnings — active now" },
+              ].map(r => (
+                <tr class="border-b border-[#1e1e23]/50 hover:bg-white/[0.02] transition-colors">
+                  <td class="px-4 py-2.5 text-gta-gold/80">{r.scraper}</td>
+                  <td class="px-4 py-2.5 text-zinc-500">{r.output}</td>
+                  <td class="px-4 py-2.5">
+                    <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${r.status === 'live' ? 'border-green-700/40 bg-green-900/20 text-green-400' : 'border-gta-gold/30 bg-gta-gold/10 text-gta-gold'}`}>
+                      {r.status === 'live' ? '✓ Live' : 'Day-1'}
+                    </span>
+                    <span class="ml-2 text-zinc-700">{r.note}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-gta6 -->
+
+
     <CrossLinks context="gta-v" class="mt-8" />
 
   </div>

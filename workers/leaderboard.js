@@ -21,6 +21,23 @@ const MAX_INDEX_SIZE = 1000;
 const RATE_LIMIT_TTL = 60;         // seconds between submissions per IP
 const MAX_STACK_ITEMS = 20;        // max businesses in a submitted stack
 
+// ── Moderation blocklist ──────────────────────────────────────────────────────
+// Lowercase exact or substring matches. Extend as needed — no redeploy required
+// once the list is in KV (see handleAdmin). For now hardcoded for simplicity.
+const BLOCKED_NAMES = new Set([
+  'admin', 'moderator', 'rockstar', 'gtavi.ai', 'gtaviai',
+  'null', 'undefined', 'test', 'spam', 'bot',
+]);
+
+function isBlockedUsername(name) {
+  const lower = name.toLowerCase().replace(/\s+/g, '');
+  if (BLOCKED_NAMES.has(lower)) return true;
+  // Block pure numbers or single chars
+  if (/^\d+$/.test(lower)) return true;
+  if (lower.length < 2) return true;
+  return false;
+}
+
 /** ISO week key: "2026-W20" */
 function weekKey(date = new Date()) {
   const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
@@ -149,6 +166,9 @@ async function handleSubmit(kv, request, origin) {
   if (!username || username.length < 2) {
     return json({ error: 'username required (min 2 chars)' }, 400, origin);
   }
+  if (isBlockedUsername(username) || isBlockedUsername(display)) {
+    return json({ error: 'Username not allowed' }, 400, origin);
+  }
 
   const stack = validateStack(body.stack);
   if (!stack || stack.length === 0) {
@@ -193,7 +213,34 @@ async function handleRank(kv, username, origin) {
   return json({ ...player, rank: rank || null }, 200, origin);
 }
 
+/** Weekly cron: snapshot top 10 of the current week into KV, then rotate */
+async function handleWeeklyCron(kv) {
+  const week   = weekKey();
+  const raw    = await kv.get('index:all');
+  if (!raw) return;
+
+  const index = JSON.parse(raw);
+  const thisWeek = index.filter(e => {
+    const d = new Date(e.submitted_at);
+    return weekKey(d) === week;
+  });
+
+  // Snapshot top 10 for this week
+  const snapshot = {
+    week_key:   week,
+    snapped_at: new Date().toISOString(),
+    top10:      thisWeek.slice(0, 10),
+  };
+  await kv.put(`snapshot:${week}`, JSON.stringify(snapshot), { expirationTtl: 86400 * 60 });
+  console.log(`[cron] Snapped week ${week}: ${thisWeek.length} entries`);
+}
+
 export default {
+  // ── Scheduled cron (every Monday 00:05 UTC — "0 5 * * 1" in wrangler.toml) ──
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(handleWeeklyCron(env.LEADERBOARD));
+  },
+
   async fetch(request, env) {
     const url    = new URL(request.url);
     const origin = request.headers.get('Origin') || '';
@@ -218,6 +265,14 @@ export default {
       if (path.startsWith('/rank/') && request.method === 'GET') {
         const username = decodeURIComponent(path.replace('/rank/', ''));
         return handleRank(kv, username, origin);
+      }
+
+      // Weekly snapshot — returns the snapped top-10 for a given week
+      if (path === '/leaderboard/snapshot' && request.method === 'GET') {
+        const w   = url.searchParams.get('week') || weekKey();
+        const raw = await kv.get(`snapshot:${w}`);
+        if (!raw) return json({ week_key: w, top10: [], message: 'No snapshot yet for this week' }, 200, origin);
+        return json(JSON.parse(raw), 200, origin);
       }
 
       // Health check
