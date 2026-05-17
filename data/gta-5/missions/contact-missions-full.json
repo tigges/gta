@@ -1,25 +1,167 @@
 {
-  "last_updated": "2026-05-17T22:28:07+00:00",
-  "source": "GTABase.com + GTA Fandom Wiki + community benchmarks (GTAForums)",
-  "schema_version": "1.0",
-  "note": "All 26 GTA Online contact mission strands + newer activity types. $/hr = community-benchmarked net at 2024/25 patch level, solo where solo=true.",
-  "strand_count": 25,
+  "last_updated": "2026-05-17T22:48:30+00:00",
+  "source": "GTA Fandom Wiki — Missions in GTA Online (MediaWiki API)",
+  "source_url": "https://gta.fandom.com/wiki/Missions_in_GTA_Online",
+  "schema_version": "2.0",
+  "note": "Per-mission payout data scraped from GTA Fandom Wiki. payout_hard_max = Hard difficulty, 16+ min completion. gta_per_hr uses community-verified completion times from GTAForums where known, rank-based estimate otherwise. Difficulty multipliers: Easy ×0.67, Normal ×0.83, Hard ×1.0. Player bonus: +10% per extra player above minimum.",
+  "payout_formula": {
+    "base_max_hard_rank5": 18300,
+    "step_per_rank": 60,
+    "max_payout_rank81": 22860,
+    "dlc_flat_payout": 23100,
+    "difficulty_multipliers": {
+      "Easy": 0.6666666666666666,
+      "Normal": 0.8333333333333334,
+      "Hard": 1.0
+    },
+    "duration_tiers_pct": {
+      "16+min": "100%",
+      "12+min": "90%",
+      "10+min": "80%",
+      "8+min": "70%",
+      "6+min": "60%",
+      "4+min": "50%",
+      "3+min": "37%",
+      "2+min": "25%",
+      "0+min": "12%"
+    },
+    "player_bonus": {
+      "1": "+0%",
+      "2": "+10%",
+      "3": "+19%",
+      "4": "+30%"
+    }
+  },
+  "strand_count": 21,
+  "mission_count": 177,
   "strands": [
     {
       "id": "lamar-missions",
-      "title": "Lamar's Missions",
+      "title": "Lamar Davis",
       "giver": "Lamar Davis",
       "dlc": "Launch (2013)",
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 30000,
+      "gta_per_hr": 117565,
       "payout_range": [
         15000,
         25000
       ],
       "notes": "Low-tier contact missions. Fast solo rotations maximize $/hr.",
-      "missions": []
+      "mission_count": 10,
+      "missions": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 22860,
+          "gta_per_hr": 117565,
+          "dlc": null
+        },
+        {
+          "id": "mall-or-nothing",
+          "title": "Mall Or Nothing",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1300,
+          "payout_hard_max": 22860,
+          "gta_per_hr": 117565,
+          "dlc": null
+        },
+        {
+          "id": "hold-up",
+          "title": "Hold Up",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": null,
+          "payout_hard_max": 22860,
+          "gta_per_hr": 117565,
+          "dlc": null
+        },
+        {
+          "id": "ballas-to-the-wall",
+          "title": "Ballas to the Wall",
+          "unlock_rank": 5,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1200,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 94114,
+          "dlc": null
+        },
+        {
+          "id": "san-andreas-seoul",
+          "title": "San Andreas Seoul",
+          "unlock_rank": 16,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1200,
+          "payout_hard_max": 18960,
+          "gta_per_hr": 97508,
+          "dlc": null
+        },
+        {
+          "id": "ticket-to-elysium",
+          "title": "Ticket to Elysium",
+          "unlock_rank": 18,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1810,
+          "payout_hard_max": 19080,
+          "gta_per_hr": 98125,
+          "dlc": null
+        },
+        {
+          "id": "going-down-the-goh",
+          "title": "Going Down the GOH",
+          "unlock_rank": 20,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1340,
+          "payout_hard_max": 19200,
+          "gta_per_hr": 98742,
+          "dlc": null
+        },
+        {
+          "id": "caught-napping",
+          "title": "Caught Napping",
+          "unlock_rank": 20,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1450,
+          "payout_hard_max": 19200,
+          "gta_per_hr": 98742,
+          "dlc": null
+        },
+        {
+          "id": "lost-mc-rip",
+          "title": "Lost MC RIP",
+          "unlock_rank": 25,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1565,
+          "payout_hard_max": 19500,
+          "gta_per_hr": 100285,
+          "dlc": null
+        },
+        {
+          "id": "no-smoking",
+          "title": "No Smoking",
+          "unlock_rank": 30,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1690,
+          "payout_hard_max": 19800,
+          "gta_per_hr": 101828,
+          "dlc": null
+        }
+      ]
     },
     {
       "id": "lamar-lowriders",
@@ -29,209 +171,1504 @@
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 35000,
+      "gta_per_hr": 122348,
       "payout_range": [
         18000,
         30000
       ],
       "notes": "8 missions. Slightly better than base Lamar missions.",
-      "missions": []
+      "mission_count": 8,
+      "missions": [
+        {
+          "id": "community-outreach",
+          "title": "Community Outreach",
+          "unlock_rank": 5,
+          "min_players": 4,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 122348,
+          "dlc": "Lowriders"
+        },
+        {
+          "id": "slow-and-low",
+          "title": "Slow and Low",
+          "unlock_rank": 5,
+          "min_players": 2,
+          "max_players": 2,
+          "rp_reward_max": null,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 103525,
+          "dlc": "Lowriders"
+        },
+        {
+          "id": "it-s-a-g-thing",
+          "title": "It's a G Thing",
+          "unlock_rank": 5,
+          "min_players": 2,
+          "max_players": 2,
+          "rp_reward_max": null,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 103525,
+          "dlc": "Lowriders"
+        },
+        {
+          "id": "funeral-party",
+          "title": "Funeral Party",
+          "unlock_rank": 5,
+          "min_players": 4,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 122348,
+          "dlc": "Lowriders"
+        },
+        {
+          "id": "lowrider-envy",
+          "title": "Lowrider Envy",
+          "unlock_rank": 5,
+          "min_players": 2,
+          "max_players": 2,
+          "rp_reward_max": null,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 103525,
+          "dlc": "Lowriders"
+        },
+        {
+          "id": "point-and-shoot",
+          "title": "Point and Shoot",
+          "unlock_rank": 5,
+          "min_players": 2,
+          "max_players": 2,
+          "rp_reward_max": null,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 103525,
+          "dlc": "Lowriders"
+        },
+        {
+          "id": "desperate-times-call-for",
+          "title": "Desperate Times Call For...",
+          "unlock_rank": 5,
+          "min_players": 4,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 122348,
+          "dlc": "Lowriders"
+        },
+        {
+          "id": "peace-offerings",
+          "title": "Peace Offerings",
+          "unlock_rank": 5,
+          "min_players": 4,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 122348,
+          "dlc": "Lowriders"
+        }
+      ]
+    },
+    {
+      "id": "short-trips",
+      "title": "Franklin and Lamar's Short Trips",
+      "giver": "Franklin Clinton",
+      "dlc": "The Contract (Dec 2021)",
+      "solo": true,
+      "max_players": 2,
+      "category": "contract",
+      "gta_per_hr": 130680,
+      "payout_range": [
+        200000,
+        300000
+      ],
+      "notes": "Franklin & Lamar missions from The Contract. ~$150-200k per mission. Solo capable. Excellent payout for time investment.",
+      "mission_count": 3,
+      "missions": [
+        {
+          "id": "short-trip-seed-capital",
+          "title": "Short Trip - Seed Capital",
+          "unlock_rank": 1,
+          "min_players": 2,
+          "max_players": 2,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 130680,
+          "dlc": "The Contract"
+        },
+        {
+          "id": "short-trip-fire-it-up",
+          "title": "Short Trip - Fire It Up",
+          "unlock_rank": 1,
+          "min_players": 2,
+          "max_players": 2,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 130680,
+          "dlc": "The Contract"
+        },
+        {
+          "id": "short-trip-og-kush",
+          "title": "Short Trip - OG Kush",
+          "unlock_rank": 1,
+          "min_players": 2,
+          "max_players": 2,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 130680,
+          "dlc": "The Contract"
+        }
+      ]
     },
     {
       "id": "gerald-missions",
-      "title": "Gerald's Missions",
+      "title": "Gerald",
       "giver": "Gerald",
       "dlc": "Launch (2013)",
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 30000,
+      "gta_per_hr": 122495,
       "payout_range": [
         15000,
         25000
       ],
       "notes": "Classic contact missions. Rooftop Rumble historically top earner.",
-      "missions": []
+      "mission_count": 15,
+      "missions": [
+        {
+          "id": "learning-the-ropes-alone",
+          "title": "Learning The Ropes Alone",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 1,
+          "rp_reward_max": 1300,
+          "payout_hard_max": 22860,
+          "gta_per_hr": 117565,
+          "dlc": null
+        },
+        {
+          "id": "learning-the-ropes",
+          "title": "Learning The Ropes",
+          "unlock_rank": null,
+          "min_players": 2,
+          "max_players": 4,
+          "rp_reward_max": 1550,
+          "payout_hard_max": 22860,
+          "gta_per_hr": 129322,
+          "dlc": null
+        },
+        {
+          "id": "pier-pressure",
+          "title": "Pier Pressure",
+          "unlock_rank": 6,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1000,
+          "payout_hard_max": 18360,
+          "gta_per_hr": 110160,
+          "dlc": null
+        },
+        {
+          "id": "death-metal",
+          "title": "Death Metal",
+          "unlock_rank": 6,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1320,
+          "payout_hard_max": 18360,
+          "gta_per_hr": 94422,
+          "dlc": null
+        },
+        {
+          "id": "deal-breaker",
+          "title": "Deal Breaker",
+          "unlock_rank": 6,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1340,
+          "payout_hard_max": 18360,
+          "gta_per_hr": 94422,
+          "dlc": null
+        },
+        {
+          "id": "flood-in-the-ls-river",
+          "title": "Flood in the LS River",
+          "unlock_rank": 6,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1400,
+          "payout_hard_max": 18360,
+          "gta_per_hr": 100145,
+          "dlc": null
+        },
+        {
+          "id": "meth-d-up",
+          "title": "Meth'd Up",
+          "unlock_rank": 7,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1100,
+          "payout_hard_max": 18420,
+          "gta_per_hr": 94731,
+          "dlc": null
+        },
+        {
+          "id": "no-hay-bronca",
+          "title": "No Hay Bronca",
+          "unlock_rank": 8,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1320,
+          "payout_hard_max": 18480,
+          "gta_per_hr": 95040,
+          "dlc": null
+        },
+        {
+          "id": "gassed-up",
+          "title": "Gassed Up",
+          "unlock_rank": 12,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1310,
+          "payout_hard_max": 18720,
+          "gta_per_hr": 96274,
+          "dlc": null
+        },
+        {
+          "id": "hit-em-up",
+          "title": "Hit 'Em Up",
+          "unlock_rank": 14,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2180,
+          "payout_hard_max": 18840,
+          "gta_per_hr": 96891,
+          "dlc": "High Life"
+        },
+        {
+          "id": "violent-duct",
+          "title": "Violent Duct",
+          "unlock_rank": 15,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1180,
+          "payout_hard_max": 18900,
+          "gta_per_hr": 103090,
+          "dlc": null
+        },
+        {
+          "id": "hard-labor",
+          "title": "Hard Labor",
+          "unlock_rank": 19,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2250,
+          "payout_hard_max": 19140,
+          "gta_per_hr": 98434,
+          "dlc": "Independence Day"
+        },
+        {
+          "id": "war-and-pieces",
+          "title": "War and Pieces",
+          "unlock_rank": 30,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2160,
+          "payout_hard_max": 19800,
+          "gta_per_hr": 101828,
+          "dlc": null
+        },
+        {
+          "id": "chumash-and-grab",
+          "title": "Chumash and Grab",
+          "unlock_rank": 35,
+          "min_players": 2,
+          "max_players": 4,
+          "rp_reward_max": 1900,
+          "payout_hard_max": 20100,
+          "gta_per_hr": 120600,
+          "dlc": null
+        },
+        {
+          "id": "dish-the-dirt",
+          "title": "Dish the Dirt",
+          "unlock_rank": 45,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2510,
+          "payout_hard_max": 20700,
+          "gta_per_hr": 93150,
+          "dlc": null
+        }
+      ]
     },
     {
       "id": "gerald-last-play",
       "title": "Gerald's Last Play",
       "giver": "Gerald",
-      "dlc": "Criminal Enterprises (Jul 2022)",
+      "dlc": "Diamond Casino Heist (Dec 2019)",
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 70000,
+      "gta_per_hr": 118800,
       "payout_range": [
         30000,
         50000
       ],
       "notes": "Criminal Enterprises update missions. Better payout than originals.",
-      "missions": [],
-      "wiki_title": "Gerald's Last Play"
+      "mission_count": 6,
+      "missions": [
+        {
+          "id": "last-play-bad-companies",
+          "title": "Last Play - Bad Companies",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Diamond Casino Heist"
+        },
+        {
+          "id": "last-play-deal-with-it",
+          "title": "Last Play - Deal With It",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Diamond Casino Heist"
+        },
+        {
+          "id": "last-play-end-product",
+          "title": "Last Play - End Product",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Diamond Casino Heist"
+        },
+        {
+          "id": "last-play-fast-peddling",
+          "title": "Last Play - Fast Peddling",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Diamond Casino Heist"
+        },
+        {
+          "id": "last-play-go-figure",
+          "title": "Last Play - Go Figure",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Diamond Casino Heist"
+        },
+        {
+          "id": "last-play-make-ends-meat",
+          "title": "Last Play - Make Ends Meat",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Diamond Casino Heist"
+        }
+      ]
     },
     {
       "id": "simeon-missions",
-      "title": "Simeon's Missions",
+      "title": "Simeon Yetarian",
       "giver": "Simeon Yetarian",
       "dlc": "Launch (2013)",
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 25000,
+      "gta_per_hr": 103382,
       "payout_range": [
         12000,
         20000
       ],
       "notes": "Repo work missions. Among the lowest $/hr contact missions.",
-      "missions": []
+      "mission_count": 13,
+      "missions": [
+        {
+          "id": "where-credit-s-due",
+          "title": "Where Credit's Due",
+          "unlock_rank": 5,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1050,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 91500,
+          "dlc": null
+        },
+        {
+          "id": "rockford-roll",
+          "title": "Rockford Roll",
+          "unlock_rank": 5,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1060,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 94114,
+          "dlc": null
+        },
+        {
+          "id": "rich-men-in-richman",
+          "title": "Rich Men in Richman",
+          "unlock_rank": 5,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1100,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 94114,
+          "dlc": null
+        },
+        {
+          "id": "chasers",
+          "title": "Chasers",
+          "unlock_rank": 5,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1250,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 94114,
+          "dlc": null
+        },
+        {
+          "id": "it-takes-a-thief",
+          "title": "It Takes a Thief",
+          "unlock_rank": 5,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1520,
+          "payout_hard_max": 18300,
+          "gta_per_hr": 94114,
+          "dlc": null
+        },
+        {
+          "id": "gentry-does-it",
+          "title": "Gentry Does It",
+          "unlock_rank": 10,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1100,
+          "payout_hard_max": 18600,
+          "gta_per_hr": 85846,
+          "dlc": null
+        },
+        {
+          "id": "all-in-the-game",
+          "title": "All in the Game",
+          "unlock_rank": 10,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1120,
+          "payout_hard_max": 18600,
+          "gta_per_hr": 95657,
+          "dlc": null
+        },
+        {
+          "id": "el-burro-heists",
+          "title": "El Burro Heists",
+          "unlock_rank": 10,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1170,
+          "payout_hard_max": 18600,
+          "gta_per_hr": 95657,
+          "dlc": null
+        },
+        {
+          "id": "blow-up",
+          "title": "Blow Up",
+          "unlock_rank": 12,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1750,
+          "payout_hard_max": 18720,
+          "gta_per_hr": 102109,
+          "dlc": null
+        },
+        {
+          "id": "gta-today",
+          "title": "GTA Today",
+          "unlock_rank": 12,
+          "min_players": 2,
+          "max_players": 4,
+          "rp_reward_max": 1800,
+          "payout_hard_max": 18720,
+          "gta_per_hr": 105901,
+          "dlc": "High Life"
+        },
+        {
+          "id": "chasers-ii",
+          "title": "Chasers II",
+          "unlock_rank": 16,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1060,
+          "payout_hard_max": 18960,
+          "gta_per_hr": 97508,
+          "dlc": null
+        },
+        {
+          "id": "blow-up-ii",
+          "title": "Blow Up II",
+          "unlock_rank": 20,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1260,
+          "payout_hard_max": 19200,
+          "gta_per_hr": 98742,
+          "dlc": null
+        },
+        {
+          "id": "blow-up-iii",
+          "title": "Blow Up III",
+          "unlock_rank": 31,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1280,
+          "payout_hard_max": 19860,
+          "gta_per_hr": 102137,
+          "dlc": null
+        }
+      ]
     },
     {
       "id": "simeon-repo-work",
       "title": "Simeon's Premium Deluxe Repo Work",
       "giver": "Simeon Yetarian",
-      "dlc": "Heists (Mar 2015)",
+      "dlc": "Arena War (Dec 2018)",
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 40000,
+      "gta_per_hr": 115500,
       "payout_range": [
         20000,
         35000
       ],
       "notes": "Heists-era missions. Marginally better than Simeon's base missions.",
-      "missions": []
+      "mission_count": 8,
+      "missions": [
+        {
+          "id": "repo-blow-up-iv",
+          "title": "Repo - Blow Up IV",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 4810,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 115500,
+          "dlc": "Arena War"
+        },
+        {
+          "id": "repo-sasquashed",
+          "title": "Repo - Sasquashed",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 4810,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 106615,
+          "dlc": "Arena War"
+        },
+        {
+          "id": "repo-under-the-hammer",
+          "title": "Repo - Under the Hammer",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 4810,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 115500,
+          "dlc": "Arena War"
+        },
+        {
+          "id": "repo-do-you-even-lift",
+          "title": "Repo - Do You Even Lift?",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 4810,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 106615,
+          "dlc": "Arena War"
+        },
+        {
+          "id": "repo-gta-today-ii",
+          "title": "Repo - GTA Today II",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 4810,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 115500,
+          "dlc": "Arena War"
+        },
+        {
+          "id": "repo-rv-nearly-there",
+          "title": "Repo - RV Nearly There?",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 4810,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 106615,
+          "dlc": "Arena War"
+        },
+        {
+          "id": "repo-burn-rate",
+          "title": "Repo - Burn Rate",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 4810,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 106615,
+          "dlc": "Arena War"
+        },
+        {
+          "id": "repo-simeonomics",
+          "title": "Repo - Simeonomics",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 4810,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 115500,
+          "dlc": "Arena War"
+        }
+      ]
     },
     {
       "id": "ron-missions",
-      "title": "Ron's Missions",
+      "title": "Ron Jakowski",
       "giver": "Ron Jakowski",
       "dlc": "Launch (2013)",
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 28000,
+      "gta_per_hr": 118182,
       "payout_range": [
         14000,
         22000
       ],
       "notes": "Trevor Philips Industries storyline. Standard contact mission payout.",
-      "missions": []
+      "mission_count": 9,
+      "missions": [
+        {
+          "id": "tp-industries",
+          "title": "TP Industries",
+          "unlock_rank": 13,
+          "min_players": 1,
+          "max_players": 1,
+          "rp_reward_max": null,
+          "payout_hard_max": 18780,
+          "gta_per_hr": 96582,
+          "dlc": null
+        },
+        {
+          "id": "romance-isn-t-dead",
+          "title": "Romance Isn't Dead",
+          "unlock_rank": 13,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1150,
+          "payout_hard_max": 18780,
+          "gta_per_hr": 96582,
+          "dlc": null
+        },
+        {
+          "id": "fuelling-the-flames",
+          "title": "Fuelling the Flames",
+          "unlock_rank": 20,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1270,
+          "payout_hard_max": 19200,
+          "gta_per_hr": 98742,
+          "dlc": null
+        },
+        {
+          "id": "turbine-carbine",
+          "title": "Turbine Carbine",
+          "unlock_rank": 25,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1560,
+          "payout_hard_max": 19500,
+          "gta_per_hr": 100285,
+          "dlc": null
+        },
+        {
+          "id": "daemon-run",
+          "title": "Daemon Run",
+          "unlock_rank": 25,
+          "min_players": 2,
+          "max_players": 4,
+          "rp_reward_max": 1690,
+          "payout_hard_max": 19500,
+          "gta_per_hr": 110314,
+          "dlc": null
+        },
+        {
+          "id": "base-invaders",
+          "title": "Base Invaders",
+          "unlock_rank": 27,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1460,
+          "payout_hard_max": 19620,
+          "gta_per_hr": 90553,
+          "dlc": null
+        },
+        {
+          "id": "crank-up-the-volume",
+          "title": "Crank Up the Volume",
+          "unlock_rank": 30,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1200,
+          "payout_hard_max": 19800,
+          "gta_per_hr": 101828,
+          "dlc": null
+        },
+        {
+          "id": "landing-gear",
+          "title": "Landing Gear",
+          "unlock_rank": 55,
+          "min_players": 4,
+          "max_players": 6,
+          "rp_reward_max": 2800,
+          "payout_hard_max": 21300,
+          "gta_per_hr": 142405,
+          "dlc": null
+        },
+        {
+          "id": "wet-workers",
+          "title": "Wet Workers",
+          "unlock_rank": 55,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 3650,
+          "payout_hard_max": 21300,
+          "gta_per_hr": 95850,
+          "dlc": null
+        }
+      ]
     },
     {
       "id": "trevor-missions",
-      "title": "Trevor's Missions",
+      "title": "Trevor Philips",
       "giver": "Trevor Philips",
       "dlc": "Launch (2013)",
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 28000,
+      "gta_per_hr": 106539,
       "payout_range": [
         14000,
         22000
       ],
       "notes": "Standard contact missions. Sandy Shores-based storyline.",
-      "missions": []
+      "mission_count": 9,
+      "missions": [
+        {
+          "id": "tp-industries",
+          "title": "TP Industries",
+          "unlock_rank": 13,
+          "min_players": 1,
+          "max_players": 1,
+          "rp_reward_max": null,
+          "payout_hard_max": 18780,
+          "gta_per_hr": 96582,
+          "dlc": null
+        },
+        {
+          "id": "lost-my-mind",
+          "title": "Lost My Mind",
+          "unlock_rank": 20,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1650,
+          "payout_hard_max": 19200,
+          "gta_per_hr": 98742,
+          "dlc": null
+        },
+        {
+          "id": "crystal-clear-out",
+          "title": "Crystal Clear Out",
+          "unlock_rank": 28,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1820,
+          "payout_hard_max": 19680,
+          "gta_per_hr": 101211,
+          "dlc": null
+        },
+        {
+          "id": "chop-chop",
+          "title": "Chop Chop",
+          "unlock_rank": 43,
+          "min_players": 2,
+          "max_players": 4,
+          "rp_reward_max": 3915,
+          "payout_hard_max": 15850,
+          "gta_per_hr": 78457,
+          "dlc": "Flight School"
+        },
+        {
+          "id": "out-of-harmony",
+          "title": "Out of Harmony",
+          "unlock_rank": 50,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2650,
+          "payout_hard_max": 21000,
+          "gta_per_hr": 94500,
+          "dlc": null
+        },
+        {
+          "id": "satellite-communications",
+          "title": "Satellite Communications",
+          "unlock_rank": 60,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 4900,
+          "payout_hard_max": 21600,
+          "gta_per_hr": 100799,
+          "dlc": null
+        },
+        {
+          "id": "method-in-the-madness",
+          "title": "Method in the Madness",
+          "unlock_rank": 65,
+          "min_players": 2,
+          "max_players": 4,
+          "rp_reward_max": 4670,
+          "payout_hard_max": 21900,
+          "gta_per_hr": 112420,
+          "dlc": null
+        },
+        {
+          "id": "chopper-tail",
+          "title": "Chopper Tail",
+          "unlock_rank": 70,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 3450,
+          "payout_hard_max": 22200,
+          "gta_per_hr": 103599,
+          "dlc": null
+        },
+        {
+          "id": "diamonds-are-for-trevor",
+          "title": "Diamonds are for Trevor",
+          "unlock_rank": 70,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 3490,
+          "payout_hard_max": 22200,
+          "gta_per_hr": 103599,
+          "dlc": null
+        }
+      ]
     },
     {
       "id": "lester-missions",
-      "title": "Lester's Missions",
+      "title": "Lester Crest",
       "giver": "Lester Crest",
       "dlc": "Launch (2013)",
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 30000,
+      "gta_per_hr": 112323,
       "payout_range": [
         15000,
         25000
       ],
       "notes": "Lester's classic missions. Some are among the most efficient solo runs.",
-      "missions": []
+      "mission_count": 19,
+      "missions": [
+        {
+          "id": "denial-of-service",
+          "title": "Denial of Service",
+          "unlock_rank": 14,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1800,
+          "payout_hard_max": 18840,
+          "gta_per_hr": 96891,
+          "dlc": "High Life"
+        },
+        {
+          "id": "master-data",
+          "title": "Master Data",
+          "unlock_rank": 16,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1800,
+          "payout_hard_max": 18960,
+          "gta_per_hr": 97508,
+          "dlc": "High Life"
+        },
+        {
+          "id": "cops-capacity",
+          "title": "Cops Capacity",
+          "unlock_rank": 19,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 2160,
+          "payout_hard_max": 19140,
+          "gta_per_hr": 98434,
+          "dlc": null
+        },
+        {
+          "id": "crime-scenester",
+          "title": "Crime Scenester",
+          "unlock_rank": 20,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1950,
+          "payout_hard_max": 19200,
+          "gta_per_hr": 98742,
+          "dlc": "High Life"
+        },
+        {
+          "id": "landing-strip",
+          "title": "Landing Strip",
+          "unlock_rank": 22,
+          "min_players": 2,
+          "max_players": 4,
+          "rp_reward_max": 1375,
+          "payout_hard_max": 19320,
+          "gta_per_hr": 109296,
+          "dlc": null
+        },
+        {
+          "id": "a-titan-of-a-job",
+          "title": "A Titan of a Job",
+          "unlock_rank": 24,
+          "min_players": 1,
+          "max_players": 6,
+          "rp_reward_max": 1200,
+          "payout_hard_max": 19440,
+          "gta_per_hr": 99977,
+          "dlc": null
+        },
+        {
+          "id": "last-chopper-outta-ls",
+          "title": "Last Chopper Outta LS",
+          "unlock_rank": 25,
+          "min_players": 2,
+          "max_players": 2,
+          "rp_reward_max": 1385,
+          "payout_hard_max": 19500,
+          "gta_per_hr": 110314,
+          "dlc": null
+        },
+        {
+          "id": "high-priority-case",
+          "title": "High Priority Case",
+          "unlock_rank": 25,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1650,
+          "payout_hard_max": 19500,
+          "gta_per_hr": 90000,
+          "dlc": null
+        },
+        {
+          "id": "quarry-quarry",
+          "title": "Quarry Quarry",
+          "unlock_rank": 30,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1920,
+          "payout_hard_max": 19800,
+          "gta_per_hr": 101828,
+          "dlc": null
+        },
+        {
+          "id": "by-land-sea-and-air",
+          "title": "By Land, Sea and Air",
+          "unlock_rank": 30,
+          "min_players": 2,
+          "max_players": 4,
+          "rp_reward_max": 1930,
+          "payout_hard_max": 19800,
+          "gta_per_hr": 112011,
+          "dlc": null
+        },
+        {
+          "id": "teaser-trailer",
+          "title": "Teaser Trailer",
+          "unlock_rank": 40,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2510,
+          "payout_hard_max": 20400,
+          "gta_per_hr": 91800,
+          "dlc": null
+        },
+        {
+          "id": "four-trailers",
+          "title": "Four Trailers",
+          "unlock_rank": 45,
+          "min_players": 1,
+          "max_players": 6,
+          "rp_reward_max": 4120,
+          "payout_hard_max": 20700,
+          "gta_per_hr": 93150,
+          "dlc": null
+        },
+        {
+          "id": "bust-out",
+          "title": "Bust Out",
+          "unlock_rank": 55,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1815,
+          "payout_hard_max": 21300,
+          "gta_per_hr": 95850,
+          "dlc": null
+        },
+        {
+          "id": "sinking-feeling",
+          "title": "Sinking Feeling",
+          "unlock_rank": 55,
+          "min_players": 2,
+          "max_players": 4,
+          "rp_reward_max": 3000,
+          "payout_hard_max": 21300,
+          "gta_per_hr": 105435,
+          "dlc": null
+        },
+        {
+          "id": "the-parking-garage",
+          "title": "The Parking Garage",
+          "unlock_rank": 55,
+          "min_players": 2,
+          "max_players": 4,
+          "rp_reward_max": 3725,
+          "payout_hard_max": 21300,
+          "gta_per_hr": 105435,
+          "dlc": null
+        },
+        {
+          "id": "hack-and-dash",
+          "title": "Hack and Dash",
+          "unlock_rank": 60,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1520,
+          "payout_hard_max": 21600,
+          "gta_per_hr": 100799,
+          "dlc": null
+        },
+        {
+          "id": "on-maneuvers",
+          "title": "On Maneuvers",
+          "unlock_rank": 65,
+          "min_players": 1,
+          "max_players": 3,
+          "rp_reward_max": 2550,
+          "payout_hard_max": 21900,
+          "gta_per_hr": 102199,
+          "dlc": null
+        },
+        {
+          "id": "docks-to-stock",
+          "title": "Docks to Stock",
+          "unlock_rank": 70,
+          "min_players": 2,
+          "max_players": 4,
+          "rp_reward_max": 3300,
+          "payout_hard_max": 22200,
+          "gta_per_hr": 113960,
+          "dlc": null
+        },
+        {
+          "id": "stocks-and-scares",
+          "title": "Stocks and Scares",
+          "unlock_rank": 70,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 4050,
+          "payout_hard_max": 22200,
+          "gta_per_hr": 111000,
+          "dlc": null
+        }
+      ]
     },
     {
       "id": "martin-missions",
-      "title": "Martin Madrazo's Missions",
+      "title": "Martin Madrazo",
       "giver": "Martin Madrazo",
-      "dlc": "Launch (2013)",
+      "dlc": "High Life (May 2014)",
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 30000,
+      "gta_per_hr": 114494,
       "payout_range": [
         15000,
         25000
       ],
       "notes": "Martin Madrazo missions. Standard contact mission payout range.",
-      "missions": []
+      "mission_count": 23,
+      "missions": [
+        {
+          "id": "on-the-list",
+          "title": "On the List",
+          "unlock_rank": 18,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2180,
+          "payout_hard_max": 19080,
+          "gta_per_hr": 98125,
+          "dlc": "High Life"
+        },
+        {
+          "id": "artificial-scarcity",
+          "title": "Artificial Scarcity",
+          "unlock_rank": 19,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2310,
+          "payout_hard_max": 19140,
+          "gta_per_hr": 98434,
+          "dlc": "High Life"
+        },
+        {
+          "id": "handle-with-care",
+          "title": "Handle with Care",
+          "unlock_rank": 20,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1950,
+          "payout_hard_max": 19200,
+          "gta_per_hr": 98742,
+          "dlc": "High Life"
+        },
+        {
+          "id": "time-to-get-away",
+          "title": "Time To Get Away",
+          "unlock_rank": 21,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1700,
+          "payout_hard_max": 19200,
+          "gta_per_hr": 98742,
+          "dlc": "Independence Day"
+        },
+        {
+          "id": "out-of-court-settlement",
+          "title": "Out of Court Settlement",
+          "unlock_rank": 22,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1160,
+          "payout_hard_max": 19320,
+          "gta_per_hr": 89169,
+          "dlc": null
+        },
+        {
+          "id": "death-from-above",
+          "title": "Death From Above",
+          "unlock_rank": 24,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 1500,
+          "payout_hard_max": 19440,
+          "gta_per_hr": 97200,
+          "dlc": null
+        },
+        {
+          "id": "check-out-time",
+          "title": "Check Out Time",
+          "unlock_rank": 35,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1110,
+          "payout_hard_max": 20100,
+          "gta_per_hr": 103371,
+          "dlc": null
+        },
+        {
+          "id": "water-the-vineyard",
+          "title": "Water the Vineyard",
+          "unlock_rank": 40,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1370,
+          "payout_hard_max": 20400,
+          "gta_per_hr": 102000,
+          "dlc": null
+        },
+        {
+          "id": "grab-your-ballas",
+          "title": "Grab Your Ballas",
+          "unlock_rank": 40,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2530,
+          "payout_hard_max": 20400,
+          "gta_per_hr": 91800,
+          "dlc": null
+        },
+        {
+          "id": "stick-up-the-stickup-crew",
+          "title": "Stick Up the Stickup Crew",
+          "unlock_rank": 40,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 3750,
+          "payout_hard_max": 20400,
+          "gta_per_hr": 91800,
+          "dlc": null
+        },
+        {
+          "id": "the-los-santos-connection",
+          "title": "The Los Santos Connection",
+          "unlock_rank": 40,
+          "min_players": 1,
+          "max_players": 6,
+          "rp_reward_max": 3900,
+          "payout_hard_max": 20400,
+          "gta_per_hr": 91800,
+          "dlc": null
+        },
+        {
+          "id": "effin-lazers",
+          "title": "Effin' Lazers",
+          "unlock_rank": 44,
+          "min_players": 2,
+          "max_players": 2,
+          "rp_reward_max": null,
+          "payout_hard_max": 20640,
+          "gta_per_hr": 102168,
+          "dlc": "Flight School"
+        },
+        {
+          "id": "editor-and-thief",
+          "title": "Editor and Thief",
+          "unlock_rank": 45,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 1130,
+          "payout_hard_max": 20700,
+          "gta_per_hr": 93150,
+          "dlc": null
+        },
+        {
+          "id": "mixed-up-with-coke",
+          "title": "Mixed Up With Coke",
+          "unlock_rank": 45,
+          "min_players": 1,
+          "max_players": 6,
+          "rp_reward_max": 2575,
+          "payout_hard_max": 20700,
+          "gta_per_hr": 106457,
+          "dlc": null
+        },
+        {
+          "id": "dry-docking",
+          "title": "Dry Docking",
+          "unlock_rank": 45,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2750,
+          "payout_hard_max": 20700,
+          "gta_per_hr": 93150,
+          "dlc": null
+        },
+        {
+          "id": "cleaning-the-cat-house",
+          "title": "Cleaning the Cat House",
+          "unlock_rank": 45,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 4090,
+          "payout_hard_max": 20700,
+          "gta_per_hr": 93150,
+          "dlc": null
+        },
+        {
+          "id": "extradition",
+          "title": "Extradition",
+          "unlock_rank": 50,
+          "min_players": 1,
+          "max_players": 6,
+          "rp_reward_max": 2350,
+          "payout_hard_max": 21000,
+          "gta_per_hr": 94500,
+          "dlc": null
+        },
+        {
+          "id": "holed-up-burton",
+          "title": "Holed Up - Burton",
+          "unlock_rank": 50,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2720,
+          "payout_hard_max": 21000,
+          "gta_per_hr": 94500,
+          "dlc": null
+        },
+        {
+          "id": "show-me-the-monet",
+          "title": "Show Me the Monet",
+          "unlock_rank": 55,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 2070,
+          "payout_hard_max": 21300,
+          "gta_per_hr": 95850,
+          "dlc": null
+        },
+        {
+          "id": "judging-the-jury",
+          "title": "Judging the Jury",
+          "unlock_rank": 65,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": 3560,
+          "payout_hard_max": 21900,
+          "gta_per_hr": 102199,
+          "dlc": null
+        },
+        {
+          "id": "defender",
+          "title": "Defender",
+          "unlock_rank": 70,
+          "min_players": 1,
+          "max_players": 2,
+          "rp_reward_max": 3600,
+          "payout_hard_max": 22200,
+          "gta_per_hr": 103599,
+          "dlc": null
+        },
+        {
+          "id": "rooftop-rumble",
+          "title": "Rooftop Rumble",
+          "unlock_rank": 75,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": 3500,
+          "payout_hard_max": 22500,
+          "gta_per_hr": 122727,
+          "dlc": null
+        },
+        {
+          "id": "trash-talk",
+          "title": "Trash Talk",
+          "unlock_rank": 81,
+          "min_players": 1,
+          "max_players": 6,
+          "rp_reward_max": 3880,
+          "payout_hard_max": 22860,
+          "gta_per_hr": 114300,
+          "dlc": null
+        }
+      ]
     },
     {
       "id": "madrazo-dispatch",
       "title": "Madrazo Dispatch Services",
       "giver": "Martin Madrazo",
-      "dlc": "Bikers (Oct 2016)",
+      "dlc": "SA Super Sport Series (Mar 2018)",
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 35000,
+      "gta_per_hr": 118800,
       "payout_range": [
         20000,
         30000
       ],
       "notes": "5 missions, Bikers era. Launched from MC Clubhouse.",
-      "missions": [],
-      "wiki_title": "Madrazo Dispatch Services"
-    },
-    {
-      "id": "special-vehicle-work",
-      "title": "Special Vehicle Work",
-      "giver": "CEO Office",
-      "dlc": "Cunning Stunts 2 (Oct 2016)",
-      "solo": false,
-      "max_players": 4,
-      "category": "ceo",
-      "gta_per_hr": 90000,
-      "payout_range": [
-        75000,
-        100000
-      ],
-      "notes": "CEO Office special vehicle missions. Efficient when doubled.",
-      "missions": [],
-      "wiki_title": "Special Vehicle Work"
-    },
-    {
-      "id": "mobile-operations",
-      "title": "Mobile Operations",
-      "giver": "Agent 14",
-      "dlc": "Gunrunning (Jun 2017)",
-      "solo": false,
-      "max_players": 4,
-      "category": "gunrunning",
-      "gta_per_hr": 80000,
-      "payout_range": [
-        60000,
-        100000
-      ],
-      "notes": "MOC missions. Requires Mobile Operations Center. Good payout.",
-      "missions": [],
-      "wiki_title": "Mobile Operations"
-    },
-    {
-      "id": "client-jobs",
-      "title": "Client Jobs (Terrorbyte)",
-      "giver": "Paige Harris",
-      "dlc": "After Hours (Jul 2018)",
-      "solo": true,
-      "max_players": 4,
-      "category": "active",
-      "gta_per_hr": 95000,
-      "payout_range": [
-        80000,
-        110000
-      ],
-      "notes": "Terrorbyte Client Jobs. Top-tier contact jobs. Requires Terrorbyte + Oppressor.",
-      "missions": []
+      "mission_count": 6,
+      "missions": [
+        {
+          "id": "dispatch-i",
+          "title": "Dispatch I",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 115500,
+          "dlc": "SA Super Sport Series"
+        },
+        {
+          "id": "dispatch-ii",
+          "title": "Dispatch II",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 115500,
+          "dlc": "SA Super Sport Series"
+        },
+        {
+          "id": "dispatch-iii",
+          "title": "Dispatch III",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 106615,
+          "dlc": "SA Super Sport Series"
+        },
+        {
+          "id": "dispatch-iv",
+          "title": "Dispatch IV",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "SA Super Sport Series"
+        },
+        {
+          "id": "dispatch-v",
+          "title": "Dispatch V",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "SA Super Sport Series"
+        },
+        {
+          "id": "dispatch-vi",
+          "title": "Dispatch VI",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "SA Super Sport Series"
+        }
+      ]
     },
     {
       "id": "casino-story-missions",
@@ -241,181 +1678,687 @@
       "solo": true,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 100000,
+      "gta_per_hr": 118800,
       "payout_range": [
         80000,
         120000
       ],
       "notes": "6 Casino missions. $100k GTA$ per mission solo. Excellent for story completion bonus.",
-      "missions": [],
-      "wiki_title": "Casino Story Missions"
+      "mission_count": 6,
+      "missions": [
+        {
+          "id": "casino-loose-cheng",
+          "title": "Casino - Loose Cheng",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 17800,
+          "gta_per_hr": 91542,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "casino-house-keeping",
+          "title": "Casino - House Keeping",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "casino-strong-arm-tactics",
+          "title": "Casino - Strong Arm Tactics",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "casino-play-to-win",
+          "title": "Casino - Play to Win",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "casino-bad-beat",
+          "title": "Casino - Bad Beat",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "casino-cashing-out",
+          "title": "Casino - Cashing Out",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Diamond Casino &amp; Resort"
+        }
+      ]
+    },
+    {
+      "id": "casino-work",
+      "title": "Casino Work",
+      "giver": "Agatha Baker",
+      "dlc": "Diamond Casino (Jul 2019)",
+      "solo": true,
+      "max_players": 4,
+      "category": "missions",
+      "gta_per_hr": 89142,
+      "payout_range": [
+        6500,
+        21000
+      ],
+      "notes": "",
+      "mission_count": 16,
+      "missions": [
+        {
+          "id": "bargaining-chips",
+          "title": "Bargaining Chips",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 6500,
+          "gta_per_hr": 33428,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "best-laid-plans",
+          "title": "Best Laid Plans",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 6500,
+          "gta_per_hr": 33428,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "department-of-defense",
+          "title": "Department of Defense",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 6500,
+          "gta_per_hr": 33428,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "fake-news",
+          "title": "Fake News",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 7500,
+          "gta_per_hr": 38571,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "high-rollin",
+          "title": "High Rollin'",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 6500,
+          "gta_per_hr": 33428,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "judgment-call",
+          "title": "Judgment Call",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 6500,
+          "gta_per_hr": 33428,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "lost-in-transit",
+          "title": "Lost in Transit",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 15000,
+          "gta_per_hr": 77142,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "one-armed-bandits",
+          "title": "One Armed Bandits",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 8000,
+          "gta_per_hr": 41142,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "recovery-time",
+          "title": "Recovery Time",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 21000,
+          "gta_per_hr": 108000,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "safe-bet",
+          "title": "Safe Bet",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 6500,
+          "gta_per_hr": 33428,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "severance",
+          "title": "Severance",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 6500,
+          "gta_per_hr": 33428,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "undisclosed-cargo",
+          "title": "Undisclosed Cargo",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 8000,
+          "gta_per_hr": 41142,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "when-the-chips-are-down",
+          "title": "When the Chips are Down",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 6500,
+          "gta_per_hr": 33428,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "damage-control",
+          "title": "Damage Control",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 16000,
+          "gta_per_hr": 82285,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "under-the-influence",
+          "title": "Under the Influence",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 14000,
+          "gta_per_hr": 72000,
+          "dlc": "The Diamond Casino &amp; Resort"
+        },
+        {
+          "id": "tour-de-force",
+          "title": "Tour de Force",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 8000,
+          "gta_per_hr": 41142,
+          "dlc": "The Diamond Casino &amp; Resort"
+        }
+      ]
     },
     {
       "id": "superyacht-life",
-      "title": "A Superyacht Life",
+      "title": "Brendan Darcy (A Superyacht Life)",
       "giver": "Brendan Darcy",
-      "dlc": "Los Santos Summer Special (Aug 2020)",
+      "dlc": "LS Summer Special (Aug 2020)",
       "solo": false,
       "max_players": 4,
       "category": "missions",
-      "gta_per_hr": 75000,
+      "gta_per_hr": 118800,
       "payout_range": [
         60000,
         90000
       ],
       "notes": "6 missions, requires Yacht ($6.5M+). Co-op only (2-4 players recommended).",
-      "missions": [],
-      "wiki_title": "A Superyacht Life"
-    },
-    {
-      "id": "short-trips",
-      "title": "Short Trips (Franklin & Lamar)",
-      "giver": "Franklin Clinton",
-      "dlc": "The Contract (Dec 2021)",
-      "solo": true,
-      "max_players": 2,
-      "category": "contract",
-      "gta_per_hr": 250000,
-      "payout_range": [
-        200000,
-        300000
-      ],
-      "notes": "Franklin & Lamar missions from The Contract. ~$150-200k per mission. Solo capable. Excellent payout for time investment.",
-      "missions": []
+      "mission_count": 6,
+      "missions": [
+        {
+          "id": "a-superyacht-life-overboard",
+          "title": "A Superyacht Life - Overboard",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "Los Santos Summer Special"
+        },
+        {
+          "id": "a-superyacht-life-salvage",
+          "title": "A Superyacht Life - Salvage",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "Los Santos Summer Special"
+        },
+        {
+          "id": "a-superyacht-life-all-hands",
+          "title": "A Superyacht Life - All Hands",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "Los Santos Summer Special"
+        },
+        {
+          "id": "a-superyacht-life-icebreaker",
+          "title": "A Superyacht Life - Icebreaker",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "Los Santos Summer Special"
+        },
+        {
+          "id": "a-superyacht-life-bon-voyage",
+          "title": "A Superyacht Life - Bon Voyage",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "Los Santos Summer Special"
+        },
+        {
+          "id": "a-superyacht-life-d-day",
+          "title": "A Superyacht Life - D-Day",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "Los Santos Summer Special"
+        }
+      ]
     },
     {
       "id": "operation-paper-trail",
-      "title": "Operation Paper Trail",
+      "title": "Agent ULP (Operation Paper Trail)",
       "giver": "Agent ULP",
       "dlc": "Criminal Enterprises (Jul 2022)",
       "solo": true,
       "max_players": 4,
       "category": "contract",
-      "gta_per_hr": 180000,
+      "gta_per_hr": 118800,
       "payout_range": [
         150000,
         210000
       ],
       "notes": "5 IAA missions. ~$100k each, fast completion. Criminal Enterprises update.",
-      "missions": [],
-      "wiki_title": "Operation Paper Trail"
+      "mission_count": 6,
+      "missions": [
+        {
+          "id": "ulp-intelligence",
+          "title": "ULP - Intelligence",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Criminal Enterprises"
+        },
+        {
+          "id": "ulp-counterintelligence",
+          "title": "ULP - Counterintelligence",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Criminal Enterprises"
+        },
+        {
+          "id": "ulp-extraction",
+          "title": "ULP - Extraction",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Criminal Enterprises"
+        },
+        {
+          "id": "ulp-asset-seizure",
+          "title": "ULP - Asset Seizure",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Criminal Enterprises"
+        },
+        {
+          "id": "ulp-operation-paper-trail",
+          "title": "ULP - Operation Paper Trail",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Criminal Enterprises"
+        },
+        {
+          "id": "ulp-cleanup",
+          "title": "ULP - Cleanup",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "The Criminal Enterprises"
+        }
+      ]
     },
     {
       "id": "the-first-dose",
-      "title": "The First Dose",
-      "giver": "Ron Jakowski",
-      "dlc": "Los Santos Drug Wars (Dec 2022)",
+      "title": "First Dose",
+      "giver": "Dax / Ron",
+      "dlc": "LS Drug Wars (Dec 2022)",
       "solo": true,
       "max_players": 4,
       "category": "mc",
-      "gta_per_hr": 100000,
+      "gta_per_hr": 118800,
       "payout_range": [
         80000,
         120000
       ],
       "notes": "5 story missions unlocking Acid Lab. One-time story run; key gateway to ~$480k/hr Acid Lab income.",
-      "missions": []
+      "mission_count": 3,
+      "missions": [
+        {
+          "id": "first-dose-1-welcome-to-the-troupe",
+          "title": "First Dose 1 - Welcome to the Troupe",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "First Dose 2 - Designated Driver"
+        },
+        {
+          "id": "first-dose-3-fatal-incursion",
+          "title": "First Dose 3 - Fatal Incursion",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "First Dose 4 - Uncontrolled Substance"
+        },
+        {
+          "id": "first-dose-5-make-war-not-love",
+          "title": "First Dose 5 - Make War not Love",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "First Dose 6 - Off the Rails"
+        }
+      ]
     },
     {
       "id": "the-last-dose",
-      "title": "The Last Dose",
-      "giver": "Ron Jakowski",
-      "dlc": "Los Santos Drug Wars II (Jan 2023)",
+      "title": "Last Dose",
+      "giver": "Dax / Ron",
+      "dlc": "LS Drug Wars II (Jan 2023)",
       "solo": true,
       "max_players": 4,
       "category": "mc",
-      "gta_per_hr": 100000,
+      "gta_per_hr": 118800,
       "payout_range": [
         80000,
         120000
       ],
       "notes": "5 follow-up missions. Completes Drug Wars storyline. Also rewards Acid Lab upgrades.",
-      "missions": []
+      "mission_count": 3,
+      "missions": [
+        {
+          "id": "last-dose-1-this-is-an-intervention",
+          "title": "Last Dose 1 - This is an Intervention",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "Last Dose 2 - Unusual Suspects"
+        },
+        {
+          "id": "last-dose-3-friedmind",
+          "title": "Last Dose 3 - Friedmind",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "Last Dose 4 - Checking In"
+        },
+        {
+          "id": "last-dose-5-bdkd",
+          "title": "Last Dose 5 - BDKD",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": null
+        }
+      ]
+    },
+    {
+      "id": "the-contract-jobs",
+      "title": "Fooligan Jobs",
+      "giver": "Fooligan",
+      "dlc": "The Contract (Dec 2021)",
+      "solo": true,
+      "max_players": 4,
+      "category": "missions",
+      "gta_per_hr": 154440,
+      "payout_range": [
+        23100,
+        23100
+      ],
+      "notes": "",
+      "mission_count": 3,
+      "missions": [
+        {
+          "id": "crop-dustin",
+          "title": "Crop Dustin'",
+          "unlock_rank": null,
+          "min_players": 1000,
+          "max_players": 1000,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 154440,
+          "dlc": null
+        },
+        {
+          "id": "liquid-assets",
+          "title": "Liquid Assets",
+          "unlock_rank": null,
+          "min_players": 1000,
+          "max_players": 1000,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 154440,
+          "dlc": null
+        },
+        {
+          "id": "write-off",
+          "title": "Write-Off",
+          "unlock_rank": null,
+          "min_players": 1000,
+          "max_players": 1000,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 154440,
+          "dlc": "}"
+        }
+      ]
     },
     {
       "id": "project-overthrow",
-      "title": "Project Overthrow",
+      "title": "Charlie Reed",
       "giver": "Charlie Reed",
       "dlc": "San Andreas Mercenaries (Jun 2023)",
       "solo": true,
       "max_players": 4,
       "category": "contract",
-      "gta_per_hr": 150000,
+      "gta_per_hr": 118800,
       "payout_range": [
         120000,
         180000
       ],
       "notes": "6 missions vs Merryweather. San Andreas Mercenaries DLC. Solo viable, good $/hr.",
-      "missions": [],
-      "wiki_title": "Project Overthrow"
+      "mission_count": 2,
+      "missions": [
+        {
+          "id": "lsa-operation-direct-action",
+          "title": "LSA Operation - Direct Action",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": null
+        },
+        {
+          "id": "lsa-operation-whistleblower",
+          "title": "LSA Operation - Whistleblower",
+          "unlock_rank": 1,
+          "min_players": 1,
+          "max_players": 8,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": "}"
+        }
+      ]
     },
     {
       "id": "cluckin-bell-farm-raid",
-      "title": "The Cluckin' Bell Farm Raid",
+      "title": "Vincent Effenburger",
       "giver": "Vincent Effenburger",
       "dlc": "Cluckin' Bell Farm Raid (Mar 2024)",
       "solo": true,
       "max_players": 4,
       "category": "contract",
-      "gta_per_hr": 420000,
+      "gta_per_hr": 118800,
       "payout_range": [
         350000,
         490000
       ],
       "notes": "4-mission contract. ~$500k payout per run (~30-45 min). Best new contract in 2024. Fully solo.",
-      "missions": [],
-      "wiki_title": "The Cluckin' Bell Farm Raid"
-    },
-    {
-      "id": "oscar-guzman",
-      "title": "Oscar Guzman Flies Again",
-      "giver": "Oscar Guzman",
-      "dlc": "Bottom Dollar Bounties (Jun 2024)",
-      "solo": true,
-      "max_players": 4,
-      "category": "contract",
-      "gta_per_hr": 200000,
-      "payout_range": [
-        150000,
-        250000
-      ],
-      "notes": "6 missions. Bottom Dollar Bounties DLC. Solo viable. Excellent payout compared to older strands.",
-      "missions": [],
-      "wiki_title": "Oscar Guzman Flies Again"
-    },
-    {
-      "id": "mr-faber-work",
-      "title": "Mr. Faber Work",
-      "giver": "Mr. Faber",
-      "dlc": "Agents of Sabotage (Dec 2024)",
-      "solo": true,
-      "max_players": 4,
-      "category": "contract",
-      "gta_per_hr": 220000,
-      "payout_range": [
-        180000,
-        260000
-      ],
-      "notes": "Agents of Sabotage DLC (Dec 2024). Money laundering jobs. Strong $/hr, solo viable.",
-      "missions": [],
-      "wiki_title": "Mr. Faber Work"
-    },
-    {
-      "id": "kno-way-out",
-      "title": "KnoWay Out",
-      "giver": "Avi Schwartzman",
-      "dlc": "Money Fronts (Mar 2025)",
-      "solo": true,
-      "max_players": 4,
-      "category": "contract",
-      "gta_per_hr": 300000,
-      "payout_range": [
-        250000,
-        350000
-      ],
-      "notes": "Money Fronts DLC (Mar 2025). Anti-surveillance missions. Best recent contract strand. Solo viable.",
-      "missions": [],
-      "wiki_title": "KnoWay Out"
+      "mission_count": 3,
+      "missions": [
+        {
+          "id": "slush-fund",
+          "title": "Slush Fund",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": null
+        },
+        {
+          "id": "concealed-weapons",
+          "title": "Concealed Weapons",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": null
+        },
+        {
+          "id": "disorganized-crime",
+          "title": "Disorganized Crime",
+          "unlock_rank": null,
+          "min_players": 1,
+          "max_players": 4,
+          "rp_reward_max": null,
+          "payout_hard_max": 23100,
+          "gta_per_hr": 118800,
+          "dlc": null
+        }
+      ]
     }
   ]
 }
