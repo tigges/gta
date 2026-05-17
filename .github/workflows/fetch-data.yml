@@ -83,6 +83,9 @@ jobs:
       - name: Fetch GTA Online income sources (all 26 strands + activities)
         run: python scrapers/fetch_gta_income.py
 
+      - name: Fetch GTA Online contact missions from GTA Wiki (per-mission payouts)
+        run: python scrapers/fetch_contact_missions.py
+
       - name: Fetch Newswire article hero images
         continue-on-error: true
         run: python scrapers/fetch_newswire_images.py
