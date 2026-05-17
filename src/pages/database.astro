@@ -524,6 +524,7 @@ const HEIST_THUMBS: Record<string, string> = {
                 solo={h.min_players === 1}
                 payout_per_run_max={h.approaches?.[0]?.player_max_cut}
                 notes={h.notes ?? undefined}
+                thumbnail={(h as any).thumbnail ?? undefined}
                 share_url="https://gtavi.ai/database"
               />
             </div>
@@ -556,6 +557,7 @@ const HEIST_THUMBS: Record<string, string> = {
                 payout_per_run_max={Math.round(step.combined_return_pct * 2000000 / 100)}
                 notes={`Combined return: +${step.combined_return_pct}%. ${step.max_profit_note ?? ""}`}
                 tips={step.strategy?.slice(0,2).map((s: any) => `${s.action.toUpperCase()} ${s.ticker} (${s.exchange})${s.expected_return_pct ? ` → +${s.expected_return_pct}%` : ''}`)}
+                thumbnail={(step as any).thumbnail ?? undefined}
                 share_url="https://gtavi.ai/database"
               />
             </div>

@@ -77,6 +77,9 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
+      - name: Fetch GTA V mission + heist thumbnails (GTA Wiki)
+        run: python scrapers/fetch_gta5_mission_thumbs.py
+
       - name: Fetch Newswire article hero images
         continue-on-error: true
         run: python scrapers/fetch_newswire_images.py
@@ -138,6 +141,9 @@ jobs:
         continue-on-error: true
         run: python scrapers/fetch_gta6_missions.py
 
+      - name: Enrich GTA VI entity image URLs (GTA Wiki)
+        run: python scrapers/fetch_entity_images.py
+
       # ── Franchise (supplementary) ──────────────────────────────────────────
 
       - name: Fetch SEC EDGAR delay timeline
@@ -152,7 +158,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "data: nightly refresh [skip ci]"
-          file_pattern: "data/**/*.json"
+          file_pattern: "data/**/*.json public/assets/gta5/story/*.jpg"
           commit_user_name: gta-intelligence-bot
           commit_user_email: bot@gtavi.ai
 
