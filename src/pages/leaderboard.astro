@@ -1,0 +1,220 @@
+---
+import Base from "../layouts/Base.astro";
+import ShareButton from "../components/ShareButton.astro";
+
+// Worker URL — community leaderboard backed by Cloudflare KV
+const WORKER_URL = "https://gtavi-leaderboard.workers.dev";
+---
+
+<Base
+  title="Community Income Leaderboard"
+  description="GTA Online community income leaderboard — players sharing their personalised $/hr stacks. Built with the GTAVI.AI Income Adviser."
+  ogPage="gta-v"
+>
+
+  <!-- Header -->
+  <section class="relative border-b border-[#1e1e23] overflow-hidden">
+    <div class="absolute inset-0" style="background:linear-gradient(135deg,#0a0a0d 0%,#0e0e11 100%)"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <div class="flex items-start justify-between flex-wrap gap-4">
+        <div>
+          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Community · Opt-in</div>
+          <h1 class="text-3xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">
+            GTA Online Income Leaderboard
+          </h1>
+          <p class="text-sm text-zinc-400 max-w-lg" style="font-family:'Inter',sans-serif">
+            Players sharing their personalised $/hr stacks from the Income Adviser.
+            Opt in from <a href="/gta-v#income-adviser" class="text-gta-teal hover:text-gta-teal/80 transition-colors">GTA V → Income Adviser</a>.
+          </p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <ShareButton text="Community GTA Online income leaderboard on GTAVI.AI — players sharing their personalised $/hr stacks. Where do you rank?" url="https://gtavi.ai/leaderboard" size="sm" label="Share" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+    <!-- Week filter + stats row -->
+    <div class="flex items-center gap-3 mb-6 flex-wrap">
+      <div class="flex items-center gap-2">
+        <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">Week</span>
+        <button id="lb-filter-all"  class="lb-week-btn px-2.5 py-1 rounded text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all" data-week="">All time</button>
+        <button id="lb-filter-week" class="lb-week-btn px-2.5 py-1 rounded text-[10px] font-mono border border-[#2a2a31] text-zinc-500 hover:border-zinc-600 transition-all" data-week="current">This week</button>
+      </div>
+      <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      <div id="lb-meta" class="text-[10px] font-mono text-zinc-600"></div>
+    </div>
+
+    <!-- Leaderboard table -->
+    <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+
+      <!-- Loading state -->
+      <div id="lb-loading" class="py-16 text-center">
+        <div class="text-zinc-600 font-mono text-sm animate-pulse">Loading leaderboard…</div>
+      </div>
+
+      <!-- Error state -->
+      <div id="lb-error" class="hidden py-16 text-center">
+        <div class="text-zinc-600 font-mono text-sm">Could not load leaderboard. <a href="" class="text-gta-teal" onclick="loadLeaderboard();return false">Retry →</a></div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="lb-empty" class="hidden py-16 text-center">
+        <div class="text-zinc-600 font-mono text-sm mb-2">No submissions yet.</div>
+        <a href="/gta-v#income-adviser" class="text-[11px] font-mono text-gta-teal hover:text-gta-teal/80 transition-colors">Be the first — submit your stack →</a>
+      </div>
+
+      <!-- Leaderboard rows -->
+      <div id="lb-rows" class="hidden divide-y divide-[#1e1e23]"></div>
+
+    </div>
+
+    <!-- Pagination -->
+    <div id="lb-pagination" class="hidden flex justify-center gap-2 mt-6"></div>
+
+    <!-- Call to action -->
+    <div class="mt-8 rounded-xl border border-gta-teal/20 p-5 flex items-center justify-between flex-wrap gap-4" style="background:#131316">
+      <div>
+        <div class="text-[10px] font-mono text-gta-teal/60 uppercase tracking-widest mb-1">Want to appear here?</div>
+        <div class="text-sm font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">Build your income stack on GTA V → Income Adviser and opt in</div>
+        <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Select your businesses → click "Share my stack to the community leaderboard"</div>
+      </div>
+      <a href="/gta-v#income-adviser"
+        class="shrink-0 px-4 py-2 rounded border border-gta-teal/30 text-gta-teal text-[11px] font-mono hover:bg-gta-teal/8 transition-colors uppercase tracking-widest">
+        Open Adviser →
+      </a>
+    </div>
+
+  </div>
+</Base>
+
+<script>
+  const WORKER_URL = 'https://gtavi-leaderboard.workers.dev';
+  const PAGE_SIZE  = 25;
+
+  let currentWeek   = '';
+  let currentOffset = 0;
+  let totalEntries  = 0;
+
+  const PLAY_COLOR: Record<string,string> = {
+    passive: '#22c55e', 'semi-passive': '#f59e0b', active: '#ef4444',
+    heist: '#818cf8', stack: '#22c55e', contract: '#0d9488',
+  };
+
+  function formatK(n: number): string {
+    if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
+    return `$${Math.round(n / 1000)}K`;
+  }
+
+  function tierColor(rank: number): string {
+    if (rank === 1) return '#f59e0b';
+    if (rank <= 3) return '#d4d4d8';
+    if (rank <= 10) return '#0d9488';
+    return '#3f3f46';
+  }
+
+  function renderRows(entries: any[]) {
+    const container = document.getElementById('lb-rows')!;
+    container.innerHTML = entries.map(e => {
+      const stackSummary = e.stack.slice(0, 4).map((s: any) =>
+        `<span class="text-[9px] font-mono text-zinc-600 border border-[#2a2a31] px-1.5 py-0.5 rounded">${s.name.split(' ')[0]}</span>`
+      ).join(' ') + (e.stack.length > 4 ? ` <span class="text-[9px] font-mono text-zinc-700">+${e.stack.length - 4}</span>` : '');
+
+      const rankColor = tierColor(e.rank);
+      const date = new Date(e.submitted_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+
+      return `
+        <div class="px-4 py-3.5 flex items-center gap-4 hover:bg-white/[0.02] transition-colors flex-wrap sm:flex-nowrap">
+          <div class="shrink-0 w-8 text-center font-mono font-black text-lg leading-none" style="color:${rankColor}">${e.rank}</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-sm font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">${e.display}</span>
+              <span class="text-[9px] font-mono text-zinc-700">${date}</span>
+            </div>
+            <div class="flex flex-wrap gap-1">${stackSummary}</div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="text-xl font-mono font-bold text-gta-gold">${formatK(e.total_hr)}<span class="text-[11px] font-normal text-zinc-600">/hr</span></div>
+            <div class="text-[9px] font-mono text-zinc-700">${e.stack.length} business${e.stack.length !== 1 ? 'es' : ''}</div>
+          </div>
+        </div>`;
+    }).join('');
+    container.classList.remove('hidden');
+  }
+
+  async function loadLeaderboard(offset = 0) {
+    const loading = document.getElementById('lb-loading')!;
+    const error   = document.getElementById('lb-error')!;
+    const empty   = document.getElementById('lb-empty')!;
+    const rows    = document.getElementById('lb-rows')!;
+    const meta    = document.getElementById('lb-meta')!;
+
+    loading.classList.remove('hidden');
+    error.classList.add('hidden');
+    empty.classList.add('hidden');
+    rows.classList.add('hidden');
+
+    try {
+      const weekParam = currentWeek ? `&week=${currentWeek}` : '';
+      const res  = await fetch(`${WORKER_URL}/leaderboard?limit=${PAGE_SIZE}&offset=${offset}${weekParam}`);
+      const data = await res.json();
+
+      loading.classList.add('hidden');
+
+      if (!data.entries || data.entries.length === 0) {
+        empty.classList.remove('hidden');
+        meta.textContent = '';
+        return;
+      }
+
+      totalEntries  = data.total;
+      currentOffset = offset;
+      meta.textContent = `${data.total.toLocaleString()} player${data.total !== 1 ? 's' : ''}`;
+
+      renderRows(data.entries);
+      renderPagination();
+
+    } catch (e) {
+      loading.classList.add('hidden');
+      error.classList.remove('hidden');
+    }
+  }
+
+  function renderPagination() {
+    const pager = document.getElementById('lb-pagination')!;
+    const pages = Math.ceil(totalEntries / PAGE_SIZE);
+    if (pages <= 1) { pager.classList.add('hidden'); return; }
+    pager.classList.remove('hidden');
+    const current = Math.floor(currentOffset / PAGE_SIZE);
+    pager.innerHTML = Array.from({ length: Math.min(pages, 10) }, (_, i) => {
+      const active = i === current;
+      return `<button onclick="loadLeaderboard(${i * PAGE_SIZE})"
+        class="px-3 py-1.5 rounded text-[10px] font-mono border transition-all ${active ? 'border-gta-gold/40 text-gta-gold bg-gta-gold/8' : 'border-[#2a2a31] text-zinc-500 hover:text-zinc-300'}">${i + 1}</button>`;
+    }).join('');
+  }
+
+  // Week filter buttons
+  document.querySelectorAll<HTMLButtonElement>('.lb-week-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const week = btn.dataset.week!;
+      currentWeek = week === 'current' ? new Date().toISOString().slice(0, 10) : '';
+      document.querySelectorAll<HTMLButtonElement>('.lb-week-btn').forEach(b => {
+        const active = b.dataset.week === week;
+        b.className = b.className
+          .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8|border-\[#2a2a31\]|text-zinc-500/g, '').trim();
+        b.classList.add(...(active
+          ? ['border-gta-gold/40', 'text-gta-gold', 'bg-gta-gold/8']
+          : ['border-[#2a2a31]', 'text-zinc-500']));
+      });
+      loadLeaderboard(0);
+    });
+  });
+
+  // Initial load
+  loadLeaderboard(0);
+
+  // Make loadLeaderboard available globally for retry link + pagination
+  (window as any).loadLeaderboard = loadLeaderboard;
+</script>

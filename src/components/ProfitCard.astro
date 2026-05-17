@@ -110,8 +110,13 @@ const GAME_LABELS: Record<string, string> = {
   "gta-6":      "GTA VI",
 };
 
-// Share text
-const shareText = `${name} — ${tier}-tier, $${Math.round(net_profit_per_hr/1000)}k/hr${solo ? " (solo)" : ""}. GTA economic intelligence.`;
+// Share text + deep-link URL (includes ?game=tab#profit-id for GTA Online cards)
+const shareText = `${name} — ${tier}-tier, $${Math.round(net_profit_per_hr/1000)}k/hr${solo ? " (solo)" : ""}. Full profile on GTAVI.AI.`;
+const deepLinkUrl = game === "gta-online"
+  ? `${share_url}?game=gta-online#profit-${id}`
+  : game === "gta-5"
+  ? `${share_url}?game=gta-5`
+  : share_url;
 ---
 
 <div class="profit-card group relative flex flex-col rounded-xl border overflow-hidden transition-all duration-200 hover:brightness-110"
@@ -278,7 +283,7 @@ const shareText = `${name} — ${tier}-tier, $${Math.round(net_profit_per_hr/100
     <span class="text-[8px] font-mono text-zinc-700 truncate">{dlc?.split("(")[0]?.trim() ?? GAME_LABELS[game]}</span>
     <div class="flex items-center gap-2 shrink-0">
       <span class="text-[8px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-      <ShareButton text={shareText} url={share_url} size="sm" label="Share" />
+      <ShareButton text={shareText} url={deepLinkUrl} size="sm" label="Share" />
     </div>
   </div>
 </div>

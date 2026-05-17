@@ -1,0 +1,17 @@
+name            = "gtavi-leaderboard"
+main            = "workers/leaderboard.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# KV namespace binding — ID is injected by CI (deploy-worker.yml creates it if absent)
+[[kv_namespaces]]
+binding = "LEADERBOARD"
+id      = "CF_KV_NAMESPACE_PLACEHOLDER"
+
+[vars]
+ALLOWED_ORIGIN = "https://gtavi.ai"
+
+# Custom domain route (configure in Cloudflare dashboard after first deploy)
+# [[routes]]
+# pattern = "api.gtavi.ai/leaderboard"
+# zone_name = "gtavi.ai"
