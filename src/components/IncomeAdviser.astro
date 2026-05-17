@@ -301,7 +301,7 @@ const ownableBusinesses = businesses.filter(b =>
   recalculate();
 
   // ── Leaderboard submit ───────────────────────────────────────────────────
-  const WORKER_URL = 'https://gtavi-leaderboard.c-bcf.workers.dev';
+  const WORKER_URL = 'https://api.gtavi.ai';
 
   document.getElementById('adviser-submit-lb')?.addEventListener('click', async () => {
     const display = (document.getElementById('adviser-display-name') as HTMLInputElement)?.value?.trim();
