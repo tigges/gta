@@ -9,7 +9,7 @@ const WORKER_URL = "https://api.gtavi.ai";
 <Base
   title="Community Income Leaderboard"
   description="GTA Online community income leaderboard — players sharing their personalised $/hr stacks. Built with the GTAVI.AI Income Adviser."
-  ogPage="gta-v"
+  ogPage="leaderboard"
 >
 
   <!-- Header -->
@@ -35,6 +35,29 @@ const WORKER_URL = "https://api.gtavi.ai";
   </section>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+    <!-- Last week's winner banner (populated by JS) -->
+    <div id="lb-winner-banner" class="hidden mb-6 rounded-xl border border-gta-gold/30 overflow-hidden" style="background:#131316">
+      <div class="px-5 py-3 border-b border-gta-gold/15 flex items-center gap-2">
+        <span class="text-[9px] font-mono text-gta-gold/70 uppercase tracking-widest">Last Week's Winner</span>
+        <div class="flex-1 h-px bg-gta-gold/10"></div>
+        <span id="lb-winner-week" class="text-[9px] font-mono text-zinc-600"></span>
+      </div>
+      <div class="px-5 py-4 flex items-center gap-5 flex-wrap">
+        <div class="flex items-center gap-3">
+          <div class="text-4xl font-black text-gta-gold" style="font-family:'Inter',sans-serif">#1</div>
+          <div>
+            <div id="lb-winner-name" class="text-base font-bold text-zinc-100" style="font-family:'Inter',sans-serif"></div>
+            <div id="lb-winner-score" class="text-[11px] font-mono text-gta-gold"></div>
+          </div>
+        </div>
+        <div id="lb-winner-stack" class="flex flex-wrap gap-1.5 flex-1"></div>
+        <a id="lb-winner-share" href="#" target="_blank" rel="noopener noreferrer"
+          class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded border border-gta-gold/30 text-gta-gold text-[10px] font-mono hover:bg-gta-gold/8 transition-colors uppercase tracking-widest">
+          Tweet winner
+        </a>
+      </div>
+    </div>
 
     <!-- Week filter + stats row -->
     <div class="flex items-center gap-3 mb-6 flex-wrap">
@@ -93,15 +116,14 @@ const WORKER_URL = "https://api.gtavi.ai";
 <script>
   const WORKER_URL = 'https://api.gtavi.ai';
   const PAGE_SIZE  = 25;
+  const LS_KEY     = 'gtaviai_lb_username';
 
   let currentWeek   = '';
   let currentOffset = 0;
   let totalEntries  = 0;
 
-  const PLAY_COLOR: Record<string,string> = {
-    passive: '#22c55e', 'semi-passive': '#f59e0b', active: '#ef4444',
-    heist: '#818cf8', stack: '#22c55e', contract: '#0d9488',
-  };
+  // Username saved after submitting from IncomeAdviser
+  const myUsername: string = (typeof localStorage !== 'undefined' && localStorage.getItem(LS_KEY)) || '';
 
   function formatK(n: number): string {
     if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
@@ -115,29 +137,45 @@ const WORKER_URL = "https://api.gtavi.ai";
     return '#3f3f46';
   }
 
+  function tweetShareUrl(rank: number, display: string, total_hr: number): string {
+    const score = formatK(total_hr);
+    const tier  = rank === 1 ? '🥇' : rank <= 3 ? '🥈' : rank <= 10 ? '🏆' : `#${rank}`;
+    const text  = `${tier} Rank #${rank} with ${score}/hr on the GTAVI.AI community income leaderboard. Can you beat me? gtavi.ai/leaderboard`;
+    return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+  }
+
   function renderRows(entries: any[]) {
     const container = document.getElementById('lb-rows')!;
     container.innerHTML = entries.map(e => {
+      const isMe = myUsername && e.username === myUsername;
       const stackSummary = e.stack.slice(0, 4).map((s: any) =>
         `<span class="text-[9px] font-mono text-zinc-600 border border-[#2a2a31] px-1.5 py-0.5 rounded">${s.name.split(' ')[0]}</span>`
       ).join(' ') + (e.stack.length > 4 ? ` <span class="text-[9px] font-mono text-zinc-700">+${e.stack.length - 4}</span>` : '');
 
       const rankColor = tierColor(e.rank);
       const date = new Date(e.submitted_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+      const shareBtn = `<a href="${tweetShareUrl(e.rank, e.display, e.total_hr)}" target="_blank" rel="noopener noreferrer"
+        class="shrink-0 flex items-center gap-1 px-2 py-1 rounded border border-gta-gold/20 text-gta-gold/70 text-[9px] font-mono hover:border-gta-gold/50 hover:text-gta-gold transition-colors uppercase tracking-widest"
+        title="Tweet your rank">
+        Tweet rank
+      </a>`;
 
       return `
-        <div class="px-4 py-3.5 flex items-center gap-4 hover:bg-white/[0.02] transition-colors flex-wrap sm:flex-nowrap">
+        <div class="px-4 py-3.5 flex items-center gap-4 hover:bg-white/[0.02] transition-colors flex-wrap sm:flex-nowrap${isMe ? ' ring-1 ring-inset ring-gta-teal/20' : ''}">
           <div class="shrink-0 w-8 text-center font-mono font-black text-lg leading-none" style="color:${rankColor}">${e.rank}</div>
           <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-sm font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">${e.display}</span>
+            <div class="flex items-center gap-2 mb-1 flex-wrap">
+              <span class="text-sm font-semibold ${isMe ? 'text-gta-teal' : 'text-zinc-200'}" style="font-family:'Inter',sans-serif">${e.display}${isMe ? ' <span class="text-[9px] font-mono text-gta-teal/60 border border-gta-teal/20 px-1 rounded">you</span>' : ''}</span>
               <span class="text-[9px] font-mono text-zinc-700">${date}</span>
             </div>
             <div class="flex flex-wrap gap-1">${stackSummary}</div>
           </div>
-          <div class="text-right shrink-0">
-            <div class="text-xl font-mono font-bold text-gta-gold">${formatK(e.total_hr)}<span class="text-[11px] font-normal text-zinc-600">/hr</span></div>
-            <div class="text-[9px] font-mono text-zinc-700">${e.stack.length} business${e.stack.length !== 1 ? 'es' : ''}</div>
+          <div class="flex items-center gap-3 shrink-0">
+            ${isMe ? shareBtn : ''}
+            <div class="text-right">
+              <div class="text-xl font-mono font-bold text-gta-gold">${formatK(e.total_hr)}<span class="text-[11px] font-normal text-zinc-600">/hr</span></div>
+              <div class="text-[9px] font-mono text-zinc-700">${e.stack.length} business${e.stack.length !== 1 ? 'es' : ''}</div>
+            </div>
           </div>
         </div>`;
     }).join('');
@@ -195,6 +233,38 @@ const WORKER_URL = "https://api.gtavi.ai";
     }).join('');
   }
 
+  // ── Last week's winner ────────────────────────────────────────────────────
+  async function loadWinner() {
+    try {
+      const res  = await fetch(`${WORKER_URL}/leaderboard/winner`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data.winner) return;
+
+      const w       = data.winner;
+      const banner  = document.getElementById('lb-winner-banner')!;
+      const nameEl  = document.getElementById('lb-winner-name')!;
+      const scoreEl = document.getElementById('lb-winner-score')!;
+      const weekEl  = document.getElementById('lb-winner-week')!;
+      const stackEl = document.getElementById('lb-winner-stack')!;
+      const shareEl = document.getElementById('lb-winner-share') as HTMLAnchorElement;
+
+      nameEl.textContent  = w.display || w.username;
+      scoreEl.textContent = `${formatK(w.total_hr)}/hr · ${w.stack?.length ?? 0} businesses`;
+      weekEl.textContent  = data.week_key ?? '';
+      stackEl.innerHTML   = (w.stack ?? []).slice(0, 5).map((s: any) =>
+        `<span class="text-[9px] font-mono text-gta-gold/60 border border-gta-gold/15 px-1.5 py-0.5 rounded">${s.name.split(' ')[0]}</span>`
+      ).join('');
+
+      const tweetText = `🥇 Last week's #1 on the GTAVI.AI community income leaderboard: ${w.display || w.username} with ${formatK(w.total_hr)}/hr. Can you top it this week? gtavi.ai/leaderboard`;
+      shareEl.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+
+      banner.classList.remove('hidden');
+    } catch {
+      // winner banner is non-critical — fail silently
+    }
+  }
+
   // Week filter buttons
   document.querySelectorAll<HTMLButtonElement>('.lb-week-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -214,6 +284,7 @@ const WORKER_URL = "https://api.gtavi.ai";
 
   // Initial load
   loadLeaderboard(0);
+  loadWinner();
 
   // Make loadLeaderboard available globally for retry link + pagination
   (window as any).loadLeaderboard = loadLeaderboard;

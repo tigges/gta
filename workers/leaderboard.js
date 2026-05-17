@@ -213,7 +213,7 @@ async function handleRank(kv, username, origin) {
   return json({ ...player, rank: rank || null }, 200, origin);
 }
 
-/** Weekly cron: snapshot top 10 of the current week into KV, then rotate */
+/** Weekly cron: snapshot top 10 of the current week into KV */
 async function handleWeeklyCron(kv) {
   const week   = weekKey();
   const raw    = await kv.get('index:all');
@@ -225,14 +225,33 @@ async function handleWeeklyCron(kv) {
     return weekKey(d) === week;
   });
 
-  // Snapshot top 10 for this week
+  if (thisWeek.length === 0) {
+    console.log(`[cron] No entries for week ${week} — skipping snapshot`);
+    return;
+  }
+
+  // Fetch full player record for the winner to embed in the snapshot
+  const winnerEntry = thisWeek[0];
+  const winnerRaw   = await kv.get(`player:${winnerEntry.username}`);
+  const winner      = winnerRaw ? JSON.parse(winnerRaw) : winnerEntry;
+
   const snapshot = {
     week_key:   week,
     snapped_at: new Date().toISOString(),
     top10:      thisWeek.slice(0, 10),
+    winner: {
+      username:     winner.username,
+      display:      winner.display || winner.username,
+      total_hr:     winner.total_hr,
+      stack:        winner.stack || [],
+      submitted_at: winner.submitted_at,
+    },
   };
+
   await kv.put(`snapshot:${week}`, JSON.stringify(snapshot), { expirationTtl: 86400 * 60 });
-  console.log(`[cron] Snapped week ${week}: ${thisWeek.length} entries`);
+  // Always keep a pointer to the latest completed snapshot for the winner banner
+  await kv.put('snapshot:latest', JSON.stringify(snapshot), { expirationTtl: 86400 * 90 });
+  console.log(`[cron] Snapped week ${week}: ${thisWeek.length} entries, winner: ${winner.display || winner.username}`);
 }
 
 export default {
@@ -272,6 +291,13 @@ export default {
         const w   = url.searchParams.get('week') || weekKey();
         const raw = await kv.get(`snapshot:${w}`);
         if (!raw) return json({ week_key: w, top10: [], message: 'No snapshot yet for this week' }, 200, origin);
+        return json(JSON.parse(raw), 200, origin);
+      }
+
+      // Last week's winner — used by the leaderboard page winner banner
+      if (path === '/leaderboard/winner' && request.method === 'GET') {
+        const raw = await kv.get('snapshot:latest');
+        if (!raw) return json({ winner: null, message: 'No winner yet — first snapshot runs Monday 00:05 UTC' }, 200, origin);
         return json(JSON.parse(raw), 200, origin);
       }
 
