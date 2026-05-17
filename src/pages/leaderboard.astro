@@ -3,7 +3,7 @@ import Base from "../layouts/Base.astro";
 import ShareButton from "../components/ShareButton.astro";
 
 // Worker URL — community leaderboard backed by Cloudflare KV
-const WORKER_URL = "https://gtavi-leaderboard.workers.dev";
+const WORKER_URL = "https://gtavi-leaderboard.c-bcf.workers.dev";
 ---
 
 <Base
@@ -91,7 +91,7 @@ const WORKER_URL = "https://gtavi-leaderboard.workers.dev";
 </Base>
 
 <script>
-  const WORKER_URL = 'https://gtavi-leaderboard.workers.dev';
+  const WORKER_URL = 'https://gtavi-leaderboard.c-bcf.workers.dev';
   const PAGE_SIZE  = 25;
 
   let currentWeek   = '';
