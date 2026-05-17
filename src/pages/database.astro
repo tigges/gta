@@ -345,7 +345,7 @@ const HEIST_THUMBS: Record<string, string> = {
           { id: "contract", label: "📋 Contracts" },
           { id: "active",   label: "⚡ Active" },
         ] as const).map(f => (
-          <button class="online-cat-filter-top px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
+          <button class="online-cat-filter px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
             class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
             data-cat={f.id}>{f.label}</button>
         ))}
@@ -360,7 +360,7 @@ const HEIST_THUMBS: Record<string, string> = {
           { id: "heist",   label: "🏦 Heists" },
           { id: "stocks",  label: "📈 Stock Guide" },
         ] as const).map(f => (
-          <button class="gta5eco-cat-filter-top px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
+          <button class="gta5eco-cat-filter px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
             class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
             data-cat={f.id}>{f.label}</button>
         ))}
@@ -401,25 +401,6 @@ const HEIST_THUMBS: Record<string, string> = {
           <span class="text-[10px] font-mono text-green-600/60 ml-auto">Discounted setup costs shown on cards ↓</span>
         </div>
       )}
-
-      <!-- Category filters -->
-      <div class="flex items-center gap-2 mb-5 flex-wrap">
-        <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mr-1">Category</span>
-        {[
-          { id: "all",      label: "All" },
-          { id: "heist",    label: "🏦 Heists" },
-          { id: "business", label: "🏢 Businesses" },
-          { id: "mc",       label: "🏍 MC Businesses" },
-          { id: "active",   label: "⚡ Active" },
-          { id: "passive",  label: "💤 Passive" },
-        ].map(f => (
-          <button class="online-cat-filter px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
-            class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
-            data-cat={f.id}>{f.label}</button>
-        ))}
-        <div class="flex-1"></div>
-        <span class="text-[9px] font-mono text-zinc-700">Sort by $/hr · fully upgraded · 2024 patches</span>
-      </div>
 
       <!-- Tier sections -->
       {tiers.map((tier: any) => (
@@ -1023,13 +1004,11 @@ const HEIST_THUMBS: Record<string, string> = {
     });
   }
 
-  // Wire both the top and inline online category filters
-  document.querySelectorAll<HTMLButtonElement>(".online-cat-filter-top, .online-cat-filter").forEach(btn => {
+  // GTA Online category filter (sticky bar only)
+  document.querySelectorAll<HTMLButtonElement>(".online-cat-filter").forEach(btn => {
     btn.addEventListener("click", () => {
       const cat = btn.dataset.cat!;
-      // Update active state for all buttons of this class
-      const cls = btn.classList.contains("online-cat-filter-top") ? ".online-cat-filter-top" : ".online-cat-filter";
-      document.querySelectorAll<HTMLButtonElement>(cls).forEach(b => {
+      document.querySelectorAll<HTMLButtonElement>(".online-cat-filter").forEach(b => {
         const active = b.dataset.cat === cat;
         b.className = b.className
           .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
@@ -1041,12 +1020,11 @@ const HEIST_THUMBS: Record<string, string> = {
     });
   });
 
-  // ── GTA V Economy top category filter ────────────────────────────────────
-  document.querySelectorAll<HTMLButtonElement>(".gta5eco-cat-filter-top, .gta5eco-cat-filter").forEach(btn => {
+  // ── GTA V Economy category filter (sticky bar only) ──────────────────────
+  document.querySelectorAll<HTMLButtonElement>(".gta5eco-cat-filter").forEach(btn => {
     btn.addEventListener("click", () => {
       const cat = btn.dataset.cat!;
-      const cls = btn.classList.contains("gta5eco-cat-filter-top") ? ".gta5eco-cat-filter-top" : ".gta5eco-cat-filter";
-      document.querySelectorAll<HTMLButtonElement>(cls).forEach(b => {
+      document.querySelectorAll<HTMLButtonElement>(".gta5eco-cat-filter").forEach(b => {
         const active = b.dataset.cat === cat;
         b.className = b.className
           .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
