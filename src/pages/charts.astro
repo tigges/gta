@@ -16,13 +16,10 @@ import delayData        from "../../data/gta-6/delay-timeline.json";
 import cpiData          from "../../data/franchise/cpi.json";
 import trailerAnalysis  from "../../data/gta-6/trailer-analysis.json";
 import revenueSplit     from "../../data/franchise/revenue-split.json";
-import businessData     from "../../data/gta-5/businesses/profit-per-hour.json";
 import regionsData      from "../../data/franchise/regions-evidence.json";
-import missionsData     from "../../data/gta-5/missions/story-missions.json";
 import stocksData       from "../../data/gta-5/economy/assassination-stocks.json";
 import revenueTiersData from "../../data/gta-5/economy/revenue-tiers.json";
 import releasesData     from "../../data/shared/releases.json";
-import metaHistoryData  from "../../data/gta-5/economy/meta-history.json";
 import bizProfilesData  from "../../data/gta-5/economy/business-profiles.json";
 
 import metacriticData   from "../../data/franchise/metacritic.json";
@@ -40,7 +37,6 @@ const CAT_LABELS: Record<string, string> = {
 };
 
 // Economy data
-const storyMissions  = (missionsData as any).missions as any[];
 const assassinGuide  = (stocksData as any).guide_order as any[];
 
 // Pre-compute stats for header strip
@@ -159,61 +155,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Take-Two IR · DFC Intelligence (GTA VI projection)</span>
           <span class="text-[10px] text-zinc-700 font-mono">{salesData.last_updated.slice(0,10)}</span>
           <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V sold 225M copies. Here's how every GTA title stacks up — franchise sales velocity charted." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════
-         CHART 2 — Pre-launch Search Hype Overlay  [COMMUNITY]
-    ═══════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Community">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-green-900/30 text-green-500 border border-green-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Pre-launch Search Hype — GTA V vs GTA VI</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-      </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-4">
-          <div>
-            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
-              Pre-launch Search Hype — GTA V vs GTA VI
-            </div>
-            <div class="text-[11px] text-zinc-500 font-mono">Both series normalised to months before launch. GTA VI running 3–4× hotter.</div>
-          </div>
-          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
-            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-zinc-500 inline-block rounded"></span>GTA V (2013)</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-gta-gold inline-block rounded"></span>GTA VI (2026)</span>
-          </div>
-        </div>
-        <!-- GTA V vs GTA VI visual comparison -->
-        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-6">
-          <div class="flex items-center gap-3">
-            <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="w-10 h-14 object-cover rounded border border-[#2a2a31]" loading="lazy" />
-            <div>
-              <div class="text-[11px] font-mono font-bold text-zinc-300">GTA V (2013)</div>
-              <div class="text-[10px] font-mono text-zinc-600">baseline · 100 pts peak</div>
-            </div>
-          </div>
-          <div class="flex-1 flex items-center justify-center">
-            <span class="text-[10px] font-mono text-zinc-700 border border-[#2a2a31] rounded px-2 py-0.5">vs</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="w-10 h-14 object-cover rounded border border-gta-gold/40 shadow-lg shadow-gta-gold/10" loading="lazy" />
-            <div>
-              <div class="text-[11px] font-mono font-bold text-gta-gold">GTA VI (2026)</div>
-              <div class="text-[10px] font-mono text-zinc-600">running 3–4× hotter</div>
-            </div>
-          </div>
-        </div>
-        <div id="hype-chart" class="w-full" style="height:280px"
-          data-gta5={JSON.stringify(gta5Trends.keywords.find(k => k.keyword === "GTA V"))}
-          data-gta6={JSON.stringify(gta6Trends.keywords.find(k => k.keyword === "GTA 6"))}
-          data-gta5launch="2013-09-17"
-          data-gta6launch="2026-11-19"
-        ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: Google Trends via pytrends · updated {new Date(gta5Trends.last_updated).toLocaleDateString("en-GB", {month:"short",year:"numeric"})}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI search interest is running 3–4× hotter than GTA V at the same pre-launch point. The data is extraordinary." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -845,77 +786,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     </section>
 
     <!-- ══════════════════════════════════════════════════════════
-         NEW CHART H — GTA Online Business Profit/Hour
-    ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Online — Business Profit Per Hour</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{businessData.businesses.length} businesses · solo optimal efficiency</span>
-      </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <!-- Thumbnail cover strip -->
-        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
-          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-8 h-11" loading="lazy" />
-              <img src="/assets/gta6/locations/Ambrosia_02.jpg" alt="Ambrosia" class="rounded border object-cover border-[#2a2a31] w-14 h-9 object-cover rounded" loading="lazy" />
-              <img src="/assets/gta6/locations/Port_Gellhorn_03.jpg" alt="Port Gellhorn" class="rounded border object-cover border-[#2a2a31] w-14 h-9 object-cover rounded" loading="lazy" />
-        </div>
-        <div class="px-5 py-4 border-b border-[#1e1e23]">
-          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
-            The Economy GTA VI Online Needs to Beat
-          </div>
-          <div class="text-[11px] text-zinc-500 font-mono">All GTA V Online businesses ranked by GTA$/hr (solo, fully upgraded). 11 years of balance patches shaped this curve.</div>
-        </div>
-        <div id="business-profit-chart" class="w-full overflow-hidden px-5 py-4"
-          data-businesses={JSON.stringify(businessData.businesses)}
-        ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Online community benchmarks — GTABase, GTA Fandom Wiki · Updated for 2024 patches</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Best GTA Online business by profit/hour? The community-verified data ranking, updated for 2024 patches." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════════════════
-         NEW CHART I — Story Mission Earnings Curve
-    ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Story Mission Earnings — Full Arc</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/gta-v" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full guide →</a>
-      </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <!-- Thumbnail cover strip -->
-        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
-          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-7 h-10" loading="lazy" />
-          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-gta-gold/40 shadow shadow-gta-gold/10 w-8 h-11" loading="lazy" />
-        </div>
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
-          <div>
-            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
-              $250 to $41.6M — The GTA V Earnings Curve
-            </div>
-            <div class="text-[11px] text-zinc-500 font-mono">Every story mission plotted by payout. Gold diamonds = Lester stock missions. The Big Score is the only real inflection point.</div>
-          </div>
-          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
-            <span class="flex items-center gap-1.5"><span class="inline-block w-0 h-0 border-l-4 border-r-4 border-b-6 border-transparent border-b-gta-gold/80" style="border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:6px solid #f59e0b66;width:0;height:0"></span>Stock mission</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-gta-gold inline-block rounded"></span>Earnings line</span>
-          </div>
-        </div>
-        <div id="mission-earnings-chart-2" class="w-full" style="height:280px"
-          data-missions={JSON.stringify(storyMissions.filter((m: any) => m.payout >= 0))}
-        ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki (Fandom) · community records · updated nightly by fetch_missions.py</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V story earnings from $250 (Repossession) to $41.6M (The Big Score). The earning curve reveals why the assassination missions are the real endgame." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════════════════
          NEW CHART J — Assassination Stock Strategy
     ══════════════════════════════════════════════════════════ -->
     <section class="chart-block" data-category="Economy-IG">
@@ -1111,33 +981,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       </div>
     </section>
 
-    <!-- ══════════════════════════════════════════════════════════
-         NEW CHART O — GTA Online Meta Shift History
-    ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// $/hr Meta History — How Rockstar's Nerfs Shaped the Game Economy</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{(metaHistoryData as any).meta_history.length} DLC milestones · 2013→2026</span>
-      </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
-          <div>
-            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Top Earner $/hr at Each Major DLC — 11 Years of Meta Shifts</div>
-            <div class="text-[11px] text-zinc-500 font-mono">Every meta reset caused by Rockstar adding new content (or nerfing old). Cayo Perico launched at $2M/hr and was nerfed 40% — still #1.</div>
-          </div>
-        </div>
-        <div id="meta-shift-chart-c" class="w-full" style="height:280px"
-          data-history={JSON.stringify((metaHistoryData as any).meta_history)}
-        ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: GTAForums · community archives · manual research · patch notes</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's economy history: Contact Missions were king in 2013 ($250K/hr). Cayo Perico redefined the game in 2020 at $2M/hr launch." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
-      </div>
-    </section>
-
     <CrossLinks context="charts" />
   </div>
 </Base>
@@ -1310,108 +1153,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
     // Increase bottom margin by extending chart area
     svg.attr("transform", `translate(${margin.left},${margin.top})`);
-  })();
-
-  // ── CHART 2 — Pre-launch Hype Overlay ───────────────────────
-  (function buildHypeChart() {
-    const el = document.getElementById("hype-chart");
-    if (!el) return;
-
-    const gta5kw: { data: {date:string;value:number}[] } | null = JSON.parse(el.dataset.gta5 || "null");
-    const gta6kw: { data: {date:string;value:number}[] } | null = JSON.parse(el.dataset.gta6 || "null");
-    const gta5Launch = new Date(el.dataset.gta5launch!);
-    const gta6Launch = new Date(el.dataset.gta6launch!);
-
-    if (!gta5kw || !gta6kw) return;
-
-    // Convert to months-before-launch
-    function toMonthsBefore(dateStr: string, launchDate: Date): number {
-      const d = new Date(dateStr);
-      const diffMs = launchDate.getTime() - d.getTime();
-      return -(diffMs / (1000 * 60 * 60 * 24 * 30.44));
-    }
-
-    const gta5Series = gta5kw.data
-      .map(d => ({ monthsBefore: toMonthsBefore(d.date, gta5Launch), value: d.value }))
-      .filter(d => d.monthsBefore >= -36 && d.monthsBefore <= 0);
-
-    const gta6Series = gta6kw.data
-      .map(d => ({ monthsBefore: toMonthsBefore(d.date, gta6Launch), value: d.value }))
-      .filter(d => d.monthsBefore >= -36 && d.monthsBefore <= 0);
-
-    const margin = { top: 16, right: 20, bottom: 36, left: 44 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = el.clientHeight - margin.top - margin.bottom;
-
-    const svg = d3.select(el).append("svg")
-      .attr("width", "100%")
-      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
-
-    const xDom: [number, number] = [-36, 0];
-    const x = d3.scaleLinear().domain(xDom).range([0, W]);
-    const y = d3.scaleLinear().domain([0, 100]).range([H, 0]);
-
-    // Grid
-    svg.append("g")
-      .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
-      .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
-
-    const line = d3.line<{monthsBefore:number;value:number}>()
-      .x(d => x(d.monthsBefore)).y(d => y(d.value)).curve(d3.curveMonotoneX);
-
-    // GTA V line (muted)
-    if (gta5Series.length > 0) {
-      svg.append("path").datum(gta5Series)
-        .attr("fill", "none").attr("stroke", "#71717a")
-        .attr("stroke-width", 1.5).attr("opacity", 0.7)
-        .attr("d", line as any);
-    }
-
-    // GTA VI line (gold)
-    if (gta6Series.length > 0) {
-      // Area fill under GTA VI
-      const area = d3.area<{monthsBefore:number;value:number}>()
-        .x(d => x(d.monthsBefore)).y0(H).y1(d => y(d.value)).curve(d3.curveMonotoneX);
-      svg.append("path").datum(gta6Series)
-        .attr("fill", "url(#hype-grad)").attr("d", area as any);
-
-      const defs = svg.append("defs");
-      const grad = defs.append("linearGradient").attr("id","hype-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-      grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.2);
-      grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.01);
-
-      svg.append("path").datum(gta6Series)
-        .attr("fill", "none").attr("stroke", "#f59e0b")
-        .attr("stroke-width", 2).attr("d", line as any);
-    }
-
-    // Launch line (x=0)
-    svg.append("line")
-      .attr("x1", x(0)).attr("x2", x(0)).attr("y1", 0).attr("y2", H)
-      .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "4,3").attr("opacity", 0.5);
-    svg.append("text")
-      .attr("x", x(0) - 4).attr("y", 10)
-      .attr("text-anchor", "end").attr("fill", "#ef4444")
-      .attr("font-size", "9").attr("font-family", "monospace").text("Launch");
-
-    // Axes
-    svg.append("g").attr("transform", `translate(0,${H})`)
-      .call(d3.axisBottom(x).ticks(9).tickFormat(d => `${Math.round(+d)}m`))
-      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
-
-    svg.append("g")
-      .call(d3.axisLeft(y).ticks(5))
-      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
-
-    svg.append("text").attr("x", x(-30)).attr("y", 14)
-      .attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace")
-      .text("← 36 months before launch");
   })();
 
   // ── CHART 3 — Player History + DLC ──────────────────────────
@@ -2295,66 +2036,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
   })();
 
-  // ── CHART H — Business Profit/Hour ──────────────────────────
-  (function() {
-    const el = document.getElementById("business-profit-chart");
-    if (!el) return;
-    const businesses: any[] = JSON.parse(el.dataset.businesses || "[]")
-      .sort((a: any, b: any) => b.profit_per_hour - a.profit_per_hour);
-
-    const CAT_COLORS: Record<string,string> = {
-      heist:"#f59e0b", passive:"#22c55e", business:"#38bdf8",
-      ceo:"#a78bfa", mc:"#fb923c", gunrunning:"#ef4444", smuggling:"#6b7280",
-    };
-
-    const barH = 26, gap = 4;
-    const margin = { top: 4, right: 110, bottom: 4, left: 180 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = businesses.length * (barH + gap);
-
-    const svg = d3.select(el).append("svg").attr("width","100%")
-      .attr("viewBox",`0 0 ${el.clientWidth} ${H + margin.top + margin.bottom}`)
-      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-
-    const maxP = d3.max(businesses, (b: any) => b.profit_per_hour) ?? 1;
-    const x = d3.scaleLinear().domain([0, maxP * 1.05]).range([0, W]);
-
-    businesses.forEach((b: any, i: number) => {
-      const y = i * (barH + gap);
-      const color = CAT_COLORS[b.category] ?? "#52525b";
-
-      svg.append("rect").attr("x",0).attr("y",y)
-        .attr("width",x(b.profit_per_hour)).attr("height",barH).attr("rx",3)
-        .attr("fill",color).attr("opacity",0.8);
-
-      svg.append("text").attr("x",-8).attr("y",y+barH/2)
-        .attr("text-anchor","end").attr("dominant-baseline","middle")
-        .attr("fill","#d4d4d8").attr("font-size","11").attr("font-family","monospace")
-        .text(b.name.length>22?b.name.slice(0,21)+"…":b.name);
-
-      const label = `$${(b.profit_per_hour/1000).toFixed(0)}k/hr`;
-      svg.append("text").attr("x",x(b.profit_per_hour)+6).attr("y",y+barH/2)
-        .attr("dominant-baseline","middle").attr("fill",color)
-        .attr("font-size","10").attr("font-family","monospace").attr("font-weight","500")
-        .text(label);
-
-      // Category pill
-      svg.append("text").attr("x",6).attr("y",y+barH/2)
-        .attr("dominant-baseline","middle").attr("fill","#09090b")
-        .attr("font-size","7").attr("font-family","monospace").attr("font-weight","700")
-        .text(b.category.toUpperCase());
-
-      if (i < 3) {
-        svg.append("rect").attr("x",x(b.profit_per_hour)-28).attr("y",y+4)
-          .attr("width",22).attr("height",18).attr("rx",2).attr("fill","#09090b").attr("opacity",0.7);
-        svg.append("text").attr("x",x(b.profit_per_hour)-17).attr("y",y+barH/2)
-          .attr("text-anchor","middle").attr("dominant-baseline","middle")
-          .attr("fill",color).attr("font-size","9").attr("font-family","monospace").attr("font-weight","700")
-          .text(`#${i+1}`);
-      }
-    });
-  })();
-
   // ── CHART 8 — Delay Timeline ────────────────────────────────
   (function() {
     const el = document.getElementById("delay-timeline-chart");
@@ -2646,56 +2327,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
   })();
 
-  // ── CHART I — Mission Earnings Curve ────────────────────────
-  (function() {
-    const el = document.getElementById("mission-earnings-chart-2");
-    if (!el) return;
-    const missions: any[] = JSON.parse(el.dataset.missions || "[]");
-    const paying = missions.filter(m => m.payout >= 0);
-    const margin = { top: 16, right: 24, bottom: 40, left: 72 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = el.clientHeight - margin.top - margin.bottom;
-    const svg = d3.select(el).append("svg").attr("width","100%")
-      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-    const x = d3.scaleLinear().domain([0, paying.length-1]).range([0,W]);
-    const y = d3.scaleLog().domain([100, Math.max(...paying.map((m:any) => m.payout||100))]).range([H,0]).clamp(true);
-    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
-      .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
-    const defs = svg.append("defs");
-    const grad = defs.append("linearGradient").attr("id","mei-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-    grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.15);
-    grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.01);
-    svg.append("path").datum(paying).attr("fill","url(#mei-grad)")
-      .attr("d",d3.area<any>().x((_d:any,i:number)=>x(i)).y0(H).y1((d:any)=>y(Math.max(d.payout||0,100))).curve(d3.curveMonotoneX));
-    svg.append("path").datum(paying).attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",1.5)
-      .attr("d",d3.line<any>().x((_d:any,i:number)=>x(i)).y((d:any)=>y(Math.max(d.payout||0,100))).curve(d3.curveMonotoneX));
-    paying.forEach((m:any,i:number) => {
-      if (m.stock_mission) {
-        svg.append("polygon").attr("points","0,-6 6,0 0,6 -6,0")
-          .attr("transform",`translate(${x(i)},${y(Math.max(m.payout,100))})`)
-          .attr("fill","#f59e0b").attr("opacity",0.9);
-      }
-    });
-    const bigScore = paying.find((m:any) => m.id==="the-big-score");
-    if (bigScore) {
-      const bi = paying.indexOf(bigScore), bx=x(bi), by=y(bigScore.payout);
-      svg.append("line").attr("x1",bx).attr("x2",bx).attr("y1",by+8).attr("y2",H)
-        .attr("stroke","#f59e0b").attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
-      svg.append("text").attr("x",bx+4).attr("y",by-4).attr("fill","#f59e0b")
-        .attr("font-size","9").attr("font-family","monospace").text("The Big Score");
-    }
-    svg.append("g").attr("transform",`translate(0,${H})`)
-      .call(d3.axisBottom(x).ticks(5).tickFormat((d:any)=>`M${d}`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
-    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>+d>=1000000?`$${(+d/1000000).toFixed(0)}M`:+d>=1000?`$${(+d/1000).toFixed(0)}k`:`$${d}`))
-      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
-  })();
-
   // ── CHART J — Assassination Returns ─────────────────────────
   (function() {
     const el = document.getElementById("assassination-returns-chart");
@@ -2825,49 +2456,4 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Net $/hr");
   })();
 
-  // ── CHART O — Meta Shift History ────────────────────────────
-  (function() {
-    const el = document.getElementById("meta-shift-chart-c");
-    if (!el) return;
-    const history: any[] = JSON.parse(el.dataset.history || "[]");
-    const margin={top:16,right:24,bottom:60,left:80};
-    const W=el.clientWidth-margin.left-margin.right;
-    const H=el.clientHeight-margin.top-margin.bottom;
-    const svg=d3.select(el).append("svg").attr("width","100%")
-      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-    const x=d3.scaleTime().domain([new Date(history[0].date),new Date(history[history.length-1].date)]).range([0,W]);
-    const y=d3.scaleLinear().domain([0,(d3.max(history,(d:any)=>d.top_gta_per_hr)??2000000)*1.1]).range([H,0]);
-    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
-      .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
-    const defs=svg.append("defs");
-    const grad=defs.append("linearGradient").attr("id","mshc-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-    grad.append("stop").attr("offset","0%").attr("stop-color","#818cf8").attr("stop-opacity",0.2);
-    grad.append("stop").attr("offset","100%").attr("stop-color","#818cf8").attr("stop-opacity",0.01);
-    svg.append("path").datum(history).attr("fill","url(#mshc-grad)")
-      .attr("d",d3.area<any>().x((d:any)=>x(new Date(d.date))).y0(H).y1((d:any)=>y(d.top_gta_per_hr)).curve(d3.curveStepAfter));
-    svg.append("path").datum(history).attr("fill","none").attr("stroke","#818cf8").attr("stroke-width",2)
-      .attr("d",d3.line<any>().x((d:any)=>x(new Date(d.date))).y((d:any)=>y(d.top_gta_per_hr)).curve(d3.curveStepAfter));
-    history.forEach((d:any,i:number) => {
-      const cx=x(new Date(d.date)),cy=y(d.top_gta_per_hr);
-      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",4)
-        .attr("fill","#818cf8").attr("stroke","#131316").attr("stroke-width",2);
-      if(i%2===0){
-        svg.append("text").attr("x",cx).attr("y",cy-8).attr("text-anchor","middle")
-          .attr("fill","#9090a8").attr("font-size","8").attr("font-family","monospace")
-          .text(d.patch.length>12?d.patch.slice(0,11)+"…":d.patch);
-      }
-    });
-    svg.append("g").attr("transform",`translate(0,${H})`)
-      .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
-    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d:any)=>`$${Math.round(+d/1000)}k`))
-      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
-    svg.append("text").attr("x",W-4).attr("y",H-6).attr("text-anchor","end")
-      .attr("fill","#27272a").attr("font-size","8").attr("font-family","monospace").text("GTAVI.AI");
-  })();
 </script>
