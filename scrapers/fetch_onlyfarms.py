@@ -31,6 +31,7 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; gtavi-ai-bot/1.0; +https://gt
 
 SOURCES = [
     "https://gtabase.com/gta-online/businesses/",
+    "https://onlyfarms.gg/guides/gta-online-money-guide-2026-how-to-make-2m-fast-with-vehicle-cargo-races-and-bonuses/",
 ]
 
 MONEY_RE = re.compile(r'\$?([\d,]+(?:\.\d+)?)\s*[MmKk]?', re.IGNORECASE)
