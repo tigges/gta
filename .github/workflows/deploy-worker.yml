@@ -75,10 +75,16 @@ jobs:
           fi
 
           if [ -z "$EXISTING" ]; then
-            echo "❌ Failed to resolve KV namespace ID"
-            echo "Hint: Ensure CLOUDFLARE_API_TOKEN has 'Workers KV Storage' Edit permission"
-            echo "Full list response: $LIST"
-            exit 1
+            echo "❌ Failed to resolve KV namespace ID via REST API (auth error likely)"
+            echo "Hint: Ensure CLOUDFLARE_API_TOKEN has 'Workers KV Storage: Edit' permission"
+            echo "Trying wrangler kv namespace create as fallback..."
+            EXISTING=$(npx wrangler kv namespace create "gtavi-leaderboard" 2>&1 \
+              | grep -oP '(?<="id":")[^"]+' | head -1 || echo "")
+            if [ -z "$EXISTING" ]; then
+              echo "❌ Both REST API and wrangler failed — check token permissions"
+              exit 1
+            fi
+            echo "✅ Created via wrangler: $EXISTING"
           fi
 
           echo "✅ KV namespace ID: $EXISTING"
