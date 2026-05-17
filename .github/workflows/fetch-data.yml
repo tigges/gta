@@ -86,6 +86,9 @@ jobs:
       - name: Fetch GTA Online contact missions from GTA Wiki (per-mission payouts)
         run: python scrapers/fetch_contact_missions.py
 
+      - name: Fetch Import/Export Vehicle Cargo data (vehicles, sell prices, source types)
+        run: python scrapers/fetch_vehicle_cargo.py
+
       - name: Fetch Newswire article hero images
         continue-on-error: true
         run: python scrapers/fetch_newswire_images.py
