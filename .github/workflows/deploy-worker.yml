@@ -37,35 +37,47 @@ jobs:
         run: |
           CF_API="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/storage/kv/namespaces"
 
-          # List existing namespaces
-          LIST=$(curl -sf -X GET "$CF_API" \
+          # List existing namespaces (no -f so we see the full response on error)
+          echo "Calling CF API: $CF_API"
+          LIST=$(curl -s -X GET "$CF_API" \
             -H "Authorization: Bearer $CF_TOKEN" \
             -H "Content-Type: application/json")
 
+          echo "List response (first 300 chars): ${LIST:0:300}"
+
           EXISTING=$(echo "$LIST" | python3 -c "
           import sys, json
-          data = json.load(sys.stdin)
-          ns = [n for n in data.get('result',[]) if n.get('title') == 'gtavi-leaderboard']
-          print(ns[0]['id'] if ns else '')
+          try:
+              data = json.load(sys.stdin)
+              ns = [n for n in data.get('result',[]) if n.get('title') == 'gtavi-leaderboard']
+              print(ns[0]['id'] if ns else '')
+          except Exception as e:
+              print('')
           " 2>/dev/null || echo "")
 
           if [ -z "$EXISTING" ]; then
-            echo "Creating KV namespace gtavi-leaderboard..."
-            CREATE=$(curl -sf -X POST "$CF_API" \
+            echo "Namespace not found — creating gtavi-leaderboard..."
+            CREATE=$(curl -s -X POST "$CF_API" \
               -H "Authorization: Bearer $CF_TOKEN" \
               -H "Content-Type: application/json" \
               --data '{"title":"gtavi-leaderboard"}')
 
+            echo "Create response (first 300 chars): ${CREATE:0:300}"
+
             EXISTING=$(echo "$CREATE" | python3 -c "
           import sys, json
-          data = json.load(sys.stdin)
-          print(data.get('result',{}).get('id',''))
+          try:
+              data = json.load(sys.stdin)
+              print(data.get('result',{}).get('id',''))
+          except Exception as e:
+              print('')
           " 2>/dev/null || echo "")
           fi
 
           if [ -z "$EXISTING" ]; then
             echo "❌ Failed to resolve KV namespace ID"
-            echo "List response: $LIST"
+            echo "Hint: Ensure CLOUDFLARE_API_TOKEN has 'Workers KV Storage' Edit permission"
+            echo "Full list response: $LIST"
             exit 1
           fi
 
