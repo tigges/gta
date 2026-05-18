@@ -345,7 +345,7 @@ const ownableBusinesses = businesses.filter(b =>
           ? `$${(data.total_hr / 1e6).toFixed(1)}M`
           : `$${Math.round(data.total_hr / 1000)}K`;
         const tierEmoji = rank === 1 ? '🥇' : rank <= 3 ? '🥈' : rank <= 10 ? '🏆' : `#${rank}`;
-        const tweetText = `${tierEmoji} I'm rank #${rank} with ${scoreStr}/hr on the GTAVI.AI community income leaderboard. Can you beat me? gtavi.ai/leaderboard`;
+        const tweetText = `${tierEmoji} I'm rank #${rank} with ${scoreStr}/hr on the GTAVI.AI community income leaderboard. Can you beat me? gtavi.ai/gta-online/bonuses`;
         const tweetUrl  = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
 
         result.innerHTML = `

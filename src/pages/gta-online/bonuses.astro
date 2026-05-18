@@ -1,40 +1,116 @@
 ---
-import Base from "../layouts/Base.astro";
-import ShareButton from "../components/ShareButton.astro";
+import Base from "../../layouts/Base.astro";
+import ShareButton from "../../components/ShareButton.astro";
+import CrossLinks from "../../components/CrossLinks.astro";
+
+import weeklyBonuses from "../../../data/gta-5/economy/weekly-bonuses.json";
+import bonusHistory  from "../../../data/gta-5/economy/bonus-history.json";
+import saleFreqData  from "../../../data/gta-5/economy/sale-frequency.json";
+
+const bonuses      = ((weeklyBonuses as any).bonuses  ?? []) as any[];
+const sales        = ((weeklyBonuses as any).sales    ?? []) as any[];
+const weekStart    = (weeklyBonuses  as any).week_start as string ?? "";
+const historyCount = (bonusHistory   as any).entry_count as number ?? 0;
+const topActivities = ((saleFreqData as any).activity_bonuses as any[]).slice(0, 5);
 
 // Worker URL — community leaderboard backed by Cloudflare KV
 const WORKER_URL = "https://api.gtavi.ai";
 ---
 
 <Base
-  title="Community Income Leaderboard"
-  description="GTA Online community income leaderboard — players sharing their personalised $/hr stacks. Built with the GTAVI.AI Income Adviser."
+  title="GTA Online Bonuses, Promos & Leaderboard"
+  description="GTA Online weekly bonus calendar, sale intelligence, promotional history and community income leaderboard. Every Thursday's events tracked since 2013."
   ogPage="leaderboard"
 >
 
-  <!-- Header -->
-  <section class="relative border-b border-[#1e1e23] overflow-hidden">
-    <div class="absolute inset-0" style="background:linear-gradient(135deg,#0a0a0d 0%,#0e0e11 100%)"></div>
+  <!-- Hero -->
+  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:180px">
+    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 70% 50%, rgba(34,197,94,0.07) 0%, transparent 55%), #0a0a0d"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Community · Opt-in</div>
+          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// GTA Online · Promotions & Community</div>
           <h1 class="text-3xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">
-            GTA Online Income Leaderboard
+            Bonuses, Promos &amp; Leaderboard
           </h1>
           <p class="text-sm text-zinc-400 max-w-lg" style="font-family:'Inter',sans-serif">
-            Players sharing their personalised $/hr stacks from the Income Adviser.
-            Opt in from <a href="/gta-v#income-adviser" class="text-gta-teal hover:text-gta-teal/80 transition-colors">GTA V → Income Adviser</a>.
+            Weekly bonus calendar · sale intelligence · {historyCount} weeks tracked · community income rankings
           </p>
         </div>
         <div class="flex items-center gap-3 shrink-0">
-          <ShareButton text="Community GTA Online income leaderboard on GTAVI.AI — players sharing their personalised $/hr stacks. Where do you rank?" url="https://gtavi.ai/leaderboard" size="sm" label="Share" />
+          <ShareButton text="GTA Online weekly bonuses, promotions and community income leaderboard — {historyCount} weeks tracked since 2013. GTAVI.AI" url="https://gtavi.ai/gta-online/bonuses" size="sm" label="Share" />
         </div>
       </div>
     </div>
   </section>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+    <!-- This week's bonuses + sales -->
+    {(bonuses.length > 0 || sales.length > 0) && (
+      <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse shrink-0"></span>
+            <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">
+              This week{weekStart ? ` · w/c ${weekStart}` : ""}
+            </span>
+          </div>
+          <a href="/charts#bonus-heatmap" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full calendar chart →</a>
+        </div>
+        <div class="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
+          <div class="divide-y divide-[#1e1e23]">
+            <div class="px-5 py-2 text-[9px] font-mono text-zinc-700 uppercase tracking-widest">Bonus Events</div>
+            {bonuses.length === 0 && <div class="px-5 py-3 text-[10px] font-mono text-zinc-700">No bonuses this week</div>}
+            {bonuses.map((b: any) => (
+              <div class="px-5 py-3 flex items-center gap-3">
+                <span class="text-[11px] font-mono font-bold w-6 shrink-0" style="color:#0d9488">{b.multiplier}×</span>
+                <span class="text-xs font-mono text-zinc-300 capitalize flex-1">{(b.activity_id as string).replace(/-/g," ")}</span>
+              </div>
+            ))}
+          </div>
+          <div class="divide-y divide-[#1e1e23]">
+            <div class="px-5 py-2 text-[9px] font-mono text-zinc-700 uppercase tracking-widest">On Sale</div>
+            {sales.length === 0 && <div class="px-5 py-3 text-[10px] font-mono text-zinc-700">No sales this week</div>}
+            {sales.map((s: any) => (
+              <div class="px-5 py-3 flex items-center gap-3">
+                <span class="text-[11px] font-mono font-bold shrink-0" style="color:#22c55e">{s.discount_pct}%</span>
+                <span class="text-xs font-mono text-zinc-300 flex-1">{s.item_description}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- Most-bonused activities -->
+    {topActivities.length > 0 && (
+      <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
+          <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Most Frequently Bonused Activities</span>
+          <a href="/charts#bonus-heatmap" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">Heatmap →</a>
+        </div>
+        <div class="divide-y divide-[#1e1e23]">
+          {topActivities.map((a: any) => {
+            const daysSince = a.days_since_last_bonus ?? null;
+            return (
+              <div class="px-5 py-3 flex items-center gap-4 flex-wrap sm:flex-nowrap">
+                <div class="flex-1 min-w-0">
+                  <div class="text-xs font-semibold text-zinc-300 capitalize">{(a.activity_id as string).replace(/-/g," ")}</div>
+                  <div class="text-[10px] font-mono text-zinc-600">{a.bonus_count}× tracked · last {a.last_bonus_date?.slice(0,7)}</div>
+                </div>
+                <div class="shrink-0">
+                  {daysSince !== null && daysSince < 8
+                    ? <span class="text-[9px] font-mono px-1.5 py-0.5 rounded" style="color:#22c55e;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3)">ACTIVE NOW</span>
+                    : <span class="text-[10px] font-mono text-zinc-600">{daysSince}d ago</span>
+                  }
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    )}
 
     <!-- Last week's winner banner (populated by JS) -->
     <div id="lb-winner-banner" class="hidden mb-6 rounded-xl border border-gta-gold/30 overflow-hidden" style="background:#131316">
@@ -86,7 +162,7 @@ const WORKER_URL = "https://api.gtavi.ai";
       <!-- Empty state -->
       <div id="lb-empty" class="hidden py-16 text-center">
         <div class="text-zinc-600 font-mono text-sm mb-2">No submissions yet.</div>
-        <a href="/gta-v#income-adviser" class="text-[11px] font-mono text-gta-teal hover:text-gta-teal/80 transition-colors">Be the first — submit your stack →</a>
+        <a href="/gta-online/income#income-adviser" class="text-[11px] font-mono text-gta-teal hover:text-gta-teal/80 transition-colors">Be the first — submit your stack →</a>
       </div>
 
       <!-- Leaderboard rows -->
@@ -104,10 +180,14 @@ const WORKER_URL = "https://api.gtavi.ai";
         <div class="text-sm font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">Build your income stack on GTA V → Income Adviser and opt in</div>
         <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Select your businesses → click "Share my stack to the community leaderboard"</div>
       </div>
-      <a href="/gta-v#income-adviser"
+      <a href="/gta-online/income#income-adviser"
         class="shrink-0 px-4 py-2 rounded border border-gta-teal/30 text-gta-teal text-[11px] font-mono hover:bg-gta-teal/8 transition-colors uppercase tracking-widest">
         Open Adviser →
       </a>
+    </div>
+
+    <div class="mt-8">
+      <CrossLinks context="database" />
     </div>
 
   </div>
@@ -140,7 +220,7 @@ const WORKER_URL = "https://api.gtavi.ai";
   function tweetShareUrl(rank: number, display: string, total_hr: number): string {
     const score = formatK(total_hr);
     const tier  = rank === 1 ? '🥇' : rank <= 3 ? '🥈' : rank <= 10 ? '🏆' : `#${rank}`;
-    const text  = `${tier} Rank #${rank} with ${score}/hr on the GTAVI.AI community income leaderboard. Can you beat me? gtavi.ai/leaderboard`;
+    const text  = `${tier} Rank #${rank} with ${score}/hr on the GTAVI.AI community income leaderboard. Can you beat me? gtavi.ai/gta-online/bonuses`;
     return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
   }
 
@@ -256,7 +336,7 @@ const WORKER_URL = "https://api.gtavi.ai";
         `<span class="text-[9px] font-mono text-gta-gold/60 border border-gta-gold/15 px-1.5 py-0.5 rounded">${s.name.split(' ')[0]}</span>`
       ).join('');
 
-      const tweetText = `🥇 Last week's #1 on the GTAVI.AI community income leaderboard: ${w.display || w.username} with ${formatK(w.total_hr)}/hr. Can you top it this week? gtavi.ai/leaderboard`;
+      const tweetText = `🥇 Last week's #1 on the GTAVI.AI community income leaderboard: ${w.display || w.username} with ${formatK(w.total_hr)}/hr. Can you top it this week? gtavi.ai/gta-online/bonuses`;
       shareEl.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
 
       banner.classList.remove('hidden');

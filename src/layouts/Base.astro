@@ -46,21 +46,21 @@ const navGroups: NavGroup[] = [
   {
     href: "/gta-online",
     label: "GTA Online",
-    activePaths: ["/gta-online", "/gta-online/economy", "/gta-online/income", "/gta-v/income-calculator", "/gta-v/cayo-perico", "/database", "/leaderboard"],
+    activePaths: ["/gta-online", "/gta-online/economy", "/gta-online/income", "/gta-v/income-calculator", "/gta-v/cayo-perico", "/database", "/gta-online/bonuses"],
     dropdown: [
       { href: "/gta-online/economy",        icon: "📊", label: "Economy",        sub: "GTA-PPI · inflation · passive stack" },
       { href: "/database?game=gta-online", icon: "💰", label: "Income Sources", sub: "S→D tier · 28 methods · ProfitCards"  },
       { href: "/charts",                   icon: "📈", label: "Charts",         sub: "Economy · promotions · meta evolution" },
-      { href: "/leaderboard",              icon: "🏷", label: "Bonuses & Promos", sub: "Weekly calendar · sale intelligence" },
+      { href: "/gta-online/bonuses",        icon: "🏷", label: "Bonuses & Promos", sub: "Weekly calendar · sale intelligence" },
     ],
   },
   {
     href: "/franchise",
     label: "Franchise",
-    activePaths: ["/franchise", "/gta-v"],
+    activePaths: ["/franchise"],
     dropdown: [
-      { href: "/franchise", icon: "📖", label: "History & Sales", sub: "30 years · 8 titles · sales · scores" },
-      { href: "/charts",    icon: "📈", label: "Charts",          sub: "Cross-title · complexity · earnings" },
+      { href: "/franchise/history", icon: "📖", label: "History & Sales", sub: "30 years · 8 titles · sales · scores" },
+      { href: "/franchise/charts",  icon: "📈", label: "Charts",          sub: "Cross-title · complexity · earnings" },
       { href: "/gta-v",     icon: "🎮", label: "GTA V Story",     sub: "Heists · assassination guide · vehicles" },
       { href: "/database",  icon: "🗄", label: "Data Browser",    sub: "All entities · income · vehicles" },
     ],

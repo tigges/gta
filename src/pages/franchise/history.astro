@@ -1,0 +1,104 @@
+---
+import Base from "../../layouts/Base.astro";
+import CrossLinks from "../../components/CrossLinks.astro";
+import ReleaseTimeline from "../../components/ReleaseTimeline.astro";
+
+import salesData     from "../../../data/franchise/sales.json";
+import metacriticData from "../../../data/franchise/metacritic.json";
+import releasesData  from "../../../data/shared/releases.json";
+
+const titles  = (salesData as any).titles as any[];
+const scores  = ((metacriticData as any).titles as any[]);
+const releases = (releasesData as any).releases as any[];
+---
+
+<Base
+  title="GTA Franchise History & Sales"
+  description="Grand Theft Auto franchise sales history, Metacritic scores, map size progression and DLC timeline across all 8 main titles from 1997 to 2026."
+  ogPage="franchise"
+>
+  <!-- Breadcrumb -->
+  <div class="border-b border-[#1e1e23]" style="background:#0a0a0d">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-[10px] font-mono text-zinc-600">
+      <a href="/franchise" class="hover:text-zinc-400 transition-colors">Franchise</a>
+      <span class="text-zinc-800">›</span>
+      <span class="text-zinc-500">History & Sales</span>
+    </div>
+  </div>
+
+  <section class="border-b border-[#1e1e23]" style="background:#0a0a0d">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Grand Theft Auto · Franchise Data</div>
+      <h1 class="text-3xl font-bold text-white mb-3" style="font-family:'Inter',sans-serif">History & Sales</h1>
+      <p class="text-sm text-zinc-400 max-w-lg" style="font-family:'Inter',sans-serif">
+        Sales figures, Metacritic scores, and release timeline across all GTA titles — 1997 to 2026.
+      </p>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-10">
+
+    <!-- Metacritic scores table -->
+    {scores.length > 0 && (
+      <section>
+        <div class="flex items-center gap-3 mb-5">
+          <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Critic & User Scores</span>
+          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        </div>
+        <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="border-b border-[#1e1e23]">
+                  <th class="text-left px-5 py-3 text-zinc-600 font-normal">Title</th>
+                  <th class="text-right px-3 py-3 text-zinc-600 font-normal">Year</th>
+                  <th class="text-right px-3 py-3 text-zinc-600 font-normal">Metacritic</th>
+                  <th class="text-right px-5 py-3 text-zinc-600 font-normal">User Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {scores.filter((t: any) => t.metacritic_score).sort((a: any, b: any) => b.release_year - a.release_year).map((t: any) => (
+                  <tr class="border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors">
+                    <td class="px-5 py-3">
+                      <div class="font-semibold text-zinc-200">{t.short ?? t.id}</div>
+                      <div class="text-[9px] text-zinc-700">{t.platform ?? ""}</div>
+                    </td>
+                    <td class="px-3 py-3 text-right text-zinc-500">{t.release_year}</td>
+                    <td class="px-3 py-3 text-right">
+                      <span class="font-bold" style={`color:${t.metacritic_score >= 95 ? '#22c55e' : t.metacritic_score >= 85 ? '#f59e0b' : '#0d9488'}`}>
+                        {t.metacritic_score}
+                      </span>
+                    </td>
+                    <td class="px-5 py-3 text-right text-zinc-500">{t.user_score ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Release timeline -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Release Timeline</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <ReleaseTimeline releases={releases} />
+    </section>
+
+    <!-- Charts cross-link -->
+    <div class="rounded-xl border border-[#1e1e23] px-5 py-4 flex items-center gap-4" style="background:#131316">
+      <div class="flex-1">
+        <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">Franchise Data Charts</div>
+        <div class="text-[10px] font-mono text-zinc-600">Sales velocity, CPI-adjusted pricing, critic divergence, DLC cadence and cross-title economic complexity.</div>
+      </div>
+      <a href="/franchise/charts" class="shrink-0 px-3 py-2 rounded border border-amber-700/30 text-amber-400 text-[10px] font-mono hover:bg-amber-900/20 transition-all">
+        View charts →
+      </a>
+    </div>
+
+    <CrossLinks context="franchise" />
+  </div>
+</Base>
