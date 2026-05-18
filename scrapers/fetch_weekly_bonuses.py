@@ -39,9 +39,10 @@ except ImportError:
     requests = None
     BeautifulSoup = None
 
-ROOT       = Path(__file__).parent.parent
-DATA_DIR   = ROOT / "data"
-OUTPUT_REL = "gta-5/economy/weekly-bonuses.json"
+ROOT        = Path(__file__).parent.parent
+DATA_DIR    = ROOT / "data"
+OUTPUT_REL  = "gta-5/economy/weekly-bonuses.json"
+HISTORY_REL = "gta-5/economy/bonus-history.json"
 
 NEWSWIRE_RSS  = "https://www.rockstargames.com/newswire/feed.xml"
 NEWSWIRE_URL  = "https://www.rockstargames.com/newswire/tag/gtaonline"
@@ -282,6 +283,71 @@ def fetch_weekly_data(session: "requests.Session", catalogue: dict[str, dict]) -
     return list(bonuses_map.values()), sales, title, pub_date
 
 
+# ── Bonus history time-series ─────────────────────────────────────────────────
+
+def append_to_history(week_result: dict) -> None:
+    """
+    Append the current week's data to bonus-history.json.
+
+    bonus-history.json is a time series — entries are never overwritten,
+    only appended. This is the core of Phase 1 of the promotional archive.
+    Schema per entry matches weekly-bonuses.json plus a `week_key` field.
+    """
+    week_start = week_result.get("week_start", "")
+    if not week_start:
+        return
+
+    existing = load_existing(HISTORY_REL)
+    history: list[dict] = existing.get("weeks", [])
+
+    # Check if this week is already recorded
+    existing_starts = {w["week_start"] for w in history}
+    if week_start in existing_starts:
+        # Update if the entry exists but had no bonuses/sales (retry fill)
+        for i, w in enumerate(history):
+            if w["week_start"] == week_start:
+                has_new_data = (
+                    len(week_result.get("bonuses", [])) > len(w.get("bonuses", []))
+                    or len(week_result.get("sales", [])) > len(w.get("sales", []))
+                )
+                if has_new_data:
+                    history[i] = _week_entry(week_result)
+                    print(f"[fetch_weekly_bonuses] ✓ Updated existing history entry {week_start}")
+                else:
+                    print(f"[fetch_weekly_bonuses] History entry {week_start} already current")
+                break
+    else:
+        history.append(_week_entry(week_result))
+        print(f"[fetch_weekly_bonuses] ✓ Appended new history entry {week_start} ({len(week_result.get('bonuses',[]))} bonuses, {len(week_result.get('sales',[]))} sales)")
+
+    # Keep sorted ascending by date
+    history.sort(key=lambda w: w["week_start"])
+
+    payload = {
+        "last_updated": now_iso(),
+        "source": "Rockstar Newswire — parsed weekly. Entries never overwritten.",
+        "note": (
+            "Promotional time series. One entry per Thursday weekly update. "
+            "bonuses[] = GTA$/RP multiplier events. sales[] = item discounts. "
+            "Use sale-frequency.json (derived) for per-item sale statistics."
+        ),
+        "entry_count": len(history),
+        "weeks": history,
+    }
+    write_json(HISTORY_REL, payload)
+
+
+def _week_entry(result: dict) -> dict:
+    """Minimal history entry from a weekly-bonuses result dict."""
+    return {
+        "week_start":    result.get("week_start", ""),
+        "article_title": result.get("article_title", ""),
+        "bonuses":       result.get("bonuses", []),
+        "sales":         result.get("sales", []),
+        "fetched_at":    result.get("last_updated", ""),
+    }
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
@@ -307,11 +373,12 @@ def main() -> None:
 
     bonuses, sales, title, pub_date = fetch_weekly_data(session, catalogue)
 
-    # If fetch failed, preserve existing data rather than overwriting with empty
+    # If fetch failed, preserve existing data and still try to append to history
     if not bonuses and not sales:
         existing = load_existing(OUTPUT_REL)
         if existing.get("bonuses") or existing.get("sales"):
             print("[fetch_weekly_bonuses] Fetch failed — preserving existing data")
+            append_to_history(existing)
             return
 
     print(f"[fetch_weekly_bonuses] Bonuses: {len(bonuses)}  |  Sales: {len(sales)}")
@@ -333,9 +400,12 @@ def main() -> None:
 
     if has_changed(result, OUTPUT_REL):
         write_json(OUTPUT_REL, result)
-        print(f"[fetch_weekly_bonuses] ✓ Updated")
+        print(f"[fetch_weekly_bonuses] ✓ Updated weekly-bonuses.json")
     else:
-        print(f"[fetch_weekly_bonuses] No change")
+        print(f"[fetch_weekly_bonuses] No change to weekly-bonuses.json")
+
+    # ── Append to bonus-history.json (time series — never overwrites past entries) ──
+    append_to_history(result)
 
 
 if __name__ == "__main__":
