@@ -1,3 +1,208 @@
 ---
-return Astro.redirect("/vi-intel", 301);
+import Base from "../layouts/Base.astro";
+import CrossLinks from "../components/CrossLinks.astro";
+
+import trailerData  from "../../data/gta-6/trailers.json";
+import velocityData from "../../data/gta-6/trailer-velocity.json";
+import predData     from "../../data/gta-6/predictions.json";
+import featuresData from "../../data/gta-6/features.json";
+
+// Trailer view counts
+const t1 = (velocityData as any).trailers?.find((t: any) => t.youtube_id === "QdBZY2fkU-0");
+const t2 = (velocityData as any).trailers?.find((t: any) => t.youtube_id === "VQRLujxTm3c");
+const t1Views = (t1?.snapshots?.at(-1)?.views ?? 0) as number;
+const t2Views = (t2?.snapshots?.at(-1)?.views ?? 0) as number;
+const totalViews = t1Views + t2Views;
+const latestTrailer = (trailerData as any).trailers?.at(-1);
+
+// Predictions
+const predictions = (predData as any).predictions as any[];
+const confirmed   = predictions.filter((p: any) => p.confidence_tier === "confirmed").length;
+const reported    = predictions.filter((p: any) => p.confidence_tier === "reported").length;
+
+// Features
+const featCats = ((featuresData as any).categories ?? []) as any[];
+const totalFeatures     = featCats.reduce((s: number, c: any) => s + (c.confirmed ?? 0) + (c.reported ?? 0), 0);
+const confirmedFeatures = featCats.reduce((s: number, c: any) => s + (c.confirmed ?? 0), 0);
+
+// Release countdown
+const releaseDate  = new Date("2026-11-19T00:00:00Z");
+const msLeft       = releaseDate.getTime() - Date.now();
+const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
 ---
+
+<Base
+  title="GTA VI"
+  description="GTA VI intelligence hub — predictions, trailers, features, cast, locations and pre-order tracker. Everything we know about Grand Theft Auto VI."
+  ogPage="vi-intel"
+>
+  <!-- Hero -->
+  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:380px">
+    <div class="absolute inset-0">
+      <img src="/assets/gta6/locations/Ambrosia_02.jpg" alt=""
+           class="w-full h-full object-cover" style="object-position:center 35%" aria-hidden="true" />
+      <div class="absolute inset-0" style="background:linear-gradient(to right, #0a0a0d 0%, #0a0a0dcc 55%, #0a0a0d55 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 40%, #0a0a0d 100%)"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+      <div class="max-w-lg">
+        <div class="text-[10px] font-mono text-gta-gold/60 uppercase tracking-[0.25em] mb-3">
+          // GTA VI · Nov 19, 2026
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight" style="font-family:'Inter',sans-serif">
+          GTA VI<br/>Intelligence
+        </h1>
+        <p class="text-sm text-zinc-400 mb-8 leading-relaxed" style="font-family:'Inter',sans-serif">
+          Data-backed predictions, trailer analysis, feature tracking — everything we know about Grand Theft Auto VI, verified against the source.
+        </p>
+        <!-- Key stats -->
+        <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono text-zinc-600">
+          <span>
+            <span class="text-gta-gold font-bold text-base">{daysToRelease}</span>
+            <span class="ml-1">days to launch</span>
+          </span>
+          <span>
+            <span class="text-zinc-400 font-bold text-base">{(totalViews / 1e6).toFixed(0)}M</span>
+            <span class="ml-1">total trailer views</span>
+          </span>
+          <span>
+            <span class="text-zinc-400 font-bold text-base">{predictions.length}</span>
+            <span class="ml-1">predictions tracked</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
+    <!-- Section cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
+
+      <!-- Intel & Predictions -->
+      <a href="/vi-intel"
+         class="group relative overflow-hidden rounded-xl border border-gta-gold/15 hover:border-gta-gold/35 p-6 flex flex-col gap-4 transition-all hover:bg-gta-gold/[0.04]"
+         style="background:#131316">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🎯</span>
+          <div>
+            <div class="text-[9px] font-mono text-gta-gold/60 uppercase tracking-widest mb-0.5">Intel</div>
+            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+              Intel & Predictions
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+          <div>
+            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Predictions</div>
+            <div class="text-zinc-200 font-semibold">{predictions.length}</div>
+            <div class="text-zinc-600 text-[10px]">{confirmed} confirmed · {reported} reported</div>
+          </div>
+          <div>
+            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Features</div>
+            <div class="text-zinc-200 font-semibold">{totalFeatures}</div>
+            <div class="text-zinc-600 text-[10px]">{confirmedFeatures} confirmed</div>
+          </div>
+        </div>
+        <div class="mt-auto text-[10px] font-mono text-gta-gold/60 group-hover:text-gta-gold transition-colors">
+          Explore intelligence →
+        </div>
+      </a>
+
+      <!-- Trailers & Analysis -->
+      <a href="/vi-intel"
+         class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-zinc-700 p-6 flex flex-col gap-4 transition-all"
+         style="background:#131316">
+        {latestTrailer && (
+          <div class="absolute inset-0 opacity-15 group-hover:opacity-20 transition-opacity">
+            <img src={`https://img.youtube.com/vi/${latestTrailer.youtube_id}/hqdefault.jpg`}
+                 alt="" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+        )}
+        <div class="relative flex items-center gap-3">
+          <span class="text-2xl">🎬</span>
+          <div>
+            <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Trailers</div>
+            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+              Trailers & Analysis
+            </div>
+          </div>
+        </div>
+        <div class="relative grid grid-cols-2 gap-3 text-xs font-mono">
+          <div>
+            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Trailer 1</div>
+            <div class="text-zinc-200 font-semibold">{(t1Views / 1e6).toFixed(0)}M views</div>
+            <div class="text-zinc-600 text-[10px]">24-hr YouTube record</div>
+          </div>
+          <div>
+            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Trailer 2</div>
+            <div class="text-zinc-200 font-semibold">{(t2Views / 1e6).toFixed(0)}M views</div>
+            <div class="text-zinc-600 text-[10px]">Apr 2025</div>
+          </div>
+        </div>
+        <div class="relative mt-auto text-[10px] font-mono text-zinc-600 group-hover:text-zinc-400 transition-colors">
+          Watch & analyse →
+        </div>
+      </a>
+
+      <!-- Pre-order -->
+      <a href="/buy"
+         class="group relative overflow-hidden rounded-xl border border-gta-gold/25 hover:border-gta-gold/50 p-6 flex flex-col gap-4 transition-all hover:bg-gta-gold/[0.05]"
+         style="background:#131316">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🛒</span>
+          <div>
+            <div class="text-[9px] font-mono text-gta-gold/60 uppercase tracking-widest mb-0.5">Pre-order</div>
+            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+              Buy GTA VI
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+          <div>
+            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Platforms</div>
+            <div class="text-zinc-200 font-semibold">PS5 · Xbox</div>
+          </div>
+          <div>
+            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Launch</div>
+            <div class="text-zinc-200 font-semibold">Nov 19, 2026</div>
+          </div>
+        </div>
+        <div class="mt-auto flex items-center gap-2">
+          <span class="text-[10px] font-mono text-gta-gold/70 group-hover:text-gta-gold transition-colors">
+            Compare editions →
+          </span>
+          <span class="ml-auto text-[9px] font-mono px-2 py-0.5 rounded" style="background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.25)">
+            {daysToRelease}d to launch
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Prediction confidence breakdown -->
+    <div class="mb-12 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <span class="w-1 h-4 rounded-full bg-gta-gold/40 shrink-0"></span>
+          <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Prediction Confidence Summary</span>
+        </div>
+        <a href="/vi-intel" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full intel →</a>
+      </div>
+      <div class="grid grid-cols-3 divide-x divide-[#1e1e23]">
+        {[
+          { label: "Confirmed",  value: confirmed,                              color: "#22c55e", sub: "Official source" },
+          { label: "Reported",   value: reported,                               color: "#f59e0b", sub: "Multiple outlets" },
+          { label: "Predicted",  value: predictions.length - confirmed - reported, color: "#818cf8", sub: "Data-backed" },
+        ].map(s => (
+          <div class="px-5 py-4">
+            <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
+            <div class="text-2xl font-mono font-black mb-0.5" style={`color:${s.color}`}>{s.value}</div>
+            <div class="text-[10px] font-mono text-zinc-600">{s.sub}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <CrossLinks context="vi-intel-predictions" />
+  </div>
+</Base>

@@ -1,0 +1,186 @@
+---
+import Base from "../layouts/Base.astro";
+import CrossLinks from "../components/CrossLinks.astro";
+
+import weeklyBonuses    from "../../data/gta-5/economy/weekly-bonuses.json";
+import revenueTiers     from "../../data/gta-5/economy/revenue-tiers.json";
+import bonusHistory     from "../../data/gta-5/economy/bonus-history.json";
+import businessProfiles from "../../data/gta-5/economy/business-profiles.json";
+
+const bonuses    = ((weeklyBonuses as any).bonuses  ?? []) as any[];
+const sales      = ((weeklyBonuses as any).sales    ?? []) as any[];
+const weekStart  = (weeklyBonuses  as any).week_start as string ?? "";
+const hasBonuses = bonuses.length > 0 || sales.length > 0;
+
+// Top income method (S-tier first source)
+const tiers        = ((revenueTiers as any).tiers ?? []) as any[];
+const sTier        = tiers.find((t: any) => t.tier === "S");
+const topSource    = sTier?.sources?.[0];
+const topGph       = topSource?.gta_per_hr ?? 0;
+const topName      = topSource?.name ?? "Cayo + Passive Stack";
+
+const historyCount  = (bonusHistory     as any).entry_count  as number ?? 0;
+const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
+---
+
+<Base
+  title="GTA Online"
+  description="GTA Online economy intelligence — income methods ranked, economy modelled, weekly bonuses tracked. Everything you need to earn smarter in GTA Online."
+  ogPage="charts"
+>
+  <!-- Hero -->
+  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:320px">
+    <div class="absolute inset-0"
+         style="background:radial-gradient(ellipse at 30% 50%, rgba(13,148,136,0.12) 0%, transparent 60%), linear-gradient(135deg, #0a0a0d 0%, #0e1a0e 40%, #0a0a0d 100%)">
+    </div>
+    <!-- Subtle grid texture -->
+    <div class="absolute inset-0 opacity-[0.03]"
+         style="background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,#fff 39px,#fff 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,#fff 39px,#fff 40px)">
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-16">
+      <div class="max-w-lg">
+        <div class="text-[10px] font-mono text-teal-500/60 uppercase tracking-[0.25em] mb-3">
+          // GTA Online · Live Economic Intelligence
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight" style="font-family:'Inter',sans-serif">
+          GTA Online<br/>Economy
+        </h1>
+        <p class="text-sm text-zinc-400 mb-8 leading-relaxed" style="font-family:'Inter',sans-serif">
+          Income methods ranked, inflation modelled, weekly bonuses tracked.
+          {profileCount} income sources profiled. Updated nightly.
+        </p>
+        <!-- Live snapshot -->
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-zinc-600">
+          <span>
+            <span class="font-bold text-sm" style="color:#0d9488">${Math.round(topGph / 1000)}k/hr</span>
+            <span class="ml-1">top method</span>
+          </span>
+          {hasBonuses && bonuses[0] && (
+            <span>
+              <span class="font-bold text-sm" style="color:#22c55e">{bonuses[0].multiplier}×</span>
+              <span class="ml-1 capitalize">{(bonuses[0].activity_id as string).replace(/-/g, " ")} this week</span>
+            </span>
+          )}
+          <span>
+            <span class="font-bold text-sm text-zinc-400">{historyCount}</span>
+            <span class="ml-1">weeks of bonus history</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
+    <!-- Section cards (4-up grid) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+
+      <!-- Economy -->
+      <a href="/gta-v/economy"
+         class="group rounded-xl border border-[#1e1e23] hover:border-teal-800/50 p-5 flex flex-col gap-3 transition-all hover:bg-teal-900/[0.06]"
+         style="background:#131316">
+        <div class="text-xl">📊</div>
+        <div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">Economy Model</div>
+          <div class="text-[10px] font-mono text-zinc-600 leading-relaxed">GTA-PPI · inflation · passive income stack · shark card analysis</div>
+        </div>
+        <div class="mt-auto text-[10px] font-mono transition-colors" style="color:#0d9488">
+          <span class="group-hover:text-teal-300 transition-colors">Explore model →</span>
+        </div>
+      </a>
+
+      <!-- Income Sources -->
+      <a href="/database?game=gta-online"
+         class="group rounded-xl border border-[#1e1e23] hover:border-amber-800/50 p-5 flex flex-col gap-3 transition-all hover:bg-amber-900/[0.04]"
+         style="background:#131316">
+        <div class="text-xl">💰</div>
+        <div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">Income Sources</div>
+          <div class="text-[10px] font-mono text-zinc-600 leading-relaxed">{profileCount} methods · S→D tier ranking · daily fee · bonus cadence</div>
+        </div>
+        <div class="mt-auto text-[10px] font-mono text-amber-600 group-hover:text-amber-400 transition-colors">Browse sources →</div>
+      </a>
+
+      <!-- Charts -->
+      <a href="/charts"
+         class="group rounded-xl border border-[#1e1e23] hover:border-amber-800/50 p-5 flex flex-col gap-3 transition-all hover:bg-amber-900/[0.04]"
+         style="background:#131316">
+        <div class="text-xl">📈</div>
+        <div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">Charts</div>
+          <div class="text-[10px] font-mono text-zinc-600 leading-relaxed">35+ D3 charts · meta evolution · heist comparison · promotions</div>
+        </div>
+        <div class="mt-auto text-[10px] font-mono text-amber-600 group-hover:text-amber-400 transition-colors">View charts →</div>
+      </a>
+
+      <!-- Bonuses & Promos -->
+      <a href="/leaderboard"
+         class="group rounded-xl border border-[#1e1e23] hover:border-green-800/50 p-5 flex flex-col gap-3 transition-all hover:bg-green-900/[0.05]"
+         style="background:#131316">
+        <div class="text-xl">🏷</div>
+        <div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">Bonuses & Promos</div>
+          <div class="text-[10px] font-mono text-zinc-600 leading-relaxed">
+            {weekStart ? `Week of ${weekStart} · ` : ""}
+            {bonuses.length + sales.length} events · {historyCount} weeks tracked
+          </div>
+        </div>
+        <div class="mt-auto text-[10px] font-mono text-green-600 group-hover:text-green-400 transition-colors">See this week →</div>
+      </a>
+    </div>
+
+    <!-- This week live strip -->
+    {hasBonuses && (
+      <div class="mb-12 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse shrink-0"></span>
+            <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// This week{weekStart ? ` · w/c ${weekStart}` : ""}</span>
+          </div>
+          <a href="/leaderboard" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full calendar →</a>
+        </div>
+        <div class="divide-y divide-[#1e1e23]">
+          {bonuses.slice(0, 4).map((b: any) => (
+            <div class="px-5 py-3 flex items-center gap-3">
+              <span class="text-[11px] font-mono font-bold w-5 shrink-0" style="color:#0d9488">{b.multiplier}×</span>
+              <span class="text-xs font-mono text-zinc-300 capitalize flex-1">
+                {(b.activity_id as string).replace(/-/g, " ")}
+              </span>
+              <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">bonus</span>
+            </div>
+          ))}
+          {sales.slice(0, 3).map((s: any) => (
+            <div class="px-5 py-3 flex items-center gap-3">
+              <span class="text-[11px] font-mono font-bold w-5 shrink-0" style="color:#22c55e">{s.discount_pct}%</span>
+              <span class="text-xs font-mono text-zinc-300 flex-1">{s.item_description}</span>
+              <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">off</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Top income method callout -->
+    <div class="mb-12 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="px-5 py-3 border-b border-[#1e1e23]">
+        <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Current meta ceiling</span>
+      </div>
+      <div class="px-5 py-5 flex items-center gap-5 flex-wrap">
+        <div>
+          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Top method</div>
+          <div class="text-xl font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{topName}</div>
+        </div>
+        <div class="ml-auto text-right">
+          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Net $/hr</div>
+          <div class="text-3xl font-mono font-black" style="color:#0d9488">${Math.round(topGph / 1000)}k</div>
+        </div>
+        <a href="/database?game=gta-online"
+           class="w-full sm:w-auto px-4 py-2 rounded border border-teal-700/30 text-teal-400 text-xs font-mono hover:bg-teal-900/20 transition-all text-center">
+          Browse all income sources →
+        </a>
+      </div>
+    </div>
+
+    <CrossLinks context="database" />
+  </div>
+</Base>
