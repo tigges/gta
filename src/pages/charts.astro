@@ -33,6 +33,12 @@ import franchiseEconData    from "../../data/franchise/economic-history.json";
 import priceChangesData    from "../../data/gta-5/economy/price-changes.json";
 import sourceHistoryData   from "../../data/gta-5/economy/per-source-history.json";
 import vehicleModsData     from "../../data/gta-5/economy/vehicle-mods.json";
+import gtaPpiData          from "../../data/gta-5/economy/gta-ppi.json";
+import passiveStackData    from "../../data/gta-5/economy/passive-stack.json";
+import metaHistoryData     from "../../data/gta-5/economy/meta-history.json";
+import heistsData          from "../../data/gta-5/economy/online-heists.json";
+import spendingDistData    from "../../data/gta-5/economy/spending-distribution.json";
+import vehicleCargoData    from "../../data/gta-5/economy/vehicle-cargo.json";
 const metacriticScores = metacriticData.titles;
 const CATEGORIES = ["All", "Economy-IG", "Economy-RL", "Promotions", "Performance", "Community", "History"] as const;
 const CAT_LABELS: Record<string, string> = {
@@ -1266,6 +1272,246 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Rockstar Newswire · GTAForums patch notes archives · {(priceChangesData as any).last_updated?.slice(0,10)}</span>
           <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online price change history — every documented nerf, buff, and property launch. Contact missions were nerfed 70% in 2014 then slowly buffed back." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ECONOMY-IG CHART AA — GTA-PPI: In-Game Purchasing Power Index
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA-PPI — In-Game Inflation Index (hours to buy standard basket)</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{(gtaPpiData as any).series.length} patches · base 100 = Oct 2013</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="grid grid-cols-3 divide-x divide-[#1e1e23] border-b border-[#1e1e23]">
+          {[
+            { label: "Launch (base)",  value: "100",  sub: "10.7 hrs to basket",  color: "#71717a" },
+            { label: "After Hours peak", value: "207", sub: "Oppressor doubled basket", color: "#ef4444" },
+            { label: "Cayo all-time low", value: "41", sub: "$2M/hr, 4.4 hrs to basket", color: "#22c55e" },
+          ].map(s => (
+            <div class="px-5 py-4">
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
+              <div class="text-2xl font-mono font-black mb-0.5" style={`color:${s.color}`}>{s.value}</div>
+              <div class="text-[10px] font-mono text-zinc-600">{s.sub}</div>
+            </div>
+          ))}
+        </div>
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">GTA Online Purchasing Power Index — 2013 to 2026</div>
+          <div class="text-[11px] text-zinc-500 font-mono">Hours needed to buy a fixed basket of goods at the meta income ceiling per era. Rising = hidden inflation via payout nerfs. Nominal GTA$ prices barely changed — the economy got harder by cutting wages.</div>
+        </div>
+        <div id="gta-ppi-chart" class="w-full" style="height:280px"
+          data-series={JSON.stringify((gtaPpiData as any).series)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: computed from price-basket.json + meta-history.json · GTAForums patch notes archives</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's hidden inflation: the economy got 2× harder in 2017–18 via payout nerfs, not price hikes. Cayo Perico reversed it to an all-time low in 2020." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ECONOMY-IG CHART BB — Passive Income Stack Evolution
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Passive Income Stack — How Idle GTA$/hr Grew From 0 to $1.24M</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">4 streams · ${((passiveStackData as any).setup_cost_total/1e6).toFixed(1)}M GTA$ setup</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Passive Income Stack Growth — Bunker to Acid Lab (2013–2025)</div>
+            <div class="text-[11px] text-zinc-500 font-mono">GTA$/hr generated while AFK at each major patch. Full stack peaked at $1.24M/hr (Dec 2022) after Acid Lab launch. Requires $18.7M setup investment.</div>
+          </div>
+          <div class="flex flex-wrap gap-2 text-[10px] font-mono text-zinc-500">
+            {[
+              { label: "Bunker",       color: "#f59e0b" },
+              { label: "Nightclub",    color: "#0d9488" },
+              { label: "MC Cocaine",   color: "#818cf8" },
+              { label: "Acid Lab",     color: "#22c55e" },
+            ].map(l => (
+              <span class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-sm inline-block" style={`background:${l.color};opacity:0.8`}></span>
+                {l.label}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div id="passive-stack-chart" class="w-full" style="height:300px"
+          data-series={JSON.stringify((passiveStackData as any).series)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTABase.com · business-profiles.json · GTAForums patch notes · community benchmarks</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online passive income history: from $0 in 2013 to $1.24M/hr AFK in 2022. The Acid Lab was the last major passive income leap before GTA VI." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ECONOMY-IG CHART CC — Meta Ceiling $/hr Per Era
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Ceiling — Top $/hr Method at Each Major DLC (2013–2023)</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{(metaHistoryData as any).meta_history.length} patches tracked</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Best Money Method Per Era — GTA$/hr Ceiling Since Launch</div>
+            <div class="text-[11px] text-zinc-500 font-mono">Top-earning method at each major DLC. Cayo Perico (Dec 2020) raised the meta ceiling by 5× in a single update — from $400k/hr to $2M/hr.</div>
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full inline-block bg-gta-gold"></span>Solo capable</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full inline-block bg-teal-500"></span>Group only</span>
+          </div>
+        </div>
+        <div id="meta-evolution-chart" class="w-full" style="height:300px"
+          data-history={JSON.stringify((metaHistoryData as any).meta_history)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTAForums · GTA Wiki · community archives · GTABase</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="10 years of GTA Online money metas charted: from $250k/hr contact missions in 2013 to $2M/hr Cayo Perico in 2020 — one update changed everything." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ECONOMY-IG CHART DD — Heist Comparison: $/hr vs Setup Cost
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Heist Comparison — $/hr vs Setup Cost vs Run Time</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{(heistsData as any).heists.length} heists</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">GTA Online Heist Comparison — All Heists by $/hr and Setup Cost</div>
+            <div class="text-[11px] text-zinc-500 font-mono">X = setup cost required · Y = GTA$/hr · bubble size = average run time. Top-right = expensive but fast. Gold = soloable.</div>
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full inline-block bg-gta-gold opacity-80"></span>Solo</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full inline-block bg-teal-600 opacity-80"></span>Group</span>
+            <span class="flex items-center gap-1.5"><span class="text-zinc-600">◉</span> = longer run</span>
+          </div>
+        </div>
+        <div id="heist-comparison-chart" class="w-full" style="height:320px"
+          data-heists={JSON.stringify((heistsData as any).heists)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki · GTABase.com · community records · 2024 patches · Hard difficulty</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="All GTA Online heists compared: Cayo Perico wins on $/hr despite being solo. Casino Heist is the best group heist. Data-driven answer to which heist is worth doing." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ECONOMY-IG CHART EE — Daily Property Operating Costs
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Property Daily Fees — Ownership Has Ongoing Costs</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">charged daily · applies offline</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">GTA Online Daily Property Fees — The Hidden Ownership Tax</div>
+          <div class="text-[11px] text-zinc-500 font-mono">Fees charged per in-game day (48 real minutes) regardless of whether you're online. Owning the full income stack costs ~$13,000/GTA day in maintenance — ~$4.7M annualised.</div>
+        </div>
+        <div id="property-daily-fee-chart" class="w-full"
+          data-properties={JSON.stringify((propertiesData as any).properties)}
+          style="min-height:220px"
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki · GTABase.com · GTA Online daily utility fee system</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's hidden tax: every income-generating property has a daily fee charged even when you're offline. Full meta stack = $13,000/day in maintenance." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ECONOMY-IG CHART FF — GTA$ Spending Distribution by Era
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Spending Mix — Where GTA$ Goes Per Era</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{(spendingDistData as any).eras.length} eras · community-modelled</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">GTA$ Spending Distribution — How Player Money Flows Each Era</div>
+            <div class="text-[11px] text-zinc-500 font-mono">Community-modelled. Vehicles dominated launch era. Properties peaked 2016–17 (Bunker/MC era). Weapons spending rose in 2021 as Cayo income made consumables trivial.</div>
+          </div>
+          <div class="flex flex-wrap gap-3 text-[10px] font-mono text-zinc-500">
+            {[
+              {label:"Vehicles",    color:"#f59e0b"},
+              {label:"Properties",  color:"#0d9488"},
+              {label:"Weapons/Mods",color:"#ef4444"},
+              {label:"Shark equiv.",color:"#818cf8"},
+            ].map(l => (
+              <span class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-sm inline-block" style={`background:${l.color};opacity:0.75`}></span>
+                {l.label}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div id="spending-distribution-chart" class="w-full" style="height:300px"
+          data-eras={JSON.stringify((spendingDistData as any).eras)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: community surveys · GTAForums spending analysis · modelled estimates · confidence: medium</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="How GTA Online players spend their money across eras: vehicles dominated 2013–14, properties peaked 2016–17 (Bunker era), then Oppressor drove vehicles back up." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ECONOMY-IG CHART GG — Import/Export Vehicle Sell Price Tiers
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Import/Export Sell Tiers — Why Top-Range Vehicles Are 3× More Valuable</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">3 tiers · 3 delivery types</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Import/Export Net Sell Price by Tier and Delivery Type</div>
+            <div class="text-[11px] text-zinc-500 font-mono">Standard private sale = $15k. Top-range specialist = $80k — a 5.3× difference. Sourcing cheap standard-range vehicles is never worth it.</div>
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#3f3f46;opacity:0.9"></span>Private</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#f59e0b;opacity:0.9"></span>Showroom</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#22c55e;opacity:0.9"></span>Specialist</span>
+          </div>
+        </div>
+        <div id="ie-tiers-chart" class="w-full"
+          data-sell={JSON.stringify((vehicleCargoData as any).sell_prices_net)}
+          style="min-height:240px"
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTABase.com · GTA Wiki · community records · no-damage assumption · net of setup mods</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online Import/Export sell prices: top-range specialist delivers 5× more than standard private. Always prioritise top-range sources." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -3274,6 +3520,470 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
             .attr("fill", "none").attr("stroke", "#ef4444").attr("stroke-width", 0.8).attr("opacity", 0.35);
         }
       }
+    });
+  })();
+
+  // ── CHART AA — GTA-PPI Purchasing Power Index ───────────────
+  (function() {
+    const el = document.getElementById("gta-ppi-chart");
+    if (!el) return;
+    const series: any[] = JSON.parse(el.dataset.series || "[]");
+    if (!series.length) return;
+
+    const margin = { top: 28, right: 110, bottom: 44, left: 52 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const sorted = [...series].sort((a, b) => a.date.localeCompare(b.date));
+    const x = d3.scaleTime().domain([new Date("2013-01-01"), new Date("2026-12-31")]).range([0, W]);
+    const y = d3.scaleLinear().domain([0, 230]).range([H, 0]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+
+    // Base=100 line
+    svg.append("line").attr("x1", 0).attr("x2", W).attr("y1", y(100)).attr("y2", y(100))
+      .attr("stroke", "#3f3f46").attr("stroke-dasharray", "6,3").attr("stroke-width", 1.5);
+    svg.append("text").attr("x", W + 5).attr("y", y(100) + 4)
+      .attr("fill", "#52525b").attr("font-size", "8").attr("font-family", "monospace").text("base=100");
+
+    // Step-line segments
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const p = sorted[i], n = sorted[i + 1];
+      const px = x(new Date(p.date)), nx = x(new Date(n.date));
+      const py = y(p.ppi), ny = y(n.ppi);
+      svg.append("line").attr("x1", px).attr("x2", nx).attr("y1", py).attr("y2", py)
+        .attr("stroke", "#f59e0b").attr("stroke-width", 2);
+      svg.append("line").attr("x1", nx).attr("x2", nx).attr("y1", py).attr("y2", ny)
+        .attr("stroke", "#f59e0b").attr("stroke-width", 2);
+    }
+    // Trailing dashed line to present
+    const last = sorted[sorted.length - 1];
+    svg.append("line").attr("x1", x(new Date(last.date))).attr("x2", W)
+      .attr("y1", y(last.ppi)).attr("y2", y(last.ppi))
+      .attr("stroke", "#f59e0b").attr("stroke-width", 2).attr("stroke-dasharray", "4,3");
+
+    // Event dots
+    const EVT_COLOR: Record<string, string> = { buff: "#22c55e", nerf: "#ef4444", basket_expansion: "#818cf8" };
+    sorted.forEach((p: any) => {
+      const col = EVT_COLOR[p.event] || "#71717a";
+      svg.append("circle").attr("cx", x(new Date(p.date))).attr("cy", y(p.ppi)).attr("r", p.event ? 5 : 3.5)
+        .attr("fill", col).attr("stroke", "#131316").attr("stroke-width", 1.5);
+    });
+
+    // Key label annotations
+    const afterHours = sorted.find((s: any) => s.patch === "After Hours");
+    const cayo = sorted.find((s: any) => s.patch === "Cayo Perico Heist");
+    if (afterHours) {
+      const ax = x(new Date(afterHours.date));
+      svg.append("text").attr("x", ax + 5).attr("y", y(afterHours.ppi) - 7)
+        .attr("fill", "#ef4444").attr("font-size", "8.5").attr("font-family", "monospace").text("After Hours 207↑");
+    }
+    if (cayo) {
+      const cx = x(new Date(cayo.date));
+      svg.append("text").attr("x", cx - 6).attr("y", y(cayo.ppi) + 16).attr("text-anchor", "end")
+        .attr("fill", "#22c55e").attr("font-size", "8.5").attr("font-family", "monospace").text("Cayo 41↓");
+    }
+
+    // X axis
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(7).tickFormat((d: any) => `'${String(d.getFullYear()).slice(2)}`))
+      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+    // Y axis
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `${d}`))
+      .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+    svg.append("text").attr("transform", "rotate(-90)").attr("x", -H / 2).attr("y", -40).attr("text-anchor", "middle")
+      .attr("fill", "#3f3f46").attr("font-size", "9").attr("font-family", "monospace").text("PPI (hrs to basket)");
+  })();
+
+  // ── CHART BB — Passive Income Stack ──────────────────────────
+  (function() {
+    const el = document.getElementById("passive-stack-chart");
+    if (!el) return;
+    const series: any[] = JSON.parse(el.dataset.series || "[]");
+    if (!series.length) return;
+
+    const KEYS = ["bunker", "nightclub", "mc_cocaine", "acid_lab"];
+    const COLORS: Record<string, string> = {
+      bunker: "#f59e0b", nightclub: "#0d9488", mc_cocaine: "#818cf8", acid_lab: "#22c55e",
+    };
+
+    const margin = { top: 20, right: 16, bottom: 60, left: 72 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleBand().domain(series.map((s: any) => s.date)).range([0, W]).padding(0.18);
+    const maxTotal = (d3.max(series, (s: any) => s.total) ?? 1) as number;
+    const y = d3.scaleLinear().domain([0, maxTotal * 1.08]).range([H, 0]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+
+    // Stacked bars (manual stack since D3.stack needs numeric keys)
+    series.forEach((s: any) => {
+      let yBottom = 0;
+      KEYS.forEach(k => {
+        const val = s[k] || 0;
+        if (val <= 0) return;
+        const xv = x(s.date) ?? 0;
+        svg.append("rect").attr("x", xv).attr("y", y(yBottom + val))
+          .attr("width", x.bandwidth()).attr("height", Math.max(0, y(yBottom) - y(yBottom + val)))
+          .attr("fill", COLORS[k]).attr("opacity", 0.82);
+        yBottom += val;
+      });
+      // Total label on top
+      if (s.total > 0) {
+        const label = s.total >= 1e6 ? `$${(s.total / 1e6).toFixed(2)}M` : `$${Math.round(s.total / 1000)}k`;
+        svg.append("text").attr("x", (x(s.date) ?? 0) + x.bandwidth() / 2).attr("y", y(s.total) - 4)
+          .attr("text-anchor", "middle").attr("fill", "#a1a1aa").attr("font-size", "8.5").attr("font-family", "monospace")
+          .text(label);
+      }
+    });
+
+    // X axis with patch year labels
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).tickFormat((d: any) => d.slice(0, 4)))
+      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "8.5").attr("font-family", "monospace")
+        .attr("transform", "rotate(-35)").attr("text-anchor", "end").attr("dx", "-0.5em").attr("dy", "0.2em"));
+    // Y axis
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `$${Math.round(+d / 1000)}k`))
+      .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+  })();
+
+  // ── CHART CC — Meta Ceiling $/hr Evolution ───────────────────
+  (function() {
+    const el = document.getElementById("meta-evolution-chart");
+    if (!el) return;
+    const history: any[] = JSON.parse(el.dataset.history || "[]");
+    if (!history.length) return;
+
+    const sorted = [...history].sort((a, b) => a.date.localeCompare(b.date));
+
+    const margin = { top: 20, right: 130, bottom: 44, left: 60 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleTime().domain([new Date("2013-01-01"), new Date("2024-06-01")]).range([0, W]);
+    const maxY = (d3.max(sorted, (d: any) => d.top_gta_per_hr) ?? 1) as number;
+    const y = d3.scaleLinear().domain([0, maxY * 1.1]).range([H, 0]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+
+    // Solo flag lookup — methods with "solo" in notes or cayo/contact/nightclub
+    const SOLO_IDS = new Set(["Cayo Perico Heist", "Contact Missions", "Cayo Perico (post-nerf)", "Finance and Felony"]);
+
+    // Step lines
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const p = sorted[i], n = sorted[i + 1];
+      const isSolo = SOLO_IDS.has(p.top_method) || p.top_method?.toLowerCase().includes("solo") || p.top_method?.toLowerCase().includes("cayo");
+      const col = isSolo ? "#f59e0b" : "#0d9488";
+      const px = x(new Date(p.date)), nx = x(new Date(n.date));
+      const py = y(p.top_gta_per_hr), ny = y(n.top_gta_per_hr);
+      svg.append("line").attr("x1", px).attr("x2", nx).attr("y1", py).attr("y2", py)
+        .attr("stroke", col).attr("stroke-width", 2.5);
+      svg.append("line").attr("x1", nx).attr("x2", nx).attr("y1", py).attr("y2", ny)
+        .attr("stroke", col).attr("stroke-width", 2.5);
+    }
+    // Last segment
+    const last = sorted[sorted.length - 1];
+    const lastSolo = SOLO_IDS.has(last.top_method) || last.top_method?.toLowerCase().includes("cayo");
+    svg.append("line").attr("x1", x(new Date(last.date))).attr("x2", W)
+      .attr("y1", y(last.top_gta_per_hr)).attr("y2", y(last.top_gta_per_hr))
+      .attr("stroke", lastSolo ? "#f59e0b" : "#0d9488").attr("stroke-width", 2.5).attr("stroke-dasharray", "4,3");
+
+    // Dots + labels for select key patches
+    const LABEL_PATCHES = new Set(["GTA Online Launch", "Heists", "Diamond Casino Heist", "Cayo Perico Heist", "Los Santos Drug Wars"]);
+    sorted.forEach((p: any) => {
+      const isSolo = SOLO_IDS.has(p.top_method) || p.top_method?.toLowerCase().includes("cayo");
+      const col = isSolo ? "#f59e0b" : "#0d9488";
+      const cx = x(new Date(p.date)), cy = y(p.top_gta_per_hr);
+      svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 4)
+        .attr("fill", col).attr("stroke", "#131316").attr("stroke-width", 1.5);
+      if (LABEL_PATCHES.has(p.patch)) {
+        const shortMethod = (p.top_method as string).length > 18 ? (p.top_method as string).slice(0, 17) + "…" : p.top_method;
+        svg.append("text").attr("x", cx + 6).attr("y", cy + 4)
+          .attr("fill", col).attr("font-size", "8").attr("font-family", "monospace")
+          .text(shortMethod as string);
+      }
+    });
+
+    // Axes
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(6).tickFormat((d: any) => `'${String(d.getFullYear()).slice(2)}`))
+      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `$${Math.round(+d / 1000)}k`))
+      .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+  })();
+
+  // ── CHART DD — Heist Comparison Bubble Chart ─────────────────
+  (function() {
+    const el = document.getElementById("heist-comparison-chart");
+    if (!el) return;
+    const heists: any[] = JSON.parse(el.dataset.heists || "[]");
+    if (!heists.length) return;
+
+    const margin = { top: 24, right: 24, bottom: 52, left: 72 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const maxSetup = (d3.max(heists, (h: any) => h.setup_cost) ?? 1) as number;
+    const maxGph = (d3.max(heists, (h: any) => h.gta_per_hr) ?? 1) as number;
+    const x = d3.scaleLinear().domain([0, maxSetup * 1.1]).range([0, W]);
+    const y = d3.scaleLinear().domain([0, maxGph * 1.15]).range([H, 0]);
+    const rScale = d3.scaleSqrt().domain([0, (d3.max(heists, (h: any) => h.avg_run_time_min) ?? 1) as number]).range([8, 28]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+
+    heists.forEach((h: any) => {
+      const cx = x(h.setup_cost), cy = y(h.gta_per_hr);
+      const r = rScale(h.avg_run_time_min || 30);
+      const col = h.solo ? "#f59e0b" : "#0d9488";
+      svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", r)
+        .attr("fill", col).attr("opacity", 0.65).attr("stroke", col).attr("stroke-width", 1.5).attr("stroke-opacity", 0.9);
+      const title = (h.title as string).replace("The ", "").replace(" Heist", "").slice(0, 16);
+      svg.append("text").attr("x", cx).attr("y", cy - r - 4).attr("text-anchor", "middle")
+        .attr("fill", "#c4c4d4").attr("font-size", "8.5").attr("font-family", "monospace").text(title);
+      // $/hr label inside bubble
+      const gphLabel = `$${Math.round(h.gta_per_hr / 1000)}k`;
+      svg.append("text").attr("x", cx).attr("y", cy + 4).attr("text-anchor", "middle")
+        .attr("fill", "#fff").attr("font-size", "9").attr("font-family", "monospace").attr("font-weight", "bold")
+        .text(gphLabel);
+    });
+
+    // Axes
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(5).tickFormat((d: any) => `$${(+d / 1e6).toFixed(1)}M`))
+      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `$${Math.round(+d / 1000)}k`))
+      .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+    svg.append("text").attr("x", W / 2).attr("y", H + 42).attr("text-anchor", "middle")
+      .attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace").text("Setup Cost ($) · bubble size = avg run time");
+    svg.append("text").attr("transform", "rotate(-90)").attr("x", -H / 2).attr("y", -58).attr("text-anchor", "middle")
+      .attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace").text("GTA$/hr");
+  })();
+
+  // ── CHART EE — Property Daily Operating Fees ─────────────────
+  (function() {
+    const el = document.getElementById("property-daily-fee-chart");
+    if (!el) return;
+    const props: any[] = JSON.parse(el.dataset.properties || "[]");
+    if (!props.length) return;
+
+    // Aggregate by type: sum all fees per type (player owns one of each)
+    const TYPE_LABELS: Record<string, string> = {
+      "mc-business": "MC Businesses (avg)", "bunker": "Bunker", "nightclub": "Nightclub",
+      "hangar": "Hangar", "office": "CEO Office",
+    };
+    const typeMap: Record<string, { total: number; count: number; max: number }> = {};
+    props.forEach((p: any) => {
+      const fee = p.daily_fee || 0;
+      if (!fee) return;
+      const t = p.type;
+      if (!typeMap[t]) typeMap[t] = { total: 0, count: 0, max: 0 };
+      typeMap[t].total += fee;
+      typeMap[t].count++;
+      typeMap[t].max = Math.max(typeMap[t].max, fee);
+    });
+
+    const items = Object.entries(typeMap)
+      .map(([t, v]) => ({ type: t, avgFee: Math.round(v.total / v.count), maxFee: v.max, label: TYPE_LABELS[t] || t }))
+      .sort((a, b) => b.maxFee - a.maxFee);
+
+    const rowH = 36, labelW = 170;
+    const margin = { top: 16, right: 130, bottom: 16, left: labelW };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = items.length * rowH + margin.top + margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${H}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const maxFee = (d3.max(items, (i: any) => i.maxFee) ?? 1) as number;
+    const x = d3.scaleLinear().domain([0, maxFee * 1.05]).range([0, W]);
+
+    items.forEach((item: any, i: number) => {
+      const y = i * rowH + 6;
+      const bh = rowH - 14;
+      const isMeta = ["bunker", "nightclub", "mc-business", "acid-lab"].includes(item.type);
+      const col = isMeta ? "#f59e0b" : "#3f3f46";
+
+      svg.append("rect").attr("x", 0).attr("y", y).attr("width", x(item.maxFee)).attr("height", bh)
+        .attr("rx", 2).attr("fill", col).attr("opacity", 0.65);
+
+      svg.append("text").attr("x", -8).attr("y", y + bh / 2 + 4).attr("text-anchor", "end")
+        .attr("fill", "#d4d4d8").attr("font-size", "10").attr("font-family", "monospace").text(item.label);
+
+      const annualised = `$${Math.round(item.maxFee * 365 / 1000)}k/yr`;
+      svg.append("text").attr("x", x(item.maxFee) + 6).attr("y", y + bh / 2 + 4)
+        .attr("fill", "#a1a1aa").attr("font-size", "9").attr("font-family", "monospace")
+        .text(`$${item.maxFee.toLocaleString()}/day  (${annualised})`);
+    });
+
+    // Total stack label
+    const totalDay = items.reduce((s: number, i: any) => s + i.maxFee, 0);
+    svg.append("text").attr("x", W + 124).attr("y", items.length * rowH / 2 + 8).attr("text-anchor", "end")
+      .attr("fill", "#71717a").attr("font-size", "9").attr("font-family", "monospace")
+      .text(`Stack total: $${totalDay.toLocaleString()}/day`);
+  })();
+
+  // ── CHART FF — Spending Distribution ─────────────────────────
+  (function() {
+    const el = document.getElementById("spending-distribution-chart");
+    if (!el) return;
+    const eras: any[] = JSON.parse(el.dataset.eras || "[]");
+    if (!eras.length) return;
+
+    const CATS = [
+      { key: "vehicles_pct",     color: "#f59e0b", label: "Vehicles" },
+      { key: "properties_pct",   color: "#0d9488", label: "Properties" },
+      { key: "weapons_pct",      color: "#ef4444", label: "Weapons" },
+      { key: "shark_equiv_pct",  color: "#818cf8", label: "Shark equiv." },
+    ];
+
+    const margin = { top: 20, right: 16, bottom: 56, left: 40 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleBand().domain(eras.map((e: any) => e.label)).range([0, W]).padding(0.18);
+    const y = d3.scaleLinear().domain([0, 100]).range([H, 0]);
+
+    // Grid
+    [25, 50, 75, 100].forEach(v => {
+      svg.append("line").attr("x1", 0).attr("x2", W).attr("y1", y(v)).attr("y2", y(v))
+        .attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3");
+    });
+
+    // 100% stacked bars per era
+    eras.forEach((era: any) => {
+      let bottom = 0;
+      CATS.forEach(cat => {
+        const pct = era[cat.key] || 0;
+        const xv = x(era.label) ?? 0;
+        svg.append("rect").attr("x", xv).attr("y", y(bottom + pct))
+          .attr("width", x.bandwidth()).attr("height", Math.max(0, y(bottom) - y(bottom + pct)))
+          .attr("fill", cat.color).attr("opacity", 0.78);
+        // Label inside bar if big enough
+        if (pct >= 8) {
+          svg.append("text").attr("x", xv + x.bandwidth() / 2).attr("y", y(bottom + pct / 2) + 4)
+            .attr("text-anchor", "middle").attr("fill", "#fff").attr("font-size", "8.5").attr("font-family", "monospace")
+            .attr("opacity", 0.9).text(`${pct}%`);
+        }
+        bottom += pct;
+      });
+    });
+
+    // X axis
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).tickFormat((d: any) => (d as string).split(" ")[0]))
+      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "8.5").attr("font-family", "monospace")
+        .attr("transform", "rotate(-30)").attr("text-anchor", "end").attr("dy", "0.3em").attr("dx", "-0.4em"));
+    // Y axis
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d: any) => `${d}%`))
+      .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+  })();
+
+  // ── CHART GG — I/E Vehicle Sell Price Tiers ──────────────────
+  (function() {
+    const el = document.getElementById("ie-tiers-chart");
+    if (!el) return;
+    const sellData: any = JSON.parse(el.dataset.sell || "{}");
+    if (!sellData.top) return;
+
+    const tiers = [
+      { key: "top",      label: "Top Range" },
+      { key: "mid",      label: "Mid Range" },
+      { key: "standard", label: "Standard" },
+    ];
+    const deliveries = [
+      { key: "private",    label: "Private Sell",    color: "#3f3f46" },
+      { key: "showroom",   label: "Showroom",        color: "#f59e0b" },
+      { key: "specialist", label: "Specialist Dealer", color: "#22c55e" },
+    ];
+
+    const rowH = 52, labelW = 106;
+    const margin = { top: 16, right: 100, bottom: 24, left: labelW };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = tiers.length * rowH + margin.top + margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${H}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const maxVal = (d3.max(tiers.flatMap(t =>
+      deliveries.map(d => sellData[t.key]?.[d.key] || 0)
+    )) ?? 1) as number;
+    const x = d3.scaleLinear().domain([0, maxVal * 1.05]).range([0, W]);
+
+    tiers.forEach((tier: any, ti: number) => {
+      const groupY = ti * rowH;
+      // Tier label
+      svg.append("text").attr("x", -8).attr("y", groupY + rowH / 2 + 4).attr("text-anchor", "end")
+        .attr("fill", "#d4d4d8").attr("font-size", "10.5").attr("font-family", "monospace").text(tier.label);
+
+      deliveries.forEach((del: any, di: number) => {
+        const val = sellData[tier.key]?.[del.key] || 0;
+        const y = groupY + di * 14 + 2;
+        const bh = 11;
+        svg.append("rect").attr("x", 0).attr("y", y).attr("width", x(val)).attr("height", bh)
+          .attr("rx", 2).attr("fill", del.color).attr("opacity", di === 2 ? 0.85 : 0.65);
+        svg.append("text").attr("x", x(val) + 5).attr("y", y + bh - 1)
+          .attr("fill", "#a1a1aa").attr("font-size", "8.5").attr("font-family", "monospace")
+          .text(`$${val.toLocaleString()}`);
+      });
+    });
+
+    // Delivery type legend at bottom
+    deliveries.forEach((del: any, i: number) => {
+      const lx = i * (W / 3);
+      svg.append("rect").attr("x", lx).attr("y", H - margin.bottom).attr("width", 10).attr("height", 10)
+        .attr("rx", 1).attr("fill", del.color).attr("opacity", 0.75);
+      svg.append("text").attr("x", lx + 13).attr("y", H - margin.bottom + 9)
+        .attr("fill", "#71717a").attr("font-size", "8.5").attr("font-family", "monospace").text(del.label);
     });
   })();
 
