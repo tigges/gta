@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "game": "gta-6",
+  "status": "pre-launch",
+  "last_updated": "2026-05-18T00:00:00Z",
+  "note": "GTA VI property registry — pre-launch stub. Schema mirrors data/gta-5/economy/properties.json. Populate at launch from GTA VI wiki, Rockstar press kit, and community records.",
+  "launch_date": "2026-11-19",
+  "property_count": 0,
+  "properties": [],
+  "fields": {
+    "id":            "string — kebab-case",
+    "name":          "string",
+    "type":          "string — apartment | office | business | vehicle-warehouse | etc.",
+    "price_min":     "number — cheapest location/config",
+    "price_max":     "number — most expensive location/config",
+    "dlc":           "string — GTA VI launch or DLC name",
+    "capacity_vehicles": "number | null",
+    "daily_fee":     "number — GTA$/day when owned",
+    "upgrade_cost":  "number | null — full upgrade cost",
+    "purchase_site": "string — in-game website name",
+    "notes":         "string"
+  },
+  "confirmed_pre_launch": {
+    "note": "Properties visible in official GTA VI trailers and press material",
+    "items": [
+      {
+        "id": "leonida-safehouse-1",
+        "name": "Vice City Safehouse (trailer visible)",
+        "type": "apartment",
+        "price_min": null,
+        "price_max": null,
+        "notes": "Seen in Trailer 1 and 2. Price unconfirmed. Typical GTA VI starting safehouse.",
+        "source": "Trailer analysis",
+        "confirmed": false
+      }
+    ]
+  },
+  "day1_checklist": [
+    "Scrape Dynasty 8 / Maze Bank Foreclosures GTA VI equivalents from wiki",
+    "Run fetch_gta_properties.py adapted for GTA VI property categories",
+    "Confirm property types — GTA VI may rename or restructure from Online",
+    "Note: GTA VI Leonida setting likely means different location names"
+  ]
+}

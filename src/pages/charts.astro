@@ -29,7 +29,9 @@ import bonusHistoryData from "../../data/gta-5/economy/bonus-history.json";
 import saleFreqData     from "../../data/gta-5/economy/sale-frequency.json";
 import sharkCardData    from "../../data/gta-5/economy/shark-cards.json";
 import propertiesData   from "../../data/gta-5/economy/properties.json";
-import franchiseEconData from "../../data/franchise/economic-history.json";
+import franchiseEconData    from "../../data/franchise/economic-history.json";
+import priceChangesData    from "../../data/gta-5/economy/price-changes.json";
+import sourceHistoryData   from "../../data/gta-5/economy/per-source-history.json";
 const metacriticScores = metacriticData.titles;
 const CATEGORIES = ["All", "Economy-IG", "Economy-RL", "Promotions", "Performance", "Community", "History"] as const;
 const CAT_LABELS: Record<string, string> = {
@@ -1150,6 +1152,109 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Estimated next sale = frequency projection. Accuracy improves as the archive grows each Thursday.</span>
           <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online sale frequency intelligence — when each major item last went on sale and when it's likely to go on sale again." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ECONOMY-IG CHART V — Income Source History (per-source $/hr timeline)
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Income Source Price History — Nerfs, Buffs, DLC Launches</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{(sourceHistoryData as any).source_count} sources · {(sourceHistoryData as any).snapshot_count} patch snapshots</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              Select Any Income Source — See Its $/hr History
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Each step = a major patch event. Gold = buff. Red = nerf. Select a source to explore its history.</div>
+          </div>
+          <!-- Source selector -->
+          <div class="flex flex-wrap gap-1.5">
+            {((sourceHistoryData as any).sources as any[]).map((src: any, i: number) => (
+              <button
+                class="income-src-btn px-2.5 py-1 rounded text-[9px] font-mono border transition-all"
+                class:list={[i === 0
+                  ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8"
+                  : "border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"]}
+                data-source-id={src.id}
+              >{src.name.split(" ")[0]}</button>
+            ))}
+          </div>
+        </div>
+        <div id="income-history-chart" class="w-full" style="height:300px"
+          data-sources={JSON.stringify((sourceHistoryData as any).sources)}
+        ></div>
+        <div id="income-history-events" class="px-5 py-3 border-t border-[#1e1e23] divide-y divide-[#1e1e23]"></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTAForums patch notes archives + Rockstar Newswire · community benchmarks</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online income source history — every major nerf, buff, and DLC launch charted. Cayo Perico was nerfed 40% in 2021 then partially restored." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ECONOMY-RL CHART W — GTA VI vs GTA Online: Price Benchmark
+    ══════════════════════════════════════════════════════════ -->
+    <section class="chart-block" data-category="Economy-RL">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Economy — What We Know Pre-Launch</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">Day-1 ready · Nov 19, 2026</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              GTA VI Economic Intelligence — Pre-Launch Status Board
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">What we know, what we're tracking, and what the data says about how GTA VI's economy will compare to 11 years of GTA Online.</div>
+          </div>
+        </div>
+        <!-- Pre-launch status grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23] border-b border-[#1e1e23]">
+          {[
+            { label: "GTA Online endgame cost",  value: "$35M+",      sub: "via Shark Cards ≈ $437", color: "#ef4444", note: "The bar GTA VI must beat" },
+            { label: "GTA VI release date",       value: "Nov 19",     sub: "2026 — confirmed",       color: "#f59e0b", note: "From Take-Two 10-Q filing" },
+            { label: "Shark Card equivalent",     value: "23.3×",      sub: "inflation since 2013",   color: "#ef4444", note: "GTA VI resets this clock" },
+          ].map(s => (
+            <div class="px-5 py-4">
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
+              <div class="text-2xl font-mono font-black mb-0.5" style={`color:${s.color}`}>{s.value}</div>
+              <div class="text-[10px] font-mono text-zinc-500">{s.sub}</div>
+              <div class="text-[9px] font-mono text-zinc-700 mt-1">{s.note}</div>
+            </div>
+          ))}
+        </div>
+        <!-- Prediction table -->
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-3">What the GTA Online data predicts for GTA VI Online launch economics</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { prediction: "Early meta will be a single dominant solo heist", basis: "Cayo Perico template — every major update since 2020 has centred on one solo-viable high-payout activity", confidence: "High" },
+              { prediction: "Starting property ~$2-5M — mirrors GTA Online progression", basis: "GTA Online Kosatka ($2.2M) as template. GTA VI prices adjusted for new title inflation curve", confidence: "Medium" },
+              { prediction: "Shark Cards at same USD price, ~$8M for Megalodon", basis: "Take-Two has never changed Shark Card denomination. Price inflation will happen in GTA$, not USD", confidence: "High" },
+              { prediction: "Weekly bonus calendar within 3 months of launch", basis: "Rockstar introduced GTA Online weekly events in 2013. GTA VI will follow the same live-service model", confidence: "High" },
+            ].map(p => (
+              <div class="rounded border border-[#2a2a31] px-3 py-2.5" style="background:#0e0e11">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${p.confidence === "High" ? "text-gta-teal border-gta-teal/30 bg-gta-teal/10" : "text-gta-gold border-gta-gold/30 bg-gta-gold/10"}`}>{p.confidence}</span>
+                </div>
+                <div class="text-[11px] font-semibold text-zinc-200 mb-1" style="font-family:'Inter',sans-serif">{p.prediction}</div>
+                <div class="text-[9px] font-mono text-zinc-600 leading-relaxed">{p.basis}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="px-5 py-3 flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Data pipeline ready: income sources, properties, price history, and bonus calendar schemas in place for Day-1 population.</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI economic predictions based on 11 years of GTA Online data: one dominant solo heist, Shark Cards unchanged, weekly bonus calendar within 3 months." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -2808,6 +2913,121 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       svg.append("text").attr("x",barW+6).attr("y",y+bh/2+4)
         .attr("fill",color).attr("font-size","9").attr("font-family","monospace").text(priceText);
     });
+  })();
+
+  // ── CHART V — Income Source History ────────────────────────
+  (function() {
+    const el = document.getElementById("income-history-chart");
+    const eventsEl = document.getElementById("income-history-events");
+    if (!el || !eventsEl) return;
+
+    const sources: any[] = JSON.parse(el.dataset.sources || "[]");
+    if (!sources.length) return;
+
+    let activeSrc = sources[0];
+
+    function renderChart(src: any) {
+      el.innerHTML = "";
+      eventsEl.innerHTML = "";
+
+      const tl: any[] = src.timeline || [];
+      if (!tl.length) return;
+
+      const margin = {top:20, right:24, bottom:40, left:90};
+      const W = el.clientWidth - margin.left - margin.right;
+      const H = el.clientHeight - margin.top - margin.bottom;
+
+      const svg = d3.select(el).append("svg").attr("width","100%")
+        .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+        .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+      const dates = tl.map((d:any) => new Date(d.date));
+      const vals  = tl.map((d:any) => d.gta_per_hr);
+      const maxV  = d3.max(vals) ?? 1;
+
+      // Extend to today
+      const extDates = [...dates, new Date()];
+      const extVals  = [...vals, vals[vals.length-1]];
+
+      const x = d3.scaleTime().domain([dates[0], new Date()]).range([0,W]);
+      const y = d3.scaleLinear().domain([0, maxV * 1.15]).range([H,0]);
+
+      // Grid
+      svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+        .call(g=>g.select(".domain").remove())
+        .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+
+      // Area
+      const defs = svg.append("defs");
+      const grad = defs.append("linearGradient").attr("id","ihs-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
+      grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.25);
+      grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.01);
+
+      svg.append("path").datum(extDates.map((d,i)=>({d,v:extVals[i]})))
+        .attr("fill","url(#ihs-grad)")
+        .attr("d",d3.area<any>().x(d=>x(d.d)).y0(H).y1(d=>y(d.v)).curve(d3.curveStepAfter));
+      svg.append("path").datum(extDates.map((d,i)=>({d,v:extVals[i]})))
+        .attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",2)
+        .attr("d",d3.line<any>().x(d=>x(d.d)).y(d=>y(d.v)).curve(d3.curveStepAfter));
+
+      // Event markers + nerf/buff coloring
+      tl.forEach((event:any, i:number) => {
+        const cx = x(new Date(event.date));
+        const cy = y(event.gta_per_hr);
+        const prev = tl[i-1];
+        const isNerf = prev && event.gta_per_hr < prev.gta_per_hr;
+        const isBuff = prev && event.gta_per_hr > prev.gta_per_hr;
+        const col = isNerf ? "#ef4444" : isBuff ? "#22c55e" : "#f59e0b";
+        svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",6).attr("fill",col).attr("stroke","#131316").attr("stroke-width",2);
+
+        // Value label
+        const fmt = (v:number) => v>=1000000 ? `$${(v/1000000).toFixed(1)}M/hr` : `$${(v/1000).toFixed(0)}k/hr`;
+        svg.append("text").attr("x",cx+8).attr("y",cy-4).attr("fill",col).attr("font-size","9").attr("font-family","monospace").text(fmt(event.gta_per_hr));
+      });
+
+      // Axes
+      svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(tl.length).tickFormat(d3.timeFormat("%Y") as any))
+        .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+        .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+        .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${Math.round(+d/1000)}k`))
+        .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+        .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+
+      // Events table
+      eventsEl.innerHTML = tl.map((event:any, i:number) => {
+        const prev = tl[i-1];
+        const isNerf = prev && event.gta_per_hr < prev.gta_per_hr;
+        const isBuff = prev && event.gta_per_hr > prev.gta_per_hr;
+        const tag = isNerf ? '<span style="color:#ef4444">▼ NERF</span>' : isBuff ? '<span style="color:#22c55e">▲ BUFF</span>' : '<span style="color:#f59e0b">★ LAUNCH</span>';
+        const khr = (event.gta_per_hr/1000).toFixed(0);
+        return `<div class="flex items-center gap-3 py-2 flex-wrap sm:flex-nowrap">
+          <span class="text-[9px] font-mono text-zinc-600 shrink-0 w-20">${event.date.slice(0,7)}</span>
+          <span class="text-[9px] font-mono shrink-0 w-16">${tag}</span>
+          <span class="text-[10px] font-mono text-zinc-200 flex-1">${event.patch}</span>
+          <span class="text-[10px] font-mono font-bold text-gta-gold shrink-0">$${khr}k/hr</span>
+          <span class="text-[9px] font-mono text-zinc-600 flex-1 min-w-0 truncate">${event.note}</span>
+        </div>`;
+      }).join("");
+    }
+
+    // Wire selector buttons
+    document.querySelectorAll<HTMLButtonElement>(".income-src-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const sid = btn.dataset.sourceId!;
+        activeSrc = sources.find((s:any) => s.id === sid) || sources[0];
+        document.querySelectorAll<HTMLButtonElement>(".income-src-btn").forEach(b => {
+          const active = b.dataset.sourceId === sid;
+          b.className = b.className
+            .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g,"")
+            .replace(/border-\[#2a2a31\]|text-zinc-500/g,"").trim();
+          b.classList.add(...(active ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"] : ["border-[#2a2a31]","text-zinc-500"]));
+        });
+        renderChart(activeSrc);
+      });
+    });
+
+    renderChart(activeSrc);
   })();
 
   // ── CHART T — Franchise Economic Complexity ─────────────────

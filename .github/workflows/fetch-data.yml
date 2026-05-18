@@ -92,6 +92,9 @@ jobs:
       - name: Fetch cross-title franchise economic history
         run: python scrapers/fetch_franchise_economy.py
 
+      - name: Fetch GTA Online price change history + per-source income timeline
+        run: python scrapers/fetch_price_history.py
+
       - name: Fetch GTA Online property price registry
         run: python scrapers/fetch_gta_properties.py
 
