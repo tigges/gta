@@ -14,6 +14,8 @@ import stocksData       from "../../data/gta-5/economy/assassination-stocks.json
 import heistsData        from "../../data/gta-5/missions/heists.json";
 import weeklyBonuses     from "../../data/gta-5/economy/weekly-bonuses.json";
 import itemCatalogue     from "../../data/gta-5/economy/item-catalogue.json";
+import saleFreqData      from "../../data/gta-5/economy/sale-frequency.json";
+import sourceHistoryData from "../../data/gta-5/economy/per-source-history.json";
 
 // ── Weekly sale map ──────────────────────────────────────────────────────────
 const weeklySales = (weeklyBonuses as any).sales as any[] ?? [];
@@ -42,6 +44,33 @@ function getSaleDiscount(id: string): number | undefined {
   }
   return undefined;
 }
+
+// ── Daily fee map (from properties.json — fee applies offline, per GTA day) ─
+// Hardcoded from the 5 property types that carry daily fees.
+const DAILY_FEE_BY_ID: Record<string, number> = {
+  bunker:                 2000,
+  nightclub:              1000,
+  hangar:                 1000,
+  "mc-cocaine":           2167,
+  "mc-meth":              2350,
+  "mc-weed":              1800,
+  "mc-cash":              2100,
+  "mc-docs":              1650,
+  "special-cargo":          50,  // CEO office
+  "vehicle-warehouse":       0,  // no daily fee for warehouses themselves
+};
+
+// ── Bonus frequency map (from sale-frequency.json) ───────────────────────────
+const bonusFreqById: Record<string, any> = {};
+((saleFreqData as any).activity_bonuses as any[]).forEach((a: any) => {
+  bonusFreqById[a.activity_id] = a;
+});
+
+// ── Historical peak $/hr map (from per-source-history.json) ──────────────────
+const peakHrById: Record<string, number> = {};
+((sourceHistoryData as any).sources as any[]).forEach((s: any) => {
+  peakHrById[s.id] = Math.max(...((s.timeline as any[]).map((t: any) => t.gta_per_hr as number)));
+});
 
 // ── GTA VI entities ────────────────────────────────────────────────────────
 const fandomEntities = (entityIndex as any).entities as any[];
@@ -440,12 +469,16 @@ const HEIST_THUMBS: Record<string, string> = {
                     avg_run_time_min={biz.avg_run_time_min ?? undefined}
                     loot_tiers={biz.loot_tiers ?? undefined}
                     tips={biz.tips ?? undefined}
-                    notes={biz.notes ?? undefined}
                     thumbnail={BIZ_THUMBS[src.id] ?? HEIST_THUMBS[src.id] ?? (biz as any).thumbnail ?? undefined}
                     last_nerfed={biz.last_nerfed ?? undefined}
                     last_nerfed_notes={biz.last_nerfed_notes ?? undefined}
                     sale_discount_pct={getSaleDiscount(src.id)}
                     share_url="https://gtavi.ai/database"
+                    daily_fee={DAILY_FEE_BY_ID[src.id]}
+                    bonus_count={bonusFreqById[src.id]?.bonus_count}
+                    bonus_last_date={bonusFreqById[src.id]?.last_bonus_date}
+                    bonus_avg_gap_weeks={bonusFreqById[src.id]?.avg_gap_weeks}
+                    peak_gta_per_hr={peakHrById[src.id]}
                   />
                 </div>
               );
