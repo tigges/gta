@@ -15,6 +15,7 @@ import gta6Trends      from "../../../data/gta-6/trends/search-interest.json";
 import featuresData    from "../../../data/gta-6/features.json";
 import delayData       from "../../../data/gta-6/delay-timeline.json";
 import trailerAnalysis from "../../../data/gta-6/trailer-analysis.json";
+import spotifyData     from "../../../data/franchise/spotify.json";
 
 const predictions    = predictionsData.predictions as Prediction[];
 const trailersData   = trailersDataRaw as TrailersData;
@@ -29,6 +30,7 @@ const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trail
   const confirmedCount: number = trailer.events.filter((e: any) => e.confidence === "confirmed").length;
   return { ...trailer, byType, confirmedCount };
 });
+const confirmedSongs = (spotifyData as any).confirmed_songs as { title: string; artist: string; trailer: string; year: number }[];
 
 const PRED_THUMBS: Record<string,string> = {
   "pred-release-window":  "/assets/gta6/characters/Lucia_Caminos_05.jpg",
@@ -137,7 +139,7 @@ const DELAY_THUMBS: Record<string,string> = {
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-7">
-        <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Signal Predictions</h2>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Signal Predictions</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-700">confidence-scored · data-derived</span>
       </div>
@@ -173,7 +175,7 @@ const DELAY_THUMBS: Record<string,string> = {
     {trailers.length > 0 && (
       <section>
         <div class="flex items-center gap-3 mb-7">
-          <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Official Trailers</h2>
+          <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Official Trailers</span>
           <div class="flex-1 h-px bg-[#1e1e23]"></div>
           <span class="text-[10px] font-mono text-zinc-700">{trailers.length} released · Rockstar Games</span>
         </div>
@@ -222,7 +224,7 @@ const DELAY_THUMBS: Record<string,string> = {
     <section>
       <div class="flex items-center gap-3 mb-6">
         <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
-        <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Cast</h2>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Cast</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-700">Official press kit · Rockstar Games</span>
       </div>
@@ -282,7 +284,7 @@ const DELAY_THUMBS: Record<string,string> = {
     <section>
       <div class="flex items-center gap-3 mb-6">
         <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
-        <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida — Confirmed Locations</h2>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida — Confirmed Locations</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-700">Official press kit · Rockstar Games</span>
       </div>
@@ -327,7 +329,7 @@ const DELAY_THUMBS: Record<string,string> = {
       <section>
         <div class="flex items-center gap-3 mb-7">
           <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
-          <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Entity Analysis</h2>
+          <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Entity Analysis</span>
           <div class="flex-1 h-px bg-[#1e1e23]"></div>
           <span class="text-[10px] font-mono text-zinc-700">Frame-by-frame · {analysisTrailers.reduce((s: number, t: any) => s + t.total_entities, 0)} reveals across {analysisTrailers.length} trailers</span>
         </div>
@@ -420,7 +422,7 @@ const DELAY_THUMBS: Record<string,string> = {
     <section>
       <div class="flex items-center gap-3 mb-7">
         <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
-        <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Confirmed Feature Tracker</h2>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Confirmed Feature Tracker</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-700">Rockstar official + community tracking</span>
       </div>
@@ -501,7 +503,7 @@ const DELAY_THUMBS: Record<string,string> = {
     <section>
       <div class="flex items-center gap-3 mb-7">
         <span class="w-2 h-2 rounded-full bg-gta-red shrink-0"></span>
-        <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Development + Delay Timeline</h2>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Development + Delay Timeline</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-700">{delayData.total_delays} delay · {delayData.timeline.length} events · SEC EDGAR sourced</span>
       </div>
@@ -580,11 +582,47 @@ const DELAY_THUMBS: Record<string,string> = {
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
+         GTA VI CONFIRMED SOUNDTRACK — Trailer Songs
+    ═══════════════════════════════════════════════════════ -->
+    {confirmedSongs.length > 0 && (
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></span>
+        <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Soundtrack — Trailer Songs</h2>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{confirmedSongs.length} confirmed · Spotify verified</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="divide-y divide-[#1e1e23]">
+          {confirmedSongs.map((song, i) => (
+            <div class="px-5 py-4 flex items-center gap-4">
+              <div class="w-7 h-7 rounded bg-[#1DB954]/10 border border-[#1DB954]/20 flex items-center justify-center shrink-0">
+                <span class="text-[#1DB954] text-xs">♪</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-sm font-semibold text-zinc-200 leading-tight" style="font-family:'Inter',sans-serif">{song.title}</div>
+                <div class="text-[11px] font-mono text-zinc-500 mt-0.5">{song.artist} · {song.year}</div>
+              </div>
+              <div class="shrink-0 text-right">
+                <span class="text-[9px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">{song.trailer}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: Spotify Web API · confirmed from official GTA VI trailers</span>
+          <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+        </div>
+      </div>
+    </section>
+    )}
+
+    <!-- ═══════════════════════════════════════════════════════
          GTA VI SEARCH TRENDS
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-7">
-        <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Search Signal</h2>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Search Signal</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-700">{totalTrendPts} pts · {trendsSince}–{trendsUntil} · worldwide</span>
       </div>
@@ -634,7 +672,7 @@ const DELAY_THUMBS: Record<string,string> = {
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-7">
-        <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Historical Context</h2>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Historical Context</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-700">gap trend extrapolated to VI</span>
       </div>

@@ -1,10 +1,6 @@
 ---
 import { SITE_VERSION_LABEL, SITE_VERSION_DATE } from "../config/version";
 import "../styles/tokens.css";
-import "@fontsource-variable/inter";
-import "@fontsource/jetbrains-mono/400.css";
-import "@fontsource/jetbrains-mono/500.css";
-import "@fontsource/jetbrains-mono/700.css";
 
 interface Props {
   title?: string;
@@ -105,7 +101,13 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- Fonts self-hosted via fontsource npm packages — no Google CDN requests -->
+    <!-- Fonts: Inter (body) + JetBrains Mono (data) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body class="min-h-screen flex flex-col font-sans antialiased" style="background:#0e0e11">
@@ -299,15 +301,59 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       // ── Mobile nav ────────────────────────────────────────────────
       const mobileNav      = document.getElementById("mobile-nav");
       const mobileBackdrop = document.getElementById("mobile-nav-backdrop");
-      const mobileOpenBtn  = document.getElementById("mobile-menu-btn");
+      const mobileOpenBtn  = document.getElementById("mobile-menu-btn") as HTMLButtonElement | null;
       const mobileCloseBtn = document.getElementById("mobile-nav-close");
 
-      function openMobileNav()  { mobileNav?.classList.remove("hidden"); document.body.style.overflow = "hidden"; }
-      function closeMobileNav() { mobileNav?.classList.add("hidden");    document.body.style.overflow = "";       }
+      function openMobileNav() {
+        mobileNav?.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        mobileOpenBtn?.setAttribute("aria-expanded", "true");
+        // Focus first focusable element in drawer
+        requestAnimationFrame(() => {
+          const first = mobileNav?.querySelector<HTMLElement>(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          );
+          first?.focus();
+        });
+      }
+
+      function closeMobileNav() {
+        mobileNav?.classList.add("hidden");
+        document.body.style.overflow = "";
+        mobileOpenBtn?.setAttribute("aria-expanded", "false");
+        mobileOpenBtn?.focus();
+      }
 
       mobileOpenBtn?.addEventListener("click", openMobileNav);
       mobileCloseBtn?.addEventListener("click", closeMobileNav);
       mobileBackdrop?.addEventListener("click", closeMobileNav);
+
+      // Escape key closes
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !mobileNav?.classList.contains("hidden")) {
+          closeMobileNav();
+        }
+      });
+
+      // Focus trap within drawer
+      mobileNav?.addEventListener("keydown", (e) => {
+        if (e.key !== "Tab") return;
+        const focusable = Array.from(
+          mobileNav.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter(el => !el.closest(".hidden"));
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last  = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
 
       // Section accordions
       document.querySelectorAll<HTMLButtonElement>(".mobile-toggle").forEach(btn => {

@@ -243,7 +243,8 @@ const HEIST_THUMBS: Record<string, string> = {
   <!-- Header -->
   <section class="relative border-b border-[#1e1e23] overflow-hidden">
     <div class="absolute inset-0">
-      <img src="/assets/gta6/locations/Vice_City_05.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 60%" aria-hidden="true" />
+      <img src="/assets/gta6/locations/Vice_City_05.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 60%" aria-hidden="true"
+                loading="lazy" />
       <div class="absolute inset-0" style="background:linear-gradient(to right, #0a0a0d 0%, #0a0a0dcc 55%, #0a0a0d88 100%)"></div>
       <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 0%, #0a0a0d 100%)"></div>
     </div>
@@ -672,19 +673,22 @@ const HEIST_THUMBS: Record<string, string> = {
   const PAGE_SIZE = 100;
 
   // ── Elements ──────────────────────────────────────────────────────────────
-  const gridGta6   = document.getElementById("db-grid-gta6")!;
-  const gridGta5   = document.getElementById("db-grid-gta5")!;
-  const countEl    = document.getElementById("db-count")!;
-  const emptyEl    = document.getElementById("db-empty")!;
-  const srcLabel   = document.getElementById("db-source-label")!;
-  const filtersGta6 = document.getElementById("filters-gta6")!;
-  const filtersGta5 = document.getElementById("filters-gta5")!;
-  const headerGta6  = document.getElementById("header-gta6")!;
-  const headerGta5  = document.getElementById("header-gta5")!;
-  const noteGta6    = document.getElementById("source-note-gta6")!;
-  const noteGta5    = document.getElementById("source-note-gta5")!;
+  // Type assertions used because these elements are always present in the Astro template.
+  // A console.warn guards against unexpected DOM mutations.
+  const gridGta6    = document.getElementById("db-grid-gta6") as HTMLElement;
+  const gridGta5    = document.getElementById("db-grid-gta5") as HTMLElement;
+  const countEl     = document.getElementById("db-count") as HTMLElement;
+  const emptyEl     = document.getElementById("db-empty") as HTMLElement;
+  const srcLabel    = document.getElementById("db-source-label") as HTMLElement;
+  const filtersGta6 = document.getElementById("filters-gta6") as HTMLElement;
+  const filtersGta5 = document.getElementById("filters-gta5") as HTMLElement;
+  const headerGta6  = document.getElementById("header-gta6") as HTMLElement;
+  const headerGta5  = document.getElementById("header-gta5") as HTMLElement;
+  const noteGta6    = document.getElementById("source-note-gta6") as HTMLElement;
+  const noteGta5    = document.getElementById("source-note-gta5") as HTMLElement;
   const searchGta6  = document.getElementById("db-search-gta6") as HTMLInputElement;
   const searchGta5  = document.getElementById("db-search-gta5") as HTMLInputElement;
+  if (!gridGta6 || !gridGta5) console.warn("database: required grid elements not found");
 
   // ── State ─────────────────────────────────────────────────────────────────
   let activeGame    = "gta-6";
