@@ -89,6 +89,15 @@ jobs:
       - name: Fetch Import/Export Vehicle Cargo data (vehicles, sell prices, source types)
         run: python scrapers/fetch_vehicle_cargo.py
 
+      - name: Fetch GTA Online property price registry
+        run: python scrapers/fetch_gta_properties.py
+
+      - name: Fetch vehicle upgrade (mod) costs
+        run: python scrapers/fetch_vehicle_mods.py
+
+      - name: Fetch Shark Card tiers and endgame cost history
+        run: python scrapers/fetch_shark_cards.py
+
       - name: Append current week bonuses to promotional archive time series
         run: python scrapers/fetch_weekly_bonuses.py
 
