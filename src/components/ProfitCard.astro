@@ -2,10 +2,10 @@
 /**
  * ProfitCard.astro — Mission / Business / Heist profile card
  *
- * The core reusable unit for the GTA economic intelligence database.
- * Designed to render identically for GTA V, GTA Online, and GTA VI content.
- * Schema-driven: populate from business-profiles.json, online-heists.json,
- * story-missions.json, or future gta-6/missions/*.json files.
+ * Redesigned v1.48: denser layout — difficulty folded inline, loot condensed
+ * to one line, payout folded into $/hr, prerequisite folded into setup label,
+ * notes removed from render (kept in Props for backward-compat). Contextual
+ * enrichment rows added: daily fee, bonus frequency, peak $/hr delta.
  */
 import ShareButton from "./ShareButton.astro";
 
@@ -20,14 +20,14 @@ interface Props {
   id: string;
   name: string;
   game: "gta-6" | "gta-online" | "gta-5";
-  category: string;         // "heist" | "mc" | "passive" | "active" | "mission" | "ceo" ...
+  category: string;
 
   // Tier
   tier: "S" | "A" | "B" | "C" | "D";
 
   // Revenue
   net_profit_per_hr: number;
-  max_profit_per_hr?: number;  // for context in bar scaling
+  max_profit_per_hr?: number;
 
   // Setup
   setup_cost_full?: number;
@@ -35,8 +35,8 @@ interface Props {
   break_even_hrs?: number;
 
   // Gameplay
-  play_type?: string;        // "active" | "semi-passive" | "passive" | "heist"
-  difficulty?: number;       // 1–5
+  play_type?: string;
+  difficulty?: number;       // 1–5 (now rendered as text badge)
   min_players?: number;
   max_players?: number;
   solo?: boolean;
@@ -49,10 +49,10 @@ interface Props {
   avg_run_time_min?: number;
   loot_tiers?: LootTier[];
   tips?: string[];
-  notes?: string;
+  notes?: string;            // kept for compat, not rendered
 
   // Visuals
-  thumbnail?: string;         // path or URL
+  thumbnail?: string;
 
   // Share
   share_url?: string;
@@ -60,6 +60,16 @@ interface Props {
   // Patch history
   last_nerfed?: string | null;
   last_nerfed_notes?: string | null;
+
+  // Weekly promotion (passed from database.astro)
+  sale_discount_pct?: number;
+
+  // Enrichment — contextual, only shown when populated
+  daily_fee?: number;            // GTA$/day upkeep (property-based sources)
+  bonus_count?: number;          // how many bonus events tracked
+  bonus_last_date?: string;      // ISO date of most recent bonus
+  bonus_avg_gap_weeks?: number;  // average cadence in weeks
+  peak_gta_per_hr?: number;      // historical max (for nerf context)
 }
 
 const {
@@ -67,63 +77,80 @@ const {
   tier = "B",
   net_profit_per_hr,
   max_profit_per_hr = 340000,
-  setup_cost_full, setup_cost_min, break_even_hrs,
+  setup_cost_full, break_even_hrs,
   play_type, difficulty = 3, min_players = 1, max_players = 4, solo = true, dlc,
   prerequisite,
   payout_per_run_min, payout_per_run_max, avg_run_time_min,
-  loot_tiers, tips, notes,
+  loot_tiers, tips,
   thumbnail,
   share_url = "https://gtavi.ai/database",
   sale_discount_pct,
+  last_nerfed, last_nerfed_notes,
+  daily_fee,
+  bonus_count, bonus_last_date, bonus_avg_gap_weeks,
+  peak_gta_per_hr,
 } = Astro.props;
 
 // Tier styling
 const TIER_STYLES = {
-  S: { color: "#22c55e", bg: "rgba(34,197,94,0.12)", border: "rgba(34,197,94,0.3)" },
-  A: { color: "#f59e0b", bg: "rgba(245,158,11,0.12)", border: "rgba(245,158,11,0.3)" },
-  B: { color: "#0d9488", bg: "rgba(13,148,136,0.12)", border: "rgba(13,148,136,0.3)" },
+  S: { color: "#22c55e", bg: "rgba(34,197,94,0.12)",   border: "rgba(34,197,94,0.3)"   },
+  A: { color: "#f59e0b", bg: "rgba(245,158,11,0.12)",  border: "rgba(245,158,11,0.3)"  },
+  B: { color: "#0d9488", bg: "rgba(13,148,136,0.12)",  border: "rgba(13,148,136,0.3)"  },
   C: { color: "#818cf8", bg: "rgba(129,140,248,0.12)", border: "rgba(129,140,248,0.3)" },
   D: { color: "#71717a", bg: "rgba(113,113,122,0.12)", border: "rgba(113,113,122,0.3)" },
 };
 const ts = TIER_STYLES[tier] ?? TIER_STYLES.B;
 
-// Play type badge color
-const PLAY_COLORS: Record<string,string> = {
-  passive:       "#22c55e",
-  "semi-passive": "#f59e0b",
-  active:        "#ef4444",
-  heist:         "#818cf8",
-  mission:       "#0d9488",
+// Play type badge colour
+const PLAY_COLORS: Record<string, string> = {
+  passive: "#22c55e", "semi-passive": "#f59e0b",
+  active: "#ef4444",  heist: "#818cf8", mission: "#0d9488",
 };
 const playColor = PLAY_COLORS[play_type ?? category] ?? "#71717a";
 
-// $/hr bar width (relative to max in the tier)
+// $/hr bar width
 const barPct = Math.round((net_profit_per_hr / max_profit_per_hr) * 100);
 
-// Difficulty dots (1–5)
-const diffDots = Array.from({ length: 5 }, (_, i) => i < difficulty);
+// Difficulty as a text label (replaces 5 dots)
+const DIFF_LABEL: Record<number, string> = {
+  1: "very easy", 2: "easy", 3: "medium", 4: "hard", 5: "very hard",
+};
+const diffLabel = DIFF_LABEL[difficulty] ?? "medium";
 
 // Game label
 const GAME_LABELS: Record<string, string> = {
-  "gta-online": "GTA Online",
-  "gta-5":      "GTA V",
-  "gta-6":      "GTA VI",
+  "gta-online": "GTA Online", "gta-5": "GTA V", "gta-6": "GTA VI",
 };
 
-// Share text + deep-link URL (includes ?game=tab#profit-id for GTA Online cards)
+// Share URL with card anchor
 const khr = Math.round(net_profit_per_hr / 1000);
 const shareText = game === "gta-online"
-  ? `${name} — ${tier}-tier · $${khr}k/hr${solo ? " · solo" : ""}. Can you beat it? Full profile + tips on GTAVI.AI`
+  ? `${name} — ${tier}-tier · $${khr}k/hr${solo ? " · solo" : ""}. Full profile + tips on GTAVI.AI`
   : game === "gta-5"
   ? `${name} · ${tier}-tier · $${khr}k/hr${solo ? " · solo" : ""}. GTA V economic intelligence on GTAVI.AI`
   : `${name} — ${tier}-tier · $${khr}k/hr. GTA economic intelligence on GTAVI.AI`;
-// GTA Online cards get a dedicated share page with unique OG image
-// GTA V / VI cards keep the page-level deep-link + card anchor
+
 const deepLinkUrl = game === "gta-online"
   ? `https://gtavi.ai/gta-v/online/${id}`
   : game === "gta-5"
   ? `${share_url}?game=gta-5#profit-${id}`
   : `${share_url}#profit-${id}`;
+
+// Bonus recency
+const bonusDaysAgo = bonus_last_date
+  ? Math.round((Date.now() - new Date(bonus_last_date).getTime()) / (1000 * 60 * 60 * 24))
+  : null;
+const bonusActiveNow = bonusDaysAgo !== null && bonusDaysAgo < 8;
+
+// Income history delta — only show when current is >10% below peak
+const pctDelta = (peak_gta_per_hr && peak_gta_per_hr > net_profit_per_hr * 1.1)
+  ? Math.round(((net_profit_per_hr - peak_gta_per_hr) / peak_gta_per_hr) * 100)
+  : null;
+
+// Short prerequisite label — first word(s) up to parens
+const prereqShort = prerequisite
+  ? prerequisite.replace(/\(.*\)/, "").replace(/\$[\d,.]+M?/g, "").trim().split(" ").slice(0, 3).join(" ")
+  : null;
 ---
 
 <div class="profit-card group relative flex flex-col rounded-xl border overflow-hidden transition-all duration-200 hover:brightness-110"
@@ -141,11 +168,9 @@ const deepLinkUrl = game === "gta-online"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         loading="lazy" />
       <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 30%,#131316 100%)"></div>
-      <!-- Tier badge -->
       <div class="absolute top-3 left-3 flex items-center gap-2">
         <span class="font-mono font-black text-xl leading-none" style={`color:${ts.color}`}>{tier}</span>
       </div>
-      <!-- Game badge -->
       <div class="absolute top-3 right-3">
         <span class="text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
           style={`color:${playColor};background:${playColor}18;border-color:${playColor}35`}>
@@ -154,7 +179,6 @@ const deepLinkUrl = game === "gta-online"
       </div>
     </div>
   ) : (
-    <!-- No thumbnail: compact tier header -->
     <div class="px-4 pt-4 pb-2 flex items-center justify-between">
       <span class="font-mono font-black text-2xl leading-none" style={`color:${ts.color}`}>{tier}</span>
       <span class="text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
@@ -165,51 +189,67 @@ const deepLinkUrl = game === "gta-online"
   )}
 
   <!-- Main content -->
-  <div class="px-4 pt-3 pb-2 flex-1 flex flex-col gap-2.5">
+  <div class="px-4 pt-3 pb-2 flex-1 flex flex-col gap-2">
 
-    <!-- Title + type -->
-    <div>
-      <div class="font-semibold text-zinc-200 text-sm leading-snug" style="font-family:'Inter',sans-serif">{name}</div>
-      <div class="flex items-center gap-2 mt-0.5 flex-wrap">
-        <span class="text-[9px] font-mono uppercase tracking-widest" style={`color:${playColor}`}>
-          {play_type ?? category}
-        </span>
-        {solo && <span class="text-[8px] font-mono text-gta-teal border border-gta-teal/25 bg-gta-teal/8 px-1 py-0.5 rounded">Solo ✓</span>}
-        {!solo && min_players && <span class="text-[8px] font-mono text-zinc-600">{min_players}–{max_players}p</span>}
-      </div>
+    <!-- Name -->
+    <div class="font-semibold text-zinc-200 text-sm leading-snug" style="font-family:'Inter',sans-serif">{name}</div>
+
+    <!-- Type · solo · difficulty — all inline, single row -->
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <span class="text-[9px] font-mono uppercase tracking-widest" style={`color:${playColor}`}>
+        {play_type ?? category}
+      </span>
+      {solo
+        ? <span class="text-[8px] font-mono text-gta-teal border border-gta-teal/25 bg-gta-teal/8 px-1 py-0.5 rounded">solo ✓</span>
+        : min_players && <span class="text-[8px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{min_players}–{max_players}p</span>
+      }
+      <span class="text-[8px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{diffLabel}</span>
     </div>
 
-    <!-- Revenue bar -->
+    <!-- Revenue bar — payout + run time folded into right side -->
     <div>
       <div class="flex items-baseline justify-between mb-1">
         <span class="text-xl font-mono font-bold" style={`color:${ts.color}`}>
           ${Math.round(net_profit_per_hr / 1000)}k
           <span class="text-[10px] font-normal text-zinc-600 ml-0.5">/hr</span>
         </span>
-        {avg_run_time_min && (
-          <span class="text-[9px] font-mono text-zinc-600">{avg_run_time_min}min avg</span>
-        )}
+        <div class="text-right leading-tight">
+          {(payout_per_run_min || payout_per_run_max) && (
+            <div class="text-[9px] font-mono text-zinc-500">
+              ${((payout_per_run_max ?? payout_per_run_min ?? 0) / 1_000_000).toFixed(1)}M/run
+            </div>
+          )}
+          {avg_run_time_min && (
+            <div class="text-[9px] font-mono text-zinc-600">{avg_run_time_min}min</div>
+          )}
+        </div>
       </div>
       <div class="h-1.5 rounded-full bg-[#1e1e23] overflow-hidden">
         <div class="h-full rounded-full" style={`width:${barPct}%;background:${ts.color};opacity:0.85`}></div>
       </div>
     </div>
 
-    <!-- Active weekly sale badge -->
+    <!-- Weekly sale badge -->
     {sale_discount_pct && (
       <div class="flex items-center gap-1.5 text-[9px] font-mono">
-        <span class="px-1.5 py-0.5 rounded font-bold tracking-wide animate-pulse" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3)">
+        <span class="px-1.5 py-0.5 rounded font-bold tracking-wide"
+          style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3)">
           🏷 {sale_discount_pct}% OFF THIS WEEK
         </span>
       </div>
     )}
 
-    <!-- Setup + ROI -->
+    <!-- Setup cost + prerequisite + break-even — one compact row -->
     {setup_cost_full && (
       <div class="grid grid-cols-2 gap-x-3 text-[10px] font-mono">
         <div>
           <div class="text-zinc-600 uppercase tracking-widest text-[8px] mb-0.5">Setup</div>
-          <div class="text-zinc-300">${(setup_cost_full / 1_000_000).toFixed(1)}M</div>
+          <div class="text-zinc-300">
+            ${(setup_cost_full / 1_000_000).toFixed(1)}M
+            {prereqShort && (
+              <span class="text-zinc-600 text-[8px] ml-1 font-normal">({prereqShort})</span>
+            )}
+          </div>
         </div>
         {break_even_hrs && (
           <div>
@@ -220,67 +260,60 @@ const deepLinkUrl = game === "gta-online"
       </div>
     )}
 
-    <!-- Payout per run (heists) -->
-    {(payout_per_run_min || payout_per_run_max) && (
-      <div class="text-[10px] font-mono">
-        <span class="text-zinc-600 uppercase tracking-widest text-[8px]">Per run: </span>
-        {payout_per_run_min && payout_per_run_max && payout_per_run_min !== payout_per_run_max ? (
-          <span class="text-zinc-300">${(payout_per_run_min/1_000_000).toFixed(1)}M–${(payout_per_run_max/1_000_000).toFixed(1)}M</span>
+    <!-- Loot tiers: condensed to 1 line -->
+    {loot_tiers && loot_tiers.length > 0 && (
+      <div class="text-[9px] font-mono text-zinc-600">
+        <span class="text-[8px] text-zinc-700 uppercase tracking-widest mr-1">Loot:</span>
+        {loot_tiers.slice(0, 2).map((l: LootTier, i: number) => (
+          <span>
+            {i > 0 && <span class="text-zinc-700 mx-1">·</span>}
+            <span style={`color:${ts.color}`}>${(l.value / 1_000_000).toFixed(1)}M</span>
+            <span class="text-zinc-700 ml-0.5">{(l.loot as string).split(" ").slice(0, 2).join(" ")}</span>
+          </span>
+        ))}
+        {loot_tiers.length > 2 && <span class="text-zinc-700 ml-1">+{loot_tiers.length - 2}</span>}
+      </div>
+    )}
+
+    <!-- ── Enrichment rows ─────────────────────────────────── -->
+
+    <!-- Daily property fee -->
+    {daily_fee && (
+      <div class="text-[9px] font-mono text-zinc-600 border-t border-[#1e1e23] pt-2 flex items-center gap-1.5">
+        <span style="color:#52525b">⚙</span>
+        <span>${daily_fee.toLocaleString()}/day upkeep</span>
+        <span class="text-zinc-700 ml-0.5">(${Math.round(daily_fee * 365 / 1000)}k/yr)</span>
+      </div>
+    )}
+
+    <!-- Bonus cadence / active bonus -->
+    {bonus_count && (
+      <div class={`text-[9px] font-mono flex items-center gap-1.5 ${daily_fee ? "" : "border-t border-[#1e1e23] pt-2"}`}>
+        {bonusActiveNow ? (
+          <span class="font-bold px-1.5 py-0.5 rounded" style="color:#22c55e;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.25)">
+            🔁 BONUS ACTIVE NOW
+          </span>
         ) : (
-          <span class="text-zinc-300">${((payout_per_run_max ?? payout_per_run_min ?? 0)/1_000_000).toFixed(1)}M</span>
+          <span style="color:#52525b">
+            🔁 Bonus ×{bonus_count}
+            {bonusDaysAgo !== null && <span> · last {bonusDaysAgo}d ago</span>}
+            {bonus_avg_gap_weeks && <span class="text-zinc-700"> · ~{Math.round(bonus_avg_gap_weeks)}w avg</span>}
+          </span>
         )}
       </div>
     )}
 
-    <!-- Difficulty -->
-    <div class="flex items-center gap-2">
-      <div class="flex gap-0.5">
-        {diffDots.map((filled: boolean) => (
-          <div class={`w-2 h-2 rounded-full ${filled ? "" : "opacity-20"}`}
-            style={filled ? `background:${ts.color}` : "background:#52525b"}></div>
-        ))}
-      </div>
-      <span class="text-[9px] font-mono text-zinc-600">
-        {difficulty <= 1 ? "Very Easy" : difficulty === 2 ? "Easy" : difficulty === 3 ? "Medium" : difficulty === 4 ? "Hard" : "Very Hard"}
-      </span>
-    </div>
-
-    <!-- Loot tiers (heists) -->
-    {loot_tiers && loot_tiers.length > 0 && (
-      <div class="flex flex-col gap-1">
-        <div class="text-[8px] font-mono text-zinc-600 uppercase tracking-widest">Loot tiers</div>
-        {loot_tiers.slice(0, 3).map((l: LootTier) => {
-          const pct = Math.round((l.value / (loot_tiers?.[0]?.value ?? 1)) * 100);
-          return (
-            <div class="flex items-center gap-2">
-              <div class="w-1 h-1 rounded-full bg-zinc-600 shrink-0"></div>
-              <span class="text-[9px] font-mono text-zinc-400 truncate flex-1">{l.loot}</span>
-              <span class="text-[9px] font-mono font-bold shrink-0" style={`color:${ts.color}`}>${(l.value/1_000_000).toFixed(2)}M</span>
-            </div>
-          );
-        })}
-      </div>
-    )}
-
-    <!-- Notes -->
-    {notes && (
-      <p class="text-[10px] text-zinc-500 leading-snug line-clamp-2" style="font-family:'Inter',sans-serif">{notes}</p>
-    )}
-
-    <!-- Patch history badge -->
-    {Astro.props.last_nerfed && (
-      <div class="text-[9px] font-mono text-amber-600/80 border-t border-[#1e1e23] pt-2 flex items-center gap-1.5">
+    <!-- Nerf indicator + peak context -->
+    {last_nerfed && (
+      <div class={`text-[9px] font-mono text-amber-600/80 flex items-center gap-1.5 ${(daily_fee || bonus_count) ? "" : "border-t border-[#1e1e23] pt-2"}`}>
         <span>⚡</span>
-        <span>Nerfed {new Date(Astro.props.last_nerfed).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
-        {Astro.props.last_nerfed_notes && <span class="text-zinc-700">— {Astro.props.last_nerfed_notes.split('.')[0]}</span>}
-      </div>
-    )}
-
-    <!-- Prerequisites -->
-    {prerequisite && (
-      <div class="text-[9px] font-mono text-zinc-600 border-t border-[#1e1e23] pt-2">
-        <span class="text-zinc-700 uppercase tracking-widest text-[8px]">Requires: </span>
-        {prerequisite}
+        <span>Nerfed {new Date(last_nerfed).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
+        {pctDelta && peak_gta_per_hr && (
+          <span class="text-zinc-700">· was ${Math.round(peak_gta_per_hr / 1000)}k/hr ({pctDelta}%)</span>
+        )}
+        {last_nerfed_notes && !pctDelta && (
+          <span class="text-zinc-700">— {(last_nerfed_notes as string).split(".")[0]}</span>
+        )}
       </div>
     )}
 
