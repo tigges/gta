@@ -1060,9 +1060,10 @@ const HEIST_THUMBS: Record<string, string> = {
       if (tabBtn) tabBtn.click();
     }
 
-    // 2. Scroll to and highlight the card (rAF lets the tab-switch DOM paint first)
+    // 2. Scroll to and highlight the card
+    // Double-rAF: first frame removes hidden, second frame paints, third scrolls.
     if (profitId) {
-      requestAnimationFrame(() => {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
         const card = document.querySelector<HTMLElement>(`[data-profit-id="${profitId}"]`);
         if (!card) return;
 
@@ -1076,7 +1077,7 @@ const HEIST_THUMBS: Record<string, string> = {
           card.style.outline   = "";
           card.style.boxShadow = "";
         }, 2500);
-      });
+      }));
     }
   })();
 </script>

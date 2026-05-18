@@ -118,12 +118,12 @@ const shareText = game === "gta-online"
   ? `${name} · ${tier}-tier · $${khr}k/hr${solo ? " · solo" : ""}. GTA V economic intelligence on GTAVI.AI`
   : `${name} — ${tier}-tier · $${khr}k/hr. GTA economic intelligence on GTAVI.AI`;
 // GTA Online cards get a dedicated share page with unique OG image
-// GTA V / VI cards keep the page-level deep-link
+// GTA V / VI cards keep the page-level deep-link + card anchor
 const deepLinkUrl = game === "gta-online"
   ? `https://gtavi.ai/gta-v/online/${id}`
   : game === "gta-5"
-  ? `${share_url}?game=gta-5`
-  : share_url;
+  ? `${share_url}?game=gta-5#profit-${id}`
+  : `${share_url}#profit-${id}`;
 ---
 
 <div class="profit-card group relative flex flex-col rounded-xl border overflow-hidden transition-all duration-200 hover:brightness-110"
@@ -194,6 +194,15 @@ const deepLinkUrl = game === "gta-online"
         <div class="h-full rounded-full" style={`width:${barPct}%;background:${ts.color};opacity:0.85`}></div>
       </div>
     </div>
+
+    <!-- Active weekly sale badge -->
+    {sale_discount_pct && (
+      <div class="flex items-center gap-1.5 text-[9px] font-mono">
+        <span class="px-1.5 py-0.5 rounded font-bold tracking-wide animate-pulse" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3)">
+          🏷 {sale_discount_pct}% OFF THIS WEEK
+        </span>
+      </div>
+    )}
 
     <!-- Setup + ROI -->
     {setup_cost_full && (

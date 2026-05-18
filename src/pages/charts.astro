@@ -4221,5 +4221,39 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       });
     });
   })();
+  // ── Hash deep-link: /charts#some-chart-id scrolls to that section ──
+  // Runs after all chart builders so the SVG containers exist in the DOM.
+  // Clears any active category filter if it would hide the target section.
+  (function handleChartHash() {
+    const hash = window.location.hash;
+    if (!hash || hash.length < 2) return;
+    const targetId = hash.slice(1);
+
+    // Poll briefly to let async D3 renders settle (max 600ms)
+    let attempts = 0;
+    const tryScroll = () => {
+      const el = document.getElementById(targetId);
+      if (!el && attempts++ < 6) { setTimeout(tryScroll, 100); return; }
+      if (!el) return;
+
+      // The section that contains this element
+      const section = (el.closest("section.chart-block") ?? el) as HTMLElement;
+
+      // If it's hidden by a category filter, reset to "All"
+      if (section.style.display === "none" || section.offsetParent === null) {
+        const allBtn = document.querySelector<HTMLButtonElement>('.chart-filter[data-filter="All"]');
+        if (allBtn) allBtn.click();
+      }
+
+      requestAnimationFrame(() => {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+        // Brief highlight pulse so the user knows which chart was linked
+        section.style.transition = "box-shadow 0.3s";
+        section.style.boxShadow = "0 0 0 2px rgba(245,158,11,0.5)";
+        setTimeout(() => { section.style.boxShadow = ""; }, 1800);
+      });
+    };
+    setTimeout(tryScroll, 200);
+  })();
 
 </script>

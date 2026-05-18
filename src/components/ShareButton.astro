@@ -79,7 +79,15 @@ const sizeClass = size === "md"
 <script>
   document.querySelectorAll<HTMLButtonElement>(".copy-link-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
-      const url = btn.dataset.url ?? window.location.href;
+      // Base URL from the prop (server-rendered). If it has no fragment yet,
+      // try to auto-append the id of the nearest chart container inside the
+      // same section — so "Copy" from a chart footer lands on that exact chart.
+      let url = btn.dataset.url ?? window.location.href;
+      if (!url.includes("#")) {
+        const section = btn.closest("section");
+        const chartEl = section?.querySelector<HTMLElement>("[id]");
+        if (chartEl?.id) url = url + "#" + chartEl.id;
+      }
       try {
         await navigator.clipboard.writeText(url);
         const label = btn.querySelector<HTMLElement>(".copy-label");
