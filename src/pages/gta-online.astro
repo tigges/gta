@@ -42,9 +42,8 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
         <div class="text-[10px] font-mono text-teal-500/60 uppercase tracking-[0.25em] mb-3">
           // GTA Online · Live Economic Intelligence
         </div>
-        <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight" style="font-family:'Inter',sans-serif">
-          GTA Online<br/>Economy
-        </h1>
+        <img src="/assets/logos/gta-online.svg" alt="Grand Theft Auto Online"
+             class="h-14 sm:h-18 w-auto mb-5 drop-shadow-lg" loading="eager" />
         <p class="text-sm text-zinc-400 mb-8 leading-relaxed" style="font-family:'Inter',sans-serif">
           Income methods ranked, inflation modelled, weekly bonuses tracked.
           {profileCount} income sources profiled. Updated nightly.
@@ -76,7 +75,7 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
 
       <!-- Economy -->
-      <a href="/gta-v/economy"
+      <a href="/gta-online/economy"
          class="group rounded-xl border border-[#1e1e23] hover:border-teal-800/50 p-5 flex flex-col gap-3 transition-all hover:bg-teal-900/[0.06]"
          style="background:#131316">
         <div class="text-xl">📊</div>

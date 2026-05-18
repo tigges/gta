@@ -1,0 +1,90 @@
+---
+import Base from "../../layouts/Base.astro";
+import CrossLinks from "../../components/CrossLinks.astro";
+
+import gta6EconIncome from "../../../data/gta-6/economy/income-sources.json";
+import gta6EconProps  from "../../../data/gta-6/economy/properties.json";
+
+const releaseDate  = new Date("2026-11-19T00:00:00Z");
+const daysToRelease = Math.max(0, Math.ceil((releaseDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+---
+
+<Base
+  title="GTA VI Economy"
+  description="GTA VI economy intelligence — income sources, property prices, and economic predictions built from 12 years of GTA Online data. Populates Day 1 post-launch."
+  ogPage="vi-intel"
+>
+  <!-- Hero -->
+  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:300px">
+    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 60% 40%, rgba(245,158,11,0.08) 0%, transparent 60%), #0a0a0d"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-16">
+      <div class="max-w-xl">
+        <div class="text-[10px] font-mono text-gta-gold/60 uppercase tracking-[0.25em] mb-3">
+          // GTA VI Economy · Day-1 Ready
+        </div>
+        <h1 class="text-4xl font-bold text-white mb-4 leading-tight" style="font-family:'Inter',sans-serif">
+          GTA VI<br/>Economic Intelligence
+        </h1>
+        <p class="text-sm text-zinc-400 mb-6 leading-relaxed" style="font-family:'Inter',sans-serif">
+          Schemas built and ready. Populated Day 1 post-launch (Nov 19, 2026) via scrapers.
+          Framework mirrors GTA Online — adapted for Leonida's economy.
+        </p>
+        <div class="flex flex-wrap items-center gap-5 text-xs font-mono text-zinc-600">
+          <span><span class="text-gta-gold font-bold text-base">{daysToRelease}</span> days to Day 1</span>
+          <span class="px-2 py-0.5 rounded font-mono text-[9px] uppercase tracking-widest" style="background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.25)">DAY-1 READY</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
+    <!-- Data readiness grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+      {[
+        { icon: "💰", label: "Income Sources",  status: "Schema ready", detail: "Mission earnings · heists · passive businesses · weekly bonuses", color: "#f59e0b" },
+        { icon: "🏠", label: "Properties",       status: "Schema ready", detail: "Buy prices · daily fees · passive income potential", color: "#0d9488" },
+        { icon: "💹", label: "Price History",    status: "Schema ready", detail: "Shark Card analysis · endgame cost · inflation tracking", color: "#818cf8" },
+      ].map(item => (
+        <div class="rounded-xl border border-[#1e1e23] p-5 flex flex-col gap-3" style="background:#131316">
+          <div class="text-xl">{item.icon}</div>
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">{item.label}</div>
+            <div class="text-[10px] font-mono text-zinc-600 leading-relaxed">{item.detail}</div>
+          </div>
+          <div class="mt-auto text-[9px] font-mono px-2 py-0.5 rounded self-start"
+               style={`background:${item.color}18;color:${item.color};border:1px solid ${item.color}30`}>
+            {item.status}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- What this page will become -->
+    <div class="rounded-xl border border-gta-gold/15 overflow-hidden mb-10" style="background:#131316">
+      <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2">
+        <span class="w-1 h-4 rounded-full bg-gta-gold/40 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Post-Launch: What This Page Becomes</span>
+      </div>
+      <div class="px-5 py-5 text-sm text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">
+        After Nov 19, 2026 this page mirrors the GTA Online Economy section — GTA VI Purchasing Power
+        Index, passive income stack growth, shark card analysis, and the first meta benchmarks as the
+        community figures out the economy. Scrapers activate on Day 1. The framework is already built.
+      </div>
+    </div>
+
+    <!-- Link to GTA Online economy for reference -->
+    <div class="rounded-xl border border-[#1e1e23] p-5 flex items-center gap-4 mb-10" style="background:#131316">
+      <div class="text-2xl shrink-0">📊</div>
+      <div class="flex-1">
+        <div class="font-semibold text-zinc-300 text-sm mb-1" style="font-family:'Inter',sans-serif">Reference Model: GTA Online Economy</div>
+        <div class="text-[10px] font-mono text-zinc-600">The GTA VI framework is built on 12 years of GTA Online economic data — PPI methodology, passive stack modelling, and meta income analysis.</div>
+      </div>
+      <a href="/gta-online/economy" class="shrink-0 px-3 py-2 rounded border border-teal-700/30 text-teal-400 text-[10px] font-mono hover:bg-teal-900/20 transition-all">
+        View GTA Online Economy →
+      </a>
+    </div>
+
+    <CrossLinks context="vi-intel-predictions" />
+  </div>
+</Base>

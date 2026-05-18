@@ -142,11 +142,11 @@ const TIER_COLOR: Record<string,string> = {
             <Countdown variant="hero" />
           </div>
           <div class="flex flex-wrap gap-3">
-            <a href="/vi-intel"
+            <a href="/gta-vi/intel"
               class="inline-flex items-center gap-2 bg-gta-gold hover:bg-gta-bright text-black font-mono font-bold text-xs px-5 py-2.5 rounded transition-colors tracking-wide uppercase">
               GTA VI Intel →
             </a>
-            <a href="/buy"
+            <a href="/gta-vi/buy"
               class="inline-flex items-center gap-2 border border-gta-gold/30 hover:border-gta-gold/60 text-gta-gold/80 hover:text-gta-gold font-mono text-xs px-5 py-2.5 rounded transition-colors tracking-wide uppercase">
               Buy GTA VI
             </a>
@@ -227,7 +227,7 @@ const TIER_COLOR: Record<string,string> = {
       <div class="flex items-center gap-3 mb-7">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Signal Intelligence</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/vi-intel" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full analysis →</a>
+        <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full analysis →</a>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {(predictionsData.predictions as Prediction[]).map((p) => (
@@ -289,7 +289,7 @@ const TIER_COLOR: Record<string,string> = {
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Confirmed Feature Tracker</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-700">{totalTracked} entries tracked</span>
-        <a href="/vi-intel" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full tracker →</a>
+        <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full tracker →</a>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {featCats.map((cat: any) => {
@@ -297,7 +297,7 @@ const TIER_COLOR: Record<string,string> = {
           const confirmedPct = Math.min(100, Math.round((cat.confirmed / cat.target) * 100));
           const reportedPct  = Math.min(100 - confirmedPct, Math.round((cat.reported / cat.target) * 100));
           return (
-            <a href="/vi-intel" class="relative group overflow-hidden rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] transition-all" style="background:#131316;min-height:160px">
+            <a href="/gta-vi/intel" class="relative group overflow-hidden rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] transition-all" style="background:#131316;min-height:160px">
               {thumb && (
                 <div class="absolute inset-0">
                   <img src={thumb} alt="" class="w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-500 group-hover:scale-105 transition-transform duration-700" loading="lazy" aria-hidden="true" />
@@ -342,7 +342,7 @@ const TIER_COLOR: Record<string,string> = {
       <div class="flex items-center gap-3 mb-7">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Official Footage</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/vi-intel" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full trailers →</a>
+        <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full trailers →</a>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[
@@ -462,7 +462,7 @@ const TIER_COLOR: Record<string,string> = {
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Cast</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/vi-intel" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full profiles →</a>
+        <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full profiles →</a>
       </div>
       <div class="flex gap-3 overflow-x-auto pb-1">
         {([
@@ -475,7 +475,7 @@ const TIER_COLOR: Record<string,string> = {
           { name: "DreQuan Priest", role: "Supporting",  img: "DreQuan_Priest_02.jpg" },
           { name: "Real Dimez",     role: "Supporting",  img: "Real_Dimez_02.jpg"     },
         ] as const).map(c => (
-          <a href="/vi-intel" class="shrink-0 w-24 sm:w-28 group">
+          <a href="/gta-vi/intel" class="shrink-0 w-24 sm:w-28 group">
             <div class="aspect-[3/4] rounded-xl overflow-hidden relative mb-1.5 border border-[#1e1e23] group-hover:border-gta-gold/30 transition-all duration-300">
               <img
                 src={`/assets/gta6/characters/${c.img}`}
@@ -650,7 +650,7 @@ const TIER_COLOR: Record<string,string> = {
         </div>
       </a>
       <!-- GTA VI card -->
-      <a href="/vi-intel" class="group relative overflow-hidden rounded-xl border border-gta-gold/20 hover:border-gta-gold/40 p-5 flex items-start gap-4 transition-all" style="min-height:140px;background:#131316">
+      <a href="/gta-vi/intel" class="group relative overflow-hidden rounded-xl border border-gta-gold/20 hover:border-gta-gold/40 p-5 flex items-start gap-4 transition-all" style="min-height:140px;background:#131316">
         <div class="absolute inset-0 overflow-hidden">
           <img src="/assets/gta6/locations/Vice_City_07.jpg" alt="" class="w-full h-full object-cover opacity-15 group-hover:opacity-25 transition-opacity duration-500" aria-hidden="true" style="object-position:center 40%" />
           <div class="absolute inset-0" style="background:linear-gradient(to right,#131316 20%,transparent 100%)"></div>

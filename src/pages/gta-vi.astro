@@ -49,9 +49,8 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         <div class="text-[10px] font-mono text-gta-gold/60 uppercase tracking-[0.25em] mb-3">
           // GTA VI · Nov 19, 2026
         </div>
-        <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight" style="font-family:'Inter',sans-serif">
-          GTA VI<br/>Intelligence
-        </h1>
+        <img src="/assets/logos/gta-vi.svg" alt="Grand Theft Auto VI"
+             class="h-16 sm:h-20 w-auto mb-5 drop-shadow-lg" loading="eager" />
         <p class="text-sm text-zinc-400 mb-8 leading-relaxed" style="font-family:'Inter',sans-serif">
           Data-backed predictions, trailer analysis, feature tracking — everything we know about Grand Theft Auto VI, verified against the source.
         </p>
@@ -80,7 +79,7 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
 
       <!-- Intel & Predictions -->
-      <a href="/vi-intel"
+      <a href="/gta-vi/intel"
          class="group relative overflow-hidden rounded-xl border border-gta-gold/15 hover:border-gta-gold/35 p-6 flex flex-col gap-4 transition-all hover:bg-gta-gold/[0.04]"
          style="background:#131316">
         <div class="flex items-center gap-3">
@@ -110,7 +109,7 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
       </a>
 
       <!-- Trailers & Analysis -->
-      <a href="/vi-intel"
+      <a href="/gta-vi/intel"
          class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-zinc-700 p-6 flex flex-col gap-4 transition-all"
          style="background:#131316">
         {latestTrailer && (
@@ -146,7 +145,7 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
       </a>
 
       <!-- Pre-order -->
-      <a href="/buy"
+      <a href="/gta-vi/buy"
          class="group relative overflow-hidden rounded-xl border border-gta-gold/25 hover:border-gta-gold/50 p-6 flex flex-col gap-4 transition-all hover:bg-gta-gold/[0.05]"
          style="background:#131316">
         <div class="flex items-center gap-3">
@@ -186,7 +185,7 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
           <span class="w-1 h-4 rounded-full bg-gta-gold/40 shrink-0"></span>
           <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Prediction Confidence Summary</span>
         </div>
-        <a href="/vi-intel" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full intel →</a>
+        <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full intel →</a>
       </div>
       <div class="grid grid-cols-3 divide-x divide-[#1e1e23]">
         {[

@@ -35,19 +35,20 @@ const navGroups: NavGroup[] = [
   {
     href: "/gta-vi",
     label: "GTA VI",
-    activePaths: ["/gta-vi", "/vi-intel", "/buy"],
+    activePaths: ["/gta-vi", "/gta-vi/intel", "/gta-vi/trailers", "/gta-vi/economy", "/gta-vi/buy"],
     dropdown: [
-      { href: "/vi-intel", icon: "🎯", label: "Intel & Predictions", sub: "Predictions · features · cast · locations" },
-      { href: "/vi-intel", icon: "🎬", label: "Trailers & Analysis",  sub: "2 trailers · view velocity · entity index" },
-      { href: "/buy",      icon: "🛒", label: "Pre-order",            sub: "PS5 · Xbox · editions · retailers" },
+      { href: "/gta-vi/intel",    icon: "🎯", label: "Intel & Predictions", sub: "Predictions · features · cast · locations" },
+      { href: "/gta-vi/trailers", icon: "🎬", label: "Trailers & Analysis",  sub: "2 trailers · view velocity · entity index" },
+      { href: "/gta-vi/economy",  icon: "💹", label: "Economy Preview",      sub: "Day-1 ready · price benchmarks · predictions" },
+      { href: "/gta-vi/buy",      icon: "🛒", label: "Pre-order",            sub: "PS5 · Xbox · editions · retailers" },
     ],
   },
   {
     href: "/gta-online",
     label: "GTA Online",
-    activePaths: ["/gta-online", "/gta-v/economy", "/gta-v/income-calculator", "/gta-v/cayo-perico", "/database", "/leaderboard"],
+    activePaths: ["/gta-online", "/gta-online/economy", "/gta-v/income-calculator", "/gta-v/cayo-perico", "/database", "/leaderboard"],
     dropdown: [
-      { href: "/gta-v/economy",            icon: "📊", label: "Economy",        sub: "GTA-PPI · inflation · passive stack" },
+      { href: "/gta-online/economy",        icon: "📊", label: "Economy",        sub: "GTA-PPI · inflation · passive stack" },
       { href: "/database?game=gta-online", icon: "💰", label: "Income Sources", sub: "S→D tier · 28 methods · ProfitCards"  },
       { href: "/charts",                   icon: "📈", label: "Charts",         sub: "Economy · promotions · meta evolution" },
       { href: "/leaderboard",              icon: "🏷", label: "Bonuses & Promos", sub: "Weekly calendar · sale intelligence" },
@@ -194,7 +195,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
         </nav>
 
         <!-- Pre-order CTA (desktop) -->
-        <a href="/buy"
+        <a href="/gta-vi/buy"
            class="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded border border-gta-gold/25 text-gta-gold text-xs font-mono tracking-wide hover:bg-gta-gold/8 hover:border-gta-gold/45 transition-all ml-2">
           Pre-order <span class="opacity-50 text-[10px]">›</span>
         </a>
@@ -287,7 +288,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
           ))}
           <!-- Pre-order CTA -->
           <div class="mx-5 mt-4 pt-4 border-t border-[#1e1e23]">
-            <a href="/buy"
+            <a href="/gta-vi/buy"
                class="flex items-center justify-center gap-2 py-2.5 rounded border border-gta-gold/25 bg-gta-gold/5 text-gta-gold text-[11px] font-mono hover:bg-gta-gold/10 hover:border-gta-gold/40 transition-all">
               🛒 Pre-order GTA VI
             </a>
