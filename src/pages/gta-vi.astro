@@ -1,6 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
+import { Image } from "astro:assets";
+import heroGtaVI from "../assets/images/hero-gta-vi.jpg";
 
 import trailerData  from "../../data/gta-6/trailers.json";
 import velocityData from "../../data/gta-6/trailer-velocity.json";
@@ -39,8 +41,9 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
   <!-- Hero -->
   <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:380px">
     <div class="absolute inset-0">
-      <img src="/assets/gta6/locations/Ambrosia_02.jpg" alt=""
-           class="w-full h-full object-cover" style="object-position:center 35%" aria-hidden="true" />
+      <Image src={heroGtaVI} alt=""
+           class="w-full h-full object-cover" style="object-position:center 35%" aria-hidden="true"
+           widths={[768, 1280, 1920]} sizes="100vw" format="webp" loading="eager" />
       <div class="absolute inset-0" style="background:linear-gradient(to right, #0a0a0d 0%, #0a0a0dcc 55%, #0a0a0d55 100%)"></div>
       <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 40%, #0a0a0d 100%)"></div>
     </div>
@@ -51,7 +54,6 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         </div>
         <img src="/assets/logos/gta-vi.svg" alt="Grand Theft Auto VI"
              class="h-16 sm:h-20 w-auto mb-5 drop-shadow-lg" loading="eager" />
-        <h1 class="sr-only">GTA VI — Intelligence, Predictions &amp; Data</h1>
         <p class="text-sm text-zinc-400 mb-8 leading-relaxed" style="font-family:'Inter',sans-serif">
           Data-backed predictions, trailer analysis, feature tracking — everything we know about Grand Theft Auto VI, verified against the source.
         </p>

@@ -52,17 +52,14 @@ jobs:
         run: python scrapers/fetch_weekly_bonuses.py
 
       - name: Fetch GTABase business and heist data
-        if: false
         continue-on-error: true
         run: python scrapers/fetch_gtabase.py
 
       - name: Fetch community validation data (OnlyFarms/GTABase cross-check)
-        if: false
         continue-on-error: true
         run: python scrapers/fetch_onlyfarms.py
 
       - name: Monitor r/gtaonline for nerf/buff meta signals
-        if: false
         continue-on-error: true
         run: python scrapers/fetch_reddit_meta.py
         env:
@@ -169,6 +166,13 @@ jobs:
 
       - name: Fetch Leonida Intel entity index
         run: python scrapers/fetch_leonida.py
+
+      - name: Fetch GTA VI entity index from GTA Wiki (characters, vehicles, weapons, locations)
+        continue-on-error: true
+        run: python scrapers/fetch_gta_wiki.py
+
+      - name: Derive features.json counts from live entity index
+        run: python scrapers/derive_features.py
 
       - name: Fetch GTA VI story missions (Day-1 ready — auto-populates at launch)
         continue-on-error: true

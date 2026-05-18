@@ -6,10 +6,12 @@ import ReleaseTimeline from "../../components/ReleaseTimeline.astro";
 import salesData     from "../../../data/franchise/sales.json";
 import metacriticData from "../../../data/franchise/metacritic.json";
 import releasesData  from "../../../data/shared/releases.json";
+import vgchartzData  from "../../../data/franchise/vgchartz.json";
 
-const titles  = (salesData as any).titles as any[];
-const scores  = ((metacriticData as any).titles as any[]);
-const releases = (releasesData as any).releases as any[];
+const titles    = (salesData as any).titles as any[];
+const scores    = ((metacriticData as any).titles as any[]);
+const releases  = (releasesData as any).releases as any[];
+const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.total_m);
 ---
 
 <Base
@@ -87,6 +89,55 @@ const releases = (releasesData as any).releases as any[];
       </div>
       <ReleaseTimeline releases={releases} />
     </section>
+
+    <!-- VGChartz regional breakdown -->
+    {vgTitles.length > 0 && (
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Regional Sales Breakdown</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">NA · EU · JP · Other · Source: VGChartz</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <table class="w-full text-xs font-mono">
+          <thead>
+            <tr class="border-b border-[#1e1e23]">
+              <th class="text-left px-5 py-2.5 text-zinc-600 font-normal">Title</th>
+              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">NA</th>
+              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">EU</th>
+              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">JP</th>
+              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Other</th>
+              <th class="text-right px-5 py-2.5 text-zinc-600 font-normal">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {vgTitles.map((t: any) => {
+              const totalMax = Math.max(...vgTitles.map((x: any) => x.total_m));
+              const barPct = Math.round((t.total_m / totalMax) * 100);
+              return (
+                <tr class="border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors">
+                  <td class="px-5 py-3">
+                    <div class="text-zinc-200 font-semibold mb-1" style="font-family:'Inter',sans-serif">{t.short}</div>
+                    <div class="h-1 rounded-full bg-[#1e1e23] overflow-hidden w-24">
+                      <div class="h-full rounded-full bg-gta-gold/60" style={`width:${barPct}%`}></div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 text-right text-zinc-400">{t.na_m?.toFixed(1) ?? "—"}M</td>
+                  <td class="px-4 py-3 text-right text-zinc-400">{t.eu_m?.toFixed(1) ?? "—"}M</td>
+                  <td class="px-4 py-3 text-right text-zinc-600">{t.jp_m?.toFixed(1) ?? "—"}M</td>
+                  <td class="px-4 py-3 text-right text-zinc-600">{t.other_m?.toFixed(1) ?? "—"}M</td>
+                  <td class="px-5 py-3 text-right font-bold text-gta-gold">{t.total_m?.toFixed(2)}M</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: VGChartz · regional estimates · may differ from publisher figures</span>
+        </div>
+      </div>
+    </section>
+    )}
 
     <!-- Charts cross-link -->
     <div class="rounded-xl border border-[#1e1e23] px-5 py-4 flex items-center gap-4" style="background:#131316">
