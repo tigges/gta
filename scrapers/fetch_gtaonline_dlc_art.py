@@ -145,7 +145,7 @@ def main():
         "trailers": registry,
     }
 
-    if has_changed(OUTPUT_JSON, result):
+    if has_changed(result, OUTPUT_JSON):
         write_json(OUTPUT_JSON, result)
         print(f"[fetch_gtaonline_dlc_art] Downloaded {downloaded} thumbnails. Registry saved.")
     else:

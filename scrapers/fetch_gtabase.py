@@ -170,7 +170,7 @@ def main():
         "heists": heists,
     }
 
-    if has_changed(OUTPUT_PATH, result):
+    if has_changed(result, OUTPUT_PATH):
         write_json(OUTPUT_PATH, result)
         print(f"[fetch_gtabase] Saved {len(businesses)} businesses + {len(heists)} heists to {OUTPUT_PATH}")
     else:

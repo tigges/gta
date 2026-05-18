@@ -180,7 +180,7 @@ def main():
         "missions": list(enriched.values()),
     }
 
-    if has_changed(SEED_PATH, result):
+    if has_changed(result, SEED_PATH):
         write_json(SEED_PATH, result)
         print(f"[fetch_missions] Updated {SEED_PATH} ({len(enriched)} missions)")
     else:
