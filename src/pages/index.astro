@@ -16,11 +16,26 @@ import steamData         from "../../data/gta-5/meta/steam-players.json";
 import featuresData      from "../../data/gta-6/features.json";
 import trailerAnalysis   from "../../data/gta-6/trailer-analysis.json";
 import newswireData      from "../../data/feeds/newswire.json";
+import velocityData      from "../../data/gta-6/trailer-velocity.json";
 
 const trailersData   = trailersDataRaw as TrailersData;
 const latestTrailer  = trailersData.trailers[0] ?? null;
 const trailer2Id     = "VQRLujxTm3c";
 const trailer1Id     = "QdBZY2fkU-0";
+
+// Derive live view counts from trailer-velocity.json (updated nightly)
+const velTrailers = (velocityData as any).trailers as any[];
+const vel1 = velTrailers.find((t: any) => t.youtube_id === trailer1Id);
+const vel2 = velTrailers.find((t: any) => t.youtube_id === trailer2Id);
+const t1Views = (vel1?.snapshots?.at(-1)?.views ?? 0) as number;
+const t2Views = (vel2?.snapshots?.at(-1)?.views ?? 0) as number;
+function fmtViews(n: number): string {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B+`;
+  if (n >= 1e6) return `${Math.floor(n / 1e7) * 10}M+`;
+  return `${Math.round(n / 1e3)}k+`;
+}
+const t1ViewsStr = fmtViews(t1Views);
+const t2ViewsStr = fmtViews(t2Views);
 
 const latestSteam    = steamData.data.at(-1);
 const peakSteam      = steamData.data.reduce((a, b) => a.avg_players > b.avg_players ? a : b);

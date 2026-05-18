@@ -1669,6 +1669,16 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     });
   });
 
+  // ── Lazy chart initialisation (IntersectionObserver) ──────────
+  // Charts are registered here, then initialised only when they scroll into
+  // view. Falls back to immediate init when IntersectionObserver is unavailable.
+  const _chartRegistry = new Map<string, () => void>();
+  function lazyChart(id: string, fn: (el: HTMLElement) => void) {
+    const el = document.getElementById(id) as HTMLElement | null;
+    if (!el) return;
+    _chartRegistry.set(id, () => fn(el));
+  }
+
   // ── Watermark: stamped on all chart SVGs after D3 renders ────
   // Runs once after all chart builders complete via requestAnimationFrame.
   function stampChartWatermarks() {
@@ -1693,9 +1703,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
   requestAnimationFrame(() => requestAnimationFrame(stampChartWatermarks));
 
   // ── CHART 1 — Franchise Sales ────────────────────────────────
-  (function buildSalesChart() {
-    const el = document.getElementById("sales-chart");
-    if (!el) return;
+  lazyChart("sales-chart", function(el) {
     const titles: any[] = JSON.parse(el.dataset.titles || "[]");
 
     const margin = { top: 20, right: 30, bottom: 80, left: 60 };
@@ -1805,12 +1813,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
     // Increase bottom margin by extending chart area
     svg.attr("transform", `translate(${margin.left},${margin.top})`);
-  })();
+  });
 
   // ── CHART 3 — Player History + DLC ──────────────────────────
-  (function buildDLCChart() {
-    const el = document.getElementById("dlc-player-chart");
-    if (!el) return;
+  lazyChart("dlc-player-chart", function(el) {
 
     const MONTHS: Record<string,number> = {January:0,February:1,March:2,April:3,May:4,June:5,July:6,August:7,September:8,October:9,November:10,December:11};
     const raw: any[] = JSON.parse(el.dataset.players || "[]");
@@ -1885,12 +1891,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g => g.select(".domain").attr("stroke","#2a2a31"))
       .call(g => g.selectAll(".tick line").attr("stroke","#2a2a31"))
       .call(g => g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
-  })();
+  });
 
   // ── CHART 4 — Vehicle Performance ───────────────────────────
-  (function buildPerfChart() {
-    const el = document.getElementById("perf-chart");
-    if (!el) return;
+  lazyChart("perf-chart", function(el) {
 
     let all: any[] = JSON.parse(el.dataset.vehicles || "[]");
     let activeClass = "All";
@@ -1979,12 +1983,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         render();
       });
     });
-  })();
+  });
 
   // ── TTWO Stock Chart ─────────────────────────────────────────
-  (function() {
-    const el = document.getElementById("ttwo-stock-chart");
-    if (!el) return;
+  lazyChart("ttwo-stock-chart", function(el) {
     const prices: {date:string;close:number}[] = JSON.parse(el.dataset.prices || "[]");
     const annotations: {date:string;label:string;type:string;color:string}[] = JSON.parse(el.dataset.annotations || "[]");
 
@@ -2047,12 +2049,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
-  })();
+  });
 
   // ── Competitors Bubble/Bar Chart ─────────────────────────────
-  (function() {
-    const el = document.getElementById("competitors-chart");
-    if (!el) return;
+  lazyChart("competitors-chart", function(el) {
     const games: any[] = JSON.parse(el.dataset.games || "[]")
       .sort((a: any, b: any) => (b.year1_units_m ?? 0) - (a.year1_units_m ?? 0));
 
@@ -2134,12 +2134,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
-  })();
+  });
 
   // ── CHART A — Pre-launch Signal Comparison ──────────────────
-  (function() {
-    const el = document.getElementById("prelaunch-comparison-chart");
-    if (!el) return;
+  lazyChart("prelaunch-comparison-chart", function(el) {
     const gta5kw: any = JSON.parse(el.dataset.gta5 || "null");
     const gta6kw: any = JSON.parse(el.dataset.gta6 || "null");
     const milestones: any[] = JSON.parse(el.dataset.reddit || "[]");
@@ -2223,12 +2221,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     // Legend
     svg.append("text").attr("x", W - 100).attr("y", 10).attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace").text("━ GTA V (2013)");
     svg.append("text").attr("x", W - 100).attr("y", 22).attr("fill","#f59e0b").attr("font-size","9").attr("font-family","monospace").text("━ GTA VI (2026)");
-  })();
+  });
 
   // ── CHART B — CPI Adjusted Pricing ──────────────────────────
-  (function() {
-    const el = document.getElementById("cpi-chart");
-    if (!el) return;
+  lazyChart("cpi-chart", function(el) {
     const titles: any[] = JSON.parse(el.dataset.titles || "[]");
     const baseCpi = parseFloat(el.dataset.baseCpi || "321.5");
 
@@ -2293,12 +2289,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     svg.append("text").attr("x",W-116).attr("y",-10).attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace").text("Nominal price");
     svg.append("rect").attr("x",W-130).attr("y",-4).attr("width",10).attr("height",10).attr("fill","#52525b").attr("opacity",0.25);
     svg.append("text").attr("x",W-116).attr("y",4).attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace").text("2026 real price");
-  })();
+  });
 
   // ── CHART C — Divergence ────────────────────────────────────
-  (function() {
-    const el = document.getElementById("divergence-chart");
-    if (!el) return;
+  lazyChart("divergence-chart", function(el) {
     const scores: any[] = JSON.parse(el.dataset.scores || "[]");
 
     // Add GTA VI prediction
@@ -2371,12 +2365,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill","#71717a").attr("font-size","11").attr("font-family","monospace").attr("dy","1.2em"));
-  })();
+  });
 
   // ── CHART D — Trailer Discovery Timeline ────────────────────
-  (function() {
-    const el = document.getElementById("trailer-discovery-chart");
-    if (!el) return;
+  lazyChart("trailer-discovery-chart", function(el) {
     const trailers: any[] = JSON.parse(el.dataset.trailers || "[]");
 
     const TYPE_COLORS: Record<string,string> = {
@@ -2465,12 +2457,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       legendDiv.appendChild(span);
     });
     el.appendChild(legendDiv);
-  })();
+  });
 
   // ── CHART E — DLC Cadence ────────────────────────────────────
-  (function() {
-    const el = document.getElementById("dlc-cadence-chart");
-    if (!el) return;
+  lazyChart("dlc-cadence-chart", function(el) {
     const dlcs: any[] = JSON.parse(el.dataset.dlc || "[]");
 
     // Calculate gaps in months between consecutive major updates
@@ -2544,12 +2534,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
-  })();
+  });
 
   // ── CHART F — Region Evidence Heatmap ───────────────────────
-  (function() {
-    const el = document.getElementById("region-heatmap");
-    if (!el) return;
+  lazyChart("region-heatmap", function(el) {
     const regions: any[] = JSON.parse(el.dataset.regions || "[]");
 
     const COLS = ["official_statements","press_kit_images","trailer_1_appearances","trailer_2_appearances","community_mapping"];
@@ -2616,12 +2604,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         </tbody>
       </table>`;
     el.appendChild(table);
-  })();
+  });
 
   // ── CHART G — Revenue Split (Shark Cards) ───────────────────
-  (function() {
-    const el = document.getElementById("revenue-split-chart");
-    if (!el) return;
+  lazyChart("revenue-split-chart", function(el) {
     const years: any[] = JSON.parse(el.dataset.years || "[]");
 
     const margin = { top: 16, right: 80, bottom: 48, left: 48 };
@@ -2686,12 +2672,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
-  })();
+  });
 
   // ── CHART 8 — Delay Timeline ────────────────────────────────
-  (function() {
-    const el = document.getElementById("delay-timeline-chart");
-    if (!el) return;
+  lazyChart("delay-timeline-chart", function(el) {
 
     const events: {date:string;event:string;type:string;source:string;source_type:string;implied_window?:string;confirmed_date?:string}[] =
       JSON.parse(el.dataset.events || "[]");
@@ -2838,12 +2822,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         .attr("markerWidth",6).attr("markerHeight",6).attr("orient","auto");
       marker.append("path").attr("d","M0,-5L10,0L0,5").attr("fill","#ef4444").attr("opacity",0.35);
     }
-  })();
+  });
 
   // ── CHART 6 — Community Anticipation ───────────────────────
-  (function() {
-    const el = document.getElementById("community-chart");
-    if (!el) return;
+  lazyChart("community-chart", function(el) {
     const milestones: {date:string;subscribers:number;event:string|null}[] = JSON.parse(el.dataset.milestones || "[]");
     const trendsKw: {data:{date:string;value:number}[]} | null = JSON.parse(el.dataset.trends || "null");
 
@@ -2916,12 +2898,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").attr("dx","3"));
-  })();
+  });
 
   // ── CHART 7 — Entertainment Comparison ─────────────────────
-  (function() {
-    const el = document.getElementById("entertainment-chart");
-    if (!el) return;
+  lazyChart("entertainment-chart", function(el) {
     const entries: {name:string;revenue_bn:number;type:string;is_prediction?:boolean}[] =
       JSON.parse(el.dataset.entries || "[]");
 
@@ -2977,12 +2957,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
-  })();
+  });
 
   // ── CHART J — Assassination Returns ─────────────────────────
-  (function() {
-    const el = document.getElementById("assassination-returns-chart");
-    if (!el) return;
+  lazyChart("assassination-returns-chart", function(el) {
     const steps: any[] = JSON.parse(el.dataset.steps || "[]");
     const margin = { top: 20, right: 24, bottom: 56, left: 160 };
     const W = el.clientWidth - margin.left - margin.right;
@@ -3013,12 +2991,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
-  })();
+  });
 
   // ── CHART K — Income Leaderboard ────────────────────────────
-  (function() {
-    const el = document.getElementById("income-leaderboard-chart");
-    if (!el) return;
+  lazyChart("income-leaderboard-chart", function(el) {
     const tiers: any[] = JSON.parse(el.dataset.tiers || "[]");
     const sources: any[] = [];
     tiers.forEach((t: any) => t.sources.forEach((s: any) => sources.push({ ...s, tierColor: t.color, tier: t.tier })));
@@ -3060,12 +3036,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       if (s.solo) svg.append("text").attr("x",x(s.gta_per_hr)+64).attr("y",yt+bh/2+yOff+4)
         .attr("fill","#0d9488").attr("font-size","8").attr("font-family","monospace").text("solo");
     });
-  })();
+  });
 
   // ── CHART N — ROI Scatter Plot ───────────────────────────────
-  (function() {
-    const el = document.getElementById("roi-scatter-chart");
-    if (!el) return;
+  lazyChart("roi-scatter-chart", function(el) {
     const bizs: any[] = JSON.parse(el.dataset.businesses || "[]");
     const PLAY_COLOR: Record<string,string> = {
       heist:"#818cf8", passive:"#22c55e", "semi-passive":"#f59e0b", active:"#ef4444",
@@ -3106,12 +3080,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Setup Cost ($)");
     svg.append("text").attr("transform","rotate(-90)").attr("x",-H/2).attr("y",-64).attr("text-anchor","middle")
       .attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Net $/hr");
-  })();
+  });
 
   // ── CHART R — Shark Card Purchasing Power Erosion ───────────
-  (function() {
-    const el = document.getElementById("shark-card-chart");
-    if (!el) return;
+  lazyChart("shark-card-chart", function(el) {
     const history: any[] = JSON.parse(el.dataset.history || "[]");
     if (!history.length) return;
 
@@ -3164,12 +3136,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
     svg.append("text").attr("transform","rotate(-90)").attr("x",-H/2).attr("y",-60).attr("text-anchor","middle").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Real USD Cost (via Megalodon)");
-  })();
+  });
 
   // ── CHART S — Property Expenditure ──────────────────────────
-  (function() {
-    const el = document.getElementById("property-cost-chart");
-    if (!el) return;
+  lazyChart("property-cost-chart", function(el) {
     const props: any[] = JSON.parse(el.dataset.properties || "[]");
     if (!props.length) return;
 
@@ -3231,7 +3201,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       svg.append("text").attr("x",barW+6).attr("y",y+bh/2+4)
         .attr("fill",color).attr("font-size","9").attr("font-family","monospace").text(priceText);
     });
-  })();
+  });
 
   // ── CHART V — Income Source History ────────────────────────
   (function() {
@@ -3346,12 +3316,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     });
 
     renderChart(activeSrc);
-  })();
+  });
 
   // ── CHART X — Vehicle TCO Breakdown ─────────────────────────
-  (function() {
-    const el = document.getElementById("vehicle-tco-chart");
-    if (!el) return;
+  lazyChart("vehicle-tco-chart", function(el) {
     const vehicles: any[] = JSON.parse(el.dataset.vehicles || "[]");
     if (!vehicles.length) return;
 
@@ -3433,12 +3401,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     svg.append("text").attr("x", W + 19).attr("y", -2)
       .attr("fill", "#818cf8").attr("font-size", "8.5").attr("font-family", "monospace")
       .text("trade");
-  })();
+  });
 
   // ── CHART Y — Price & Payout Change Timeline ─────────────────
-  (function() {
-    const el = document.getElementById("price-history-chart");
-    if (!el) return;
+  lazyChart("price-history-chart", function(el) {
     const items: any[] = JSON.parse(el.dataset.items || "[]");
     if (!items.length) return;
 
@@ -3521,12 +3487,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         }
       }
     });
-  })();
+  });
 
   // ── CHART AA — GTA-PPI Purchasing Power Index ───────────────
-  (function() {
-    const el = document.getElementById("gta-ppi-chart");
-    if (!el) return;
+  lazyChart("gta-ppi-chart", function(el) {
     const series: any[] = JSON.parse(el.dataset.series || "[]");
     if (!series.length) return;
 
@@ -3603,12 +3567,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
     svg.append("text").attr("transform", "rotate(-90)").attr("x", -H / 2).attr("y", -40).attr("text-anchor", "middle")
       .attr("fill", "#3f3f46").attr("font-size", "9").attr("font-family", "monospace").text("PPI (hrs to basket)");
-  })();
+  });
 
   // ── CHART BB — Passive Income Stack ──────────────────────────
-  (function() {
-    const el = document.getElementById("passive-stack-chart");
-    if (!el) return;
+  lazyChart("passive-stack-chart", function(el) {
     const series: any[] = JSON.parse(el.dataset.series || "[]");
     if (!series.length) return;
 
@@ -3666,12 +3628,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `$${Math.round(+d / 1000)}k`))
       .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
       .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
-  })();
+  });
 
   // ── CHART CC — Meta Ceiling $/hr Evolution ───────────────────
-  (function() {
-    const el = document.getElementById("meta-evolution-chart");
-    if (!el) return;
+  lazyChart("meta-evolution-chart", function(el) {
     const history: any[] = JSON.parse(el.dataset.history || "[]");
     if (!history.length) return;
 
@@ -3741,12 +3701,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `$${Math.round(+d / 1000)}k`))
       .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
       .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
-  })();
+  });
 
   // ── CHART DD — Heist Comparison Bubble Chart ─────────────────
-  (function() {
-    const el = document.getElementById("heist-comparison-chart");
-    if (!el) return;
+  lazyChart("heist-comparison-chart", function(el) {
     const heists: any[] = JSON.parse(el.dataset.heists || "[]");
     if (!heists.length) return;
 
@@ -3798,12 +3756,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace").text("Setup Cost ($) · bubble size = avg run time");
     svg.append("text").attr("transform", "rotate(-90)").attr("x", -H / 2).attr("y", -58).attr("text-anchor", "middle")
       .attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace").text("GTA$/hr");
-  })();
+  });
 
   // ── CHART EE — Property Daily Operating Fees ─────────────────
-  (function() {
-    const el = document.getElementById("property-daily-fee-chart");
-    if (!el) return;
+  lazyChart("property-daily-fee-chart", function(el) {
     const props: any[] = JSON.parse(el.dataset.properties || "[]");
     if (!props.length) return;
 
@@ -3862,12 +3818,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     svg.append("text").attr("x", W + 124).attr("y", items.length * rowH / 2 + 8).attr("text-anchor", "end")
       .attr("fill", "#71717a").attr("font-size", "9").attr("font-family", "monospace")
       .text(`Stack total: $${totalDay.toLocaleString()}/day`);
-  })();
+  });
 
   // ── CHART FF — Spending Distribution ─────────────────────────
-  (function() {
-    const el = document.getElementById("spending-distribution-chart");
-    if (!el) return;
+  lazyChart("spending-distribution-chart", function(el) {
     const eras: any[] = JSON.parse(el.dataset.eras || "[]");
     if (!eras.length) return;
 
@@ -3925,12 +3879,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d: any) => `${d}%`))
       .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
       .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
-  })();
+  });
 
   // ── CHART GG — I/E Vehicle Sell Price Tiers ──────────────────
-  (function() {
-    const el = document.getElementById("ie-tiers-chart");
-    if (!el) return;
+  lazyChart("ie-tiers-chart", function(el) {
     const sellData: any = JSON.parse(el.dataset.sell || "{}");
     if (!sellData.top) return;
 
@@ -3985,12 +3937,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       svg.append("text").attr("x", lx + 13).attr("y", H - margin.bottom + 9)
         .attr("fill", "#71717a").attr("font-size", "8.5").attr("font-family", "monospace").text(del.label);
     });
-  })();
+  });
 
   // ── CHART T — Franchise Economic Complexity ─────────────────
-  (function() {
-    const el = document.getElementById("franchise-complexity-chart");
-    if (!el) return;
+  lazyChart("franchise-complexity-chart", function(el) {
     const titles: any[] = JSON.parse(el.dataset.titles || "[]");
     if (!titles.length) return;
 
@@ -4046,12 +3996,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         });
       }
     });
-  })();
+  });
 
   // ── CHART U — Cross-Title Earnings Curve ─────────────────────
-  (function() {
-    const el = document.getElementById("franchise-earnings-chart");
-    if (!el) return;
+  lazyChart("franchise-earnings-chart", function(el) {
     const effort: any[] = JSON.parse(el.dataset.effort || "[]");
     if (!effort.length) return;
 
@@ -4114,12 +4062,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
       .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","8").attr("font-family","monospace"));
-  })();
+  });
 
   // ── CHART P — Activity Bonus Heatmap ────────────────────────
-  (function() {
-    const el = document.getElementById("bonus-heatmap");
-    if (!el) return;
+  lazyChart("bonus-heatmap", function(el) {
 
     const weeks: any[]  = JSON.parse(el.dataset.history || "[]");
     const freq: any[]   = JSON.parse(el.dataset.freq    || "[]");
@@ -4220,10 +4166,32 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         }
       });
     });
-  })();
+  });
   // ── Hash deep-link: /charts#some-chart-id scrolls to that section ──
   // Runs after all chart builders so the SVG containers exist in the DOM.
   // Clears any active category filter if it would hide the target section.
+  // ── Boot: IntersectionObserver for lazy chart rendering ────────
+  {
+    const rootMargin = '200px 0px';
+    if (window.IntersectionObserver) {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const id = (entry.target as HTMLElement).id;
+          const fn = _chartRegistry.get(id);
+          if (fn) { fn(); _chartRegistry.delete(id); obs.unobserve(entry.target); }
+        });
+      }, { rootMargin });
+      _chartRegistry.forEach((_, id) => {
+        const el = document.getElementById(id);
+        if (el) obs.observe(el);
+      });
+    } else {
+      // Fallback: run all immediately
+      _chartRegistry.forEach(fn => fn());
+    }
+  }
+
   (function handleChartHash() {
     const hash = window.location.hash;
     if (!hash || hash.length < 2) return;
@@ -4254,6 +4222,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       });
     };
     setTimeout(tryScroll, 200);
-  })();
+  });
 
 </script>
