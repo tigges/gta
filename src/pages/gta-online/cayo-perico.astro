@@ -1,5 +1,5 @@
 ---
-// SEO landing page: /gta-v/cayo-perico
+// SEO landing page: /gta-online/cayo-perico
 // Target queries: "cayo perico heist guide", "best solo money gta online", "cayo perico $/hr"
 import Base from "../../layouts/Base.astro";
 import ProfitCard from "../../components/ProfitCard.astro";
@@ -17,13 +17,15 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
 <Base
   title="Cayo Perico Heist Guide — Best Solo Money GTA Online"
   description={`Cayo Perico Heist: $${(cayo.net_profit_per_hr/1000).toFixed(0)}k/hr solo. Full guide — loot tiers, optimal strategy, setup cost, break-even. The #1 solo money method in GTA Online.`}
-  ogPage="gta-v"
+  ogPage="gta-online"
 >
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
 
     <!-- Breadcrumb -->
     <div class="flex items-center gap-2 text-[10px] font-mono text-zinc-600 mb-6">
-      <a href="/gta-v" class="hover:text-zinc-400 transition-colors">GTA V Data</a>
+      <a href="/gta-online" class="hover:text-zinc-400 transition-colors">GTA Online</a>
+      <span>›</span>
+      <a href="/gta-online/income" class="hover:text-zinc-400 transition-colors">Income Sources</a>
       <span>›</span>
       <span class="text-zinc-400">Cayo Perico Heist Guide</span>
     </div>
@@ -70,7 +72,7 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
           tips={cayo.tips}
           notes={cayo.notes}
           thumbnail="/assets/gta5/dlc/cayo-perico.jpg"
-          share_url="https://gtavi.ai/gta-v/cayo-perico"
+          share_url="https://gtavi.ai/gta-online/cayo-perico"
         />
       </div>
     </div>
@@ -97,7 +99,7 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
         </table>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
           <span class="text-[10px] text-zinc-700 font-mono">Only run for Panther Statue, Pink Diamond, or Bearer Bonds. Abort if primary is Cash.</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Cayo Perico loot tiers: Panther Statue $2.09M vs Cash $90K. Always check before running. Full guide." url="https://gtavi.ai/gta-v/cayo-perico" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Cayo Perico loot tiers: Panther Statue $2.09M vs Cash $90K. Always check before running. Full guide." url="https://gtavi.ai/gta-online/cayo-perico" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -117,8 +119,8 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
 
     <!-- Link back -->
     <div class="flex items-center justify-between flex-wrap gap-3">
-      <a href="/gta-v" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold border border-gta-gold/20 hover:border-gta-gold/40 px-4 py-2 rounded transition-colors uppercase tracking-widest">
-        ← All GTA V / Online income methods
+      <a href="/gta-online/income" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold border border-gta-gold/20 hover:border-gta-gold/40 px-4 py-2 rounded transition-colors uppercase tracking-widest">
+        ← GTA Online Income Sources
       </a>
       <a href="/database" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 border border-[#2a2a31] hover:border-zinc-600 px-4 py-2 rounded transition-colors uppercase tracking-widest">
         Database: Full Profit Cards →
