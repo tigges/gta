@@ -89,6 +89,12 @@ jobs:
       - name: Fetch Import/Export Vehicle Cargo data (vehicles, sell prices, source types)
         run: python scrapers/fetch_vehicle_cargo.py
 
+      - name: Append current week bonuses to promotional archive time series
+        run: python scrapers/fetch_weekly_bonuses.py
+
+      - name: Derive sale-frequency.json from bonus history
+        run: python scrapers/derive_sale_frequency.py
+
       - name: Fetch Newswire article hero images
         continue-on-error: true
         run: python scrapers/fetch_newswire_images.py
@@ -167,7 +173,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "data: nightly refresh [skip ci]"
-          file_pattern: "data/**/*.json public/assets/gta5/story/*.jpg"
+          file_pattern: "data/**/*.json public/assets/gta5/story/*.jpg public/assets/gta5/dlc/*.jpg"
           commit_user_name: gta-intelligence-bot
           commit_user_email: bot@gtavi.ai
 
