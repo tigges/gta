@@ -1,5 +1,5 @@
 ---
-// SEO landing page: /gta-v/assassination-guide
+// SEO landing page: /gta-online/assassination-guide
 // Target queries: "GTA 5 assassination missions stocks", "GTA V stock market guide", "Lester missions $2 billion"
 import Base from "../../layouts/Base.astro";
 import StockCalculator from "../../components/StockCalculator.astro";
@@ -16,7 +16,9 @@ import stocksData from "../../../data/gta-5/economy/assassination-stocks.json";
 
     <!-- Breadcrumb -->
     <div class="flex items-center gap-2 text-[10px] font-mono text-zinc-600 mb-6">
-      <a href="/gta-v" class="hover:text-zinc-400 transition-colors">GTA V Data</a>
+      <a href="/gta-online" class="hover:text-zinc-400 transition-colors">GTA Online</a>
+      <span>›</span>
+      <a href="/gta-online/income" class="hover:text-zinc-400 transition-colors">Income Sources</a>
       <span>›</span>
       <span class="text-zinc-400">Assassination Stock Guide</span>
     </div>
@@ -80,16 +82,16 @@ import stocksData from "../../../data/gta-5/economy/assassination-stocks.json";
         </table>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki · GTAForums community guides · LCN/BAWSAQ exchange data</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V assassination missions: Multi-Target + Redwood Cigarettes = +300% return. The interactive $2B calculator at GTAVI.AI." url="https://gtavi.ai/gta-v/assassination-guide" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V assassination missions: Multi-Target + Redwood Cigarettes = +300% return. The interactive $2B calculator at GTAVI.AI." url="https://gtavi.ai/gta-online/assassination-guide" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
 
     <div class="flex items-center justify-between flex-wrap gap-3">
-      <a href="/gta-v" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold border border-gta-gold/20 hover:border-gta-gold/40 px-4 py-2 rounded transition-colors uppercase tracking-widest">
-        ← All GTA V / Online income methods
+      <a href="/gta-online/income" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold border border-gta-gold/20 hover:border-gta-gold/40 px-4 py-2 rounded transition-colors uppercase tracking-widest">
+        ← GTA Online Income Sources
       </a>
-      <a href="/gta-v/cayo-perico" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 border border-[#2a2a31] hover:border-zinc-600 px-4 py-2 rounded transition-colors uppercase tracking-widest">
+      <a href="/gta-online/cayo-perico" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 border border-[#2a2a31] hover:border-zinc-600 px-4 py-2 rounded transition-colors uppercase tracking-widest">
         Online: Cayo Perico Guide →
       </a>
     </div>
