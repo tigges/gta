@@ -177,6 +177,8 @@ gh run list --limit 3
 
 The version is displayed in the ops bar on every page (`Base.astro`) and in the footer — it should read the new version immediately after deploy.
 
+> **MANDATORY — no exceptions:** Every single commit that touches code, data, scrapers, or UI — including bug fixes, one-liners, and CI tweaks — must bump `src/config/version.ts` before being pushed to `main`. Patch bump (x.y.Z+1) for fixes and minor tweaks; minor bump (x.Y+1.0) for new features or charts; major bump (X+1.0.0) for full redesigns. Also update `SITE_VERSION_DATE` to today's date (YYYY-MM-DD). Forgetting the version bump is the most common agent error on this project.
+
 ---
 
 ## Git & branch conventions
@@ -185,6 +187,7 @@ The version is displayed in the ops bar on every page (`Base.astro`) and in the 
   Example: `cursor/my-feature-c815`
 - Branch names must be **lowercase**
 - One logical change per commit with a descriptive message
+- **Every commit to `main` must include a `src/config/version.ts` bump** — patch, minor, or major depending on scope. No exceptions, including single-file bug fixes.
 - After merging to main, a PR can optionally be opened for record-keeping, but the merge to main always happens first
 - The nightly data bot commits with `[skip ci]` to avoid triggering redundant builds
 
