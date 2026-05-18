@@ -178,6 +178,58 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
     { href: "/news", icon: "📰", tier: "News", label: "Pre-order news",
       sub: `Latest from ${newsItems} tracked sources`, color: "text-zinc-400", border: "border-zinc-700" },
   ],
+
+  // GTA Online hub
+  "gta-online": [
+    { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "Income source browser",
+      sub: `S→D tier · ${gta5Vehicles > 0 ? "56" : "50"}+ methods profiled · ProfitCards`, color: "text-teal-400", border: "border-teal-700/30" },
+    { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
+      sub: "Weekly calendar · 42 weeks of history · sale intelligence", color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
+      sub: "GTA-PPI · inflation · passive stack tracker", color: "text-amber-400", border: "border-amber-500/20" },
+    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI — what comes next",
+      sub: `${predCount} predictions · economy preview · pre-order`, color: "text-gta-gold", border: "border-gta-gold/20" },
+  ],
+
+  // GTA Online economy page
+  "gta-online-economy": [
+    { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "Income source browser",
+      sub: "All 56 methods · S→D tier · weekly bonus tracker", color: "text-teal-400", border: "border-teal-700/30" },
+    { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
+      sub: "Weekly calendar · sale intelligence · leaderboard", color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/franchise/charts", icon: "📈", tier: "Franchise", label: "Franchise charts",
+      sub: "Cross-title complexity · earnings · inflation", color: "text-amber-400", border: "border-amber-500/20" },
+  ],
+
+  // GTA Online income hub
+  "gta-online-income": [
+    { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
+      sub: "GTA-PPI · inflation · passive stack", color: "text-amber-400", border: "border-amber-500/20" },
+    { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
+      sub: "Weekly calendar · sale intelligence · leaderboard", color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/database?game=gta-online", icon: "🗄", tier: "Database", label: "Full data browser",
+      sub: `${gta5Vehicles} vehicles · all income entities`, color: "text-zinc-400", border: "border-zinc-700" },
+  ],
+
+  // GTA Online bonuses page
+  "gta-online-bonuses": [
+    { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "Income source browser",
+      sub: "Find out which active bonus is worth your time", color: "text-teal-400", border: "border-teal-700/30" },
+    { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
+      sub: "GTA-PPI · inflation history · meta evolution", color: "text-amber-400", border: "border-amber-500/20" },
+    { href: "/franchise/charts", icon: "📈", tier: "Franchise", label: "Promotion analytics",
+      sub: "Bonus cadence · sale frequency over time", color: "text-zinc-400", border: "border-zinc-700" },
+  ],
+
+  // SEO landings: cayo-perico, assassination-guide
+  "gta-online-seo": [
+    { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "All income sources",
+      sub: "56 methods · S→D tier · full profit profiles", color: "text-teal-400", border: "border-teal-700/30" },
+    { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Weekly bonuses",
+      sub: "Is this method on bonus this week?", color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
+      sub: "GTA-PPI · inflation · passive vs active", color: "text-amber-400", border: "border-amber-500/20" },
+  ],
 };
 
 const links: CrossLink[] = ALL_LINKS[context] ?? [];

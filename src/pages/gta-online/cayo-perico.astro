@@ -2,6 +2,7 @@
 // SEO landing page: /gta-online/cayo-perico
 // Target queries: "cayo perico heist guide", "best solo money gta online", "cayo perico $/hr"
 import Base from "../../layouts/Base.astro";
+import CrossLinks from "../../components/CrossLinks.astro";
 import ProfitCard from "../../components/ProfitCard.astro";
 import StockCalculator from "../../components/StockCalculator.astro";
 import ShareButton from "../../components/ShareButton.astro";
@@ -116,6 +117,8 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
         ))}
       </div>
     </section>
+
+    <CrossLinks context="gta-online-seo" />
 
     <!-- Link back -->
     <div class="flex items-center justify-between flex-wrap gap-3">

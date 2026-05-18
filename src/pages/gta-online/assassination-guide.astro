@@ -2,6 +2,7 @@
 // SEO landing page: /gta-online/assassination-guide
 // Target queries: "GTA 5 assassination missions stocks", "GTA V stock market guide", "Lester missions $2 billion"
 import Base from "../../layouts/Base.astro";
+import CrossLinks from "../../components/CrossLinks.astro";
 import StockCalculator from "../../components/StockCalculator.astro";
 import ShareButton from "../../components/ShareButton.astro";
 import stocksData from "../../../data/gta-5/economy/assassination-stocks.json";
@@ -86,6 +87,8 @@ import stocksData from "../../../data/gta-5/economy/assassination-stocks.json";
         </div>
       </div>
     </section>
+
+    <CrossLinks context="gta-online-seo" />
 
     <div class="flex items-center justify-between flex-wrap gap-3">
       <a href="/gta-online/income" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold border border-gta-gold/20 hover:border-gta-gold/40 px-4 py-2 rounded transition-colors uppercase tracking-widest">

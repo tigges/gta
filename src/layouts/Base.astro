@@ -1,6 +1,10 @@
 ---
 import { SITE_VERSION_LABEL, SITE_VERSION_DATE } from "../config/version";
 import "../styles/tokens.css";
+import "@fontsource-variable/inter";
+import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/jetbrains-mono/500.css";
+import "@fontsource/jetbrains-mono/700.css";
 
 interface Props {
   title?: string;
@@ -46,7 +50,7 @@ const navGroups: NavGroup[] = [
   {
     href: "/gta-online",
     label: "GTA Online",
-    activePaths: ["/gta-online", "/gta-online/economy", "/gta-online/income", "/gta-v/income-calculator", "/gta-online/cayo-perico", "/gta-online/assassination-guide", "/database", "/gta-online/bonuses"],
+    activePaths: ["/gta-online", "/gta-online/economy", "/gta-online/income", "/gta-v/income-calculator", "/gta-v/cayo-perico", "/database", "/gta-online/bonuses"],
     dropdown: [
       { href: "/gta-online/economy",        icon: "📊", label: "Economy",        sub: "GTA-PPI · inflation · passive stack" },
       { href: "/database?game=gta-online", icon: "💰", label: "Income Sources", sub: "S→D tier · 28 methods · ProfitCards"  },
@@ -101,13 +105,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- Fonts: Inter (body) + JetBrains Mono (data) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Fonts self-hosted via fontsource npm packages — no Google CDN requests -->
   </head>
 
   <body class="min-h-screen flex flex-col font-sans antialiased" style="background:#0e0e11">
