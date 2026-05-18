@@ -59,7 +59,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/franchise", icon: "📊", tier: "Franchise", label: "Historical context",
       sub: `${franchiseTitles} titles · 30 years of data`, color: "text-zinc-400", border: "border-zinc-700" },
-    { href: "/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
+    { href: "/gta-vi/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
       sub: "Platforms, editions, retailers", color: "text-gta-gold", border: "border-gta-gold/20" },
   ],
 
@@ -70,7 +70,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/news", icon: "📰", tier: "News", label: "Character intel",
       sub: `${newsItems} articles tracked nightly`, color: "text-zinc-400", border: "border-zinc-700" },
-    { href: "/vi-intel", icon: "🎬", tier: "GTA VI", label: "Trailer analysis",
+    { href: "/gta-vi/intel", icon: "🎬", tier: "GTA VI", label: "Trailer analysis",
       sub: `${trailerCount} official trailers analysed`, color: "text-gta-gold", border: "border-gta-gold/20" },
   ],
 
@@ -106,7 +106,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // Database page
   "database": [
-    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
+    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
       sub: `${predCount} predictions · cast · locations · trailer analysis`,
       color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/news", icon: "📰", tier: "News", label: "Live news feed",
@@ -117,17 +117,17 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // News page
   "news": [
-    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "GTA VI predictions",
+    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI predictions",
       sub: `${predCount} confidence-scored signals`, color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/database", icon: "🗄", tier: "Database", label: "Entity database",
       sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
+    { href: "/gta-vi/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
       sub: "PS5 · Xbox · retailer watch", color: "text-zinc-400", border: "border-zinc-700" },
   ],
 
   // Charts page
   "charts": [
-    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "What the data predicts",
+    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "What the data predicts",
       sub: `${predCount} confidence-scored GTA VI predictions`, color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/franchise", icon: "📊", tier: "Franchise", label: "30-year franchise history",
       sub: `${franchiseTitles} titles · sales · scores · map growth`, color: "text-zinc-400", border: "border-zinc-700" },
@@ -139,7 +139,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
   "franchise": [
     { href: "/charts", icon: "📈", tier: "Charts", label: "Full chart suite",
       sub: "Sales velocity, CPI pricing, Metacritic, revenue model", color: "text-amber-400", border: "border-amber-500/20" },
-    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "GTA VI predictions",
+    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI predictions",
       sub: "What 30 years of data says about VI", color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/database", icon: "🗄", tier: "Database", label: "GTA V + VI entities",
       sub: `${gta5Vehicles} GTA V vehicles · ${gta6Entities.toLocaleString()} GTA VI entries`, color: "text-gta-teal", border: "border-gta-teal/20" },
@@ -147,7 +147,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // Home page
   "home": [
-    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
+    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
       sub: `${predCount} predictions · cast · locations · timelines`, color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/charts", icon: "📈", tier: "Charts", label: "Data visualised",
       sub: "15+ live charts — franchise sales to search signal", color: "text-amber-400", border: "border-amber-500/20" },
@@ -155,13 +155,13 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       sub: `${gta6Entities.toLocaleString()} GTA VI · ${gta5Vehicles} GTA V`, color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/news", icon: "📰", tier: "News", label: "Live intelligence feed",
       sub: `${newsItems} articles · updated nightly`, color: "text-zinc-400", border: "border-zinc-700" },
-    { href: "/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
+    { href: "/gta-vi/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
       sub: "Editions, platforms, retailer watch", color: "text-zinc-300", border: "border-zinc-600" },
   ],
 
   // Buy page
   "buy": [
-    { href: "/vi-intel", icon: "🎯", tier: "GTA VI", label: "Intelligence backing these prices",
+    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "Intelligence backing these prices",
       sub: `${predCount} predictions · ${trailerCount} trailers analysed`, color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/charts", icon: "📈", tier: "Charts", label: "CPI-adjusted pricing history",
       sub: "Is $79.99 cheap vs every prior GTA at launch?", color: "text-amber-400", border: "border-amber-500/20" },

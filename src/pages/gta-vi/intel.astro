@@ -1,20 +1,20 @@
 ---
-import Base from "../layouts/Base.astro";
-import PredictionCard from "../components/PredictionCard.astro";
-import ReleaseTimeline from "../components/ReleaseTimeline.astro";
-import CrossLinks from "../components/CrossLinks.astro";
-import Countdown from "../components/Countdown.astro";
-import ShareButton from "../components/ShareButton.astro";
+import Base from "../../layouts/Base.astro";
+import PredictionCard from "../../components/PredictionCard.astro";
+import ReleaseTimeline from "../../components/ReleaseTimeline.astro";
+import CrossLinks from "../../components/CrossLinks.astro";
+import Countdown from "../../components/Countdown.astro";
+import ShareButton from "../../components/ShareButton.astro";
 
-import type { TrailersData, Prediction } from "../types/gta";
+import type { TrailersData, Prediction } from "../../types/gta";
 
-import predictionsData from "../../data/gta-6/predictions.json";
-import trailersDataRaw from "../../data/gta-6/trailers.json";
-import releaseData     from "../../data/shared/releases.json";
-import gta6Trends      from "../../data/gta-6/trends/search-interest.json";
-import featuresData    from "../../data/gta-6/features.json";
-import delayData       from "../../data/gta-6/delay-timeline.json";
-import trailerAnalysis from "../../data/gta-6/trailer-analysis.json";
+import predictionsData from "../../../data/gta-6/predictions.json";
+import trailersDataRaw from "../../../data/gta-6/trailers.json";
+import releaseData     from "../../../data/shared/releases.json";
+import gta6Trends      from "../../../data/gta-6/trends/search-interest.json";
+import featuresData    from "../../../data/gta-6/features.json";
+import delayData       from "../../../data/gta-6/delay-timeline.json";
+import trailerAnalysis from "../../../data/gta-6/trailer-analysis.json";
 
 const predictions    = predictionsData.predictions as Prediction[];
 const trailersData   = trailersDataRaw as TrailersData;

@@ -135,10 +135,10 @@ const BENCHMARKS = {
   });
 
   document.getElementById('sc-analyse')?.addEventListener('click', () => {
-    const rank     = parseInt((document.getElementById('sc-rank') as HTMLInputElement).value) || 0;
-    const cash     = parseInt((document.getElementById('sc-cash') as HTMLInputElement).value) || 0;
-    const missions = parseInt((document.getElementById('sc-missions') as HTMLInputElement).value) || 0;
-    const hours    = parseInt((document.getElementById('sc-hours') as HTMLInputElement).value) || 0;
+    const rank     = parseInt(document.getElementById('sc-rank').value)     || 0;
+    const cash     = parseInt(document.getElementById('sc-cash').value)     || 0;
+    const missions = parseInt(document.getElementById('sc-missions').value) || 0;
+    const hours    = parseInt(document.getElementById('sc-hours').value)    || 0;
 
     if (!rank && !cash) {
       alert('Enter at least your rank or cash balance to analyse.');
@@ -164,7 +164,8 @@ const BENCHMARKS = {
       return `$${Math.round(n/1000)}K`;
     }
 
-    const statsGrid = document.getElementById('sc-stats-grid')!;
+    const statsGrid = document.getElementById('sc-stats-grid');
+    if (!statsGrid) return;;
     const stats = [
       { label: 'Criminal Rank',   value: rank,     fmt: `Rank ${rank.toLocaleString()}`,   avg: BENCHMARKS.avg_criminal_rank,  top10: 8000 },
       { label: 'Cash in Bank',    value: cash,     fmt: formatCash(cash),                  avg: BENCHMARKS.avg_cash_bank,      top10: BENCHMARKS.top10_cash },
@@ -183,20 +184,22 @@ const BENCHMARKS = {
     `).join('');
 
     // Personalised recommendation
-    const recEl = document.getElementById('sc-rec-text')!;
-    if (cash < 2_200_000) {
-      recEl.textContent = 'Priority: Complete First Dose missions (free) → buy Kosatka ($2.2M). At your cash level, Cayo Perico is your fastest path to financial growth.';
-    } else if (cash < 5_000_000) {
-      recEl.textContent = 'You can afford Cayo Perico setup now. Run it until $10M+ before investing in passive businesses like Nightclub.';
-    } else if (cash < 15_000_000) {
-      recEl.textContent = 'Buy the Agency ($2M). Dr. Dre contract pays $1M flat with no cooldown — highest $/hr in your budget. Stack with Cayo Perico.';
-    } else if (cash < 50_000_000) {
-      recEl.textContent = 'Add Nightclub ($3.5M fully upgraded). Passive income while you run Cayo Perico sessions. Combined stack: $1.5M+/hr.';
-    } else {
-      recEl.textContent = "You're in the top tier. Stack optimization: Cayo Perico + Agency contracts + Nightclub passive = $1.5-2M+/hr combined. Focus on Payphone Hits between heist cooldowns.";
+    const recEl = document.getElementById('sc-rec-text');
+    if (recEl) {
+      if (cash < 2_200_000) {
+        recEl.textContent = 'Priority: Complete First Dose missions (free) → buy Kosatka ($2.2M). At your cash level, Cayo Perico is your fastest path to financial growth.';
+      } else if (cash < 5_000_000) {
+        recEl.textContent = 'You can afford Cayo Perico setup now. Run it until $10M+ before investing in passive businesses like Nightclub.';
+      } else if (cash < 15_000_000) {
+        recEl.textContent = 'Buy the Agency ($2M). Dr. Dre contract pays $1M flat with no cooldown — highest $/hr in your budget. Stack with Cayo Perico.';
+      } else if (cash < 50_000_000) {
+        recEl.textContent = 'Add Nightclub ($3.5M fully upgraded). Passive income while you run Cayo Perico sessions. Combined stack: $1.5M+/hr.';
+      } else {
+        recEl.textContent = "You're in the top tier. Stack optimization: Cayo Perico + Agency contracts + Nightclub passive = $1.5-2M+/hr combined. Focus on Payphone Hits between heist cooldowns.";
+      }
     }
 
-    document.getElementById('sc-results')!.classList.remove('hidden');
-    document.getElementById('sc-empty')!.classList.add('hidden');
+    document.getElementById('sc-results')?.classList.remove('hidden');
+    document.getElementById('sc-empty')?.classList.add('hidden');
   });
 </script>
