@@ -1,0 +1,256 @@
+---
+/**
+ * gta-online/income/[id].astro
+ * Real standalone page for each GTA Online income source.
+ * Replaces the old redirect stubs at /gta-v/online/[id].
+ * Generated from business-profiles.json + online-heists.json.
+ */
+import type { GetStaticPaths } from "astro";
+import Base from "../../../layouts/Base.astro";
+import ProfitCard from "../../../components/ProfitCard.astro";
+import CrossLinks from "../../../components/CrossLinks.astro";
+import ShareButton from "../../../components/ShareButton.astro";
+
+import businessProfiles  from "../../../../data/gta-5/economy/business-profiles.json";
+import onlineHeists      from "../../../../data/gta-5/economy/online-heists.json";
+import revenueTiers      from "../../../../data/gta-5/economy/revenue-tiers.json";
+import saleFreqData      from "../../../../data/gta-5/economy/sale-frequency.json";
+import sourceHistoryData from "../../../../data/gta-5/economy/per-source-history.json";
+import weeklyBonuses     from "../../../../data/gta-5/economy/weekly-bonuses.json";
+
+export const getStaticPaths: GetStaticPaths = () => {
+  const bizList   = ((businessProfiles as any).businesses as any[]).filter((b: any) => b.net_profit_per_hr > 0);
+  const heistList = ((onlineHeists as any).heists as any[]);
+  // Merge, heists override biz if same id
+  const merged: any[] = [...bizList];
+  heistList.forEach((h: any) => {
+    if (!merged.find(b => b.id === h.id)) merged.push(h);
+  });
+  return merged.map((biz: any) => ({ params: { id: biz.id }, props: { biz } }));
+};
+
+const { id } = Astro.params;
+const { biz } = Astro.props as { biz: any };
+
+// ── Tier lookup ────────────────────────────────────────────────────────────
+const tiers    = ((revenueTiers as any).tiers as any[]);
+const tierEntry = tiers.find((t: any) => t.sources.some((s: any) => s.id === id));
+const srcEntry  = tierEntry?.sources.find((s: any) => s.id === id);
+const tier      = (tierEntry?.tier ?? "B") as "S"|"A"|"B"|"C"|"D";
+const maxProfitHr = Math.max(...tiers.flatMap((t: any) => t.sources.map((s: any) => s.gta_per_hr as number)));
+const netProfitHr = srcEntry?.gta_per_hr ?? biz.net_profit_per_hr ?? 0;
+
+// ── Bonus cadence ─────────────────────────────────────────────────────────
+const bonusFreq = ((saleFreqData as any).activity_bonuses as any[]).find((a: any) => a.activity_id === id);
+const bonusDaysAgo = bonusFreq?.last_bonus_date
+  ? Math.round((Date.now() - new Date(bonusFreq.last_bonus_date).getTime()) / (1000*60*60*24))
+  : null;
+
+// ── Income history ─────────────────────────────────────────────────────────
+const srcHistory = ((sourceHistoryData as any).sources as any[]).find((s: any) => s.id === id);
+const peakHr = srcHistory ? Math.max(...srcHistory.timeline.map((t: any) => t.gta_per_hr as number)) : null;
+
+// ── Weekly bonus active ────────────────────────────────────────────────────
+const activeBonus = ((weeklyBonuses as any).bonuses as any[]).find((b: any) => b.activity_id === id);
+
+// ── Related sources (same tier, first 3 excl. self) ───────────────────────
+const related = (tierEntry?.sources ?? []).filter((s: any) => s.id !== id).slice(0, 3);
+
+// ── Thumbnail ─────────────────────────────────────────────────────────────
+const BIZ_THUMBS: Record<string,string> = {
+  "cayo-perico":          "/assets/gta5/story/blitz-play.jpg",
+  "diamond-casino-heist": "/assets/gta5/story/arcade.jpg",
+  "nightclub":            "/assets/gta5/dlc/nightclub.jpg",
+  "bunker":               "/assets/gta5/dlc/bunker.jpg",
+  "acid-lab":             "/assets/gta5/dlc/acid-lab.jpg",
+  "agency-vip-contract":  "/assets/gta5/dlc/agency.jpg",
+};
+const thumbnail = BIZ_THUMBS[id] ?? biz.thumbnail ?? undefined;
+
+// ── SEO ───────────────────────────────────────────────────────────────────
+const title       = `${biz.name ?? biz.title} — GTA Online Income Guide`;
+const khr         = Math.round(netProfitHr / 1000);
+const description = `${biz.name ?? biz.title}: $${khr}k/hr net in GTA Online. Full setup guide, tips, and income analysis. ${biz.solo !== false ? "Solo capable." : ""}`;
+---
+
+<Base
+  title={title}
+  description={description}
+  ogImage={`https://gtavi.ai/og/online/${id}.png`}
+>
+  <!-- Breadcrumb -->
+  <div class="border-b border-[#1e1e23]" style="background:#0a0a0d">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-[10px] font-mono text-zinc-600">
+      <a href="/gta-online" class="hover:text-zinc-400 transition-colors">GTA Online</a>
+      <span class="text-zinc-800">›</span>
+      <a href="/gta-online/income" class="hover:text-zinc-400 transition-colors">Income Sources</a>
+      <span class="text-zinc-800">›</span>
+      <span class="text-zinc-500">{biz.name ?? biz.title}</span>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Left: ProfitCard + income chart -->
+      <div class="lg:col-span-1 flex flex-col gap-6">
+
+        <!-- ProfitCard -->
+        <ProfitCard
+          id={id}
+          name={biz.name ?? biz.title}
+          game="gta-online"
+          category={biz.category ?? (biz.min_players > 1 ? "heist" : "business")}
+          tier={tier}
+          net_profit_per_hr={netProfitHr}
+          max_profit_per_hr={maxProfitHr}
+          setup_cost_full={biz.setup_cost_full ?? undefined}
+          break_even_hrs={biz.break_even_hrs ?? (biz.setup_cost_full && netProfitHr > 0 ? Math.round(biz.setup_cost_full / netProfitHr) : undefined)}
+          play_type={biz.play_type ?? (biz.solo !== false ? "active" : "heist")}
+          difficulty={biz.risk === "high" ? 4 : biz.risk === "medium" ? 3 : 2}
+          min_players={biz.min_players ?? 1}
+          max_players={biz.max_players ?? 4}
+          solo={biz.solo ?? true}
+          dlc={biz.dlc ?? undefined}
+          prerequisite={biz.prerequisite ?? undefined}
+          payout_per_run_min={biz.payout_per_run_min ?? undefined}
+          payout_per_run_max={biz.payout_per_run_max ?? undefined}
+          avg_run_time_min={biz.avg_run_time_min ?? undefined}
+          loot_tiers={biz.loot_tiers ?? undefined}
+          tips={biz.tips ?? undefined}
+          thumbnail={thumbnail}
+          last_nerfed={biz.last_nerfed ?? undefined}
+          last_nerfed_notes={biz.last_nerfed_notes ?? undefined}
+          bonus_count={bonusFreq?.bonus_count}
+          bonus_last_date={bonusFreq?.last_bonus_date}
+          bonus_avg_gap_weeks={bonusFreq?.avg_gap_weeks}
+          peak_gta_per_hr={peakHr ?? undefined}
+          share_url="https://gtavi.ai/database"
+        />
+
+        <!-- Active bonus callout -->
+        {activeBonus && (
+          <div class="rounded-xl border border-green-700/30 px-4 py-3 flex items-center gap-3" style="background:rgba(34,197,94,0.06)">
+            <span class="text-lg shrink-0">🔥</span>
+            <div>
+              <div class="text-xs font-semibold text-green-400" style="font-family:'Inter',sans-serif">ACTIVE BONUS THIS WEEK</div>
+              <div class="text-[10px] font-mono text-green-600">{activeBonus.multiplier}× GTA$ · check the weekly update</div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- Right: Guide content -->
+      <div class="lg:col-span-2 flex flex-col gap-6">
+
+        <!-- Full tips -->
+        {biz.tips && biz.tips.length > 0 && (
+          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+            <div class="px-5 py-3 border-b border-[#1e1e23]">
+              <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Strategy & Tips</div>
+            </div>
+            <div class="divide-y divide-[#1e1e23]">
+              {(biz.tips as string[]).map((tip: string, i: number) => (
+                <div class="px-5 py-3 flex gap-3">
+                  <span class="text-gta-gold shrink-0 font-mono text-[10px] mt-0.5">{i + 1}.</span>
+                  <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">{tip}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <!-- Income history timeline (if available) -->
+        {srcHistory && srcHistory.timeline.length > 1 && (
+          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+            <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
+              <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">$/hr History</div>
+              <span class="text-[10px] font-mono text-zinc-600">{srcHistory.timeline.length} snapshots</span>
+            </div>
+            <div class="divide-y divide-[#1e1e23]">
+              {[...srcHistory.timeline].reverse().map((snap: any, ri: number) => {
+                const isPeak = snap.gta_per_hr === peakHr;
+                const isCurrent = ri === 0; // first in reversed = last in original
+                return (
+                  <div class="px-5 py-3 flex items-center gap-4">
+                    <div class="w-28 shrink-0">
+                      <div class="text-[10px] font-mono text-zinc-600">{snap.date?.slice(0,7)}</div>
+                      <div class="text-[9px] font-mono text-zinc-700 truncate">{snap.patch}</div>
+                    </div>
+                    <div class="flex-1">
+                      <div class="h-1.5 rounded-full bg-[#1e1e23] overflow-hidden">
+                        <div class="h-full rounded-full" style={`width:${Math.round((snap.gta_per_hr / (peakHr ?? 1)) * 100)}%;background:${isPeak ? '#22c55e' : isCurrent ? '#f59e0b' : '#3f3f46'}`}></div>
+                      </div>
+                    </div>
+                    <div class="shrink-0 text-right">
+                      <span class="text-[11px] font-mono font-bold" style={`color:${isPeak ? '#22c55e' : isCurrent ? '#f59e0b' : '#71717a'}`}>
+                        ${Math.round(snap.gta_per_hr / 1000)}k/hr
+                      </span>
+                      {isPeak && <span class="text-[8px] font-mono text-green-600 ml-1">peak</span>}
+                      {isCurrent && !isPeak && <span class="text-[8px] font-mono text-amber-600 ml-1">now</span>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <!-- Notes -->
+        {biz.notes && (
+          <div class="rounded-xl border border-[#1e1e23] px-5 py-4" style="background:#131316">
+            <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Notes</div>
+            <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">{biz.notes}</p>
+          </div>
+        )}
+
+        <!-- Related sources -->
+        {related.length > 0 && (
+          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+            <div class="px-5 py-3 border-b border-[#1e1e23]">
+              <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Same Tier — Also Worth Running</div>
+            </div>
+            <div class="divide-y divide-[#1e1e23]">
+              {related.map((r: any) => (
+                <a href={`/gta-online/income/${r.id}`}
+                   class="flex items-center justify-between px-5 py-3 hover:bg-white/[0.02] transition-colors group">
+                  <div>
+                    <div class="text-[11px] font-semibold text-zinc-300 group-hover:text-white transition-colors" style="font-family:'Inter',sans-serif">{r.name}</div>
+                    <div class="text-[9px] font-mono text-zinc-600">{r.type} · {r.solo ? "solo" : "group"}</div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="text-[11px] font-mono font-bold text-gta-gold">${Math.round(r.gta_per_hr / 1000)}k/hr</span>
+                    <span class="text-zinc-700 group-hover:text-zinc-400 font-mono text-[10px] transition-colors">→</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <!-- CTA to full database -->
+        <div class="flex items-center gap-3 flex-wrap">
+          <a href="/gta-online/income"
+             class="px-4 py-2 rounded border border-[#2a2a31] text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">
+            ← All income sources
+          </a>
+          <a href={`/database?game=gta-online#profit-${id}`}
+             class="px-4 py-2 rounded border border-teal-700/30 text-teal-400 text-[11px] font-mono hover:bg-teal-900/20 transition-all">
+            View in Database →
+          </a>
+          <div class="ml-auto">
+            <ShareButton
+              text={`${biz.name ?? biz.title} — ${tier}-tier GTA Online income. $${khr}k/hr${biz.solo !== false ? ' solo' : ''}. Full guide on GTAVI.AI`}
+              url={`https://gtavi.ai/gta-online/income/${id}`}
+              size="sm" label="Share" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="mt-10">
+      <CrossLinks context="database" />
+    </div>
+  </div>
+</Base>
