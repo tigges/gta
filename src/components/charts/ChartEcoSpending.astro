@@ -27,6 +27,7 @@ const spendEras = (spendingData as any).eras as any[];
 <script>
   import * as d3 from "d3";
   import { cc } from "../../assets/chartColors";
+  import { registerChart } from "../../assets/chartInit";
 
   const CHART_H: Record<string, number> = {
     "chart-wages": 220, "chart-spending": 220, "chart-savings": 220,
@@ -68,10 +69,17 @@ const spendEras = (spendingData as any).eras as any[];
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));  }
 
+  // Register with chartInit so ChartPreviewCard can force-init on expand
+  registerChart("chart-spending", init);
+
+  // Also lazy-init via IntersectionObserver for directly-visible charts
   if ("IntersectionObserver" in window) {
     const obsEl = document.getElementById("chart-spending");
-    if (obsEl) new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) { init(); }
-    }, { rootMargin: "200px" }).observe(obsEl);
+    if (obsEl) {
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+      }, { rootMargin: "200px" });
+      obs.observe(obsEl);
+    }
   } else { init(); }
 </script>

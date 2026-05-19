@@ -9,6 +9,7 @@ import ChartCommunity          from "../components/charts/ChartCommunity.astro";
 import ChartPrelaunchComparison from "../components/charts/ChartPrelaunchComparison.astro";
 import ChartTrailerDiscovery   from "../components/charts/ChartTrailerDiscovery.astro";
 import ChartPreviewCard        from "../components/charts/ChartPreviewCard.astro";
+import ChartTrailerVelocity   from "../components/charts/ChartTrailerVelocity.astro";
 
 import trailerData  from "../../data/gta-6/trailers.json";
 import velocityData from "../../data/gta-6/trailer-velocity.json";
@@ -220,6 +221,11 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Signal Intelligence — Key Charts</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <a href="/charts?title=gta-vi" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
+      </div>
+
+      <!-- Featured: Trailer velocity (full width) -->
+      <div class="mb-6">
+        <ChartTrailerVelocity />
       </div>
 
       <!-- Featured: Delay timeline (full width) -->
