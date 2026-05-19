@@ -1,0 +1,119 @@
+---
+/**
+ * ChartPassiveStack
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import passiveStackData  from "../../../data/gta-5/economy/passive-stack.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Passive Income Stack — How Idle GTA$/hr Grew From 0 to $1.24M</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">4 streams · ${((passiveStackData as any).setup_cost_total/1e6).toFixed(1)}M GTA$ setup</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Passive Income Stack Growth — Bunker to Acid Lab (2013–2025)</div>
+            <div class="text-[11px] text-zinc-500 font-mono">GTA$/hr generated while AFK at each major patch. Full stack peaked at $1.24M/hr (Dec 2022) after Acid Lab launch. Requires $18.7M setup investment.</div>
+          </div>
+          <div class="flex flex-wrap gap-2 text-[10px] font-mono text-zinc-500">
+            {[
+              { label: "Bunker",       color: "#f59e0b" },
+              { label: "Nightclub",    color: "#0d9488" },
+              { label: "MC Cocaine",   color: "#818cf8" },
+              { label: "Acid Lab",     color: "#22c55e" },
+            ].map(l => (
+              <span class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-sm inline-block" style={`background:${l.color};opacity:0.8`}></span>
+                {l.label}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div id="passive-stack-chart" class="w-full" style="height:300px"
+          data-series={JSON.stringify((passiveStackData as any).series)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTABase.com · business-profiles.json · GTAForums patch notes · community benchmarks</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online passive income history: from $0 in 2013 to $1.24M/hr AFK in 2022. The Acid Lab was the last major passive income leap before GTA VI." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("passive-stack-chart") as HTMLElement | null;
+    if (!el) return;
+
+    const series: any[] = JSON.parse(el.dataset.series || "[]");
+    if (!series.length) return;
+
+    const KEYS = ["bunker", "nightclub", "mc_cocaine", "acid_lab"];
+    const COLORS: Record<string, string> = {
+      bunker: "#f59e0b", nightclub: "#0d9488", mc_cocaine: "#818cf8", acid_lab: "#22c55e",
+    };
+
+    const margin = { top: 20, right: 16, bottom: 60, left: 72 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleBand().domain(series.map((s: any) => s.date)).range([0, W]).padding(0.18);
+    const maxTotal = (d3.max(series, (s: any) => s.total) ?? 1) as number;
+    const y = d3.scaleLinear().domain([0, maxTotal * 1.08]).range([H, 0]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+
+    // Stacked bars (manual stack since D3.stack needs numeric keys)
+    series.forEach((s: any) => {
+      let yBottom = 0;
+      KEYS.forEach(k => {
+        const val = s[k] || 0;
+        if (val <= 0) return;
+        const xv = x(s.date) ?? 0;
+        svg.append("rect").attr("x", xv).attr("y", y(yBottom + val))
+          .attr("width", x.bandwidth()).attr("height", Math.max(0, y(yBottom) - y(yBottom + val)))
+          .attr("fill", COLORS[k]).attr("opacity", 0.82);
+        yBottom += val;
+      });
+      // Total label on top
+      if (s.total > 0) {
+        const label = s.total >= 1e6 ? `$${(s.total / 1e6).toFixed(2)}M` : `$${Math.round(s.total / 1000)}k`;
+        svg.append("text").attr("x", (x(s.date) ?? 0) + x.bandwidth() / 2).attr("y", y(s.total) - 4)
+          .attr("text-anchor", "middle").attr("fill", "#a1a1aa").attr("font-size", "8.5").attr("font-family", "monospace")
+          .text(label);
+      }
+    });
+
+    // X axis with patch year labels
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).tickFormat((d: any) => d.slice(0, 4)))
+      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "8.5").attr("font-family", "monospace")
+        .attr("transform", "rotate(-35)").attr("text-anchor", "end").attr("dx", "-0.5em").attr("dy", "0.2em"));
+    // Y axis
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `$${Math.round(+d / 1000)}k`))
+      .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("passive-stack-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

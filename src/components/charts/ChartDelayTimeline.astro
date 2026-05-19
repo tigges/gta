@@ -1,0 +1,211 @@
+---
+/**
+ * ChartDelayTimeline
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import delayData         from "../../../data/gta-6/delay-timeline.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="History">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Development & Delay Timeline</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{delayData.total_delays} delay · {delayData.timeline.length} events · SEC EDGAR sourced</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-4">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+              GTA VI: From Announcement to Launch — Every Date Shift
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">
+              Promised "2025" → delayed Feb 2025 → confirmed Nov 19, 2026. Source-tagged per event.
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500 flex-wrap">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gta-gold inline-block"></span>Trailer</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gta-teal inline-block"></span>Date confirmed</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gta-red inline-block"></span>Delay / Leak</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-zinc-600 inline-block"></span>Development</span>
+          </div>
+        </div>
+        <div id="delay-timeline-chart" class="w-full" style="height:320px"
+          data-events={JSON.stringify(delayData.timeline)}
+          data-launch={delayData.confirmed_launch}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
+          <span class="text-[10px] text-zinc-700 font-mono">Sources: SEC EDGAR Take-Two 8-K filings · Rockstar Games official announcements</span>
+          <span class="text-[10px] text-zinc-700 font-mono">Updated {new Date(delayData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI has been delayed twice. The full timeline — and what it signals for the Nov 19, 2026 release date." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("delay-timeline-chart") as HTMLElement | null;
+    if (!el) return;
+
+
+    const events: {date:string;event:string;type:string;source:string;source_type:string;implied_window?:string;confirmed_date?:string}[] =
+      JSON.parse(el.dataset.events || "[]");
+    const launchDate = new Date(el.dataset.launch || "2026-11-19");
+
+    const TYPE_COLORS: Record<string,string> = {
+      milestone:      "#3f3f46",
+      development:    "#52525b",
+      leak:           "#ef4444",
+      trailer:        "#f59e0b",
+      date_set:       "#0d9488",
+      delay:          "#ef4444",
+      date_confirmed: "#0d9488",
+    };
+    const TYPE_FILL: Record<string,string> = {
+      trailer:        "#f59e0b",
+      delay:          "#ef4444",
+      date_confirmed: "#0d9488",
+      date_set:       "#0d9488",
+      leak:           "#ef4444",
+      development:    "#3f3f46",
+      milestone:      "#3f3f46",
+    };
+
+    // Focus on 2022–2027 (where the story is)
+    const startDate = new Date("2022-01-01");
+    const endDate   = new Date("2027-02-01");
+
+    const margin = { top: 60, right: 30, bottom: 50, left: 30 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg")
+      .attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleTime().domain([startDate, endDate]).range([0, W]);
+    const MID = H / 2;
+
+    // ── "Promised 2025" window band ─────────────────────────
+    const promisedStart = new Date("2025-01-01");
+    const promisedEnd   = new Date("2025-12-31");
+    svg.append("rect")
+      .attr("x", x(promisedStart)).attr("y", MID - 28)
+      .attr("width", x(promisedEnd) - x(promisedStart)).attr("height", 56)
+      .attr("rx", 4)
+      .attr("fill", "#0d9488").attr("fill-opacity", 0.08)
+      .attr("stroke", "#0d9488").attr("stroke-opacity", 0.2).attr("stroke-width", 1)
+      .attr("stroke-dasharray", "4,3");
+    svg.append("text")
+      .attr("x", x(new Date("2025-07-01"))).attr("y", MID - 33)
+      .attr("text-anchor","middle")
+      .attr("fill","#0d9488").attr("font-size","9").attr("font-family","monospace").attr("opacity",0.6)
+      .text("promised 2025 window");
+
+    // ── Confirmed Nov 19, 2026 band ──────────────────────────
+    svg.append("rect")
+      .attr("x", x(launchDate) - 1).attr("y", MID - 28)
+      .attr("width", 2).attr("height", 56)
+      .attr("fill","#f59e0b").attr("opacity",0.9);
+    svg.append("text")
+      .attr("x", x(launchDate) + 5).attr("y", MID - 30)
+      .attr("fill","#f59e0b").attr("font-size","9").attr("font-family","monospace").attr("font-weight","700")
+      .text("Nov 19, 2026");
+
+    // ── Main spine ───────────────────────────────────────────
+    svg.append("line")
+      .attr("x1",0).attr("x2",W).attr("y1",MID).attr("y2",MID)
+      .attr("stroke","#2a2a31").attr("stroke-width",1.5);
+
+    // ── Events ───────────────────────────────────────────────
+    const visibleEvents = events.filter(e => new Date(e.date) >= startDate);
+
+    visibleEvents.forEach((ev, i) => {
+      const ex = x(new Date(ev.date));
+      const color = TYPE_COLORS[ev.type] ?? "#52525b";
+      const fill  = TYPE_FILL[ev.type] ?? "#3f3f46";
+      const above = i % 2 === 0; // alternate above/below
+      const labelY = above ? MID - 52 : MID + 70;
+      const tickY1 = above ? MID - 12 : MID + 12;
+      const tickY2 = above ? MID - 32 : MID + 52;
+
+      // Tick line
+      svg.append("line")
+        .attr("x1",ex).attr("x2",ex).attr("y1",tickY1).attr("y2",tickY2)
+        .attr("stroke",color).attr("stroke-width",1).attr("opacity",0.7);
+
+      // Dot on spine
+      svg.append("circle").attr("cx",ex).attr("cy",MID).attr("r", ev.type === "delay" ? 7 : 5)
+        .attr("fill", ev.type === "delay" || ev.type === "date_confirmed" || ev.type === "trailer" ? fill : "#131316")
+        .attr("stroke",color).attr("stroke-width",ev.type === "delay" ? 2 : 1.5);
+
+      // Short event label (2-3 words)
+      const shortLabel: Record<string,string> = {
+        milestone:      "GTA V Launch",
+        development:    "Dev Confirmed",
+        leak:           "Data Breach",
+        date_set:       ev.implied_window ? `Target: ${ev.implied_window}` : "Date Hinted",
+        delay:          "DELAYED →2026",
+        trailer:        i < 4 ? "Trailer 1" : "Trailer 2",
+        date_confirmed: i < 8 ? "Nov 19 (earnings)" : "Nov 19 (official)",
+      };
+      const label = shortLabel[ev.type] ?? ev.type;
+
+      svg.append("text")
+        .attr("x",ex).attr("y",labelY)
+        .attr("text-anchor","middle")
+        .attr("fill", ev.type === "delay" ? "#ef4444" : ev.type === "date_confirmed" ? "#0d9488" : ev.type === "trailer" ? "#f59e0b" : "#71717a")
+        .attr("font-size",ev.type === "delay" ? "11" : "9")
+        .attr("font-family","monospace")
+        .attr("font-weight", ev.type === "delay" || ev.type === "date_confirmed" ? "700" : "400")
+        .text(label);
+
+      // Date below label
+      svg.append("text")
+        .attr("x",ex).attr("y",above ? MID - 40 : MID + 84)
+        .attr("text-anchor","middle")
+        .attr("fill","#3f3f46").attr("font-size","8").attr("font-family","monospace")
+        .text(ev.date.slice(0,7));
+    });
+
+    // ── X axis (year ticks) ──────────────────────────────────
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(d3.timeYear.every(1)).tickFormat(d3.timeFormat("%Y") as any))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
+
+    // ── Delay annotation arrow ───────────────────────────────
+    const delayEv = events.find(e => e.type === "delay");
+    const confirmEv = events.find(e => e.type === "date_confirmed");
+    if (delayEv && confirmEv) {
+      const x1 = x(new Date(delayEv.date)) + 8;
+      const x2 = x(new Date(confirmEv.date)) - 8;
+      const ay = MID + 4;
+      svg.append("line").attr("x1",x1).attr("x2",x2).attr("y1",ay).attr("y2",ay)
+        .attr("stroke","#ef4444").attr("stroke-width",1.5).attr("opacity",0.35)
+        .attr("marker-end","url(#arrow-red)");
+      // Arrow marker
+      const defs = svg.append("defs");
+      const marker = defs.append("marker").attr("id","arrow-red")
+        .attr("viewBox","0 -5 10 10").attr("refX",6).attr("refY",0)
+        .attr("markerWidth",6).attr("markerHeight",6).attr("orient","auto");
+      marker.append("path").attr("d","M0,-5L10,0L0,5").attr("fill","#ef4444").attr("opacity",0.35);
+    }
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("delay-timeline-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

@@ -1,0 +1,97 @@
+---
+/**
+ * ChartEcoWages
+ * Economy chart extracted from gta-online/economy.astro.
+ * Self-contained; D3 init deferred via IntersectionObserver.
+ */
+import metaHistory      from "../../../data/gta-5/economy/meta-history.json";
+import revenueTiersData from "../../../data/gta-5/economy/revenue-tiers.json";
+import ShareButton from "../ShareButton.astro";
+
+const metaSeries    = (metaHistory as any).meta_history as any[];
+const tierSources   = ((revenueTiersData as any).tiers as any[]).flatMap((t:any) => t.sources);
+const liveTopYield  = Math.max(...tierSources.map((s:any) => s.gta_per_hr as number));
+const liveTopName   = tierSources.find((s:any) => s.gta_per_hr === liveTopYield)?.name ?? "Current meta stack";
+const lastMeta      = [...metaSeries].sort((a:any,b:any) => a.date.localeCompare(b.date)).at(-1);
+const today         = new Date().toISOString().slice(0,10);
+const liveMetaSeries = lastMeta?.date === today
+  ? metaSeries
+  : [...metaSeries, { date: today, patch: "Current", top_method: liveTopName, top_gta_per_hr: liveTopYield, notes: "Live — from revenue-tiers.json" }];
+---
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+  <div class="px-5 py-3 border-b border-[#1e1e23]">
+    <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">GTA Online Income Ceiling — Best $/hr Per Era</div>
+    <div class="text-[10px] font-mono text-zinc-600 mt-0.5">Top money method per patch · community benchmarks · auto-updated nightly</div>
+  </div>
+  <div id="chart-wages" class="w-full" style="height:220px"
+    data-series={JSON.stringify(liveMetaSeries)}
+  ></div>
+  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+    <span class="text-[10px] text-zinc-700 font-mono">Source: community data · updated nightly</span>
+    <ShareButton text="GTA Online economy chart: GTA Online Income Ceiling — Best $/hr Per Era" url="https://gtavi.ai/gta-online/economy" size="sm" label="Share" />
+  </div>
+</div>
+
+<script>
+  import * as d3 from "d3";
+  import { cc } from "../../assets/chartColors";
+
+  const CHART_H: Record<string, number> = {
+    "chart-wages": 220, "chart-spending": 220, "chart-savings": 220,
+    "chart-sharkcards": 220, "chart-investment": 200, "chart-ppi": 280, "chart-health": 280,
+  };
+  function getDims(id: string, ml:number, mr:number, mt:number, mb:number) {
+    const el = document.getElementById(id) as HTMLElement;
+    const totalH = CHART_H[id] ?? 220;
+    const totalW = el?.clientWidth || 600;
+    const W = totalW - ml - mr;
+    const H = totalH - mt - mb;
+    return { el, W: Math.max(W,10), H: Math.max(H,10), totalW, totalH };
+  }
+
+  function init() {
+    const { el, W, H, totalW, totalH } = getDims("chart-wages", 68, 60, 16, 36);
+    if (!el) return;
+    const series: any[] = JSON.parse(el.dataset.series || "[]");
+    const ml=68,mr=60,mt=16,mb=36;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${totalW} ${totalH}`)
+      .append("g").attr("transform",`translate(${ml},${mt})`);
+    const x = d3.scaleTime().domain([new Date("2013-01-01"),new Date("2026-01-01")]).range([0,W]);
+    const y = d3.scaleLinear().domain([0,(d3.max(series,(d:any)=>d.top_gta_per_hr)??2e6)*1.2]).range([H,0]);
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+    const defs=svg.append("defs");
+    const grad=defs.append("linearGradient").attr("id","wage-grad2").attr("x1","0").attr("y1","0").attr("x2","0").attr("y2","1");
+    grad.append("stop").attr("offset","0%").attr("stop-color",cc.bar).attr("stop-opacity",0.25);
+    grad.append("stop").attr("offset","100%").attr("stop-color",cc.bar).attr("stop-opacity",0.02);
+    const areaFn=d3.area<any>().x(d=>x(new Date(d.date))).y0(H).y1(d=>y(d.top_gta_per_hr)).curve(d3.curveMonotoneX);
+    svg.append("path").datum(series).attr("fill","url(#wage-grad2)").attr("d",areaFn as any);
+    const lineFn=d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d.top_gta_per_hr)).curve(d3.curveMonotoneX);
+    svg.append("path").datum(series).attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",2).attr("d",lineFn as any);
+    series.forEach((d:any,i:number)=>{
+      const cx=x(new Date(d.date)),cy=y(d.top_gta_per_hr),isLast=i===series.length-1;
+      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3).attr("fill",isLast?cc.bar:cc.bg).attr("stroke",cc.bar).attr("stroke-width",1.5);
+      if(isLast) svg.append("text").attr("x",cx+8).attr("y",cy+4).attr("fill",cc.bar).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold").text(`$${Math.round(d.top_gta_per_hr/1000)}K/hr`);
+    });
+    [{date:"2020-12-15",label:"Cayo",color:cc.green},{date:"2022-01-20",label:"Nerf",color:cc.red},{date:"2022-12-13",label:"Acid Lab",color:cc.teal}].forEach(a=>{
+      const xp=x(new Date(a.date));
+      svg.append("line").attr("x1",xp).attr("x2",xp).attr("y1",0).attr("y2",H).attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.6);
+      svg.append("text").attr("x",xp+3).attr("y",12).attr("fill",a.color).attr("font-size","8").attr("font-family","monospace").text(a.label);
+    });
+    svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2)).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${+d>=1e6?(+d/1e6).toFixed(1)+"M":(+d/1e3)+"K"}`))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));  }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("chart-wages");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

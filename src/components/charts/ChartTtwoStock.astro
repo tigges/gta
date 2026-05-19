@@ -1,0 +1,122 @@
+---
+/**
+ * ChartTtwoStock
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import ttwoStock         from "../../../data/franchise/ttwo-stock.json";
+import delayData         from "../../../data/gta-6/delay-timeline.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="Economy-RL">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Take-Two (TTWO) Stock Price vs GTA VI Milestones</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{ttwoStock.prices.length} months · Yahoo Finance</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              TTWO Share Price — What the Market Said About Every GTA VI Announcement
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">
+              Monthly closing price 2013–{new Date(ttwoStock.prices.at(-1)?.date ?? "").getFullYear()} · key events annotated · current ${ttwoStock.prices.at(-1)?.close}
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gta-gold inline-block"></span>Trailer</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gta-teal inline-block"></span>Date set/confirmed</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gta-red inline-block"></span>Delay/leak</span>
+          </div>
+        </div>
+        <div id="ttwo-stock-chart" class="w-full" style="height:340px"
+          data-prices={JSON.stringify(ttwoStock.prices)}
+          data-annotations={JSON.stringify(ttwoStock.annotations)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: Yahoo Finance (TTWO) · Not investment advice · Updated {new Date(ttwoStock.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Take-Two stock tracks GTA announcement cycles almost perfectly. The market reaction to every trailer and delay, charted." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("ttwo-stock-chart") as HTMLElement | null;
+    if (!el) return;
+
+    const prices: {date:string;close:number}[] = JSON.parse(el.dataset.prices || "[]");
+    const annotations: {date:string;label:string;type:string;color:string}[] = JSON.parse(el.dataset.annotations || "[]");
+
+    const margin = { top: 24, right: 20, bottom: 32, left: 56 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const data = prices.map(p => ({ date: new Date(p.date), close: p.close }));
+    const x = d3.scaleTime().domain(d3.extent(data, d => d.date) as [Date,Date]).range([0,W]);
+    const y = d3.scaleLinear().domain([0, (d3.max(data, d => d.close) ?? 1) * 1.1]).range([H,0]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+
+    // Annotation vertical lines
+    annotations.forEach(a => {
+      const ax = x(new Date(a.date));
+      svg.append("line").attr("x1",ax).attr("x2",ax).attr("y1",0).attr("y2",H)
+        .attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.5);
+    });
+
+    // Gradient fill
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id","ttwo-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
+    grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.2);
+    grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.02);
+
+    svg.append("path").datum(data).attr("fill","url(#ttwo-grad)")
+      .attr("d",d3.area<any>().x(d=>x(d.date)).y0(H).y1(d=>y(d.close)).curve(d3.curveMonotoneX));
+    svg.append("path").datum(data).attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",2)
+      .attr("d",d3.line<any>().x(d=>x(d.date)).y(d=>y(d.close)).curve(d3.curveMonotoneX));
+
+    // Annotation labels (alternating above/below)
+    annotations.forEach((a, i) => {
+      const ax = x(new Date(a.date));
+      // Find price near this date
+      const nearby = data.find(d => Math.abs(d.date.getTime() - new Date(a.date).getTime()) < 1000*60*60*24*45);
+      const ay = nearby ? y(nearby.close) : H/2;
+      const above = i % 2 === 0;
+      svg.append("circle").attr("cx",ax).attr("cy",ay).attr("r",4)
+        .attr("fill",a.color).attr("stroke","#0e0e11").attr("stroke-width",1.5);
+      svg.append("text").attr("x",ax).attr("y",above?ay-10:ay+18)
+        .attr("text-anchor","middle").attr("fill",a.color).attr("font-size","8").attr("font-family","monospace")
+        .text(a.label);
+    });
+
+    // Axes
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>`$${d}`))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("ttwo-stock-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

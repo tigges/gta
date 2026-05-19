@@ -1,0 +1,115 @@
+---
+/**
+ * ChartSharkCard
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import sharkCardData     from "../../../data/gta-5/economy/shark-cards.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="Economy-RL">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Shark Card Purchasing Power — 12 Years of In-Game Inflation</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{(sharkCardData as any).analysis.years_span} years · {(sharkCardData as any).analysis.purchasing_power_ratio}× real-money cost increase</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Key stat callouts -->
+        <div class="grid grid-cols-3 divide-x divide-[#1e1e23] border-b border-[#1e1e23]">
+          {[
+            { label: "Endgame cost 2013",    value: `$${(sharkCardData as any).analysis.launch_endgame_usd.toFixed(2)} USD`,  sub: "via Shark Cards",    color: "#71717a" },
+            { label: "Endgame cost 2025",    value: `$${(sharkCardData as any).analysis.current_endgame_usd.toFixed(2)} USD`, sub: "via Shark Cards",    color: "#ef4444" },
+            { label: "Real-money inflation", value: `${(sharkCardData as any).analysis.purchasing_power_ratio}×`,            sub: "12-year multiplier", color: "#ef4444" },
+          ].map(s => (
+            <div class="px-5 py-4">
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
+              <div class="text-2xl font-mono font-black mb-0.5" style={`color:${s.color}`}>{s.value}</div>
+              <div class="text-[10px] font-mono text-zinc-600">{s.sub}</div>
+            </div>
+          ))}
+        </div>
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+            GTA Online Endgame Cost in Real USD — 2013 to 2026
+          </div>
+          <div class="text-[11px] text-zinc-500 font-mono">How many Megalodon Shark Cards to reach the meta at each major DLC? Rockstar never raised card prices — the game got more expensive instead.</div>
+        </div>
+        <div id="shark-card-chart" class="w-full" style="height:320px"
+          data-history={JSON.stringify((sharkCardData as any).endgame_cost_history)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Real-money figures = endgame GTA$ ÷ Megalodon rate ($80k GTA$/USD). Shark Card prices unchanged since 2013 launch.</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text={`GTA Online endgame cost via Shark Cards: $18.75 in 2013 → $437.50 in 2026. A ${(sharkCardData as any).analysis.purchasing_power_ratio}× real-money increase while card prices never changed.`} url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("shark-card-chart") as HTMLElement | null;
+    if (!el) return;
+
+    const history: any[] = JSON.parse(el.dataset.history || "[]");
+    if (!history.length) return;
+
+    const margin = { top: 24, right: 90, bottom: 70, left: 80 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const dates = history.map(d => new Date(d.date));
+    const x = d3.scaleTime().domain([dates[0], dates[dates.length-1]]).range([0,W]);
+    const maxUSD = d3.max(history, (d:any) => d.megalodon_usd_equivalent) ?? 500;
+    const y = d3.scaleLinear().domain([0, maxUSD * 1.1]).range([H, 0]);
+    const y2 = d3.scaleLinear().domain([0, (d3.max(history, (d:any) => d.endgame_cost) ?? 35000000) * 1.1]).range([H, 0]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+
+    // Area fill (GTA$ endgame cost)
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id","shark-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
+    grad.append("stop").attr("offset","0%").attr("stop-color","#ef4444").attr("stop-opacity",0.25);
+    grad.append("stop").attr("offset","100%").attr("stop-color","#ef4444").attr("stop-opacity",0.02);
+
+    const area = d3.area<any>().x(d=>x(new Date(d.date))).y0(H).y1(d=>y(d.megalodon_usd_equivalent)).curve(d3.curveStepAfter);
+    svg.append("path").datum(history).attr("fill","url(#shark-grad)").attr("d",area as any);
+
+    const line = d3.line<any>().x(d=>x(new Date(d.date))).y(d=>y(d.megalodon_usd_equivalent)).curve(d3.curveStepAfter);
+    svg.append("path").datum(history).attr("fill","none").attr("stroke","#ef4444").attr("stroke-width",2).attr("d",line as any);
+
+    // Data points + labels
+    history.forEach((d:any, i:number) => {
+      const cx = x(new Date(d.date)), cy = y(d.megalodon_usd_equivalent);
+      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",5).attr("fill","#ef4444").attr("stroke","#131316").attr("stroke-width",2);
+      if (i === 0 || i === history.length-1 || d.megalodon_usd_equivalent > 200) {
+        svg.append("text").attr("x",cx+6).attr("y",cy-6).attr("fill","#ef4444").attr("font-size","9").attr("font-family","monospace").text(`$${d.megalodon_usd_equivalent.toFixed(0)}`);
+      }
+    });
+
+    // Axes
+    svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(history.length).tickFormat(d3.timeFormat("%Y") as any))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace").attr("transform","rotate(-35)").attr("text-anchor","end").attr("dy","0.5em"));
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d:any)=>`$${d}`))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+    svg.append("text").attr("transform","rotate(-90)").attr("x",-H/2).attr("y",-60).attr("text-anchor","middle").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Real USD Cost (via Megalodon)");
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("shark-card-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

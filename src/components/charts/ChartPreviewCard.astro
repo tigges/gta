@@ -1,0 +1,88 @@
+---
+/**
+ * ChartPreviewCard
+ * Shows a chart thumbnail + title in collapsed state.
+ * On expand, renders the chart slot inline.
+ * Accepts a unique `cardId` to isolate state.
+ */
+interface Props {
+  cardId: string;           // unique slug, used for DOM targeting
+  title: string;
+  description: string;
+  category: string;         // badge label e.g. "Economy-IG · GTA Online"
+  deepLink: string;         // /charts#anchor for "Full chart →"
+  thumbUrl?: string;        // YouTube or image thumbnail
+}
+const { cardId, title, description, category, deepLink, thumbUrl } = Astro.props;
+const thumb = thumbUrl ?? `https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg`;
+---
+
+<div class="chart-preview-card rounded-xl border border-[#1e1e23] overflow-hidden transition-all duration-300" style="background:#131316" data-card-id={cardId}>
+  <!-- Collapsed header — always visible -->
+  <button
+    class="preview-toggle w-full flex items-center gap-4 px-4 py-3 hover:bg-white/[0.02] transition-colors text-left"
+    aria-expanded="false"
+    aria-controls={`preview-body-${cardId}`}
+  >
+    <!-- Thumbnail -->
+    <div class="shrink-0 w-20 h-12 rounded overflow-hidden border border-[#2a2a31]">
+      <img src={thumb} alt="" class="w-full h-full object-cover" loading="lazy" aria-hidden="true" />
+    </div>
+    <!-- Text -->
+    <div class="flex-1 min-w-0 text-left">
+      <div class="text-[12px] font-semibold text-zinc-200 leading-snug mb-0.5 truncate" style="font-family:'Inter',sans-serif">{title}</div>
+      <div class="text-[10px] font-mono text-zinc-600 leading-snug">{description}</div>
+    </div>
+    <!-- Badge + chevron -->
+    <div class="shrink-0 flex items-center gap-2">
+      <span class="hidden sm:block text-[8px] font-mono text-zinc-700 border border-[#2a2a31] px-1.5 py-0.5 rounded uppercase tracking-widest">{category}</span>
+      <svg class="preview-chevron w-3.5 h-3.5 text-zinc-600 transition-transform duration-200 shrink-0"
+           viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 1l4 4 4-4"/>
+      </svg>
+    </div>
+  </button>
+
+  <!-- Expanded body — hidden by default -->
+  <div
+    id={`preview-body-${cardId}`}
+    class="preview-body hidden border-t border-[#1e1e23]"
+  >
+    <!-- Chart slot renders here on expand -->
+    <div class="preview-chart-slot px-0 py-0">
+      <slot />
+    </div>
+    <!-- Footer with deep-link -->
+    <div class="px-4 py-2.5 border-t border-[#1e1e23] flex items-center justify-between gap-3" style="background:#0e0e11">
+      <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">{category}</span>
+      <a href={deepLink}
+         class="text-[9px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors uppercase tracking-widest">
+        Full chart →
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".chart-preview-card").forEach(card => {
+    const toggle   = card.querySelector<HTMLButtonElement>(".preview-toggle");
+    const body     = card.querySelector<HTMLElement>(".preview-body");
+    const chevron  = card.querySelector<SVGElement>(".preview-chevron");
+    if (!toggle || !body) return;
+
+    toggle.addEventListener("click", () => {
+      const isOpen = !body.classList.contains("hidden");
+      if (isOpen) {
+        body.classList.add("hidden");
+        toggle.setAttribute("aria-expanded", "false");
+        if (chevron) (chevron as HTMLElement).style.transform = "";
+      } else {
+        body.classList.remove("hidden");
+        toggle.setAttribute("aria-expanded", "true");
+        if (chevron) (chevron as HTMLElement).style.transform = "rotate(180deg)";
+        // Trigger resize so D3 can measure the newly visible container
+        window.dispatchEvent(new Event("resize"));
+      }
+    });
+  });
+</script>

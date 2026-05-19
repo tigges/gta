@@ -9,6 +9,10 @@ import StockCalculator from "../components/StockCalculator.astro";
 import SocialClubConnector from "../components/SocialClubConnector.astro";
 import { Image } from "astro:assets";
 import heroGtaV from "../assets/images/hero-gta-v.jpg";
+import ChartAssassinationReturns from "../components/charts/ChartAssassinationReturns.astro";
+import ChartDlcPlayerHistory     from "../components/charts/ChartDlcPlayerHistory.astro";
+import ChartPrelaunchComparison  from "../components/charts/ChartPrelaunchComparison.astro";
+import ChartPreviewCard          from "../components/charts/ChartPreviewCard.astro";
 
 import steamData     from "../../data/gta-5/meta/steam-players.json";
 import trendsData    from "../../data/gta-5/trends/search-interest.json";
@@ -267,6 +271,50 @@ const RETURN_COLOR = (pct: number) =>
         </div>
       </div>
     </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         MORE GTA V CHARTS — preview cards
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-red shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// More GTA V Charts</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/charts?title=gta-v" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
+      </div>
+      <div class="flex flex-col gap-2">
+
+        <ChartPreviewCard
+          cardId="preview-assassination"
+          title="Assassination Stocks — Combined Return Per Mission"
+          description="Interactive $2B calculator · buy/sell windows · optimal order"
+          category="Economy-IG · GTA V Story"
+          deepLink="/charts#assassination-returns-chart"
+        >
+          <ChartAssassinationReturns />
+        </ChartPreviewCard>
+
+        <ChartPreviewCard
+          cardId="preview-dlc-players"
+          title="GTA V Steam Player History — DLC Events Overlay"
+          description="Every DLC launch vs concurrent player counts · 2015–2026"
+          category="Community · GTA V"
+          deepLink="/charts#dlc-player-chart"
+        >
+          <ChartDlcPlayerHistory />
+        </ChartPreviewCard>
+
+        <ChartPreviewCard
+          cardId="preview-prelaunch-v"
+          title="Pre-launch Hype — GTA V (2013) vs GTA VI (2026)"
+          description="Same moment before launch · search trends · community size"
+          category="Community · V vs VI"
+          deepLink="/charts#prelaunch-comparison-chart"
+        >
+          <ChartPrelaunchComparison />
+        </ChartPreviewCard>
+      </div>
+    </section>
 
     <CrossLinks context="gta-v" />
 

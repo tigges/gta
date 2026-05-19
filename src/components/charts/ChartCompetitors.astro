@@ -1,0 +1,131 @@
+---
+/**
+ * ChartCompetitors
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import competitorData    from "../../../data/franchise/competitors.json";
+import salesData         from "../../../data/franchise/sales.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="Economy-RL">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Major Game Launches — Year 1 Sales & Pre-launch Hype</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{competitorData.games.length} titles compared</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+            GTA VI Projected Year-1 vs the Biggest Game Launches of the Last Decade
+          </div>
+          <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Year-1 units (left axis) · pre-launch search interest at T-12m (right axis) · bubble size = Metacritic score</div>
+        </div>
+        <div id="competitors-chart" class="w-full" style="height:380px"
+          data-games={JSON.stringify(competitorData.games)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Sources: Publisher earnings · VGChartz · Metacritic · Google Trends · DFC Intelligence (GTA VI) · *predicted</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI projected year-1 vs the biggest game launches of the last decade. Every metric points to an unprecedented release." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("competitors-chart") as HTMLElement | null;
+    if (!el) return;
+
+    const games: any[] = JSON.parse(el.dataset.games || "[]")
+      .sort((a: any, b: any) => (b.year1_units_m ?? 0) - (a.year1_units_m ?? 0));
+
+    const margin = { top: 20, right: 80, bottom: 56, left: 190 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleBand().domain(games.map(g=>g.id)).range([0,W]).padding(0.28);
+    const maxUnits = d3.max(games, g => g.year1_units_m ?? 0) ?? 1;
+    const y = d3.scaleLinear().domain([0, maxUnits * 1.15]).range([H,0]);
+    const y2 = d3.scaleLinear().domain([0, 100]).range([H, 0]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+
+    games.forEach(g => {
+      const bx = x(g.id) ?? 0, bw = x.bandwidth();
+      const isPred = g.is_prediction;
+      const units = g.year1_units_m ?? 0;
+
+      // Bar
+      svg.append("rect").attr("x",bx).attr("y",y(units))
+        .attr("width",bw).attr("height",H-y(units)).attr("rx",3)
+        .attr("fill",isPred?"none":g.color).attr("fill-opacity",isPred?0:0.75)
+        .attr("stroke",isPred?g.color:"none").attr("stroke-width",isPred?1.5:0)
+        .attr("stroke-dasharray",isPred?"6,3":"0");
+
+      // Prediction range band
+      if (isPred && g.prediction_range) {
+        const lo = parseFloat(g.prediction_range.low), hi = parseFloat(g.prediction_range.high);
+        svg.append("rect").attr("x",bx+bw*0.1).attr("y",y(hi))
+          .attr("width",bw*0.8).attr("height",y(lo)-y(hi)).attr("rx",2)
+          .attr("fill",g.color).attr("opacity",0.12);
+        svg.append("text").attr("x",bx+bw/2).attr("y",y(hi)-4)
+          .attr("text-anchor","middle").attr("fill","#71717a").attr("font-size","8").attr("font-family","monospace")
+          .text(`${g.prediction_range.low}–${g.prediction_range.high}M`);
+      }
+
+      // Units label
+      svg.append("text").attr("x",bx+bw/2).attr("y",y(units)-(isPred?24:5))
+        .attr("text-anchor","middle").attr("fill",isPred?g.color:"#a1a1aa")
+        .attr("font-size",isPred?"11":"10").attr("font-family","monospace").attr("font-weight",isPred?"700":"400")
+        .text(isPred?`~${units}M*`:`${units}M`);
+
+      // Search dot on right axis
+      if (g.search_t12) {
+        svg.append("circle").attr("cx",bx+bw/2).attr("cy",y2(g.search_t12)).attr("r",isPred?7:5)
+          .attr("fill",isPred?g.color:"#0d9488").attr("opacity",isPred?0.9:0.7)
+          .attr("stroke","#0e0e11").attr("stroke-width",1);
+        svg.append("text").attr("x",bx+bw/2).attr("y",y2(g.search_t12)-8)
+          .attr("text-anchor","middle").attr("fill","#0d9488").attr("font-size","8").attr("font-family","monospace")
+          .text(`${g.search_t12}`);
+      }
+
+      // Title label
+      svg.append("text").attr("x",-8).attr("y",H+30).attr("text-anchor","end")
+        .attr("transform",`translate(${bx+bw/2},0) rotate(-35,0,${H+30})`)
+        .attr("fill",isPred?g.color:"#71717a").attr("font-size","10").attr("font-family","monospace")
+        .text(g.title.length>16?g.title.slice(0,15)+"…":g.title);
+    });
+
+    // Right axis — search index
+    svg.append("g").attr("transform",`translate(${W},0)`)
+      .call(d3.axisRight(y2).ticks(5))
+      .call(g=>g.select(".domain").attr("stroke","#0d9488"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#0d9488").attr("opacity",0.2))
+      .call(g=>g.selectAll("text").attr("fill","#0d9488").attr("font-size","9").attr("font-family","monospace").attr("dx","3"));
+    svg.append("text").attr("x",W+44).attr("y",-8)
+      .attr("fill","#0d9488").attr("font-size","8").attr("font-family","monospace").text("search");
+
+    // Left axis
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>`${d}M`))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("competitors-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

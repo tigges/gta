@@ -1,0 +1,153 @@
+---
+/**
+ * ChartTrailerDiscovery
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import trailerAnalysis   from "../../../data/gta-6/trailer-analysis.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="History">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Discovery Density — What Every Second Revealed</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{trailerAnalysis.trailers[0].total_entities + trailerAnalysis.trailers[1].total_entities} entities discovered across both trailers</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-center gap-5 flex-wrap">
+          <div class="flex-1">
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              Frame-by-Frame: Information Density Across Both Official Trailers
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Each marker = a new entity confirmed. Colour = entity type. Trailer 2 is information-denser at every quartile.</div>
+          </div>
+          <!-- Trailer thumbnails -->
+          <div class="flex items-center gap-3 shrink-0">
+            {(trailerAnalysis.trailers as any[]).map((t: any, i: number) => (
+              <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
+                class="group relative overflow-hidden rounded-lg border border-[#2a2a31] hover:border-gta-gold/30 transition-all">
+                <img src={`https://img.youtube.com/vi/${t.youtube_id}/mqdefault.jpg`}
+                  alt={t.title} class="w-28 h-16 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 50%)"></div>
+                <div class="absolute bottom-1 left-2">
+                  <span class="text-[8px] font-mono text-gta-gold">T{i + 1}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+        <div id="trailer-discovery-chart" class="w-full px-5 py-4"
+          data-trailers={JSON.stringify(trailerAnalysis.trailers)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTA VI.AI frame-by-frame analysis · official Rockstar trailers</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis across both trailers." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("trailer-discovery-chart") as HTMLElement | null;
+    if (!el) return;
+
+    const trailers: any[] = JSON.parse(el.dataset.trailers || "[]");
+
+    const TYPE_COLORS: Record<string,string> = {
+      vehicle:"#f59e0b", character:"#22c55e", location:"#38bdf8",
+      wildlife:"#a3e635", weapon:"#ef4444", audio:"#a78bfa", reveal:"#ffffff",
+    };
+
+    trailers.forEach((trailer, ti) => {
+      const stripH = 48;
+      const labelH = 60;
+      const totalH = stripH + labelH;
+      const W = el.clientWidth - 20;
+
+      const div = document.createElement("div");
+      div.className = "mb-6";
+      el.appendChild(div);
+
+      const titleEl = document.createElement("div");
+      titleEl.className = "text-[10px] font-mono text-zinc-500 mb-2 uppercase tracking-widest";
+      titleEl.textContent = `${trailer.title} · ${trailer.duration_sec}s runtime · ${trailer.events.length} entities`;
+      div.appendChild(titleEl);
+
+      const svg = d3.select(div).append("svg").attr("width","100%")
+        .attr("viewBox",`0 0 ${el.clientWidth} ${totalH + 20}`)
+        .append("g").attr("transform","translate(10,0)");
+
+      const dur = trailer.duration_sec;
+      const x = d3.scaleLinear().domain([0, dur]).range([0, W]);
+
+      // Background strip
+      svg.append("rect").attr("x",0).attr("y",16).attr("width",W).attr("height",stripH).attr("rx",4)
+        .attr("fill","#1a1a1e");
+
+      // Density heatmap (count events per 10-second bucket)
+      const buckets = Math.ceil(dur / 8);
+      const counts = new Array(buckets).fill(0);
+      trailer.events.forEach((ev: any) => { counts[Math.floor(ev.t / 8)]++; });
+      const maxCount = Math.max(...counts);
+      counts.forEach((c, i) => {
+        if (c === 0) return;
+        const bx = x(i * 8);
+        const bw = x(8) - x(0);
+        svg.append("rect").attr("x",bx).attr("y",16).attr("width",bw).attr("height",stripH).attr("rx",2)
+          .attr("fill","#f59e0b").attr("opacity", 0.05 + (c / maxCount) * 0.25);
+      });
+
+      // Event markers
+      trailer.events.forEach((ev: any, i: number) => {
+        const ex = x(ev.t);
+        const color = TYPE_COLORS[ev.type] ?? "#71717a";
+        const above = i % 2 === 0;
+        const markerY = above ? 16 : 16 + stripH - 10;
+
+        svg.append("line").attr("x1",ex).attr("x2",ex).attr("y1",16).attr("y2",16+stripH)
+          .attr("stroke",color).attr("stroke-width",1).attr("opacity",0.6);
+
+        svg.append("circle").attr("cx",ex).attr("cy",markerY+5).attr("r",4)
+          .attr("fill",color).attr("stroke","#0e0e11").attr("stroke-width",1);
+
+        // Key reveals get labels
+        if (ev.type === "reveal" || ev.type === "character" || (i < 3) || ev.confidence === "confirmed") {
+          const shortName = ev.entity.split(" ").slice(0,2).join(" ");
+          svg.append("text").attr("x",ex).attr("y",above?12:16+stripH+14)
+            .attr("text-anchor","middle").attr("fill",color)
+            .attr("font-size","8").attr("font-family","monospace").text(shortName);
+        }
+      });
+
+      // Time axis
+      [0, 0.25, 0.5, 0.75, 1.0].forEach(pct => {
+        const tx = pct * W;
+        const tSec = Math.round(pct * dur);
+        svg.append("text").attr("x",tx).attr("y",totalH+16)
+          .attr("text-anchor","middle").attr("fill","#3f3f46").attr("font-size","9").attr("font-family","monospace")
+          .text(`${Math.floor(tSec/60)}:${String(tSec%60).padStart(2,"0")}`);
+      });
+    });
+
+    // Legend
+    const legendDiv = document.createElement("div");
+    legendDiv.className = "flex flex-wrap gap-x-4 gap-y-1 mt-2";
+    Object.entries(TYPE_COLORS).forEach(([type, color]) => {
+      const span = document.createElement("span");
+      span.className = "text-[10px] font-mono text-zinc-500 flex items-center gap-1";
+      span.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color}"></span>${type}`;
+      legendDiv.appendChild(span);
+    });
+    el.appendChild(legendDiv);
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("trailer-discovery-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

@@ -1,0 +1,77 @@
+---
+/**
+ * ChartEcoSpending
+ * Economy chart extracted from gta-online/economy.astro.
+ * Self-contained; D3 init deferred via IntersectionObserver.
+ */
+import spendingData from "../../../data/gta-5/economy/spending-distribution.json";
+import ShareButton from "../ShareButton.astro";
+
+const spendEras = (spendingData as any).eras as any[];
+---
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+  <div class="px-5 py-3 border-b border-[#1e1e23]">
+    <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">GTA$ Spending Distribution — How Player Money Flows Each Era</div>
+    <div class="text-[10px] font-mono text-zinc-600 mt-0.5">Vehicles · weapons · properties · shark cards by era</div>
+  </div>
+  <div id="chart-spending" class="w-full" style="height:220px"
+    data-eras={JSON.stringify(spendEras)}
+  ></div>
+  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+    <span class="text-[10px] text-zinc-700 font-mono">Source: community data · updated nightly</span>
+    <ShareButton text="GTA Online economy chart: GTA$ Spending Distribution — How Player Money Flows Each Era" url="https://gtavi.ai/gta-online/economy" size="sm" label="Share" />
+  </div>
+</div>
+
+<script>
+  import * as d3 from "d3";
+  import { cc } from "../../assets/chartColors";
+
+  const CHART_H: Record<string, number> = {
+    "chart-wages": 220, "chart-spending": 220, "chart-savings": 220,
+    "chart-sharkcards": 220, "chart-investment": 200, "chart-ppi": 280, "chart-health": 280,
+  };
+  function getDims(id: string, ml:number, mr:number, mt:number, mb:number) {
+    const el = document.getElementById(id) as HTMLElement;
+    const totalH = CHART_H[id] ?? 220;
+    const totalW = el?.clientWidth || 600;
+    const W = totalW - ml - mr;
+    const H = totalH - mt - mb;
+    return { el, W: Math.max(W,10), H: Math.max(H,10), totalW, totalH };
+  }
+
+  function init() {
+    const {el,W,H,totalW,totalH}=getDims("chart-spending",48,24,16,48);
+    if(!el) return;
+    const eras:any[]=JSON.parse(el.dataset.eras||"[]");
+    const ml=48,mr=24,mt=16,mb=48;
+    const svg=d3.select(el).append("svg").attr("width","100%").attr("viewBox",`0 0 ${totalW} ${totalH}`).append("g").attr("transform",`translate(${ml},${mt})`);
+    const x=d3.scaleBand().domain(eras.map(e=>e.label)).range([0,W]).padding(0.25);
+    const y=d3.scaleLinear().domain([0,100]).range([H,0]);
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+    const cats=[{key:"vehicles_pct",color:cc.bar},{key:"properties_pct",color:cc.indigo},{key:"weapons_pct",color:cc.teal}];
+    eras.forEach(era=>{
+      let yOff=0;
+      cats.forEach(cat=>{
+        const val=era[cat.key] as number;
+        svg.append("rect").attr("x",x(era.label)??0).attr("y",y(yOff+val)).attr("rx",2)
+          .attr("width",x.bandwidth()).attr("height",Math.max(0,y(yOff)-y(yOff+val))).attr("fill",cat.color).attr("opacity",0.85);
+        yOff+=val;
+      });
+    });
+    svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace").attr("transform","rotate(-30)").attr("text-anchor","end").attr("dy","0.5em"));
+    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`${d}%`))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));  }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("chart-spending");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

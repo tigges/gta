@@ -1,0 +1,115 @@
+---
+/**
+ * ChartRegionHeatmap
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import regionsData       from "../../../data/franchise/regions-evidence.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="History">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida Region Evidence Heatmap</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{regionsData.regions.filter((r: any) => r.confirmed).length} confirmed regions · evidence per source type</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+            How Much Does Rockstar Actually Want You to Know?
+          </div>
+          <div class="text-[11px] text-zinc-500 font-mono">Evidence density per region per source. Dark = little shown. Bright = extensively documented. Vice City dominates every source type.</div>
+        </div>
+        <div id="region-heatmap" class="w-full overflow-x-auto"
+          data-regions={JSON.stringify(regionsData.regions)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Sources: Rockstar press kit · Trailer analysis · Leonida Intel community mapping</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Every confirmed GTA VI region from official trailer analysis. The Leonida map is the largest open world Rockstar has ever built." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("region-heatmap") as HTMLElement | null;
+    if (!el) return;
+
+    const regions: any[] = JSON.parse(el.dataset.regions || "[]");
+
+    const COLS = ["official_statements","press_kit_images","trailer_1_appearances","trailer_2_appearances","community_mapping"];
+    const COL_LABELS = ["Official","Press Kit","Trailer 1","Trailer 2","Community"];
+    const maxVal = Math.max(...regions.flatMap(r => COLS.map(c => r.evidence[c] ?? 0)));
+
+    const REGION_THUMBS: Record<string,string> = {
+      "Vice City":    "/assets/gta6/locations/Vice_City_01.jpg",
+      "Port Gellhorn":"/assets/gta6/locations/Port_Gellhorn_01.jpg",
+      "Leonida Keys": "/assets/gta6/locations/Leonida_Keys_01.jpg",
+      "Ambrosia":     "/assets/gta6/locations/Ambrosia_01.jpg",
+      "Mount Kalaga": "/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg",
+      "Grassrivers":  "/assets/gta6/locations/Grassrivers_01.jpg",
+    };
+
+    const table = document.createElement("div");
+    table.className = "overflow-x-auto";
+    table.innerHTML = `
+      <table class="w-full text-xs font-mono">
+        <thead>
+          <tr class="border-b border-[#1e1e23]">
+            <th class="text-left px-5 py-2.5 text-zinc-600 font-normal w-44">Region</th>
+            ${COL_LABELS.map(l => `<th class="text-center px-3 py-2.5 text-zinc-600 font-normal">${l}</th>`).join("")}
+            <th class="text-right px-5 py-2.5 text-zinc-600 font-normal">Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${regions.map(r => {
+            const thumb = REGION_THUMBS[r.name];
+            const nameCell = thumb
+              ? `<div class="flex items-center gap-2.5">
+                   <img src="${thumb}" alt="${r.name}" style="width:48px;height:30px;object-fit:cover;border-radius:3px;border:1px solid #2a2a31;flex-shrink:0" loading="lazy" />
+                   <span>${r.name}</span>
+                 </div>`
+              : r.name;
+            return `
+            <tr class="border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors">
+              <td class="px-5 py-2.5 font-semibold ${r.confirmed ? "text-zinc-200" : "text-zinc-600"}">
+                ${nameCell}
+              </td>
+              ${COLS.map(c => {
+                const v = r.evidence[c] ?? 0;
+                const pct = maxVal > 0 ? v / maxVal : 0;
+                const opacity = 0.05 + pct * 0.95;
+                const bg = r.confirmed ? `rgba(245,158,11,${opacity})` : `rgba(82,82,91,${opacity*0.4})`;
+                return `<td class="px-3 py-2.5 text-center">
+                  <div class="inline-flex items-center justify-center w-8 h-6 rounded text-[10px] font-mono font-bold"
+                       style="background:${bg};color:${v>0?(r.confirmed?"#f59e0b":"#71717a"):"#3f3f46"}">
+                    ${v > 0 ? v : "—"}
+                  </div>
+                </td>`;
+              }).join("")}
+              <td class="px-5 py-2.5 text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <div class="h-1 w-16 rounded-full bg-[#1e1e23] overflow-hidden">
+                    <div class="h-full rounded-full ${r.confirmed?"bg-gta-gold":"bg-zinc-600"}"
+                         style="width:${r.confidence_pct}%"></div>
+                  </div>
+                  <span class="${r.confirmed?"text-gta-gold":"text-zinc-600"}">${r.confidence_pct}%</span>
+                </div>
+              </td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>`;
+    el.appendChild(table);
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("region-heatmap");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

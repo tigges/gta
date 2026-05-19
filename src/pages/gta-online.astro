@@ -1,6 +1,17 @@
 ---
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
+import ChartMetaEvolution    from "../components/charts/ChartMetaEvolution.astro";
+import ChartIncomeLeaderboard from "../components/charts/ChartIncomeLeaderboard.astro";
+import ChartGtaPpi           from "../components/charts/ChartGtaPpi.astro";
+import ChartBonusHeatmap     from "../components/charts/ChartBonusHeatmap.astro";
+import ChartRoiScatter       from "../components/charts/ChartRoiScatter.astro";
+import ChartPassiveStack     from "../components/charts/ChartPassiveStack.astro";
+import ChartSharkCard        from "../components/charts/ChartSharkCard.astro";
+import ChartEcoWages         from "../components/charts/ChartEcoWages.astro";
+import ChartEcoPpi           from "../components/charts/ChartEcoPpi.astro";
+import ChartEcoHealth        from "../components/charts/ChartEcoHealth.astro";
+import ChartPreviewCard      from "../components/charts/ChartPreviewCard.astro";
 
 import weeklyBonuses    from "../../data/gta-5/economy/weekly-bonuses.json";
 import revenueTiers     from "../../data/gta-5/economy/revenue-tiers.json";
@@ -179,6 +190,109 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
         </a>
       </div>
     </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         FEATURED CHARTS — GTA Online
+    ═══════════════════════════════════════════════════════ -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-teal shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economy Intelligence — Key Charts</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/charts?title=gta-online" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
+      </div>
+
+      <!-- Featured: Meta evolution (full width) -->
+      <div class="mb-6">
+        <ChartMetaEvolution />
+      </div>
+
+      <!-- Featured: Income leaderboard + GTA-PPI (2-col) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <ChartIncomeLeaderboard />
+        <ChartGtaPpi />
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         MORE CHARTS — expandable preview cards
+    ═══════════════════════════════════════════════════════ -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// More GTA Online Charts</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <div class="flex flex-col gap-2">
+
+        <ChartPreviewCard
+          cardId="preview-bonus"
+          title="Bonus Activity Heatmap — Which Activities Run and How Often"
+          description="52-week grid · every activity · frequency intelligence"
+          category="Promotions · GTA Online"
+          deepLink="/charts#bonus-heatmap"
+        >
+          <ChartBonusHeatmap />
+        </ChartPreviewCard>
+
+        <ChartPreviewCard
+          cardId="preview-roi"
+          title="ROI Bubble — Which Businesses Are Worth the Investment?"
+          description="$/hr vs setup cost · all 56 sources · buy-order guide"
+          category="Economy-IG · GTA Online"
+          deepLink="/charts#roi-scatter-chart"
+        >
+          <ChartRoiScatter />
+        </ChartPreviewCard>
+
+        <ChartPreviewCard
+          cardId="preview-passive"
+          title="Passive Income Stack Growth — Bunker to Acid Lab 2013–2026"
+          description="DLC-by-DLC passive ceiling · how the meta stacked up"
+          category="Economy-IG · GTA Online"
+          deepLink="/charts#passive-stack-chart"
+        >
+          <ChartPassiveStack />
+        </ChartPreviewCard>
+
+        <ChartPreviewCard
+          cardId="preview-shark"
+          title="GTA Online Endgame Cost in Real USD — Shark Card Erosion"
+          description="How much does it cost to start? 2013 vs today in real dollars"
+          category="Economy-RL · GTA Online"
+          deepLink="/charts#shark-card-chart"
+        >
+          <ChartSharkCard />
+        </ChartPreviewCard>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         ECONOMY DEEP DIVE
+    ═══════════════════════════════════════════════════════ -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-[9px] font-mono bg-teal-900/30 text-teal-400 border border-teal-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economic Flow Analysis</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/gta-online/economy" class="text-[10px] font-mono text-teal-400/70 hover:text-teal-400 transition-colors tracking-widest uppercase">Full model →</a>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <ChartEcoWages />
+        <ChartEcoPpi />
+      </div>
+      <ChartEcoHealth />
+
+      <div class="mt-5 rounded-xl border border-teal-800/20 px-5 py-4 flex items-center justify-between flex-wrap gap-3" style="background:#0e1a0e">
+        <div>
+          <div class="font-semibold text-teal-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Complete Economy Model</div>
+          <div class="text-[10px] font-mono text-teal-700 leading-snug">Circular flow · Shark Card spend · savings profile · investment analysis · all 7 economy charts</div>
+        </div>
+        <a href="/gta-online/economy" class="shrink-0 px-4 py-2 rounded border border-teal-700/30 text-teal-400 text-[10px] font-mono hover:bg-teal-900/20 transition-all">
+          Open Economy Model →
+        </a>
+      </div>
+    </section>
 
     <CrossLinks context="gta-online" />
   </div>

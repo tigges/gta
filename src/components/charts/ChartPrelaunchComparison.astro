@@ -1,0 +1,166 @@
+---
+/**
+ * ChartPrelaunchComparison
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import steamData      from "../../../data/gta-5/meta/steam-players.json";
+import gta5Trends     from "../../../data/gta-5/trends/search-interest.json";
+import gta6Trends     from "../../../data/gta-6/trends/search-interest.json";
+import velocityData   from "../../../data/gta-6/trailer-velocity.json";
+import redditData     from "../../../data/community/reddit.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="Community">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-green-900/30 text-green-500 border border-green-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Community</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs GTA V — Pre-launch Signal Comparison</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">both normalised to months before launch</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-8 h-11" loading="lazy" />
+              <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+            Pre-launch Hype — GTA V (2013) vs GTA VI (2026) at the Same Moment
+          </div>
+          <div class="text-[11px] text-zinc-500 font-mono">Three signals, same axis. GTA VI running dramatically hotter at every equivalent pre-launch milestone.</div>
+        </div>
+        <!-- Key stat callouts -->
+        <div class="grid grid-cols-3 divide-x divide-[#1e1e23] border-b border-[#1e1e23]">
+          {[
+            { label: "Search interest at T-24m", gta5: "~12", gta6: "~58", unit: "/100 Trends", delta: "4.8×" },
+            { label: "Search interest at T-12m", gta5: "~28", gta6: "~72", unit: "/100 Trends", delta: "2.6×" },
+            { label: "Reddit subs at T-12m",     gta5: "~90k", gta6: "~1.5M", unit: "subscribers", delta: "17×" },
+          ].map(s => (
+            <div class="px-4 py-3">
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
+              <div class="flex items-baseline gap-2">
+                <span class="text-sm font-mono font-bold text-gta-gold">{s.gta6}</span>
+                <span class="text-[10px] font-mono text-zinc-600">GTA VI</span>
+              </div>
+              <div class="flex items-baseline gap-2">
+                <span class="text-xs font-mono text-zinc-500">{s.gta5}</span>
+                <span class="text-[10px] font-mono text-zinc-700">GTA V</span>
+              </div>
+              <div class="text-[9px] font-mono text-gta-teal mt-1">{s.delta} hotter</div>
+            </div>
+          ))}
+        </div>
+        <div id="prelaunch-comparison-chart" class="w-full" style="height:320px"
+          data-gta5={JSON.stringify(gta5Trends.keywords.find(k => k.keyword === "GTA V"))}
+          data-gta6={JSON.stringify(gta6Trends.keywords.find(k => k.keyword === "GTA 6"))}
+          data-reddit={JSON.stringify(redditData.historical_milestones)}
+          data-gta5launch="2013-09-17"
+          data-gta6launch="2026-11-19"
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Sources: Google Trends via pytrends · r/GrandTheftAutoVI community records</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI is running 4.8× hotter than GTA V at the same pre-launch moment. Three signals, one conclusion." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("prelaunch-comparison-chart") as HTMLElement | null;
+    if (!el) return;
+
+    const gta5kw: any = JSON.parse(el.dataset.gta5 || "null");
+    const gta6kw: any = JSON.parse(el.dataset.gta6 || "null");
+    const milestones: any[] = JSON.parse(el.dataset.reddit || "[]");
+    const gta5Launch = new Date(el.dataset.gta5launch!);
+    const gta6Launch = new Date(el.dataset.gta6launch!);
+    if (!gta5kw || !gta6kw) return;
+
+    function toMonths(dateStr: string, launch: Date) {
+      return -(launch.getTime() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24 * 30.44);
+    }
+
+    const g5 = gta5kw.data.map((d: any) => ({ m: toMonths(d.date, gta5Launch), v: d.value })).filter((d: any) => d.m >= -36 && d.m <= 2);
+    const g6 = gta6kw.data.map((d: any) => ({ m: toMonths(d.date, gta6Launch), v: d.value })).filter((d: any) => d.m >= -36 && d.m <= 2);
+
+    // Reddit normalized to index (gta5: implied ~5 at T-36, gta6: actual milestones)
+    const g5reddit = [
+      { m: -36, v: 2 }, { m: -24, v: 8 }, { m: -12, v: 35 }, { m: -6, v: 65 }, { m: 0, v: 100 }
+    ];
+    const g6MaxSubs = 2400000;
+    const g6reddit = milestones.filter((m: any) => toMonths(m.date, gta6Launch) >= -36)
+      .map((m: any) => ({ m: toMonths(m.date, gta6Launch), v: (m.subscribers / g6MaxSubs) * 100 }));
+
+    const margin = { top: 16, right: 24, bottom: 32, left: 40 };
+    // Split canvas into two panels
+    const W = el.clientWidth - margin.left - margin.right;
+    const panelH = (el.clientHeight - margin.top - margin.bottom - 20) / 2;
+
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const xDom: [number,number] = [-36, 2];
+    const x = d3.scaleLinear().domain(xDom).range([0, W]);
+    const y = d3.scaleLinear().domain([0, 100]).range([panelH, 0]);
+
+    function drawPanel(yOffset: number, gta5data: any[], gta6data: any[], label: string) {
+      const g = svg.append("g").attr("transform",`translate(0,${yOffset})`);
+      g.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+        .call((gg: any) => gg.select(".domain").remove())
+        .call((gg: any) => gg.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+
+      const line = d3.line<any>().x(d => x(d.m)).y(d => y(d.v)).curve(d3.curveMonotoneX);
+
+      // GTA V (muted grey)
+      g.append("path").datum(gta5data).attr("fill","none").attr("stroke","#52525b")
+        .attr("stroke-width",1.5).attr("d",line as any);
+
+      // GTA VI (gold + area fill)
+      const area = d3.area<any>().x(d=>x(d.m)).y0(panelH).y1(d=>y(d.v)).curve(d3.curveMonotoneX);
+      const defs = svg.append("defs");
+      const gid = `pg-grad-${yOffset}`;
+      const grad = defs.append("linearGradient").attr("id",gid).attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",panelH);
+      grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.25);
+      grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.02);
+      g.append("path").datum(gta6data).attr("fill",`url(#${gid})`).attr("d",area);
+      g.append("path").datum(gta6data).attr("fill","none").attr("stroke","#f59e0b")
+        .attr("stroke-width",2).attr("d",line as any);
+
+      // Launch line
+      g.append("line").attr("x1",x(0)).attr("x2",x(0)).attr("y1",0).attr("y2",panelH)
+        .attr("stroke","#ef4444").attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.4);
+
+      // Panel label
+      g.append("text").attr("x",6).attr("y",12).attr("fill","#52525b")
+        .attr("font-size","9").attr("font-family","monospace").text(label);
+
+      // Axis
+      g.append("g").attr("transform",`translate(0,${panelH})`)
+        .call(d3.axisBottom(x).ticks(9).tickFormat(d => `${d}m`))
+        .call((gg: any)=>gg.select(".domain").attr("stroke","#2a2a31"))
+        .call((gg: any)=>gg.selectAll(".tick line").attr("stroke","#2a2a31"))
+        .call((gg: any)=>gg.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      g.append("g").call(d3.axisLeft(y).ticks(4))
+        .call((gg: any)=>gg.select(".domain").attr("stroke","#2a2a31"))
+        .call((gg: any)=>gg.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+    }
+
+    drawPanel(0, g5, g6, "Google Trends search interest (0–100)");
+    drawPanel(panelH + 20, g5reddit, g6reddit, "Reddit subscriber index (normalised to 100 at launch)");
+
+    // Legend
+    svg.append("text").attr("x", W - 100).attr("y", 10).attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace").text("━ GTA V (2013)");
+    svg.append("text").attr("x", W - 100).attr("y", 22).attr("fill","#f59e0b").attr("font-size","9").attr("font-family","monospace").text("━ GTA VI (2026)");
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("prelaunch-comparison-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

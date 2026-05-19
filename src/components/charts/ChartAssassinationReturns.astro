@@ -1,0 +1,86 @@
+---
+/**
+ * ChartAssassinationReturns
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import stocksData    from "../../../data/gta-5/economy/assassination-stocks.json";
+import ShareButton from "../ShareButton.astro";
+const assassinGuide = (stocksData as any).guide_order as any[];
+---
+
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Assassination Stock Returns — Optimal Sequence</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/gta-v" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full stock guide →</a>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-7 h-10" loading="lazy" />
+        </div>
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              The $2 Billion Strategy — Combined Return Per Mission
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Each bar = combined return % from both the pre-buy and competitor recovery plays. Multi-Target + Redwood is the standout.</div>
+          </div>
+        </div>
+        <div id="assassination-returns-chart" class="w-full" style="height:220px"
+          data-steps={JSON.stringify(assassinGuide)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki · community guides · LCN/BAWSAQ exchange data · 2024 verified</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V assassination missions ranked by combined stock return. Multi-Target (Debonaire + Redwood) delivers 380% combined — the best single play in the game." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("assassination-returns-chart") as HTMLElement | null;
+    if (!el) return;
+
+    const steps: any[] = JSON.parse(el.dataset.steps || "[]");
+    const margin = { top: 20, right: 24, bottom: 56, left: 160 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+    const x = d3.scaleLinear().domain([0, d3.max(steps,(s:any)=>s.combined_return_pct)||400]).range([0,W]);
+    const y = d3.scaleBand().domain(steps.map((s:any)=>s.title)).range([0,H]).padding(0.3);
+    svg.append("g").call(d3.axisLeft(y))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill","#a1a1aa").attr("font-size","10").attr("font-family","monospace").attr("text-anchor","end"));
+    steps.forEach((s:any) => {
+      const pct = s.combined_return_pct;
+      const color = pct >= 200 ? "#22c55e" : pct >= 80 ? "#f59e0b" : "#0d9488";
+      svg.append("rect")
+        .attr("x",0).attr("y",y(s.title)??0)
+        .attr("width",x(pct)).attr("height",y.bandwidth())
+        .attr("rx",3).attr("fill",color).attr("opacity",0.8);
+      svg.append("text")
+        .attr("x",x(pct)+6).attr("y",(y(s.title)??0)+y.bandwidth()/2+4)
+        .attr("fill",color).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold")
+        .text(`+${pct}%`);
+    });
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(5).tickFormat((d:any)=>`+${d}%`))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("assassination-returns-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>
