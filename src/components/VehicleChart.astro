@@ -43,7 +43,6 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
 
 <script>
   import * as d3 from "d3";
-  import { registerChart } from "../assets/chartInit";
 
   interface Vehicle {
     name: string;
@@ -215,5 +214,4 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
     });
   });
 
-  registerChart("vehicle-chart", init);
 </script>

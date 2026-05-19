@@ -21,7 +21,6 @@ import steamData from "../../data/gta-5/meta/steam-players.json";
 
 <script>
   import * as d3 from "d3";
-  import { registerChart } from "../assets/chartInit";
 
   document.addEventListener("DOMContentLoaded", () => {
     const el = document.getElementById("player-chart");
@@ -116,5 +115,4 @@ import steamData from "../../data/gta-5/meta/steam-players.json";
       .call((g) => g.selectAll("text").attr("fill", "#71717a").attr("font-size", "11").attr("font-family", "monospace"));
   });
 
-  registerChart("player-chart", init);
 </script>

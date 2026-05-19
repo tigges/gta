@@ -29,7 +29,6 @@ import trendsData from "../../data/gta-5/trends/search-interest.json";
 
 <script>
   import * as d3 from "d3";
-  import { registerChart } from "../assets/chartInit";
 
   document.addEventListener("DOMContentLoaded", () => {
     const el = document.getElementById("trends-chart");
@@ -119,5 +118,4 @@ import trendsData from "../../data/gta-5/trends/search-interest.json";
     });
   });
 
-  registerChart("trends-chart", init);
 </script>
