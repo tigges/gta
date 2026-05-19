@@ -1,0 +1,135 @@
+---
+/**
+ * /gta-v/economy
+ * GTA V Story Mode economy page — mixed market + capital market (BAWSAQ).
+ */
+import Base from "../../layouts/Base.astro";
+import CrossLinks from "../../components/CrossLinks.astro";
+import ShareButton from "../../components/ShareButton.astro";
+import CircularEconomy from "../../components/CircularEconomy.astro";
+import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
+
+import economyData  from "../../../data/franchise/economy-models.json";
+import stocksData   from "../../../data/gta-5/economy/assassination-stocks.json";
+import missionsData from "../../../data/gta-5/missions/story-missions.json";
+import heistsData   from "../../../data/gta-5/economy/online-heists.json";
+
+const economy    = (economyData as any).economies.find((e: any) => e.title_id === "gta-5");
+const guide      = (stocksData as any).guide_order as any[];
+const maxProfit  = (stocksData as any).max_theoretical_profit_usd as number;
+const missions   = (missionsData as any).missions as any[];
+const heists     = (heistsData as any).heists as any[];
+const bigScore   = heists.find((h: any) => h.id === "the-big-score");
+const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
+---
+
+<Base
+  title="GTA V Economy — Mixed Market + BAWSAQ Capital"
+  description="GTA V Story Mode economy analysis: BAWSAQ mission-linked capital market, Lester assassination stocks, property passive income, and the complete $2B money strategy."
+  ogPage="gta-v"
+>
+  <!-- Header -->
+  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:220px">
+    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 60% 50%, rgba(245,158,11,0.05) 0%, transparent 60%), #0a0a0d"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-[9px] font-mono bg-amber-900/30 border border-amber-700/40 text-amber-400 px-2 py-0.5 rounded uppercase tracking-widest">ERA 3 · HD Universe 2013</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">GTA V Story — Economy</h1>
+      <p class="text-zinc-400 text-sm leading-relaxed mb-6 max-w-xl" style="font-family:'Inter',sans-serif">
+        The franchise's first capital market. BAWSAQ lets player actions propagate through stock prices.
+        Combined with property passive income, compounding wealth is possible for the first time.
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
+        {[
+          { value: "$41.6M",  label: "Big Score max cut",    sub: "optimal crew · subtle" },
+          { value: "$2B+",    label: "assassination ceiling", sub: "all 5 missions combined" },
+          { value: `${guide.length}`,     label: "BAWSAQ missions",      sub: "mission-linked stocks" },
+          { value: "12",      label: "complexity score",     sub: "out of 17 max" },
+        ].map(s => (
+          <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
+            <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug" style="font-family:'Inter',sans-serif">{s.label}</div>
+            <div class="text-[10px] font-mono text-zinc-700 mt-0.5">{s.sub}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+
+    <!-- Circular Economy Diagram -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Circular Economy Model</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 rounded-xl border border-[#1e1e23] p-5" style="background:#0e0e11">
+          <CircularEconomy titleId="gta-5" mode="full" />
+        </div>
+        <ChartComplexityRadar titleId="gta-5" size={260} />
+      </div>
+    </section>
+
+    <!-- BAWSAQ Mission Stock Guide -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-[9px] font-mono bg-purple-900/30 border border-purple-700/40 text-purple-400 px-2 py-0.5 rounded uppercase tracking-widest">Capital Market</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// BAWSAQ — Assassination Mission Returns</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/gta-v/assassination-guide" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full guide →</a>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
+          <div class="text-sm font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">
+            The $2 Billion Strategy — Optimal Sequence
+          </div>
+          <div class="text-[10px] font-mono text-zinc-600">{(stocksData as any).optimal_sequence_note}</div>
+        </div>
+        <div class="divide-y divide-[#1e1e23]">
+          {guide.map((step: any, i: number) => {
+            const pct = step.combined_return_pct;
+            const color = pct >= 300 ? "#22c55e" : pct >= 100 ? "#f59e0b" : "#0d9488";
+            const buy  = step.strategy?.find((s: any) => s.action === "buy");
+            return (
+              <div class="px-5 py-3 flex items-center gap-4">
+                <div class="shrink-0 w-5 h-5 rounded-full bg-gta-gold/15 border border-gta-gold/30 flex items-center justify-center text-[9px] font-mono font-bold text-gta-gold">
+                  {step.step}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[11px] font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{step.title}</div>
+                  {buy && <div class="text-[9px] font-mono text-zinc-600 mt-0.5">Buy: {buy.ticker} ({buy.exchange})</div>}
+                </div>
+                <div class="shrink-0 text-right">
+                  <div class="text-base font-mono font-black" style={`color:${color}`}>+{pct}%</div>
+                  <div class="text-[8px] font-mono text-zinc-700">combined</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] font-mono text-zinc-700">Do Hotel Assassination first. Complete remaining 4 AFTER The Big Score. Reinvest between each.</span>
+          <ShareButton text="GTA V assassination strategy: do all 5 missions after The Big Score. Multi-Target + Redwood = +380% alone. Full $2B guide on GTAVI.AI." url="https://gtavi.ai/gta-v/economy" size="sm" label="Share" />
+        </div>
+      </div>
+    </section>
+
+    <!-- GTA VI Lineage -->
+    <section class="rounded-xl border border-gta-gold/15 px-6 py-5" style="background:rgba(245,158,11,0.03)">
+      <div class="text-[9px] font-mono text-gta-gold/40 uppercase tracking-widest mb-2">GTA VI Lineage</div>
+      <p class="text-[11px] font-mono text-zinc-500 leading-relaxed">{economy.gta_vi_lineage}</p>
+    </section>
+
+    <div class="flex items-center gap-3 flex-wrap">
+      <a href="/franchise/economics" class="px-4 py-2 rounded border border-[#2a2a31] text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">← Ten Economies</a>
+      <a href="/gta-v" class="px-4 py-2 rounded border border-[#2a2a31] text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">GTA V Story Mode →</a>
+      <a href="/gta-online/economy" class="px-4 py-2 rounded border border-teal-700/30 text-teal-400 text-[11px] font-mono hover:bg-teal-900/20 transition-all">What came next: GTA Online →</a>
+    </div>
+
+    <CrossLinks context="gta-v" />
+  </div>
+</Base>

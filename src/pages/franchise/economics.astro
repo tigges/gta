@@ -1,0 +1,351 @@
+---
+/**
+ * /franchise/economics
+ * "Ten Economies. One Franchise." — the complete economic arc overview.
+ * Economy browser with CircularEconomy compact mode + ChartPreviewCard expand.
+ * Decision 3: Both — inline browser AND per-title pages.
+ */
+import Base from "../../layouts/Base.astro";
+import CrossLinks from "../../components/CrossLinks.astro";
+import ShareButton from "../../components/ShareButton.astro";
+import CircularEconomy from "../../components/CircularEconomy.astro";
+import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
+import ChartPreviewCard from "../../components/charts/ChartPreviewCard.astro";
+
+import economyData from "../../../data/franchise/economy-models.json";
+import salesData   from "../../../data/franchise/sales.json";
+
+const economies = (economyData as any).economies as any[];
+const arcSummary = (economyData as any).franchise_arc_summary as string;
+const chartNote  = (economyData as any).complexity_chart_note as string;
+
+// Economy page URLs (Decision B: GTA 1-2 has no standalone page — shown inline only)
+const ECONOMY_PAGES: Record<string, string> = {
+  "gta-3":      "/gta-iii/economy",
+  "gta-vc":     "/gta-vc/economy",
+  "gta-sa":     "/gta-sa/economy",
+  "gta-4":      "/gta-iv/economy",
+  "gta-5":      "/gta-v/economy",
+  "gta-online": "/gta-online/economy",
+  "gta-6":      "/gta-vi/economy",
+};
+
+const TITLE_COVER: Record<string, string> = {
+  "gta-1-2":    "/assets/covers/gta-1.jpg",
+  "gta-3":      "/assets/covers/gta-3.jpg",
+  "gta-vc":     "/assets/covers/gta-vc.jpg",
+  "gta-sa":     "/assets/covers/gta-sa.jpg",
+  "gta-4":      "/assets/covers/gta-4.jpg",
+  "gta-5":      "/assets/covers/gta-5.jpg",
+  "gta-online": "/assets/covers/gta-5.jpg",
+  "gta-6":      "/assets/covers/gta-6.jpg",
+};
+
+const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score));
+---
+
+<Base
+  title="Franchise Economics — Ten Economies. One Franchise."
+  description="The complete GTA franchise economic arc from score counter to live MMT sovereign. Every title's circular economy mapped, compared, and contextualised against real-world macroeconomic analogues."
+  ogPage="franchise"
+>
+
+  <!-- Hero -->
+  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:280px">
+    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 20% 60%, rgba(245,158,11,0.04) 0%, transparent 55%), #0a0a0d"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-[9px] font-mono bg-amber-900/30 border border-amber-700/40 text-amber-400 px-2 py-0.5 rounded uppercase tracking-widest">GTA Series · Complete Economic History 1997–2026</span>
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3" style="font-family:'Inter',sans-serif">
+        Ten Economies.<br /><span class="text-gta-gold">One Franchise.</span>
+      </h1>
+      <p class="text-zinc-400 text-sm leading-relaxed mb-6 max-w-xl" style="font-family:'Inter',sans-serif">
+        From score-counter extraction to live sovereign monetary management — every major title mapped.
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
+        {[
+          { value: "10",  label: "distinct economies",   sub: "1997 → 2026" },
+          { value: "17",  label: "max complexity score", sub: "GTA Online & VI" },
+          { value: "30",  label: "years of franchise",   sub: "GTA 1 → GTA VI" },
+          { value: "4",   label: "real-world analogues", sub: "feudal → Eurozone" },
+        ].map(s => (
+          <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
+            <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug" style="font-family:'Inter',sans-serif">{s.label}</div>
+            <div class="text-[10px] font-mono text-zinc-700 mt-0.5">{s.sub}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-16">
+
+    <!-- ═══════════════════════════════════════════════════════
+         COMPLEXITY ARC CHART
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economic Complexity — Full Franchise Timeline 1997–2026</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Economic Complexity — Full Franchise Arc</div>
+          <div class="text-[11px] font-mono text-zinc-600">Composite score: circular flow · capital market · passive income · inflation · sovereign complexity</div>
+        </div>
+        <!-- Bar chart from economy-models data -->
+        <div id="complexity-arc-chart" class="w-full" style="height:280px"
+             data-economies={JSON.stringify(economies.map((e: any) => ({
+               short: e.short, score: e.complexity_score, projected: e.projected, regression: e.regression_era ?? false, color: e.projected ? "#f59e0b" : e.regression_era ? "#ef4444" : "#0d9488"
+             })))}>
+        </div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[9px] font-mono text-zinc-700 leading-relaxed max-w-2xl">{chartNote}</span>
+          <ShareButton text="GTA franchise economic complexity: from score counter (1) to Full MMT sovereign (17). Every title's economy visualised. GTAVI.AI." url="https://gtavi.ai/franchise/economics" size="sm" label="Share" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         OVERVIEW TABLE
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// All Economies — Overview</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs font-mono" style="min-width:700px">
+            <thead>
+              <tr class="border-b border-[#1e1e23]">
+                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Title</th>
+                <th class="text-left px-3 py-2.5 text-zinc-600 font-normal">Economy Type</th>
+                <th class="text-center px-3 py-2.5 text-zinc-600 font-normal">Circular Flow</th>
+                <th class="text-center px-3 py-2.5 text-zinc-600 font-normal">Capital Market</th>
+                <th class="text-center px-3 py-2.5 text-zinc-600 font-normal">Passive Income</th>
+                <th class="text-center px-3 py-2.5 text-zinc-600 font-normal">Inflation</th>
+                <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Complexity</th>
+              </tr>
+            </thead>
+            <tbody>
+              {economies.map((e: any) => {
+                const pct = Math.round((e.complexity_score / maxComplexity) * 100);
+                const color = e.projected ? "#f59e0b" : e.regression_era ? "#ef4444" : "#0d9488";
+                const pageUrl = ECONOMY_PAGES[e.title_id];
+                const Row = (
+                  <tr class="border-b border-[#1e1e23]/50 hover:bg-white/[0.02] transition-colors">
+                    <td class="px-4 py-2.5">
+                      <div class="flex items-center gap-2">
+                        {pageUrl ? (
+                          <a href={pageUrl} class="font-semibold text-zinc-200 hover:text-white transition-colors">{e.short}</a>
+                        ) : (
+                          <span class="font-semibold text-zinc-500">{e.short}</span>
+                        )}
+                        <span class="text-zinc-700">{e.year}</span>
+                        {e.regression_era && <span class="text-[7px] border border-red-600/30 text-red-500 px-1 rounded uppercase">nerf</span>}
+                        {e.projected && <span class="text-[7px] border border-amber-700/30 text-amber-500 px-1 rounded uppercase">proj</span>}
+                      </div>
+                    </td>
+                    <td class="px-3 py-2.5 text-zinc-500 text-[10px] leading-snug max-w-[140px]">{e.economy_type}</td>
+                    <td class="px-3 py-2.5 text-center">
+                      <span class="text-[9px]" style={`color:${e.dimension_scores.circular_flow > 0 ? "#0d9488" : "#3f3f46"}`}>
+                        {"●".repeat(e.dimension_scores.circular_flow)}{"○".repeat(4 - e.dimension_scores.circular_flow)}
+                      </span>
+                    </td>
+                    <td class="px-3 py-2.5 text-center">
+                      <span class="text-[9px]" style={`color:${e.dimension_scores.capital_market > 0 ? "#a78bfa" : "#3f3f46"}`}>
+                        {"●".repeat(e.dimension_scores.capital_market)}{"○".repeat(4 - e.dimension_scores.capital_market)}
+                      </span>
+                    </td>
+                    <td class="px-3 py-2.5 text-center">
+                      <span class="text-[9px]" style={`color:${e.dimension_scores.passive_income > 0 ? "#22c55e" : "#3f3f46"}`}>
+                        {"●".repeat(e.dimension_scores.passive_income)}{"○".repeat(4 - e.dimension_scores.passive_income)}
+                      </span>
+                    </td>
+                    <td class="px-3 py-2.5 text-center">
+                      <span class="text-[9px]" style={`color:${e.dimension_scores.inflation > 0 ? "#ef4444" : "#3f3f46"}`}>
+                        {"●".repeat(e.dimension_scores.inflation)}{"○".repeat(4 - e.dimension_scores.inflation)}
+                      </span>
+                    </td>
+                    <td class="px-4 py-2.5 text-right">
+                      <div class="flex items-center justify-end gap-2">
+                        <div class="w-16 h-1.5 rounded-full bg-[#1e1e23] overflow-hidden">
+                          <div class="h-full rounded-full" style={`width:${pct}%;background:${color};opacity:${e.regression_era ? 0.5 : 0.75}`}></div>
+                        </div>
+                        <span class="font-bold w-4 text-right" style={`color:${color}`}>{e.complexity_score}</span>
+                      </div>
+                    </td>
+                  </tr>
+                );
+                return Row;
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div class="px-4 py-2.5 border-t border-[#1e1e23] text-[9px] font-mono text-zinc-700">
+          ● = dimension active (0–4 scale) · Proj = projected · Nerf = deliberate regression
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         THE REGRESSION CALLOUT
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="rounded-xl border border-red-900/30 overflow-hidden" style="background:rgba(127,29,29,0.06)">
+        <div class="px-6 py-5">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-[9px] font-mono bg-red-900/30 border border-red-600/40 text-red-400 px-2 py-0.5 rounded uppercase tracking-widest">ERA 2 · 2008 — The Regression Zone</span>
+          </div>
+          <div class="font-semibold text-red-300 text-base mb-2" style="font-family:'Inter',sans-serif">
+            GTA IV: The Most Important Dip in Franchise History
+          </div>
+          <p class="text-[11px] font-mono text-zinc-500 leading-relaxed mb-4 max-w-2xl">
+            The GTA IV regression zone on the complexity chart is intentional — Rockstar explicitly stripped six years of economic innovation for narrative realism. The shaded zone marks this as a design choice, not a data error. GTA IV is economically simpler than Vice City (2002) — a deliberate six-year step backward. However, TBOGT's nightclub mechanic planted the seed that would bloom into GTA Online's entire business empire. Without TBOGT there may have been no Acid Lab.
+          </p>
+          <a href="/gta-iv/economy" class="text-[10px] font-mono text-red-400/70 hover:text-red-400 transition-colors tracking-widest uppercase border border-red-700/30 px-3 py-1.5 rounded hover:bg-red-900/20">
+            GTA IV Economy — Full Analysis →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         ECONOMY BROWSER — expandable per-title diagrams
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economy Browser — Expand to View Circular Flow</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">Click to expand · Full page → for deep dive</span>
+      </div>
+      <div class="flex flex-col gap-2">
+        {economies.map((e: any) => {
+          const pageUrl = ECONOMY_PAGES[e.title_id];
+          const cover = TITLE_COVER[e.title_id] ?? "/assets/covers/gta-5.jpg";
+          const eraColor = { zinc: "#71717a", amber: "#f59e0b", green: "#22c55e", red: "#ef4444", teal: "#0d9488", gold: "#f59e0b" }[e.era_badge_color as string] ?? "#71717a";
+          return (
+            <ChartPreviewCard
+              cardId={`econ-${e.title_id}`}
+              title={`${e.short} — ${e.economy_type}`}
+              description={`${e.real_world_analogue} · Complexity ${e.complexity_score}/17${e.key_innovation ? " · " + e.key_innovation : ""}`}
+              category={e.era_label}
+              deepLink={pageUrl ?? "/franchise/economics"}
+              thumbUrl={cover}
+            >
+              <div class="px-5 py-5">
+                <CircularEconomy titleId={e.title_id} mode="compact" />
+              </div>
+            </ChartPreviewCard>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         GTA VI — END OF THE ARC
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="rounded-xl border border-gta-gold/20 overflow-hidden" style="background:linear-gradient(135deg,#0e1500 0%,#0e0e11 70%)">
+        <div class="px-6 py-6">
+          <div class="text-[9px] font-mono text-gta-gold/40 uppercase tracking-widest mb-3">The Arc Ends Here</div>
+          <div class="font-semibold text-gta-gold text-base mb-2" style="font-family:'Inter',sans-serif">
+            GTA VI — The Dual-Territory Currency Union
+          </div>
+          <p class="text-[11px] font-mono text-zinc-500 leading-relaxed mb-4 max-w-2xl">
+            {arcSummary}
+          </p>
+          <a href="/gta-vi/economy" class="inline-flex items-center gap-2 px-4 py-2 rounded border border-gta-gold/25 text-gta-gold text-[10px] font-mono hover:bg-gta-gold/8 hover:border-gta-gold/45 transition-all uppercase tracking-widest">
+            GTA VI Economy — Full Projected Model →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <CrossLinks context="franchise" />
+  </div>
+</Base>
+
+<script>
+  import * as d3 from "d3";
+
+  // Complexity arc chart
+  const el = document.getElementById("complexity-arc-chart") as HTMLElement | null;
+  if (el) {
+    requestAnimationFrame(() => {
+      const data = JSON.parse(el.dataset.economies || "[]") as any[];
+      const margin = { top: 20, right: 30, bottom: 50, left: 40 };
+      const W = el.clientWidth - margin.left - margin.right;
+      const H = (el.clientHeight || 280) - margin.top - margin.bottom;
+
+      const svg = d3.select(el).append("svg").attr("width","100%")
+        .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight || 280}`)
+        .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+      const x = d3.scaleBand().domain(data.map((d: any) => d.short)).range([0,W]).padding(0.3);
+      const y = d3.scaleLinear().domain([0,17]).range([H,0]);
+
+      // Grid
+      svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
+        .call(g => g.select(".domain").remove())
+        .call(g => g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+
+      // Regression zone shading
+      const gta4 = data.findIndex((d: any) => d.short === "GTA IV");
+      if (gta4 >= 0) {
+        const x0 = x(data[gta4].short) ?? 0;
+        const x1 = (x0) + (x.bandwidth() ?? 0) + 10;
+        svg.append("rect").attr("x", x0 - 5).attr("y", 0).attr("width", x.bandwidth() + 10).attr("height", H)
+          .attr("fill","#ef4444").attr("opacity",0.04);
+      }
+
+      // Line connecting all bars
+      const line = d3.line<any>()
+        .x((d: any) => (x(d.short) ?? 0) + (x.bandwidth() ?? 0)/2)
+        .y((d: any) => y(d.score))
+        .curve(d3.curveMonotoneX);
+
+      svg.append("path").datum(data).attr("fill","none").attr("stroke","#2a2a31")
+        .attr("stroke-width",1.5).attr("stroke-dasharray","4,3")
+        .attr("d", line as any);
+
+      // Bars
+      svg.selectAll("rect.bar").data(data).enter().append("rect")
+        .attr("class","bar")
+        .attr("x",(d: any) => x(d.short) ?? 0)
+        .attr("y",(d: any) => y(d.score))
+        .attr("width", x.bandwidth())
+        .attr("height",(d: any) => H - y(d.score))
+        .attr("rx",3)
+        .attr("fill",(d: any) => d.color)
+        .attr("opacity",(d: any) => d.regression ? 0.4 : 0.75)
+        .attr("stroke-dasharray",(d: any) => d.projected ? "4,3" : "none");
+
+      // Score labels on top of bars
+      svg.selectAll("text.score").data(data).enter().append("text")
+        .attr("class","score")
+        .attr("x",(d: any) => (x(d.short) ?? 0) + (x.bandwidth() ?? 0)/2)
+        .attr("y",(d: any) => y(d.score) - 4)
+        .attr("text-anchor","middle")
+        .attr("fill",(d: any) => d.color)
+        .attr("font-size","9").attr("font-family","monospace").attr("font-weight","bold")
+        .text((d: any) => d.score);
+
+      // Axes
+      svg.append("g").attr("transform",`translate(0,${H})`)
+        .call(d3.axisBottom(x))
+        .call(g => g.select(".domain").attr("stroke","#2a2a31"))
+        .call(g => g.selectAll(".tick line").remove())
+        .call(g => g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+
+      // GTAVI.AI watermark
+      svg.append("text").attr("x",W-4).attr("y",H-4)
+        .attr("text-anchor","end").attr("fill","#27272a").attr("font-size","7").attr("font-family","monospace")
+        .text("GTAVI.AI");
+    });
+  }
+</script>

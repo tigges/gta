@@ -39,7 +39,7 @@ const navGroups: NavGroup[] = [
     dropdown: [
       { href: "/gta-vi/intel",    icon: "🎯", label: "Intel & Predictions", sub: "Predictions · features · cast · locations" },
       { href: "/gta-vi/trailers", icon: "🎬", label: "Trailers & Analysis",  sub: "2 trailers · view velocity · entity index" },
-      { href: "/gta-vi/economy",  icon: "💹", label: "Economy Model",         sub: "Dual-territory · Eurozone analogy · GTA-RPP" },
+      { href: "/gta-vi/economy",  icon: "💹", label: "Economy Preview",      sub: "Day-1 ready · price benchmarks · predictions" },
       { href: "/gta-vi/buy",      icon: "🛒", label: "Pre-order",            sub: "PS5 · Xbox · editions · retailers" },
     ],
   },
@@ -48,18 +48,20 @@ const navGroups: NavGroup[] = [
     label: "GTA Online",
     activePaths: ["/gta-online", "/gta-online/economy", "/gta-online/income", "/gta-v/income-calculator", "/gta-v/cayo-perico", "/database", "/gta-online/bonuses"],
     dropdown: [
-      { href: "/gta-online/economy",        icon: "📊", label: "Economy",           sub: "GTA-PPI · inflation · passive stack · charts" },
-      { href: "/database?game=gta-online", icon: "💰", label: "Income Sources",    sub: "S→D tier · 56 methods · ProfitCards"  },
+      { href: "/gta-online/economy",        icon: "📊", label: "Economy",        sub: "GTA-PPI · inflation · passive stack" },
+      { href: "/database?game=gta-online", icon: "💰", label: "Income Sources", sub: "S→D tier · 28 methods · ProfitCards"  },
+      { href: "/charts",                   icon: "📈", label: "Charts",         sub: "Economy · promotions · meta evolution" },
       { href: "/gta-online/bonuses",        icon: "🏷", label: "Bonuses & Promos", sub: "Weekly calendar · sale intelligence" },
     ],
   },
   {
     href: "/franchise",
     label: "Franchise",
-    activePaths: ["/franchise"],
+    activePaths: ["/franchise", "/franchise/economics", "/gta-iii", "/gta-vc", "/gta-sa", "/gta-iv"],
     dropdown: [
-      { href: "/franchise/history", icon: "📖", label: "History & Sales", sub: "30 years · 8 titles · sales · scores" },
-      { href: "/franchise/charts",  icon: "📈", label: "Charts",          sub: "Cross-title · complexity · earnings" },
+      { href: "/franchise/economics",icon: "💹", label: "Economic History",  sub: "Ten economies · circular flow · 1997–2026" },
+      { href: "/franchise/history", icon: "📖", label: "History & Sales",   sub: "30 years · 8 titles · sales · scores" },
+      { href: "/franchise/charts",  icon: "📈", label: "Charts",            sub: "Cross-title · complexity · earnings" },
       { href: "/gta-v",     icon: "🎮", label: "GTA V Story",     sub: "Heists · assassination guide · vehicles" },
       { href: "/database",  icon: "🗄", label: "Data Browser",    sub: "All entities · income · vehicles" },
     ],
@@ -300,59 +302,15 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       // ── Mobile nav ────────────────────────────────────────────────
       const mobileNav      = document.getElementById("mobile-nav");
       const mobileBackdrop = document.getElementById("mobile-nav-backdrop");
-      const mobileOpenBtn  = document.getElementById("mobile-menu-btn") as HTMLButtonElement | null;
+      const mobileOpenBtn  = document.getElementById("mobile-menu-btn");
       const mobileCloseBtn = document.getElementById("mobile-nav-close");
 
-      function openMobileNav() {
-        mobileNav?.classList.remove("hidden");
-        document.body.style.overflow = "hidden";
-        mobileOpenBtn?.setAttribute("aria-expanded", "true");
-        // Focus first focusable element in drawer
-        requestAnimationFrame(() => {
-          const first = mobileNav?.querySelector<HTMLElement>(
-            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-          );
-          first?.focus();
-        });
-      }
-
-      function closeMobileNav() {
-        mobileNav?.classList.add("hidden");
-        document.body.style.overflow = "";
-        mobileOpenBtn?.setAttribute("aria-expanded", "false");
-        mobileOpenBtn?.focus();
-      }
+      function openMobileNav()  { mobileNav?.classList.remove("hidden"); document.body.style.overflow = "hidden"; }
+      function closeMobileNav() { mobileNav?.classList.add("hidden");    document.body.style.overflow = "";       }
 
       mobileOpenBtn?.addEventListener("click", openMobileNav);
       mobileCloseBtn?.addEventListener("click", closeMobileNav);
       mobileBackdrop?.addEventListener("click", closeMobileNav);
-
-      // Escape key closes
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !mobileNav?.classList.contains("hidden")) {
-          closeMobileNav();
-        }
-      });
-
-      // Focus trap within drawer
-      mobileNav?.addEventListener("keydown", (e) => {
-        if (e.key !== "Tab") return;
-        const focusable = Array.from(
-          mobileNav.querySelectorAll<HTMLElement>(
-            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-          )
-        ).filter(el => !el.closest(".hidden"));
-        if (!focusable.length) return;
-        const first = focusable[0];
-        const last  = focusable[focusable.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      });
 
       // Section accordions
       document.querySelectorAll<HTMLButtonElement>(".mobile-toggle").forEach(btn => {
