@@ -33,6 +33,7 @@ import ShareButton from "../ShareButton.astro";
 
 <script>
   import * as d3 from "d3";
+  import { registerChart } from "../../assets/chartInit";
 
   function init() {
     const el = document.getElementById("region-heatmap") as HTMLElement | null;
@@ -106,10 +107,17 @@ import ShareButton from "../ShareButton.astro";
     el.appendChild(table);
     }
 
+  // Register with chartInit so ChartPreviewCard can force-init on expand
+  registerChart("region-heatmap", init);
+
+  // Also lazy-init via IntersectionObserver for directly-visible charts
   if ("IntersectionObserver" in window) {
     const obsEl = document.getElementById("region-heatmap");
-    if (obsEl) new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) { init(); }
-    }, { rootMargin: "200px" }).observe(obsEl);
+    if (obsEl) {
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+      }, { rootMargin: "200px" });
+      obs.observe(obsEl);
+    }
   } else { init(); }
 </script>

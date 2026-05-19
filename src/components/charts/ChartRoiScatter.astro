@@ -34,6 +34,7 @@ import ShareButton from "../ShareButton.astro";
 
 <script>
   import * as d3 from "d3";
+  import { registerChart } from "../../assets/chartInit";
 
   function init() {
     const el = document.getElementById("roi-scatter-chart") as HTMLElement | null;
@@ -81,10 +82,17 @@ import ShareButton from "../ShareButton.astro";
       .attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Net $/hr");
     }
 
+  // Register with chartInit so ChartPreviewCard can force-init on expand
+  registerChart("roi-scatter-chart", init);
+
+  // Also lazy-init via IntersectionObserver for directly-visible charts
   if ("IntersectionObserver" in window) {
     const obsEl = document.getElementById("roi-scatter-chart");
-    if (obsEl) new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) { init(); }
-    }, { rootMargin: "200px" }).observe(obsEl);
+    if (obsEl) {
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+      }, { rootMargin: "200px" });
+      obs.observe(obsEl);
+    }
   } else { init(); }
 </script>
