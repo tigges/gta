@@ -128,16 +128,16 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 
   {/* ── Era badges ────────────────────────────────────────────────────────── */}
   <div class="flex items-center gap-2 mb-3 flex-wrap">
-    <span class={`text-[9px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest ${eraBadge}`}>
+    <span class={`text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest ${eraBadge}`}>
       {(economy as any).era_label}
     </span>
     {isRegression && (
-      <span class="text-[9px] font-mono bg-red-900/30 border border-red-600/40 text-red-400 px-2 py-0.5 rounded uppercase tracking-widest">
+      <span class="text-[11px] font-mono bg-red-900/30 border border-red-600/40 text-red-400 px-2 py-0.5 rounded uppercase tracking-widest">
         Deliberate Regression
       </span>
     )}
     {isProjected && (
-      <span class="text-[9px] font-mono bg-amber-900/20 border border-amber-700/30 text-amber-500 px-2 py-0.5 rounded uppercase tracking-widest">
+      <span class="text-[11px] font-mono bg-gta-gold/20 border border-gta-gold/30 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">
         Projected
       </span>
     )}
@@ -148,9 +148,9 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
     <div class={`rounded-xl border px-4 py-3 mb-2 ${isProjected ? "border-dashed" : ""}`}
          style="border-color:rgba(245,158,11,0.35);background:rgba(245,158,11,0.09)">
       <div class="text-center mb-0.5">
-        <span class={`text-[8px] font-mono uppercase tracking-[0.2em] ${schema.sovereign.text_header}`}>SOVEREIGN</span>
+        <span class={`text-[10px] font-mono uppercase tracking-[0.2em] ${schema.sovereign.text_header}`}>SOVEREIGN</span>
       </div>
-      <div class={`text-center font-semibold text-sm mb-1 ${schema.sovereign.text_label}`} style="font-family:'Inter',sans-serif">
+      <div class={`text-center font-semibold text-sm mb-1 ${schema.sovereign.text_label}`}>
         {sovNode.label}
       </div>
       <div class={`text-center text-[10px] font-mono leading-snug ${schema.sovereign.text_detail}`}>
@@ -159,7 +159,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       {!isCompact && (economy as any).sovereign_levers?.length > 0 && (
         <div class="flex flex-wrap justify-center gap-1.5 mt-2.5">
           {(economy as any).sovereign_levers.map((lever: string) => (
-            <span class={`text-[8px] font-mono border px-2 py-0.5 rounded-full ${schema.sovereign.lever_border} ${schema.sovereign.lever_text}`}>
+            <span class={`text-[10px] font-mono border px-2 py-0.5 rounded-full ${schema.sovereign.lever_border} ${schema.sovereign.lever_text}`}>
               {lever}
             </span>
           ))}
@@ -185,7 +185,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
         {/* VC region */}
         <div class={`rounded-xl border-2 p-3 ${isProjected ? "border-dashed border-gta-gold/20" : "border-gta-gold/45"}`}
              style="background:rgba(245,158,11,0.10)">
-          <div class="text-[9px] font-mono text-gta-gold/80 uppercase tracking-widest text-center mb-1 font-semibold">
+          <div class="text-[11px] font-mono text-gta-gold/80 uppercase tracking-widest text-center mb-1 font-semibold">
             {nodeMap["region-1"]?.label ?? "Vice City"}
           </div>
           <div class="text-[10px] font-mono text-zinc-400 text-center mb-3 leading-snug">
@@ -197,7 +197,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
               return (
                 <div class={`rounded-lg border px-2 py-2 text-center ${isProjected ? "border-dashed " : ""}${nodeBorder(n.color_token)}`}
                      style="background:rgba(10,10,13,0.65)" data-node-id={nid}>
-                  <div class={`text-[10px] font-semibold ${nodeText(n.color_token)}`} style="font-family:'Inter',sans-serif">{n.label}</div>
+                  <div class={`text-[10px] font-semibold ${nodeText(n.color_token)}`}>{n.label}</div>
                   <div class="text-[10px] font-mono text-zinc-400 mt-0.5 leading-snug">{n.detail}</div>
                 </div>
               );
@@ -205,9 +205,9 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
           </div>
         </div>
         {/* Leonida region */}
-        <div class={`rounded-xl border-2 p-3 ${isProjected ? "border-dashed border-teal-600/20" : "border-teal-500/40"}`}
+        <div class={`rounded-xl border-2 p-3 ${isProjected ? "border-dashed border-gta-teal/20" : "border-gta-teal/40"}`}
              style="background:rgba(13,148,136,0.10)">
-          <div class="text-[9px] font-mono text-teal-300/80 uppercase tracking-widest text-center mb-1 font-semibold">
+          <div class="text-[11px] font-mono text-gta-teal/80 uppercase tracking-widest text-center mb-1 font-semibold">
             {nodeMap["region-2"]?.label ?? "Leonida"}
           </div>
           <div class="text-[10px] font-mono text-zinc-400 text-center mb-3 leading-snug">
@@ -219,7 +219,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
               return (
                 <div class={`rounded-lg border px-2 py-2 text-center ${isProjected ? "border-dashed " : ""}${nodeBorder(n.color_token)}`}
                      style="background:rgba(10,10,13,0.65)" data-node-id={nid}>
-                  <div class={`text-[10px] font-semibold ${nodeText(n.color_token)}`} style="font-family:'Inter',sans-serif">{n.label}</div>
+                  <div class={`text-[10px] font-semibold ${nodeText(n.color_token)}`}>{n.label}</div>
                   <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{n.detail}</div>
                 </div>
               );
@@ -248,12 +248,12 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       </div>
       {/* Shark Cards */}
       {nodeMap["shark-cards"] && (
-        <div class={`rounded-xl border px-4 py-3 text-center ${isProjected ? "border-dashed " : ""}border-blue-500/40`}
-             style="background:rgba(37,99,235,0.14)">
-          <div class="text-sm font-semibold text-blue-300 mb-0.5" style="font-family:'Inter',sans-serif">
+        <div class={`rounded-xl border px-4 py-3 text-center ${isProjected ? "border-dashed " : ""}border-gta-indigo/45`}
+             style="background:rgba(129,140,248,0.10)">
+          <div class="text-sm font-semibold text-gta-indigo mb-0.5">
             {nodeMap["shark-cards"].label}
           </div>
-          <div class="text-[10px] font-mono text-blue-300/80 leading-snug">
+          <div class="text-[10px] font-mono text-gta-indigo/70 leading-snug">
             {nodeMap["shark-cards"].detail}
           </div>
         </div>
@@ -272,7 +272,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       {/* Annotation for zero-flow titles */}
       {((economy as any).dimensions as any).circular_flow === "none" && (
         <div class="absolute bottom-3 left-0 right-0 text-center pointer-events-none" style="z-index:20">
-          <span class="text-[9px] font-mono text-zinc-500">✕ no circular return — money = score only</span>
+          <span class="text-[11px] font-mono text-zinc-500">✕ no circular return — money = score only</span>
         </div>
       )}
 
@@ -280,7 +280,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       {(economy as any).layout_template === "full-mmt" && (
         <div class="absolute rounded-xl border border-dashed border-[#2a2a31] pointer-events-none"
              style="top:10%;left:0;right:0;bottom:62%;z-index:0">
-          <div class="absolute -top-2.5 left-4 text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] px-1" style="background:#0e0e11">
+          <div class="absolute -top-2.5 left-4 text-[11px] font-mono text-zinc-500 uppercase tracking-[0.2em] px-1" style="background:#0e0e11">
             In-Game Circular Economy
           </div>
         </div>
@@ -299,8 +299,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
                  nodeBorder(node.color_token),
                ].join(" ")}
                style={`top:${pos.top}%;left:${pos.left}%;width:${pos.width}%;padding:8px 10px;background:rgba(10,10,13,0.85);z-index:5`}>
-            <div class={`text-[11px] font-semibold leading-snug ${nodeText(node.color_token)}`}
-                 style="font-family:'Inter',sans-serif">
+            <div class={`text-[11px] font-semibold leading-snug ${nodeText(node.color_token)}`}>
               {node.label}
             </div>
             {!isCompact && (
@@ -351,19 +350,19 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   {!isCompact && (
     <div class="grid grid-cols-2 gap-3 mt-4">
       <div class="rounded-lg border border-[#2a2a31] px-3 py-2.5" style="background:#131316">
-        <div class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Economy Type</div>
-        <div class="text-sm font-semibold text-zinc-100" style="font-family:'Inter',sans-serif">{(economy as any).economy_type}</div>
+        <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Economy Type</div>
+        <div class="text-sm font-semibold text-zinc-100">{(economy as any).economy_type}</div>
       </div>
       <div class="rounded-lg border border-[#2a2a31] px-3 py-2.5" style="background:#131316">
-        <div class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Real-World Analogue</div>
-        <div class="text-sm font-semibold text-zinc-100" style="font-family:'Inter',sans-serif">{(economy as any).real_world_analogue}</div>
+        <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Real-World Analogue</div>
+        <div class="text-sm font-semibold text-zinc-100">{(economy as any).real_world_analogue}</div>
       </div>
       {(economy as any).key_innovation && (
         <div class="col-span-2 rounded-lg border border-[#1e1e23] px-3 py-2.5" style="background:#131316">
-          <div class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1">
+          <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">
             Key Innovation {"★".repeat((economy as any).innovation_stars)}
           </div>
-          <div class="text-[11px] font-semibold text-zinc-200 mb-1" style="font-family:'Inter',sans-serif">
+          <div class="text-[11px] font-semibold text-zinc-200 mb-1">
             {(economy as any).key_innovation}
           </div>
           {!isCompact && <div class="text-[10px] font-mono text-zinc-400 leading-snug">{(economy as any).key_innovation_note}</div>}
@@ -371,7 +370,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       )}
       {(economy as any).inflation_channels?.length > 0 && !isCompact && (
         <div class="col-span-2 rounded-lg border border-red-900/20 px-3 py-2.5" style="background:rgba(127,29,29,0.07)">
-          <div class="text-[9px] font-mono text-red-400 uppercase tracking-widest mb-1.5">Inflation Channels</div>
+          <div class="text-[11px] font-mono text-red-400 uppercase tracking-widest mb-1.5">Inflation Channels</div>
           <div class="flex flex-col gap-1">
             {(economy as any).inflation_channels.map((ch: string) => (
               <div class="flex items-start gap-1.5">
@@ -388,7 +387,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   {/* ── GTA VI lineage ────────────────────────────────────────────────────── */}
   {!isCompact && (economy as any).gta_vi_lineage && (
     <div class="mt-3 rounded-lg border border-gta-gold/15 px-3 py-2.5" style="background:rgba(245,158,11,0.03)">
-      <div class="text-[9px] font-mono text-gta-gold/70 uppercase tracking-widest mb-1">GTA VI Lineage</div>
+      <div class="text-[11px] font-mono text-gta-gold/70 uppercase tracking-widest mb-1">GTA VI Lineage</div>
       <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{(economy as any).gta_vi_lineage}</p>
     </div>
   )}

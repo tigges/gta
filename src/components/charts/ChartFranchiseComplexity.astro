@@ -10,15 +10,15 @@ import ShareButton from "../ShareButton.astro";
 
     <section class="chart-block" data-category="History">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
+        <span class="text-[11px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Economic Complexity — 25 Years of Evolution</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{(franchiseEconData as any).title_count} titles · 1997 → 2026</span>
+        <span class="text-[10px] font-mono text-zinc-500">{(franchiseEconData as any).title_count} titles · 1997 → 2026</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
-            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5">
               How GTA's Economy Got More Complex — Title by Title
             </div>
             <div class="text-[11px] text-zinc-500 font-mono">Complexity score (1–10) based on active economic mechanics: missions, passive income, property market, investment, multiplayer, microtransactions.</div>
@@ -28,8 +28,8 @@ import ShareButton from "../ShareButton.astro";
           data-titles={JSON.stringify((franchiseEconData as any).titles.filter((t: any) => t.complexity_score !== null))}
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: curated research · GTAForums · GTA Fandom Wiki · complexity score = count of active economic mechanics</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA's economy went from 1/10 complexity in 1997 to 10/10 in GTA Online. 25 years of design evolution in one chart." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: curated research · GTAForums · GTA Fandom Wiki · complexity score = count of active economic mechanics</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA's economy went from 1/10 complexity in 1997 to 10/10 in GTA Online. 25 years of design evolution in one chart." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
 

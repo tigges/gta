@@ -10,10 +10,10 @@ import ShareButton from "../ShareButton.astro";
 
     <section class="chart-block" data-category="History">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
+        <span class="text-[11px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Development & Delay Timeline</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{delayData.total_delays} delay · {delayData.timeline.length} events · SEC EDGAR sourced</span>
+        <span class="text-[10px] font-mono text-zinc-500">{delayData.total_delays} delay · {delayData.timeline.length} events · SEC EDGAR sourced</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <!-- Thumbnail cover strip -->
@@ -22,7 +22,7 @@ import ShareButton from "../ShareButton.astro";
         </div>
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-4">
           <div>
-            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+            <div class="font-semibold text-zinc-200 text-sm">
               GTA VI: From Announcement to Launch — Every Date Shift
             </div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">
@@ -41,9 +41,9 @@ import ShareButton from "../ShareButton.astro";
           data-launch={delayData.confirmed_launch}
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
-          <span class="text-[10px] text-zinc-700 font-mono">Sources: SEC EDGAR Take-Two 8-K filings · Rockstar Games official announcements</span>
-          <span class="text-[10px] text-zinc-700 font-mono">Updated {new Date(delayData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI has been delayed twice. The full timeline — and what it signals for the Nov 19, 2026 release date." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Sources: SEC EDGAR Take-Two 8-K filings · Rockstar Games official announcements</span>
+          <span class="text-[10px] text-zinc-500 font-mono">Updated {new Date(delayData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI has been delayed twice. The full timeline — and what it signals for the Nov 19, 2026 release date." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
 

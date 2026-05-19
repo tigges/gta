@@ -30,11 +30,11 @@ const BENCHMARKS = {
       <span class="font-mono font-black text-white text-xs">R★</span>
     </div>
     <div>
-      <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Rockstar Social Club — Connect Your Stats</div>
+      <div class="font-semibold text-zinc-200 text-sm">Rockstar Social Club — Connect Your Stats</div>
       <div class="text-[11px] text-zinc-500 font-mono">Enter your username → see how you compare to the community</div>
     </div>
     <div class="ml-auto">
-      <span class="text-[9px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Phase 1</span>
+      <span class="text-[11px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Phase 1</span>
     </div>
   </div>
 
@@ -43,7 +43,7 @@ const BENCHMARKS = {
     <!-- Left: username input + manual stats -->
     <div>
       <div class="mb-4">
-        <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1.5">Your Social Club Username</label>
+        <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1.5">Your Social Club Username</label>
         <div class="flex items-center gap-2">
           <input
             id="sc-username"
@@ -56,28 +56,28 @@ const BENCHMARKS = {
             View Profile ↗
           </a>
         </div>
-        <div class="text-[9px] font-mono text-zinc-700 mt-1">Opens your public Social Club profile where you can copy your stats</div>
+        <div class="text-[11px] font-mono text-zinc-500 mt-1">Opens your public Social Club profile where you can copy your stats</div>
       </div>
 
       <!-- Manual stat entry -->
       <div class="grid grid-cols-2 gap-3 mb-4">
         <div>
-          <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Criminal Rank</label>
+          <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Criminal Rank</label>
           <input id="sc-rank" type="number" placeholder="500" min="1" max="8000"
             class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
         </div>
         <div>
-          <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Cash in Bank (GTA$)</label>
+          <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Cash in Bank (GTA$)</label>
           <input id="sc-cash" type="number" placeholder="5000000" min="0"
             class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
         </div>
         <div>
-          <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Missions Played</label>
+          <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Missions Played</label>
           <input id="sc-missions" type="number" placeholder="1200" min="0"
             class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
         </div>
         <div>
-          <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Hours Played</label>
+          <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Hours Played</label>
           <input id="sc-hours" type="number" placeholder="300" min="0"
             class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
         </div>
@@ -91,20 +91,20 @@ const BENCHMARKS = {
 
     <!-- Right: comparison results -->
     <div id="sc-results" class="hidden">
-      <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-3">Your Stats vs Community</div>
+      <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-3">Your Stats vs Community</div>
 
       <div class="flex flex-col gap-3" id="sc-stats-grid">
         <!-- Populated by JS -->
       </div>
 
       <div id="sc-recommendation" class="mt-4 rounded-lg border border-gta-gold/25 p-3" style="background:#0e0e11">
-        <div class="text-[9px] font-mono text-gta-gold uppercase tracking-widest mb-1">Recommendation for your level</div>
-        <div id="sc-rec-text" class="text-[11px] text-zinc-300" style="font-family:'Inter',sans-serif"></div>
+        <div class="text-[11px] font-mono text-gta-gold uppercase tracking-widest mb-1">Recommendation for your level</div>
+        <div id="sc-rec-text" class="text-[11px] text-zinc-300"></div>
       </div>
     </div>
 
     <!-- Right: empty state -->
-    <div id="sc-empty" class="flex items-center justify-center text-zinc-700 text-[10px] font-mono">
+    <div id="sc-empty" class="flex items-center justify-center text-zinc-500 text-[10px] font-mono">
       Enter your stats to see your community ranking →
     </div>
 
@@ -112,11 +112,11 @@ const BENCHMARKS = {
 
   <!-- Footer -->
   <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3" style="background:#0e0e11">
-    <div class="text-[10px] text-zinc-700 font-mono">
+    <div class="text-[10px] text-zinc-500 font-mono">
       Phase 2 coming: auto-fetch from Social Club public profile · No login required
     </div>
     <div class="flex items-center gap-3 shrink-0">
-      <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
       <ShareButton text="Just checked my GTA Online stats on GTAVI.AI — see how you compare to the community. Income adviser + weekly bonus tracker included." url="https://gtavi.ai/gta-v" size="sm" label="Share" />
     </div>
   </div>
@@ -179,7 +179,7 @@ const BENCHMARKS = {
           <span class="text-[11px] font-mono font-bold text-zinc-200">${s.fmt}</span>
         </div>
         ${pctBar(s.value, s.avg, s.top10)}
-        <div class="text-[8px] font-mono text-zinc-700 mt-1">Community avg: ${s.label === 'Cash in Bank' ? formatCash(s.avg) : s.avg.toLocaleString()}</div>
+        <div class="text-[10px] font-mono text-zinc-500 mt-1">Community avg: ${s.label === 'Cash in Bank' ? formatCash(s.avg) : s.avg.toLocaleString()}</div>
       </div>
     `).join('');
 

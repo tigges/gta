@@ -46,9 +46,9 @@ const {
 const TIER_STYLES = {
   confirmed: {
     label: "CONFIRMED",
-    color: "text-emerald-400",
+    color: "text-gta-teal",
     bar: "bg-emerald-500",
-    border: "border-l-emerald-500",
+    border: "border-l-gta-teal",
     bg: "bg-emerald-500/5",
     badgeBg: "bg-emerald-900/30 border-emerald-800/40 text-emerald-400",
   },
@@ -91,7 +91,7 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
   <!-- Top: title + tier badge -->
   <div class={`flex items-start justify-between px-4 pb-2 ${thumbnail ? "pt-2" : "pt-4"}`}>
     <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.18em] leading-snug">{title}</span>
-    <span class={`text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ml-2 ${tier.badgeBg}`}>
+    <span class={`text-[11px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ml-2 ${tier.badgeBg}`}>
       {tier.label}
     </span>
   </div>
@@ -118,7 +118,7 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
     <div class="px-4 pb-2">
       <span class="text-[10px] font-mono text-zinc-600">
         Range: <span class="text-zinc-500">{prediction_range!.low}</span>
-        <span class="text-zinc-700"> – </span>
+        <span class="text-zinc-500"> – </span>
         <span class="text-zinc-500">{prediction_range!.high}</span>
       </span>
     </div>
@@ -127,14 +127,14 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
   <!-- Basis text -->
   {!compact && (
   <div class="px-4 pb-3 flex-1">
-    <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{basis}</p>
+    <p class="text-[11px] text-zinc-500 leading-relaxed">{basis}</p>
   </div>
   )}
 
   <!-- Method (if present) -->
   {!compact && prediction_method && (
     <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5">
-      <div class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest mb-0.5">Method</div>
+      <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-0.5">Method</div>
       <p class="text-[10px] font-mono text-zinc-600 leading-snug">{prediction_method}</p>
     </div>
   )}
@@ -143,22 +143,22 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
   {!compact && (source || trailer_timestamp) && (
     <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5 flex items-start justify-between gap-2">
       {source && (
-        <span class="text-[10px] font-mono text-zinc-700 truncate">
-          {source_type === "official" && <span class="text-emerald-600">● </span>}
-          {source_type === "reported" && <span class="text-amber-700">● </span>}
+        <span class="text-[10px] font-mono text-zinc-500 truncate">
+          {source_type === "official" && <span class="text-gta-teal">● </span>}
+          {source_type === "reported" && <span class="text-gta-gold">● </span>}
           {source_type === "predicted" && <span class="text-zinc-600">● </span>}
           {source}
         </span>
       )}
       {trailer_timestamp && (
-        <span class="text-[10px] font-mono text-zinc-700 shrink-0">▶ {trailer_timestamp}</span>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">▶ {trailer_timestamp}</span>
       )}
     </div>
   )}
 
   <!-- Share strip -->
   <div class="px-4 pb-3 flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
-    <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+    <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
     <ShareButton
       text={`GTA VI ${title}: ${value}${unit ? " " + unit : ""} — ${confidence}% confidence. Data-driven, not speculation.`}
       url="https://gtavi.ai/vi-intel"
@@ -169,9 +169,9 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
 
   <!-- Outcome banner (post-launch) -->
   {outcome_verified && outcome_actual && (
-    <div class="px-4 py-2 border-t border-emerald-900/30" style="background:#0a1a0e">
-      <div class="text-[9px] font-mono text-emerald-600 uppercase tracking-widest mb-0.5">Actual</div>
-      <p class="text-[11px] font-mono text-emerald-400 font-semibold">{outcome_actual}</p>
+    <div class="px-4 py-2 border-t border-gta-teal/30" style="background:#0a1a0e">
+      <div class="text-[11px] font-mono text-gta-teal uppercase tracking-widest mb-0.5">Actual</div>
+      <p class="text-[11px] font-mono text-gta-teal font-semibold">{outcome_actual}</p>
     </div>
   )}
 </div>

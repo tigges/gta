@@ -11,10 +11,10 @@ import ShareButton from "../ShareButton.astro";
 
     <section class="chart-block" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA-PPI — In-Game Inflation Index (hours to buy standard basket)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{(gtaPpiData as any).series.length} patches · base 100 = Oct 2013</span>
+        <span class="text-[10px] font-mono text-zinc-500">{(gtaPpiData as any).series.length} patches · base 100 = Oct 2013</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="grid grid-cols-3 divide-x divide-[#1e1e23] border-b border-[#1e1e23]">
@@ -24,22 +24,22 @@ import ShareButton from "../ShareButton.astro";
             { label: "Cayo all-time low", value: "41", sub: "$2M/hr, 4.4 hrs to basket", color: "#22c55e" },
           ].map(s => (
             <div class="px-5 py-4">
-              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
+              <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
               <div class="text-2xl font-mono font-black mb-0.5" style={`color:${s.color}`}>{s.value}</div>
               <div class="text-[10px] font-mono text-zinc-600">{s.sub}</div>
             </div>
           ))}
         </div>
         <div class="px-5 py-4 border-b border-[#1e1e23]">
-          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">GTA Online Purchasing Power Index — 2013 to 2026</div>
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5">GTA Online Purchasing Power Index — 2013 to 2026</div>
           <div class="text-[11px] text-zinc-500 font-mono">Hours needed to buy a fixed basket of goods at the meta income ceiling per era. Rising = hidden inflation via payout nerfs. Nominal GTA$ prices barely changed — the economy got harder by cutting wages.</div>
         </div>
         <div id="gta-ppi-chart" class="w-full" style="height:280px"
           data-series={JSON.stringify((gtaPpiData as any).series)}
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: computed from price-basket.json + meta-history.json · GTAForums patch notes archives</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's hidden inflation: the economy got 2× harder in 2017–18 via payout nerfs, not price hikes. Cayo Perico reversed it to an all-time low in 2020." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: computed from price-basket.json + meta-history.json · GTAForums patch notes archives</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's hidden inflation: the economy got 2× harder in 2017–18 via payout nerfs, not price hikes. Cayo Perico reversed it to an all-time low in 2020." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
 

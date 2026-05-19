@@ -33,10 +33,10 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
     <div class="absolute inset-0" style="background:radial-gradient(ellipse at 60% 50%, rgba(245,158,11,0.05) 0%, transparent 60%), #0a0a0d"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-center gap-2 mb-4">
-        <span class="text-[9px] font-mono bg-amber-900/30 border border-amber-700/40 text-amber-400 px-2 py-0.5 rounded uppercase tracking-widest">ERA 3 · HD Universe 2013</span>
+        <span class="text-[11px] font-mono bg-gta-gold/30 border border-gta-gold/40 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">ERA 3 · HD Universe 2013</span>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">GTA V Story — Economy</h1>
-      <p class="text-zinc-300 text-sm leading-relaxed mb-6 max-w-xl" style="font-family:'Inter',sans-serif">
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">GTA V Story — Economy</h1>
+      <p class="text-zinc-300 text-sm leading-relaxed mb-6 max-w-xl">
         The franchise's first capital market. BAWSAQ lets player actions propagate through stock prices.
         Combined with property passive income, compounding wealth is possible for the first time.
       </p>
@@ -49,7 +49,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
         ].map(s => (
           <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
             <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
-            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug" style="font-family:'Inter',sans-serif">{s.label}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug">{s.label}</div>
             <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{s.sub}</div>
           </div>
         ))}
@@ -77,14 +77,14 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
     <!-- BAWSAQ Mission Stock Guide -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[9px] font-mono bg-purple-900/30 border border-purple-700/40 text-purple-400 px-2 py-0.5 rounded uppercase tracking-widest">Capital Market</span>
+        <span class="text-[11px] font-mono bg-purple-900/30 border border-purple-700/40 text-purple-400 px-2 py-0.5 rounded uppercase tracking-widest">Capital Market</span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// BAWSAQ — Assassination Mission Returns</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <a href="/gta-v/assassination-guide" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full guide →</a>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
-          <div class="text-sm font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">
+          <div class="text-sm font-semibold text-zinc-200">
             The $2 Billion Strategy — Optimal Sequence
           </div>
           <div class="text-[10px] font-mono text-zinc-400">{(stocksData as any).optimal_sequence_note}</div>
@@ -96,16 +96,16 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
             const buy  = step.strategy?.find((s: any) => s.action === "buy");
             return (
               <div class="px-5 py-3 flex items-center gap-4">
-                <div class="shrink-0 w-5 h-5 rounded-full bg-gta-gold/15 border border-gta-gold/30 flex items-center justify-center text-[9px] font-mono font-bold text-gta-gold">
+                <div class="shrink-0 w-5 h-5 rounded-full bg-gta-gold/15 border border-gta-gold/30 flex items-center justify-center text-[11px] font-mono font-bold text-gta-gold">
                   {step.step}
                 </div>
                 <div class="flex-1 min-w-0">
-                  <div class="text-[11px] font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{step.title}</div>
-                  {buy && <div class="text-[9px] font-mono text-zinc-400 mt-0.5">Buy: {buy.ticker} ({buy.exchange})</div>}
+                  <div class="text-[11px] font-semibold text-zinc-200">{step.title}</div>
+                  {buy && <div class="text-[11px] font-mono text-zinc-400 mt-0.5">Buy: {buy.ticker} ({buy.exchange})</div>}
                 </div>
                 <div class="shrink-0 text-right">
                   <div class="text-base font-mono font-black" style={`color:${color}`}>+{pct}%</div>
-                  <div class="text-[8px] font-mono text-zinc-500">combined</div>
+                  <div class="text-[10px] font-mono text-zinc-500">combined</div>
                 </div>
               </div>
             );
@@ -120,14 +120,14 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
 
     <!-- GTA VI Lineage -->
     <section class="rounded-xl border border-gta-gold/15 px-6 py-5" style="background:rgba(245,158,11,0.03)">
-      <div class="text-[9px] font-mono text-gta-gold/40 uppercase tracking-widest mb-2">GTA VI Lineage</div>
+      <div class="text-[11px] font-mono text-gta-gold/40 uppercase tracking-widest mb-2">GTA VI Lineage</div>
       <p class="text-[11px] font-mono text-zinc-300 leading-relaxed">{economy.gta_vi_lineage}</p>
     </section>
 
     <div class="flex items-center gap-3 flex-wrap">
       <a href="/franchise/economics" class="px-4 py-2 rounded border border-[#2a2a31] text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">← Ten Economies</a>
       <a href="/gta-v" class="px-4 py-2 rounded border border-[#2a2a31] text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">GTA V Story Mode →</a>
-      <a href="/gta-online/economy" class="px-4 py-2 rounded border border-teal-700/30 text-teal-400 text-[11px] font-mono hover:bg-teal-900/20 transition-all">What came next: GTA Online →</a>
+      <a href="/gta-online/economy" class="px-4 py-2 rounded border border-gta-teal/30 text-gta-teal text-[11px] font-mono hover:bg-gta-teal/20 transition-all">What came next: GTA Online →</a>
     </div>
 
     <CrossLinks context="gta-v" />

@@ -11,28 +11,28 @@ import ShareButton from "../ShareButton.astro";
 
     <section class="chart-block" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Ceiling — Top $/hr Method at Each Major DLC (2013–2023)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{(metaHistoryData as any).meta_history.length} patches tracked</span>
+        <span class="text-[10px] font-mono text-zinc-500">{(metaHistoryData as any).meta_history.length} patches tracked</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
-            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Best Money Method Per Era — GTA$/hr Ceiling Since Launch</div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5">Best Money Method Per Era — GTA$/hr Ceiling Since Launch</div>
             <div class="text-[11px] text-zinc-500 font-mono">Top-earning method at each major DLC. Cayo Perico (Dec 2020) raised the meta ceiling by 5× in a single update — from $400k/hr to $2M/hr.</div>
           </div>
           <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500">
             <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full inline-block bg-gta-gold"></span>Solo capable</span>
-            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full inline-block bg-teal-500"></span>Group only</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full inline-block bg-gta-teal"></span>Group only</span>
           </div>
         </div>
         <div id="meta-evolution-chart" class="w-full" style="height:300px"
           data-history={JSON.stringify((metaHistoryData as any).meta_history)}
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: GTAForums · GTA Wiki · community archives · GTABase</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="10 years of GTA Online money metas charted: from $250k/hr contact missions in 2013 to $2M/hr Cayo Perico in 2020 — one update changed everything." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: GTAForums · GTA Wiki · community archives · GTABase</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="10 years of GTA Online money metas charted: from $250k/hr contact missions in 2013 to $2M/hr Cayo Perico in 2020 — one update changed everything." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
 

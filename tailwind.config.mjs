@@ -5,10 +5,13 @@ export default {
     extend: {
       colors: {
         // ── Brand (mapped to CSS vars — change var to update everywhere) ──
-        'gta-gold':   'var(--c-brand)',
-        'gta-bright': 'var(--c-brand-bright)',
-        'gta-teal':   'var(--c-live)',
-        'gta-red':    'var(--c-alert)',
+        'gta-gold':    'var(--c-brand)',
+        'gta-bright':  'var(--c-brand-bright)',
+        'gta-teal':    'var(--c-live)',
+        'gta-red':     'var(--c-alert)',
+        'gta-green':   'var(--c-growth)',    // community, S+, passive income
+        'gta-indigo':  'var(--c-economy)',   // economy, capital, complexity
+        'gta-reddit':  'var(--c-reddit)',    // Reddit brand colour only
 
         // ── Surfaces ───────────────────────────────────────────────────────
         'surface':    'var(--c-bg)',

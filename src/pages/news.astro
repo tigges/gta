@@ -59,11 +59,11 @@ const allItems = [...pressItems, ...redditItems].sort((a, b) => {
 // Source config
 const SOURCE_META: Record<string, { color: string; badge: string; tier: string }> = {
   "rockstar-newswire": { color: "text-gta-gold",  badge: "bg-gta-gold/10 border-gta-gold/20",    tier: "OFFICIAL"   },
-  "rockstar-intel":    { color: "text-amber-400", badge: "bg-amber-500/10 border-amber-500/20",   tier: "PRESS"      },
+  "rockstar-intel":    { color: "text-gta-gold", badge: "bg-gta-gold/8 border-gta-gold/25",   tier: "PRESS"      },
   "kotaku":            { color: "text-zinc-300",  badge: "bg-zinc-800 border-zinc-700",            tier: "PRESS"      },
   "eurogamer":         { color: "text-zinc-300",  badge: "bg-zinc-800 border-zinc-700",            tier: "PRESS"      },
   "insider-gaming":    { color: "text-gta-teal",  badge: "bg-gta-teal/10 border-gta-teal/20",     tier: "PRESS"      },
-  "reddit":            { color: "text-orange-400", badge: "bg-orange-500/10 border-orange-500/20", tier: "COMMUNITY"  },
+  "reddit":            { color: "text-gta-reddit", badge: "bg-gta-reddit/10 border-gta-reddit/20", tier: "COMMUNITY"  },
 };
 
 function sourceMeta(id: string) {
@@ -109,8 +109,8 @@ const updatedAt = feedData.last_updated;
       <div class="flex items-start justify-between flex-wrap gap-4">
         <div>
           <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Intelligence Feed</div>
-          <h1 class="text-3xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">News</h1>
-          <p class="text-sm text-zinc-400 max-w-lg" style="font-family:'Inter',sans-serif">
+          <h1 class="text-3xl font-bold text-white mb-2">News</h1>
+          <p class="text-sm text-zinc-400 max-w-lg">
             GTA VI press coverage + community signal aggregated from {totalSources} sources.
             Ranked by credibility, tagged by tier. Updated nightly.
           </p>
@@ -126,7 +126,7 @@ const updatedAt = feedData.last_updated;
           ))}
           <div class="flex items-center gap-2">
             <span class="text-[10px] font-mono text-zinc-600 w-28 truncate">Reddit r/GTA6</span>
-            <div class="h-1 rounded-full bg-orange-500/20" style={`width:${Math.round(redditItems.length/pressItems.length*120)}px`}></div>
+            <div class="h-1 rounded-full bg-gta-reddit/15" style={`width:${Math.round(redditItems.length/pressItems.length*120)}px`}></div>
             <span class="text-[10px] font-mono text-zinc-600">{redditItems.length}</span>
           </div>
         </div>
@@ -139,13 +139,13 @@ const updatedAt = feedData.last_updated;
           <span class="text-[10px] font-mono text-zinc-500">{allItems.length} items tracked</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-gta-reddit animate-pulse"></span>
           <span class="text-[10px] font-mono text-zinc-500">{redditItems.length} community posts</span>
         </div>
-        <span class="text-[10px] font-mono text-zinc-700">
+        <span class="text-[10px] font-mono text-zinc-500">
           Updated: {new Date(updatedAt).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" })}
         </span>
-        <span class="text-[10px] font-mono text-zinc-700">Sources: {feedData.sources.length} RSS · r/GTA6</span>
+        <span class="text-[10px] font-mono text-zinc-500">Sources: {feedData.sources.length} RSS · r/GTA6</span>
       </div>
     </div>
   </section>
@@ -158,7 +158,7 @@ const updatedAt = feedData.last_updated;
         <div class="flex items-center gap-3 mb-2">
           <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Latest Intel</span>
           <div class="flex-1 h-px bg-[#1e1e23]"></div>
-          <span class="text-[10px] font-mono text-zinc-700">newest first</span>
+          <span class="text-[10px] font-mono text-zinc-500">newest first</span>
         </div>
 
         {allItems.map((item) => {
@@ -188,17 +188,16 @@ const updatedAt = feedData.last_updated;
               <div class={`flex items-start gap-3 p-4 flex-1 min-w-0 ${!thumb ? "" : ""}`}>
                 <!-- Tier badge -->
                 <div class="shrink-0 mt-0.5">
-                  <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}`}>
+                  <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}`}>
                     {meta.tier}
                   </span>
                 </div>
                 <div class="min-w-0 flex-1">
-                  <div class={`text-sm leading-snug mb-1 group-hover:text-white transition-colors ${meta.color}`}
-                    style="font-family:'Inter',sans-serif">
+                  <div class={`text-sm leading-snug mb-1 group-hover:text-white transition-colors ${meta.color}`}>
                     {item.title}
                   </div>
                   {item.summary && (
-                    <p class="text-[11px] text-zinc-600 leading-relaxed line-clamp-2 mb-2" style="font-family:'Inter',sans-serif">
+                    <p class="text-[11px] text-zinc-600 leading-relaxed line-clamp-2 mb-2">
                       {item.summary}
                     </p>
                   )}
@@ -207,7 +206,7 @@ const updatedAt = feedData.last_updated;
                     {item.published_at && (
                       <>
                         <span class="text-zinc-800">·</span>
-                        <span class="text-[10px] font-mono text-zinc-700">{relativeTime(item.published_at)}</span>
+                        <span class="text-[10px] font-mono text-zinc-500">{relativeTime(item.published_at)}</span>
                       </>
                     )}
                     <span class="text-zinc-800">·</span>
@@ -224,13 +223,13 @@ const updatedAt = feedData.last_updated;
       <div class="flex flex-col gap-4">
 
         <!-- Reddit community signal -->
-        <div class="rounded-xl border border-orange-500/20 overflow-hidden" style="background:#131316">
-          <div class="px-4 py-3 border-b border-orange-500/20 flex items-center justify-between">
-            <div class="text-[10px] font-mono text-orange-400 uppercase tracking-[0.2em]">// r/GTA6 Community Signal</div>
-            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+        <div class="rounded-xl border border-gta-reddit/20 overflow-hidden" style="background:#131316">
+          <div class="px-4 py-3 border-b border-gta-reddit/20 flex items-center justify-between">
+            <div class="text-[10px] font-mono text-gta-reddit uppercase tracking-[0.2em]">// r/GTA6 Community Signal</div>
+            <span class="w-1.5 h-1.5 rounded-full bg-gta-reddit animate-pulse"></span>
           </div>
           <div class="px-4 py-3">
-            <p class="text-[11px] text-zinc-500 leading-relaxed mb-3" style="font-family:'Inter',sans-serif">
+            <p class="text-[11px] text-zinc-500 leading-relaxed mb-3">
               Top posts from r/GTA6 — {redditItems.length} posts tracked nightly.
             </p>
             <div class="flex flex-col gap-1.5">
@@ -238,8 +237,7 @@ const updatedAt = feedData.last_updated;
                 <a
                   href={p.url}
                   target="_blank" rel="noopener noreferrer"
-                  class="text-[11px] text-zinc-400 hover:text-orange-400 transition-colors leading-snug truncate"
-                  style="font-family:'Inter',sans-serif"
+                  class="text-[11px] text-zinc-400 hover:text-gta-reddit transition-colors leading-snug truncate"
                   title={p.title}
                 >
                   ↗ {p.title}
@@ -257,14 +255,14 @@ const updatedAt = feedData.last_updated;
           <div class="divide-y divide-[#1e1e23]">
             {[
               { tier: "OFFICIAL",  color: "text-gta-gold",    badge: "bg-gta-gold/10 border-gta-gold/20",      desc: "Rockstar Games or Take-Two direct announcements." },
-              { tier: "PRESS",     color: "text-amber-400",   badge: "bg-amber-500/10 border-amber-500/20",    desc: "Specialist and mainstream gaming press. Credibility varies by outlet." },
-              { tier: "COMMUNITY", color: "text-orange-400",  badge: "bg-orange-500/10 border-orange-500/20",  desc: "Reddit r/GTA6 top posts — community discussion and leaks." },
+              { tier: "PRESS",     color: "text-gta-gold",   badge: "bg-gta-gold/8 border-gta-gold/25",    desc: "Specialist and mainstream gaming press. Credibility varies by outlet." },
+              { tier: "COMMUNITY", color: "text-gta-reddit",  badge: "bg-gta-reddit/10 border-gta-reddit/20",  desc: "Reddit r/GTA6 top posts — community discussion and leaks." },
             ].map(s => (
               <div class="px-4 py-3">
                 <div class="flex items-center gap-2 mb-1">
-                  <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${s.badge} ${s.color}`}>{s.tier}</span>
+                  <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${s.badge} ${s.color}`}>{s.tier}</span>
                 </div>
-                <p class="text-[11px] text-zinc-600 leading-relaxed" style="font-family:'Inter',sans-serif">{s.desc}</p>
+                <p class="text-[11px] text-zinc-600 leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -286,7 +284,7 @@ const updatedAt = feedData.last_updated;
             ] as const).map(s => (
               <div class="px-4 py-2.5 flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <span class={`w-1.5 h-1.5 rounded-full ${s.status === "live" ? (s.name === "Reddit r/GTA6" ? "bg-orange-500" : "bg-gta-teal") : "bg-zinc-700"}`}></span>
+                  <span class={`w-1.5 h-1.5 rounded-full ${s.status === "live" ? (s.name === "Reddit r/GTA6" ? "bg-gta-reddit" : "bg-gta-teal") : "bg-zinc-700"}`}></span>
                   <span class="text-[11px] font-mono text-zinc-400">{s.name}</span>
                 </div>
                 <span class={`text-[10px] font-mono ${s.status === "live" ? "text-zinc-600" : "text-zinc-800"}`}>
@@ -303,7 +301,7 @@ const updatedAt = feedData.last_updated;
         <!-- Methodology note -->
         <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
           <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Note</div>
-          <p class="text-[11px] text-zinc-600 leading-relaxed" style="font-family:'Inter',sans-serif">
+          <p class="text-[11px] text-zinc-600 leading-relaxed">
             GTA VI.AI aggregates public RSS feeds and the Reddit r/GTA6 RSS. All articles link to their original source.
             Not affiliated with any outlet or community listed.
           </p>

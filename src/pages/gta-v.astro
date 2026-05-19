@@ -60,11 +60,11 @@ const RETURN_COLOR = (pct: number) =>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-5">
         <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] rounded px-2 py-0.5 uppercase tracking-widest">Grand Theft Auto V</span>
-        <span class="text-[10px] font-mono text-zinc-700">2013 · Rockstar Games</span>
+        <span class="text-[10px] font-mono text-zinc-500">2013 · Rockstar Games</span>
       </div>
       <img src="/assets/logos/gta-v.png" alt="Grand Theft Auto V"
            class="h-14 sm:h-16 w-auto mb-4 drop-shadow-lg" loading="eager" />
-      <p class="text-zinc-400 text-sm leading-relaxed mb-8 max-w-lg" style="font-family:'Inter',sans-serif">
+      <p class="text-zinc-400 text-sm leading-relaxed mb-8 max-w-lg">
         11 years of live signals: Steam players, vehicle benchmarks, story mission earnings,
         assassination stock guide, heist payouts, and GTA Online economics. The complete data blueprint for GTA VI.
       </p>
@@ -79,8 +79,8 @@ const RETURN_COLOR = (pct: number) =>
         ].map(s => (
           <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
             <div class="text-xl font-mono font-bold text-gta-bright">{s.value}</div>
-            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug" style="font-family:'Inter',sans-serif">{s.label}</div>
-            <div class="text-[10px] font-mono text-zinc-700 mt-0.5">{s.sub}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug">{s.label}</div>
+            <div class="text-[10px] font-mono text-zinc-500 mt-0.5">{s.sub}</div>
           </div>
         ))}
       </div>
@@ -95,7 +95,7 @@ const RETURN_COLOR = (pct: number) =>
         <span class="w-1.5 h-1.5 rounded-full bg-gta-teal shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Steam — Player History</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">PC concurrent · monthly</span>
+        <span class="text-[10px] font-mono text-zinc-500">PC concurrent · monthly</span>
       </div>
       <PlayerChart />
     </section>
@@ -103,10 +103,10 @@ const RETURN_COLOR = (pct: number) =>
     <!-- Google Trends -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-green shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Google Trends — Search Interest</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{totalTrendPts} data points · worldwide</span>
+        <span class="text-[10px] font-mono text-zinc-500">{totalTrendPts} data points · worldwide</span>
       </div>
       <TrendsChart />
     </section>
@@ -117,7 +117,7 @@ const RETURN_COLOR = (pct: number) =>
         <span class="w-1.5 h-1.5 rounded-full bg-gta-red shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Broughy1322 — Vehicle Benchmarks</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{totalVehicles} vehicles · 25 classes</span>
+        <span class="text-[10px] font-mono text-zinc-500">{totalVehicles} vehicles · 25 classes</span>
       </div>
       <VehicleChart />
     </section>
@@ -127,7 +127,7 @@ const RETURN_COLOR = (pct: number) =>
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mode Stock Market Calculator</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-gta-gold/70">$2B+ visual playthrough</span>
@@ -140,15 +140,15 @@ const RETURN_COLOR = (pct: number) =>
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mission Earnings — Full Arc</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{payingMissions.length} paying missions · {stockMissions.length} stock missions</span>
+        <span class="text-[10px] font-mono text-zinc-500">{payingMissions.length} paying missions · {stockMissions.length} stock missions</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
-            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Earnings Curve — $250 Repossession to $41.6M Big Score</div>
+            <div class="font-semibold text-zinc-200 text-sm">Earnings Curve — $250 Repossession to $41.6M Big Score</div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Each mission plotted by chapter. Gold diamonds = Lester stock missions. The Big Score is the only real money event.</div>
           </div>
           <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500">
@@ -160,8 +160,8 @@ const RETURN_COLOR = (pct: number) =>
           data-missions={JSON.stringify(storyMissions.filter((m: any) => m.payout >= 0))}
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki (Fandom) · community records · updated by fetch_missions.py</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V story mission earnings from start to finish. $250 at Repossession to $41.6M at The Big Score. The earning curve tells the whole story." url="https://gtavi.ai/gta-v" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Wiki (Fandom) · community records · updated by fetch_missions.py</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V story mission earnings from start to finish. $250 at Repossession to $41.6M at The Big Score. The earning curve tells the whole story." url="https://gtavi.ai/gta-v" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -171,14 +171,14 @@ const RETURN_COLOR = (pct: number) =>
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Heist Earnings — Take Breakdown</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{heists.length} heists · max ${((bigScore?.approaches?.[0]?.player_max_cut ?? 0) / 1_000_000).toFixed(1)}M player cut</span>
+        <span class="text-[10px] font-mono text-zinc-500">{heists.length} heists · max ${((bigScore?.approaches?.[0]?.player_max_cut ?? 0) / 1_000_000).toFixed(1)}M player cut</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23]">
-          <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Story Heists — Total Take vs Player Cut</div>
+          <div class="font-semibold text-zinc-200 text-sm">Story Heists — Total Take vs Player Cut</div>
           <div class="text-[11px] text-zinc-500 font-mono mt-0.5">3 of 5 heists pay $0 (lore reasons). The Big Score is the only heist that changes your financial trajectory.</div>
         </div>
         <div class="divide-y divide-[#1e1e23]">
@@ -192,8 +192,8 @@ const RETURN_COLOR = (pct: number) =>
             return (
               <div class="px-5 py-4 flex items-center gap-4">
                 <div class="w-36 shrink-0">
-                  <div class="text-xs font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{h.title}</div>
-                  <div class="text-[9px] font-mono text-zinc-600 mt-0.5">Ch.{h.chapter} · {h.difficulty}</div>
+                  <div class="text-xs font-semibold text-zinc-200">{h.title}</div>
+                  <div class="text-[11px] font-mono text-zinc-600 mt-0.5">Ch.{h.chapter} · {h.difficulty}</div>
                 </div>
                 <div class="flex-1">
                   {cut > 0 ? (
@@ -203,18 +203,18 @@ const RETURN_COLOR = (pct: number) =>
                       </div>
                       <div class="flex items-center justify-between mt-1">
                         <span class="text-[10px] font-mono text-zinc-500">Player cut: <span class="text-gta-gold font-bold">${(cut / 1_000_000).toFixed(1)}M</span></span>
-                        <span class="text-[9px] font-mono text-zinc-700">Total take: ${(total / 1_000_000).toFixed(1)}M</span>
+                        <span class="text-[11px] font-mono text-zinc-500">Total take: ${(total / 1_000_000).toFixed(1)}M</span>
                       </div>
                     </div>
                   ) : (
                     <div class="flex items-center gap-2">
                       <div class="h-2 flex-1 rounded-full bg-[#1e1e23]"></div>
-                      <span class="text-[10px] font-mono text-zinc-700">$0 — {h.notes}</span>
+                      <span class="text-[10px] font-mono text-zinc-500">$0 — {h.notes}</span>
                     </div>
                   )}
                 </div>
                 {h.approaches.length > 1 && (
-                  <div class="shrink-0 text-[9px] font-mono text-zinc-700">
+                  <div class="shrink-0 text-[11px] font-mono text-zinc-500">
                     {h.approaches.length} approaches
                   </div>
                 )}
@@ -225,11 +225,11 @@ const RETURN_COLOR = (pct: number) =>
         <!-- Big Score crew guide -->
         {bigScore && (
           <div class="px-5 py-4 border-t border-[#1e1e23]" style="background:#0e0e11">
-            <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-2">The Big Score — Optimal Crew (Subtle Approach)</div>
+            <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-2">The Big Score — Optimal Crew (Subtle Approach)</div>
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
               {Object.entries(bigScore.approaches[0].optimal_crew ?? {}).map(([role, assignment]) => (
                 <div class="rounded border border-[#1e1e23] px-2.5 py-2">
-                  <div class="text-[8px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">{role.replace(/_/g,' ')}</div>
+                  <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">{role.replace(/_/g,' ')}</div>
                   <div class="text-[10px] font-mono text-zinc-300">{String(assignment)}</div>
                 </div>
               ))}
@@ -237,8 +237,8 @@ const RETURN_COLOR = (pct: number) =>
           </div>
         )}
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki (Fandom) · optimal crew minimises cut to maximise protagonist take</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V heist earnings: 3 of 5 heists pay $0 (lore). The Big Score with optimal crew = $41.6M player cut. Then invest in Lester's assassination missions for $2B+." url="https://gtavi.ai/gta-v" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Wiki (Fandom) · optimal crew minimises cut to maximise protagonist take</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V heist earnings: 3 of 5 heists pay $0 (lore). The Big Score with optimal crew = $41.6M player cut. Then invest in Lester's assassination missions for $2B+." url="https://gtavi.ai/gta-v" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -248,24 +248,24 @@ const RETURN_COLOR = (pct: number) =>
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[9px] font-mono bg-teal-900/30 text-teal-400 border border-teal-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Profile</span>
+        <span class="text-[11px] font-mono bg-gta-teal/30 text-gta-teal border border-gta-teal/40 px-2 py-0.5 rounded uppercase tracking-widest">Profile</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Your Stats vs Community</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">Rockstar Social Club · Phase 1</span>
+        <span class="text-[10px] font-mono text-zinc-500">Rockstar Social Club · Phase 1</span>
       </div>
       <SocialClubConnector />
     </section>
 
     <!-- Crosslinks to GTA Online -->
-    <div class="rounded-xl border border-teal-800/20 overflow-hidden" style="background:#0e1a0e">
+    <div class="rounded-xl border border-gta-teal/20 overflow-hidden" style="background:#0e1a0e">
       <div class="px-5 py-4 flex items-start gap-4">
         <div class="text-2xl shrink-0">🎮</div>
         <div class="flex-1">
-          <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">GTA Online Economy → Separate Section</div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1">GTA Online Economy → Separate Section</div>
           <p class="text-[11px] text-zinc-500 font-mono leading-relaxed mb-3">
             GTA Online income sources, economy model, weekly bonuses, and income adviser have moved to the dedicated GTA Online section.
           </p>
-          <a href="/gta-online/income" class="text-[10px] font-mono text-teal-400 hover:text-teal-300 transition-colors tracking-widest uppercase border border-teal-700/30 px-3 py-1.5 rounded hover:bg-teal-900/20">
+          <a href="/gta-online/income" class="text-[10px] font-mono text-gta-teal hover:text-gta-teal transition-colors tracking-widest uppercase border border-gta-teal/30 px-3 py-1.5 rounded hover:bg-gta-teal/20">
             GTA Online Income Sources →
           </a>
         </div>
@@ -280,7 +280,7 @@ const RETURN_COLOR = (pct: number) =>
         <span class="w-1.5 h-1.5 rounded-full bg-gta-red shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// More GTA V Charts</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/charts?title=gta-v" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
+        <a href="/charts?title=gta-v" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
       </div>
       <div class="flex flex-col gap-2">
 

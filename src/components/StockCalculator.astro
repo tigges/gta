@@ -17,7 +17,7 @@ const { steps } = Astro.props;
   <!-- Header -->
   <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
     <div>
-      <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+      <div class="font-semibold text-zinc-200 text-sm">
         Story Mode Stock Market Calculator — $2B Playthrough
       </div>
       <div class="text-[11px] text-zinc-500 font-mono mt-0.5">
@@ -34,7 +34,7 @@ const { steps } = Astro.props;
   <div class="px-5 py-4 border-b border-[#1e1e23]" style="background:#0e0e11">
     <div class="flex items-center gap-4 flex-wrap">
       <div>
-        <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Your cash after The Big Score (GTA$)</label>
+        <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Your cash after The Big Score (GTA$)</label>
         <div class="flex items-center gap-2">
           <span class="text-zinc-500 font-mono text-sm">$</span>
           <input
@@ -50,7 +50,7 @@ const { steps } = Astro.props;
         </div>
       </div>
       <div class="flex-1 text-right">
-        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Projected Final Total</div>
+        <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Projected Final Total</div>
         <div id="stock-calc-result" class="text-2xl font-mono font-bold text-gta-gold">$—</div>
         <div id="stock-calc-multiplier" class="text-[10px] font-mono text-zinc-600 mt-0.5"></div>
       </div>
@@ -77,15 +77,15 @@ const { steps } = Astro.props;
             <!-- Content -->
             <div class="flex-1 min-w-0 pt-1">
               <div class="flex items-center gap-2 mb-1 flex-wrap">
-                <span class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">{step.title}</span>
-                {i === 0 && <span class="text-[8px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Do FIRST (early game)</span>}
-                {i > 0  && <span class="text-[8px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">After Big Score</span>}
+                <span class="font-semibold text-zinc-200 text-sm">{step.title}</span>
+                {i === 0 && <span class="text-[10px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Do FIRST (early game)</span>}
+                {i > 0  && <span class="text-[10px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">After Big Score</span>}
               </div>
 
               <!-- Buy/sell chips -->
               <div class="flex flex-wrap gap-1.5 mb-2">
                 {step.strategy.map((s: any) => (
-                  <div class={`flex items-center gap-1.5 px-2 py-1 rounded text-[9px] font-mono border ${
+                  <div class={`flex items-center gap-1.5 px-2 py-1 rounded text-[11px] font-mono border ${
                     s.action === 'buy' ? 'bg-gta-gold/8 border-gta-gold/25 text-gta-gold' : 'bg-gta-teal/8 border-gta-teal/25 text-gta-teal'
                   }`}>
                     <span class="font-bold">{s.action === 'buy' ? '▲' : '▼'} {s.ticker}</span>
@@ -97,18 +97,18 @@ const { steps } = Astro.props;
 
               <!-- Projected balance after this step -->
               <div class="flex items-center gap-3">
-                <span class="text-[9px] font-mono text-zinc-600">Combined return:</span>
+                <span class="text-[11px] font-mono text-zinc-600">Combined return:</span>
                 <span class="text-[11px] font-mono font-bold" style={`color:${step.combined_return_pct >= 300 ? '#22c55e' : step.combined_return_pct >= 80 ? '#f59e0b' : '#0d9488'}`}>
                   +{step.combined_return_pct}%
                 </span>
-                <span class="text-[9px] font-mono text-zinc-700 ml-2">Balance after: </span>
+                <span class="text-[11px] font-mono text-zinc-500 ml-2">Balance after: </span>
                 <span class="stock-step-balance text-[11px] font-mono text-zinc-400 font-bold">$—</span>
               </div>
             </div>
 
             <!-- Payout direct -->
             <div class="shrink-0 text-right pt-1">
-              <div class="text-[9px] font-mono text-zinc-700">Mission pay</div>
+              <div class="text-[11px] font-mono text-zinc-500">Mission pay</div>
               <div class="text-[10px] font-mono text-zinc-500">${(step.payout_direct ?? 0).toLocaleString()}</div>
             </div>
           </div>
@@ -121,12 +121,12 @@ const { steps } = Astro.props;
   <div class="px-5 py-4 border-t border-[#1e1e23]" style="background:#0e0e11">
     <div class="flex items-center justify-between flex-wrap gap-3">
       <div>
-        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Total projected (3 characters combined)</div>
+        <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Total projected (3 characters combined)</div>
         <div id="stock-calc-total-combined" class="text-2xl font-mono font-bold text-gta-gold">$—</div>
         <div class="text-[10px] font-mono text-zinc-600 mt-0.5">Do Hotel early, rest after Big Score. Reinvest between each mission.</div>
       </div>
       <div class="flex items-center gap-3 shrink-0">
-        <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+        <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
         <ShareButton
           text="GTA V story mode stock guide: $41.6M from Big Score becomes $2B+ with Lester assassination missions. The complete timeline."
           url="https://gtavi.ai/database"

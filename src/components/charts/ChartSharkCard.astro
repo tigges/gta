@@ -10,10 +10,10 @@ import ShareButton from "../ShareButton.astro";
 
     <section class="chart-block" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
+        <span class="text-[11px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Shark Card Purchasing Power — 12 Years of In-Game Inflation</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{(sharkCardData as any).analysis.years_span} years · {(sharkCardData as any).analysis.purchasing_power_ratio}× real-money cost increase</span>
+        <span class="text-[10px] font-mono text-zinc-500">{(sharkCardData as any).analysis.years_span} years · {(sharkCardData as any).analysis.purchasing_power_ratio}× real-money cost increase</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <!-- Key stat callouts -->
@@ -24,14 +24,14 @@ import ShareButton from "../ShareButton.astro";
             { label: "Real-money inflation", value: `${(sharkCardData as any).analysis.purchasing_power_ratio}×`,            sub: "12-year multiplier", color: "#ef4444" },
           ].map(s => (
             <div class="px-5 py-4">
-              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
+              <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
               <div class="text-2xl font-mono font-black mb-0.5" style={`color:${s.color}`}>{s.value}</div>
               <div class="text-[10px] font-mono text-zinc-600">{s.sub}</div>
             </div>
           ))}
         </div>
         <div class="px-5 py-4 border-b border-[#1e1e23]">
-          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5">
             GTA Online Endgame Cost in Real USD — 2013 to 2026
           </div>
           <div class="text-[11px] text-zinc-500 font-mono">How many Megalodon Shark Cards to reach the meta at each major DLC? Rockstar never raised card prices — the game got more expensive instead.</div>
@@ -40,8 +40,8 @@ import ShareButton from "../ShareButton.astro";
           data-history={JSON.stringify((sharkCardData as any).endgame_cost_history)}
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Real-money figures = endgame GTA$ ÷ Megalodon rate ($80k GTA$/USD). Shark Card prices unchanged since 2013 launch.</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text={`GTA Online endgame cost via Shark Cards: $18.75 in 2013 → $437.50 in 2026. A ${(sharkCardData as any).analysis.purchasing_power_ratio}× real-money increase while card prices never changed.`} url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Real-money figures = endgame GTA$ ÷ Megalodon rate ($80k GTA$/USD). Shark Card prices unchanged since 2013 launch.</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text={`GTA Online endgame cost via Shark Cards: $18.75 in 2013 → $437.50 in 2026. A ${(sharkCardData as any).analysis.purchasing_power_ratio}× real-money increase while card prices never changed.`} url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
 

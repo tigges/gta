@@ -44,15 +44,15 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
     <div class="absolute inset-0" style="background:radial-gradient(ellipse at 70% 50%, rgba(245,158,11,0.06) 0%, transparent 65%), #0a0a0d"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-4">
-        <span class="text-[9px] font-mono bg-amber-900/30 border border-amber-700/40 text-amber-400 px-2 py-0.5 rounded uppercase tracking-widest">ERA 5 · 2025/26</span>
-        <span class="text-[9px] font-mono bg-amber-900/20 border border-amber-700/30 text-amber-500/80 px-2 py-0.5 rounded uppercase tracking-widest">Projected</span>
+        <span class="text-[11px] font-mono bg-gta-gold/30 border border-gta-gold/40 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">ERA 5 · 2025/26</span>
+        <span class="text-[11px] font-mono bg-gta-gold/20 border border-gta-gold/30 text-gta-gold/80 px-2 py-0.5 rounded uppercase tracking-widest">Projected</span>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3" style="font-family:'Inter',sans-serif">
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">
         GTA VI Economy
       </h1>
-      <p class="text-zinc-300 text-sm leading-relaxed mb-6 max-w-xl" style="font-family:'Inter',sans-serif">
+      <p class="text-zinc-300 text-sm leading-relaxed mb-6 max-w-xl">
         The most structurally sophisticated virtual economy ever designed.
-        Two territories, one currency — a <strong class="text-amber-400">dual-territory currency union</strong>
+        Two territories, one currency — a <strong class="text-gta-gold">dual-territory currency union</strong>
         analogous to the Eurozone. Everything we know and predict, sourced from the franchise arc.
       </p>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
@@ -64,7 +64,7 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
         ].map(s => (
           <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
             <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
-            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug" style="font-family:'Inter',sans-serif">{s.label}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug">{s.label}</div>
             <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{s.sub}</div>
           </div>
         ))}
@@ -94,7 +94,7 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Complexity — Franchise Context</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <a href="/franchise/economics" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All 10 economies →</a>
@@ -102,7 +102,7 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ChartComplexityRadar titleId="gta-6" size={280} showAverage={true} />
         <div class="rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
-          <div class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-4">Franchise Arc — Complexity Trajectory</div>
+          <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-4">Franchise Arc — Complexity Trajectory</div>
           <div class="flex flex-col gap-2">
             {(economyData as any).economies.map((e: any) => {
               const pct = Math.round((e.complexity_score / 17) * 100);
@@ -111,17 +111,17 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
               const color = isGtaVI ? "#f59e0b" : isRegression ? "#ef4444" : "#0d9488";
               return (
                 <div class="flex items-center gap-3">
-                  <div class="w-20 shrink-0 text-[9px] font-mono text-zinc-500 text-right">{e.short}</div>
+                  <div class="w-20 shrink-0 text-[11px] font-mono text-zinc-500 text-right">{e.short}</div>
                   <div class="flex-1 h-2 rounded-full bg-[#1e1e23] overflow-hidden">
                     <div class="h-full rounded-full transition-all"
                          style={`width:${pct}%;background:${color};opacity:${isRegression ? 0.5 : 0.75}${e.projected ? ";border-right:2px dashed " + color : ""}`}></div>
                   </div>
-                  <div class="w-6 text-right text-[9px] font-mono shrink-0" style={`color:${color}`}>{e.complexity_score}</div>
+                  <div class="w-6 text-right text-[11px] font-mono shrink-0" style={`color:${color}`}>{e.complexity_score}</div>
                 </div>
               );
             })}
           </div>
-          <div class="mt-3 pt-3 border-t border-[#1e1e23] text-[9px] font-mono text-zinc-500 leading-relaxed">
+          <div class="mt-3 pt-3 border-t border-[#1e1e23] text-[11px] font-mono text-zinc-500 leading-relaxed">
             {(economyData as any).complexity_chart_note}
           </div>
         </div>
@@ -133,14 +133,14 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[9px] font-mono bg-amber-900/30 border border-amber-700/40 text-amber-400 px-2 py-0.5 rounded uppercase tracking-widest">Analysis</span>
+        <span class="text-[11px] font-mono bg-gta-gold/30 border border-gta-gold/40 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">Analysis</span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The Eurozone Analogy</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
           <div class="px-6 py-5">
-            <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-3">GTA VI Model</div>
+            <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-3">GTA VI Model</div>
             <div class="space-y-2.5">
               {[
                 { label: "Monetary authority", value: "Rockstar / Take-Two (as ECB)" },
@@ -151,14 +151,14 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
                 { label: "Inflation mechanism", value: "Nerf-driven + SC ratio + regional divergence" },
               ].map(r => (
                 <div class="flex items-start gap-3">
-                  <div class="text-[9px] font-mono text-zinc-500 w-36 shrink-0 pt-0.5">{r.label}</div>
+                  <div class="text-[11px] font-mono text-zinc-500 w-36 shrink-0 pt-0.5">{r.label}</div>
                   <div class="text-[10px] font-mono text-zinc-200">{r.value}</div>
                 </div>
               ))}
             </div>
           </div>
           <div class="px-6 py-5">
-            <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-3">Eurozone Parallel</div>
+            <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-3">Eurozone Parallel</div>
             <div class="space-y-2.5">
               {[
                 { label: "Monetary authority", value: "European Central Bank" },
@@ -169,7 +169,7 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
                 { label: "Inflation mechanism", value: "ECB rate policy + structural divergence" },
               ].map(r => (
                 <div class="flex items-start gap-3">
-                  <div class="text-[9px] font-mono text-zinc-500 w-36 shrink-0 pt-0.5">{r.label}</div>
+                  <div class="text-[11px] font-mono text-zinc-500 w-36 shrink-0 pt-0.5">{r.label}</div>
                   <div class="text-[10px] font-mono text-zinc-200">{r.value}</div>
                 </div>
               ))}
@@ -191,12 +191,12 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[9px] font-mono bg-teal-900/30 border border-teal-700/40 text-teal-400 px-2 py-0.5 rounded uppercase tracking-widest">New Metric</span>
+        <span class="text-[11px] font-mono bg-gta-teal/30 border border-gta-teal/40 text-gta-teal px-2 py-0.5 rounded uppercase tracking-widest">New Metric</span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// GTA-RPP — Regional Purchasing Parity</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">Day-1 ready · awaiting launch data</span>
       </div>
-      <div class="rounded-xl border border-teal-800/20 p-6" style="background:#0e1a10">
+      <div class="rounded-xl border border-gta-teal/20 p-6" style="background:#0e1a10">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
           {[
             { label: "Vice City RPP",  value: "—",     sub: "Populates at launch", color: "#f59e0b" },
@@ -204,18 +204,18 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
             { label: "RPP Ratio",      value: "—",     sub: "VC ÷ Leonida", color: "#22c55e" },
           ].map(s => (
             <div class="rounded-lg border border-[#2a2a31] px-4 py-3 text-center" style="background:#131316">
-              <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-1">{s.label}</div>
+              <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1">{s.label}</div>
               <div class="text-2xl font-mono font-black" style={`color:${s.color};opacity:0.4`}>{s.value}</div>
-              <div class="text-[9px] font-mono text-zinc-500 mt-1">{s.sub}</div>
+              <div class="text-[11px] font-mono text-zinc-500 mt-1">{s.sub}</div>
             </div>
           ))}
         </div>
-        <div class="text-[11px] font-mono text-teal-300 leading-relaxed">
-          <strong class="text-teal-500">Formula:</strong> GTA-RPP = regional basket cost ÷ regional top hourly yield.
+        <div class="text-[11px] font-mono text-gta-teal leading-relaxed">
+          <strong class="text-gta-teal">Formula:</strong> GTA-RPP = regional basket cost ÷ regional top hourly yield.
           The GTA-PPI (currently tracking GTA Online) is the single-market predecessor.
           GTA-RPP extends this to measure cross-territory purchasing power divergence — if Vice City wages are
           higher but prices are higher by a larger factor, Leonida players have higher real purchasing power.
-          Computed nightly from confirmed launch-day data. <span class="text-teal-600">Status: {(gta6Rpp as any).status}.</span>
+          Computed nightly from confirmed launch-day data. <span class="text-gta-teal">Status: {(gta6Rpp as any).status}.</span>
         </div>
       </div>
     </section>
@@ -225,7 +225,7 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-amber-500/60 shrink-0"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Structure Predictions</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{econPreds.length} model-derived</span>
@@ -238,19 +238,19 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
             <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
               <div class="px-5 py-4 flex items-start gap-4">
                 <div class="shrink-0 flex flex-col items-center gap-1 pt-0.5">
-                  <div class="text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+                  <div class="text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
                        style={`color:${tierColor};border-color:${tierColor}40`}>{tierLabel}</div>
                   <div class="text-lg font-mono font-black" style={`color:${tierColor}`}>{pred.confidence}%</div>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">
+                  <div class="font-semibold text-zinc-200 text-sm mb-1">
                     {pred.title}
                   </div>
                   <div class="text-[10px] font-mono text-zinc-400 leading-relaxed mb-2">
                     {pred.basis}
                   </div>
                   {pred.prediction_range && (
-                    <div class="flex items-center gap-3 text-[9px] font-mono text-zinc-500">
+                    <div class="flex items-center gap-3 text-[11px] font-mono text-zinc-500">
                       <span>Low: {pred.prediction_range.low}</span>
                       <span>·</span>
                       <span>High: {pred.prediction_range.high}</span>
@@ -277,7 +277,7 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
           {(economy as any).summary}
         </p>
         <div class="rounded-lg border border-gta-gold/15 px-4 py-3" style="background:rgba(245,158,11,0.03)">
-          <div class="text-[8px] font-mono text-gta-gold/40 uppercase tracking-widest mb-1">GTA Online → GTA VI</div>
+          <div class="text-[10px] font-mono text-gta-gold/40 uppercase tracking-widest mb-1">GTA Online → GTA VI</div>
           <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{(economy as any).gta_vi_lineage}</p>
         </div>
       </div>
@@ -288,7 +288,7 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
       <a href="/franchise/economics" class="px-4 py-2 rounded border border-[#2a2a31] text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">
         ← Ten Economies: Full Arc
       </a>
-      <a href="/gta-online/economy" class="px-4 py-2 rounded border border-teal-700/30 text-teal-400 text-[11px] font-mono hover:bg-teal-900/20 transition-all">
+      <a href="/gta-online/economy" class="px-4 py-2 rounded border border-gta-teal/30 text-gta-teal text-[11px] font-mono hover:bg-gta-teal/20 transition-all">
         GTA Online Economy Model →
       </a>
       <a href="/gta-vi/intel" class="px-4 py-2 rounded border border-gta-gold/20 text-gta-gold text-[11px] font-mono hover:bg-gta-gold/8 transition-all">

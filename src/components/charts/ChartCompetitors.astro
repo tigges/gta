@@ -11,14 +11,14 @@ import ShareButton from "../ShareButton.astro";
 
     <section class="chart-block" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
+        <span class="text-[11px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Major Game Launches — Year 1 Sales & Pre-launch Hype</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{competitorData.games.length} titles compared</span>
+        <span class="text-[10px] font-mono text-zinc-500">{competitorData.games.length} titles compared</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23]">
-          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5">
             GTA VI Projected Year-1 vs the Biggest Game Launches of the Last Decade
           </div>
           <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Year-1 units (left axis) · pre-launch search interest at T-12m (right axis) · bubble size = Metacritic score</div>
@@ -27,8 +27,8 @@ import ShareButton from "../ShareButton.astro";
           data-games={JSON.stringify(competitorData.games)}
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Sources: Publisher earnings · VGChartz · Metacritic · Google Trends · DFC Intelligence (GTA VI) · *predicted</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI projected year-1 vs the biggest game launches of the last decade. Every metric points to an unprecedented release." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Sources: Publisher earnings · VGChartz · Metacritic · Google Trends · DFC Intelligence (GTA VI) · *predicted</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI projected year-1 vs the biggest game launches of the last decade. Every metric points to an unprecedented release." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
 

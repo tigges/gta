@@ -31,8 +31,8 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
   <section class="border-b border-[#1e1e23]" style="background:#0a0a0d">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Grand Theft Auto · Franchise Data</div>
-      <h1 class="text-3xl font-bold text-white mb-3" style="font-family:'Inter',sans-serif">History & Sales</h1>
-      <p class="text-sm text-zinc-400 max-w-lg" style="font-family:'Inter',sans-serif">
+      <h1 class="text-3xl font-bold text-white mb-3">History & Sales</h1>
+      <p class="text-sm text-zinc-400 max-w-lg">
         Sales figures, Metacritic scores, and release timeline across all GTA titles — 1997 to 2026.
       </p>
     </div>
@@ -63,7 +63,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
                   <tr class="border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors">
                     <td class="px-5 py-3">
                       <div class="font-semibold text-zinc-200">{t.short ?? t.id}</div>
-                      <div class="text-[9px] text-zinc-700">{t.platform ?? ""}</div>
+                      <div class="text-[11px] text-zinc-500">{t.platform ?? ""}</div>
                     </td>
                     <td class="px-3 py-3 text-right text-zinc-500">{t.release_year}</td>
                     <td class="px-3 py-3 text-right">
@@ -96,7 +96,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Regional Sales Breakdown</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">NA · EU · JP · Other · Source: VGChartz</span>
+        <span class="text-[10px] font-mono text-zinc-500">NA · EU · JP · Other · Source: VGChartz</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <table class="w-full text-xs font-mono">
@@ -117,7 +117,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
               return (
                 <tr class="border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors">
                   <td class="px-5 py-3">
-                    <div class="text-zinc-200 font-semibold mb-1" style="font-family:'Inter',sans-serif">{t.short}</div>
+                    <div class="text-zinc-200 font-semibold mb-1">{t.short}</div>
                     <div class="h-1 rounded-full bg-[#1e1e23] overflow-hidden w-24">
                       <div class="h-full rounded-full bg-gta-gold/60" style={`width:${barPct}%`}></div>
                     </div>
@@ -133,7 +133,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
           </tbody>
         </table>
         <div class="px-5 py-3 border-t border-[#1e1e23]">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: VGChartz · regional estimates · may differ from publisher figures</span>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: VGChartz · regional estimates · may differ from publisher figures</span>
         </div>
       </div>
     </section>
@@ -142,10 +142,10 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
     <!-- Charts cross-link -->
     <div class="rounded-xl border border-[#1e1e23] px-5 py-4 flex items-center gap-4" style="background:#131316">
       <div class="flex-1">
-        <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">Franchise Data Charts</div>
+        <div class="font-semibold text-zinc-200 text-sm mb-1">Franchise Data Charts</div>
         <div class="text-[10px] font-mono text-zinc-600">Sales velocity, CPI-adjusted pricing, critic divergence, DLC cadence and cross-title economic complexity.</div>
       </div>
-      <a href="/franchise/charts" class="shrink-0 px-3 py-2 rounded border border-amber-700/30 text-amber-400 text-[10px] font-mono hover:bg-amber-900/20 transition-all">
+      <a href="/franchise/charts" class="shrink-0 px-3 py-2 rounded border border-gta-gold/30 text-gta-gold text-[10px] font-mono hover:bg-gta-gold/20 transition-all">
         View charts →
       </a>
     </div>

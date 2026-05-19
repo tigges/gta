@@ -27,11 +27,11 @@ const thumb = thumbUrl ?? `https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg`
       <img src={thumb} alt="" class="w-full h-full object-cover" loading="lazy" aria-hidden="true" />
     </div>
     <div class="flex-1 min-w-0 text-left">
-      <div class="text-[12px] font-semibold text-zinc-200 leading-snug mb-0.5 truncate" style="font-family:'Inter',sans-serif">{title}</div>
+      <div class="text-[12px] font-semibold text-zinc-200 leading-snug mb-0.5 truncate">{title}</div>
       <div class="text-[10px] font-mono text-zinc-600 leading-snug">{description}</div>
     </div>
     <div class="shrink-0 flex items-center gap-2">
-      <span class="hidden sm:block text-[8px] font-mono text-zinc-700 border border-[#2a2a31] px-1.5 py-0.5 rounded uppercase tracking-widest">{category}</span>
+      <span class="hidden sm:block text-[10px] font-mono text-zinc-500 border border-[#2a2a31] px-1.5 py-0.5 rounded uppercase tracking-widest">{category}</span>
       <svg class="preview-chevron w-3.5 h-3.5 text-zinc-600 transition-transform duration-200 shrink-0"
            viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M1 1l4 4 4-4"/>
@@ -44,8 +44,8 @@ const thumb = thumbUrl ?? `https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg`
       <slot />
     </div>
     <div class="px-4 py-2.5 border-t border-[#1e1e23] flex items-center justify-between gap-3" style="background:#0e0e11">
-      <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">{category}</span>
-      <a href={deepLink} class="text-[9px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors uppercase tracking-widest">
+      <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">{category}</span>
+      <a href={deepLink} class="text-[11px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors uppercase tracking-widest">
         Full chart →
       </a>
     </div>

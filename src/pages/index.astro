@@ -102,7 +102,7 @@ const t2TypeCounts = t2Events.reduce((acc: Record<string,number>, e: any) => {
 const recentNews = ((newswireData as any).items as any[]).slice(0, 3);
 const TIER_COLOR: Record<string,string> = {
   press:     "text-gta-gold",
-  official:  "text-emerald-400",
+  official:  "text-gta-teal",
   community: "text-blue-400",
 };
 ---
@@ -145,11 +145,11 @@ const TIER_COLOR: Record<string,string> = {
             <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em]">Live intelligence · updated nightly</span>
           </div>
           <div class="font-mono font-bold tracking-[0.25em] text-gta-gold mb-1 text-sm uppercase">GTA VI.AI</div>
-          <h1 class="text-4xl sm:text-5xl font-bold text-white leading-[1.1] mb-3" style="font-family:'Inter',sans-serif">
+          <h1 class="text-4xl sm:text-5xl font-bold text-white leading-[1.1] mb-3">
             Every signal.<br/>
             <span class="text-gta-bright">One source.</span>
           </h1>
-          <p class="text-zinc-400 text-sm leading-relaxed mb-6 max-w-sm" style="font-family:'Inter',sans-serif">
+          <p class="text-zinc-400 text-sm leading-relaxed mb-6 max-w-sm">
             30 years of GTA data, quantified. Live franchise analytics,
             confidence-scored predictions, and everything the numbers say about GTA VI.
           </p>
@@ -196,12 +196,12 @@ const TIER_COLOR: Record<string,string> = {
               </div>
               <!-- Official badge -->
               <div class="absolute top-2.5 left-2.5">
-                <span class="text-[8px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Official · Trailer 2</span>
+                <span class="text-[10px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Official · Trailer 2</span>
               </div>
               <!-- Title overlay -->
               <div class="absolute bottom-0 left-0 right-0 px-3 pb-3">
-                <div class="text-xs font-semibold text-white leading-tight" style="font-family:'Inter',sans-serif">Grand Theft Auto VI — Trailer 2</div>
-                <div class="text-[9px] font-mono text-zinc-500 mt-0.5">May 6, 2025 · 159M+ views</div>
+                <div class="text-xs font-semibold text-white leading-tight">Grand Theft Auto VI — Trailer 2</div>
+                <div class="text-[11px] font-mono text-zinc-500 mt-0.5">May 6, 2025 · 159M+ views</div>
               </div>
             </div>
           </a>
@@ -225,8 +225,8 @@ const TIER_COLOR: Record<string,string> = {
         ].map(s => (
           <div class="px-5 py-4">
             <div class="text-xl font-mono font-bold text-gta-bright">{s.value}</div>
-            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug" style="font-family:'Inter',sans-serif">{s.label}</div>
-            <div class="text-[10px] font-mono text-zinc-700 mt-1">via {s.source}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug">{s.label}</div>
+            <div class="text-[10px] font-mono text-zinc-500 mt-1">via {s.source}</div>
           </div>
         ))}
       </div>
@@ -279,7 +279,7 @@ const TIER_COLOR: Record<string,string> = {
         {([
           { href: "/vi-intel",  label: "VI Intel",   sub: "Cast · locations · predictions", img: "/assets/gta6/characters/Jason_Duval_01.jpg",    accent: "border-gta-gold/30",   badge: "text-gta-gold",   pos: "center top" },
           { href: "/charts",    label: "Charts",     sub: "D3 analytics · live signals",    img: "/assets/gta6/locations/Vice_City_01.jpg",         accent: "border-indigo-500/30", badge: "text-indigo-300", pos: "center 30%" },
-          { href: "/database",  label: "Database",   sub: "1,715 entities · 665 vehicles",  img: "/assets/gta6/characters/Raul_Bautista_01.jpg",   accent: "border-teal-500/30",   badge: "text-teal-300",   pos: "center top" },
+          { href: "/database",  label: "Database",   sub: "1,715 entities · 665 vehicles",  img: "/assets/gta6/characters/Raul_Bautista_01.jpg",   accent: "border-gta-teal/30",   badge: "text-gta-teal",   pos: "center top" },
           { href: "/franchise", label: "Franchise",  sub: "30yr history · DLC · sales",     img: "/assets/gta6/locations/Port_Gellhorn_03.jpg",    accent: "border-purple-500/30", badge: "text-purple-300", pos: "center 40%" },
           { href: "/news",      label: "News",       sub: "Rockstar · community · live",    img: "/assets/gta6/locations/Leonida_Keys_01.jpg",     accent: "border-green-500/30",  badge: "text-green-300",  pos: "center 50%" },
         ] as const).map(s => (
@@ -288,7 +288,7 @@ const TIER_COLOR: Record<string,string> = {
             <div class="absolute inset-0" style="background:linear-gradient(to top,#131316 20%,transparent 80%)"></div>
             <div class="relative p-4 h-full flex flex-col justify-end">
               <div class={`text-[10px] font-mono font-bold ${s.badge} mb-0.5 uppercase tracking-widest`}>{s.label}</div>
-              <div class="text-[10px] text-zinc-500 leading-snug" style="font-family:'Inter',sans-serif">{s.sub}</div>
+              <div class="text-[10px] text-zinc-500 leading-snug">{s.sub}</div>
             </div>
           </a>
         ))}
@@ -303,7 +303,7 @@ const TIER_COLOR: Record<string,string> = {
         <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Confirmed Feature Tracker</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{totalTracked} entries tracked</span>
+        <span class="text-[10px] font-mono text-zinc-500">{totalTracked} entries tracked</span>
         <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full tracker →</a>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -322,12 +322,12 @@ const TIER_COLOR: Record<string,string> = {
               <div class="relative px-4 py-4 flex flex-col h-full">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="text-lg">{cat.icon}</span>
-                  <span class="text-xs font-bold text-zinc-200" style="font-family:'Inter',sans-serif">{cat.label}</span>
+                  <span class="text-xs font-bold text-zinc-200">{cat.label}</span>
                 </div>
                 <div class="flex items-baseline gap-1.5 mb-2.5">
                   <span class="text-2xl font-mono font-bold text-gta-gold">{cat.confirmed}</span>
                   <span class="text-[10px] font-mono text-zinc-600">confirmed</span>
-                  <span class="text-zinc-700 mx-0.5">·</span>
+                  <span class="text-zinc-500 mx-0.5">·</span>
                   <span class="text-sm font-mono text-zinc-400">{cat.reported}</span>
                   <span class="text-[10px] font-mono text-zinc-600">reported</span>
                 </div>
@@ -336,8 +336,8 @@ const TIER_COLOR: Record<string,string> = {
                   {reportedPct  > 0 && <div class="h-full bg-zinc-500 ml-px" style={`width:${reportedPct}%`}></div>}
                 </div>
                 <div class="flex items-center justify-between mt-1">
-                  <span class="text-[9px] font-mono text-zinc-700">{confirmedPct}% confirmed</span>
-                  <span class="text-[9px] font-mono text-zinc-700">/ {cat.target} est.</span>
+                  <span class="text-[11px] font-mono text-zinc-500">{confirmedPct}% confirmed</span>
+                  <span class="text-[11px] font-mono text-zinc-500">/ {cat.target} est.</span>
                 </div>
               </div>
             </a>
@@ -345,7 +345,7 @@ const TIER_COLOR: Record<string,string> = {
         })}
       </div>
       <div class="mt-3 flex items-center justify-between">
-        <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+        <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
         <ShareButton text={`GTA VI has ${totalTracked}+ entries tracked: ${featCats.map((c: any) => `${c.confirmed} ${c.label.toLowerCase()} confirmed`).join(', ')}. Full feature tracker.`} url="https://gtavi.ai/vi-intel" size="sm" label="Share" />
       </div>
     </section>
@@ -386,13 +386,13 @@ const TIER_COLOR: Record<string,string> = {
               </div>
               <!-- Badge -->
               <div class="absolute top-3 left-3">
-                <span class="text-[9px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">{t.badge}</span>
+                <span class="text-[11px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">{t.badge}</span>
               </div>
             </div>
             <!-- Info bar -->
             <div class="px-4 py-3 flex items-center justify-between">
               <div>
-                <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Grand Theft Auto VI — {t.title}</div>
+                <div class="font-semibold text-zinc-200 text-sm">Grand Theft Auto VI — {t.title}</div>
                 <div class="text-[11px] text-zinc-600 font-mono mt-0.5">{t.date} · {t.views}</div>
               </div>
               <span class="text-zinc-600 group-hover:text-gta-gold transition-colors text-xs font-mono">↗</span>
@@ -401,7 +401,7 @@ const TIER_COLOR: Record<string,string> = {
         ))}
       </div>
       <div class="mt-3 flex items-center justify-between">
-        <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+        <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
         <ShareButton text="GTA VI has two official trailers. Trailer 1: 475M+ views (YouTube 24h record). Trailer 2: 159M views. The hype is unlike anything in gaming." url="https://gtavi.ai" size="sm" label="Share" />
       </div>
     </section>
@@ -413,12 +413,12 @@ const TIER_COLOR: Record<string,string> = {
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer 2 — Frame-by-Frame Entity Discovery</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{t2Events.length} entities · {(t2raw as any).duration_sec}s runtime</span>
+        <span class="text-[10px] font-mono text-zinc-500">{t2Events.length} entities · {(t2raw as any).duration_sec}s runtime</span>
         <a href="/charts" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full analysis →</a>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23]">
-          <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">What Every Second of Trailer 2 Revealed</div>
+          <div class="font-semibold text-zinc-200 text-sm">What Every Second of Trailer 2 Revealed</div>
           <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Each marker = a new entity confirmed. Colour = type. {t2Events.length} entities across {(t2raw as any).duration_sec}s.</div>
         </div>
 
@@ -437,7 +437,7 @@ const TIER_COLOR: Record<string,string> = {
               ></div>
             ))}
             <!-- Time label at end -->
-            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[8px] font-mono text-zinc-700">
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-zinc-500">
               {Math.floor((t2raw as any).duration_sec/60)}:{String((t2raw as any).duration_sec%60).padStart(2,"0")}
             </span>
           </div>
@@ -445,7 +445,7 @@ const TIER_COLOR: Record<string,string> = {
           <!-- Key entity labels below (most interesting ones) -->
           <div class="relative h-10 mt-1">
             {t2Events.filter((_: any, i: number) => i % 3 === 0).map((e: any) => (
-              <div class="absolute text-[8px] font-mono whitespace-nowrap" style={`left:${e.pct}%;color:${e.color};opacity:0.7;transform:translateX(-50%)`}>
+              <div class="absolute text-[10px] font-mono whitespace-nowrap" style={`left:${e.pct}%;color:${e.color};opacity:0.7;transform:translateX(-50%)`}>
                 {e.entity.split(" ")[0]}
               </div>
             ))}
@@ -458,12 +458,12 @@ const TIER_COLOR: Record<string,string> = {
             {Object.entries(t2TypeCounts).map(([type, count]) => (
               <span class="flex items-center gap-1.5 text-[10px] font-mono text-zinc-500">
                 <span class="w-2 h-2 rounded-full inline-block shrink-0" style={`background:${TYPE_COLOR[type] ?? "#71717a"}`}></span>
-                {type} <span class="text-zinc-700">({count as number})</span>
+                {type} <span class="text-zinc-500">({count as number})</span>
               </span>
             ))}
           </div>
           <div class="flex items-center gap-3 shrink-0">
-            <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+            <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
             <ShareButton text="GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis: 24 confirmed discoveries in 167 seconds." url="https://gtavi.ai/charts" size="sm" label="Share" />
           </div>
         </div>
@@ -505,14 +505,14 @@ const TIER_COLOR: Record<string,string> = {
                 </div>
               )}
               <div class="absolute bottom-1.5 left-2 right-2">
-                <div class="text-[9px] font-mono text-white truncate leading-tight">{c.name.split(" ")[0]}</div>
+                <div class="text-[11px] font-mono text-white truncate leading-tight">{c.name.split(" ")[0]}</div>
               </div>
             </div>
           </a>
         ))}
       </div>
       <div class="mt-3 flex items-center justify-between">
-        <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI confirmed cast: Lucia Caminos and Jason Duval as leads, plus 6 supporting characters. Official character profiles." url="https://gtavi.ai/vi-intel" size="sm" label="Share" /></div>
+        <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI confirmed cast: Lucia Caminos and Jason Duval as leads, plus 6 supporting characters. Official character profiles." url="https://gtavi.ai/vi-intel" size="sm" label="Share" /></div>
       </div>
     </section>
 
@@ -563,14 +563,14 @@ const TIER_COLOR: Record<string,string> = {
                           )}
                           <span>
                             {g.short}
-                            {isPred && <span class="ml-1 text-[9px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1 py-0.5 rounded uppercase tracking-widest align-middle">est</span>}
+                            {isPred && <span class="ml-1 text-[11px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1 py-0.5 rounded uppercase tracking-widest align-middle">est</span>}
                           </span>
                         </div>
                       </td>
                       <td class="px-4 py-2.5 text-right text-zinc-600">{year ?? "—"}</td>
-                      <td class="px-4 py-2.5 text-right">{price ? `$${price.toFixed(0)}` : <span class="text-zinc-700">—</span>}</td>
-                      <td class="px-4 py-2.5 text-right">{map ?? <span class="text-zinc-700">—</span>}</td>
-                      <td class="px-5 py-2.5 text-right">{vehicles ?? <span class="text-zinc-700">—</span>}</td>
+                      <td class="px-4 py-2.5 text-right">{price ? `$${price.toFixed(0)}` : <span class="text-zinc-500">—</span>}</td>
+                      <td class="px-4 py-2.5 text-right">{map ?? <span class="text-zinc-500">—</span>}</td>
+                      <td class="px-5 py-2.5 text-right">{vehicles ?? <span class="text-zinc-500">—</span>}</td>
                     </tr>
                   );
                 })}
@@ -578,8 +578,8 @@ const TIER_COLOR: Record<string,string> = {
             </table>
           </div>
           <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-            <span class="text-[10px] text-zinc-700 font-mono">est = estimated · sources: Rockstar, Broughy1322, community records</span>
-            <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA franchise history: GTA III in 2001 → GTA VI in 2026. 30 years of growth — vehicles, map size, price." url="https://gtavi.ai" size="sm" label="Share" /></div>
+            <span class="text-[10px] text-zinc-500 font-mono">est = estimated · sources: Rockstar, Broughy1322, community records</span>
+            <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA franchise history: GTA III in 2001 → GTA VI in 2026. 30 years of growth — vehicles, map size, price." url="https://gtavi.ai" size="sm" label="Share" /></div>
           </div>
         </div>
       </div>
@@ -601,7 +601,7 @@ const TIER_COLOR: Record<string,string> = {
               <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse inline-block"></span>
               Intelligence Digest
             </div>
-            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Latest from Rockstar + Community</div>
+            <div class="font-semibold text-zinc-200 text-sm">Latest from Rockstar + Community</div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">{(newswireData as any).items.length} stories tracked · updated nightly</div>
           </div>
           <a href="/news" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase shrink-0">Full feed →</a>
@@ -617,14 +617,14 @@ const TIER_COLOR: Record<string,string> = {
               class="flex items-start gap-4 px-5 py-4 hover:bg-white/2 transition-colors group">
               <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 mb-1">
-                  <span class={`text-[9px] font-mono uppercase tracking-widest ${TIER_COLOR[item.tier] ?? "text-zinc-600"}`}>{item.source_name}</span>
-                  <span class="text-zinc-700 text-[9px] font-mono">{daysAgo === 0 ? "today" : `${daysAgo}d ago`}</span>
+                  <span class={`text-[11px] font-mono uppercase tracking-widest ${TIER_COLOR[item.tier] ?? "text-zinc-600"}`}>{item.source_name}</span>
+                  <span class="text-zinc-500 text-[11px] font-mono">{daysAgo === 0 ? "today" : `${daysAgo}d ago`}</span>
                 </div>
-                <div class="text-[12px] text-zinc-300 group-hover:text-white transition-colors leading-snug line-clamp-2" style="font-family:'Inter',sans-serif">
+                <div class="text-[12px] text-zinc-300 group-hover:text-white transition-colors leading-snug line-clamp-2">
                   {item.title}
                 </div>
               </div>
-              <span class="text-zinc-700 group-hover:text-gta-gold transition-colors text-xs font-mono shrink-0 mt-0.5">↗</span>
+              <span class="text-zinc-500 group-hover:text-gta-gold transition-colors text-xs font-mono shrink-0 mt-0.5">↗</span>
             </a>
           );
         })}
@@ -634,7 +634,7 @@ const TIER_COLOR: Record<string,string> = {
       <div class="px-5 py-4 border-t border-[#1e1e23]" style="background:#0e0e11">
         <div class="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <div class="text-xs font-semibold text-zinc-300" style="font-family:'Inter',sans-serif">Get the weekly digest</div>
+            <div class="text-xs font-semibold text-zinc-300">Get the weekly digest</div>
             <div class="text-[11px] text-zinc-500 font-mono">Predictions · data updates · community intelligence</div>
           </div>
           <a href="/news" class="inline-flex items-center gap-2 bg-gta-gold/10 hover:bg-gta-gold/20 border border-gta-gold/25 text-gta-gold font-mono text-xs px-4 py-2 rounded transition-colors tracking-wide">
@@ -657,11 +657,11 @@ const TIER_COLOR: Record<string,string> = {
                 loading="lazy" />
           <div class="absolute inset-0" style="background:linear-gradient(to right,#131316 30%,transparent 100%)"></div>
         </div>
-        <div class="relative shrink-0 w-1 self-stretch rounded-full bg-amber-700/50 group-hover:bg-gta-gold/50 transition-colors"></div>
+        <div class="relative shrink-0 w-1 self-stretch rounded-full bg-gta-gold/50 group-hover:bg-gta-gold/50 transition-colors"></div>
         <div class="relative">
           <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-1">GTA V · 2013</div>
-          <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors" style="font-family:'Inter',sans-serif">Grand Theft Auto V — Live Data</div>
-          <div class="text-xs text-zinc-500" style="font-family:'Inter',sans-serif">133 months of Steam players · 665 Broughy-tested vehicles · Google Trends 2013–2026</div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors">Grand Theft Auto V — Live Data</div>
+          <div class="text-xs text-zinc-500">133 months of Steam players · 665 Broughy-tested vehicles · Google Trends 2013–2026</div>
           <div class="mt-3 text-[10px] font-mono text-gta-gold/60 group-hover:text-gta-gold transition-colors tracking-widest uppercase">Explore data →</div>
         </div>
       </a>
@@ -676,10 +676,10 @@ const TIER_COLOR: Record<string,string> = {
         <div class="relative">
           <div class="flex items-center gap-2 mb-1">
             <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">GTA VI · 2026</span>
-            <span class="text-[9px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Live</span>
+            <span class="text-[11px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Live</span>
           </div>
-          <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors" style="font-family:'Inter',sans-serif">Grand Theft Auto VI — Intelligence</div>
-          <div class="text-xs text-zinc-500" style="font-family:'Inter',sans-serif">Predictions · Trailers · Search trends · Franchise economics · Methodology</div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors">Grand Theft Auto VI — Intelligence</div>
+          <div class="text-xs text-zinc-500">Predictions · Trailers · Search trends · Franchise economics · Methodology</div>
           <div class="mt-3 text-[10px] font-mono text-gta-gold/60 group-hover:text-gta-gold transition-colors tracking-widest uppercase">View intel →</div>
         </div>
       </a>

@@ -54,7 +54,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
   // After Signal Predictions on VI Intel
   "vi-intel-predictions": [
     { href: "/charts", icon: "📈", tier: "Charts", label: "Signal charts",
-      sub: `${predCount} predictions backed by live data`, color: "text-amber-400", border: "border-amber-500/20" },
+      sub: `${predCount} predictions backed by live data`, color: "text-gta-gold", border: "border-gta-gold/25" },
     { href: "/database", icon: "🗄", tier: "Database", label: "Entity database",
       sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/franchise", icon: "📊", tier: "Franchise", label: "Historical context",
@@ -80,7 +80,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       sub: `${((leonidaData as any).by_category?.Locations ?? 0)} Leonida Intel locations`,
       color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/charts", icon: "🗺", tier: "Charts", label: "Region evidence heatmap",
-      sub: "Confidence density per location per source", color: "text-amber-400", border: "border-amber-500/20" },
+      sub: "Confidence density per location per source", color: "text-gta-gold", border: "border-gta-gold/25" },
     { href: "/news", icon: "📰", tier: "News", label: "Location coverage",
       sub: "Vice City, Port Gellhorn, Ambrosia in the news", color: "text-zinc-400", border: "border-zinc-700" },
   ],
@@ -91,7 +91,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       sub: `${gta6Entities.toLocaleString()} entries · vehicle, character, weapon, mission`,
       color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/charts", icon: "📈", tier: "Charts", label: "Franchise benchmarks",
-      sub: "How GTA V's features compare at launch", color: "text-amber-400", border: "border-amber-500/20" },
+      sub: "How GTA V's features compare at launch", color: "text-gta-gold", border: "border-gta-gold/25" },
   ],
 
   // After Trailer Analysis (VI Intel)
@@ -101,7 +101,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
     { href: "/database?type=character", icon: "👤", tier: "Database", label: "Characters confirmed",
       sub: "Lucia, Jason + supporting cast", color: "text-zinc-400", border: "border-zinc-700" },
     { href: "/charts", icon: "📈", tier: "Charts", label: "Trailer view velocity",
-      sub: `${trailerCount} trailers · live view count tracking`, color: "text-amber-400", border: "border-amber-500/20" },
+      sub: `${trailerCount} trailers · live view count tracking`, color: "text-gta-gold", border: "border-gta-gold/25" },
   ],
 
   // Database page
@@ -112,13 +112,13 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
     { href: "/news", icon: "📰", tier: "News", label: "Live news feed",
       sub: `${newsItems} articles · press + Reddit r/GTA6`, color: "text-zinc-400", border: "border-zinc-700" },
     { href: "/charts", icon: "📈", tier: "Charts", label: "GTA V performance data",
-      sub: `${gta5Vehicles} vehicles · Broughy benchmarks`, color: "text-amber-400", border: "border-amber-500/20" },
+      sub: `${gta5Vehicles} vehicles · Broughy benchmarks`, color: "text-gta-gold", border: "border-gta-gold/25" },
   ],
 
   // GTA V story mode page
   "gta-v": [
     { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "GTA Online income sources",
-      sub: "56 methods · S→D tier · full profiles", color: "text-teal-400", border: "border-teal-700/30" },
+      sub: "56 methods · S→D tier · full profiles", color: "text-gta-teal", border: "border-gta-teal/30" },
     { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
       sub: `${predCount} predictions · what GTA V data says about VI`, color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/franchise", icon: "📖", tier: "Franchise", label: "Franchise history",
@@ -148,7 +148,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
   // Franchise page
   "franchise": [
     { href: "/charts", icon: "📈", tier: "Charts", label: "Full chart suite",
-      sub: "Sales velocity, CPI pricing, Metacritic, revenue model", color: "text-amber-400", border: "border-amber-500/20" },
+      sub: "Sales velocity, CPI pricing, Metacritic, revenue model", color: "text-gta-gold", border: "border-gta-gold/25" },
     { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI predictions",
       sub: "What 30 years of data says about VI", color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/database", icon: "🗄", tier: "Database", label: "GTA V + VI entities",
@@ -160,7 +160,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
     { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
       sub: `${predCount} predictions · cast · locations · timelines`, color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/charts", icon: "📈", tier: "Charts", label: "Data visualised",
-      sub: "15+ live charts — franchise sales to search signal", color: "text-amber-400", border: "border-amber-500/20" },
+      sub: "15+ live charts — franchise sales to search signal", color: "text-gta-gold", border: "border-gta-gold/25" },
     { href: "/database", icon: "🗄", tier: "Database", label: "Entity database",
       sub: `${gta6Entities.toLocaleString()} GTA VI · ${gta5Vehicles} GTA V`, color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/news", icon: "📰", tier: "News", label: "Live intelligence feed",
@@ -174,7 +174,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
     { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "Intelligence backing these prices",
       sub: `${predCount} predictions · ${trailerCount} trailers analysed`, color: "text-gta-gold", border: "border-gta-gold/20" },
     { href: "/charts", icon: "📈", tier: "Charts", label: "CPI-adjusted pricing history",
-      sub: "Is $79.99 cheap vs every prior GTA at launch?", color: "text-amber-400", border: "border-amber-500/20" },
+      sub: "Is $79.99 cheap vs every prior GTA at launch?", color: "text-gta-gold", border: "border-gta-gold/25" },
     { href: "/news", icon: "📰", tier: "News", label: "Pre-order news",
       sub: `Latest from ${newsItems} tracked sources`, color: "text-zinc-400", border: "border-zinc-700" },
   ],
@@ -182,11 +182,11 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
   // GTA Online hub
   "gta-online": [
     { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "Income source browser",
-      sub: `S→D tier · ${gta5Vehicles > 0 ? "56" : "50"}+ methods profiled · ProfitCards`, color: "text-teal-400", border: "border-teal-700/30" },
+      sub: `S→D tier · ${gta5Vehicles > 0 ? "56" : "50"}+ methods profiled · ProfitCards`, color: "text-gta-teal", border: "border-gta-teal/30" },
     { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
       sub: "Weekly calendar · 42 weeks of history · sale intelligence", color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
-      sub: "GTA-PPI · inflation · passive stack tracker", color: "text-amber-400", border: "border-amber-500/20" },
+      sub: "GTA-PPI · inflation · passive stack tracker", color: "text-gta-gold", border: "border-gta-gold/25" },
     { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI — what comes next",
       sub: `${predCount} predictions · economy preview · pre-order`, color: "text-gta-gold", border: "border-gta-gold/20" },
   ],
@@ -194,17 +194,17 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
   // GTA Online economy page
   "gta-online-economy": [
     { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "Income source browser",
-      sub: "All 56 methods · S→D tier · weekly bonus tracker", color: "text-teal-400", border: "border-teal-700/30" },
+      sub: "All 56 methods · S→D tier · weekly bonus tracker", color: "text-gta-teal", border: "border-gta-teal/30" },
     { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
       sub: "Weekly calendar · sale intelligence · leaderboard", color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/franchise/charts", icon: "📈", tier: "Franchise", label: "Franchise charts",
-      sub: "Cross-title complexity · earnings · inflation", color: "text-amber-400", border: "border-amber-500/20" },
+      sub: "Cross-title complexity · earnings · inflation", color: "text-gta-gold", border: "border-gta-gold/25" },
   ],
 
   // GTA Online income hub
   "gta-online-income": [
     { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
-      sub: "GTA-PPI · inflation · passive stack", color: "text-amber-400", border: "border-amber-500/20" },
+      sub: "GTA-PPI · inflation · passive stack", color: "text-gta-gold", border: "border-gta-gold/25" },
     { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
       sub: "Weekly calendar · sale intelligence · leaderboard", color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/database?game=gta-online", icon: "🗄", tier: "Database", label: "Full data browser",
@@ -214,9 +214,9 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
   // GTA Online bonuses page
   "gta-online-bonuses": [
     { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "Income source browser",
-      sub: "Find out which active bonus is worth your time", color: "text-teal-400", border: "border-teal-700/30" },
+      sub: "Find out which active bonus is worth your time", color: "text-gta-teal", border: "border-gta-teal/30" },
     { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
-      sub: "GTA-PPI · inflation history · meta evolution", color: "text-amber-400", border: "border-amber-500/20" },
+      sub: "GTA-PPI · inflation history · meta evolution", color: "text-gta-gold", border: "border-gta-gold/25" },
     { href: "/franchise/charts", icon: "📈", tier: "Franchise", label: "Promotion analytics",
       sub: "Bonus cadence · sale frequency over time", color: "text-zinc-400", border: "border-zinc-700" },
   ],
@@ -224,11 +224,11 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
   // SEO landings: cayo-perico, assassination-guide
   "gta-online-seo": [
     { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "All income sources",
-      sub: "56 methods · S→D tier · full profit profiles", color: "text-teal-400", border: "border-teal-700/30" },
+      sub: "56 methods · S→D tier · full profit profiles", color: "text-gta-teal", border: "border-gta-teal/30" },
     { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Weekly bonuses",
       sub: "Is this method on bonus this week?", color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
-      sub: "GTA-PPI · inflation · passive vs active", color: "text-amber-400", border: "border-amber-500/20" },
+      sub: "GTA-PPI · inflation · passive vs active", color: "text-gta-gold", border: "border-gta-gold/25" },
   ],
 };
 
@@ -240,7 +240,7 @@ const links: CrossLink[] = ALL_LINKS[context] ?? [];
     <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2">
       <span class="w-1 h-4 rounded-full bg-gta-gold/40 shrink-0"></span>
       <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Related Intelligence</span>
-      <span class="text-[9px] font-mono text-zinc-800 ml-auto">auto-updated · builds nightly</span>
+      <span class="text-[11px] font-mono text-zinc-800 ml-auto">auto-updated · builds nightly</span>
     </div>
     <div class={`grid gap-0 divide-[#1e1e23] ${links.length <= 2 ? "grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x" : links.length === 3 ? "grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x"}`}>
       {links.map(link => (
@@ -249,17 +249,16 @@ const links: CrossLink[] = ALL_LINKS[context] ?? [];
           <span class="text-lg shrink-0 mt-0.5">{link.icon}</span>
           <div class="min-w-0">
             <div class="flex items-center gap-2 mb-0.5">
-              <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest bg-transparent ${link.color} ${link.border}`}>
+              <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest bg-transparent ${link.color} ${link.border}`}>
                 {link.tier}
               </span>
             </div>
-            <div class={`text-[12px] font-semibold group-hover:text-white transition-colors leading-snug mb-0.5 ${link.color}`}
-              style="font-family:'Inter',sans-serif">
+            <div class={`text-[12px] font-semibold group-hover:text-white transition-colors leading-snug mb-0.5 ${link.color}`}>
               {link.label}
             </div>
             <div class="text-[10px] font-mono text-zinc-600 leading-snug">{link.sub}</div>
           </div>
-          <span class="text-zinc-700 group-hover:text-zinc-500 font-mono text-xs ml-auto shrink-0 mt-1 transition-colors">→</span>
+          <span class="text-zinc-500 group-hover:text-zinc-500 font-mono text-xs ml-auto shrink-0 mt-1 transition-colors">→</span>
         </a>
       ))}
     </div>

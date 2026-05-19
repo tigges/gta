@@ -10,15 +10,15 @@ import ShareButton from "../ShareButton.astro";
 
     <section class="chart-block" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Passive Income Stack — How Idle GTA$/hr Grew From 0 to $1.24M</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">4 streams · ${((passiveStackData as any).setup_cost_total/1e6).toFixed(1)}M GTA$ setup</span>
+        <span class="text-[10px] font-mono text-zinc-500">4 streams · ${((passiveStackData as any).setup_cost_total/1e6).toFixed(1)}M GTA$ setup</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
-            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Passive Income Stack Growth — Bunker to Acid Lab (2013–2025)</div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5">Passive Income Stack Growth — Bunker to Acid Lab (2013–2025)</div>
             <div class="text-[11px] text-zinc-500 font-mono">GTA$/hr generated while AFK at each major patch. Full stack peaked at $1.24M/hr (Dec 2022) after Acid Lab launch. Requires $18.7M setup investment.</div>
           </div>
           <div class="flex flex-wrap gap-2 text-[10px] font-mono text-zinc-500">
@@ -39,8 +39,8 @@ import ShareButton from "../ShareButton.astro";
           data-series={JSON.stringify((passiveStackData as any).series)}
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: GTABase.com · business-profiles.json · GTAForums patch notes · community benchmarks</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online passive income history: from $0 in 2013 to $1.24M/hr AFK in 2022. The Acid Lab was the last major passive income leap before GTA VI." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: GTABase.com · business-profiles.json · GTAForums patch notes · community benchmarks</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online passive income history: from $0 in 2013 to $1.24M/hr AFK in 2022. The Acid Lab was the last major passive income leap before GTA VI." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
 

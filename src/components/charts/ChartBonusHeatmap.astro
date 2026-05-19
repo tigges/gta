@@ -12,15 +12,15 @@ import ShareButton from "../ShareButton.astro";
 
     <section class="chart-block" data-category="Promotions">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-green-900/30 text-green-500 border border-green-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Promotions</span>
+        <span class="text-[11px] font-mono bg-gta-green/30 text-gta-green border border-gta-green/40 px-2 py-0.5 rounded uppercase tracking-widest">Promotions</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Weekly Bonus Calendar — Activity Multiplier History</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{(bonusHistoryData as any).entry_count} weeks tracked · {(saleFreqData as any).date_range?.earliest?.slice(0,4)} → present</span>
+        <span class="text-[10px] font-mono text-zinc-500">{(bonusHistoryData as any).entry_count} weeks tracked · {(saleFreqData as any).date_range?.earliest?.slice(0,4)} → present</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
-            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5">
               Which Activities Get Bonus Events — and How Often
             </div>
             <div class="text-[11px] text-zinc-500 font-mono">Each cell = one Thursday weekly update. Gold = 2× bonus, bright = 3×. Patterns reveal Rockstar's promotional calendar.</div>
@@ -37,8 +37,8 @@ import ShareButton from "../ShareButton.astro";
           style="min-height:280px"
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: Rockstar Newswire · community archives · curated seed back to 2020 · live capture every Thursday</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online bonus calendar — which activities Rockstar has promoted and how often. The promotional pattern is more predictable than you'd think." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: Rockstar Newswire · community archives · curated seed back to 2020 · live capture every Thursday</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online bonus calendar — which activities Rockstar has promoted and how often. The promotional pattern is more predictable than you'd think." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
 

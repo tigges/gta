@@ -55,12 +55,12 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
     <div class="absolute inset-0" style="background:radial-gradient(ellipse at 20% 60%, rgba(245,158,11,0.04) 0%, transparent 55%), #0a0a0d"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-4">
-        <span class="text-[9px] font-mono bg-amber-900/30 border border-amber-700/40 text-amber-400 px-2 py-0.5 rounded uppercase tracking-widest">GTA Series · Complete Economic History 1997–2026</span>
+        <span class="text-[11px] font-mono bg-gta-gold/30 border border-gta-gold/40 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">GTA Series · Complete Economic History 1997–2026</span>
       </div>
-      <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3" style="font-family:'Inter',sans-serif">
+      <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3">
         Ten Economies.<br /><span class="text-gta-gold">One Franchise.</span>
       </h1>
-      <p class="text-zinc-300 text-sm leading-relaxed mb-6 max-w-xl" style="font-family:'Inter',sans-serif">
+      <p class="text-zinc-300 text-sm leading-relaxed mb-6 max-w-xl">
         From score-counter extraction to live sovereign monetary management — every major title mapped.
       </p>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
@@ -72,7 +72,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
         ].map(s => (
           <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
             <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
-            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug" style="font-family:'Inter',sans-serif">{s.label}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug">{s.label}</div>
             <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{s.sub}</div>
           </div>
         ))}
@@ -93,7 +93,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23]">
-          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Economic Complexity — Full Franchise Arc</div>
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5">Economic Complexity — Full Franchise Arc</div>
           <div class="text-[11px] font-mono text-zinc-400">Composite score: circular flow · capital market · passive income · inflation · sovereign complexity</div>
         </div>
         <!-- Bar chart from economy-models data -->
@@ -103,7 +103,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
              })))}>
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[9px] font-mono text-zinc-500 leading-relaxed max-w-2xl">{chartNote}</span>
+          <span class="text-[11px] font-mono text-zinc-500 leading-relaxed max-w-2xl">{chartNote}</span>
           <ShareButton text="GTA franchise economic complexity: from score counter (1) to Full MMT sovereign (17). Every title's economy visualised. GTAVI.AI." url="https://gtavi.ai/franchise/economics" size="sm" label="Share" />
         </div>
       </div>
@@ -147,27 +147,27 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
                         )}
                         <span class="text-zinc-500">{e.year}</span>
                         {e.regression_era && <span class="text-[7px] border border-red-600/30 text-red-500 px-1 rounded uppercase">nerf</span>}
-                        {e.projected && <span class="text-[7px] border border-amber-700/30 text-amber-500 px-1 rounded uppercase">proj</span>}
+                        {e.projected && <span class="text-[7px] border border-gta-gold/30 text-gta-gold px-1 rounded uppercase">proj</span>}
                       </div>
                     </td>
                     <td class="px-3 py-2.5 text-zinc-300 text-[10px] leading-snug max-w-[140px]">{e.economy_type}</td>
                     <td class="px-3 py-2.5 text-center">
-                      <span class="text-[9px]" style={`color:${e.dimension_scores.circular_flow > 0 ? "#0d9488" : "#3f3f46"}`}>
+                      <span class="text-[11px]" style={`color:${e.dimension_scores.circular_flow > 0 ? "#0d9488" : "#3f3f46"}`}>
                         {"●".repeat(e.dimension_scores.circular_flow)}{"○".repeat(4 - e.dimension_scores.circular_flow)}
                       </span>
                     </td>
                     <td class="px-3 py-2.5 text-center">
-                      <span class="text-[9px]" style={`color:${e.dimension_scores.capital_market > 0 ? "#a78bfa" : "#3f3f46"}`}>
+                      <span class="text-[11px]" style={`color:${e.dimension_scores.capital_market > 0 ? "#a78bfa" : "#3f3f46"}`}>
                         {"●".repeat(e.dimension_scores.capital_market)}{"○".repeat(4 - e.dimension_scores.capital_market)}
                       </span>
                     </td>
                     <td class="px-3 py-2.5 text-center">
-                      <span class="text-[9px]" style={`color:${e.dimension_scores.passive_income > 0 ? "#22c55e" : "#3f3f46"}`}>
+                      <span class="text-[11px]" style={`color:${e.dimension_scores.passive_income > 0 ? "#22c55e" : "#3f3f46"}`}>
                         {"●".repeat(e.dimension_scores.passive_income)}{"○".repeat(4 - e.dimension_scores.passive_income)}
                       </span>
                     </td>
                     <td class="px-3 py-2.5 text-center">
-                      <span class="text-[9px]" style={`color:${e.dimension_scores.inflation > 0 ? "#ef4444" : "#3f3f46"}`}>
+                      <span class="text-[11px]" style={`color:${e.dimension_scores.inflation > 0 ? "#ef4444" : "#3f3f46"}`}>
                         {"●".repeat(e.dimension_scores.inflation)}{"○".repeat(4 - e.dimension_scores.inflation)}
                       </span>
                     </td>
@@ -186,7 +186,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
             </tbody>
           </table>
         </div>
-        <div class="px-4 py-2.5 border-t border-[#1e1e23] text-[9px] font-mono text-zinc-500">
+        <div class="px-4 py-2.5 border-t border-[#1e1e23] text-[11px] font-mono text-zinc-500">
           ● = dimension active (0–4 scale) · Proj = projected · Nerf = deliberate regression
         </div>
       </div>
@@ -199,9 +199,9 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
       <div class="rounded-xl border border-red-900/30 overflow-hidden" style="background:rgba(127,29,29,0.06)">
         <div class="px-6 py-5">
           <div class="flex items-center gap-2 mb-3">
-            <span class="text-[9px] font-mono bg-red-900/30 border border-red-600/40 text-red-400 px-2 py-0.5 rounded uppercase tracking-widest">ERA 2 · 2008 — The Regression Zone</span>
+            <span class="text-[11px] font-mono bg-red-900/30 border border-red-600/40 text-red-400 px-2 py-0.5 rounded uppercase tracking-widest">ERA 2 · 2008 — The Regression Zone</span>
           </div>
-          <div class="font-semibold text-red-300 text-base mb-2" style="font-family:'Inter',sans-serif">
+          <div class="font-semibold text-red-300 text-base mb-2">
             GTA IV: The Most Important Dip in Franchise History
           </div>
           <p class="text-[11px] font-mono text-zinc-300 leading-relaxed mb-4 max-w-2xl">
@@ -252,8 +252,8 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
     <section>
       <div class="rounded-xl border border-gta-gold/20 overflow-hidden" style="background:linear-gradient(135deg,#0e1500 0%,#0e0e11 70%)">
         <div class="px-6 py-6">
-          <div class="text-[9px] font-mono text-gta-gold/40 uppercase tracking-widest mb-3">The Arc Ends Here</div>
-          <div class="font-semibold text-gta-gold text-base mb-2" style="font-family:'Inter',sans-serif">
+          <div class="text-[11px] font-mono text-gta-gold/40 uppercase tracking-widest mb-3">The Arc Ends Here</div>
+          <div class="font-semibold text-gta-gold text-base mb-2">
             GTA VI — The Dual-Territory Currency Union
           </div>
           <p class="text-[11px] font-mono text-zinc-300 leading-relaxed mb-4 max-w-2xl">

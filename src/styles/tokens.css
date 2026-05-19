@@ -1,106 +1,112 @@
 /**
- * GTAVI.AI — Design Token System
+ * GTAVI.AI — Design Token System  v2
  *
- * Single source of truth for all colors, typography scales, and surface values.
- * Tailwind config reads these vars. D3 charts will read them via chartColors.ts
- * once Layer 3 is implemented.
+ * SINGLE SOURCE OF TRUTH for all colours, typography, and surfaces.
+ * Edit here → propagates everywhere via Tailwind custom tokens and
+ * chartColors.ts. Never reach for raw Tailwind palette classes
+ * (amber-400, teal-500, emerald-600 etc.) — use the semantic tokens below.
  *
- * To change the entire brand color: edit --c-brand below. Done.
+ * ── COLOUR RULE (memorise this) ─────────────────────────────────────────
+ *   gold   = Rockstar · authority · GTA VI · reported · official · S-tier
+ *   teal   = confirmed · live data · GTA Online · active scraper · A-tier
+ *   red    = alert · nerf · delay · danger · regression · active play type
+ *   green  = growth · community · S+ tier · passive income · positive
+ *   indigo = economy · capital markets · complexity · B-tier · heist type
+ *   zinc   = neutral · inactive · predicted/unverified · C/D-tier
+ *
+ * ── FONT RULE ────────────────────────────────────────────────────────────
+ *   font-mono  = data · numbers · labels · badges · timestamps · metadata
+ *   font-sans  = headings · descriptions · card titles · narrative prose
+ *   (never use inline style="font-family:..." — use Tailwind class instead)
+ *
+ * ── TEXT SIZE FLOOR ──────────────────────────────────────────────────────
+ *   Minimum 10px for any text a user must read.
+ *   Minimum 14px for body/description text.
  */
 
 :root {
   /* ── Brand palette ─────────────────────────────────────── */
-  --c-brand:         #f59e0b;  /* primary gold  — identity, CTAs, predictions */
-  --c-brand-bright:  #fbbf24;  /* bright amber  — hero h1, large value display */
-  --c-live:          #0d9488;  /* teal          — confirmed / live / verified */
-  --c-alert:         #ef4444;  /* red           — breaking news, delay alerts */
+  --c-brand:         #f59e0b;  /* gold    — identity, CTAs, GTA VI, reported */
+  --c-brand-bright:  #fbbf24;  /* bright amber — hero h1, large value display */
+  --c-live:          #0d9488;  /* teal    — confirmed / live / verified */
+  --c-alert:         #ef4444;  /* red     — breaking news, delay, danger */
+  --c-growth:        #22c55e;  /* green   — community, S+, passive income */
+  --c-economy:       #818cf8;  /* indigo  — economy, capital, complexity */
+  --c-reddit:        #ff4500;  /* orange  — Reddit brand only; not a general accent */
 
   /* ── Surface stack ─────────────────────────────────────── */
-  --c-bg:            #0e0e11;  /* page background */
-  --c-bg-deep:       #0a0a0d;  /* ops bar, footer — deepest layer */
-  --c-card:          #131316;  /* card / panel background */
-  --c-card-raised:   #1a1a1e;  /* elevated card, hover state */
+  --c-bg:            #0e0e11;
+  --c-bg-deep:       #0a0a0d;
+  --c-card:          #131316;
+  --c-card-raised:   #1a1a1e;
 
   /* ── Border scale ──────────────────────────────────────── */
-  --c-border-1:      #1e1e23;  /* subtle   — card edges, dividers */
-  --c-border-2:      #2a2a31;  /* visible  — section separators, input borders */
+  --c-border-1:      #1e1e23;
+  --c-border-2:      #2a2a31;
 
-  /* ── Text hierarchy (8 steps, warm near-black base) ────── */
-  --c-text-0:        #ffffff;  /* level 0  — hero headings, white-on-dark */
-  --c-text-1:        #ebebef;  /* level 1  — card titles, primary values */
-  --c-text-2:        #d4d4d8;  /* level 2  — strong secondary body */
-  --c-text-3:        #b8b8c4;  /* level 3  — body text, descriptions */
-  --c-text-4:        #9898b8;  /* level 4  — muted labels, metadata, nav links */
-  --c-text-5:        #b4b4cc;  /* level 5  — section labels (// UPPERCASE) */
-  --c-text-6:        #3f3f46;  /* level 6  — source footnotes */
-  --c-text-7:        #27272a;  /* level 7  — watermarks (GTAVI.AI credit) */
+  /* ── Text hierarchy ─────────────────────────────────────
+     MINIMUM READABLE: level 4 (#9898b8) — never use level 6/7 for content.
+     Level 6 = source footnotes only. Level 7 = SVG watermarks only.      */
+  --c-text-0:        #ffffff;  /* white    — hero headings */
+  --c-text-1:        #ebebef;  /* near-white — primary values, card titles */
+  --c-text-2:        #d4d4d8;  /* light    — strong secondary body */
+  --c-text-3:        #b8b8c4;  /* medium   — body text, descriptions */
+  --c-text-4:        #9898b8;  /* muted    — labels, metadata, nav links */
+  --c-text-5:        #b4b4cc;  /* label    — section labels (// UPPERCASE) */
+  --c-text-6:        #52525b;  /* dim      — source footnotes (upgraded from #3f3f46) */
+  --c-text-7:        #3f3f46;  /* very dim — SVG watermarks only */
 
-  /* ── Category / badge colors ───────────────────────────── */
-  --c-cat-franchise:   #f59e0b;  /* amber  — franchise, sales, history */
-  --c-cat-community:   #22c55e;  /* green  — community, live, reddit */
-  --c-cat-performance: #ef4444;  /* red    — vehicles, benchmarks */
-  --c-cat-economy:     #818cf8;  /* indigo — economy, revenue, stocks */
-  --c-cat-intel:       #0d9488;  /* teal   — VI intel, confirmed data */
-  --c-cat-news:        #22c55e;  /* green  — news feed */
+  /* ── Category / badge colours ─────────────────────────── */
+  --c-cat-franchise:   #f59e0b;  /* = brand gold */
+  --c-cat-community:   #22c55e;  /* = growth green */
+  --c-cat-performance: #ef4444;  /* = alert red */
+  --c-cat-economy:     #818cf8;  /* = economy indigo */
+  --c-cat-intel:       #0d9488;  /* = live teal */
 
-  /* ── Chart / D3 internals (consumed by chartColors.ts) ─── */
-  --c-chart-axis:    #b4b4cc;  /* = text-5 — axis tick labels */
-  --c-chart-grid:    #1e1e23;  /* = border-1 — grid lines */
-  --c-chart-bar:     #f59e0b;  /* = brand — primary bar fill */
-  --c-chart-bar-dim: rgba(245,158,11,0.35); /* secondary / projected */
-  --c-chart-teal:    #0d9488;  /* = live — secondary bar (year-1 etc) */
-  --c-chart-purple:  #a78bfa;  /* user scores, divergence charts */
-  --c-chart-green:   #22c55e;  /* community growth */
-  --c-chart-red:     #ef4444;  /* delay events, alerts */
-  --c-chart-indigo:  #818cf8;  /* economy / revenue charts */
+  /* ── Chart / D3 palette ────────────────────────────────── */
+  --c-chart-axis:    #b4b4cc;
+  --c-chart-grid:    #1e1e23;
+  --c-chart-bar:     #f59e0b;
+  --c-chart-bar-dim: rgba(245,158,11,0.35);
+  --c-chart-teal:    #0d9488;
+  --c-chart-purple:  #a78bfa;
+  --c-chart-green:   #22c55e;
+  --c-chart-red:     #ef4444;
+  --c-chart-indigo:  #818cf8;
 
-  /* ── Typography scale ───────────────────────────────────── */
+  /* ── Typography ────────────────────────────────────────────
+     Sizes aligned with actual Tailwind class usage on site.  */
   --font-sans:  'Inter Variable', 'Inter', system-ui, sans-serif;
   --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
 
-  /* Semantic size names (used in comments/docs; Tailwind uses px classes) */
-  --fs-badge:    9px;   /* tier badges, micro labels */
-  --fs-label:   10px;   /* section labels, footnotes */
-  --fs-data:    11px;   /* data sub-labels, chart annotations */
-  --fs-body:    12px;   /* body/xs */
-  --fs-ui:      14px;   /* nav, UI text/sm */
-  --fs-card:    16px;   /* card headings/base */
+  --fs-micro:    10px;   /* tier badges, pill text — MINIMUM for any readable text */
+  --fs-label:    11px;   /* data labels, chart annotations, metadata */
+  --fs-body:     14px;   /* body text, descriptions (text-sm) */
+  --fs-ui:       12px;   /* nav items, table headers, compact UI (text-xs) */
+  --fs-card:     16px;   /* card headings (text-base) */
+  --fs-heading:  24px;   /* section headings (text-2xl) */
 }
 
-/* ── Reusable utility classes ──────────────────────────────────────────── */
+/* ── Element base colours ──────────────────────────────────────────────── */
+body { color: var(--c-text-3); }
+h1, h2, h3 { color: var(--c-text-0); }
+h4, h5, h6 { color: var(--c-text-1); }
+p, li, td, th { color: var(--c-text-3); }
 
-/* Base element styles — makes existing content inherit token colours
-   without needing to change any individual class on any page           */
-body {
-  color: var(--c-text-3);
-}
-
-h1, h2, h3 {
-  color: var(--c-text-0);
-}
-
-h4, h5, h6 {
-  color: var(--c-text-1);
-}
-
-p, li, td, th {
-  color: var(--c-text-3);
-}
-
-/* text-white and text-zinc-50 become pure white via this override */
 .text-white { color: var(--c-text-0) !important; }
 
-/* Brighten the common zinc text steps to match new token values */
+/* ── Zinc text steps → design token mapping ────────────────────────────── */
 .text-zinc-200, .text-zinc-100 { color: var(--c-text-1) !important; }
 .text-zinc-300                  { color: var(--c-text-2) !important; }
 .text-zinc-400                  { color: var(--c-text-3) !important; }
 .text-zinc-500                  { color: var(--c-text-4) !important; }
 .text-zinc-600                  { color: var(--c-text-5) !important; }
-.text-zinc-700                  { color: var(--c-text-6) !important; }
-.text-zinc-800                  { color: var(--c-text-7) !important; }
+.text-zinc-700                  { color: var(--c-text-6) !important; } /* footnotes only */
+.text-zinc-800                  { color: var(--c-text-7) !important; } /* SVG watermarks only */
 
+/* ── Section label utility ─────────────────────────────────────────────── */
 .section-label {
-  font-size: 11px;
+  font-size: var(--fs-label);
   font-weight: 500;
   color: var(--c-text-5);
   border-left: 2px solid var(--c-brand);

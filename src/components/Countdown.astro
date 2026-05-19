@@ -15,20 +15,20 @@ const { variant = "hero" } = Astro.props;
           id={`cd-${unit}`}
           class="text-2xl sm:text-3xl font-mono font-bold text-gta-bright tabular-nums"
         >--</span>
-        <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-[0.2em] mt-0.5">{unit}</span>
+        <span class="text-[11px] font-mono text-zinc-600 uppercase tracking-[0.2em] mt-0.5">{unit}</span>
       </div>
-      <span class="text-zinc-700 font-mono text-xl pb-4 last:hidden">·</span>
+      <span class="text-zinc-500 font-mono text-xl pb-4 last:hidden">·</span>
     ))}
     <div class="ml-2 flex flex-col justify-center">
-      <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">until launch</span>
-      <span class="text-[9px] font-mono text-zinc-700">Nov 19 · 2026</span>
+      <span class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest">until launch</span>
+      <span class="text-[11px] font-mono text-zinc-500">Nov 19 · 2026</span>
     </div>
   </div>
 ) : (
   <div id="countdown-compact" class="flex items-center gap-2" data-launch={LAUNCH_DATE}>
     <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
     <span id="cd-compact" class="text-[10px] font-mono text-zinc-400 tracking-wide">-- D · -- H · -- M</span>
-    <span class="text-[10px] font-mono text-zinc-700">to launch</span>
+    <span class="text-[10px] font-mono text-zinc-500">to launch</span>
   </div>
 )}
 

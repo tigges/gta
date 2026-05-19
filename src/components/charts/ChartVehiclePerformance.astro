@@ -10,10 +10,10 @@ import ShareButton from "../ShareButton.astro";
 
     <section class="chart-block" data-category="Performance">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-red-900/30 text-red-500 border border-red-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Performance</span>
+        <span class="text-[11px] font-mono bg-red-900/30 text-red-500 border border-red-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Performance</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Vehicle Performance Benchmarks</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{vehicleData.vehicles.length} vehicles · Broughy1322 test track</span>
+        <span class="text-[10px] font-mono text-zinc-500">{vehicleData.vehicles.length} vehicles · Broughy1322 test track</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <!-- Thumbnail cover strip -->
@@ -23,7 +23,7 @@ import ShareButton from "../ShareButton.astro";
         </div>
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
-            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5">
               GTA V Vehicle Performance — The Benchmark GTA VI Must Beat
             </div>
             <div class="text-[11px] text-zinc-500 font-mono">Top 25 fastest vehicles by lap time · Broughy1322 Rockford Hills test circuit</div>
@@ -46,8 +46,8 @@ import ShareButton from "../ShareButton.astro";
         <div id="perf-chart" class="w-full overflow-hidden px-5 py-3"
           data-vehicles={JSON.stringify(vehicleData.vehicles)}></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: Broughy1322 GTA Vehicle Performance Spreadsheet · updated {new Date(vehicleData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="665 Broughy-tested GTA V vehicles ranked. Top speed vs lap time — the actual performance data, not guesswork." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: Broughy1322 GTA Vehicle Performance Spreadsheet · updated {new Date(vehicleData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="665 Broughy-tested GTA V vehicles ranked. Top speed vs lap time — the actual performance data, not guesswork." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
 

@@ -30,10 +30,10 @@ const WORKER_URL = "https://api.gtavi.ai";
       <div class="flex items-start justify-between flex-wrap gap-4">
         <div>
           <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// GTA Online · Promotions & Community</div>
-          <h1 class="text-3xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">
+          <h1 class="text-3xl font-bold text-white mb-2">
             Bonuses, Promos &amp; Leaderboard
           </h1>
-          <p class="text-sm text-zinc-400 max-w-lg" style="font-family:'Inter',sans-serif">
+          <p class="text-sm text-zinc-400 max-w-lg">
             Weekly bonus calendar · sale intelligence · {historyCount} weeks tracked · community income rankings
           </p>
         </div>
@@ -51,17 +51,17 @@ const WORKER_URL = "https://api.gtavi.ai";
       <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
           <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse shrink-0"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
             <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">
               This week{weekStart ? ` · w/c ${weekStart}` : ""}
             </span>
           </div>
-          <a href="/charts#bonus-heatmap" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full calendar chart →</a>
+          <a href="/charts#bonus-heatmap" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full calendar chart →</a>
         </div>
         <div class="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
           <div class="divide-y divide-[#1e1e23]">
-            <div class="px-5 py-2 text-[9px] font-mono text-zinc-700 uppercase tracking-widest">Bonus Events</div>
-            {bonuses.length === 0 && <div class="px-5 py-3 text-[10px] font-mono text-zinc-700">No bonuses this week</div>}
+            <div class="px-5 py-2 text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Bonus Events</div>
+            {bonuses.length === 0 && <div class="px-5 py-3 text-[10px] font-mono text-zinc-500">No bonuses this week</div>}
             {bonuses.map((b: any) => (
               <div class="px-5 py-3 flex items-center gap-3">
                 <span class="text-[11px] font-mono font-bold w-6 shrink-0" style="color:#0d9488">{b.multiplier}×</span>
@@ -70,8 +70,8 @@ const WORKER_URL = "https://api.gtavi.ai";
             ))}
           </div>
           <div class="divide-y divide-[#1e1e23]">
-            <div class="px-5 py-2 text-[9px] font-mono text-zinc-700 uppercase tracking-widest">On Sale</div>
-            {sales.length === 0 && <div class="px-5 py-3 text-[10px] font-mono text-zinc-700">No sales this week</div>}
+            <div class="px-5 py-2 text-[11px] font-mono text-zinc-500 uppercase tracking-widest">On Sale</div>
+            {sales.length === 0 && <div class="px-5 py-3 text-[10px] font-mono text-zinc-500">No sales this week</div>}
             {sales.map((s: any) => (
               <div class="px-5 py-3 flex items-center gap-3">
                 <span class="text-[11px] font-mono font-bold shrink-0" style="color:#22c55e">{s.discount_pct}%</span>
@@ -88,7 +88,7 @@ const WORKER_URL = "https://api.gtavi.ai";
       <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
           <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Most Frequently Bonused Activities</span>
-          <a href="/charts#bonus-heatmap" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">Heatmap →</a>
+          <a href="/charts#bonus-heatmap" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">Heatmap →</a>
         </div>
         <div class="divide-y divide-[#1e1e23]">
           {topActivities.map((a: any) => {
@@ -101,7 +101,7 @@ const WORKER_URL = "https://api.gtavi.ai";
                 </div>
                 <div class="shrink-0">
                   {daysSince !== null && daysSince < 8
-                    ? <span class="text-[9px] font-mono px-1.5 py-0.5 rounded" style="color:#22c55e;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3)">ACTIVE NOW</span>
+                    ? <span class="text-[11px] font-mono px-1.5 py-0.5 rounded" style="color:#22c55e;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3)">ACTIVE NOW</span>
                     : <span class="text-[10px] font-mono text-zinc-600">{daysSince}d ago</span>
                   }
                 </div>
@@ -115,15 +115,15 @@ const WORKER_URL = "https://api.gtavi.ai";
     <!-- Last week's winner banner (populated by JS) -->
     <div id="lb-winner-banner" class="hidden mb-6 rounded-xl border border-gta-gold/30 overflow-hidden" style="background:#131316">
       <div class="px-5 py-3 border-b border-gta-gold/15 flex items-center gap-2">
-        <span class="text-[9px] font-mono text-gta-gold/70 uppercase tracking-widest">Last Week's Winner</span>
+        <span class="text-[11px] font-mono text-gta-gold/70 uppercase tracking-widest">Last Week's Winner</span>
         <div class="flex-1 h-px bg-gta-gold/10"></div>
-        <span id="lb-winner-week" class="text-[9px] font-mono text-zinc-600"></span>
+        <span id="lb-winner-week" class="text-[11px] font-mono text-zinc-600"></span>
       </div>
       <div class="px-5 py-4 flex items-center gap-5 flex-wrap">
         <div class="flex items-center gap-3">
-          <div class="text-4xl font-black text-gta-gold" style="font-family:'Inter',sans-serif">#1</div>
+          <div class="text-4xl font-black text-gta-gold">#1</div>
           <div>
-            <div id="lb-winner-name" class="text-base font-bold text-zinc-100" style="font-family:'Inter',sans-serif"></div>
+            <div id="lb-winner-name" class="text-base font-bold text-zinc-100"></div>
             <div id="lb-winner-score" class="text-[11px] font-mono text-gta-gold"></div>
           </div>
         </div>
@@ -138,7 +138,7 @@ const WORKER_URL = "https://api.gtavi.ai";
     <!-- Week filter + stats row -->
     <div class="flex items-center gap-3 mb-6 flex-wrap">
       <div class="flex items-center gap-2">
-        <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">Week</span>
+        <span class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest">Week</span>
         <button id="lb-filter-all"  class="lb-week-btn px-2.5 py-1 rounded text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all" data-week="">All time</button>
         <button id="lb-filter-week" class="lb-week-btn px-2.5 py-1 rounded text-[10px] font-mono border border-[#2a2a31] text-zinc-500 hover:border-zinc-600 transition-all" data-week="current">This week</button>
       </div>
@@ -177,7 +177,7 @@ const WORKER_URL = "https://api.gtavi.ai";
     <div class="mt-8 rounded-xl border border-gta-teal/20 p-5 flex items-center justify-between flex-wrap gap-4" style="background:#131316">
       <div>
         <div class="text-[10px] font-mono text-gta-teal/60 uppercase tracking-widest mb-1">Want to appear here?</div>
-        <div class="text-sm font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">Build your income stack on GTA V → Income Adviser and opt in</div>
+        <div class="text-sm font-semibold text-zinc-200">Build your income stack on GTA V → Income Adviser and opt in</div>
         <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Select your businesses → click "Share my stack to the community leaderboard"</div>
       </div>
       <a href="/gta-online/income#income-adviser"
@@ -229,13 +229,13 @@ const WORKER_URL = "https://api.gtavi.ai";
     container.innerHTML = entries.map(e => {
       const isMe = myUsername && e.username === myUsername;
       const stackSummary = e.stack.slice(0, 4).map((s: any) =>
-        `<span class="text-[9px] font-mono text-zinc-600 border border-[#2a2a31] px-1.5 py-0.5 rounded">${s.name.split(' ')[0]}</span>`
-      ).join(' ') + (e.stack.length > 4 ? ` <span class="text-[9px] font-mono text-zinc-700">+${e.stack.length - 4}</span>` : '');
+        `<span class="text-[11px] font-mono text-zinc-600 border border-[#2a2a31] px-1.5 py-0.5 rounded">${s.name.split(' ')[0]}</span>`
+      ).join(' ') + (e.stack.length > 4 ? ` <span class="text-[11px] font-mono text-zinc-500">+${e.stack.length - 4}</span>` : '');
 
       const rankColor = tierColor(e.rank);
       const date = new Date(e.submitted_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
       const shareBtn = `<a href="${tweetShareUrl(e.rank, e.display, e.total_hr)}" target="_blank" rel="noopener noreferrer"
-        class="shrink-0 flex items-center gap-1 px-2 py-1 rounded border border-gta-gold/20 text-gta-gold/70 text-[9px] font-mono hover:border-gta-gold/50 hover:text-gta-gold transition-colors uppercase tracking-widest"
+        class="shrink-0 flex items-center gap-1 px-2 py-1 rounded border border-gta-gold/20 text-gta-gold/70 text-[11px] font-mono hover:border-gta-gold/50 hover:text-gta-gold transition-colors uppercase tracking-widest"
         title="Tweet your rank">
         Tweet rank
       </a>`;
@@ -245,8 +245,8 @@ const WORKER_URL = "https://api.gtavi.ai";
           <div class="shrink-0 w-8 text-center font-mono font-black text-lg leading-none" style="color:${rankColor}">${e.rank}</div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 mb-1 flex-wrap">
-              <span class="text-sm font-semibold ${isMe ? 'text-gta-teal' : 'text-zinc-200'}" style="font-family:'Inter',sans-serif">${e.display}${isMe ? ' <span class="text-[9px] font-mono text-gta-teal/60 border border-gta-teal/20 px-1 rounded">you</span>' : ''}</span>
-              <span class="text-[9px] font-mono text-zinc-700">${date}</span>
+              <span class="text-sm font-semibold ${isMe ? 'text-gta-teal' : 'text-zinc-200'}">${e.display}${isMe ? ' <span class="text-[11px] font-mono text-gta-teal/60 border border-gta-teal/20 px-1 rounded">you</span>' : ''}</span>
+              <span class="text-[11px] font-mono text-zinc-500">${date}</span>
             </div>
             <div class="flex flex-wrap gap-1">${stackSummary}</div>
           </div>
@@ -254,7 +254,7 @@ const WORKER_URL = "https://api.gtavi.ai";
             ${isMe ? shareBtn : ''}
             <div class="text-right">
               <div class="text-xl font-mono font-bold text-gta-gold">${formatK(e.total_hr)}<span class="text-[11px] font-normal text-zinc-600">/hr</span></div>
-              <div class="text-[9px] font-mono text-zinc-700">${e.stack.length} business${e.stack.length !== 1 ? 'es' : ''}</div>
+              <div class="text-[11px] font-mono text-zinc-500">${e.stack.length} business${e.stack.length !== 1 ? 'es' : ''}</div>
             </div>
           </div>
         </div>`;
@@ -333,7 +333,7 @@ const WORKER_URL = "https://api.gtavi.ai";
       scoreEl.textContent = `${formatK(w.total_hr)}/hr · ${w.stack?.length ?? 0} businesses`;
       weekEl.textContent  = data.week_key ?? '';
       stackEl.innerHTML   = (w.stack ?? []).slice(0, 5).map((s: any) =>
-        `<span class="text-[9px] font-mono text-gta-gold/60 border border-gta-gold/15 px-1.5 py-0.5 rounded">${s.name.split(' ')[0]}</span>`
+        `<span class="text-[11px] font-mono text-gta-gold/60 border border-gta-gold/15 px-1.5 py-0.5 rounded">${s.name.split(' ')[0]}</span>`
       ).join('');
 
       const tweetText = `🥇 Last week's #1 on the GTAVI.AI community income leaderboard: ${w.display || w.username} with ${formatK(w.total_hr)}/hr. Can you top it this week? gtavi.ai/gta-online/bonuses`;
