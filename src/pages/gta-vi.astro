@@ -233,10 +233,10 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         <ChartDelayTimeline />
       </div>
 
-      <!-- Featured: Region heatmap + Community growth (2-col) -->
+      <!-- Featured: Region heatmap + Trailer Discovery (2-col) -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ChartRegionHeatmap />
-        <ChartCommunity />
+        <ChartTrailerDiscovery />
       </div>
     </section>
 
@@ -261,14 +261,13 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         </ChartPreviewCard>
 
         <ChartPreviewCard
-          cardId="preview-discovery"
-          title="Frame-by-Frame: Information Density Across Both Trailers"
-          description="Every entity revealed · confidence level · timestamp in trailer"
-          category="History · GTA VI"
-          deepLink="/charts#trailer-discovery-chart"
-          thumbUrl={`https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg`}
+          cardId="preview-community"
+          title="r/GrandTheftAutoVI Community Growth"
+          description="Subreddit growth vs search interest · anticipation vs GTA V"
+          category="Community · GTA VI"
+          deepLink="/charts#community-chart"
         >
-          <ChartTrailerDiscovery />
+          <ChartCommunity />
         </ChartPreviewCard>
       </div>
     </section>
