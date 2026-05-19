@@ -1,0 +1,143 @@
+---
+/**
+ * ChartVehicleTco
+ * Extracted from charts.astro.
+ */
+import vehicleModsData from "../../../data/gta-5/economy/vehicle-mods.json";
+import bizProfilesData from "../../../data/gta-5/economy/business-profiles.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+<section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Vehicle TCO — What Does Going Full Meta Actually Cost?</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500">{(vehicleModsData as any).vehicle_count} vehicles · avg upgrade ${((vehicleModsData as any).avg_upgrade_cost/1000).toFixed(0)}k</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5">
+              Total Cost of Ownership — Buy · Upgrades · Weapons · Armour
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Full investment required to go meta. Standard shop prices. Purple dash = trade price where unlockable.</div>
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500 flex-wrap">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#52525b;opacity:0.75"></span>Buy price</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#f59e0b;opacity:0.75"></span>Upgrades</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#ef4444;opacity:0.75"></span>Weapons</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#0d9488;opacity:0.75"></span>Armour</span>
+          </div>
+        </div>
+        <div id="vehicle-tco-chart" class="w-full"
+          data-vehicles={JSON.stringify((vehicleModsData as any).vehicles)}
+          style="min-height:500px"
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-500 font-mono">Source: GTABase.com · Broughy1322 · standard shop prices · trade prices shown where unlockable</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online meta vehicle costs — Oppressor Mk2 costs $5.1M fully kitted. Akula helicopter $4.8M. What going full meta actually requires." url="https://gtavi.ai/charts#vehicle-tco-chart" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+  import { registerChart } from "../../assets/chartInit";
+
+  function init() {
+    const el = document.getElementById("vehicle-tco-chart") as HTMLElement | null;
+    if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
+    const vehicles: any[] = JSON.parse(el.dataset.vehicles || "[]");
+    if (!vehicles.length) return;
+
+    // Exclude zero-cost vehicles (free promotional items)
+    const sorted = vehicles
+      .filter((v: any) => v.total_cost_standard > 0)
+      .sort((a: any, b: any) => b.total_cost_standard - a.total_cost_standard);
+
+    const rowH   = 30;
+    const labelW = 195;
+    const margin = { top: 20, right: 90, bottom: 8, left: labelW };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = sorted.length * rowH + margin.top + margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${H}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const maxCost = (d3.max(sorted, (v: any) => v.total_cost_standard) ?? 1) as number;
+    const x = d3.scaleLinear().domain([0, maxCost * 1.05]).range([0, W]);
+
+    const COLORS = { buy: "#52525b", upgrade: "#f59e0b", weapons: "#ef4444", armour: "#0d9488" };
+
+    // Axis grid lines (light)
+    [0.25, 0.5, 0.75, 1.0].forEach(frac => {
+      const xv = x(maxCost * frac);
+      svg.append("line").attr("x1", xv).attr("x2", xv).attr("y1", 0).attr("y2", sorted.length * rowH)
+        .attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3");
+      svg.append("text").attr("x", xv).attr("y", -6).attr("text-anchor", "middle")
+        .attr("fill", "#3f3f46").attr("font-size", "9").attr("font-family", "monospace")
+        .text(`$${((maxCost * frac) / 1e6).toFixed(1)}M`);
+    });
+
+    sorted.forEach((v: any, i: number) => {
+      const y = i * rowH + 4;
+      const bh = rowH - 10;
+      let xOff = 0;
+
+      const segs = [
+        { val: v.buy_price     || 0, color: COLORS.buy     },
+        { val: v.upgrade_cost  || 0, color: COLORS.upgrade  },
+        { val: v.weapons_cost  || 0, color: COLORS.weapons  },
+        { val: v.armour_cost   || 0, color: COLORS.armour   },
+      ];
+
+      segs.forEach(s => {
+        if (s.val <= 0) return;
+        const bw = x(s.val);
+        svg.append("rect").attr("x", xOff).attr("y", y).attr("width", bw).attr("height", bh)
+          .attr("rx", 2).attr("fill", s.color).attr("opacity", 0.75);
+        xOff += bw;
+      });
+
+      // Trade price dashed marker
+      if (v.total_cost_trade) {
+        const tx = x(v.total_cost_trade);
+        svg.append("line")
+          .attr("x1", tx).attr("x2", tx).attr("y1", y - 3).attr("y2", y + bh + 3)
+          .attr("stroke", "#818cf8").attr("stroke-width", 1.5).attr("stroke-dasharray", "4,2");
+      }
+
+      // Total cost label
+      const tot = v.total_cost_standard;
+      const totTxt = tot >= 1e6 ? `$${(tot / 1e6).toFixed(2)}M` : `$${Math.round(tot / 1000)}k`;
+      svg.append("text").attr("x", xOff + 6).attr("y", y + bh / 2 + 4)
+        .attr("fill", "#a1a1aa").attr("font-size", "9").attr("font-family", "monospace")
+        .text(totTxt);
+
+      // Vehicle name label
+      const label = v.name.length > 24 ? v.name.slice(0, 23) + "…" : v.name;
+      svg.append("text").attr("x", -8).attr("y", y + bh / 2 + 4).attr("text-anchor", "end")
+        .attr("fill", "#d4d4d8").attr("font-size", "10").attr("font-family", "monospace")
+        .text(label);
+    });
+
+    // Trade price legend
+    svg.append("line").attr("x1", W + 4).attr("x2", W + 16).attr("y1", -6).attr("y2", -6)
+      .attr("stroke", "#818cf8").attr("stroke-width", 1.5).attr("stroke-dasharray", "4,2");
+    svg.append("text").attr("x", W + 19).attr("y", -2)
+      .attr("fill", "#818cf8").attr("font-size", "8.5").attr("font-family", "monospace")
+      .text("trade");  }
+
+  registerChart("vehicle-tco-chart", init);
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("vehicle-tco-chart");
+    if (obsEl) {
+      const obs = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+      }, { rootMargin: "200px" });
+      obs.observe(obsEl);
+    }
+  } else { init(); }
+</script>
