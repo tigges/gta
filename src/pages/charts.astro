@@ -113,20 +113,42 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
             ))}
           </div>
         </div>
-        <!-- Title filters -->
-        <div class="flex flex-wrap gap-2 pb-3 border-b border-[#1e1e23] mb-3">
-          {["All", "gta-vi", "gta-online", "gta-v", "franchise"].map(t => (
-            <button
-              class="chart-title-filter px-3 py-1.5 rounded text-[11px] font-mono border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
-              data-title={t}
-            >{{
-              "All":       "All Titles",
-              "gta-vi":    "GTA VI",
-              "gta-online":"GTA Online",
-              "gta-v":     "GTA V",
-              "franchise": "Franchise",
-            }[t]}</button>
-          ))}
+        <!-- Title filters — logo-based, GTA VI first (most recent), backwards in time -->
+        <div class="flex flex-wrap items-center gap-2 pb-4 border-b border-[#1e1e23] mb-3">
+
+          {/* All Titles */}
+          <button class="chart-title-filter flex items-center gap-1.5 px-3 py-1.5 rounded border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 text-[11px] font-mono"
+                  data-title="All">
+            <span class="text-[10px] font-mono">All</span>
+          </button>
+
+          {/* GTA VI */}
+          <button class="chart-title-filter flex items-center gap-2 px-2.5 py-1.5 rounded border transition-all border-[#2a2a31] hover:border-gta-gold/40 group"
+                  data-title="gta-vi" aria-label="GTA VI">
+            <img src="/assets/logos/gta-vi.svg" alt="GTA VI"
+                 class="h-5 w-auto opacity-60 group-hover:opacity-90 transition-opacity" />
+          </button>
+
+          {/* GTA Online */}
+          <button class="chart-title-filter flex items-center gap-2 px-2.5 py-1.5 rounded border transition-all border-[#2a2a31] hover:border-gta-teal/40 group"
+                  data-title="gta-online" aria-label="GTA Online">
+            <img src="/assets/logos/gta-online.svg" alt="GTA Online"
+                 class="h-5 w-auto opacity-60 group-hover:opacity-90 transition-opacity" />
+          </button>
+
+          {/* GTA V */}
+          <button class="chart-title-filter flex items-center gap-2 px-2.5 py-1.5 rounded border transition-all border-[#2a2a31] hover:border-zinc-500 group"
+                  data-title="gta-v" aria-label="GTA V">
+            <img src="/assets/logos/gta-v.png" alt="GTA V"
+                 class="h-5 w-auto opacity-60 group-hover:opacity-90 transition-opacity" />
+          </button>
+
+          {/* Franchise */}
+          <button class="chart-title-filter flex items-center gap-1.5 px-3 py-1.5 rounded border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 text-[10px] font-mono uppercase tracking-widest"
+                  data-title="franchise">
+            Franchise
+          </button>
+
         </div>
         <!-- Category filters -->
         <div class="flex flex-wrap gap-2 self-end pb-1">
@@ -313,7 +335,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <!-- ═══════════════════════════════════════════════════════
          CHART 5 — Trailer View Velocity  [GTA VI]
     ═══════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-title="gta-vi" data-category="Franchise">
+    <section class="chart-block" data-title="gta-vi" data-category="Community">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">GTA VI</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Trailer View Velocity</span>
@@ -1641,14 +1663,26 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       // Always set display to ensure previously-hidden blocks are restored
       block.style.display = show ? "" : "none";
     });
+    // Title filter active states — use data-active + per-title accent colour
+    const TITLE_ACCENT: Record<string, { border: string; bg: string; img: string }> = {
+      "All":        { border: "#2a2a31",          bg: "transparent",           img: "1" },
+      "gta-vi":     { border: "rgba(245,158,11,0.5)", bg: "rgba(245,158,11,0.06)", img: "1" },
+      "gta-online": { border: "rgba(13,148,136,0.5)", bg: "rgba(13,148,136,0.06)", img: "1" },
+      "gta-v":      { border: "rgba(113,113,122,0.5)", bg: "rgba(113,113,122,0.06)", img: "1" },
+      "franchise":  { border: "rgba(113,113,122,0.5)", bg: "rgba(113,113,122,0.06)", img: "1" },
+    };
     document.querySelectorAll<HTMLButtonElement>(".chart-title-filter").forEach(b => {
-      const active = b.dataset.title === activeTitle || (activeTitle === "All" && b.dataset.title === "All");
-      b.className = b.className
-        .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
-        .replace(/border-\[#2a2a31\]|text-zinc-500/g, "").trim();
-      b.classList.add(...(active
-        ? ["border-gta-gold/40", "text-gta-gold", "bg-gta-gold/8"]
-        : ["border-[#2a2a31]", "text-zinc-500"]));
+      const title  = b.dataset.title ?? "All";
+      const isActive = title === activeTitle || (activeTitle === "All" && title === "All");
+      const accent = TITLE_ACCENT[title] ?? TITLE_ACCENT["All"];
+      b.style.borderColor    = isActive ? accent.border : "rgba(42,42,49,1)";
+      b.style.backgroundColor = isActive ? accent.bg   : "transparent";
+      const img = b.querySelector<HTMLImageElement>("img");
+      if (img) img.style.opacity = isActive ? "1" : "0.5";
+      // Text buttons (All / Franchise)
+      if (!img) {
+        b.style.color = isActive ? "#f59e0b" : "";
+      }
     });
   }
   // Apply title filter AFTER charts render (via rAF) to avoid hiding elements
