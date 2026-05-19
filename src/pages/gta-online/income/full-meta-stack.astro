@@ -1,0 +1,259 @@
+---
+/**
+ * /gta-online/income/full-meta-stack
+ * Composite guide: the GTA Online optimal income stack.
+ * This is a strategy page, not a single business — explains how to combine
+ * Cayo Perico, Agency/GF contracts, and passive businesses for $1.7M/hr.
+ */
+import Base from "../../../layouts/Base.astro";
+import ShareButton from "../../../components/ShareButton.astro";
+import CrossLinks from "../../../components/CrossLinks.astro";
+import revenueTiersData from "../../../../data/gta-5/economy/revenue-tiers.json";
+import weeklyBonuses    from "../../../../data/gta-5/economy/weekly-bonuses.json";
+import saleFreqData     from "../../../../data/gta-5/economy/sale-frequency.json";
+
+const tiers       = (revenueTiersData as any).tiers as any[];
+const starterPath = (revenueTiersData as any).optimal_starter_path as any[];
+const spTier      = tiers.find((t: any) => t.tier === "S+");
+const stackEntry  = spTier?.sources.find((s: any) => s.id === "full-meta-stack");
+
+// Component sources with page links
+const COMPONENTS = [
+  {
+    id:       "cayo-perico",
+    name:     "Cayo Perico Heist",
+    role:     "Active core — run every cooldown",
+    gph:      1200000,
+    setup:    4200000,
+    note:     "Primary earner. Always check primary loot — only run for Panther Statue, Pink Diamond, or Bearer Bonds.",
+    color:    "#818cf8",
+  },
+  {
+    id:       "agency-vip-contract",
+    name:     "Agency / GF Contracts",
+    role:     "Active filler — run during Cayo cooldown",
+    gph:      600000,
+    setup:    2010000,
+    note:     "Dr. Dre contract or Garment Factory missions during the 3hr Cayo cooldown. No resupply needed.",
+    color:    "#f59e0b",
+  },
+  {
+    id:       "nightclub",
+    name:     "Nightclub (fully upgraded, 5 sources)",
+    role:     "Passive — runs while you do everything else",
+    gph:      120000,
+    setup:    6700000,
+    note:     "Requires Bunker + Acid Lab + MC businesses linked. Fill to 1000 units then sell large.",
+    color:    "#22c55e",
+  },
+  {
+    id:       "bunker",
+    name:     "Bunker (upgraded)",
+    role:     "Passive — runs automatically",
+    gph:      90000,
+    setup:    2500000,
+    note:     "Paleto Bay bunker is cheapest. Upgrade Equipment + Staff. Sell when full to public lobby.",
+    color:    "#22c55e",
+  },
+  {
+    id:       "acid-lab",
+    name:     "Acid Lab (upgraded)",
+    role:     "Semi-passive — resupply twice/session",
+    gph:      170000,
+    setup:    2950000,
+    note:     "Unlocked via First Dose missions (free). Resupply every 2.5hr. Best semi-passive per cost.",
+    color:    "#f59e0b",
+  },
+];
+
+const totalSetup  = COMPONENTS.reduce((s, c) => s + c.setup, 0);
+const activeBonuses = ((weeklyBonuses as any).bonuses as any[]).filter((b: any) =>
+  COMPONENTS.some(c => c.id === b.activity_id)
+);
+
+const bonusFreqs = COMPONENTS.map(comp => ({
+  ...comp,
+  freq: ((saleFreqData as any).activity_bonuses as any[]).find((a: any) => a.activity_id === comp.id),
+}));
+---
+
+<Base
+  title="GTA Online Full Meta Stack — $1.7M/hr Optimal Income Guide"
+  description="The complete GTA Online optimal income strategy: Cayo Perico + Agency contracts + passive stack. $1.7M/hr total. Full setup path, component breakdown, and timing guide."
+  ogImage="https://gtavi.ai/og/online/cayo-perico.png"
+>
+  <!-- Breadcrumb -->
+  <div class="border-b border-[#1e1e23]" style="background:#0a0a0d">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-[10px] font-mono text-zinc-600">
+      <a href="/gta-online" class="hover:text-zinc-400 transition-colors">GTA Online</a>
+      <span class="text-zinc-800">›</span>
+      <a href="/gta-online/income" class="hover:text-zinc-400 transition-colors">Income Sources</a>
+      <span class="text-zinc-800">›</span>
+      <span class="text-zinc-500">Full Meta Stack</span>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-8">
+
+    <!-- Hero header -->
+    <div class="rounded-xl border border-green-800/30 overflow-hidden" style="background:linear-gradient(135deg,#0e1a10 0%,#131316 60%)">
+      <div class="px-6 py-6">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-[9px] font-mono bg-green-900/40 text-green-400 border border-green-700/40 px-2 py-0.5 rounded uppercase tracking-widest">S+ Tier</span>
+          <span class="text-[9px] font-mono text-zinc-600 border border-[#2a2a31] px-2 py-0.5 rounded uppercase tracking-widest">Stack Strategy · Solo</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">
+          GTA Online Full Meta Stack
+        </h1>
+        <p class="text-zinc-400 text-sm leading-relaxed mb-5 max-w-2xl" style="font-family:'Inter',sans-serif">
+          The community-verified optimal income strategy. Run Cayo Perico as your primary earner,
+          fill its 3hr cooldown with Agency contracts, and let passive businesses generate income in the background.
+          Combined: <strong class="text-green-400">$1.7M+/hr</strong> solo.
+        </p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { value: "$1.7M/hr", label: "combined ceiling",  color: "#22c55e" },
+            { value: `$${(totalSetup / 1_000_000).toFixed(0)}M`,   label: "total setup cost", color: "#f59e0b" },
+            { value: `${COMPONENTS.length} sources`, label: "running in parallel", color: "#818cf8" },
+            { value: "100% solo",  label: "no lobby needed", color: "#0d9488" },
+          ].map(s => (
+            <div class="rounded-lg border border-[#2a2a31] px-3 py-2.5" style="background:#0e0e11">
+              <div class="text-lg font-mono font-black mb-0.5" style={`color:${s.color}`}>{s.value}</div>
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Active bonus callout -->
+    {activeBonuses.length > 0 && (
+      <div class="rounded-xl border border-green-700/30 px-5 py-3 flex items-center gap-3 flex-wrap" style="background:rgba(34,197,94,0.05)">
+        <span class="text-lg shrink-0">🔥</span>
+        <div>
+          <div class="text-xs font-semibold text-green-400" style="font-family:'Inter',sans-serif">STACK COMPONENT ON BONUS THIS WEEK</div>
+          <div class="text-[10px] font-mono text-green-600">
+            {activeBonuses.map((b: any) => `${COMPONENTS.find(c => c.id === b.activity_id)?.name} — ${b.multiplier}× GTA$`).join(' · ')}
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- Component breakdown -->
+    <section>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Stack Components — Run in Parallel</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <div class="flex flex-col gap-3">
+        {COMPONENTS.map(comp => {
+          const bf = bonusFreqs.find(b => b.id === comp.id);
+          const freq = bf?.freq;
+          return (
+            <a href={`/gta-online/income/${comp.id}`}
+               class="group rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] overflow-hidden transition-all"
+               style="background:#131316">
+              <div class="px-5 py-4 flex items-start gap-4">
+                <div class="shrink-0 w-2 h-2 rounded-full mt-1.5" style={`background:${comp.color}`}></div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap mb-1">
+                    <span class="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors" style="font-family:'Inter',sans-serif">{comp.name}</span>
+                    <span class="text-[8px] font-mono text-zinc-600 border border-[#2a2a31] px-1.5 py-0.5 rounded uppercase tracking-widest">{comp.role.split(' — ')[0]}</span>
+                  </div>
+                  <div class="text-[10px] font-mono text-zinc-600 mb-2">{comp.role.split(' — ')[1] ?? comp.role}</div>
+                  <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{comp.note}</p>
+                  {freq && freq.last_bonus_date && (
+                    <div class="mt-2 text-[9px] font-mono text-zinc-700">
+                      Last bonus: {freq.days_since_last_bonus}d ago · avg every {freq.avg_gap_weeks?.toFixed(1)}wk
+                    </div>
+                  )}
+                </div>
+                <div class="shrink-0 text-right">
+                  <div class="text-lg font-mono font-black" style={`color:${comp.color}`}>${Math.round(comp.gph / 1000)}k/hr</div>
+                  <div class="text-[9px] font-mono text-zinc-700">setup: ${(comp.setup / 1_000_000).toFixed(1)}M</div>
+                </div>
+                <span class="text-zinc-700 group-hover:text-zinc-400 font-mono text-[10px] ml-2 shrink-0 transition-colors">→</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- Session flow guide -->
+    <section>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Optimal Session Flow</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="divide-y divide-[#1e1e23]">
+          {[
+            { time: "0:00",  action: "Log in — collect Nightclub + Bunker goods if full, trigger Acid Lab resupply" },
+            { time: "0:05",  action: "Launch Cayo Perico scope out (free roam, save for later)" },
+            { time: "0:10",  action: "Start Cayo Perico heist — scope confirmed in previous session" },
+            { time: "0:45",  action: "Cayo complete ($1.2M if Panther Statue). 3hr cooldown starts." },
+            { time: "0:50",  action: "Launch Agency — Dr. Dre contract or Garment Factory mission series" },
+            { time: "2:00",  action: "Resupply Acid Lab if needed. Check Nightclub goods." },
+            { time: "3:45",  action: "Cayo cooldown ends — repeat from step 3. Sell passive stock if full." },
+          ].map((step, i) => (
+            <div class="px-5 py-3 flex items-start gap-4">
+              <div class="shrink-0 w-12 text-[10px] font-mono text-zinc-700 pt-0.5">{step.time}</div>
+              <div class="flex-1 text-[11px] font-mono text-zinc-400">{step.action}</div>
+            </div>
+          ))}
+        </div>
+        <div class="px-5 py-3 border-t border-[#1e1e23]">
+          <span class="text-[9px] font-mono text-zinc-700">Times approximate. Cayo active time ~35min. Agency contracts ~60-90min. Passive runs regardless.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Setup path -->
+    <section>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Getting Here — The Optimal Setup Path</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">total investment: ${(totalSetup / 1_000_000).toFixed(0)}M GTA$</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="divide-y divide-[#1e1e23]">
+          {starterPath.map((step: any) => (
+            <div class="px-5 py-3 flex items-center gap-4">
+              <div class="shrink-0 w-5 h-5 rounded-full bg-gta-gold/15 border border-gta-gold/30 flex items-center justify-center text-[9px] font-mono font-bold text-gta-gold">{step.step}</div>
+              <div class="flex-1">
+                <div class="text-[11px] font-mono text-zinc-300">{step.action}</div>
+                <div class="text-[9px] font-mono text-zinc-600 mt-0.5">Unlocks: {step.unlocks}</div>
+              </div>
+              <div class="shrink-0 text-right">
+                <div class="text-[11px] font-mono font-bold text-zinc-400">
+                  {step.cost > 0 ? `$${(step.cost / 1_000_000).toFixed(2)}M` : "Free"}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer CTAs -->
+    <div class="flex items-center gap-3 flex-wrap">
+      <a href="/gta-online/income"
+         class="px-4 py-2 rounded border border-[#2a2a31] text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">
+        ← All income sources
+      </a>
+      <a href="/gta-online/economy"
+         class="px-4 py-2 rounded border border-teal-700/30 text-teal-400 text-[11px] font-mono hover:bg-teal-900/20 transition-all">
+        Economy model →
+      </a>
+      <div class="ml-auto">
+        <ShareButton
+          text="GTA Online full meta stack: Cayo Perico + Agency contracts + passives = $1.7M+/hr solo. The optimal 2024 income strategy."
+          url="https://gtavi.ai/gta-online/income/full-meta-stack"
+          size="sm" label="Share" />
+      </div>
+    </div>
+
+    <CrossLinks context="gta-online-income" />
+  </div>
+</Base>
