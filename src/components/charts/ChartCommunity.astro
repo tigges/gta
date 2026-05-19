@@ -48,6 +48,7 @@ import ShareButton from "../ShareButton.astro";
   function init() {
     const el = document.getElementById("community-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const milestones: {date:string;subscribers:number;event:string|null}[] = JSON.parse(el.dataset.milestones || "[]");
     const trendsKw: {data:{date:string;value:number}[]} | null = JSON.parse(el.dataset.trends || "null");

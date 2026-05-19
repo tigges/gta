@@ -39,6 +39,7 @@ import ShareButton from "../ShareButton.astro";
   function init() {
     const el = document.getElementById("competitors-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const games: any[] = JSON.parse(el.dataset.games || "[]")
       .sort((a: any, b: any) => (b.year1_units_m ?? 0) - (a.year1_units_m ?? 0));

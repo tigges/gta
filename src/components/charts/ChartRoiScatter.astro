@@ -39,6 +39,7 @@ import ShareButton from "../ShareButton.astro";
   function init() {
     const el = document.getElementById("roi-scatter-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const bizs: any[] = JSON.parse(el.dataset.businesses || "[]");
     const PLAY_COLOR: Record<string,string> = {
