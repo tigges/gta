@@ -60,7 +60,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
       <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3" style="font-family:'Inter',sans-serif">
         Ten Economies.<br /><span class="text-gta-gold">One Franchise.</span>
       </h1>
-      <p class="text-zinc-400 text-sm leading-relaxed mb-6 max-w-xl" style="font-family:'Inter',sans-serif">
+      <p class="text-zinc-300 text-sm leading-relaxed mb-6 max-w-xl" style="font-family:'Inter',sans-serif">
         From score-counter extraction to live sovereign monetary management — every major title mapped.
       </p>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
@@ -73,7 +73,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
           <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
             <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
             <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug" style="font-family:'Inter',sans-serif">{s.label}</div>
-            <div class="text-[10px] font-mono text-zinc-700 mt-0.5">{s.sub}</div>
+            <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{s.sub}</div>
           </div>
         ))}
       </div>
@@ -88,13 +88,13 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
     <section>
       <div class="flex items-center gap-3 mb-6">
         <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economic Complexity — Full Franchise Timeline 1997–2026</span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Complexity — Full Franchise Timeline 1997–2026</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23]">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Economic Complexity — Full Franchise Arc</div>
-          <div class="text-[11px] font-mono text-zinc-600">Composite score: circular flow · capital market · passive income · inflation · sovereign complexity</div>
+          <div class="text-[11px] font-mono text-zinc-400">Composite score: circular flow · capital market · passive income · inflation · sovereign complexity</div>
         </div>
         <!-- Bar chart from economy-models data -->
         <div id="complexity-arc-chart" class="w-full" style="height:280px"
@@ -103,7 +103,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
              })))}>
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[9px] font-mono text-zinc-700 leading-relaxed max-w-2xl">{chartNote}</span>
+          <span class="text-[9px] font-mono text-zinc-500 leading-relaxed max-w-2xl">{chartNote}</span>
           <ShareButton text="GTA franchise economic complexity: from score counter (1) to Full MMT sovereign (17). Every title's economy visualised. GTAVI.AI." url="https://gtavi.ai/franchise/economics" size="sm" label="Share" />
         </div>
       </div>
@@ -114,7 +114,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// All Economies — Overview</span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// All Economies — Overview</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -122,13 +122,13 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
           <table class="w-full text-xs font-mono" style="min-width:700px">
             <thead>
               <tr class="border-b border-[#1e1e23]">
-                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Title</th>
-                <th class="text-left px-3 py-2.5 text-zinc-600 font-normal">Economy Type</th>
-                <th class="text-center px-3 py-2.5 text-zinc-600 font-normal">Circular Flow</th>
-                <th class="text-center px-3 py-2.5 text-zinc-600 font-normal">Capital Market</th>
-                <th class="text-center px-3 py-2.5 text-zinc-600 font-normal">Passive Income</th>
-                <th class="text-center px-3 py-2.5 text-zinc-600 font-normal">Inflation</th>
-                <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Complexity</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Title</th>
+                <th class="text-left px-3 py-2.5 text-zinc-400 font-normal">Economy Type</th>
+                <th class="text-center px-3 py-2.5 text-zinc-400 font-normal">Circular Flow</th>
+                <th class="text-center px-3 py-2.5 text-zinc-400 font-normal">Capital Market</th>
+                <th class="text-center px-3 py-2.5 text-zinc-400 font-normal">Passive Income</th>
+                <th class="text-center px-3 py-2.5 text-zinc-400 font-normal">Inflation</th>
+                <th class="text-right px-4 py-2.5 text-zinc-400 font-normal">Complexity</th>
               </tr>
             </thead>
             <tbody>
@@ -145,12 +145,12 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
                         ) : (
                           <span class="font-semibold text-zinc-500">{e.short}</span>
                         )}
-                        <span class="text-zinc-700">{e.year}</span>
+                        <span class="text-zinc-500">{e.year}</span>
                         {e.regression_era && <span class="text-[7px] border border-red-600/30 text-red-500 px-1 rounded uppercase">nerf</span>}
                         {e.projected && <span class="text-[7px] border border-amber-700/30 text-amber-500 px-1 rounded uppercase">proj</span>}
                       </div>
                     </td>
-                    <td class="px-3 py-2.5 text-zinc-500 text-[10px] leading-snug max-w-[140px]">{e.economy_type}</td>
+                    <td class="px-3 py-2.5 text-zinc-300 text-[10px] leading-snug max-w-[140px]">{e.economy_type}</td>
                     <td class="px-3 py-2.5 text-center">
                       <span class="text-[9px]" style={`color:${e.dimension_scores.circular_flow > 0 ? "#0d9488" : "#3f3f46"}`}>
                         {"●".repeat(e.dimension_scores.circular_flow)}{"○".repeat(4 - e.dimension_scores.circular_flow)}
@@ -186,7 +186,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
             </tbody>
           </table>
         </div>
-        <div class="px-4 py-2.5 border-t border-[#1e1e23] text-[9px] font-mono text-zinc-700">
+        <div class="px-4 py-2.5 border-t border-[#1e1e23] text-[9px] font-mono text-zinc-500">
           ● = dimension active (0–4 scale) · Proj = projected · Nerf = deliberate regression
         </div>
       </div>
@@ -204,7 +204,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
           <div class="font-semibold text-red-300 text-base mb-2" style="font-family:'Inter',sans-serif">
             GTA IV: The Most Important Dip in Franchise History
           </div>
-          <p class="text-[11px] font-mono text-zinc-500 leading-relaxed mb-4 max-w-2xl">
+          <p class="text-[11px] font-mono text-zinc-300 leading-relaxed mb-4 max-w-2xl">
             The GTA IV regression zone on the complexity chart is intentional — Rockstar explicitly stripped six years of economic innovation for narrative realism. The shaded zone marks this as a design choice, not a data error. GTA IV is economically simpler than Vice City (2002) — a deliberate six-year step backward. However, TBOGT's nightclub mechanic planted the seed that would bloom into GTA Online's entire business empire. Without TBOGT there may have been no Acid Lab.
           </p>
           <a href="/gta-iv/economy" class="text-[10px] font-mono text-red-400/70 hover:text-red-400 transition-colors tracking-widest uppercase border border-red-700/30 px-3 py-1.5 rounded hover:bg-red-900/20">
@@ -219,9 +219,9 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economy Browser — Expand to View Circular Flow</span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economy Browser — Expand to View Circular Flow</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">Click to expand · Full page → for deep dive</span>
+        <span class="text-[10px] font-mono text-zinc-500">Click to expand · Full page → for deep dive</span>
       </div>
       <div class="flex flex-col gap-2">
         {economies.map((e: any) => {
@@ -256,7 +256,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
           <div class="font-semibold text-gta-gold text-base mb-2" style="font-family:'Inter',sans-serif">
             GTA VI — The Dual-Territory Currency Union
           </div>
-          <p class="text-[11px] font-mono text-zinc-500 leading-relaxed mb-4 max-w-2xl">
+          <p class="text-[11px] font-mono text-zinc-300 leading-relaxed mb-4 max-w-2xl">
             {arcSummary}
           </p>
           <a href="/gta-vi/economy" class="inline-flex items-center gap-2 px-4 py-2 rounded border border-gta-gold/25 text-gta-gold text-[10px] font-mono hover:bg-gta-gold/8 hover:border-gta-gold/45 transition-all uppercase tracking-widest">
