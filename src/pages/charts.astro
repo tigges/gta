@@ -349,7 +349,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     ═══════════════════════════════════════════════════════ -->
     <section class="chart-block" data-title="gta-vi" data-category="History">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
+        <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/30 px-2 py-0.5 rounded uppercase tracking-widest">GTA VI</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Development & Delay Timeline</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{delayData.total_delays} delay · {delayData.timeline.length} events · SEC EDGAR sourced</span>
@@ -681,9 +681,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          NEW CHART F — Region Evidence Heatmap
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-title="gta-vi" data-category="History">
+    <section class="chart-block" data-title="gta-vi" data-category="Community">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
+        <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/30 px-2 py-0.5 rounded uppercase tracking-widest">GTA VI</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida Region Evidence Heatmap</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{regionsData.regions.filter((r: any) => r.confirmed).length} confirmed regions · evidence per source type</span>
@@ -1645,6 +1645,15 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
   </div>
 </Base>
 
+<style>
+  /* ── Per-title left border accent on chart sections ─────────────────────
+     Provides immediate visual title identification before JS badge injection. */
+  .chart-block[data-title="gta-vi"]     { border-left: 2px solid rgba(245,158,11,0.30); padding-left: 12px; }
+  .chart-block[data-title="gta-online"] { border-left: 2px solid rgba(13,148,136,0.25); padding-left: 12px; }
+  .chart-block[data-title="gta-v"]      { border-left: 2px solid rgba(113,113,122,0.20); padding-left: 12px; }
+  .chart-block[data-title="franchise"]  { border-left: 2px solid rgba(113,113,122,0.15); padding-left: 12px; }
+</style>
+
 <script>
   import * as d3 from "d3";
   import { cc, playColor } from "../assets/chartColors";
@@ -1772,6 +1781,46 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
   // Apply title filter AFTER chart init rAFs have queued
   requestAnimationFrame(() => applyTitleFilter());
+
+  // ── Auto-inject title chips into all chart section headers ───────────────
+  // Reads data-title from each .chart-block and prepends a mini title badge
+  // before the existing category badge — zero per-chart HTML changes needed.
+  (function injectTitleChips() {
+    const TITLE_CONFIG: Record<string, { label: string; imgSrc: string | null; color: string; bg: string; border: string }> = {
+      "gta-vi":     { label: "GTA VI",    imgSrc: "/assets/logos/gta-vi.svg",     color: "#f59e0b", bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.30)" },
+      "gta-online": { label: "GTA Online",imgSrc: "/assets/logos/gta-online.svg", color: "#0d9488", bg: "rgba(13,148,136,0.08)",  border: "rgba(13,148,136,0.30)"  },
+      "gta-v":      { label: "GTA V",     imgSrc: "/assets/logos/gta-v.png",      color: "#a1a1aa", bg: "rgba(113,113,122,0.07)", border: "rgba(113,113,122,0.25)"  },
+      "franchise":  { label: "Franchise", imgSrc: null,                           color: "#a1a1aa", bg: "rgba(113,113,122,0.07)", border: "rgba(113,113,122,0.25)"  },
+    };
+
+    document.querySelectorAll<HTMLElement>(".chart-block").forEach(section => {
+      const titleKey = section.dataset.title;
+      const cfg = titleKey ? TITLE_CONFIG[titleKey] : null;
+      if (!cfg) return;
+
+      // Find the header row (flex items-center gap-3 mb-5)
+      const header = section.querySelector<HTMLElement>(".flex.items-center.gap-3.mb-5");
+      if (!header || header.querySelector(".chart-auto-title")) return;
+
+      // Build the title chip
+      const chip = document.createElement("span");
+      chip.className = "chart-auto-title inline-flex items-center gap-1.5 shrink-0";
+      chip.style.cssText = `padding:2px 7px 2px 4px;border-radius:4px;border:1px solid ${cfg.border};background:${cfg.bg};font-size:9px;font-family:monospace;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${cfg.color};white-space:nowrap`;
+
+      if (cfg.imgSrc) {
+        const img = document.createElement("img");
+        img.src   = cfg.imgSrc;
+        img.alt   = cfg.label;
+        img.style.cssText = "height:14px;width:auto;object-fit:contain;opacity:0.9;flex-shrink:0";
+        chip.appendChild(img);
+      } else {
+        chip.textContent = cfg.label;
+      }
+
+      // Insert before the first existing badge
+      header.insertBefore(chip, header.firstChild);
+    });
+  })();
 
   // ── Chart initialisations ────────────────────────────────────────────────
 
