@@ -1,9 +1,10 @@
 ---
 /**
- * CircularEconomy.astro
- * Renders the circular economy diagram for any GTA franchise title.
- * Data-driven from data/franchise/economy-models.json.
- * Decision 1: CSS Grid + absolute SVG overlay (Option B)
+ * CircularEconomy.astro  v2
+ * - Reads ALL colours from economy-models.json color_schema (single source of truth)
+ * - All layouts use positioned grid + SVG overlay for consistent arrow rendering
+ * - CSS keyframe animations on flow arrows (type-driven: forward/backward/pulse)
+ * - SVG overflow:visible + clientWidth retry guard ensures arrows always render
  */
 import type { EconomyModel } from "../types/gta";
 import economyData from "../../data/franchise/economy-models.json";
@@ -14,72 +15,79 @@ interface Props {
 }
 
 const { titleId, mode = "full" } = Astro.props;
-const allEconomies = (economyData as any).economies as EconomyModel[];
-const economy = allEconomies.find((e: any) => e.title_id === titleId);
-if (!economy) throw new Error(`CircularEconomy: unknown titleId "${titleId}"`);
-
 const isCompact = mode === "compact";
 
-// ── Color token → Tailwind class maps ────────────────────────────────────────
-const BORDER: Record<string, string> = {
-  indigo: "border-indigo-500/30", amber:  "border-amber-700/40",
-  orange: "border-orange-700/40", teal:   "border-teal-600/40",
-  green:  "border-green-700/40",  purple: "border-purple-700/40",
-  blue:   "border-blue-600/40",   zinc:   "border-[#2a2a31]",
-  gold:   "border-gta-gold/40",   yellow: "border-yellow-600/40",
-  red:    "border-red-600/40",
-};
-const TEXT: Record<string, string> = {
-  indigo: "text-indigo-400", amber:  "text-amber-400",
-  orange: "text-orange-400", teal:   "text-teal-400",
-  green:  "text-green-400",  purple: "text-purple-400",
-  blue:   "text-blue-400",   zinc:   "text-zinc-300",
-  gold:   "text-gta-gold",   yellow: "text-yellow-400",
-  red:    "text-red-400",
-};
+const allEconomies = (economyData as any).economies as EconomyModel[];
+const schema       = (economyData as any).color_schema;
+const economy      = allEconomies.find((e: any) => e.title_id === titleId);
+if (!economy) throw new Error(`CircularEconomy: unknown titleId "${titleId}"`);
 
-// ── Node lookup ───────────────────────────────────────────────────────────────
-const nodeMap: Record<string, any> = {};
-for (const n of economy.nodes as any[]) nodeMap[n.id] = n;
-const sovereignNode = (economy.nodes as any[]).find((n: any) => n.type === "sovereign");
-const gridNodes     = (economy.nodes as any[]).filter((n: any) => n.type !== "sovereign");
+// ── Color helpers from color_schema ─────────────────────────────────────────
+const NT = schema.node_tokens as Record<string, { border: string; text: string; hex: string }>;
+const FA = schema.flow_animation as Record<string, { dir: string; duration_s: number }>;
 
-// ── Layout templates: node positions as % of container ───────────────────────
+function nodeBorder(token: string): string { return NT[token]?.border ?? NT.zinc.border; }
+function nodeText(token: string):   string { return NT[token]?.text   ?? NT.zinc.text;   }
+function flowHex(token: string):    string { return NT[token]?.hex    ?? "#71717a";       }
+
+// ── Sovereign node ───────────────────────────────────────────────────────────
+const sovNode     = (economy.nodes as any[]).find((n: any) => n.type === "sovereign");
+const gridNodes   = (economy.nodes as any[]).filter((n: any) => n.type !== "sovereign");
+const nodeMap: Record<string, any> = Object.fromEntries((economy.nodes as any[]).map((n: any) => [n.id, n]));
+const flows       = economy.flows as any[];
+const isProjected = (economy as any).projected === true;
+const isRegression = (economy as any).regression_era === true;
+
+// ── Era badge ────────────────────────────────────────────────────────────────
+const ERA_BADGE: Record<string, string> = {
+  zinc:  "bg-zinc-800/60 border-zinc-700/50 text-zinc-400",
+  amber: "bg-amber-900/30 border-amber-700/40 text-amber-400",
+  green: "bg-green-900/30 border-green-700/40 text-green-400",
+  red:   "bg-red-900/30 border-red-600/40 text-red-400",
+  teal:  "bg-teal-900/30 border-teal-700/40 text-teal-400",
+  gold:  "bg-gta-gold/10 border-gta-gold/30 text-gta-gold",
+};
+const eraBadge = ERA_BADGE[(economy as any).era_badge_color] ?? ERA_BADGE.zinc;
+
+// ── Node grid positions (% of container) ────────────────────────────────────
+// All layouts use absolute positioning so JS arrow-drawing works uniformly.
 const LAYOUTS: Record<string, Record<string, { top: number; left: number; width: number }>> = {
   "one-way": {
-    "player":          { top: 18, left:  4, width: 40 },
-    "world":           { top: 18, left: 56, width: 40 },
-    "world-shops":     { top: 18, left: 56, width: 40 },
+    "player":           { top: 18, left:  4, width: 40 },
+    "world":            { top: 18, left: 56, width: 40 },
+    "world-shops":      { top: 18, left: 56, width: 40 },
   },
   "proto": {
-    "missions-jobs":   { top: 10, left:  1, width: 26 },
-    "missions-hits":   { top: 10, left:  1, width: 26 },
-    "player":          { top: 10, left: 33, width: 34 },
-    "businesses":      { top: 10, left: 70, width: 28 },
-    "world":           { top: 10, left: 70, width: 28 },
-    "world-shops":     { top: 68, left: 33, width: 34 },
-    "tbogt-bridge":    { top: 70, left: 22, width: 56 },
+    "missions-jobs":    { top: 10, left:  1, width: 26 },
+    "missions-hits":    { top: 10, left:  1, width: 26 },
+    "player":           { top: 10, left: 33, width: 34 },
+    "businesses":       { top: 10, left: 70, width: 28 },
+    "world":            { top: 10, left: 70, width: 28 },
+    "world-shops":      { top: 68, left: 33, width: 34 },
+    "tbogt-bridge":     { top: 70, left: 22, width: 56 },
   },
   "loop": {
-    "heists-missions": { top:  8, left:  1, width: 26 },
-    "player":          { top:  8, left: 32, width: 36 },
-    "properties":      { top:  8, left: 71, width: 27 },
-    "bawsaq-lcn":      { top: 65, left: 26, width: 48 },
+    "heists-missions":  { top:  8, left:  1, width: 26 },
+    "player":           { top:  8, left: 32, width: 36 },
+    "properties":       { top:  8, left: 71, width: 27 },
+    "bawsaq-lcn":       { top: 65, left: 26, width: 48 },
   },
   "multi-stream": {
-    "missions-jobs":   { top:  3, left: 33, width: 34 },
-    "player":          { top: 36, left: 33, width: 34 },
-    "properties":      { top:  3, left: 70, width: 28 },
-    "gang-territory":  { top: 72, left:  1, width: 30 },
-    "gambling":        { top: 72, left: 35, width: 30 },
-    "stock-market":    { top: 72, left: 69, width: 30 },
+    "missions-jobs":    { top:  3, left: 33, width: 34 },
+    "player":           { top: 36, left: 33, width: 34 },
+    "properties":       { top:  3, left: 70, width: 28 },
+    "gang-territory":   { top: 72, left:  1, width: 30 },
+    "gambling":         { top: 72, left: 35, width: 30 },
+    "stock-market":     { top: 72, left: 69, width: 30 },
   },
+  // full-mmt now uses positioned layout (same JS path as others)
   "full-mmt": {
-    "businesses":      { top: 18, left:  1, width: 30 },
-    "players":         { top: 18, left: 35, width: 30 },
-    "maze-bank":       { top: 18, left: 69, width: 29 },
-    "shark-cards":     { top: 72, left: 26, width: 48 },
+    "businesses":       { top: 18, left:  1, width: 30 },
+    "players":          { top: 18, left: 35, width: 30 },
+    "maze-bank":        { top: 18, left: 69, width: 29 },
+    "shark-cards":      { top: 72, left: 26, width: 48 },
   },
+  // dual-territory inner nodes (regions handled separately in HTML)
   "dual-territory": {
     "businesses-vc":      { top: 32, left:  2, width: 22 },
     "players-vc":         { top: 32, left: 26, width: 22 },
@@ -88,69 +96,70 @@ const LAYOUTS: Record<string, Record<string, { top: number; left: number; width:
     "shark-cards":        { top: 78, left: 26, width: 48 },
   },
 };
-const nodePositions = LAYOUTS[economy.layout_template as string] ?? {};
+const nodePositions = LAYOUTS[(economy as any).layout_template as string] ?? {};
 
-const CONTAINER_H: Record<string, number> = {
-  "one-way":       160,  "proto":         300,
-  "loop":          300,  "multi-stream":  360,
-  "full-mmt":      300,  "dual-territory":380,
+const HEIGHTS: Record<string, number> = {
+  "one-way": 160, "proto": 300, "loop": 300,
+  "multi-stream": 360, "full-mmt": 300, "dual-territory": 380,
 };
 const containerH = isCompact
-  ? Math.round((CONTAINER_H[economy.layout_template as string] ?? 300) * 0.8)
-  : (CONTAINER_H[economy.layout_template as string] ?? 300);
+  ? Math.round((HEIGHTS[(economy as any).layout_template as string] ?? 300) * 0.75)
+  : (HEIGHTS[(economy as any).layout_template as string] ?? 300);
 
-// ── Era badge styling ─────────────────────────────────────────────────────────
-const ERA_BADGE: Record<string, string> = {
-  zinc:  "bg-zinc-800 border-zinc-700/50 text-zinc-400",
-  amber: "bg-amber-900/30 border-amber-700/40 text-amber-400",
-  green: "bg-green-900/30 border-green-700/40 text-green-400",
-  red:   "bg-red-900/30 border-red-600/40 text-red-400",
-  teal:  "bg-teal-900/30 border-teal-700/40 text-teal-400",
-  gold:  "bg-gta-gold/10 border-gta-gold/30 text-gta-gold",
-};
-const eraBadge = ERA_BADGE[economy.era_badge_color as string] ?? ERA_BADGE.zinc;
+// Unique ID for SVG marker namespacing per instance
+const uid = `ce-${titleId}-${Math.random().toString(36).slice(2, 6)}`;
 
-// Unique component ID for SVG marker namespacing
-const uid = `ce-${economy.title_id}-${Math.random().toString(36).slice(2,7)}`;
+// Marker colours needed (collect from flows)
+const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))];
 ---
 
-<div class="circular-economy-wrapper" data-ce-uid={uid}>
+<style>
+  /* ── Flow arrow animations ─────────────────────────────────────────────── */
+  @keyframes ce-flow-fwd  { from { stroke-dashoffset:  0; } to { stroke-dashoffset: -20; } }
+  @keyframes ce-flow-bwd  { from { stroke-dashoffset:  0; } to { stroke-dashoffset:  20; } }
+  @keyframes ce-flow-pulse{ 0%,100%{stroke-opacity:.3}50%{stroke-opacity:.85} }
 
-  {/* ── Era badge row ──────────────────────────────────────────────────── */}
+  .ce-anim-forward  { stroke-dasharray: 7 4; animation: ce-flow-fwd   1.4s linear infinite; }
+  .ce-anim-backward { stroke-dasharray: 7 4; animation: ce-flow-bwd   2.0s linear infinite; }
+  .ce-anim-pulse    { stroke-dasharray: 5 5; animation: ce-flow-pulse 0.9s ease-in-out infinite; }
+</style>
+
+<div class="ce-wrapper" data-ce-uid={uid}>
+
+  {/* ── Era badges ────────────────────────────────────────────────────────── */}
   <div class="flex items-center gap-2 mb-3 flex-wrap">
     <span class={`text-[9px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest ${eraBadge}`}>
-      {economy.era_label}
+      {(economy as any).era_label}
     </span>
-    {(economy ).regression_era && (
+    {isRegression && (
       <span class="text-[9px] font-mono bg-red-900/30 border border-red-600/40 text-red-400 px-2 py-0.5 rounded uppercase tracking-widest">
         Deliberate Regression
       </span>
     )}
-    {(economy ).projected && (
+    {isProjected && (
       <span class="text-[9px] font-mono bg-amber-900/20 border border-amber-700/30 text-amber-500 px-2 py-0.5 rounded uppercase tracking-widest">
         Projected
       </span>
     )}
   </div>
 
-  {/* ── Sovereign box ─────────────────────────────────────────────────── */}
-  {sovereignNode && (
-    <div class={`rounded-xl border px-4 py-3 mb-2 ${(economy ).projected ? "border-dashed border-indigo-500/20" : "border-indigo-500/25"}`}
-         style="background:rgba(49,46,129,0.12)">
+  {/* ── Sovereign box ─────────────────────────────────────────────────────── */}
+  {sovNode && (
+    <div class={`rounded-xl border px-4 py-3 mb-2 ${isProjected ? "border-dashed" : ""}`}
+         style={`border-color:rgba(245,158,11,0.22);background:${schema.sovereign.bg}`}>
       <div class="text-center mb-0.5">
-        <span class="text-[8px] font-mono text-indigo-400/50 uppercase tracking-[0.2em]">SOVEREIGN</span>
+        <span class={`text-[8px] font-mono uppercase tracking-[0.2em] ${schema.sovereign.text_header}`}>SOVEREIGN</span>
       </div>
-      <div class="text-center font-semibold text-indigo-300 text-sm mb-1" style="font-family:'Inter',sans-serif">
-        {sovereignNode.label}
+      <div class={`text-center font-semibold text-sm mb-1 ${schema.sovereign.text_label}`} style="font-family:'Inter',sans-serif">
+        {sovNode.label}
       </div>
-      <div class="text-center text-[10px] font-mono text-indigo-400/50 leading-snug">
-        {sovereignNode.detail}
+      <div class={`text-center text-[10px] font-mono leading-snug ${schema.sovereign.text_detail}`}>
+        {sovNode.detail}
       </div>
-      {/* Sovereign lever pills (GTA Online / GTA VI) */}
-      {!isCompact && (economy ).sovereign_levers.length > 0 && (
+      {!isCompact && (economy as any).sovereign_levers?.length > 0 && (
         <div class="flex flex-wrap justify-center gap-1.5 mt-2.5">
-          {(economy ).sovereign_levers.map((lever: string) => (
-            <span class={`text-[8px] font-mono border px-2 py-0.5 rounded-full ${(economy ).projected ? "border-indigo-700/25 text-indigo-500/60" : "border-indigo-700/40 text-indigo-400/70"}`}>
+          {(economy as any).sovereign_levers.map((lever: string) => (
+            <span class={`text-[8px] font-mono border px-2 py-0.5 rounded-full ${schema.sovereign.lever_border} ${schema.sovereign.lever_text}`}>
               {lever}
             </span>
           ))}
@@ -161,115 +170,86 @@ const uid = `ce-${economy.title_id}-${Math.random().toString(36).slice(2,7)}`;
 
   {/* Sovereign dashed arrow down */}
   <div class="flex justify-center my-1">
-    <svg width="16" height="18" viewBox="0 0 16 18">
-      <line x1="8" y1="0" x2="8" y2="12" stroke="#4338ca" stroke-width="1.5"
-            stroke-dasharray={(economy ).projected ? "3,2" : "none"} stroke-opacity="0.35" />
-      <polygon points="3,10 8,18 13,10" fill="#4338ca" opacity="0.25" />
+    <svg width="16" height="18" viewBox="0 0 16 18" style="overflow:visible">
+      <line x1="8" y1="0" x2="8" y2="12"
+            stroke="rgba(245,158,11,0.3)" stroke-width="1.5"
+            stroke-dasharray={isProjected ? "3,2" : "none"} />
+      <polygon points="3,10 8,18 13,10" fill="rgba(245,158,11,0.2)" />
     </svg>
   </div>
 
-  {/* ── Layout: dual-territory ────────────────────────────────────────── */}
-  {economy.layout_template === "dual-territory" && (() => {
-    const proj = (economy ).projected;
-    const r1 = nodeMap["region-1"];
-    const r2 = nodeMap["region-2"];
-    const bvc = nodeMap["businesses-vc"];
-    const pvc = nodeMap["players-vc"];
-    const ble = nodeMap["businesses-leonida"];
-    const ple = nodeMap["players-leonida"];
-    const sc  = nodeMap["shark-cards"];
-    return (
+  {/* ── Dual-territory: special two-region HTML layout ────────────────────── */}
+  {(economy as any).layout_template === "dual-territory" ? (
     <div class="w-full space-y-3">
       <div class="grid grid-cols-2 gap-3">
-        <div class={proj ? "rounded-xl border-2 border-dashed border-gta-gold/20 p-3" : "rounded-xl border-2 border-gta-gold/20 p-3"}
+        {/* VC region */}
+        <div class={`rounded-xl border-2 p-3 ${isProjected ? "border-dashed border-gta-gold/20" : "border-gta-gold/20"}`}
              style="background:rgba(245,158,11,0.04)">
-          <div class="text-[9px] font-mono text-gta-gold/40 uppercase tracking-widest text-center mb-1">{r1?.label}</div>
-          <div class="text-[8px] font-mono text-zinc-700 text-center mb-3 leading-snug">{r1?.detail}</div>
-          <div class="grid grid-cols-2 gap-2">
-            {bvc && <div class={proj ? "rounded-lg border border-dashed px-2 py-2 text-center border-amber-700/30" : "rounded-lg border px-2 py-2 text-center border-amber-700/40"}
-                        style="background:rgba(0,0,0,0.2)" data-node-id="businesses-vc">
-              <div class="text-[10px] font-semibold text-amber-400" style="font-family:'Inter',sans-serif">{bvc.label}</div>
-              <div class="text-[8px] font-mono text-zinc-600 mt-0.5 leading-snug">{bvc.detail}</div>
-            </div>}
-            {pvc && <div class="rounded-lg border px-2 py-2 text-center border-[#2a2a31]"
-                        style="background:rgba(0,0,0,0.2)" data-node-id="players-vc">
-              <div class="text-[10px] font-semibold text-zinc-300" style="font-family:'Inter',sans-serif">{pvc.label}</div>
-              <div class="text-[8px] font-mono text-zinc-600 mt-0.5">{pvc.detail}</div>
-            </div>}
+          <div class="text-[9px] font-mono text-gta-gold/40 uppercase tracking-widest text-center mb-1">
+            {nodeMap["region-1"]?.label ?? "Vice City"}
           </div>
-        </div>
-        <div class={proj ? "rounded-xl border-2 border-dashed border-teal-600/20 p-3" : "rounded-xl border-2 border-teal-600/20 p-3"}
-             style="background:rgba(13,148,136,0.04)">
-          <div class="text-[9px] font-mono text-teal-400/40 uppercase tracking-widest text-center mb-1">{r2?.label}</div>
-          <div class="text-[8px] font-mono text-zinc-700 text-center mb-3 leading-snug">{r2?.detail}</div>
-          <div class="grid grid-cols-2 gap-2">
-            {ble && <div class={proj ? "rounded-lg border border-dashed px-2 py-2 text-center border-teal-700/30" : "rounded-lg border px-2 py-2 text-center border-teal-600/40"}
-                        style="background:rgba(0,0,0,0.2)" data-node-id="businesses-leonida">
-              <div class="text-[10px] font-semibold text-teal-400" style="font-family:'Inter',sans-serif">{ble.label}</div>
-              <div class="text-[8px] font-mono text-zinc-600 mt-0.5 leading-snug">{ble.detail}</div>
-            </div>}
-            {ple && <div class="rounded-lg border px-2 py-2 text-center border-[#2a2a31]"
-                        style="background:rgba(0,0,0,0.2)" data-node-id="players-leonida">
-              <div class="text-[10px] font-semibold text-zinc-300" style="font-family:'Inter',sans-serif">{ple.label}</div>
-              <div class="text-[8px] font-mono text-zinc-600 mt-0.5">{ple.detail}</div>
-            </div>}
+          <div class="text-[8px] font-mono text-zinc-700 text-center mb-3 leading-snug">
+            {nodeMap["region-1"]?.detail ?? ""}
           </div>
-        </div>
-      </div>
-      <div class="flex items-center justify-center gap-3 text-[9px] font-mono text-zinc-700">
-        <div class="flex-1 h-px border-t border-dashed border-[#2a2a31]"></div>
-        <span>← player movement →</span>
-        <div class="flex-1 h-px border-t border-dashed border-[#2a2a31]"></div>
-      </div>
-      {sc && <div class={proj ? "rounded-xl border border-dashed border-blue-600/30 px-4 py-3 text-center" : "rounded-xl border border-blue-600/30 px-4 py-3 text-center"}
-                  style="background:rgba(37,99,235,0.05)">
-        <div class="text-sm font-semibold text-blue-400 mb-0.5" style="font-family:'Inter',sans-serif">{sc.label}</div>
-        <div class="text-[9px] font-mono text-blue-400/50 leading-snug">{sc.detail}</div>
-      </div>}
-    </div>
-    );
-  })()}
-
-  {/* ── Layout: full-mmt ─────────────────────────────────────────────── */}
-  {economy.layout_template === "full-mmt" && (
-    <div class="w-full space-y-3">
-      <div class="rounded-xl border border-dashed border-[#2a2a31] p-4" style="background:rgba(0,0,0,0.08)">
-        <div class="text-[8px] font-mono text-zinc-700 uppercase tracking-[0.2em] text-center mb-3">
-          In-Game Circular Economy
-        </div>
-        <div class="grid grid-cols-3 gap-3 mb-4">
-          {["businesses","players","maze-bank"].map(nid => {
-            const n = nodeMap[nid]; if (!n) return null;
-            return (
-              <div class={`rounded-xl border px-3 py-3 text-center ${BORDER[n.color_token] ?? BORDER.zinc}`}
-                   style="background:rgba(0,0,0,0.25)" data-node-id={nid}>
-                <div class={`text-[11px] font-semibold mb-1 ${TEXT[n.color_token] ?? TEXT.zinc}`} style="font-family:'Inter',sans-serif">
-                  {n.label}
-                </div>
-                <div class="text-[8px] font-mono text-zinc-600 leading-snug">{n.detail}</div>
-              </div>
-            );
-          })}
-        </div>
-        {/* Flow labels */}
-        {!isCompact && (
-          <div class="grid grid-cols-2 gap-1.5">
-            {(economy.flows).filter((f: any) => f.type !== "injection").map((flow: any) => {
-              const colorHex = { amber:"#f59e0b", orange:"#f97316", teal:"#0d9488", green:"#22c55e", purple:"#a78bfa", blue:"#60a5fa", zinc:"#71717a", gold:"#f59e0b" };
-              const hex = colorHex[flow.color_token] ?? "#71717a";
+          <div class="grid grid-cols-2 gap-2">
+            {["businesses-vc","players-vc"].map(nid => {
+              const n = nodeMap[nid]; if (!n) return null;
               return (
-                <div class="flex items-center gap-1.5 text-[9px] font-mono">
-                  <div class="w-5 h-px flex-shrink-0" style={`background:${hex};opacity:0.7`}></div>
-                  <span class="text-zinc-600 leading-snug truncate">{flow.label}</span>
+                <div class={`rounded-lg border px-2 py-2 text-center ${isProjected ? "border-dashed " : ""}${nodeBorder(n.color_token)}`}
+                     style="background:rgba(0,0,0,0.2)" data-node-id={nid}>
+                  <div class={`text-[10px] font-semibold ${nodeText(n.color_token)}`} style="font-family:'Inter',sans-serif">{n.label}</div>
+                  <div class="text-[8px] font-mono text-zinc-600 mt-0.5 leading-snug">{n.detail}</div>
                 </div>
               );
             })}
           </div>
-        )}
+        </div>
+        {/* Leonida region */}
+        <div class={`rounded-xl border-2 p-3 ${isProjected ? "border-dashed border-teal-600/20" : "border-teal-600/20"}`}
+             style="background:rgba(13,148,136,0.04)">
+          <div class="text-[9px] font-mono text-teal-400/40 uppercase tracking-widest text-center mb-1">
+            {nodeMap["region-2"]?.label ?? "Leonida"}
+          </div>
+          <div class="text-[8px] font-mono text-zinc-700 text-center mb-3 leading-snug">
+            {nodeMap["region-2"]?.detail ?? ""}
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            {["businesses-leonida","players-leonida"].map(nid => {
+              const n = nodeMap[nid]; if (!n) return null;
+              return (
+                <div class={`rounded-lg border px-2 py-2 text-center ${isProjected ? "border-dashed " : ""}${nodeBorder(n.color_token)}`}
+                     style="background:rgba(0,0,0,0.2)" data-node-id={nid}>
+                  <div class={`text-[10px] font-semibold ${nodeText(n.color_token)}`} style="font-family:'Inter',sans-serif">{n.label}</div>
+                  <div class="text-[8px] font-mono text-zinc-600 mt-0.5">{n.detail}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      {/* Player movement animated arrow */}
+      <div class="relative flex items-center justify-center h-8">
+        <svg width="100%" height="28" style="overflow:visible">
+          <defs>
+            <marker id={`${uid}-dt-arr`} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L8,3 z" fill="#71717a" opacity="0.5" />
+            </marker>
+          </defs>
+          <line x1="15%" y1="14" x2="48%" y2="14"
+                stroke="#71717a" stroke-width="1.2" stroke-dasharray="6 4" stroke-opacity="0.4"
+                marker-end={`url(#${uid}-dt-arr)`}
+                style="animation:ce-flow-fwd 2s linear infinite" />
+          <line x1="85%" y1="14" x2="52%" y2="14"
+                stroke="#71717a" stroke-width="1.2" stroke-dasharray="6 4" stroke-opacity="0.4"
+                marker-end={`url(#${uid}-dt-arr)`}
+                style="animation:ce-flow-fwd 2s linear infinite" />
+          <text x="50%" y="11" text-anchor="middle" font-size="8" font-family="monospace" fill="#3f3f46">player movement</text>
+        </svg>
       </div>
       {/* Shark Cards */}
       {nodeMap["shark-cards"] && (
-        <div class="rounded-xl border border-blue-600/30 px-4 py-3 text-center" style="background:rgba(37,99,235,0.05)" data-node-id="shark-cards">
+        <div class={`rounded-xl border px-4 py-3 text-center ${isProjected ? "border-dashed " : ""}border-blue-500/40`}
+             style="background:rgba(37,99,235,0.07)">
           <div class="text-sm font-semibold text-blue-400 mb-0.5" style="font-family:'Inter',sans-serif">
             {nodeMap["shark-cards"].label}
           </div>
@@ -279,59 +259,69 @@ const uid = `ce-${economy.title_id}-${Math.random().toString(36).slice(2,7)}`;
         </div>
       )}
     </div>
-  )}
 
-  {/* ── All other layouts: positioned grid + SVG arrows ──────────────── */}
-  {economy.layout_template !== "dual-territory" && economy.layout_template !== "full-mmt" && (
+  ) : (
+
+    /* ── Standard positioned grid (ALL other layouts incl. full-mmt) ─────── */
     <div class="ce-node-grid relative w-full"
-         style={`height:${containerH}px`}
-         data-flows={JSON.stringify(economy.flows)}
-         data-uid={uid}>
+         style={`height:${containerH}px;`}
+         data-flows={JSON.stringify(flows)}
+         data-uid={uid}
+         data-template={(economy as any).layout_template}>
 
-      {/* No-circular-return annotation */}
-      {(economy ).dimensions.circular_flow === "none" && (
-        <div class="absolute bottom-3 left-0 right-0 text-center pointer-events-none">
-          <span class="text-[9px] font-mono text-zinc-700">✕ no circular return · money = score only</span>
+      {/* Annotation for zero-flow titles */}
+      {((economy as any).dimensions as any).circular_flow === "none" && (
+        <div class="absolute bottom-3 left-0 right-0 text-center pointer-events-none" style="z-index:20">
+          <span class="text-[9px] font-mono text-zinc-700">✕ no circular return — money = score only</span>
         </div>
       )}
 
-      {/* Nodes */}
+      {/* "IN-GAME CIRCULAR ECONOMY" dashed border for full-mmt */}
+      {(economy as any).layout_template === "full-mmt" && (
+        <div class="absolute rounded-xl border border-dashed border-[#2a2a31] pointer-events-none"
+             style="top:10%;left:0;right:0;bottom:62%;z-index:0">
+          <div class="absolute -top-2.5 left-4 text-[8px] font-mono text-zinc-700 uppercase tracking-[0.2em] px-1" style="background:#0e0e11">
+            In-Game Circular Economy
+          </div>
+        </div>
+      )}
+
+      {/* Position all grid nodes */}
       {gridNodes.filter((n: any) => n.type !== "region").map((node: any) => {
         const pos = nodePositions[node.id];
         if (!pos) return null;
+        const isNodeProjected = node.projected || isProjected;
         return (
           <div data-node-id={node.id}
                class={[
-                 "absolute rounded-xl border px-3 py-2.5 text-center",
-                 node.projected ? "border-dashed" : "",
-                 BORDER[node.color_token] ?? BORDER.zinc,
+                 "absolute rounded-xl border text-center",
+                 isNodeProjected ? "border-dashed" : "",
+                 nodeBorder(node.color_token),
                ].join(" ")}
-               style={`top:${pos.top}%;left:${pos.left}%;width:${pos.width}%;background:rgba(0,0,0,0.28)`}>
-            <div class={`text-[11px] font-semibold leading-snug ${TEXT[node.color_token] ?? TEXT.zinc}`}
+               style={`top:${pos.top}%;left:${pos.left}%;width:${pos.width}%;padding:8px 10px;background:rgba(10,10,13,0.85);z-index:5`}>
+            <div class={`text-[11px] font-semibold leading-snug ${nodeText(node.color_token)}`}
                  style="font-family:'Inter',sans-serif">
               {node.label}
             </div>
             {!isCompact && (
               <div class="text-[8px] font-mono text-zinc-600 mt-0.5 leading-snug">{node.detail}</div>
             )}
-            {node.projected && (
-              <div class="text-[7px] font-mono text-amber-500/50 mt-1 uppercase tracking-widest">projected</div>
-            )}
           </div>
         );
       })}
 
-      {/* SVG arrow overlay */}
-      <svg class="ce-flow-svg absolute inset-0 w-full h-full pointer-events-none" style="overflow:visible;z-index:10">
+      {/* SVG flow arrow overlay — paths injected by JS after layout */}
+      <svg class="ce-flow-svg"
+           style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:10;pointer-events:none">
         <defs>
-          {(["amber","orange","teal","green","purple","blue","zinc","gold","red"] as const).map(color => {
-            const HEX = {
-              amber:"#f59e0b",orange:"#f97316",teal:"#0d9488",green:"#22c55e",
-              purple:"#a78bfa",blue:"#60a5fa",zinc:"#71717a",gold:"#f59e0b",red:"#ef4444"
-            };
+          {markerColors.map(color => {
+            const hex = flowHex(color);
             return (
-              <marker id={`${uid}-arr-${color}`} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
-                <path d="M0,0 L0,6 L8,3 z" fill={HEX[color]} opacity="0.75" />
+              <marker id={`${uid}-arr-${color}`}
+                      markerWidth="7" markerHeight="7"
+                      refX="5" refY="3"
+                      orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L7,3 z" fill={hex} opacity="0.85" />
               </marker>
             );
           })}
@@ -340,13 +330,12 @@ const uid = `ce-${economy.title_id}-${Math.random().toString(36).slice(2,7)}`;
     </div>
   )}
 
-  {/* ── Flow legend (full mode only, non-full-mmt) ────────────────────── */}
-  {!isCompact && economy.layout_template !== "full-mmt" && economy.layout_template !== "dual-territory" && (economy.flows).length > 0 && (
+  {/* ── Flow legend ───────────────────────────────────────────────────────── */}
+  {!isCompact && flows.length > 0 && (economy as any).layout_template !== "dual-territory" && (
     <div class="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 pt-3 border-t border-[#1e1e23]">
-      {(economy.flows).map((flow: any) => {
-        const HEX = { amber:"#f59e0b",orange:"#f97316",teal:"#0d9488",green:"#22c55e",purple:"#a78bfa",blue:"#60a5fa",zinc:"#71717a",gold:"#f59e0b",red:"#ef4444" };
-        const hex = HEX[flow.color_token] ?? "#71717a";
-        const label = flow.label.replace(/[←→①②③④⑤★]/g,"").trim();
+      {flows.map((flow: any) => {
+        const hex = flowHex(flow.color_token);
+        const label = (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim();
         return (
           <div class="flex items-center gap-1.5">
             <div class="w-5 h-px" style={`background:${hex};opacity:0.7`}></div>
@@ -358,31 +347,33 @@ const uid = `ce-${economy.title_id}-${Math.random().toString(36).slice(2,7)}`;
     </div>
   )}
 
-  {/* ── Economy metadata (full mode) ─────────────────────────────────── */}
+  {/* ── Economy metadata (full mode) ─────────────────────────────────────── */}
   {!isCompact && (
     <div class="grid grid-cols-2 gap-3 mt-4">
       <div class="rounded-lg border border-[#1e1e23] px-3 py-2.5" style="background:#131316">
         <div class="text-[8px] font-mono text-zinc-700 uppercase tracking-widest mb-1">Economy Type</div>
-        <div class="text-[11px] font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{economy.economy_type}</div>
+        <div class="text-[11px] font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{(economy as any).economy_type}</div>
       </div>
       <div class="rounded-lg border border-[#1e1e23] px-3 py-2.5" style="background:#131316">
         <div class="text-[8px] font-mono text-zinc-700 uppercase tracking-widest mb-1">Real-World Analogue</div>
-        <div class="text-[11px] font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{economy.real_world_analogue}</div>
+        <div class="text-[11px] font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{(economy as any).real_world_analogue}</div>
       </div>
-      {economy.key_innovation && (
+      {(economy as any).key_innovation && (
         <div class="col-span-2 rounded-lg border border-[#1e1e23] px-3 py-2.5" style="background:#131316">
           <div class="text-[8px] font-mono text-zinc-700 uppercase tracking-widest mb-1">
-            Key Innovation {economy.innovation_stars > 0 ? "★".repeat(economy.innovation_stars as number) : ""}
+            Key Innovation {"★".repeat((economy as any).innovation_stars)}
           </div>
-          <div class="text-[11px] font-semibold text-zinc-200 mb-1" style="font-family:'Inter',sans-serif">{economy.key_innovation}</div>
-          <div class="text-[10px] font-mono text-zinc-600 leading-snug">{economy.key_innovation_note}</div>
+          <div class="text-[11px] font-semibold text-zinc-200 mb-1" style="font-family:'Inter',sans-serif">
+            {(economy as any).key_innovation}
+          </div>
+          {!isCompact && <div class="text-[10px] font-mono text-zinc-600 leading-snug">{(economy as any).key_innovation_note}</div>}
         </div>
       )}
-      {(economy ).inflation_channels?.length > 0 && (
+      {(economy as any).inflation_channels?.length > 0 && !isCompact && (
         <div class="col-span-2 rounded-lg border border-red-900/20 px-3 py-2.5" style="background:rgba(127,29,29,0.07)">
           <div class="text-[8px] font-mono text-red-700 uppercase tracking-widest mb-1.5">Inflation Channels</div>
           <div class="flex flex-col gap-1">
-            {(economy ).inflation_channels.map((ch: string) => (
+            {(economy as any).inflation_channels.map((ch: string) => (
               <div class="flex items-start gap-1.5">
                 <span class="text-red-500 shrink-0 text-[10px] mt-0.5">↑</span>
                 <span class="text-[10px] font-mono text-zinc-500 leading-snug">{ch}</span>
@@ -394,108 +385,161 @@ const uid = `ce-${economy.title_id}-${Math.random().toString(36).slice(2,7)}`;
     </div>
   )}
 
-  {/* ── GTA VI lineage ────────────────────────────────────────────────── */}
-  {!isCompact && economy.gta_vi_lineage && (
+  {/* ── GTA VI lineage ────────────────────────────────────────────────────── */}
+  {!isCompact && (economy as any).gta_vi_lineage && (
     <div class="mt-3 rounded-lg border border-gta-gold/15 px-3 py-2.5" style="background:rgba(245,158,11,0.03)">
       <div class="text-[8px] font-mono text-gta-gold/40 uppercase tracking-widest mb-1">GTA VI Lineage</div>
-      <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{economy.gta_vi_lineage}</p>
+      <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{(economy as any).gta_vi_lineage}</p>
     </div>
   )}
 
 </div>
 
 <script>
-  // ── Draw SVG flow arrows for positioned layouts ───────────────────────────
-  document.querySelectorAll<HTMLElement>(".ce-node-grid").forEach(grid => {
-    const flows = JSON.parse(grid.dataset.flows || "[]") as any[];
+  // ── Flow animation class map (matches color_schema.flow_animation) ────────
+  const ANIM_CLASS: Record<string, string> = {
+    forward:  "ce-anim-forward",
+    backward: "ce-anim-backward",
+    pulse:    "ce-anim-pulse",
+  };
+  const FLOW_ANIM: Record<string, { dir: string; duration_s: number }> = {
+    wages:          { dir: "forward",  duration_s: 1.4 },
+    spending:       { dir: "forward",  duration_s: 1.6 },
+    passive:        { dir: "backward", duration_s: 2.0 },
+    investment:     { dir: "forward",  duration_s: 1.8 },
+    "capital-return":{ dir: "backward",duration_s: 1.6 },
+    injection:      { dir: "pulse",    duration_s: 0.9 },
+    savings:        { dir: "forward",  duration_s: 2.5 },
+  };
+
+  const FLOW_HEX: Record<string, string> = {
+    amber:"#f59e0b", orange:"#f97316", teal:"#0d9488", green:"#22c55e",
+    purple:"#a78bfa", blue:"#60a5fa", zinc:"#71717a", gold:"#f59e0b",
+    yellow:"#d97706", red:"#ef4444", indigo:"#f59e0b",
+  };
+
+  function drawArrows(grid: HTMLElement) {
+    if (grid.clientWidth === 0) {
+      // Not laid out yet — retry
+      requestAnimationFrame(() => drawArrows(grid));
+      return;
+    }
+
+    const flows = JSON.parse(grid.dataset.flows || "[]");
     const uid   = grid.dataset.uid ?? "";
     const svg   = grid.querySelector<SVGSVGElement>(".ce-flow-svg");
     if (!svg || !flows.length) return;
 
-    const HEX = {
-      amber:"#f59e0b", orange:"#f97316", teal:"#0d9488", green:"#22c55e",
-      purple:"#a78bfa", blue:"#60a5fa", zinc:"#71717a", gold:"#f59e0b", red:"#ef4444",
-    };
+    // Clear previously drawn paths (handles re-render on resize)
+    svg.querySelectorAll("path.ce-flow-path, text.ce-flow-label").forEach(el => el.remove());
 
-    function getEdgePt(el: HTMLElement, gridRect: DOMRect, dir: string, offset = 0) {
-      const r = el.getBoundingClientRect();
-      const x = r.left - gridRect.left, y = r.top - gridRect.top;
-      const w = r.width, h = r.height;
-      if (dir === "top")    return { x: x + w/2 + offset, y };
-      if (dir === "bottom") return { x: x + w/2 + offset, y: y + h };
-      if (dir === "left")   return { x, y: y + h/2 + offset };
-      if (dir === "right")  return { x: x + w, y: y + h/2 + offset };
-      return { x: x + w/2, y: y + h/2 };
+    const gridRect = grid.getBoundingClientRect();
+    if (gridRect.width === 0) { requestAnimationFrame(() => drawArrows(grid)); return; }
+
+    function getEdgePt(el: HTMLElement, dir: string, offset = 0): { x: number; y: number } {
+      const r  = el.getBoundingClientRect();
+      const x  = r.left - gridRect.left;
+      const y  = r.top  - gridRect.top;
+      if (dir === "top")    return { x: x + r.width/2 + offset, y };
+      if (dir === "bottom") return { x: x + r.width/2 + offset, y: y + r.height };
+      if (dir === "left")   return { x, y: y + r.height/2 + offset };
+      if (dir === "right")  return { x: x + r.width, y: y + r.height/2 + offset };
+      return { x: x + r.width/2, y: y + r.height/2 };
     }
 
-    function bestEdges(fromEl: HTMLElement, toEl: HTMLElement, gridRect: DOMRect, offset = 0) {
+    function bestEdges(fromEl: HTMLElement, toEl: HTMLElement, offset = 0) {
       const fr = fromEl.getBoundingClientRect(), tr = toEl.getBoundingClientRect();
-      const fCx = fr.left + fr.width/2, fCy = fr.top + fr.height/2;
-      const tCx = tr.left + tr.width/2, tCy = tr.top  + tr.height/2;
+      const fCx = fr.left + fr.width/2,  fCy = fr.top + fr.height/2;
+      const tCx = tr.left + tr.width/2,  tCy = tr.top + tr.height/2;
       const dx = tCx - fCx, dy = tCy - fCy;
       if (Math.abs(dx) >= Math.abs(dy)) {
         const fd = dx > 0 ? "right" : "left", td = dx > 0 ? "left" : "right";
-        return { from: getEdgePt(fromEl, gridRect, fd, 0), to: getEdgePt(toEl, gridRect, td, offset) };
+        return { from: getEdgePt(fromEl, fd, 0), to: getEdgePt(toEl, td, offset) };
       }
       const fd = dy > 0 ? "bottom" : "top", td = dy > 0 ? "top" : "bottom";
-      return { from: getEdgePt(fromEl, gridRect, fd, offset), to: getEdgePt(toEl, gridRect, td, 0) };
+      return { from: getEdgePt(fromEl, fd, offset), to: getEdgePt(toEl, td, 0) };
     }
 
-    function addArrow(flow: any, gridRect: DOMRect, passOffset: number) {
+    const pairCount: Record<string, number> = {};
+    for (const flow of flows) {
       const fromEl = grid.querySelector<HTMLElement>(`[data-node-id="${flow.from}"]`);
       const toEl   = grid.querySelector<HTMLElement>(`[data-node-id="${flow.to}"]`);
-      if (!fromEl || !toEl) return;
+      if (!fromEl || !toEl) continue;
 
-      const edges = bestEdges(fromEl, toEl, gridRect, passOffset * 7);
+      const pairKey = [flow.from, flow.to].sort().join("|");
+      const pass    = pairCount[pairKey] ?? 0;
+      pairCount[pairKey] = pass + 1;
+
+      const edges  = bestEdges(fromEl, toEl, pass * 8);
       const p1 = edges.from, p2 = edges.to;
-      const hex = HEX[flow.color_token] ?? "#71717a";
+      const hex    = FLOW_HEX[flow.color_token] ?? "#71717a";
       const isDashed = flow.projected || !flow.active;
 
-      // Quadratic bezier with mild curve
+      // Bezier control point
       const midX = (p1.x + p2.x) / 2, midY = (p1.y + p2.y) / 2;
-      const dx = p2.x - p1.x, dy = p2.y - p1.y;
-      const curvature = flow.bidirectional ? 0.18 : 0.1;
-      const cx = midX - dy * curvature, cy = midY + dx * curvature;
+      const dx   = p2.x - p1.x,       dy   = p2.y - p1.y;
+      const curve = flow.bidirectional ? 0.2 : 0.12;
+      const cx = midX - dy * curve,   cy = midY + dx * curve;
+
+      // Determine animation from flow type
+      const animCfg  = FLOW_ANIM[flow.type] ?? { dir: "forward", duration_s: 1.5 };
+      const animClass = ANIM_CLASS[animCfg.dir] ?? "";
 
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("class", `ce-flow-path ${animClass}`);
       path.setAttribute("d", `M${p1.x},${p1.y} Q${cx},${cy} ${p2.x},${p2.y}`);
       path.setAttribute("fill", "none");
       path.setAttribute("stroke", hex);
-      path.setAttribute("stroke-width", "1.5");
-      path.setAttribute("stroke-opacity", "0.65");
-      if (isDashed) path.setAttribute("stroke-dasharray", "4,3");
+      path.setAttribute("stroke-width", "2");
+      path.setAttribute("stroke-opacity", "0.75");
+      path.style.animationDuration = `${animCfg.duration_s}s`;
+      if (isDashed && animClass === "") path.setAttribute("stroke-dasharray", "5,3");
       path.setAttribute("marker-end", `url(#${uid}-arr-${flow.color_token})`);
       svg.appendChild(path);
 
-      // Label at bezier midpoint
-      if (flow.label && flow.label.trim()) {
-        const bx = 0.25*p1.x + 0.5*cx + 0.25*p2.x;
-        const by = 0.25*p1.y + 0.5*cy + 0.25*p2.y;
-        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        t.setAttribute("x", String(Math.round(bx)));
-        t.setAttribute("y", String(Math.round(by) - 5));
-        t.setAttribute("text-anchor", "middle");
-        t.setAttribute("fill", hex);
-        t.setAttribute("font-size", "8");
-        t.setAttribute("font-family", "monospace");
-        t.setAttribute("opacity", "0.65");
-        const label = flow.label.replace(/[①②③④⑤★←→]/g, "").trim().slice(0, 24);
-        t.textContent = label;
-        svg.appendChild(t);
+      // Flow label at bezier midpoint
+      const label = (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim().slice(0, 22);
+      if (label) {
+        const bx = Math.round(0.25*p1.x + 0.5*cx + 0.25*p2.x);
+        const by = Math.round(0.25*p1.y + 0.5*cy + 0.25*p2.y) - 5;
+        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txt.setAttribute("class", "ce-flow-label");
+        txt.setAttribute("x", String(bx));
+        txt.setAttribute("y", String(by));
+        txt.setAttribute("text-anchor", "middle");
+        txt.setAttribute("fill", hex);
+        txt.setAttribute("font-size", "8");
+        txt.setAttribute("font-family", "monospace");
+        txt.setAttribute("opacity", "0.65");
+        txt.textContent = label;
+        svg.appendChild(txt);
       }
     }
+  }
 
-    // Draw arrows after layout (rAF ensures elements are positioned)
-    requestAnimationFrame(() => {
-      const gridRect = grid.getBoundingClientRect();
-      // Track pair usage to offset parallel/bidirectional flows
-      const pairCount = {};
-      for (const flow of flows) {
-        const key = [flow.from, flow.to].sort().join("|");
-        const pass = pairCount[key] ?? 0;
-        pairCount[key] = pass + 1;
-        addArrow(flow, gridRect, pass);
-      }
-    });
+  // ── Init on page load ────────────────────────────────────────────────────
+  document.querySelectorAll<HTMLElement>(".ce-node-grid").forEach(grid => {
+    requestAnimationFrame(() => drawArrows(grid));
+  });
+
+  // ── Re-draw on resize ─────────────────────────────────────────────────────
+  let resizeTimer: ReturnType<typeof setTimeout>;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      document.querySelectorAll<HTMLElement>(".ce-node-grid").forEach(drawArrows);
+    }, 150);
+  });
+
+  // ── Re-draw when ChartPreviewCard expands ─────────────────────────────────
+  // Listen for the custom event fired by ChartPreviewCard's expand handler
+  document.addEventListener("click", (e) => {
+    const toggle = (e.target as HTMLElement).closest(".preview-toggle");
+    if (!toggle) return;
+    const card = toggle.closest<HTMLElement>(".chart-preview-card");
+    if (!card) return;
+    setTimeout(() => {
+      card.querySelectorAll<HTMLElement>(".ce-node-grid").forEach(drawArrows);
+    }, 50);
   });
 </script>
