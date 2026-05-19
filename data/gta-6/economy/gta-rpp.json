@@ -1,0 +1,14 @@
+{
+  "last_updated": "2026-05-19T00:00:00+00:00",
+  "status": "stub",
+  "note": "GTA Regional Purchasing Parity index. Computed as: (regional basket cost) / (regional top hourly yield). A GTA-RPP ratio > 1.0 means the region is more expensive relative to what players earn there. Analogous to the Eurozone RPP divergence metric. Requires vice-city-prices.json and leonida-prices.json to be populated post-launch.",
+  "methodology": "basket_cost_region / top_gta_per_hr_region",
+  "regions": [
+    { "region": "Vice City", "rpp_ratio": null, "basket_cost": null, "top_gta_per_hr": null, "last_computed": null },
+    { "region": "Leonida",   "rpp_ratio": null, "basket_cost": null, "top_gta_per_hr": null, "last_computed": null }
+  ],
+  "franchise_reference": {
+    "gta_online_ppi": "data/gta-5/economy/gta-ppi.json",
+    "note": "GTA-PPI is the single-market predecessor. GTA-RPP extends this to dual-territory divergence measurement."
+  }
+}

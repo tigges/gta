@@ -1,0 +1,808 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-05-19",
+  "note": "Canonical circular economy model for every GTA franchise title. Drives CircularEconomy.astro visualisation, per-title economy pages, and the /franchise/economics overview. Editorial — updated manually as new titles release or analysis deepens.",
+  "source": "GTAVI.AI Economic Model Analysis — derived from franchise design patterns, community records, and macroeconomic analogues.",
+  "economies": [
+
+    {
+      "title_id": "gta-1-2",
+      "title_name": "GTA 1 & 2",
+      "short": "GTA 1–2",
+      "year": "1997–99",
+      "era": 0,
+      "era_label": "Top-Down 1997–1999",
+      "era_badge_color": "zinc",
+      "economy_type": "Pure score counter",
+      "real_world_analogue": "Pre-monetary tribute economy",
+      "key_innovation": "Gang reputation system (GTA 2)",
+      "key_innovation_note": "First quasi-economic mechanic — faction trade-offs with no monetary dimension. Franchise economic zero point.",
+      "innovation_stars": 0,
+      "complexity_score": 1,
+      "layout_template": "one-way",
+      "dimensions": {
+        "circular_flow": "none",
+        "capital_market": "none",
+        "passive_income": false,
+        "inflation": false,
+        "sovereign_type": "fixed-release"
+      },
+      "dimension_scores": {
+        "circular_flow": 0,
+        "capital_market": 0,
+        "passive_income": 0,
+        "inflation": 0,
+        "sovereign_complexity": 1
+      },
+      "projected": false,
+      "regression_era": false,
+      "nodes": [
+        {
+          "id": "sovereign",
+          "label": "DMA Design / Rockstar",
+          "type": "sovereign",
+          "detail": "Fixed mission pay · Static shop prices · Gang reputation (GTA 2 only)",
+          "color_token": "indigo",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "player",
+          "label": "Player",
+          "type": "player",
+          "detail": "extract · spend · survive · no property · no invest",
+          "color_token": "zinc",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "world",
+          "label": "World",
+          "type": "destination",
+          "detail": "weapons · bribes · faction rep (GTA 2)",
+          "color_token": "orange",
+          "projected": false,
+          "data_source": null
+        }
+      ],
+      "flows": [
+        { "id": "mission-pay", "from": "sovereign", "to": "player", "label": "mission pay", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": null },
+        { "id": "spending", "from": "player", "to": "world", "label": "spending →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null }
+      ],
+      "inflation_channels": [],
+      "sovereign_levers": [],
+      "data_coverage": {},
+      "gta_vi_lineage": "The franchise's baseline. No circular flow, no investment loop, no passive income. Every subsequent innovation is measured against this zero point.",
+      "summary": "GTA 1 and 2 have no economy in any meaningful sense. Money is a point score with a spending outlet. GTA 2's faction system is the only proto-economic mechanic — the franchise's economic zero point."
+    },
+
+    {
+      "title_id": "gta-3",
+      "title_name": "GTA III",
+      "short": "GTA III",
+      "year": "2001",
+      "era": 1,
+      "era_label": "3D Universe 2001",
+      "era_badge_color": "zinc",
+      "economy_type": "One-way extraction",
+      "real_world_analogue": "Wartime command economy",
+      "key_innovation": "3D world with richer spending menu",
+      "key_innovation_note": "More item types, weapon shops, safehouses. Structurally identical to GTA 1–2 — money still doesn't circulate.",
+      "innovation_stars": 0,
+      "complexity_score": 2,
+      "layout_template": "one-way",
+      "dimensions": {
+        "circular_flow": "one-way",
+        "capital_market": "none",
+        "passive_income": false,
+        "inflation": false,
+        "sovereign_type": "fixed-release"
+      },
+      "dimension_scores": {
+        "circular_flow": 1,
+        "capital_market": 0,
+        "passive_income": 0,
+        "inflation": 0,
+        "sovereign_complexity": 1
+      },
+      "projected": false,
+      "regression_era": false,
+      "nodes": [
+        {
+          "id": "sovereign",
+          "label": "Rockstar",
+          "type": "sovereign",
+          "detail": "Fixed release · Static economy · Defines mission rewards · Sets shop prices · No economy between actors",
+          "color_token": "indigo",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "player",
+          "label": "Player",
+          "type": "player",
+          "detail": "extract · spend · no save · no invest · no compound",
+          "color_token": "zinc",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "world-shops",
+          "label": "World / Shops",
+          "type": "destination",
+          "detail": "weapons · health · ammo · static prices · no ownership",
+          "color_token": "orange",
+          "projected": false,
+          "data_source": null
+        }
+      ],
+      "flows": [
+        { "id": "mission-pay", "from": "sovereign", "to": "player", "label": "← mission pay", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": null },
+        { "id": "spending", "from": "player", "to": "world-shops", "label": "spending →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null }
+      ],
+      "inflation_channels": [],
+      "sovereign_levers": [],
+      "data_coverage": {},
+      "gta_vi_lineage": "GTA III is structurally identical to GTA 1–2 — just in 3D. No economic model. Sets the floor for the 3D era before Vice City breaks it open.",
+      "summary": "Money flows in one direction only. No reinvestment, no compounding, no circular flow. The world does not respond to player wealth. A richer spending menu, but the same economic nothing."
+    },
+
+    {
+      "title_id": "gta-vc",
+      "title_name": "GTA Vice City",
+      "short": "Vice City",
+      "year": "2002",
+      "era": 1,
+      "era_label": "3D Universe 2002 — Franchise First: Passive Income",
+      "era_badge_color": "amber",
+      "economy_type": "Extraction + first property loop",
+      "real_world_analogue": "Early industrial capitalism",
+      "key_innovation": "Passive income from owned businesses",
+      "key_innovation_note": "Malibu Club, Print Works, Pole Position generate GTA$ per mission completed nearby. First asset → income loop in GTA history. The conceptual ancestor of the Acid Lab.",
+      "innovation_stars": 1,
+      "complexity_score": 5,
+      "layout_template": "proto",
+      "dimensions": {
+        "circular_flow": "proto",
+        "capital_market": "none",
+        "passive_income": "first",
+        "inflation": false,
+        "sovereign_type": "fixed-release"
+      },
+      "dimension_scores": {
+        "circular_flow": 2,
+        "capital_market": 0,
+        "passive_income": 1,
+        "inflation": 0,
+        "sovereign_complexity": 1
+      },
+      "projected": false,
+      "regression_era": false,
+      "nodes": [
+        {
+          "id": "sovereign",
+          "label": "Rockstar",
+          "type": "sovereign",
+          "detail": "Fixed release · No live balancing · Sets mission pay · Property prices · Shop prices",
+          "color_token": "indigo",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "missions-jobs",
+          "label": "Missions / Jobs",
+          "type": "income",
+          "detail": "primary income",
+          "color_token": "amber",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "player",
+          "label": "Tommy Vercetti",
+          "type": "player",
+          "detail": "earn · spend · own property · first property owner in GTA",
+          "color_token": "zinc",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "businesses",
+          "label": "Businesses",
+          "type": "asset",
+          "detail": "Malibu · Print Works · Pole Position · Taxi co.",
+          "color_token": "orange",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "world-shops",
+          "label": "World Shops",
+          "type": "destination",
+          "detail": "weapons · clothing · safehouses",
+          "color_token": "zinc",
+          "projected": false,
+          "data_source": null
+        }
+      ],
+      "flows": [
+        { "id": "wages", "from": "missions-jobs", "to": "player", "label": "wages →", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": null },
+        { "id": "buy", "from": "player", "to": "businesses", "label": "buy →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null },
+        { "id": "passive", "from": "businesses", "to": "player", "label": "← passive income ★", "type": "passive", "bidirectional": false, "active": true, "projected": false, "color_token": "teal", "chart_link": null },
+        { "id": "spending", "from": "player", "to": "world-shops", "label": "spending", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null }
+      ],
+      "inflation_channels": [],
+      "sovereign_levers": [],
+      "data_coverage": {},
+      "gta_vi_lineage": "Vice City's passive business income is the conceptual ancestor of every passive mechanic in GTA Online — Bunker, Acid Lab, Nightclub. The property loop born here reaches its apex 20 years later.",
+      "summary": "Vice City introduces the franchise's first asset ownership loop: earn → buy business → receive passive income → earn more. The Malibu Club is the conceptual ancestor of the Acid Lab. Partial and static, but the prototype for everything GTA Online's business empire became."
+    },
+
+    {
+      "title_id": "gta-sa",
+      "title_name": "GTA San Andreas",
+      "short": "San Andreas",
+      "year": "2004",
+      "era": 1,
+      "era_label": "3D Universe 2004 — Peak Pre-Online Complexity",
+      "era_badge_color": "green",
+      "economy_type": "Multi-stream mixed economy",
+      "real_world_analogue": "Post-war developing economy",
+      "key_innovation": "Territory + gambling + stock market",
+      "key_innovation_note": "Gang territory = proto-yield farming. Casino/horse racing = first speculative capital flow. Basic stock market = first equity mechanic. All three later stripped out by GTA IV.",
+      "innovation_stars": 3,
+      "complexity_score": 10,
+      "layout_template": "multi-stream",
+      "dimensions": {
+        "circular_flow": "partial-4",
+        "capital_market": "gambling+stocks",
+        "passive_income": "territory+property",
+        "inflation": false,
+        "sovereign_type": "fixed-release"
+      },
+      "dimension_scores": {
+        "circular_flow": 3,
+        "capital_market": 2,
+        "passive_income": 2,
+        "inflation": 0,
+        "sovereign_complexity": 1
+      },
+      "projected": false,
+      "regression_era": false,
+      "nodes": [
+        {
+          "id": "sovereign",
+          "label": "Rockstar",
+          "type": "sovereign",
+          "detail": "Fixed release · Three-city map · Mission pay · Property prices · Gambling odds · Gang territory rules — all set at launch",
+          "color_token": "indigo",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "missions-jobs",
+          "label": "Missions / Jobs",
+          "type": "income",
+          "detail": "primary income",
+          "color_token": "amber",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "player",
+          "label": "CJ / Player",
+          "type": "player",
+          "detail": "earn · spend · own · gamble · three cities · gang territory",
+          "color_token": "zinc",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "properties",
+          "label": "Properties",
+          "type": "asset",
+          "detail": "safehouses · businesses",
+          "color_token": "orange",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "gang-territory",
+          "label": "Gang Territory ★",
+          "type": "capital",
+          "detail": "control zones → income · first territorial economy",
+          "color_token": "green",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "gambling",
+          "label": "Gambling ★",
+          "type": "capital",
+          "detail": "casino · horse racing · first speculative capital flow",
+          "color_token": "purple",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "stock-market",
+          "label": "Stock Market ★",
+          "type": "capital",
+          "detail": "basic equities · precursor to BAWSAQ",
+          "color_token": "yellow",
+          "projected": false,
+          "data_source": null
+        }
+      ],
+      "flows": [
+        { "id": "wages", "from": "missions-jobs", "to": "player", "label": "wages →", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": null },
+        { "id": "buy-property", "from": "player", "to": "properties", "label": "buy →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null },
+        { "id": "passive-income", "from": "properties", "to": "player", "label": "← passive income", "type": "passive", "bidirectional": false, "active": true, "projected": false, "color_token": "teal", "chart_link": null },
+        { "id": "territory", "from": "player", "to": "gang-territory", "label": "control", "type": "investment", "bidirectional": true, "active": true, "projected": false, "color_token": "green", "chart_link": null },
+        { "id": "gamble", "from": "player", "to": "gambling", "label": "bet", "type": "investment", "bidirectional": true, "active": true, "projected": false, "color_token": "purple", "chart_link": null },
+        { "id": "invest-stocks", "from": "player", "to": "stock-market", "label": "invest", "type": "investment", "bidirectional": true, "active": true, "projected": false, "color_token": "yellow", "chart_link": null }
+      ],
+      "inflation_channels": [],
+      "sovereign_levers": [],
+      "data_coverage": {},
+      "gta_vi_lineage": "San Andreas' gang territory income → GTA Online CEO territory yield. Its gambling flows → Diamond Casino Heist setup. Its basic stocks → BAWSAQ. Every innovation was stripped by GTA IV then rebuilt at scale in GTA Online.",
+      "summary": "Four simultaneous income streams: missions, property passive income, gang territory control, and gambling. Most complex single-player economy until GTA V. Still fixed at launch but the closest any fixed-release GTA gets to a full economic model."
+    },
+
+    {
+      "title_id": "gta-4",
+      "title_name": "GTA IV",
+      "short": "GTA IV",
+      "year": "2008",
+      "era": 2,
+      "era_label": "HD Universe 2008 — Deliberate Economic Regression",
+      "era_badge_color": "red",
+      "economy_type": "Deliberate regression",
+      "real_world_analogue": "Subsistence / survival economy",
+      "key_innovation": "TBOGT: nightclub management — proto-GTA Online passive income",
+      "key_innovation_note": "The Ballad of Gay Tony introduces nightclub business management — the direct conceptual ancestor of GTA Online's entire passive income business stack. Without TBOGT there may have been no Acid Lab.",
+      "innovation_stars": 0,
+      "complexity_score": 3,
+      "layout_template": "proto",
+      "regression_era": true,
+      "regression_note": "Rockstar explicitly stripped property, territory, gambling, and stock mechanics. GTA IV is economically simpler than Vice City (2002) — a deliberate 6-year step backward. Narrative realism over economic depth.",
+      "dimensions": {
+        "circular_flow": "none",
+        "capital_market": "none",
+        "passive_income": false,
+        "inflation": false,
+        "sovereign_type": "narrative-first"
+      },
+      "dimension_scores": {
+        "circular_flow": 0,
+        "capital_market": 0,
+        "passive_income": 0,
+        "inflation": 0,
+        "sovereign_complexity": 1
+      },
+      "projected": false,
+      "nodes": [
+        {
+          "id": "sovereign",
+          "label": "Rockstar",
+          "type": "sovereign",
+          "detail": "Narrative-first design · Fixed release · Stripped economic complexity intentionally · Focus on realism over accumulation",
+          "color_token": "indigo",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "missions-hits",
+          "label": "Missions / Hits",
+          "type": "income",
+          "detail": "primary income",
+          "color_token": "amber",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "player",
+          "label": "Niko Bellic",
+          "type": "player",
+          "detail": "earn · spend · survive · no property · no investment · no territory",
+          "color_token": "zinc",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "world",
+          "label": "World",
+          "type": "destination",
+          "detail": "weapons · clothes · food",
+          "color_token": "orange",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "tbogt-bridge",
+          "label": "TBOGT DLC",
+          "type": "bridge",
+          "detail": "Nightclub management mechanic = proto-GTA Online passive income · First hint of the live-service business model — planted the seed for GTA Online",
+          "color_token": "purple",
+          "projected": false,
+          "data_source": null
+        }
+      ],
+      "flows": [
+        { "id": "wages", "from": "missions-hits", "to": "player", "label": "wages →", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": null },
+        { "id": "spending", "from": "player", "to": "world", "label": "spending →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null },
+        { "id": "tbogt-passive", "from": "tbogt-bridge", "to": "player", "label": "← proto-passive (DLC)", "type": "passive", "bidirectional": false, "active": false, "projected": false, "color_token": "purple", "chart_link": null }
+      ],
+      "inflation_channels": [],
+      "sovereign_levers": [],
+      "data_coverage": {},
+      "gta_vi_lineage": "GTA IV is the franchise's economic low point — but TBOGT's nightclub mechanic planted the seed that would bloom into GTA Online's entire business empire. The regression was necessary for narrative; the bridge was the real innovation.",
+      "summary": "GTA IV is the franchise's economic low point — a deliberate six-year regression from San Andreas. All four 3D-era innovations stripped for narrative purity. However, TBOGT's nightclub mechanic planted the seed that would become GTA Online's business empire."
+    },
+
+    {
+      "title_id": "gta-5",
+      "title_name": "GTA V Story Mode",
+      "short": "GTA V SP",
+      "year": "2013",
+      "era": 3,
+      "era_label": "HD Universe 2013 — First Capital Market",
+      "era_badge_color": "amber",
+      "economy_type": "Mixed market + capital market",
+      "real_world_analogue": "1980s emerging market economy",
+      "key_innovation": "BAWSAQ — mission-linked capital market",
+      "key_innovation_note": "Lester assassination missions deliberately move stock prices. First GTA where a player action propagates through a capital market. Wealth can compound for the first time. The complete framework for GTA Online's live economy is now assembled — the blueprint is ready.",
+      "innovation_stars": 2,
+      "complexity_score": 12,
+      "layout_template": "loop",
+      "dimensions": {
+        "circular_flow": "partial",
+        "capital_market": "bawsaq",
+        "passive_income": "property",
+        "inflation": "limited",
+        "sovereign_type": "fixed-release"
+      },
+      "dimension_scores": {
+        "circular_flow": 2,
+        "capital_market": 3,
+        "passive_income": 2,
+        "inflation": 1,
+        "sovereign_complexity": 1
+      },
+      "projected": false,
+      "regression_era": false,
+      "nodes": [
+        {
+          "id": "sovereign",
+          "label": "Rockstar",
+          "type": "sovereign",
+          "detail": "Fixed release — no live patching · Sets all prices, property values, stock seed prices at launch — no post-release adjustment",
+          "color_token": "indigo",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "heists-missions",
+          "label": "Heists / Missions",
+          "type": "income",
+          "detail": "primary income",
+          "color_token": "amber",
+          "projected": false,
+          "data_source": "data/gta-5/missions/story-missions.json"
+        },
+        {
+          "id": "player",
+          "label": "Players (3)",
+          "type": "player",
+          "detail": "Michael · Trevor · Franklin · earn · spend · invest",
+          "color_token": "zinc",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "properties",
+          "label": "Properties",
+          "type": "asset",
+          "detail": "cinemas · carwash · taxi",
+          "color_token": "orange",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "bawsaq-lcn",
+          "label": "BAWSAQ / LCN ★★",
+          "type": "capital",
+          "detail": "Mission-linked price manipulation · First GTA where player actions propagate through a capital market · Compounding wealth possible",
+          "color_token": "purple",
+          "projected": false,
+          "data_source": "data/gta-5/economy/assassination-stocks.json"
+        }
+      ],
+      "flows": [
+        { "id": "wages", "from": "heists-missions", "to": "player", "label": "wages →", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": "/charts#assassination-returns-chart" },
+        { "id": "buy", "from": "player", "to": "properties", "label": "buy →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null },
+        { "id": "passive", "from": "properties", "to": "player", "label": "← passive income", "type": "passive", "bidirectional": false, "active": true, "projected": false, "color_token": "teal", "chart_link": null },
+        { "id": "invest", "from": "player", "to": "bawsaq-lcn", "label": "invest", "type": "investment", "bidirectional": false, "active": true, "projected": false, "color_token": "purple", "chart_link": "/charts#assassination-returns-chart" },
+        { "id": "capital-return", "from": "bawsaq-lcn", "to": "player", "label": "← capital returns", "type": "capital-return", "bidirectional": false, "active": true, "projected": false, "color_token": "purple", "chart_link": "/charts#assassination-returns-chart" }
+      ],
+      "inflation_channels": ["BAWSAQ provides only dynamic price signal in otherwise frozen economy"],
+      "sovereign_levers": [],
+      "data_coverage": {
+        "heists-missions": { "file": "data/gta-5/missions/story-missions.json", "status": "live" },
+        "bawsaq-lcn": { "file": "data/gta-5/economy/assassination-stocks.json", "status": "static" }
+      },
+      "gta_vi_lineage": "GTA V SP reintegrates everything GTA IV stripped and adds BAWSAQ's mission-linked capital market. The blueprint for GTA Online's live economy is now assembled here. The stock compounding loop is the first prototype of the Shark Card arbitrage.",
+      "summary": "GTA V SP reintegrates everything GTA IV stripped and goes further with BAWSAQ's mission-linked price manipulation. The first GTA where rational capital allocation is possible. Still a static fixed-release system, but the complete framework for GTA Online's live economy is now assembled — the blueprint is ready."
+    },
+
+    {
+      "title_id": "gta-online",
+      "title_name": "GTA Online",
+      "short": "GTA Online",
+      "year": "2013–now",
+      "era": 4,
+      "era_label": "Live Service 2013–Present — Full MMT Sovereign Economy",
+      "era_badge_color": "teal",
+      "economy_type": "Full MMT sovereign economy",
+      "real_world_analogue": "Colonial currency board + MMT",
+      "key_innovation": "Live sovereign monetary policy — complete circular flow with 5 levers and 3 inflation channels",
+      "key_innovation_note": "Rockstar actively manages wages, prices, and money supply in real time — for profit. The GTA-PPI (basket cost ÷ top hourly yield) is the essential metric. The Cayo Perico nerf of 2021 is a ~40% real wage cut with zero nominal price change. Pure hidden inflation, by design.",
+      "innovation_stars": 4,
+      "complexity_score": 17,
+      "layout_template": "full-mmt",
+      "dimensions": {
+        "circular_flow": "full",
+        "capital_market": "business-invest",
+        "passive_income": "full-stack",
+        "inflation": "3-channel",
+        "sovereign_type": "live-mmt"
+      },
+      "dimension_scores": {
+        "circular_flow": 4,
+        "capital_market": 4,
+        "passive_income": 4,
+        "inflation": 4,
+        "sovereign_complexity": 4
+      },
+      "projected": false,
+      "regression_era": false,
+      "nodes": [
+        {
+          "id": "sovereign",
+          "label": "Rockstar / Take-Two",
+          "type": "sovereign",
+          "detail": "Currency issuer · Wage floor setter · Price setter · Legislature (patch law) · Weekly policy events",
+          "color_token": "indigo",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "businesses",
+          "label": "Businesses",
+          "type": "asset",
+          "detail": "CEO · MC · Bunker · Acid Lab · Nightclub",
+          "color_token": "amber",
+          "projected": false,
+          "data_source": "data/gta-5/economy/business-profiles.json"
+        },
+        {
+          "id": "players",
+          "label": "Players",
+          "type": "player",
+          "detail": "earn · spend · hold · invest in businesses",
+          "color_token": "zinc",
+          "projected": false,
+          "data_source": null
+        },
+        {
+          "id": "maze-bank",
+          "label": "Maze Bank",
+          "type": "savings",
+          "detail": "holds savings — decorative, no credit",
+          "color_token": "teal",
+          "projected": false,
+          "data_source": "data/gta-5/economy/savings-profile.json"
+        },
+        {
+          "id": "shark-cards",
+          "label": "Shark Cards",
+          "type": "injection",
+          "detail": "Real £/$ → GTA$ · cross-economy real-money injection · Take-Two revenue imperative",
+          "color_token": "blue",
+          "projected": false,
+          "data_source": "data/gta-5/economy/shark-cards.json"
+        }
+      ],
+      "flows": [
+        { "id": "wages", "from": "businesses", "to": "players", "label": "① wages", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": "/charts#meta-evolution-chart" },
+        { "id": "spending", "from": "players", "to": "businesses", "label": "② spending", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": "/charts#spending-distribution-chart" },
+        { "id": "savings", "from": "players", "to": "maze-bank", "label": "③ savings", "type": "savings", "bidirectional": false, "active": true, "projected": false, "color_token": "teal", "chart_link": null },
+        { "id": "shark-inject", "from": "shark-cards", "to": "players", "label": "④ Shark Cards (real £/$ → GTA$)", "type": "injection", "bidirectional": false, "active": true, "projected": false, "color_token": "blue", "chart_link": "/charts#shark-card-chart" },
+        { "id": "investment", "from": "players", "to": "businesses", "label": "⑤ investment → passive income", "type": "investment", "bidirectional": false, "active": true, "projected": false, "color_token": "green", "chart_link": "/charts#passive-stack-chart" }
+      ],
+      "inflation_channels": [
+        "Price rises — nominal DLC price increases (rare, hidden)",
+        "Payout nerfs — real wage cuts via activity nerf (common; Cayo Perico 2021 = -40% real wage)",
+        "SC ratio degradation — structural GTA$/real-currency erosion over time"
+      ],
+      "sovereign_levers": [
+        "Shark Cards (GTA$)",
+        "Mission payout floors",
+        "DLC price levels",
+        "Nerfs / buffs / events",
+        "Weekly bonus rates"
+      ],
+      "data_coverage": {
+        "sovereign-shark-cards": { "file": "data/gta-5/economy/shark-cards.json", "status": "live" },
+        "sovereign-payout-floors": { "file": "data/gta-5/economy/meta-history.json", "status": "live" },
+        "sovereign-dlc-prices": { "file": "data/gta-5/economy/item-catalogue.json", "status": "live" },
+        "sovereign-nerfs": { "file": "data/gta-5/economy/weekly-bonuses.json", "status": "live" },
+        "sovereign-bonus-rates": { "file": "data/gta-5/economy/sale-frequency.json", "status": "live" },
+        "wages": { "file": "data/gta-5/economy/business-profiles.json", "status": "live" },
+        "spending": { "file": "data/gta-5/economy/spending-distribution.json", "status": "static" },
+        "savings": { "file": "data/gta-5/economy/savings-profile.json", "status": "static" },
+        "shark-cards": { "file": "data/gta-5/economy/shark-cards.json", "status": "live" },
+        "investment": { "file": "data/gta-5/economy/passive-stack.json", "status": "static" },
+        "inflation-ppi": { "file": "data/gta-5/economy/gta-ppi.json", "status": "live" }
+      },
+      "gta_vi_lineage": "GTA Online is the apex of the franchise economic arc. Every mechanic GTA VI inherits — business ownership, passive income, Shark Cards, live events, regional pricing — was first proven here at scale. The dual-territory model is the next evolution of the MMT sovereign, applied across geography.",
+      "summary": "GTA Online is the apex — a full circular flow with a live sovereign engineering real-terms inflation to maximise Shark Card revenue. The GTA-PPI captures all three inflation channels. Rockstar is the central bank, Take-Two is the treasury, and every player is a subject of monetary policy they cannot see."
+    },
+
+    {
+      "title_id": "gta-6",
+      "title_name": "GTA VI",
+      "short": "GTA VI",
+      "year": "2025/26",
+      "era": 5,
+      "era_label": "2025/26 — Dual Territory (Projected)",
+      "era_badge_color": "gold",
+      "economy_type": "Dual-territory currency union",
+      "real_world_analogue": "Internal currency union — Eurozone",
+      "key_innovation": "Regional purchasing parity — two structural economies, one currency",
+      "key_innovation_note": "One monetary authority (Rockstar as ECB), two structurally different regional economies. If price divergence is real, GTA-RPP would differ by region — a new research axis unique to this site.",
+      "innovation_stars": 4,
+      "complexity_score": 17,
+      "layout_template": "dual-territory",
+      "dimensions": {
+        "circular_flow": "full+regional",
+        "capital_market": "deeper",
+        "passive_income": "full+mobile",
+        "inflation": "regional",
+        "sovereign_type": "projected-mmt"
+      },
+      "dimension_scores": {
+        "circular_flow": 4,
+        "capital_market": 4,
+        "passive_income": 4,
+        "inflation": 4,
+        "sovereign_complexity": 4
+      },
+      "projected": true,
+      "regression_era": false,
+      "nodes": [
+        {
+          "id": "sovereign",
+          "label": "Rockstar / Take-Two",
+          "type": "sovereign",
+          "detail": "Deeper ownership economy · Possible dual-territory price levels · Mobile-linked persistence · Shark Cards persist",
+          "color_token": "indigo",
+          "projected": true,
+          "data_source": null
+        },
+        {
+          "id": "region-1",
+          "label": "Vice City (Urban)",
+          "type": "region",
+          "detail": "High prices · High wages · Dense economy",
+          "color_token": "gold",
+          "projected": true,
+          "data_source": "data/gta-6/economy/vice-city-prices.json"
+        },
+        {
+          "id": "businesses-vc",
+          "label": "Businesses",
+          "type": "asset",
+          "detail": "clubs · heists",
+          "color_token": "amber",
+          "projected": true,
+          "data_source": null
+        },
+        {
+          "id": "players-vc",
+          "label": "Players",
+          "type": "player",
+          "detail": "Lucia · Jason",
+          "color_token": "zinc",
+          "projected": true,
+          "data_source": null
+        },
+        {
+          "id": "region-2",
+          "label": "Leonida (Rural)",
+          "type": "region",
+          "detail": "Lower prices · Lower wages · Sparse economy",
+          "color_token": "teal",
+          "projected": true,
+          "data_source": "data/gta-6/economy/leonida-prices.json"
+        },
+        {
+          "id": "businesses-leonida",
+          "label": "Businesses",
+          "type": "asset",
+          "detail": "smuggling · farms",
+          "color_token": "teal",
+          "projected": true,
+          "data_source": null
+        },
+        {
+          "id": "players-leonida",
+          "label": "Players",
+          "type": "player",
+          "detail": "Lucia · Jason",
+          "color_token": "zinc",
+          "projected": true,
+          "data_source": null
+        },
+        {
+          "id": "shark-cards",
+          "label": "Shark Cards",
+          "type": "injection",
+          "detail": "cross-region real-money injection · Deepens as structural revenue imperative",
+          "color_token": "blue",
+          "projected": true,
+          "data_source": null
+        }
+      ],
+      "flows": [
+        { "id": "vc-economy", "from": "businesses-vc", "to": "players-vc", "label": "wages / passive", "type": "wages", "bidirectional": true, "active": true, "projected": true, "color_token": "amber", "chart_link": null },
+        { "id": "leonida-economy", "from": "businesses-leonida", "to": "players-leonida", "label": "wages / passive", "type": "wages", "bidirectional": true, "active": true, "projected": true, "color_token": "teal", "chart_link": null },
+        { "id": "player-movement", "from": "players-vc", "to": "players-leonida", "label": "player movement", "type": "spending", "bidirectional": true, "active": true, "projected": true, "color_token": "zinc", "chart_link": null },
+        { "id": "shark-inject", "from": "shark-cards", "to": "players-vc", "label": "real money injection", "type": "injection", "bidirectional": false, "active": true, "projected": true, "color_token": "blue", "chart_link": null }
+      ],
+      "inflation_channels": [
+        "Regional price divergence — Vice City vs Leonida purchasing power gap (projected)",
+        "Shark Card ratio degradation — structural, inherits from GTA Online",
+        "Payout nerfs — expected to continue as live-service mechanic"
+      ],
+      "sovereign_levers": [
+        "Regional price floors (projected)",
+        "Shark Card cross-region rates (projected)",
+        "Mission payout floors per territory (projected)",
+        "Weekly events — regional bonus rotations (projected)",
+        "Mobile-linked persistence (projected)"
+      ],
+      "data_coverage": {
+        "region-1-prices": { "file": "data/gta-6/economy/vice-city-prices.json", "status": "stub" },
+        "region-2-prices": { "file": "data/gta-6/economy/leonida-prices.json", "status": "stub" },
+        "gta-rpp": { "file": "data/gta-6/economy/gta-rpp.json", "status": "stub" }
+      },
+      "gta_vi_lineage": "GTA VI is the culmination of the franchise arc. The dual-territory model is the most structurally sophisticated virtual economy ever designed — applying the Eurozone currency union model to a video game for the first time.",
+      "summary": "GTA VI projects the GTA Online MMT sovereign across two structurally different regional economies — Vice City (urban, dense, high-wage) and Leonida (rural, sparse, low-wage) — unified by one currency. The Eurozone analogy predicts regional purchasing parity divergence, a research axis unique to this site."
+    }
+
+  ],
+
+  "franchise_arc_summary": "Score counter extraction (1–2) → one-way extraction (III) → first asset loop (VC) → multi-stream economy (SA) → deliberate regression (IV) → capital market recovery (V SP) → full MMT sovereign (Online) → dual-territory currency union (VI projected). The Cayo Perico nerf of 2021 is the single most economically significant event in franchise history.",
+
+  "complexity_chart_note": "The GTA IV regression zone is intentional — Rockstar stripped six years of economic innovation for narrative realism. The shaded zone marks this as a design choice, not a data error.",
+
+  "layout_templates": {
+    "one-way": "3 nodes: Sovereign top, Player + World horizontal. No return flow.",
+    "proto": "4–5 nodes: Sovereign top, Income source left, Player centre, Asset right, optional World shops bottom-right.",
+    "multi-stream": "7 nodes: Sovereign top, Player centre, 5 satellite nodes (income, properties, territory, gambling, stocks).",
+    "loop": "5 nodes: Sovereign top, Income left, Player centre, Asset right, Capital market bottom.",
+    "full-mmt": "5+1 nodes: Sovereign top with 5 lever pills, dashed inner circle (Businesses–Players–Maze Bank), external injection node below.",
+    "dual-territory": "7 nodes: Sovereign top spanning both columns, two mirror region columns (VC left, Leonida right), Shark Cards injection below."
+  },
+
+  "flow_color_map": {
+    "wages": "--c-brand",
+    "spending": "--c-alert",
+    "passive": "--c-live",
+    "investment": "--c-chart-green",
+    "capital-return": "--c-chart-purple",
+    "injection": "--c-chart-indigo",
+    "savings": "--c-live"
+  }
+}
