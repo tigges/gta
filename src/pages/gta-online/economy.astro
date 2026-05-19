@@ -106,7 +106,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-start justify-between flex-wrap gap-6">
         <div>
-          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">// CIRCULAR FLOW · 3-ACTOR MODEL</div>
+          <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-1">// CIRCULAR FLOW · 3-ACTOR MODEL</div>
           <h1 class="text-4xl sm:text-5xl font-black text-white leading-tight mb-1" style="font-family:'Inter',sans-serif">
             Five Flows.<br/>One Economy.
           </h1>
@@ -116,19 +116,19 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
         <!-- Actor selector -->
         <div class="flex flex-col gap-2 shrink-0">
-          <div class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest mb-1">// ACTORS</div>
+          <div class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1">// ACTORS</div>
           <div class="flex items-stretch gap-1.5">
             <button id="actor-businesses" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-gta-gold/50 bg-gta-gold/10 text-gta-gold transition-all" data-actor="businesses">
               <span class="text-[11px] font-black tracking-wider">BUSINESSES</span>
               <span class="text-[9px] font-mono text-gta-gold/60 mt-0.5">produce · contract</span>
               <div class="flex flex-col items-center gap-0.5 mt-2 text-[9px] font-mono">
                 <span class="text-gta-gold/80">① WAGES →</span>
-                <span class="text-zinc-600">← SPENDING ②</span>
+                <span class="text-zinc-400">← SPENDING ②</span>
               </div>
             </button>
             <button id="actor-players" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-[#2a2a31] text-zinc-400 transition-all hover:border-zinc-600" data-actor="players">
               <span class="text-[11px] font-black tracking-wider">PLAYERS</span>
-              <span class="text-[9px] font-mono text-zinc-600 mt-0.5">earn · spend · save</span>
+              <span class="text-[9px] font-mono text-zinc-400 mt-0.5">earn · spend · save</span>
               <div class="flex flex-col items-center gap-0.5 mt-2 text-[9px] font-mono">
                 <span class="text-zinc-500">③ SAVINGS →</span>
                 <span class="text-zinc-500">← SHARK CARDS ④</span>
@@ -136,9 +136,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             </button>
             <button id="actor-mazebank" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-[#2a2a31] text-zinc-400 transition-all hover:border-zinc-600" data-actor="mazebank">
               <span class="text-[11px] font-black tracking-wider">MAZE BANK</span>
-              <span class="text-[9px] font-mono text-zinc-600 mt-0.5">hold · (no real lend)</span>
+              <span class="text-[9px] font-mono text-zinc-400 mt-0.5">hold · (no real lend)</span>
               <div class="flex flex-col items-center gap-0.5 mt-2 text-[9px] font-mono">
-                <span class="text-zinc-700">decorative</span>
+                <span class="text-zinc-500">decorative</span>
               </div>
             </button>
           </div>
@@ -163,7 +163,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             data-tab={t.id}>{t.label}</button>
         ))}
         <div class="flex-1"></div>
-        <span class="text-[9px] font-mono text-zinc-700 shrink-0 hidden sm:block">GTA Online · 2013–2025</span>
+        <span class="text-[9px] font-mono text-zinc-500 shrink-0 hidden sm:block">GTA Online · 2013–2025</span>
       </div>
     </div>
   </div>
@@ -180,8 +180,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       <div class="flex flex-col gap-4">
         <ChartComplexityRadar titleId="gta-online" size={260} />
         <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
-          <div class="text-[8px] font-mono text-zinc-700 uppercase tracking-widest mb-2">Franchise Arc</div>
-          <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">
+          <div class="text-[8px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Franchise Arc</div>
+          <p class="text-[10px] font-mono text-zinc-400 leading-relaxed">
             GTA Online is the apex of the franchise arc — Full MMT sovereign with live policy.
             Every mechanic GTA VI inherits starts here.
           </p>
@@ -215,12 +215,12 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       </div>
 
       <!-- Policy interface arrow -->
-      <div class="flex justify-center my-2 text-zinc-600 font-mono text-xs">↕ policy interface</div>
+      <div class="flex justify-center my-2 text-zinc-400 font-mono text-xs">↕ policy interface</div>
 
       <!-- In-game circular economy -->
       <div class="rounded-xl border border-[#2a2a31] p-5 mb-4" style="background:#0e0e11">
         <div class="text-center mb-4">
-          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-[0.2em]">IN-GAME CIRCULAR ECONOMY · UNIT OF ANALYSIS</div>
+          <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-[0.2em]">IN-GAME CIRCULAR ECONOMY · UNIT OF ANALYSIS</div>
         </div>
         <!-- Three actors row -->
         <div class="flex items-center justify-center gap-2 sm:gap-4 flex-wrap">
@@ -239,9 +239,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
               <span>wages →</span>
             </div>
             <div class="flex items-center gap-1 text-zinc-500">
-              <span class="text-zinc-700">②</span>
+              <span class="text-zinc-500">②</span>
               <span>← spending</span>
-              <span class="text-zinc-700">⓶</span>
+              <span class="text-zinc-500">⓶</span>
             </div>
           </div>
 
@@ -249,7 +249,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div class="flex flex-col items-center gap-1">
             <div class="rounded-xl border border-[#2a2a31] bg-[#1a1a1e] px-5 py-3 text-center min-w-[120px]">
               <div class="text-sm font-black text-zinc-200 tracking-wide">Players</div>
-              <div class="text-[9px] font-mono text-zinc-600 mt-0.5">earn · spend · hold</div>
+              <div class="text-[9px] font-mono text-zinc-400 mt-0.5">earn · spend · hold</div>
             </div>
           </div>
 
@@ -276,7 +276,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
 
         <!-- Investment flow note -->
-        <div class="text-center mt-4 text-[10px] font-mono text-zinc-600">
+        <div class="text-center mt-4 text-[10px] font-mono text-zinc-400">
           ⑤ Investment flow: Players → Businesses (buy passive income properties: Bunker, Acid Lab, Nightclub, MC)
         </div>
       </div>
@@ -317,9 +317,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <table class="w-full text-[11px] font-mono">
             <thead>
               <tr class="border-b border-[#1e1e23]">
-                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Framework</th>
-                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Real-world source</th>
-                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">GTA application</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Framework</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Real-world source</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">GTA application</th>
               </tr>
             </thead>
             <tbody>
@@ -368,14 +368,14 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           ></div>
           <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-2 gap-4">
             <div>
-              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">CURRENT</div>
+              <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">CURRENT</div>
               <div class="text-2xl font-black" style={`color:var(--c-chart-bar);font-family:'Inter',sans-serif`}>${Math.round((latestYield?.top_gta_per_hr ?? 0)/1000)}K/hr</div>
-              <div class="text-[10px] font-mono text-zinc-600">{latestYield?.top_method ?? "—"}</div>
+              <div class="text-[10px] font-mono text-zinc-400">{latestYield?.top_method ?? "—"}</div>
             </div>
             <div>
-              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">ALL-TIME PEAK</div>
+              <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">ALL-TIME PEAK</div>
               <div class="text-2xl font-black text-green-400" style="font-family:'Inter',sans-serif">$2,000K/hr</div>
-              <div class="text-[10px] font-mono text-zinc-600">Cayo Perico launch 2020</div>
+              <div class="text-[10px] font-mono text-zinc-400">Cayo Perico launch 2020</div>
             </div>
           </div>
           <div class="px-5 pb-4">
@@ -392,7 +392,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div class="px-5 py-4 border-b border-[#1e1e23]">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[9px] font-mono text-zinc-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                <span class="text-zinc-600">②</span> PLAYERS → BUSINESSES
+                <span class="text-zinc-400">②</span> PLAYERS → BUSINESSES
               </div>
               <span class="text-[9px] font-mono border border-orange-600/40 bg-orange-900/20 text-orange-400 px-2 py-0.5 rounded uppercase tracking-widest">SPENDING (C)</span>
             </div>
@@ -409,9 +409,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
               { label:"WEAPONS/MODS",   val:`${spendEras.at(-1)?.weapons_pct ?? 0}%`,   sub:"recurring costs",  color:"var(--c-chart-teal)" },
             ].map(s => (
               <div>
-                <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">{s.label}</div>
+                <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">{s.label}</div>
                 <div class="text-xl font-black" style={`color:${s.color};font-family:'Inter',sans-serif`}>{s.val}</div>
-                <div class="text-[10px] font-mono text-zinc-600">{s.sub}</div>
+                <div class="text-[10px] font-mono text-zinc-400">{s.sub}</div>
               </div>
             ))}
           </div>
@@ -441,14 +441,14 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           ></div>
           <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-2 gap-4">
             <div>
-              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">TOP SAVER CAP</div>
+              <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">TOP SAVER CAP</div>
               <div class="text-2xl font-black text-green-400" style="font-family:'Inter',sans-serif">$2.1B</div>
-              <div class="text-[10px] font-mono text-zinc-600">transaction screen ceiling</div>
+              <div class="text-[10px] font-mono text-zinc-400">transaction screen ceiling</div>
             </div>
             <div>
-              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">EST. AVG RATE</div>
+              <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">EST. AVG RATE</div>
               <div class="text-2xl font-black text-green-400" style="font-family:'Inter',sans-serif">8.9%</div>
-              <div class="text-[10px] font-mono text-zinc-600">of earnings held idle</div>
+              <div class="text-[10px] font-mono text-zinc-400">of earnings held idle</div>
             </div>
           </div>
           <div class="px-5 pb-4">
@@ -477,14 +477,14 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           ></div>
           <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-2 gap-4">
             <div>
-              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">PEAK YEAR</div>
+              <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">PEAK YEAR</div>
               <div class="text-2xl font-black text-blue-400" style="font-family:'Inter',sans-serif">$1.62B</div>
-              <div class="text-[10px] font-mono text-zinc-600">FY2022 (2021 calendar year)</div>
+              <div class="text-[10px] font-mono text-zinc-400">FY2022 (2021 calendar year)</div>
             </div>
             <div>
-              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">LATEST</div>
+              <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">LATEST</div>
               <div class="text-2xl font-black text-blue-400" style="font-family:'Inter',sans-serif">${latestRecurr?.recurrent_bn ?? "—"}B</div>
-              <div class="text-[10px] font-mono text-zinc-600">recurrent consumer spending</div>
+              <div class="text-[10px] font-mono text-zinc-400">recurrent consumer spending</div>
             </div>
           </div>
           <div class="px-5 pb-4">
@@ -524,14 +524,14 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between flex-wrap gap-4">
           <div class="flex items-center gap-6">
             <div>
-              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">FULL STACK PASSIVE</div>
+              <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">FULL STACK PASSIVE</div>
               <div class="text-xl font-black text-indigo-400" style="font-family:'Inter',sans-serif">$1.24M/hr</div>
-              <div class="text-[10px] font-mono text-zinc-600">Bunker + Nightclub + MC + Acid Lab</div>
+              <div class="text-[10px] font-mono text-zinc-400">Bunker + Nightclub + MC + Acid Lab</div>
             </div>
             <div>
-              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">SETUP COST</div>
+              <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">SETUP COST</div>
               <div class="text-xl font-black text-zinc-400" style="font-family:'Inter',sans-serif">$18.7M</div>
-              <div class="text-[10px] font-mono text-zinc-600">~15h break-even at $1.24M/hr</div>
+              <div class="text-[10px] font-mono text-zinc-400">~15h break-even at $1.24M/hr</div>
             </div>
           </div>
           <div class="border-l-2 border-indigo-700/40 pl-3 py-1 rounded-r max-w-lg" style="background:#1a1a1e">
@@ -553,21 +553,21 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       <!-- Headline stats row -->
       <div class="grid grid-cols-3 gap-4 mb-6">
         <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
-          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">CURRENT GTA-PPI</div>
+          <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-1">CURRENT GTA-PPI</div>
           <div class="text-3xl font-black" style={`color:${latestPPI?.ppi <= 50 ? 'var(--c-chart-green)' : latestPPI?.ppi <= 80 ? 'var(--c-chart-bar)' : 'var(--c-chart-red)'};font-family:'Inter',sans-serif`}>
             {latestPPI?.ppi}
           </div>
-          <div class="text-[10px] font-mono text-zinc-600">{latestPPI?.hours_to_basket}h to buy basket</div>
+          <div class="text-[10px] font-mono text-zinc-400">{latestPPI?.hours_to_basket}h to buy basket</div>
         </div>
         <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
-          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">ALL-TIME BEST (lowest PPI)</div>
+          <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-1">ALL-TIME BEST (lowest PPI)</div>
           <div class="text-3xl font-black text-green-400" style="font-family:'Inter',sans-serif">{troughPPI?.ppi}</div>
-          <div class="text-[10px] font-mono text-zinc-600">{troughPPI?.patch} · {troughPPI?.hours_to_basket}h</div>
+          <div class="text-[10px] font-mono text-zinc-400">{troughPPI?.patch} · {troughPPI?.hours_to_basket}h</div>
         </div>
         <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
-          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">ALL-TIME WORST (highest PPI)</div>
+          <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-1">ALL-TIME WORST (highest PPI)</div>
           <div class="text-3xl font-black text-red-400" style="font-family:'Inter',sans-serif">{peakPPI?.ppi}</div>
-          <div class="text-[10px] font-mono text-zinc-600">{peakPPI?.patch} · {peakPPI?.hours_to_basket}h</div>
+          <div class="text-[10px] font-mono text-zinc-400">{peakPPI?.patch} · {peakPPI?.hours_to_basket}h</div>
         </div>
       </div>
 
@@ -575,7 +575,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden mb-5" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
-            <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">// ALL THREE ACTORS · COMPOSITE</div>
+            <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-1">// ALL THREE ACTORS · COMPOSITE</div>
             <div class="text-lg font-bold text-white" style="font-family:'Inter',sans-serif">GTA-PPI — Purchasing Power Index</div>
             <div class="text-[11px] text-zinc-500 font-mono">Hours to buy the fixed reference basket at current top hourly yield. Base 100 = Oct 2013 launch.</div>
           </div>
@@ -599,7 +599,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
-            <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">// ALL THREE ACTORS · COMPOSITE</div>
+            <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-1">// ALL THREE ACTORS · COMPOSITE</div>
             <div class="text-lg font-bold text-white" style="font-family:'Inter',sans-serif">Circular Flow Health Monitor</div>
             <div class="text-[11px] text-zinc-500 font-mono">Normalised index: hourly yield, Shark Card reliance, passive investment returns.</div>
           </div>
@@ -636,12 +636,12 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden mb-5" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between gap-4">
           <div>
-            <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">// GTA-CPI BASKET</div>
+            <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-1">// GTA-CPI BASKET</div>
             <div class="text-lg font-bold text-white" style="font-family:'Inter',sans-serif">Fixed Reference Basket</div>
             <div class="text-[11px] text-zinc-500 font-mono">Prices tracked in GTA$ per major patch era. Base index 100 = Oct 2013 launch.</div>
           </div>
           <div class="text-right shrink-0">
-            <div class="text-[9px] font-mono text-zinc-700">Methodology</div>
+            <div class="text-[9px] font-mono text-zinc-500">Methodology</div>
             <div class="text-[10px] font-mono text-zinc-500">GTA-PPI = Σ(price × weight) ÷ top hourly yield</div>
           </div>
         </div>
@@ -649,12 +649,12 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <table class="w-full text-[11px] font-mono">
             <thead>
               <tr class="border-b border-[#1e1e23]">
-                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Item</th>
-                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Category</th>
-                <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Weight</th>
-                <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Current Price (GTA$)</th>
-                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Available from</th>
-                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Rationale</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Item</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Category</th>
+                <th class="text-right px-4 py-2.5 text-zinc-400 font-normal">Weight</th>
+                <th class="text-right px-4 py-2.5 text-zinc-400 font-normal">Current Price (GTA$)</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Available from</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Rationale</th>
               </tr>
             </thead>
             <tbody>
@@ -669,7 +669,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
                   </td>
                   <td class="px-4 py-2.5 text-right text-gta-gold">{Math.round(item.weight*100)}%</td>
                   <td class="px-4 py-2.5 text-right text-zinc-300">{item.current_price ? `$${item.current_price.toLocaleString()}` : "—"}</td>
-                  <td class="px-4 py-2.5 text-zinc-600">{item.available_from}</td>
+                  <td class="px-4 py-2.5 text-zinc-400">{item.available_from}</td>
                   <td class="px-4 py-2.5 text-zinc-500 max-w-xs">{item.rationale}</td>
                 </tr>
               ))}
@@ -678,15 +678,15 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center gap-4 flex-wrap">
           <div>
-            <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">BASKET COST (live)</span>
+            <span class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">BASKET COST (live)</span>
             <span class="text-[13px] font-bold text-gta-gold ml-3 font-mono">${liveBasketCost.toLocaleString()}</span>
           </div>
           <div>
-            <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">AT CURRENT YIELD</span>
+            <span class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">AT CURRENT YIELD</span>
             <span class="text-[13px] font-bold text-zinc-400 ml-3 font-mono">{liveHours}h to buy</span>
           </div>
           <div>
-            <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">GTA-PPI</span>
+            <span class="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">GTA-PPI</span>
             <span class="text-[13px] font-bold text-zinc-400 ml-3 font-mono">{livePPI} / 100</span>
           </div>
           {hasSales && saleHours && (
@@ -701,7 +701,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 
       <!-- Price stability note -->
       <div class="rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
-        <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// KEY INSIGHT — PRICE STABILITY</div>
+        <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-3">// KEY INSIGHT — PRICE STABILITY</div>
         <p class="text-[12px] text-zinc-400 leading-relaxed mb-3" style="font-family:'Inter',sans-serif">
           GTA Online nominal prices are remarkably stable. The Zentorno has cost $725,000 since 2013. The Buzzard has cost $1,750,000 since 2014. Rockstar has never raised the price of an existing vehicle or property.
         </p>
@@ -789,9 +789,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <table class="w-full text-[11px] font-mono">
             <thead>
               <tr class="border-b border-[#1e1e23]">
-                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Scraper</th>
-                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Output</th>
-                <th class="text-left px-4 py-2.5 text-zinc-600 font-normal">Status</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Scraper</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Output</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -810,7 +810,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
                     <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${r.status === 'live' ? 'border-green-700/40 bg-green-900/20 text-green-400' : 'border-gta-gold/30 bg-gta-gold/10 text-gta-gold'}`}>
                       {r.status === 'live' ? '✓ Live' : 'Day-1'}
                     </span>
-                    <span class="ml-2 text-zinc-700">{r.note}</span>
+                    <span class="ml-2 text-zinc-500">{r.note}</span>
                   </td>
                 </tr>
               ))}

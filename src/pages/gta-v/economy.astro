@@ -36,7 +36,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
         <span class="text-[9px] font-mono bg-amber-900/30 border border-amber-700/40 text-amber-400 px-2 py-0.5 rounded uppercase tracking-widest">ERA 3 · HD Universe 2013</span>
       </div>
       <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">GTA V Story — Economy</h1>
-      <p class="text-zinc-400 text-sm leading-relaxed mb-6 max-w-xl" style="font-family:'Inter',sans-serif">
+      <p class="text-zinc-300 text-sm leading-relaxed mb-6 max-w-xl" style="font-family:'Inter',sans-serif">
         The franchise's first capital market. BAWSAQ lets player actions propagate through stock prices.
         Combined with property passive income, compounding wealth is possible for the first time.
       </p>
@@ -50,7 +50,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
           <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
             <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
             <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug" style="font-family:'Inter',sans-serif">{s.label}</div>
-            <div class="text-[10px] font-mono text-zinc-700 mt-0.5">{s.sub}</div>
+            <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{s.sub}</div>
           </div>
         ))}
       </div>
@@ -63,7 +63,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
     <section>
       <div class="flex items-center gap-3 mb-6">
         <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Circular Economy Model</span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Circular Economy Model</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -78,16 +78,16 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
     <section>
       <div class="flex items-center gap-3 mb-6">
         <span class="text-[9px] font-mono bg-purple-900/30 border border-purple-700/40 text-purple-400 px-2 py-0.5 rounded uppercase tracking-widest">Capital Market</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// BAWSAQ — Assassination Mission Returns</span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// BAWSAQ — Assassination Mission Returns</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/gta-v/assassination-guide" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full guide →</a>
+        <a href="/gta-v/assassination-guide" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full guide →</a>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
           <div class="text-sm font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">
             The $2 Billion Strategy — Optimal Sequence
           </div>
-          <div class="text-[10px] font-mono text-zinc-600">{(stocksData as any).optimal_sequence_note}</div>
+          <div class="text-[10px] font-mono text-zinc-400">{(stocksData as any).optimal_sequence_note}</div>
         </div>
         <div class="divide-y divide-[#1e1e23]">
           {guide.map((step: any, i: number) => {
@@ -101,18 +101,18 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="text-[11px] font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{step.title}</div>
-                  {buy && <div class="text-[9px] font-mono text-zinc-600 mt-0.5">Buy: {buy.ticker} ({buy.exchange})</div>}
+                  {buy && <div class="text-[9px] font-mono text-zinc-400 mt-0.5">Buy: {buy.ticker} ({buy.exchange})</div>}
                 </div>
                 <div class="shrink-0 text-right">
                   <div class="text-base font-mono font-black" style={`color:${color}`}>+{pct}%</div>
-                  <div class="text-[8px] font-mono text-zinc-700">combined</div>
+                  <div class="text-[8px] font-mono text-zinc-500">combined</div>
                 </div>
               </div>
             );
           })}
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] font-mono text-zinc-700">Do Hotel Assassination first. Complete remaining 4 AFTER The Big Score. Reinvest between each.</span>
+          <span class="text-[10px] font-mono text-zinc-500">Do Hotel Assassination first. Complete remaining 4 AFTER The Big Score. Reinvest between each.</span>
           <ShareButton text="GTA V assassination strategy: do all 5 missions after The Big Score. Multi-Target + Redwood = +380% alone. Full $2B guide on GTAVI.AI." url="https://gtavi.ai/gta-v/economy" size="sm" label="Share" />
         </div>
       </div>
@@ -121,7 +121,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
     <!-- GTA VI Lineage -->
     <section class="rounded-xl border border-gta-gold/15 px-6 py-5" style="background:rgba(245,158,11,0.03)">
       <div class="text-[9px] font-mono text-gta-gold/40 uppercase tracking-widest mb-2">GTA VI Lineage</div>
-      <p class="text-[11px] font-mono text-zinc-500 leading-relaxed">{economy.gta_vi_lineage}</p>
+      <p class="text-[11px] font-mono text-zinc-300 leading-relaxed">{economy.gta_vi_lineage}</p>
     </section>
 
     <div class="flex items-center gap-3 flex-wrap">
