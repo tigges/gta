@@ -125,7 +125,7 @@ const description = `${biz.name ?? biz.title}: $${khr}k/hr net in GTA Online. Fu
           bonus_last_date={bonusFreq?.last_bonus_date}
           bonus_avg_gap_weeks={bonusFreq?.avg_gap_weeks}
           peak_gta_per_hr={peakHr ?? undefined}
-          share_url="https://gtavi.ai/database"
+          share_url={`https://gtavi.ai/gta-online/income/${id}`}
         />
 
         <!-- Active bonus callout -->
@@ -201,6 +201,125 @@ const description = `${biz.name ?? biz.title}: $${khr}k/hr net in GTA Online. Fu
           <div class="rounded-xl border border-[#1e1e23] px-5 py-4" style="background:#131316">
             <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Notes</div>
             <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">{biz.notes}</p>
+          </div>
+        )}
+
+        <!-- Bonus cadence (full detail) -->
+        {bonusFreq && (
+          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+            <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
+              <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Bonus Calendar Intelligence</div>
+              <span class="text-[10px] font-mono text-zinc-600">{bonusFreq.bonus_count} bonus events tracked</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
+              <div class="px-5 py-4">
+                <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Last bonus</div>
+                <div class="text-base font-mono font-bold text-zinc-200">
+                  {bonusDaysAgo !== null ? (bonusDaysAgo < 7 ? `${bonusDaysAgo}d ago` : `${Math.round(bonusDaysAgo/7)}wk ago`) : "—"}
+                </div>
+                <div class="text-[9px] font-mono text-zinc-700 mt-0.5">{bonusFreq.last_bonus_date ?? "no data"}</div>
+              </div>
+              <div class="px-5 py-4">
+                <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Avg gap</div>
+                <div class="text-base font-mono font-bold text-zinc-200">
+                  {bonusFreq.avg_gap_weeks ? `${bonusFreq.avg_gap_weeks.toFixed(1)} wk` : "—"}
+                </div>
+                <div class="text-[9px] font-mono text-zinc-700 mt-0.5">between bonus events</div>
+              </div>
+              <div class="px-5 py-4">
+                <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Est. next</div>
+                <div class="text-base font-mono font-bold" style={`color:${bonusFreq.estimated_next_bonus && new Date(bonusFreq.estimated_next_bonus) < new Date(Date.now() + 30*24*60*60*1000) ? '#22c55e' : '#71717a'}`}>
+                  {bonusFreq.estimated_next_bonus ? new Date(bonusFreq.estimated_next_bonus).toLocaleDateString("en-GB", {month:"short", year:"numeric"}) : "—"}
+                </div>
+                <div class="text-[9px] font-mono text-zinc-700 mt-0.5">estimate only</div>
+              </div>
+            </div>
+            {bonusFreq.bonus_weeks && bonusFreq.bonus_weeks.length > 0 && (
+              <div class="px-5 py-3 border-t border-[#1e1e23]">
+                <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Recent bonus weeks</div>
+                <div class="flex flex-wrap gap-1.5">
+                  {[...bonusFreq.bonus_weeks].reverse().slice(0, 8).map((w: string) => (
+                    <span class="text-[9px] font-mono text-zinc-500 border border-[#2a2a31] px-2 py-0.5 rounded">{w.slice(0,7)}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        <!-- Patch history (richer than per-source-history) -->
+        {biz.patch_history && biz.patch_history.length > 0 && (
+          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+            <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
+              <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Patch History</div>
+              <span class="text-[10px] font-mono text-zinc-600">{biz.patch_history.length} patches tracked</span>
+            </div>
+            <div class="divide-y divide-[#1e1e23]">
+              {([...biz.patch_history] as any[]).reverse().map((patch: any, ri: number) => {
+                const allVals = (biz.patch_history as any[]).map((p: any) => p.net_profit_per_hr);
+                const peak = Math.max(...allVals);
+                const pct  = Math.round((patch.net_profit_per_hr / peak) * 100);
+                const isCurrent = ri === 0;
+                const isPeak    = patch.net_profit_per_hr === peak;
+                return (
+                  <div class="px-5 py-3 flex items-center gap-4">
+                    <div class="w-28 shrink-0">
+                      <div class="text-[10px] font-mono text-zinc-600">{patch.date?.slice(0,7)}</div>
+                      <div class="text-[9px] font-mono text-zinc-700 truncate" title={patch.patch}>{patch.patch}</div>
+                    </div>
+                    <div class="flex-1">
+                      <div class="h-1.5 rounded-full bg-[#1e1e23] overflow-hidden">
+                        <div class="h-full rounded-full transition-all"
+                             style={`width:${pct}%;background:${isPeak ? '#22c55e' : isCurrent ? '#f59e0b' : '#3f3f46'}`}></div>
+                      </div>
+                      {patch.notes && (
+                        <div class="text-[9px] font-mono text-zinc-700 mt-1 leading-snug">{patch.notes}</div>
+                      )}
+                    </div>
+                    <div class="shrink-0 text-right w-20">
+                      <span class="text-[11px] font-mono font-bold"
+                            style={`color:${isPeak ? '#22c55e' : isCurrent ? '#f59e0b' : '#71717a'}`}>
+                        ${Math.round(patch.net_profit_per_hr / 1000)}k/hr
+                      </span>
+                      {isCurrent && <div class="text-[8px] font-mono text-amber-600">current</div>}
+                      {isPeak && !isCurrent && <div class="text-[8px] font-mono text-green-600">peak</div>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <!-- Loot tiers (heist-type sources) -->
+        {biz.loot_tiers && biz.loot_tiers.length > 0 && (
+          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+            <div class="px-5 py-3 border-b border-[#1e1e23]">
+              <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Loot Tiers — What to Target</div>
+            </div>
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="border-b border-[#1e1e23]">
+                  <th class="text-left px-5 py-2 text-zinc-600 font-normal">Primary Loot</th>
+                  <th class="text-right px-4 py-2 text-zinc-600 font-normal">Value</th>
+                  <th class="text-right px-5 py-2 text-zinc-600 font-normal">Frequency</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(biz.loot_tiers as any[]).map((l: any, i: number) => (
+                  <tr class="border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors">
+                    <td class="px-5 py-2.5 font-semibold text-zinc-200">{l.loot}</td>
+                    <td class="px-4 py-2.5 text-right font-bold" style={`color:${i === 0 ? '#22c55e' : i === 1 ? '#f59e0b' : '#71717a'}`}>
+                      ${(l.value / 1_000_000).toFixed(2)}M
+                    </td>
+                    <td class="px-5 py-2.5 text-right text-zinc-500">{l.frequency}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div class="px-5 py-2.5 border-t border-[#1e1e23]">
+              <span class="text-[9px] font-mono text-zinc-700">Only run for top 2 loot tiers. Abort and restart if primary loot is low-value.</span>
+            </div>
           </div>
         )}
 

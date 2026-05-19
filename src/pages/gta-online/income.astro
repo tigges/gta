@@ -24,6 +24,11 @@ const PLAY_COLOR: Record<string, string> = {
 };
 
 const totalSources = revTiers.reduce((s: number, t: any) => s + t.sources.length, 0);
+
+// IDs that have a generated /gta-online/income/{id} page
+const bizIds   = new Set(bizProfiles.filter((b: any) => b.net_profit_per_hr > 0).map((b: any) => b.id));
+const heistIds = new Set((onlineHeistList as any[]).map((h: any) => h.id));
+const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
 ---
 
 <Base
@@ -115,8 +120,10 @@ const totalSources = revTiers.reduce((s: number, t: any) => s + t.sources.length
                 {tier.sources.map((s: any) => {
                   const barPct = Math.round((s.gta_per_hr / maxBizProfitHr) * 100);
                   const typeColor = PLAY_COLOR[s.type] ?? "#71717a";
-                  return (
-                    <a href={`/gta-online/income/${s.id}`} class="flex items-center gap-3 hover:opacity-80 transition-opacity group">
+                  const hasPage = validPageIds.has(s.id);
+                  const rowClasses = "flex items-center gap-3 transition-opacity" + (hasPage ? " hover:opacity-80 group" : " opacity-60");
+                  return hasPage ? (
+                    <a href={`/gta-online/income/${s.id}`} class={rowClasses}>
                       <div class="w-52 shrink-0">
                         <div class="text-[11px] font-mono text-zinc-300 truncate group-hover:text-white transition-colors">{s.name}</div>
                         <div class="text-[9px] font-mono text-zinc-600">{s.solo ? "Solo" : "2+ players"} · Setup: {s.setup_gta > 0 ? `$${(s.setup_gta/1_000_000).toFixed(1)}M` : "Free"}</div>
@@ -129,6 +136,19 @@ const totalSources = revTiers.reduce((s: number, t: any) => s + t.sources.length
                       </div>
                       <span class="text-zinc-700 group-hover:text-zinc-400 text-[10px] font-mono shrink-0">→</span>
                     </a>
+                  ) : (
+                    <div class={rowClasses}>
+                      <div class="w-52 shrink-0">
+                        <div class="text-[11px] font-mono text-zinc-500 truncate">{s.name}</div>
+                        <div class="text-[9px] font-mono text-zinc-700">{s.solo ? "Solo" : "2+ players"} · Setup: {s.setup_gta > 0 ? `$${(s.setup_gta/1_000_000).toFixed(1)}M` : "Free"}</div>
+                      </div>
+                      <div class="flex-1 flex items-center gap-2">
+                        <div class="flex-1 h-2 rounded-full bg-[#1e1e23] overflow-hidden">
+                          <div class="h-full rounded-full" style={`width:${barPct}%;background:${typeColor};opacity:0.5`}></div>
+                        </div>
+                        <span class="text-[11px] font-mono font-bold shrink-0 w-20 text-right" style={`color:${typeColor};opacity:0.5`}>${(s.gta_per_hr/1000).toFixed(0)}k/hr</span>
+                      </div>
+                    </div>
                   );
                 })}
               </div>
