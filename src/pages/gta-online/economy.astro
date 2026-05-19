@@ -2,6 +2,8 @@
 import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
 import ShareButton from "../../components/ShareButton.astro";
+import CircularEconomy from "../../components/CircularEconomy.astro";
+import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 
 import ppiData          from "../../../data/gta-5/economy/gta-ppi.json";
 import metaHistory      from "../../../data/gta-5/economy/meta-history.json";
@@ -162,6 +164,31 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         ))}
         <div class="flex-1"></div>
         <span class="text-[9px] font-mono text-zinc-700 shrink-0 hidden sm:block">GTA Online · 2013–2025</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       CIRCULAR ECONOMY OVERVIEW (Full MMT Sovereign)
+  ═══════════════════════════════════════════════════════ -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 rounded-xl border border-[#1e1e23] p-5" style="background:#0e0e11">
+        <CircularEconomy titleId="gta-online" mode="full" />
+      </div>
+      <div class="flex flex-col gap-4">
+        <ChartComplexityRadar titleId="gta-online" size={260} />
+        <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
+          <div class="text-[8px] font-mono text-zinc-700 uppercase tracking-widest mb-2">Franchise Arc</div>
+          <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">
+            GTA Online is the apex of the franchise arc — Full MMT sovereign with live policy.
+            Every mechanic GTA VI inherits starts here.
+          </p>
+          <a href="/gta-vi/economy" class="inline-block mt-2 text-[9px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors uppercase tracking-widest">
+            GTA VI economy preview →
+          </a>
+        </div>
       </div>
     </div>
   </div>
