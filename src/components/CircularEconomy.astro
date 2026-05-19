@@ -100,7 +100,7 @@ const nodePositions = LAYOUTS[(economy as any).layout_template as string] ?? {};
 
 const HEIGHTS: Record<string, number> = {
   "one-way": 160, "proto": 300, "loop": 300,
-  "multi-stream": 360, "full-mmt": 300, "dual-territory": 380,
+  "multi-stream": 420, "full-mmt": 300, "dual-territory": 380,
 };
 const containerH = isCompact
   ? Math.round((HEIGHTS[(economy as any).layout_template as string] ?? 300) * 0.75)
@@ -475,11 +475,15 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       const hex    = FLOW_HEX[flow.color_token] ?? "#71717a";
       const isDashed = flow.projected || !flow.active;
 
-      // Bezier control point
+      // Bezier control point — more curvature on bidirectional/parallel flows
+      // to visually separate arrows that share the same node pair
       const midX = (p1.x + p2.x) / 2, midY = (p1.y + p2.y) / 2;
       const dx   = p2.x - p1.x,       dy   = p2.y - p1.y;
-      const curve = flow.bidirectional ? 0.2 : 0.12;
-      const cx = midX - dy * curve,   cy = midY + dx * curve;
+      // More curvature on multi-stream template and bidirectional flows
+      const isMulti = grid.dataset.template === "multi-stream";
+      const curve = flow.bidirectional ? 0.28 : isMulti ? 0.22 : 0.14;
+      const curveDir = pass % 2 === 0 ? 1 : -1; // alternate sides for parallel arrows
+      const cx = midX - dy * curve * curveDir, cy = midY + dx * curve * curveDir;
 
       // Determine animation from flow type
       const animCfg  = FLOW_ANIM[flow.type] ?? { dir: "forward", duration_s: 1.5 };
@@ -497,22 +501,53 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       path.setAttribute("marker-end", `url(#${uid}-arr-${flow.color_token})`);
       svg.appendChild(path);
 
-      // Flow label at bezier midpoint
-      const label = (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim().slice(0, 22);
+      // Flow label — positioned at t=0.25 (closer to source) to spread labels apart
+      // A background rect behind the text prevents overlap illegibility
+      const label = (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim().slice(0, 18);
       if (label) {
-        const bx = Math.round(0.25*p1.x + 0.5*cx + 0.25*p2.x);
-        const by = Math.round(0.25*p1.y + 0.5*cy + 0.25*p2.y) - 5;
+        // Bezier point at t=0.25 (closer to source node — spreads labels from center)
+        const t  = 0.25;
+        const t2 = t * t, mt = 1 - t, mt2 = mt * mt;
+        const bx = Math.round(mt2*p1.x + 2*mt*t*cx + t2*p2.x);
+        const by = Math.round(mt2*p1.y + 2*mt*t*cy + t2*p2.y);
+
+        // Slight perpendicular offset so label doesn't sit on the path
+        const pathDx = p2.x - p1.x, pathDy = p2.y - p1.y;
+        const pathLen = Math.sqrt(pathDx*pathDx + pathDy*pathDy) || 1;
+        const perpX = -pathDy / pathLen * 9;
+        const perpY =  pathDx / pathLen * 9;
+        const lx = Math.round(bx + perpX);
+        const ly = Math.round(by + perpY);
+
+        const FONT_SIZE = 10;
+        const estimatedW = label.length * 5.8 + 8;
+        const estimatedH = FONT_SIZE + 4;
+
+        // Background rect for readability
+        const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        bg.setAttribute("class", "ce-flow-label");
+        bg.setAttribute("x", String(lx - estimatedW / 2));
+        bg.setAttribute("y", String(ly - estimatedH + 2));
+        bg.setAttribute("width", String(estimatedW));
+        bg.setAttribute("height", String(estimatedH));
+        bg.setAttribute("rx", "3");
+        bg.setAttribute("fill", "#0a0a0d");
+        bg.setAttribute("fill-opacity", "0.82");
+        svg.appendChild(bg);
+
+        // Label text
         const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
         txt.setAttribute("class", "ce-flow-label");
-        txt.setAttribute("x", String(bx));
-        txt.setAttribute("y", String(by));
+        txt.setAttribute("x", String(lx));
+        txt.setAttribute("y", String(ly));
         txt.setAttribute("text-anchor", "middle");
+        txt.setAttribute("dominant-baseline", "auto");
         txt.setAttribute("fill", hex);
-        txt.setAttribute("font-size", "8");
+        txt.setAttribute("font-size", String(FONT_SIZE));
         txt.setAttribute("font-family", "monospace");
-        txt.setAttribute("opacity", "0.65");
-        txt.textContent = label;
+        txt.setAttribute("font-weight", "500");
         svg.appendChild(txt);
+        txt.textContent = label;
       }
     }
   }
