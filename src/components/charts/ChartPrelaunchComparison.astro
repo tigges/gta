@@ -72,6 +72,7 @@ import ShareButton from "../ShareButton.astro";
   function init() {
     const el = document.getElementById("prelaunch-comparison-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const gta5kw: any = JSON.parse(el.dataset.gta5 || "null");
     const gta6kw: any = JSON.parse(el.dataset.gta6 || "null");

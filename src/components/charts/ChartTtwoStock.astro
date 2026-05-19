@@ -49,6 +49,7 @@ import ShareButton from "../ShareButton.astro";
   function init() {
     const el = document.getElementById("ttwo-stock-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const prices: {date:string;close:number}[] = JSON.parse(el.dataset.prices || "[]");
     const annotations: {date:string;label:string;type:string;color:string}[] = JSON.parse(el.dataset.annotations || "[]");

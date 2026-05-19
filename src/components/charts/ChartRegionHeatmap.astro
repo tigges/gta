@@ -38,6 +38,7 @@ import ShareButton from "../ShareButton.astro";
   function init() {
     const el = document.getElementById("region-heatmap") as HTMLElement | null;
     if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const regions: any[] = JSON.parse(el.dataset.regions || "[]");
 

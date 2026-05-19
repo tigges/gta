@@ -54,6 +54,7 @@ import ShareButton from "../ShareButton.astro";
   function init() {
     const el = document.getElementById("delay-timeline-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
 
     const events: {date:string;event:string;type:string;source:string;source_type:string;implied_window?:string;confirmed_date?:string}[] =

@@ -42,6 +42,7 @@ import ShareButton from "../ShareButton.astro";
   function init() {
     const el = document.getElementById("entertainment-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const entries: {name:string;revenue_bn:number;type:string;is_prediction?:boolean}[] =
       JSON.parse(el.dataset.entries || "[]");

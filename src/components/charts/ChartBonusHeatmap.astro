@@ -49,6 +49,7 @@ import ShareButton from "../ShareButton.astro";
   function init() {
     const el = document.getElementById("bonus-heatmap") as HTMLElement | null;
     if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
 
     const weeks: any[]  = JSON.parse(el.dataset.history || "[]");
