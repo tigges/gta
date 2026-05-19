@@ -4,7 +4,6 @@
   "note": "Canonical circular economy model for every GTA franchise title. Drives CircularEconomy.astro visualisation, per-title economy pages, and the /franchise/economics overview. Editorial — updated manually as new titles release or analysis deepens.",
   "source": "GTAVI.AI Economic Model Analysis — derived from franchise design patterns, community records, and macroeconomic analogues.",
   "economies": [
-
     {
       "title_id": "gta-1-2",
       "title_name": "GTA 1 & 2",
@@ -66,8 +65,30 @@
         }
       ],
       "flows": [
-        { "id": "mission-pay", "from": "sovereign", "to": "player", "label": "mission pay", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": null },
-        { "id": "spending", "from": "player", "to": "world", "label": "spending →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null }
+        {
+          "id": "mission-pay",
+          "from": "sovereign",
+          "to": "player",
+          "label": "mission pay",
+          "type": "wages",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "amber",
+          "chart_link": null
+        },
+        {
+          "id": "spending",
+          "from": "player",
+          "to": "world",
+          "label": "spending →",
+          "type": "spending",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "orange",
+          "chart_link": null
+        }
       ],
       "inflation_channels": [],
       "sovereign_levers": [],
@@ -75,7 +96,6 @@
       "gta_vi_lineage": "The franchise's baseline. No circular flow, no investment loop, no passive income. Every subsequent innovation is measured against this zero point.",
       "summary": "GTA 1 and 2 have no economy in any meaningful sense. Money is a point score with a spending outlet. GTA 2's faction system is the only proto-economic mechanic — the franchise's economic zero point."
     },
-
     {
       "title_id": "gta-3",
       "title_name": "GTA III",
@@ -137,8 +157,30 @@
         }
       ],
       "flows": [
-        { "id": "mission-pay", "from": "sovereign", "to": "player", "label": "← mission pay", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": null },
-        { "id": "spending", "from": "player", "to": "world-shops", "label": "spending →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null }
+        {
+          "id": "mission-pay",
+          "from": "sovereign",
+          "to": "player",
+          "label": "← mission pay",
+          "type": "wages",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "amber",
+          "chart_link": null
+        },
+        {
+          "id": "spending",
+          "from": "player",
+          "to": "world-shops",
+          "label": "spending →",
+          "type": "spending",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "orange",
+          "chart_link": null
+        }
       ],
       "inflation_channels": [],
       "sovereign_levers": [],
@@ -146,7 +188,6 @@
       "gta_vi_lineage": "GTA III is structurally identical to GTA 1–2 — just in 3D. No economic model. Sets the floor for the 3D era before Vice City breaks it open.",
       "summary": "Money flows in one direction only. No reinvestment, no compounding, no circular flow. The world does not respond to player wealth. A richer spending menu, but the same economic nothing."
     },
-
     {
       "title_id": "gta-vc",
       "title_name": "GTA Vice City",
@@ -226,10 +267,54 @@
         }
       ],
       "flows": [
-        { "id": "wages", "from": "missions-jobs", "to": "player", "label": "wages →", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": null },
-        { "id": "buy", "from": "player", "to": "businesses", "label": "buy →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null },
-        { "id": "passive", "from": "businesses", "to": "player", "label": "← passive income ★", "type": "passive", "bidirectional": false, "active": true, "projected": false, "color_token": "teal", "chart_link": null },
-        { "id": "spending", "from": "player", "to": "world-shops", "label": "spending", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null }
+        {
+          "id": "wages",
+          "from": "missions-jobs",
+          "to": "player",
+          "label": "wages →",
+          "type": "wages",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "amber",
+          "chart_link": null
+        },
+        {
+          "id": "buy",
+          "from": "player",
+          "to": "businesses",
+          "label": "buy →",
+          "type": "spending",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "orange",
+          "chart_link": null
+        },
+        {
+          "id": "passive",
+          "from": "businesses",
+          "to": "player",
+          "label": "← passive income ★",
+          "type": "passive",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "teal",
+          "chart_link": null
+        },
+        {
+          "id": "spending",
+          "from": "player",
+          "to": "world-shops",
+          "label": "spending",
+          "type": "spending",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "orange",
+          "chart_link": null
+        }
       ],
       "inflation_channels": [],
       "sovereign_levers": [],
@@ -237,7 +322,6 @@
       "gta_vi_lineage": "Vice City's passive business income is the conceptual ancestor of every passive mechanic in GTA Online — Bunker, Acid Lab, Nightclub. The property loop born here reaches its apex 20 years later.",
       "summary": "Vice City introduces the franchise's first asset ownership loop: earn → buy business → receive passive income → earn more. The Malibu Club is the conceptual ancestor of the Acid Lab. Partial and static, but the prototype for everything GTA Online's business empire became."
     },
-
     {
       "title_id": "gta-sa",
       "title_name": "GTA San Andreas",
@@ -335,12 +419,78 @@
         }
       ],
       "flows": [
-        { "id": "wages", "from": "missions-jobs", "to": "player", "label": "wages →", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": null },
-        { "id": "buy-property", "from": "player", "to": "properties", "label": "buy →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null },
-        { "id": "passive-income", "from": "properties", "to": "player", "label": "← passive income", "type": "passive", "bidirectional": false, "active": true, "projected": false, "color_token": "teal", "chart_link": null },
-        { "id": "territory", "from": "player", "to": "gang-territory", "label": "control", "type": "investment", "bidirectional": true, "active": true, "projected": false, "color_token": "green", "chart_link": null },
-        { "id": "gamble", "from": "player", "to": "gambling", "label": "bet", "type": "investment", "bidirectional": true, "active": true, "projected": false, "color_token": "purple", "chart_link": null },
-        { "id": "invest-stocks", "from": "player", "to": "stock-market", "label": "invest", "type": "investment", "bidirectional": true, "active": true, "projected": false, "color_token": "yellow", "chart_link": null }
+        {
+          "id": "wages",
+          "from": "missions-jobs",
+          "to": "player",
+          "label": "wages →",
+          "type": "wages",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "amber",
+          "chart_link": null
+        },
+        {
+          "id": "buy-property",
+          "from": "player",
+          "to": "properties",
+          "label": "buy →",
+          "type": "spending",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "orange",
+          "chart_link": null
+        },
+        {
+          "id": "passive-income",
+          "from": "properties",
+          "to": "player",
+          "label": "← passive income",
+          "type": "passive",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "teal",
+          "chart_link": null
+        },
+        {
+          "id": "territory",
+          "from": "player",
+          "to": "gang-territory",
+          "label": "control",
+          "type": "investment",
+          "bidirectional": true,
+          "active": true,
+          "projected": false,
+          "color_token": "green",
+          "chart_link": null
+        },
+        {
+          "id": "gamble",
+          "from": "player",
+          "to": "gambling",
+          "label": "bet",
+          "type": "investment",
+          "bidirectional": true,
+          "active": true,
+          "projected": false,
+          "color_token": "purple",
+          "chart_link": null
+        },
+        {
+          "id": "invest-stocks",
+          "from": "player",
+          "to": "stock-market",
+          "label": "invest",
+          "type": "investment",
+          "bidirectional": true,
+          "active": true,
+          "projected": false,
+          "color_token": "yellow",
+          "chart_link": null
+        }
       ],
       "inflation_channels": [],
       "sovereign_levers": [],
@@ -348,7 +498,6 @@
       "gta_vi_lineage": "San Andreas' gang territory income → GTA Online CEO territory yield. Its gambling flows → Diamond Casino Heist setup. Its basic stocks → BAWSAQ. Every innovation was stripped by GTA IV then rebuilt at scale in GTA Online.",
       "summary": "Four simultaneous income streams: missions, property passive income, gang territory control, and gambling. Most complex single-player economy until GTA V. Still fixed at launch but the closest any fixed-release GTA gets to a full economic model."
     },
-
     {
       "title_id": "gta-4",
       "title_name": "GTA IV",
@@ -429,9 +578,42 @@
         }
       ],
       "flows": [
-        { "id": "wages", "from": "missions-hits", "to": "player", "label": "wages →", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": null },
-        { "id": "spending", "from": "player", "to": "world", "label": "spending →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null },
-        { "id": "tbogt-passive", "from": "tbogt-bridge", "to": "player", "label": "← proto-passive (DLC)", "type": "passive", "bidirectional": false, "active": false, "projected": false, "color_token": "purple", "chart_link": null }
+        {
+          "id": "wages",
+          "from": "missions-hits",
+          "to": "player",
+          "label": "wages →",
+          "type": "wages",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "amber",
+          "chart_link": null
+        },
+        {
+          "id": "spending",
+          "from": "player",
+          "to": "world",
+          "label": "spending →",
+          "type": "spending",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "orange",
+          "chart_link": null
+        },
+        {
+          "id": "tbogt-passive",
+          "from": "tbogt-bridge",
+          "to": "player",
+          "label": "← proto-passive (DLC)",
+          "type": "passive",
+          "bidirectional": false,
+          "active": false,
+          "projected": false,
+          "color_token": "purple",
+          "chart_link": null
+        }
       ],
       "inflation_channels": [],
       "sovereign_levers": [],
@@ -439,7 +621,6 @@
       "gta_vi_lineage": "GTA IV is the franchise's economic low point — but TBOGT's nightclub mechanic planted the seed that would bloom into GTA Online's entire business empire. The regression was necessary for narrative; the bridge was the real innovation.",
       "summary": "GTA IV is the franchise's economic low point — a deliberate six-year regression from San Andreas. All four 3D-era innovations stripped for narrative purity. However, TBOGT's nightclub mechanic planted the seed that would become GTA Online's business empire."
     },
-
     {
       "title_id": "gta-5",
       "title_name": "GTA V Story Mode",
@@ -519,22 +700,84 @@
         }
       ],
       "flows": [
-        { "id": "wages", "from": "heists-missions", "to": "player", "label": "wages →", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": "/charts#assassination-returns-chart" },
-        { "id": "buy", "from": "player", "to": "properties", "label": "buy →", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": null },
-        { "id": "passive", "from": "properties", "to": "player", "label": "← passive income", "type": "passive", "bidirectional": false, "active": true, "projected": false, "color_token": "teal", "chart_link": null },
-        { "id": "invest", "from": "player", "to": "bawsaq-lcn", "label": "invest", "type": "investment", "bidirectional": false, "active": true, "projected": false, "color_token": "purple", "chart_link": "/charts#assassination-returns-chart" },
-        { "id": "capital-return", "from": "bawsaq-lcn", "to": "player", "label": "← capital returns", "type": "capital-return", "bidirectional": false, "active": true, "projected": false, "color_token": "purple", "chart_link": "/charts#assassination-returns-chart" }
+        {
+          "id": "wages",
+          "from": "heists-missions",
+          "to": "player",
+          "label": "wages →",
+          "type": "wages",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "amber",
+          "chart_link": "/charts#assassination-returns-chart"
+        },
+        {
+          "id": "buy",
+          "from": "player",
+          "to": "properties",
+          "label": "buy →",
+          "type": "spending",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "orange",
+          "chart_link": null
+        },
+        {
+          "id": "passive",
+          "from": "properties",
+          "to": "player",
+          "label": "← passive income",
+          "type": "passive",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "teal",
+          "chart_link": null
+        },
+        {
+          "id": "invest",
+          "from": "player",
+          "to": "bawsaq-lcn",
+          "label": "invest",
+          "type": "investment",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "purple",
+          "chart_link": "/charts#assassination-returns-chart"
+        },
+        {
+          "id": "capital-return",
+          "from": "bawsaq-lcn",
+          "to": "player",
+          "label": "← capital returns",
+          "type": "capital-return",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "purple",
+          "chart_link": "/charts#assassination-returns-chart"
+        }
       ],
-      "inflation_channels": ["BAWSAQ provides only dynamic price signal in otherwise frozen economy"],
+      "inflation_channels": [
+        "BAWSAQ provides only dynamic price signal in otherwise frozen economy"
+      ],
       "sovereign_levers": [],
       "data_coverage": {
-        "heists-missions": { "file": "data/gta-5/missions/story-missions.json", "status": "live" },
-        "bawsaq-lcn": { "file": "data/gta-5/economy/assassination-stocks.json", "status": "static" }
+        "heists-missions": {
+          "file": "data/gta-5/missions/story-missions.json",
+          "status": "live"
+        },
+        "bawsaq-lcn": {
+          "file": "data/gta-5/economy/assassination-stocks.json",
+          "status": "static"
+        }
       },
       "gta_vi_lineage": "GTA V SP reintegrates everything GTA IV stripped and adds BAWSAQ's mission-linked capital market. The blueprint for GTA Online's live economy is now assembled here. The stock compounding loop is the first prototype of the Shark Card arbitrage.",
       "summary": "GTA V SP reintegrates everything GTA IV stripped and goes further with BAWSAQ's mission-linked price manipulation. The first GTA where rational capital allocation is possible. Still a static fixed-release system, but the complete framework for GTA Online's live economy is now assembled — the blueprint is ready."
     },
-
     {
       "title_id": "gta-online",
       "title_name": "GTA Online",
@@ -614,11 +857,66 @@
         }
       ],
       "flows": [
-        { "id": "wages", "from": "businesses", "to": "players", "label": "① wages", "type": "wages", "bidirectional": false, "active": true, "projected": false, "color_token": "amber", "chart_link": "/charts#meta-evolution-chart" },
-        { "id": "spending", "from": "players", "to": "businesses", "label": "② spending", "type": "spending", "bidirectional": false, "active": true, "projected": false, "color_token": "orange", "chart_link": "/charts#spending-distribution-chart" },
-        { "id": "savings", "from": "players", "to": "maze-bank", "label": "③ savings", "type": "savings", "bidirectional": false, "active": true, "projected": false, "color_token": "teal", "chart_link": null },
-        { "id": "shark-inject", "from": "shark-cards", "to": "players", "label": "④ Shark Cards (real £/$ → GTA$)", "type": "injection", "bidirectional": false, "active": true, "projected": false, "color_token": "blue", "chart_link": "/charts#shark-card-chart" },
-        { "id": "investment", "from": "players", "to": "businesses", "label": "⑤ investment → passive income", "type": "investment", "bidirectional": false, "active": true, "projected": false, "color_token": "green", "chart_link": "/charts#passive-stack-chart" }
+        {
+          "id": "wages",
+          "from": "businesses",
+          "to": "players",
+          "label": "① wages",
+          "type": "wages",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "amber",
+          "chart_link": "/charts#meta-evolution-chart"
+        },
+        {
+          "id": "spending",
+          "from": "players",
+          "to": "businesses",
+          "label": "② spending",
+          "type": "spending",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "orange",
+          "chart_link": "/charts#spending-distribution-chart"
+        },
+        {
+          "id": "savings",
+          "from": "players",
+          "to": "maze-bank",
+          "label": "③ savings",
+          "type": "savings",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "teal",
+          "chart_link": null
+        },
+        {
+          "id": "shark-inject",
+          "from": "shark-cards",
+          "to": "players",
+          "label": "④ Shark Cards (real £/$ → GTA$)",
+          "type": "injection",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "blue",
+          "chart_link": "/charts#shark-card-chart"
+        },
+        {
+          "id": "investment",
+          "from": "players",
+          "to": "businesses",
+          "label": "⑤ investment → passive income",
+          "type": "investment",
+          "bidirectional": false,
+          "active": true,
+          "projected": false,
+          "color_token": "green",
+          "chart_link": "/charts#passive-stack-chart"
+        }
       ],
       "inflation_channels": [
         "Price rises — nominal DLC price increases (rare, hidden)",
@@ -633,22 +931,54 @@
         "Weekly bonus rates"
       ],
       "data_coverage": {
-        "sovereign-shark-cards": { "file": "data/gta-5/economy/shark-cards.json", "status": "live" },
-        "sovereign-payout-floors": { "file": "data/gta-5/economy/meta-history.json", "status": "live" },
-        "sovereign-dlc-prices": { "file": "data/gta-5/economy/item-catalogue.json", "status": "live" },
-        "sovereign-nerfs": { "file": "data/gta-5/economy/weekly-bonuses.json", "status": "live" },
-        "sovereign-bonus-rates": { "file": "data/gta-5/economy/sale-frequency.json", "status": "live" },
-        "wages": { "file": "data/gta-5/economy/business-profiles.json", "status": "live" },
-        "spending": { "file": "data/gta-5/economy/spending-distribution.json", "status": "static" },
-        "savings": { "file": "data/gta-5/economy/savings-profile.json", "status": "static" },
-        "shark-cards": { "file": "data/gta-5/economy/shark-cards.json", "status": "live" },
-        "investment": { "file": "data/gta-5/economy/passive-stack.json", "status": "static" },
-        "inflation-ppi": { "file": "data/gta-5/economy/gta-ppi.json", "status": "live" }
+        "sovereign-shark-cards": {
+          "file": "data/gta-5/economy/shark-cards.json",
+          "status": "live"
+        },
+        "sovereign-payout-floors": {
+          "file": "data/gta-5/economy/meta-history.json",
+          "status": "live"
+        },
+        "sovereign-dlc-prices": {
+          "file": "data/gta-5/economy/item-catalogue.json",
+          "status": "live"
+        },
+        "sovereign-nerfs": {
+          "file": "data/gta-5/economy/weekly-bonuses.json",
+          "status": "live"
+        },
+        "sovereign-bonus-rates": {
+          "file": "data/gta-5/economy/sale-frequency.json",
+          "status": "live"
+        },
+        "wages": {
+          "file": "data/gta-5/economy/business-profiles.json",
+          "status": "live"
+        },
+        "spending": {
+          "file": "data/gta-5/economy/spending-distribution.json",
+          "status": "static"
+        },
+        "savings": {
+          "file": "data/gta-5/economy/savings-profile.json",
+          "status": "static"
+        },
+        "shark-cards": {
+          "file": "data/gta-5/economy/shark-cards.json",
+          "status": "live"
+        },
+        "investment": {
+          "file": "data/gta-5/economy/passive-stack.json",
+          "status": "static"
+        },
+        "inflation-ppi": {
+          "file": "data/gta-5/economy/gta-ppi.json",
+          "status": "live"
+        }
       },
       "gta_vi_lineage": "GTA Online is the apex of the franchise economic arc. Every mechanic GTA VI inherits — business ownership, passive income, Shark Cards, live events, regional pricing — was first proven here at scale. The dual-territory model is the next evolution of the MMT sovereign, applied across geography.",
       "summary": "GTA Online is the apex — a full circular flow with a live sovereign engineering real-terms inflation to maximise Shark Card revenue. The GTA-PPI captures all three inflation channels. Rockstar is the central bank, Take-Two is the treasury, and every player is a subject of monetary policy they cannot see."
     },
-
     {
       "title_id": "gta-6",
       "title_name": "GTA VI",
@@ -755,10 +1085,54 @@
         }
       ],
       "flows": [
-        { "id": "vc-economy", "from": "businesses-vc", "to": "players-vc", "label": "wages / passive", "type": "wages", "bidirectional": true, "active": true, "projected": true, "color_token": "amber", "chart_link": null },
-        { "id": "leonida-economy", "from": "businesses-leonida", "to": "players-leonida", "label": "wages / passive", "type": "wages", "bidirectional": true, "active": true, "projected": true, "color_token": "teal", "chart_link": null },
-        { "id": "player-movement", "from": "players-vc", "to": "players-leonida", "label": "player movement", "type": "spending", "bidirectional": true, "active": true, "projected": true, "color_token": "zinc", "chart_link": null },
-        { "id": "shark-inject", "from": "shark-cards", "to": "players-vc", "label": "real money injection", "type": "injection", "bidirectional": false, "active": true, "projected": true, "color_token": "blue", "chart_link": null }
+        {
+          "id": "vc-economy",
+          "from": "businesses-vc",
+          "to": "players-vc",
+          "label": "wages / passive",
+          "type": "wages",
+          "bidirectional": true,
+          "active": true,
+          "projected": true,
+          "color_token": "amber",
+          "chart_link": null
+        },
+        {
+          "id": "leonida-economy",
+          "from": "businesses-leonida",
+          "to": "players-leonida",
+          "label": "wages / passive",
+          "type": "wages",
+          "bidirectional": true,
+          "active": true,
+          "projected": true,
+          "color_token": "teal",
+          "chart_link": null
+        },
+        {
+          "id": "player-movement",
+          "from": "players-vc",
+          "to": "players-leonida",
+          "label": "player movement",
+          "type": "spending",
+          "bidirectional": true,
+          "active": true,
+          "projected": true,
+          "color_token": "zinc",
+          "chart_link": null
+        },
+        {
+          "id": "shark-inject",
+          "from": "shark-cards",
+          "to": "players-vc",
+          "label": "real money injection",
+          "type": "injection",
+          "bidirectional": false,
+          "active": true,
+          "projected": true,
+          "color_token": "blue",
+          "chart_link": null
+        }
       ],
       "inflation_channels": [
         "Regional price divergence — Vice City vs Leonida purchasing power gap (projected)",
@@ -773,20 +1147,25 @@
         "Mobile-linked persistence (projected)"
       ],
       "data_coverage": {
-        "region-1-prices": { "file": "data/gta-6/economy/vice-city-prices.json", "status": "stub" },
-        "region-2-prices": { "file": "data/gta-6/economy/leonida-prices.json", "status": "stub" },
-        "gta-rpp": { "file": "data/gta-6/economy/gta-rpp.json", "status": "stub" }
+        "region-1-prices": {
+          "file": "data/gta-6/economy/vice-city-prices.json",
+          "status": "stub"
+        },
+        "region-2-prices": {
+          "file": "data/gta-6/economy/leonida-prices.json",
+          "status": "stub"
+        },
+        "gta-rpp": {
+          "file": "data/gta-6/economy/gta-rpp.json",
+          "status": "stub"
+        }
       },
       "gta_vi_lineage": "GTA VI is the culmination of the franchise arc. The dual-territory model is the most structurally sophisticated virtual economy ever designed — applying the Eurozone currency union model to a video game for the first time.",
       "summary": "GTA VI projects the GTA Online MMT sovereign across two structurally different regional economies — Vice City (urban, dense, high-wage) and Leonida (rural, sparse, low-wage) — unified by one currency. The Eurozone analogy predicts regional purchasing parity divergence, a research axis unique to this site."
     }
-
   ],
-
   "franchise_arc_summary": "Score counter extraction (1–2) → one-way extraction (III) → first asset loop (VC) → multi-stream economy (SA) → deliberate regression (IV) → capital market recovery (V SP) → full MMT sovereign (Online) → dual-territory currency union (VI projected). The Cayo Perico nerf of 2021 is the single most economically significant event in franchise history.",
-
   "complexity_chart_note": "The GTA IV regression zone is intentional — Rockstar stripped six years of economic innovation for narrative realism. The shaded zone marks this as a design choice, not a data error.",
-
   "layout_templates": {
     "one-way": "3 nodes: Sovereign top, Player + World horizontal. No return flow.",
     "proto": "4–5 nodes: Sovereign top, Income source left, Player centre, Asset right, optional World shops bottom-right.",
@@ -795,7 +1174,6 @@
     "full-mmt": "5+1 nodes: Sovereign top with 5 lever pills, dashed inner circle (Businesses–Players–Maze Bank), external injection node below.",
     "dual-territory": "7 nodes: Sovereign top spanning both columns, two mirror region columns (VC left, Leonida right), Shark Cards injection below."
   },
-
   "flow_color_map": {
     "wages": "--c-brand",
     "spending": "--c-alert",
@@ -804,5 +1182,104 @@
     "capital-return": "--c-chart-purple",
     "injection": "--c-chart-indigo",
     "savings": "--c-live"
+  },
+  "color_schema": {
+    "_note": "All CircularEconomy rendering colours defined here. Edit once, propagates to all 8 diagrams.",
+    "sovereign": {
+      "border": "border-gta-gold/25",
+      "bg": "rgba(245,158,11,0.06)",
+      "text_header": "text-gta-gold/50",
+      "text_label": "text-gta-gold/80",
+      "text_detail": "text-gta-gold/40",
+      "lever_border": "border-gta-gold/20",
+      "lever_text": "text-gta-gold/50"
+    },
+    "node_tokens": {
+      "amber": {
+        "border": "border-amber-600/50",
+        "text": "text-amber-400",
+        "hex": "#f59e0b"
+      },
+      "orange": {
+        "border": "border-orange-600/50",
+        "text": "text-orange-400",
+        "hex": "#f97316"
+      },
+      "teal": {
+        "border": "border-teal-500/50",
+        "text": "text-teal-400",
+        "hex": "#0d9488"
+      },
+      "green": {
+        "border": "border-green-600/50",
+        "text": "text-green-400",
+        "hex": "#22c55e"
+      },
+      "purple": {
+        "border": "border-purple-600/50",
+        "text": "text-purple-400",
+        "hex": "#a78bfa"
+      },
+      "blue": {
+        "border": "border-blue-500/50",
+        "text": "text-blue-400",
+        "hex": "#60a5fa"
+      },
+      "zinc": {
+        "border": "border-[#3a3a42]",
+        "text": "text-zinc-300",
+        "hex": "#71717a"
+      },
+      "gold": {
+        "border": "border-gta-gold/45",
+        "text": "text-gta-gold",
+        "hex": "#f59e0b"
+      },
+      "yellow": {
+        "border": "border-yellow-500/50",
+        "text": "text-yellow-400",
+        "hex": "#d97706"
+      },
+      "red": {
+        "border": "border-red-500/50",
+        "text": "text-red-400",
+        "hex": "#ef4444"
+      },
+      "indigo": {
+        "border": "border-gta-gold/25",
+        "text": "text-gta-gold/70",
+        "hex": "#f59e0b"
+      }
+    },
+    "flow_animation": {
+      "wages": {
+        "dir": "forward",
+        "duration_s": 1.4
+      },
+      "spending": {
+        "dir": "forward",
+        "duration_s": 1.6
+      },
+      "passive": {
+        "dir": "backward",
+        "duration_s": 2.0
+      },
+      "investment": {
+        "dir": "forward",
+        "duration_s": 1.8
+      },
+      "capital-return": {
+        "dir": "backward",
+        "duration_s": 1.6
+      },
+      "injection": {
+        "dir": "pulse",
+        "duration_s": 0.9
+      },
+      "savings": {
+        "dir": "forward",
+        "duration_s": 2.5
+      }
+    }
   }
 }
