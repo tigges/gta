@@ -108,6 +108,21 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
             ))}
           </div>
         </div>
+        <!-- Title filters -->
+        <div class="flex flex-wrap gap-2 pb-3 border-b border-[#1e1e23] mb-3">
+          {["All", "gta-vi", "gta-online", "gta-v", "franchise"].map(t => (
+            <button
+              class="chart-title-filter px-3 py-1.5 rounded text-[11px] font-mono border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+              data-title={t}
+            >{{
+              "All":       "All Titles",
+              "gta-vi":    "GTA VI",
+              "gta-online":"GTA Online",
+              "gta-v":     "GTA V",
+              "franchise": "Franchise",
+            }[t]}</button>
+          ))}
+        </div>
         <!-- Category filters -->
         <div class="flex flex-wrap gap-2 self-end pb-1">
           {CATEGORIES.map(cat => (
@@ -131,7 +146,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ═══════════════════════════════════════════════════════
          CHART 1 — Franchise Sales Velocity  [FRANCHISE]
     ═══════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-RL">
+    <section class="chart-block" data-title="franchise" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Franchise Sales Velocity</span>
@@ -169,7 +184,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Take-Two IR · DFC Intelligence (GTA VI projection)</span>
           <span class="text-[10px] text-zinc-700 font-mono">{salesData.last_updated.slice(0,10)}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V sold 225M copies. Here's how every GTA title stacks up — franchise sales velocity charted." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V sold 225M copies. Here's how every GTA title stacks up — franchise sales velocity charted." url="https://gtavi.ai/charts#sales-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -177,7 +192,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ═══════════════════════════════════════════════════════
          CHART 3 — GTA V Player History + DLC  [COMMUNITY]
     ═══════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Community">
+    <section class="chart-block" data-title="gta-v" data-category="Community">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-green-900/30 text-green-500 border border-green-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Player History</span>
@@ -204,7 +219,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: SteamCharts · Rockstar Games official announcements · updated {new Date(steamData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V still pulls tens of thousands of concurrent Steam players, 11 years after launch. Every DLC spike visible in the data." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V still pulls tens of thousands of concurrent Steam players, 11 years after launch. Every DLC spike visible in the data." url="https://gtavi.ai/charts#dlc-player-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -212,7 +227,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ═══════════════════════════════════════════════════════
          CHART 4 — Vehicle Performance Top 25  [PERFORMANCE]
     ═══════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Performance">
+    <section class="chart-block" data-title="gta-v" data-category="Performance">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-red-900/30 text-red-500 border border-red-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Performance</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Vehicle Performance Benchmarks</span>
@@ -251,7 +266,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           data-vehicles={JSON.stringify(vehicleData.vehicles)}></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Broughy1322 GTA Vehicle Performance Spreadsheet · updated {new Date(vehicleData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="665 Broughy-tested GTA V vehicles ranked. Top speed vs lap time — the actual performance data, not guesswork." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="665 Broughy-tested GTA V vehicles ranked. Top speed vs lap time — the actual performance data, not guesswork." url="https://gtavi.ai/charts#perf-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -334,7 +349,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ═══════════════════════════════════════════════════════
          CHART 8 — GTA VI Delay Timeline  [FRANCHISE]
     ═══════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="History">
+    <section class="chart-block" data-title="gta-vi" data-category="History">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Development & Delay Timeline</span>
@@ -369,7 +384,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: SEC EDGAR Take-Two 8-K filings · Rockstar Games official announcements</span>
           <span class="text-[10px] text-zinc-700 font-mono">Updated {new Date(delayData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI has been delayed twice. The full timeline — and what it signals for the Nov 19, 2026 release date." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI has been delayed twice. The full timeline — and what it signals for the Nov 19, 2026 release date." url="https://gtavi.ai/charts#delay-timeline-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -377,7 +392,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ═══════════════════════════════════════════════════════
          CHART 6 — Community Anticipation Curve  [COMMUNITY]
     ═══════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Community">
+    <section class="chart-block" data-title="gta-vi" data-category="Community">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-green-900/30 text-green-500 border border-green-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Community Anticipation Curve</span>
@@ -405,7 +420,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: r/GrandTheftAutoVI community records · Google Trends via pytrends · {redditData.credentials_required ? "Live Reddit polling needs REDDIT_CLIENT_ID secret" : "Live polling active"}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="r/GrandTheftAutoVI hit 1.5M+ subscribers before launch. The community growth curve looks unlike any prior game release." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="r/GrandTheftAutoVI hit 1.5M+ subscribers before launch. The community growth curve looks unlike any prior game release." url="https://gtavi.ai/charts#community-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -413,7 +428,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ═══════════════════════════════════════════════════════
          CHART 7 — GTA VI vs Entertainment  [ECONOMY]
     ═══════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-RL">
+    <section class="chart-block" data-title="gta-vi" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Global Entertainment</span>
@@ -435,7 +450,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
           data-entries={JSON.stringify(entertainData.entries.slice(0, 14))}></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Box Office Mojo (worldwide lifetime) · Take-Two IR · Spotify IR · DFC Intelligence · *projected</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI is projected to outgross the biggest movie openings in history. The entertainment revenue comparison is staggering." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI is projected to outgross the biggest movie openings in history. The entertainment revenue comparison is staggering." url="https://gtavi.ai/charts#entertainment-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -443,7 +458,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          NEW CHART A — GTA VI vs GTA V Pre-launch Signal Comparison
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Community">
+    <section class="chart-block" data-title="gta-vi" data-category="Community">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-green-900/30 text-green-500 border border-green-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs GTA V — Pre-launch Signal Comparison</span>
@@ -492,7 +507,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Google Trends via pytrends · r/GrandTheftAutoVI community records</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI is running 4.8× hotter than GTA V at the same pre-launch moment. Three signals, one conclusion." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI is running 4.8× hotter than GTA V at the same pre-launch moment. Three signals, one conclusion." url="https://gtavi.ai/charts#prelaunch-comparison-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -500,7 +515,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          NEW CHART B — CPI-Adjusted Franchise Pricing
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-RL">
+    <section class="chart-block" data-title="franchise" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Launch Price — Nominal vs Inflation-Adjusted</span>
@@ -538,7 +553,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: US Bureau of Labor Statistics CPI-U · Nominal prices from Rockstar/Take-Two</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI at $79.99 is actually cheaper than GTA III in 2001, in real inflation-adjusted dollars. The data says it's a bargain." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI at $79.99 is actually cheaper than GTA III in 2001, in real inflation-adjusted dollars. The data says it's a bargain." url="https://gtavi.ai/charts#cpi-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -546,7 +561,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          NEW CHART C — Critic vs User Score Divergence
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="History">
+    <section class="chart-block" data-title="franchise" data-category="History">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Critic vs User Score Divergence — The Monetisation Story</span>
@@ -585,7 +600,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Metacritic.com · GTA VI prediction based on franchise trajectory</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA SA had perfect critic/user alignment. GTA IV opened a 22-point gap. Will GTA VI close it? The historical pattern." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA SA had perfect critic/user alignment. GTA IV opened a 22-point gap. Will GTA VI close it? The historical pattern." url="https://gtavi.ai/charts#divergence-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -593,7 +608,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          NEW CHART D — Trailer Discovery Timeline (Heat Strips)
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="History">
+    <section class="chart-block" data-title="gta-vi" data-category="History">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Discovery Density — What Every Second Revealed</span>
@@ -628,7 +643,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTA VI.AI frame-by-frame analysis · official Rockstar trailers</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis across both trailers." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis across both trailers." url="https://gtavi.ai/charts#trailer-discovery-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -636,7 +651,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          NEW CHART E — GTA Online DLC Cadence → VI Prediction
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="History">
+    <section class="chart-block" data-title="franchise" data-category="History">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online DLC Cadence → GTA VI Online Prediction</span>
@@ -660,7 +675,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Rockstar Games official announcements · GTA Online update history 2013–2024</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online had 38 major content drops over 11 years. Here's what that cadence predicts for GTA VI Online post-launch." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online had 38 major content drops over 11 years. Here's what that cadence predicts for GTA VI Online post-launch." url="https://gtavi.ai/charts#dlc-cadence-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -668,7 +683,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          NEW CHART F — Region Evidence Heatmap
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="History">
+    <section class="chart-block" data-title="gta-vi" data-category="History">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida Region Evidence Heatmap</span>
@@ -687,7 +702,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Rockstar press kit · Trailer analysis · Leonida Intel community mapping</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Every confirmed GTA VI region from official trailer analysis. The Leonida map is the largest open world Rockstar has ever built." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Every confirmed GTA VI region from official trailer analysis. The Leonida map is the largest open world Rockstar has ever built." url="https://gtavi.ai/charts#region-heatmap" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -695,7 +710,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          NEW CHART G — Shark Card Revenue Shift
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-RL">
+    <section class="chart-block" data-title="franchise" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Revenue Model — Game Sales vs Online Economy</span>
@@ -726,7 +741,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Take-Two IR quarterly earnings · Wedbush Securities analyst estimates · DFC Intelligence (GTA VI)</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Shark Cards have generated billions for Take-Two. The revenue shift that fundamentally changed how Rockstar makes games." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Shark Cards have generated billions for Take-Two. The revenue shift that fundamentally changed how Rockstar makes games." url="https://gtavi.ai/charts#revenue-split-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -734,7 +749,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          TTWO STOCK PRICE
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-RL">
+    <section class="chart-block" data-title="franchise" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Take-Two (TTWO) Stock Price vs GTA VI Milestones</span>
@@ -763,7 +778,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Yahoo Finance (TTWO) · Not investment advice · Updated {new Date(ttwoStock.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Take-Two stock tracks GTA announcement cycles almost perfectly. The market reaction to every trailer and delay, charted." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Take-Two stock tracks GTA announcement cycles almost perfectly. The market reaction to every trailer and delay, charted." url="https://gtavi.ai/charts#ttwo-stock-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -771,7 +786,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          GTA VI VS COMPETITORS
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-RL">
+    <section class="chart-block" data-title="gta-vi" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Major Game Launches — Year 1 Sales & Pre-launch Hype</span>
@@ -790,7 +805,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Sources: Publisher earnings · VGChartz · Metacritic · Google Trends · DFC Intelligence (GTA VI) · *predicted</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI projected year-1 vs the biggest game launches of the last decade. Every metric points to an unprecedented release." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI projected year-1 vs the biggest game launches of the last decade. Every metric points to an unprecedented release." url="https://gtavi.ai/charts#competitors-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -798,7 +813,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          NEW CHART J — Assassination Stock Strategy
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-v" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Assassination Stock Returns — Optimal Sequence</span>
@@ -823,7 +838,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki · community guides · LCN/BAWSAQ exchange data · 2024 verified</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V assassination missions ranked by combined stock return. Multi-Target (Debonaire + Redwood) delivers 380% combined — the best single play in the game." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V assassination missions ranked by combined stock return. Multi-Target (Debonaire + Redwood) delivers 380% combined — the best single play in the game." url="https://gtavi.ai/charts#assassination-returns-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -831,7 +846,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          NEW CHART K — GTA Online Income Leaderboard
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Income Leaderboard — All Sources Ranked</span>
@@ -861,7 +876,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTABase.com · community benchmarks · net after costs · 2024 patches</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online income ranked S→C tier by net GTA$/hr. Cayo Perico $340k solo. Full profiles and tips in the Database." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online income ranked S→C tier by net GTA$/hr. Cayo Perico $340k solo. Full profiles and tips in the Database." url="https://gtavi.ai/charts#income-leaderboard-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -967,7 +982,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          NEW CHART N — Setup Cost vs ROI Scatter
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Setup Cost vs $/hr — What's Actually Worth Buying?</span>
@@ -986,7 +1001,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTABase.com · community benchmarks · 2024 patches · bubble = break-even hours</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online setup cost vs $/hr: Kosatka is top-right (high cost, highest return, fast payback). Some businesses are expensive traps. The ROI chart." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online setup cost vs $/hr: Kosatka is top-right (high cost, highest return, fast payback). Some businesses are expensive traps. The ROI chart." url="https://gtavi.ai/charts#roi-scatter-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -994,7 +1009,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-RL CHART R — Shark Card Purchasing Power Erosion
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-RL">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Shark Card Purchasing Power — 12 Years of In-Game Inflation</span>
@@ -1027,7 +1042,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Real-money figures = endgame GTA$ ÷ Megalodon rate ($80k GTA$/USD). Shark Card prices unchanged since 2013 launch.</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text={`GTA Online endgame cost via Shark Cards: $18.75 in 2013 → $437.50 in 2026. A ${(sharkCardData as any).analysis.purchasing_power_ratio}× real-money increase while card prices never changed.`} url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text={`GTA Online endgame cost via Shark Cards: $18.75 in 2013 → $437.50 in 2026. A ${(sharkCardData as any).analysis.purchasing_power_ratio}× real-money increase while card prices never changed.`} url="https://gtavi.ai/charts#shark-card-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1035,7 +1050,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-RL CHART S — Property Expenditure Overview
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-RL">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Property Costs — Full Expenditure Registry</span>
@@ -1052,7 +1067,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Fandom Wiki + community records · {(propertiesData as any).last_updated?.slice(0,10)}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online complete property cost guide — apartments to Kosatka submarine. Every purchasable property and what it actually costs." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online complete property cost guide — apartments to Kosatka submarine. Every purchasable property and what it actually costs." url="https://gtavi.ai/charts#property-cost-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1060,7 +1075,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          PROMO CHART P — Activity Bonus Heatmap
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Promotions">
+    <section class="chart-block" data-title="gta-online" data-category="Promotions">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-green-900/30 text-green-500 border border-green-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Promotions</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Weekly Bonus Calendar — Activity Multiplier History</span>
@@ -1088,7 +1103,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Rockstar Newswire · community archives · curated seed back to 2020 · live capture every Thursday</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online bonus calendar — which activities Rockstar has promoted and how often. The promotional pattern is more predictable than you'd think." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online bonus calendar — which activities Rockstar has promoted and how often. The promotional pattern is more predictable than you'd think." url="https://gtavi.ai/charts#bonus-heatmap" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1161,7 +1176,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-IG CHART V — Income Source History (per-source $/hr timeline)
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Income Source Price History — Nerfs, Buffs, DLC Launches</span>
@@ -1195,7 +1210,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div id="income-history-events" class="px-5 py-3 border-t border-[#1e1e23] divide-y divide-[#1e1e23]"></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTAForums patch notes archives + Rockstar Newswire · community benchmarks</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online income source history — every major nerf, buff, and DLC launch charted. Cayo Perico was nerfed 40% in 2021 then partially restored." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online income source history — every major nerf, buff, and DLC launch charted. Cayo Perico was nerfed 40% in 2021 then partially restored." url="https://gtavi.ai/charts#income-history-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1203,7 +1218,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-IG CHART X — Meta Vehicle Total Cost of Ownership
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Vehicle TCO — What Does Going Full Meta Actually Cost?</span>
@@ -1231,7 +1246,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTABase.com · Broughy1322 · standard shop prices · trade prices shown where unlockable</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online meta vehicle costs — Oppressor Mk2 costs $5.1M fully kitted. Akula helicopter $4.8M. What going full meta actually requires." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online meta vehicle costs — Oppressor Mk2 costs $5.1M fully kitted. Akula helicopter $4.8M. What going full meta actually requires." url="https://gtavi.ai/charts#vehicle-tco-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1239,7 +1254,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-IG CHART Y — GTA Online Price & Payout Change Timeline
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Price &amp; Payout History — Every Nerf, Buff, and Launch Since 2013</span>
@@ -1266,7 +1281,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: Rockstar Newswire · GTAForums patch notes archives · {(priceChangesData as any).last_updated?.slice(0,10)}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online price change history — every documented nerf, buff, and property launch. Contact missions were nerfed 70% in 2014 then slowly buffed back." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online price change history — every documented nerf, buff, and property launch. Contact missions were nerfed 70% in 2014 then slowly buffed back." url="https://gtavi.ai/charts#price-history-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1274,7 +1289,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-IG CHART AA — GTA-PPI: In-Game Purchasing Power Index
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA-PPI — In-Game Inflation Index (hours to buy standard basket)</span>
@@ -1304,7 +1319,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: computed from price-basket.json + meta-history.json · GTAForums patch notes archives</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's hidden inflation: the economy got 2× harder in 2017–18 via payout nerfs, not price hikes. Cayo Perico reversed it to an all-time low in 2020." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's hidden inflation: the economy got 2× harder in 2017–18 via payout nerfs, not price hikes. Cayo Perico reversed it to an all-time low in 2020." url="https://gtavi.ai/charts#gta-ppi-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1312,7 +1327,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-IG CHART BB — Passive Income Stack Evolution
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Passive Income Stack — How Idle GTA$/hr Grew From 0 to $1.24M</span>
@@ -1344,7 +1359,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTABase.com · business-profiles.json · GTAForums patch notes · community benchmarks</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online passive income history: from $0 in 2013 to $1.24M/hr AFK in 2022. The Acid Lab was the last major passive income leap before GTA VI." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online passive income history: from $0 in 2013 to $1.24M/hr AFK in 2022. The Acid Lab was the last major passive income leap before GTA VI." url="https://gtavi.ai/charts#passive-stack-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1352,7 +1367,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-IG CHART CC — Meta Ceiling $/hr Per Era
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Ceiling — Top $/hr Method at Each Major DLC (2013–2023)</span>
@@ -1375,7 +1390,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTAForums · GTA Wiki · community archives · GTABase</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="10 years of GTA Online money metas charted: from $250k/hr contact missions in 2013 to $2M/hr Cayo Perico in 2020 — one update changed everything." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="10 years of GTA Online money metas charted: from $250k/hr contact missions in 2013 to $2M/hr Cayo Perico in 2020 — one update changed everything." url="https://gtavi.ai/charts#meta-evolution-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1383,7 +1398,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-IG CHART DD — Heist Comparison: $/hr vs Setup Cost
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Heist Comparison — $/hr vs Setup Cost vs Run Time</span>
@@ -1407,7 +1422,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki · GTABase.com · community records · 2024 patches · Hard difficulty</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="All GTA Online heists compared: Cayo Perico wins on $/hr despite being solo. Casino Heist is the best group heist. Data-driven answer to which heist is worth doing." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="All GTA Online heists compared: Cayo Perico wins on $/hr despite being solo. Casino Heist is the best group heist. Data-driven answer to which heist is worth doing." url="https://gtavi.ai/charts#heist-comparison-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1415,7 +1430,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-IG CHART EE — Daily Property Operating Costs
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Property Daily Fees — Ownership Has Ongoing Costs</span>
@@ -1433,7 +1448,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTA Wiki · GTABase.com · GTA Online daily utility fee system</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's hidden tax: every income-generating property has a daily fee charged even when you're offline. Full meta stack = $13,000/day in maintenance." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's hidden tax: every income-generating property has a daily fee charged even when you're offline. Full meta stack = $13,000/day in maintenance." url="https://gtavi.ai/charts#property-daily-fee-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1441,7 +1456,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-IG CHART FF — GTA$ Spending Distribution by Era
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Spending Mix — Where GTA$ Goes Per Era</span>
@@ -1473,7 +1488,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: community surveys · GTAForums spending analysis · modelled estimates · confidence: medium</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="How GTA Online players spend their money across eras: vehicles dominated 2013–14, properties peaked 2016–17 (Bunker era), then Oppressor drove vehicles back up." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="How GTA Online players spend their money across eras: vehicles dominated 2013–14, properties peaked 2016–17 (Bunker era), then Oppressor drove vehicles back up." url="https://gtavi.ai/charts#spending-distribution-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1481,7 +1496,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          ECONOMY-IG CHART GG — Import/Export Vehicle Sell Price Tiers
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="Economy-IG">
+    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Import/Export Sell Tiers — Why Top-Range Vehicles Are 3× More Valuable</span>
@@ -1506,7 +1521,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: GTABase.com · GTA Wiki · community records · no-damage assumption · net of setup mods</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online Import/Export sell prices: top-range specialist delivers 5× more than standard private. Always prioritise top-range sources." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online Import/Export sell prices: top-range specialist delivers 5× more than standard private. Always prioritise top-range sources." url="https://gtavi.ai/charts#ie-tiers-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1575,7 +1590,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          HISTORY CHART T — GTA Economic Complexity Evolution
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="History">
+    <section class="chart-block" data-title="franchise" data-category="History">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Economic Complexity — 25 Years of Evolution</span>
@@ -1596,7 +1611,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">Source: curated research · GTAForums · GTA Fandom Wiki · complexity score = count of active economic mechanics</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA's economy went from 1/10 complexity in 1997 to 10/10 in GTA Online. 25 years of design evolution in one chart." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA's economy went from 1/10 complexity in 1997 to 10/10 in GTA Online. 25 years of design evolution in one chart." url="https://gtavi.ai/charts#franchise-complexity-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1604,7 +1619,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <!-- ══════════════════════════════════════════════════════════
          HISTORY CHART U — Cross-Title Earnings Curve
     ══════════════════════════════════════════════════════════ -->
-    <section class="chart-block" data-category="History">
+    <section class="chart-block" data-title="franchise" data-category="History">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Cross-Title Earnings — Max $/hr + Hours to Endgame</span>
@@ -1623,7 +1638,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-700 font-mono">hours_to_aspirational = aspirational_price ÷ best_hourly_rate per title · Sources: community records · GTA Fandom Wiki</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA franchise earnings compared across titles: how many hours does it take to buy the era's most aspirational item? GTA V story wins — 0.5 hrs." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA franchise earnings compared across titles: how many hours does it take to buy the era's most aspirational item? GTA V story wins — 0.5 hrs." url="https://gtavi.ai/charts#franchise-earnings-chart" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -1637,6 +1652,38 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
   import { cc, playColor } from "../assets/chartColors";
 
   // ── Category filter ─────────────────────────────────────────
+  // ── Title filter ─────────────────────────────────────────────
+  let activeTitle = "All";
+  const titleParams = new URLSearchParams(window.location.search);
+  if (titleParams.has("title")) {
+    activeTitle = titleParams.get("title")!;
+  }
+  function applyTitleFilter() {
+    document.querySelectorAll<HTMLElement>(".chart-block").forEach(block => {
+      const blockTitle = block.dataset.title;
+      const show = activeTitle === "All" || !blockTitle || blockTitle === activeTitle;
+      if (!show) block.style.display = "none";
+    });
+    document.querySelectorAll<HTMLButtonElement>(".chart-title-filter").forEach(b => {
+      const active = b.dataset.title === activeTitle || (activeTitle === "All" && b.dataset.title === "All");
+      b.className = b.className
+        .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
+        .replace(/border-\[#2a2a31\]|text-zinc-500/g, "").trim();
+      b.classList.add(...(active
+        ? ["border-gta-gold/40", "text-gta-gold", "bg-gta-gold/8"]
+        : ["border-[#2a2a31]", "text-zinc-500"]));
+    });
+  }
+  applyTitleFilter();
+  document.querySelectorAll<HTMLButtonElement>(".chart-title-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeTitle = btn.dataset.title!;
+      applyTitleFilter();
+      // Re-apply category filter too
+      document.querySelector<HTMLButtonElement>('.chart-filter[data-filter="All"]')?.click();
+    });
+  });
+
   document.querySelectorAll<HTMLButtonElement>(".chart-filter").forEach(btn => {
     btn.addEventListener("click", () => {
       const filter = btn.dataset.filter!;

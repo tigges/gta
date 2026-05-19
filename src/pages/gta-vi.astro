@@ -3,6 +3,12 @@ import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 import { Image } from "astro:assets";
 import heroGtaVI from "../assets/images/hero-gta-vi.jpg";
+import ChartDelayTimeline      from "../components/charts/ChartDelayTimeline.astro";
+import ChartRegionHeatmap      from "../components/charts/ChartRegionHeatmap.astro";
+import ChartCommunity          from "../components/charts/ChartCommunity.astro";
+import ChartPrelaunchComparison from "../components/charts/ChartPrelaunchComparison.astro";
+import ChartTrailerDiscovery   from "../components/charts/ChartTrailerDiscovery.astro";
+import ChartPreviewCard        from "../components/charts/ChartPreviewCard.astro";
 
 import trailerData  from "../../data/gta-6/trailers.json";
 import velocityData from "../../data/gta-6/trailer-velocity.json";
@@ -204,6 +210,62 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         ))}
       </div>
     </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         FEATURED CHARTS — GTA VI
+    ═══════════════════════════════════════════════════════ -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Signal Intelligence — Key Charts</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/charts?title=gta-vi" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
+      </div>
+
+      <!-- Featured: Delay timeline (full width) -->
+      <div class="mb-6">
+        <ChartDelayTimeline />
+      </div>
+
+      <!-- Featured: Region heatmap + Community growth (2-col) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <ChartRegionHeatmap />
+        <ChartCommunity />
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         MORE GTA VI CHARTS — preview cards
+    ═══════════════════════════════════════════════════════ -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// More GTA VI Charts</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <div class="flex flex-col gap-2">
+
+        <ChartPreviewCard
+          cardId="preview-prelaunch"
+          title="Pre-launch Hype — GTA V (2013) vs GTA VI (2026) at the Same Moment"
+          description="Steam players · search trends · community size · same time before launch"
+          category="Community · V vs VI"
+          deepLink="/charts#prelaunch-comparison-chart"
+        >
+          <ChartPrelaunchComparison />
+        </ChartPreviewCard>
+
+        <ChartPreviewCard
+          cardId="preview-discovery"
+          title="Frame-by-Frame: Information Density Across Both Trailers"
+          description="Every entity revealed · confidence level · timestamp in trailer"
+          category="History · GTA VI"
+          deepLink="/charts#trailer-discovery-chart"
+          thumbUrl={`https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg`}
+        >
+          <ChartTrailerDiscovery />
+        </ChartPreviewCard>
+      </div>
+    </section>
 
     <CrossLinks context="vi-intel-predictions" />
   </div>

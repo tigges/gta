@@ -1,0 +1,131 @@
+---
+/**
+ * ChartCommunity
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import redditData        from "../../../data/community/reddit.json";
+import gta6Trends        from "../../../data/gta-6/trends/search-interest.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="Community">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-green-900/30 text-green-500 border border-green-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Community</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Community Anticipation Curve</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">Reddit r/GTAVI subscriber growth · Google Trends overlay</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Community Anticipation — r/GrandTheftAutoVI Growth</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Subscriber milestones + Google Trends "GTA 6" overlay · annotated with key events</div>
+          </div>
+          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-green-500 inline-block rounded"></span>Subscribers</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-gta-gold inline-block rounded opacity-60"></span>Trends "GTA 6"</span>
+          </div>
+        </div>
+        <div id="community-chart" class="w-full" style="height:320px"
+          data-milestones={JSON.stringify(redditData.historical_milestones)}
+          data-trends={JSON.stringify(gta6Trends.keywords.find(k => k.keyword === "GTA 6"))}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Sources: r/GrandTheftAutoVI community records · Google Trends via pytrends · {redditData.credentials_required ? "Live Reddit polling needs REDDIT_CLIENT_ID secret" : "Live polling active"}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="r/GrandTheftAutoVI hit 1.5M+ subscribers before launch. The community growth curve looks unlike any prior game release." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("community-chart") as HTMLElement | null;
+    if (!el) return;
+
+    const milestones: {date:string;subscribers:number;event:string|null}[] = JSON.parse(el.dataset.milestones || "[]");
+    const trendsKw: {data:{date:string;value:number}[]} | null = JSON.parse(el.dataset.trends || "null");
+
+    const margin = { top: 20, right: 60, bottom: 36, left: 72 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const msData = milestones.map(m => ({ date: new Date(m.date), subs: m.subscribers, event: m.event }));
+    const allDates = msData.map(d => d.date);
+    if (trendsKw) trendsKw.data.forEach(d => allDates.push(new Date(d.date)));
+
+    const x = d3.scaleTime().domain(d3.extent(allDates) as [Date,Date]).range([0, W]);
+    const maxSubs = d3.max(msData, d => d.subs) ?? 1;
+    const y1 = d3.scaleLinear().domain([0, maxSubs * 1.1]).range([H, 0]);
+    const y2 = d3.scaleLinear().domain([0, 100]).range([H, 0]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y1).ticks(5).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+
+    // Key event annotations
+    msData.filter(d => d.event).forEach(d => {
+      svg.append("line").attr("x1",x(d.date)).attr("x2",x(d.date)).attr("y1",0).attr("y2",H)
+        .attr("stroke","#2a2a31").attr("stroke-width",1).attr("stroke-dasharray","3,3");
+      svg.append("text").attr("x",x(d.date)+3).attr("y",10)
+        .attr("fill","#3f3f46").attr("font-size","8").attr("font-family","monospace")
+        .text((d.event ?? "").split(" ").slice(0,3).join(" "));
+    });
+
+    // Trends overlay (right axis)
+    if (trendsKw && trendsKw.data.length > 0) {
+      const tData = trendsKw.data.map(d => ({ date: new Date(d.date), value: d.value }));
+      svg.append("path").datum(tData).attr("fill","none").attr("stroke","#f59e0b")
+        .attr("stroke-width",1).attr("opacity",0.4)
+        .attr("d",d3.line<any>().x(d=>x(d.date)).y(d=>y2(d.value)).curve(d3.curveMonotoneX));
+    }
+
+    // Subscriber area + line
+    const area = d3.area<any>().x(d=>x(d.date)).y0(H).y1(d=>y1(d.subs)).curve(d3.curveMonotoneX);
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id","comm-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
+    grad.append("stop").attr("offset","0%").attr("stop-color","#22c55e").attr("stop-opacity",0.2);
+    grad.append("stop").attr("offset","100%").attr("stop-color","#22c55e").attr("stop-opacity",0.01);
+    svg.append("path").datum(msData).attr("fill","url(#comm-grad)").attr("d",area);
+    svg.append("path").datum(msData).attr("fill","none").attr("stroke","#22c55e").attr("stroke-width",2)
+      .attr("d",d3.line<any>().x(d=>x(d.date)).y(d=>y1(d.subs)).curve(d3.curveMonotoneX));
+    // Dots at milestones
+    msData.forEach(d => {
+      svg.append("circle").attr("cx",x(d.date)).attr("cy",y1(d.subs)).attr("r",3)
+        .attr("fill","#22c55e").attr("stroke","#0e0e11").attr("stroke-width",1.5);
+    });
+
+    // Axes
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y1).ticks(5).tickFormat(d => `${(+d/1_000_000).toFixed(1)}M`))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+    svg.append("g").attr("transform",`translate(${W},0)`)
+      .call(d3.axisRight(y2).ticks(5))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").attr("dx","3"));
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("community-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

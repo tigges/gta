@@ -1,0 +1,137 @@
+---
+/**
+ * ChartGtaPpi
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import gtaPpiData        from "../../../data/gta-5/economy/gta-ppi.json";
+import metaHistoryData   from "../../../data/gta-5/economy/meta-history.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA-PPI — In-Game Inflation Index (hours to buy standard basket)</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{(gtaPpiData as any).series.length} patches · base 100 = Oct 2013</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="grid grid-cols-3 divide-x divide-[#1e1e23] border-b border-[#1e1e23]">
+          {[
+            { label: "Launch (base)",  value: "100",  sub: "10.7 hrs to basket",  color: "#71717a" },
+            { label: "After Hours peak", value: "207", sub: "Oppressor doubled basket", color: "#ef4444" },
+            { label: "Cayo all-time low", value: "41", sub: "$2M/hr, 4.4 hrs to basket", color: "#22c55e" },
+          ].map(s => (
+            <div class="px-5 py-4">
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
+              <div class="text-2xl font-mono font-black mb-0.5" style={`color:${s.color}`}>{s.value}</div>
+              <div class="text-[10px] font-mono text-zinc-600">{s.sub}</div>
+            </div>
+          ))}
+        </div>
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">GTA Online Purchasing Power Index — 2013 to 2026</div>
+          <div class="text-[11px] text-zinc-500 font-mono">Hours needed to buy a fixed basket of goods at the meta income ceiling per era. Rising = hidden inflation via payout nerfs. Nominal GTA$ prices barely changed — the economy got harder by cutting wages.</div>
+        </div>
+        <div id="gta-ppi-chart" class="w-full" style="height:280px"
+          data-series={JSON.stringify((gtaPpiData as any).series)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: computed from price-basket.json + meta-history.json · GTAForums patch notes archives</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's hidden inflation: the economy got 2× harder in 2017–18 via payout nerfs, not price hikes. Cayo Perico reversed it to an all-time low in 2020." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("gta-ppi-chart") as HTMLElement | null;
+    if (!el) return;
+
+    const series: any[] = JSON.parse(el.dataset.series || "[]");
+    if (!series.length) return;
+
+    const margin = { top: 28, right: 110, bottom: 44, left: 52 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const sorted = [...series].sort((a, b) => a.date.localeCompare(b.date));
+    const x = d3.scaleTime().domain([new Date("2013-01-01"), new Date("2026-12-31")]).range([0, W]);
+    const y = d3.scaleLinear().domain([0, 230]).range([H, 0]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+
+    // Base=100 line
+    svg.append("line").attr("x1", 0).attr("x2", W).attr("y1", y(100)).attr("y2", y(100))
+      .attr("stroke", "#3f3f46").attr("stroke-dasharray", "6,3").attr("stroke-width", 1.5);
+    svg.append("text").attr("x", W + 5).attr("y", y(100) + 4)
+      .attr("fill", "#52525b").attr("font-size", "8").attr("font-family", "monospace").text("base=100");
+
+    // Step-line segments
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const p = sorted[i], n = sorted[i + 1];
+      const px = x(new Date(p.date)), nx = x(new Date(n.date));
+      const py = y(p.ppi), ny = y(n.ppi);
+      svg.append("line").attr("x1", px).attr("x2", nx).attr("y1", py).attr("y2", py)
+        .attr("stroke", "#f59e0b").attr("stroke-width", 2);
+      svg.append("line").attr("x1", nx).attr("x2", nx).attr("y1", py).attr("y2", ny)
+        .attr("stroke", "#f59e0b").attr("stroke-width", 2);
+    }
+    // Trailing dashed line to present
+    const last = sorted[sorted.length - 1];
+    svg.append("line").attr("x1", x(new Date(last.date))).attr("x2", W)
+      .attr("y1", y(last.ppi)).attr("y2", y(last.ppi))
+      .attr("stroke", "#f59e0b").attr("stroke-width", 2).attr("stroke-dasharray", "4,3");
+
+    // Event dots
+    const EVT_COLOR: Record<string, string> = { buff: "#22c55e", nerf: "#ef4444", basket_expansion: "#818cf8" };
+    sorted.forEach((p: any) => {
+      const col = EVT_COLOR[p.event] || "#71717a";
+      svg.append("circle").attr("cx", x(new Date(p.date))).attr("cy", y(p.ppi)).attr("r", p.event ? 5 : 3.5)
+        .attr("fill", col).attr("stroke", "#131316").attr("stroke-width", 1.5);
+    });
+
+    // Key label annotations
+    const afterHours = sorted.find((s: any) => s.patch === "After Hours");
+    const cayo = sorted.find((s: any) => s.patch === "Cayo Perico Heist");
+    if (afterHours) {
+      const ax = x(new Date(afterHours.date));
+      svg.append("text").attr("x", ax + 5).attr("y", y(afterHours.ppi) - 7)
+        .attr("fill", "#ef4444").attr("font-size", "8.5").attr("font-family", "monospace").text("After Hours 207↑");
+    }
+    if (cayo) {
+      const cx = x(new Date(cayo.date));
+      svg.append("text").attr("x", cx - 6).attr("y", y(cayo.ppi) + 16).attr("text-anchor", "end")
+        .attr("fill", "#22c55e").attr("font-size", "8.5").attr("font-family", "monospace").text("Cayo 41↓");
+    }
+
+    // X axis
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(7).tickFormat((d: any) => `'${String(d.getFullYear()).slice(2)}`))
+      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+    // Y axis
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `${d}`))
+      .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+    svg.append("text").attr("transform", "rotate(-90)").attr("x", -H / 2).attr("y", -40).attr("text-anchor", "middle")
+      .attr("fill", "#3f3f46").attr("font-size", "9").attr("font-family", "monospace").text("PPI (hrs to basket)");
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("gta-ppi-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

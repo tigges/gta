@@ -1,0 +1,90 @@
+---
+/**
+ * ChartRoiScatter
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import revenueTiersData  from "../../../data/gta-5/economy/revenue-tiers.json";
+import bizProfilesData   from "../../../data/gta-5/economy/business-profiles.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Setup Cost vs $/hr — What's Actually Worth Buying?</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/database" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full profiles →</a>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+            The ROI Bubble Chart — Which Businesses Are Worth the Investment?
+          </div>
+          <div class="text-[11px] text-zinc-500 font-mono">X = setup cost · Y = net $/hr · bubble size = time to break even. Top-right = expensive but worth it. Bottom-right = expensive traps.</div>
+        </div>
+        <div id="roi-scatter-chart" class="w-full" style="height:380px"
+          data-businesses={JSON.stringify((bizProfilesData as any).businesses.filter((b: any) => b.setup_cost_full > 0 && b.net_profit_per_hr > 0))}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTABase.com · community benchmarks · 2024 patches · bubble = break-even hours</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online setup cost vs $/hr: Kosatka is top-right (high cost, highest return, fast payback). Some businesses are expensive traps. The ROI chart." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("roi-scatter-chart") as HTMLElement | null;
+    if (!el) return;
+
+    const bizs: any[] = JSON.parse(el.dataset.businesses || "[]");
+    const PLAY_COLOR: Record<string,string> = {
+      heist:"#818cf8", passive:"#22c55e", "semi-passive":"#f59e0b", active:"#ef4444",
+      mc:"#f59e0b", ceo:"#0d9488", contract:"#0d9488", gunrunning:"#f59e0b"
+    };
+    const margin={top:24,right:24,bottom:48,left:80};
+    const W=el.clientWidth-margin.left-margin.right;
+    const H=el.clientHeight-margin.top-margin.bottom;
+    const svg=d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+    const x=d3.scaleLinear().domain([0,(d3.max(bizs,(b:any)=>b.setup_cost_full)??1)*1.05]).range([0,W]);
+    const y=d3.scaleLinear().domain([0,(d3.max(bizs,(b:any)=>b.net_profit_per_hr)??1)*1.1]).range([H,0]);
+    const rScale=d3.scaleSqrt().domain([0,d3.max(bizs,(b:any)=>b.break_even_hrs??0)??50]).range([4,22]);
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
+      .call(g=>g.select(".domain").remove())
+      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+    bizs.forEach((b:any) => {
+      const cx=x(b.setup_cost_full), cy=y(b.net_profit_per_hr);
+      const r=rScale(b.break_even_hrs??20);
+      const col=PLAY_COLOR[b.play_type??b.category]??"#71717a";
+      svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",r)
+        .attr("fill",col).attr("opacity",0.7).attr("stroke",col).attr("stroke-width",1).attr("stroke-opacity",0.9);
+      svg.append("text").attr("x",cx).attr("y",cy-r-3).attr("text-anchor","middle")
+        .attr("fill","#b8b8c4").attr("font-size","8").attr("font-family","monospace")
+        .text(b.name.split(" ")[0].slice(0,10));
+    });
+    svg.append("g").attr("transform",`translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(5).tickFormat((d:any)=>`$${(+d/1e6).toFixed(0)}M`))
+      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d:any)=>`$${Math.round(+d/1000)}k`))
+      .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
+      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+    // Labels
+    svg.append("text").attr("x",W/2).attr("y",H+40).attr("text-anchor","middle")
+      .attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Setup Cost ($)");
+    svg.append("text").attr("transform","rotate(-90)").attr("x",-H/2).attr("y",-64).attr("text-anchor","middle")
+      .attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Net $/hr");
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("roi-scatter-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

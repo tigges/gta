@@ -1,0 +1,123 @@
+---
+/**
+ * ChartMetaEvolution
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import metaHistoryData   from "../../../data/gta-5/economy/meta-history.json";
+import revenueTiersData  from "../../../data/gta-5/economy/revenue-tiers.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-500 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Ceiling — Top $/hr Method at Each Major DLC (2013–2023)</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{(metaHistoryData as any).meta_history.length} patches tracked</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Best Money Method Per Era — GTA$/hr Ceiling Since Launch</div>
+            <div class="text-[11px] text-zinc-500 font-mono">Top-earning method at each major DLC. Cayo Perico (Dec 2020) raised the meta ceiling by 5× in a single update — from $400k/hr to $2M/hr.</div>
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full inline-block bg-gta-gold"></span>Solo capable</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full inline-block bg-teal-500"></span>Group only</span>
+          </div>
+        </div>
+        <div id="meta-evolution-chart" class="w-full" style="height:300px"
+          data-history={JSON.stringify((metaHistoryData as any).meta_history)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: GTAForums · GTA Wiki · community archives · GTABase</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="10 years of GTA Online money metas charted: from $250k/hr contact missions in 2013 to $2M/hr Cayo Perico in 2020 — one update changed everything." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("meta-evolution-chart") as HTMLElement | null;
+    if (!el) return;
+
+    const history: any[] = JSON.parse(el.dataset.history || "[]");
+    if (!history.length) return;
+
+    const sorted = [...history].sort((a, b) => a.date.localeCompare(b.date));
+
+    const margin = { top: 20, right: 130, bottom: 44, left: 60 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleTime().domain([new Date("2013-01-01"), new Date("2024-06-01")]).range([0, W]);
+    const maxY = (d3.max(sorted, (d: any) => d.top_gta_per_hr) ?? 1) as number;
+    const y = d3.scaleLinear().domain([0, maxY * 1.1]).range([H, 0]);
+
+    // Grid
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+
+    // Solo flag lookup — methods with "solo" in notes or cayo/contact/nightclub
+    const SOLO_IDS = new Set(["Cayo Perico Heist", "Contact Missions", "Cayo Perico (post-nerf)", "Finance and Felony"]);
+
+    // Step lines
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const p = sorted[i], n = sorted[i + 1];
+      const isSolo = SOLO_IDS.has(p.top_method) || p.top_method?.toLowerCase().includes("solo") || p.top_method?.toLowerCase().includes("cayo");
+      const col = isSolo ? "#f59e0b" : "#0d9488";
+      const px = x(new Date(p.date)), nx = x(new Date(n.date));
+      const py = y(p.top_gta_per_hr), ny = y(n.top_gta_per_hr);
+      svg.append("line").attr("x1", px).attr("x2", nx).attr("y1", py).attr("y2", py)
+        .attr("stroke", col).attr("stroke-width", 2.5);
+      svg.append("line").attr("x1", nx).attr("x2", nx).attr("y1", py).attr("y2", ny)
+        .attr("stroke", col).attr("stroke-width", 2.5);
+    }
+    // Last segment
+    const last = sorted[sorted.length - 1];
+    const lastSolo = SOLO_IDS.has(last.top_method) || last.top_method?.toLowerCase().includes("cayo");
+    svg.append("line").attr("x1", x(new Date(last.date))).attr("x2", W)
+      .attr("y1", y(last.top_gta_per_hr)).attr("y2", y(last.top_gta_per_hr))
+      .attr("stroke", lastSolo ? "#f59e0b" : "#0d9488").attr("stroke-width", 2.5).attr("stroke-dasharray", "4,3");
+
+    // Dots + labels for select key patches
+    const LABEL_PATCHES = new Set(["GTA Online Launch", "Heists", "Diamond Casino Heist", "Cayo Perico Heist", "Los Santos Drug Wars"]);
+    sorted.forEach((p: any) => {
+      const isSolo = SOLO_IDS.has(p.top_method) || p.top_method?.toLowerCase().includes("cayo");
+      const col = isSolo ? "#f59e0b" : "#0d9488";
+      const cx = x(new Date(p.date)), cy = y(p.top_gta_per_hr);
+      svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 4)
+        .attr("fill", col).attr("stroke", "#131316").attr("stroke-width", 1.5);
+      if (LABEL_PATCHES.has(p.patch)) {
+        const shortMethod = (p.top_method as string).length > 18 ? (p.top_method as string).slice(0, 17) + "…" : p.top_method;
+        svg.append("text").attr("x", cx + 6).attr("y", cy + 4)
+          .attr("fill", col).attr("font-size", "8").attr("font-family", "monospace")
+          .text(shortMethod as string);
+      }
+    });
+
+    // Axes
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(6).tickFormat((d: any) => `'${String(d.getFullYear()).slice(2)}`))
+      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `$${Math.round(+d / 1000)}k`))
+      .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
+      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("meta-evolution-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>

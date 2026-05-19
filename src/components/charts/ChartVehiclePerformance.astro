@@ -1,0 +1,157 @@
+---
+/**
+ * ChartVehiclePerformance
+ * Chart component extracted from charts.astro.
+ * Can be embedded on any page; D3 init deferred via IntersectionObserver.
+ */
+import vehicleData       from "../../../data/gta-5/vehicles/performance.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+    <section class="chart-block" data-category="Performance">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[9px] font-mono bg-red-900/30 text-red-500 border border-red-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Performance</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Vehicle Performance Benchmarks</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-700">{vehicleData.vehicles.length} vehicles · Broughy1322 test track</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <!-- Thumbnail cover strip -->
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
+          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-7 h-10" loading="lazy" />
+          <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
+        </div>
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+              GTA V Vehicle Performance — The Benchmark GTA VI Must Beat
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Top 25 fastest vehicles by lap time · Broughy1322 Rockford Hills test circuit</div>
+          </div>
+          <!-- Class filter -->
+          <div class="flex flex-wrap gap-1.5" id="class-filter-btns">
+            {["All","Supers","Sports","Muscle","Off-Road"].map(cls => (
+              <button
+                class="class-btn px-2 py-1 rounded text-[10px] font-mono border transition-all"
+                class:list={[
+                  cls === "All"
+                    ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8"
+                    : "border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+                ]}
+                data-class={cls}
+              >{cls}</button>
+            ))}
+          </div>
+        </div>
+        <div id="perf-chart" class="w-full overflow-hidden px-5 py-3"
+          data-vehicles={JSON.stringify(vehicleData.vehicles)}></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-700 font-mono">Source: Broughy1322 GTA Vehicle Performance Spreadsheet · updated {new Date(vehicleData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="665 Broughy-tested GTA V vehicles ranked. Top speed vs lap time — the actual performance data, not guesswork." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+
+  function init() {
+    const el = document.getElementById("perf-chart") as HTMLElement | null;
+    if (!el) return;
+
+
+    let all: any[] = JSON.parse(el.dataset.vehicles || "[]");
+    let activeClass = "All";
+
+    const CLASS_COLORS: Record<string,string> = {
+      Supers:"#f59e0b", Sports:"#22c55e", "Sports Classics":"#86efac",
+      Muscle:"#ef4444", Coupes:"#a78bfa", Sedans:"#38bdf8",
+      SUVs:"#fb923c", "Off-Road":"#a3e635", Military:"#6b7280",
+    };
+
+    function classColor(cls: string) {
+      return CLASS_COLORS[cls.replace(/ \(NR\)$/,"")] ?? "#71717a";
+    }
+
+    function render() {
+      el.innerHTML = "";
+      const filtered = all
+        .filter(v => v.lap_seconds !== null)
+        .filter(v => activeClass === "All" || v.class.replace(/ \(NR\)$/,"") === activeClass)
+        .sort((a,b) => (a.lap_seconds??999)-(b.lap_seconds??999))
+        .slice(0, 25);
+
+      if (!filtered.length) {
+        el.innerHTML = `<p class="text-xs text-zinc-600 font-mono py-4">No data for this class.</p>`;
+        return;
+      }
+
+      const barH = 24, gap = 3;
+      const margin = { top: 4, right: 100, bottom: 4, left: 150 };
+      const W = el.clientWidth - margin.left - margin.right;
+      const H = filtered.length * (barH + gap);
+
+      const svg = d3.select(el).append("svg")
+        .attr("width","100%")
+        .attr("viewBox", `0 0 ${el.clientWidth} ${H + margin.top + margin.bottom}`)
+        .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const minL = d3.min(filtered, d => d.lap_seconds) ?? 50;
+      const maxL = d3.max(filtered, d => d.lap_seconds) ?? 70;
+      const x = d3.scaleLinear().domain([minL-0.5, maxL+0.5]).range([W, 0]);
+
+      filtered.forEach((v, i) => {
+        const y = i*(barH+gap);
+        const bw = x(minL-0.5) - x(v.lap_seconds ?? maxL);
+        const color = classColor(v.class);
+
+        svg.append("rect").attr("x", x(v.lap_seconds??maxL)).attr("y",y)
+          .attr("width", Math.max(bw,2)).attr("height",barH).attr("rx",3)
+          .attr("fill",color).attr("opacity",0.85);
+
+        svg.append("text").attr("x",-8).attr("y",y+barH/2)
+          .attr("text-anchor","end").attr("dominant-baseline","middle")
+          .attr("fill","#d4d4d8").attr("font-size","11").attr("font-family","monospace")
+          .text(v.name.length > 20 ? v.name.slice(0,19)+"…" : v.name);
+
+        const lbl = v.top_speed_mph ? `${v.lap_time}  ${v.top_speed_mph}mph` : v.lap_time ?? "";
+        svg.append("text").attr("x", W+6).attr("y", y+barH/2)
+          .attr("dominant-baseline","middle")
+          .attr("fill",color).attr("font-size","10").attr("font-family","monospace").attr("font-weight","500")
+          .text(lbl);
+
+        if (i < 3) {
+          svg.append("rect").attr("x", x(v.lap_seconds??maxL)+6).attr("y",y+4)
+            .attr("width",18).attr("height",16).attr("rx",2).attr("fill","#09090b").attr("opacity",0.7);
+          svg.append("text").attr("x",x(v.lap_seconds??maxL)+15).attr("y",y+barH/2)
+            .attr("text-anchor","middle").attr("dominant-baseline","middle")
+            .attr("fill",color).attr("font-size","9").attr("font-family","monospace").attr("font-weight","700")
+            .text(`#${i+1}`);
+        }
+      });
+    }
+
+    render();
+
+    document.querySelectorAll<HTMLButtonElement>(".class-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll<HTMLButtonElement>(".class-btn").forEach(b => {
+          const act = b.dataset.class === btn.dataset.class!;
+          b.classList.toggle("border-gta-gold/40", act);
+          b.classList.toggle("text-gta-gold", act);
+          b.classList.toggle("bg-gta-gold/8", act);
+          b.classList.toggle("border-[#2a2a31]", !act);
+          b.classList.toggle("text-zinc-500", !act);
+        });
+        activeClass = btn.dataset.class!;
+        render();
+      });
+    });
+    }
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("perf-chart");
+    if (obsEl) new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { init(); }
+    }, { rootMargin: "200px" }).observe(obsEl);
+  } else { init(); }
+</script>
