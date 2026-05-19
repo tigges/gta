@@ -1,0 +1,109 @@
+---
+/**
+ * ChartPropertyDailyFee
+ * Extracted from charts.astro.
+ */
+import propertiesData from "../../../data/gta-5/economy/properties.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+<section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Property Daily Fees — Ownership Has Ongoing Costs</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500">charged daily · applies offline</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5">GTA Online Daily Property Fees — The Hidden Ownership Tax</div>
+          <div class="text-[11px] text-zinc-500 font-mono">Fees charged per in-game day (48 real minutes) regardless of whether you're online. Owning the full income stack costs ~$13,000/GTA day in maintenance — ~$4.7M annualised.</div>
+        </div>
+        <div id="property-daily-fee-chart" class="w-full"
+          data-properties={JSON.stringify((propertiesData as any).properties)}
+          style="min-height:220px"
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Wiki · GTABase.com · GTA Online daily utility fee system</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's hidden tax: every income-generating property has a daily fee charged even when you're offline. Full meta stack = $13,000/day in maintenance." url="https://gtavi.ai/charts#property-daily-fee-chart" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+  import { registerChart } from "../../assets/chartInit";
+
+  function init() {
+    const el = document.getElementById("property-daily-fee-chart") as HTMLElement | null;
+    if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
+    const props: any[] = JSON.parse(el.dataset.properties || "[]");
+    if (!props.length) return;
+
+    // Aggregate by type: sum all fees per type (player owns one of each)
+    const TYPE_LABELS: Record<string, string> = {
+      "mc-business": "MC Businesses (avg)", "bunker": "Bunker", "nightclub": "Nightclub",
+      "hangar": "Hangar", "office": "CEO Office",
+    };
+    const typeMap: Record<string, { total: number; count: number; max: number }> = {};
+    props.forEach((p: any) => {
+      const fee = p.daily_fee || 0;
+      if (!fee) return;
+      const t = p.type;
+      if (!typeMap[t]) typeMap[t] = { total: 0, count: 0, max: 0 };
+      typeMap[t].total += fee;
+      typeMap[t].count++;
+      typeMap[t].max = Math.max(typeMap[t].max, fee);
+    });
+
+    const items = Object.entries(typeMap)
+      .map(([t, v]) => ({ type: t, avgFee: Math.round(v.total / v.count), maxFee: v.max, label: TYPE_LABELS[t] || t }))
+      .sort((a, b) => b.maxFee - a.maxFee);
+
+    const rowH = 36, labelW = 170;
+    const margin = { top: 16, right: 130, bottom: 16, left: labelW };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = items.length * rowH + margin.top + margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${H}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const maxFee = (d3.max(items, (i: any) => i.maxFee) ?? 1) as number;
+    const x = d3.scaleLinear().domain([0, maxFee * 1.05]).range([0, W]);
+
+    items.forEach((item: any, i: number) => {
+      const y = i * rowH + 6;
+      const bh = rowH - 14;
+      const isMeta = ["bunker", "nightclub", "mc-business", "acid-lab"].includes(item.type);
+      const col = isMeta ? "#f59e0b" : "#3f3f46";
+
+      svg.append("rect").attr("x", 0).attr("y", y).attr("width", x(item.maxFee)).attr("height", bh)
+        .attr("rx", 2).attr("fill", col).attr("opacity", 0.65);
+
+      svg.append("text").attr("x", -8).attr("y", y + bh / 2 + 4).attr("text-anchor", "end")
+        .attr("fill", "#d4d4d8").attr("font-size", "10").attr("font-family", "monospace").text(item.label);
+
+      const annualised = `$${Math.round(item.maxFee * 365 / 1000)}k/yr`;
+      svg.append("text").attr("x", x(item.maxFee) + 6).attr("y", y + bh / 2 + 4)
+        .attr("fill", "#a1a1aa").attr("font-size", "9").attr("font-family", "monospace")
+        .text(`$${item.maxFee.toLocaleString()}/day  (${annualised})`);
+    });
+
+    // Total stack label
+    const totalDay = items.reduce((s: number, i: any) => s + i.maxFee, 0);
+    svg.append("text").attr("x", W + 124).attr("y", items.length * rowH / 2 + 8).attr("text-anchor", "end")
+      .attr("fill", "#71717a").attr("font-size", "9").attr("font-family", "monospace")
+      .text(`Stack total: $${totalDay.toLocaleString()}/day`);  }
+
+  registerChart("property-daily-fee-chart", init);
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("property-daily-fee-chart");
+    if (obsEl) {
+      const obs = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+      }, { rootMargin: "200px" });
+      obs.observe(obsEl);
+    }
+  } else { init(); }
+</script>

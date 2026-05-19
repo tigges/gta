@@ -12,6 +12,17 @@ import ChartEcoWages         from "../components/charts/ChartEcoWages.astro";
 import ChartEcoPpi           from "../components/charts/ChartEcoPpi.astro";
 import ChartEcoHealth        from "../components/charts/ChartEcoHealth.astro";
 import ChartPreviewCard      from "../components/charts/ChartPreviewCard.astro";
+import chartConfig from "../../data/config/chart-config.json";
+import { CHART_REGISTRY } from "../config/chartRegistry";
+
+const goConfig   = chartConfig.gta_online;
+const Featured0  = CHART_REGISTRY[goConfig.featured[0]];
+const Featured1  = CHART_REGISTRY[goConfig.featured[1]];
+const Featured2  = CHART_REGISTRY[goConfig.featured[2]];
+const Preview0   = CHART_REGISTRY[goConfig.preview[0]];
+const Preview1   = CHART_REGISTRY[goConfig.preview[1]];
+const Preview2   = CHART_REGISTRY[goConfig.preview[2]];
+const Preview3   = CHART_REGISTRY[goConfig.preview[3]];
 
 import weeklyBonuses    from "../../data/gta-5/economy/weekly-bonuses.json";
 import revenueTiers     from "../../data/gta-5/economy/revenue-tiers.json";
@@ -190,16 +201,14 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
         <a href="/charts?title=gta-online" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
       </div>
 
-      <!-- Featured: Meta evolution (full width) -->
-      <div class="mb-6">
-        <ChartMetaEvolution />
-      </div>
-
-      <!-- Featured: Income leaderboard + GTA-PPI (2-col) -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChartIncomeLeaderboard />
-        <ChartGtaPpi />
-      </div>
+      <!-- Featured charts — order from data/config/chart-config.json gta_online.featured -->
+      {Featured0 && <div class="mb-6"><Featured0 /></div>}
+      {Featured1 && Featured2 && (
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Featured1 />
+          <Featured2 />
+        </div>
+      )}
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -212,45 +221,18 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
       </div>
       <div class="flex flex-col gap-2">
 
-        <ChartPreviewCard
-          cardId="preview-bonus"
-          title="Bonus Activity Heatmap — Which Activities Run and How Often"
-          description="52-week grid · every activity · frequency intelligence"
-          category="Promotions · GTA Online"
-          deepLink="/charts#bonus-heatmap"
-        >
-          <ChartBonusHeatmap />
-        </ChartPreviewCard>
-
-        <ChartPreviewCard
-          cardId="preview-roi"
-          title="ROI Bubble — Which Businesses Are Worth the Investment?"
-          description="$/hr vs setup cost · all 56 sources · buy-order guide"
-          category="Economy-IG · GTA Online"
-          deepLink="/charts#roi-scatter-chart"
-        >
-          <ChartRoiScatter />
-        </ChartPreviewCard>
-
-        <ChartPreviewCard
-          cardId="preview-passive"
-          title="Passive Income Stack Growth — Bunker to Acid Lab 2013–2026"
-          description="DLC-by-DLC passive ceiling · how the meta stacked up"
-          category="Economy-IG · GTA Online"
-          deepLink="/charts#passive-stack-chart"
-        >
-          <ChartPassiveStack />
-        </ChartPreviewCard>
-
-        <ChartPreviewCard
-          cardId="preview-shark"
-          title="GTA Online Endgame Cost in Real USD — Shark Card Erosion"
-          description="How much does it cost to start? 2013 vs today in real dollars"
-          category="Economy-RL · GTA Online"
-          deepLink="/charts#shark-card-chart"
-        >
-          <ChartSharkCard />
-        </ChartPreviewCard>
+        <!-- Preview cards — order from data/config/chart-config.json gta_online.preview -->
+        {[Preview0, Preview1, Preview2, Preview3].filter(Boolean).map((Comp, i) => (
+          Comp && <ChartPreviewCard
+            cardId={`preview-online-${i}`}
+            title={goConfig.preview[i]}
+            description="GTA Online economy chart"
+            category="Economy · GTA Online"
+            deepLink={`/charts#${goConfig.preview[i]}`}
+          >
+            <Comp />
+          </ChartPreviewCard>
+        ))}
       </div>
     </section>
 

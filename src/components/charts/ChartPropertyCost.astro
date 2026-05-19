@@ -1,0 +1,111 @@
+---
+/**
+ * ChartPropertyCost
+ * Extracted from charts.astro.
+ */
+import propertiesData from "../../../data/gta-5/economy/properties.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+<section class="chart-block" data-title="gta-online" data-category="Economy-RL">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[11px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Property Costs — Full Expenditure Registry</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500">{(propertiesData as any).property_count} properties · {Object.keys((propertiesData as any).type_counts).length} types</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23]">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5">Every Purchasable Property — Min/Max Price by Type</div>
+          <div class="text-[11px] text-zinc-500 font-mono">Cheapest-to-priciest option per property type. Yellow = income-generating. Bar width = price range within type.</div>
+        </div>
+        <div id="property-cost-chart" class="w-full" style="height:400px"
+          data-properties={JSON.stringify((propertiesData as any).properties)}
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Fandom Wiki + community records · {(propertiesData as any).last_updated?.slice(0,10)}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online complete property cost guide — apartments to Kosatka submarine. Every purchasable property and what it actually costs." url="https://gtavi.ai/charts#property-cost-chart" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+  import { registerChart } from "../../assets/chartInit";
+
+  function init() {
+    const el = document.getElementById("property-cost-chart") as HTMLElement | null;
+    if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
+    const props: any[] = JSON.parse(el.dataset.properties || "[]");
+    if (!props.length) return;
+
+    // Income-generating types
+    const INCOME_TYPES = new Set(["bunker","nightclub","office","vehicle-warehouse","warehouse","mc-business","hangar","facility","arcade","auto-shop","agency","salvage-yard","garment-factory","bail-office","submarine","money-front"]);
+
+    // Aggregate by type: min price, max price
+    const typeMap: Record<string, {min:number, max:number, income:boolean}> = {};
+    props.forEach((p:any) => {
+      if (!typeMap[p.type]) typeMap[p.type] = {min:p.price_min, max:p.price_max, income:INCOME_TYPES.has(p.type)};
+      else {
+        typeMap[p.type].min = Math.min(typeMap[p.type].min, p.price_min);
+        typeMap[p.type].max = Math.max(typeMap[p.type].max, p.price_max);
+      }
+    });
+
+    const TYPE_LABELS: Record<string,string> = {
+      "submarine":"Kosatka (Submarine)","mc-business":"MC Businesses","warehouse":"Spec. Cargo Warehouse",
+      "vehicle-warehouse":"Vehicle Warehouse","money-front":"Money Fronts","garment-factory":"Garment Factory",
+      "bail-office":"Bail Office","salvage-yard":"Salvage Yard","auto-shop":"Auto Shop","facility":"Facility",
+      "nightclub":"Nightclub","arcade":"Arcade","agency":"Agency","hangar":"Hangar","bunker":"Bunker",
+      "office":"CEO Office","clubhouse":"MC Clubhouse","yacht":"Super Yacht","apartment":"Apartment","garage":"Garage",
+    };
+
+    const types = Object.entries(typeMap).sort((a,b)=>b[1].max - a[1].max);
+    const maxPrice = d3.max(types, ([,v]) => v.max) ?? 8000000;
+
+    const rowH = 30, labelW = 185;
+    const margin = {top:8, right:80, bottom:8, left:labelW};
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = types.length * rowH + margin.top + margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width","100%")
+      .attr("viewBox",`0 0 ${el.clientWidth} ${H}`)
+      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleLinear().domain([0, maxPrice]).range([0, W]);
+
+    types.forEach(([type, v], i) => {
+      const y = i * rowH + rowH * 0.15;
+      const bh = rowH * 0.7;
+      const color = v.income ? "#f59e0b" : "#3f3f46";
+      const barW = Math.max(2, x(v.max));
+      const barMin = x(v.min);
+
+      // Range bar (min to max)
+      svg.append("rect").attr("x",barMin).attr("y",y).attr("width",Math.max(2, barW - barMin)).attr("height",bh)
+        .attr("rx",2).attr("fill",color).attr("opacity",v.income ? 0.6 : 0.3);
+      // Min marker
+      svg.append("rect").attr("x",barMin).attr("y",y).attr("width",3).attr("height",bh).attr("fill",color).attr("opacity",0.9);
+
+      // Label
+      svg.append("text").attr("x",-8).attr("y",y+bh/2+4).attr("text-anchor","end")
+        .attr("fill", v.income ? "#d4d4d8" : "#71717a").attr("font-size","10").attr("font-family","monospace")
+        .text(TYPE_LABELS[type] || type);
+
+      // Price range
+      const priceText = v.min === v.max ? `$${(v.min/1e6).toFixed(1)}M` : `$${(v.min/1e6).toFixed(1)}–${(v.max/1e6).toFixed(1)}M`;
+      svg.append("text").attr("x",barW+6).attr("y",y+bh/2+4)
+        .attr("fill",color).attr("font-size","9").attr("font-family","monospace").text(priceText);
+    });  }
+
+  registerChart("property-cost-chart", init);
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("property-cost-chart");
+    if (obsEl) {
+      const obs = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+      }, { rootMargin: "200px" });
+      obs.observe(obsEl);
+    }
+  } else { init(); }
+</script>

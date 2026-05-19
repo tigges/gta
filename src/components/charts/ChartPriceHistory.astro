@@ -1,0 +1,142 @@
+---
+/**
+ * ChartPriceHistory
+ * Extracted from charts.astro.
+ */
+import priceChangesData from "../../../data/gta-5/economy/price-changes.json";
+import ShareButton from "../ShareButton.astro";
+---
+
+<section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Price &amp; Payout History — Every Nerf, Buff, and Launch Since 2013</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500">{(priceChangesData as any).change_count} events · {(priceChangesData as any).item_count} items</span>
+      </div>
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5">
+              GTA Online Price &amp; Payout History — 2013 to 2026
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono">Every documented nerf, buff, and item launch. Green = increase / launch. Red = nerf. Gray ring = mechanical change (same price, reduced value).</div>
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500 flex-wrap">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#22c55e"></span>Buff / Launch</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#ef4444"></span>Nerf</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full inline-block border" style="background:transparent;border-color:#71717a"></span>Mechanical nerf</span>
+          </div>
+        </div>
+        <div id="price-history-chart" class="w-full"
+          data-items={JSON.stringify((priceChangesData as any).items)}
+          style="min-height:500px"
+        ></div>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-500 font-mono">Source: Rockstar Newswire · GTAForums patch notes archives · {(priceChangesData as any).last_updated?.slice(0,10)}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online price change history — every documented nerf, buff, and property launch. Contact missions were nerfed 70% in 2014 then slowly buffed back." url="https://gtavi.ai/charts#price-history-chart" size="sm" label="Share" /></div>
+        </div>
+      </div>
+
+<script>
+  import * as d3 from "d3";
+  import { registerChart } from "../../assets/chartInit";
+
+  function init() {
+    const el = document.getElementById("price-history-chart") as HTMLElement | null;
+    if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
+    const items: any[] = JSON.parse(el.dataset.items || "[]");
+    if (!items.length) return;
+
+    // Flatten all events
+    interface Evt { date: Date; item: string; evtType: string; note: string; old: number|null; newVal: number; }
+    const events: Evt[] = [];
+    items.forEach((item: any) => {
+      item.changes.forEach((c: any) => {
+        const old_p: number | null = c.old_price;
+        const new_p: number       = c.new_price;
+        let evtType: string;
+        if (old_p === null)         evtType = "launch";
+        else if (new_p > old_p)     evtType = "buff";
+        else if (new_p < old_p)     evtType = "nerf";
+        else                        evtType = "unchanged";
+        events.push({ date: new Date(c.date), item: item.item_name, evtType, note: c.note, old: old_p, newVal: new_p });
+      });
+    });
+
+    const itemNames = items.map((i: any) => i.item_name);
+    const margin    = { top: 20, right: 16, bottom: 48, left: 228 };
+    const rowH      = 30;
+    const W         = el.clientWidth - margin.left - margin.right;
+    const H         = itemNames.length * rowH + margin.top + margin.bottom;
+
+    const svg = d3.select(el).append("svg").attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${H}`)
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const xDomain: [Date, Date] = [new Date("2013-01-01"), new Date("2026-12-31")];
+    const x = d3.scaleTime().domain(xDomain).range([0, W]);
+
+    const COLOR: Record<string, string> = {
+      launch:    "#22c55e",
+      buff:      "#22c55e",
+      nerf:      "#ef4444",
+      unchanged: "#71717a",
+    };
+
+    // Year grid lines + labels
+    for (let yr = 2013; yr <= 2027; yr++) {
+      const xv = x(new Date(`${yr}-01-01`));
+      svg.append("line").attr("x1", xv).attr("x2", xv).attr("y1", 0).attr("y2", itemNames.length * rowH)
+        .attr("stroke", yr % 2 === 0 ? "#1e1e23" : "#161619").attr("stroke-dasharray", "3,3");
+      if (yr <= 2026) {
+        svg.append("text").attr("x", xv + (W / 13) / 2).attr("y", itemNames.length * rowH + 16)
+          .attr("text-anchor", "middle").attr("fill", "#3f3f46").attr("font-size", "9").attr("font-family", "monospace")
+          .text(`'${String(yr).slice(2)}`);
+      }
+    }
+
+    // Item row labels + horizontal guide lines
+    itemNames.forEach((name: string, i: number) => {
+      const ym = i * rowH + rowH / 2;
+      const shortName = (name as string).length > 28 ? (name as string).slice(0, 27) + "…" : name;
+      svg.append("text").attr("x", -10).attr("y", ym + 4).attr("text-anchor", "end")
+        .attr("fill", "#a1a1aa").attr("font-size", "9.5").attr("font-family", "monospace")
+        .text(shortName as string);
+      svg.append("line").attr("x1", 0).attr("x2", W).attr("y1", ym).attr("y2", ym)
+        .attr("stroke", "#1e1e23").attr("opacity", 0.7);
+    });
+
+    // Event dots
+    events.forEach((ev: any) => {
+      const cx  = x(ev.date);
+      const cy  = itemNames.indexOf(ev.item) * rowH + rowH / 2;
+      const col = COLOR[ev.evtType] || "#71717a";
+
+      if (ev.evtType === "unchanged") {
+        // Mechanical nerf: open circle (ring only)
+        svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 6)
+          .attr("fill", "none").attr("stroke", "#71717a").attr("stroke-width", 1.5).attr("opacity", 0.8);
+      } else {
+        svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 5)
+          .attr("fill", col).attr("opacity", 0.85).attr("stroke", col).attr("stroke-width", 1);
+        // Second ring for nerfs (visual emphasis)
+        if (ev.evtType === "nerf") {
+          svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 8)
+            .attr("fill", "none").attr("stroke", "#ef4444").attr("stroke-width", 0.8).attr("opacity", 0.35);
+        }
+      }
+    });  }
+
+  registerChart("price-history-chart", init);
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("price-history-chart");
+    if (obsEl) {
+      const obs = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+      }, { rootMargin: "200px" });
+      obs.observe(obsEl);
+    }
+  } else { init(); }
+</script>

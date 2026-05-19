@@ -10,6 +10,16 @@ import ChartPrelaunchComparison from "../components/charts/ChartPrelaunchCompari
 import ChartTrailerDiscovery   from "../components/charts/ChartTrailerDiscovery.astro";
 import ChartPreviewCard        from "../components/charts/ChartPreviewCard.astro";
 import ChartTrailerVelocity   from "../components/charts/ChartTrailerVelocity.astro";
+import chartConfig from "../../data/config/chart-config.json";
+import { CHART_REGISTRY } from "../config/chartRegistry";
+
+const gtaViConfig = chartConfig.gta_vi;
+const Featured0 = CHART_REGISTRY[gtaViConfig.featured[0]];
+const Featured1 = CHART_REGISTRY[gtaViConfig.featured[1]];
+const Featured2 = CHART_REGISTRY[gtaViConfig.featured[2]];
+const Featured3 = CHART_REGISTRY[gtaViConfig.featured[3]];
+const Preview0  = CHART_REGISTRY[gtaViConfig.preview[0]];
+const Preview1  = CHART_REGISTRY[gtaViConfig.preview[1]];
 
 import trailerData  from "../../data/gta-6/trailers.json";
 import velocityData from "../../data/gta-6/trailer-velocity.json";
@@ -223,21 +233,15 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         <a href="/charts?title=gta-vi" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
       </div>
 
-      <!-- Featured: Trailer velocity (full width) -->
-      <div class="mb-6">
-        <ChartTrailerVelocity />
-      </div>
-
-      <!-- Featured: Delay timeline (full width) -->
-      <div class="mb-6">
-        <ChartDelayTimeline />
-      </div>
-
-      <!-- Featured: Region heatmap + Trailer Discovery (2-col) -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChartRegionHeatmap />
-        <ChartTrailerDiscovery />
-      </div>
+      <!-- Featured charts — order from data/config/chart-config.json gta_vi.featured -->
+      {Featured0 && <div class="mb-6"><Featured0 /></div>}
+      {Featured1 && <div class="mb-6"><Featured1 /></div>}
+      {Featured2 && Featured3 && (
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Featured2 />
+          <Featured3 />
+        </div>
+      )}
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -250,25 +254,20 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
       </div>
       <div class="flex flex-col gap-2">
 
-        <ChartPreviewCard
-          cardId="preview-prelaunch"
-          title="Pre-launch Hype — GTA V (2013) vs GTA VI (2026) at the Same Moment"
-          description="Steam players · search trends · community size · same time before launch"
-          category="Community · V vs VI"
-          deepLink="/charts#prelaunch-comparison-chart"
-        >
-          <ChartPrelaunchComparison />
-        </ChartPreviewCard>
-
-        <ChartPreviewCard
-          cardId="preview-community"
-          title="r/GrandTheftAutoVI Community Growth"
-          description="Subreddit growth vs search interest · anticipation vs GTA V"
-          category="Community · GTA VI"
-          deepLink="/charts#community-chart"
-        >
-          <ChartCommunity />
-        </ChartPreviewCard>
+        {Preview0 && (
+          <ChartPreviewCard cardId="preview-0" title={gtaViConfig.preview[0]}
+            description="GTA VI intelligence chart" category="Community · GTA VI"
+            deepLink={`/charts#${gtaViConfig.preview[0]}`}>
+            <Preview0 />
+          </ChartPreviewCard>
+        )}
+        {Preview1 && (
+          <ChartPreviewCard cardId="preview-1" title={gtaViConfig.preview[1]}
+            description="GTA VI intelligence chart" category="Community · GTA VI"
+            deepLink={`/charts#${gtaViConfig.preview[1]}`}>
+            <Preview1 />
+          </ChartPreviewCard>
+        )}
       </div>
     </section>
 
