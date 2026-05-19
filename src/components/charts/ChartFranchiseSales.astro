@@ -10,14 +10,14 @@ import ShareButton from "../ShareButton.astro";
 
     <section class="chart-block" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
+        <span class="text-[11px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Franchise Sales Velocity</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-4">
           <div>
-            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5">
               Franchise Sales Velocity — GTA III to GTA VI
             </div>
             <div class="text-[11px] text-zinc-500 font-mono">Total units sold per title · launch week · year 1 where known</div>
@@ -36,7 +36,7 @@ import ShareButton from "../ShareButton.astro";
                 class={`rounded object-cover border ${t.is_prediction ? "border-gta-gold/40 w-8 h-11" : "border-[#2a2a31] w-8 h-11"}`} loading="lazy" />
               <div>
                 <div class={`text-[10px] font-mono font-bold ${t.is_prediction ? "text-gta-gold" : "text-zinc-300"}`}>{t.short}</div>
-                <div class="text-[9px] font-mono text-zinc-600">{t.total_units_m ? `${t.total_units_m}M` : "projected"} · {t.year}</div>
+                <div class="text-[11px] font-mono text-zinc-600">{t.total_units_m ? `${t.total_units_m}M` : "projected"} · {t.year}</div>
               </div>
             </div>
           ))}
@@ -44,9 +44,9 @@ import ShareButton from "../ShareButton.astro";
         <div id="sales-chart" class="w-full" style="height:320px"
           data-titles={JSON.stringify(salesData.titles)}></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
-          <span class="text-[10px] text-zinc-700 font-mono">Sources: Take-Two IR · DFC Intelligence (GTA VI projection)</span>
-          <span class="text-[10px] text-zinc-700 font-mono">{salesData.last_updated.slice(0,10)}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V sold 225M copies. Here's how every GTA title stacks up — franchise sales velocity charted." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Sources: Take-Two IR · DFC Intelligence (GTA VI projection)</span>
+          <span class="text-[10px] text-zinc-500 font-mono">{salesData.last_updated.slice(0,10)}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V sold 225M copies. Here's how every GTA title stacks up — franchise sales velocity charted." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
 

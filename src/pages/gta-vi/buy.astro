@@ -54,7 +54,7 @@ const EDITIONS = [
   },
   {
     id: "digital-deluxe", name: "Digital Deluxe", price_usd: 99.99, confirmed: false,
-    tier: "SPECULATIVE", tier_color: "text-amber-400", tier_bg: "bg-amber-900/20 border-amber-700/30",
+    tier: "SPECULATIVE", tier_color: "text-gta-gold", tier_bg: "bg-gta-gold/8 border-gta-gold/25",
     platforms: ["PS5","Xbox","PC"], highlight: true,
     includes: ["Base game", "Speculated: Story Mode bonus cash + weapons package", "Speculated: GTA Online successor starter pack", "Speculated: digital soundtrack sampler", "Speculated: digital artbook"],
     preorder_bonus: ["Speculated: early access to one GTA Online activity"],
@@ -62,7 +62,7 @@ const EDITIONS = [
   },
   {
     id: "ultimate", name: "Ultimate Edition", price_usd: 109.99, confirmed: false,
-    tier: "SPECULATIVE", tier_color: "text-amber-400", tier_bg: "bg-amber-900/20 border-amber-700/30",
+    tier: "SPECULATIVE", tier_color: "text-gta-gold", tier_bg: "bg-gta-gold/8 border-gta-gold/25",
     platforms: ["PS5","Xbox","PC"], highlight: false,
     includes: ["Base game", "Speculated: full Story Mode bonus package", "Speculated: GTA Online successor premium starter pack", "Speculated: exclusive vehicle set (2–3 cars)", "Speculated: outfit set — both protagonists"],
     preorder_bonus: ["Speculated: top-tier pre-order bundle"],
@@ -109,7 +109,7 @@ const COUNTRIES: Country[] = [
     stores: [
       { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-gb/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
       { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-GB/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
-      { name: "GAME",              initials: "G",  logoBg: "#00673A", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.game.co.uk/search?q=grand+theft+auto+vi", color: "text-emerald-400", border: "border-emerald-500/20", status: "Pre-orders imminent" },
+      { name: "GAME",              initials: "G",  logoBg: "#00673A", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.game.co.uk/search?q=grand+theft+auto+vi", color: "text-gta-teal", border: "border-emerald-500/20", status: "Pre-orders imminent" },
       { name: "Amazon UK",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.co.uk/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
       { name: "Argos",             initials: "Ar", logoBg: "#C41230", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.argos.co.uk/search/grand-theft-auto-vi/", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
       { name: "ShopTo",            initials: "ST", logoBg: "#333333", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.shopto.net/video-games/PS5/search/grand+theft+auto+vi", color: "text-zinc-300", border: "border-zinc-600/20", status: "Check for listings" },
@@ -212,7 +212,7 @@ const COUNTRIES: Country[] = [
     <!-- Hero content -->
     <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 pb-14 pt-28 text-center">
       <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.25em] mb-3">// Launch Intelligence</div>
-      <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3 leading-tight" style="font-family:'Inter',sans-serif">
+      <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3 leading-tight">
         Grand Theft Auto VI
       </h1>
       <div class="flex items-center justify-center gap-3 mb-6 flex-wrap">
@@ -234,7 +234,7 @@ const COUNTRIES: Country[] = [
         <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Platforms</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">Source: Rockstar Games</span>
+        <span class="text-[10px] font-mono text-zinc-500">Source: Rockstar Games</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {PLATFORMS.map(p => (
@@ -245,23 +245,23 @@ const COUNTRIES: Country[] = [
                 {p.logoText}
               </div>
               <div>
-                <div class={`text-sm font-bold leading-tight ${p.color}`} style="font-family:'Inter',sans-serif">{p.name}</div>
+                <div class={`text-sm font-bold leading-tight ${p.color}`}>{p.name}</div>
                 <div class="text-[10px] font-mono text-zinc-600 mt-0.5">{p.store}</div>
               </div>
               <div class="ml-auto shrink-0">
-                <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${p.confirmed ? "bg-gta-teal/10 text-gta-teal border-gta-teal/20" : "bg-zinc-800/60 text-zinc-600 border-zinc-700"}`}>
+                <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${p.confirmed ? "bg-gta-teal/10 text-gta-teal border-gta-teal/20" : "bg-zinc-800/60 text-zinc-600 border-zinc-700"}`}>
                   {p.confirmed ? "✓ Confirmed" : "TBC"}
                 </span>
               </div>
             </div>
-            <p class="text-[11px] text-zinc-500 leading-snug mb-4" style="font-family:'Inter',sans-serif">{p.desc}</p>
+            <p class="text-[11px] text-zinc-500 leading-snug mb-4">{p.desc}</p>
             {p.official_url ? (
               <a href={p.official_url} target="_blank" rel="noopener noreferrer"
                 class={`inline-flex items-center gap-2 text-[10px] font-mono border px-3 py-1.5 rounded uppercase tracking-widest transition-all hover:bg-white/5 ${p.color} ${p.border}`}>
                 Official page ↗
               </a>
             ) : (
-              <span class="text-[10px] font-mono text-zinc-700">No official page yet</span>
+              <span class="text-[10px] font-mono text-zinc-500">No official page yet</span>
             )}
           </div>
         ))}
@@ -276,12 +276,12 @@ const COUNTRIES: Country[] = [
         <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Where to Buy</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">Digital + Physical · Pre-orders imminent</span>
+        <span class="text-[10px] font-mono text-zinc-500">Digital + Physical · Pre-orders imminent</span>
       </div>
 
       <!-- Country selector strip -->
       <div class="flex items-center gap-2 mb-5 overflow-x-auto pb-1 scrollbar-none">
-        <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest shrink-0 mr-1">Region:</span>
+        <span class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest shrink-0 mr-1">Region:</span>
         {COUNTRIES.map((c, i) => (
           <button
             class="country-btn shrink-0 text-[11px] font-mono border rounded px-2.5 py-1.5 transition-all"
@@ -293,15 +293,15 @@ const COUNTRIES: Country[] = [
 
       <!-- Active country label -->
       <div id="country-label" class="text-[10px] font-mono text-zinc-500 mb-4">
-        🇺🇸 Showing stores for United States · Prices in USD · <span class="text-zinc-700">Detected via browser locale</span>
+        🇺🇸 Showing stores for United States · Prices in USD · <span class="text-zinc-500">Detected via browser locale</span>
       </div>
 
       <!-- Status alert -->
       <div class="rounded-xl border border-gta-teal/20 bg-gta-teal/5 px-5 py-4 mb-5 flex items-start gap-3">
         <span class="w-1.5 h-1.5 rounded-full bg-gta-teal mt-1.5 shrink-0 animate-pulse"></span>
         <div>
-          <div class="text-[11px] font-semibold text-gta-teal mb-0.5" style="font-family:'Inter',sans-serif">Pre-orders imminent</div>
-          <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">
+          <div class="text-[11px] font-semibold text-gta-teal mb-0.5">Pre-orders imminent</div>
+          <p class="text-[11px] text-zinc-500 leading-relaxed">
             Tom Henderson confirmed Best Buy pre-orders starting imminently (May 2026). Official PS Store and Xbox Store wishlist links are live. Physical retailer pre-orders expected in lockstep.
           </p>
         </div>
@@ -321,16 +321,16 @@ const COUNTRIES: Country[] = [
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center justify-between gap-2 mb-0.5">
-                    <span class={`text-sm font-semibold group-hover:text-white transition-colors truncate ${r.color}`} style="font-family:'Inter',sans-serif">{r.name}</span>
-                    <span class="text-zinc-700 group-hover:text-zinc-400 font-mono text-xs transition-colors shrink-0">↗</span>
+                    <span class={`text-sm font-semibold group-hover:text-white transition-colors truncate ${r.color}`}>{r.name}</span>
+                    <span class="text-zinc-500 group-hover:text-zinc-400 font-mono text-xs transition-colors shrink-0">↗</span>
                   </div>
                   <div class="text-[10px] font-mono text-zinc-600">{r.type}</div>
                   <div class="flex items-center gap-1.5 mt-1">
                     <span class="w-1.5 h-1.5 rounded-full bg-gta-teal/60 shrink-0"></span>
                     <span class="text-[10px] font-mono text-zinc-500">{r.status ?? "Check for listings"}</span>
                   </div>
-                  <div class="text-[9px] font-mono text-zinc-700 mt-0.5">{r.platform}</div>
-                  {r.note && <div class="text-[9px] font-mono text-amber-700/70 mt-1">⚠ {r.note}</div>}
+                  <div class="text-[11px] font-mono text-zinc-500 mt-0.5">{r.platform}</div>
+                  {r.note && <div class="text-[11px] font-mono text-gta-gold/70 mt-1">⚠ {r.note}</div>}
                 </div>
               </a>
             ))}
@@ -338,7 +338,7 @@ const COUNTRIES: Country[] = [
         </div>
       ))}
 
-      <p class="text-[10px] font-mono text-zinc-700 mt-4">
+      <p class="text-[10px] font-mono text-zinc-500 mt-4">
         * Some retailer links may be affiliate links. GTA VI.AI may earn a commission on qualifying purchases at no extra cost to you. Currency conversions are estimates.
       </p>
     </section>
@@ -351,14 +351,14 @@ const COUNTRIES: Country[] = [
         <span class="w-2 h-2 rounded-full bg-zinc-600 shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Edition Breakdown</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">All prices USD · All editions speculative</span>
+        <span class="text-[10px] font-mono text-zinc-500">All prices USD · All editions speculative</span>
       </div>
       <!-- Speculative notice -->
       <div class="rounded-xl border border-zinc-700/40 bg-zinc-800/20 px-5 py-3 mb-6 flex items-start gap-3">
         <span class="text-zinc-500 font-mono text-xs mt-0.5 shrink-0">⚠</span>
-        <p class="text-[11px] text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">
+        <p class="text-[11px] text-zinc-500 leading-relaxed">
           Rockstar has not announced editions, prices, or pre-order bonuses. The breakdown below is modelled on <strong class="text-zinc-400">RDR2 (2018)</strong> and <strong class="text-zinc-400">GTA V</strong> release precedent.
-          Every edition is labelled <span class="text-zinc-400 font-mono uppercase tracking-widest text-[9px]">Speculative</span> until Rockstar confirms.
+          Every edition is labelled <span class="text-zinc-400 font-mono uppercase tracking-widest text-[11px]">Speculative</span> until Rockstar confirms.
         </p>
       </div>
 
@@ -371,14 +371,14 @@ const COUNTRIES: Country[] = [
             <!-- Edition header -->
             {ed.highlight && (
               <div class="px-5 py-2 border-b border-gta-gold/20 bg-gta-gold/5 flex items-center justify-between">
-                <span class="text-[9px] font-mono text-gta-gold uppercase tracking-widest">Most likely full-content tier</span>
+                <span class="text-[11px] font-mono text-gta-gold uppercase tracking-widest">Most likely full-content tier</span>
               </div>
             )}
 
             <div class="px-5 pt-5 pb-4 flex-1">
               <div class="flex items-start justify-between gap-2 mb-1">
-                <div class="text-sm font-bold text-zinc-200 leading-snug" style="font-family:'Inter',sans-serif">{ed.name}</div>
-                <span class={`shrink-0 text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${ed.tier_bg} ${ed.tier_color}`}>{ed.tier}</span>
+                <div class="text-sm font-bold text-zinc-200 leading-snug">{ed.name}</div>
+                <span class={`shrink-0 text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${ed.tier_bg} ${ed.tier_color}`}>{ed.tier}</span>
               </div>
 
               <!-- Price -->
@@ -386,28 +386,28 @@ const COUNTRIES: Country[] = [
                 <span class="edition-price-usd">${ed.price_usd.toFixed(2)}</span>
               </div>
               <div class="edition-price-local hidden text-sm font-mono text-zinc-500 mb-0.5"></div>
-              <div class="text-[10px] font-mono text-zinc-700 mb-4">USD · <span class="edition-price-note">not announced</span></div>
+              <div class="text-[10px] font-mono text-zinc-500 mb-4">USD · <span class="edition-price-note">not announced</span></div>
 
               <!-- Platforms -->
               <div class="flex items-center gap-1.5 mb-4 flex-wrap">
                 {ed.platforms.map((pl: string) => (
-                  <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${pl === "PS5" ? "text-blue-400 border-blue-500/20 bg-blue-500/5" : pl === "Xbox" ? "text-green-400 border-green-500/20 bg-green-500/5" : "text-zinc-500 border-zinc-700 bg-zinc-800/40"}`}>
+                  <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${pl === "PS5" ? "text-blue-400 border-blue-500/20 bg-blue-500/5" : pl === "Xbox" ? "text-gta-green border-gta-green/20 bg-gta-green/5" : "text-zinc-500 border-zinc-700 bg-zinc-800/40"}`}>
                     {pl}
                   </span>
                 ))}
                 {"physical" in ed && (ed as any).physical && (
-                  <span class="text-[8px] font-mono border border-amber-500/20 text-amber-400 bg-amber-900/10 px-1.5 py-0.5 rounded uppercase tracking-widest">Physical only</span>
+                  <span class="text-[10px] font-mono border border-gta-gold/20 text-gta-gold bg-gta-gold/10 px-1.5 py-0.5 rounded uppercase tracking-widest">Physical only</span>
                 )}
               </div>
 
               <!-- Includes -->
               <div class="mb-3">
-                <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Includes</div>
+                <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Includes</div>
                 <ul class="flex flex-col gap-1.5">
                   {ed.includes.map((item: string) => (
                     <li class="flex items-start gap-2">
-                      <span class={`shrink-0 mt-0.5 text-[8px] ${ed.highlight ? "text-gta-gold" : "text-zinc-600"}`}>◆</span>
-                      <span class="text-[11px] text-zinc-400 leading-snug" style="font-family:'Inter',sans-serif">{item}</span>
+                      <span class={`shrink-0 mt-0.5 text-[10px] ${ed.highlight ? "text-gta-gold" : "text-zinc-600"}`}>◆</span>
+                      <span class="text-[11px] text-zinc-400 leading-snug">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -416,12 +416,12 @@ const COUNTRIES: Country[] = [
               <!-- Pre-order bonus -->
               {ed.preorder_bonus.length > 0 && (
                 <div>
-                  <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1.5">Pre-order bonus</div>
+                  <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-1.5">Pre-order bonus</div>
                   <ul class="flex flex-col gap-1">
                     {ed.preorder_bonus.map((b: string) => (
                       <li class="flex items-start gap-2">
-                        <span class="shrink-0 mt-0.5 text-[8px] text-gta-teal">+</span>
-                        <span class="text-[11px] text-zinc-500 leading-snug" style="font-family:'Inter',sans-serif">{b}</span>
+                        <span class="shrink-0 mt-0.5 text-[10px] text-gta-teal">+</span>
+                        <span class="text-[11px] text-zinc-500 leading-snug">{b}</span>
                       </li>
                     ))}
                   </ul>
@@ -431,7 +431,7 @@ const COUNTRIES: Country[] = [
 
             <!-- Basis -->
             <div class="px-5 py-3 border-t border-[#1e1e23]">
-              <p class="text-[10px] text-zinc-700 font-mono leading-relaxed">{ed.basis}</p>
+              <p class="text-[10px] text-zinc-500 font-mono leading-relaxed">{ed.basis}</p>
             </div>
           </div>
         ))}
@@ -465,10 +465,10 @@ const COUNTRIES: Country[] = [
             </div>
             <div class="absolute inset-0 flex items-center px-6">
               <div>
-                <div class="text-[9px] font-mono text-gta-gold uppercase tracking-widest mb-1">Confirmed · Official Trailers</div>
-                <div class="text-xl font-bold text-white mb-1" style="font-family:'Inter',sans-serif">{c.name}</div>
+                <div class="text-[11px] font-mono text-gta-gold uppercase tracking-widest mb-1">Confirmed · Official Trailers</div>
+                <div class="text-xl font-bold text-white mb-1">{c.name}</div>
                 <div class="text-[10px] font-mono text-zinc-500 mb-3">{c.role}</div>
-                <p class="text-[11px] text-zinc-400 max-w-xs leading-relaxed" style="font-family:'Inter',sans-serif">{c.desc}</p>
+                <p class="text-[11px] text-zinc-400 max-w-xs leading-relaxed">{c.desc}</p>
               </div>
             </div>
           </div>
@@ -486,16 +486,16 @@ const COUNTRIES: Country[] = [
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {[
           { label: "Confirmed", color: "text-gta-teal", border: "border-gta-teal/20", desc: "Rockstar Games official material — trailers, press releases, Take-Two IR." },
-          { label: "Reported",  color: "text-amber-400", border: "border-amber-500/20", desc: "Credible industry sources with a track record — Tom Henderson, IGN, Kotaku." },
+          { label: "Reported",  color: "text-gta-gold", border: "border-gta-gold/25", desc: "Credible industry sources with a track record — Tom Henderson, IGN, Kotaku." },
           { label: "Speculative", color: "text-zinc-400", border: "border-zinc-700", desc: "Modelled from RDR2, GTA V precedent, and industry-standard release patterns. Not sourced." },
         ].map(t => (
           <div class="flex items-start gap-3">
-            <span class={`shrink-0 text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest mt-0.5 bg-transparent ${t.color} ${t.border}`}>{t.label}</span>
-            <p class="text-[11px] text-zinc-600 leading-relaxed" style="font-family:'Inter',sans-serif">{t.desc}</p>
+            <span class={`shrink-0 text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest mt-0.5 bg-transparent ${t.color} ${t.border}`}>{t.label}</span>
+            <p class="text-[11px] text-zinc-600 leading-relaxed">{t.desc}</p>
           </div>
         ))}
       </div>
-      <p class="text-[10px] text-zinc-700 font-mono mt-4">
+      <p class="text-[10px] text-zinc-500 font-mono mt-4">
         GTA VI.AI is a community data project. Not affiliated with Rockstar Games, Take-Two Interactive, or any retailer listed.
         Retailer links may be affiliate links — we may earn a commission at no extra cost to you.
       </p>

@@ -9,7 +9,7 @@ import ShareButton  from "../ShareButton.astro";
 ---
 
 <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-amber-900/30 text-amber-600 border border-amber-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Franchise</span>
+        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">Franchise</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Trailer View Velocity</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
@@ -26,7 +26,7 @@ import ShareButton  from "../ShareButton.astro";
           </a>
         </div>
         <div class="px-5 py-4 border-b border-[#1e1e23]">
-          <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+          <div class="font-semibold text-zinc-200 text-sm mb-0.5">
             GTA VI Trailer View Counts — Live
           </div>
           <div class="text-[11px] text-zinc-500 font-mono">Polled via YouTube Data API · snapshots accumulate over time to build velocity curve</div>
@@ -73,7 +73,7 @@ import ShareButton  from "../ShareButton.astro";
           })}
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: YouTube Data API · polled {new Date(velocityData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI Trailer 1 holds the 24-hour YouTube record. 279M views, 161M for Trailer 2. The hype is unlike anything in gaming." url="https://gtavi.ai/charts#trailer-velocity" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: YouTube Data API · polled {new Date(velocityData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI Trailer 1 holds the 24-hour YouTube record. 279M views, 161M for Trailer 2. The hype is unlike anything in gaming." url="https://gtavi.ai/charts#trailer-velocity" size="sm" label="Share" /></div>
         </div>
       </div>

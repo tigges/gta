@@ -10,15 +10,15 @@ import ShareButton from "../ShareButton.astro";
 
     <section class="chart-block" data-category="History">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[9px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
+        <span class="text-[11px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Discovery Density — What Every Second Revealed</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{trailerAnalysis.trailers[0].total_entities + trailerAnalysis.trailers[1].total_entities} entities discovered across both trailers</span>
+        <span class="text-[10px] font-mono text-zinc-500">{trailerAnalysis.trailers[0].total_entities + trailerAnalysis.trailers[1].total_entities} entities discovered across both trailers</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-center gap-5 flex-wrap">
           <div class="flex-1">
-            <div class="font-semibold text-zinc-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">
+            <div class="font-semibold text-zinc-200 text-sm mb-0.5">
               Frame-by-Frame: Information Density Across Both Official Trailers
             </div>
             <div class="text-[11px] text-zinc-500 font-mono">Each marker = a new entity confirmed. Colour = entity type. Trailer 2 is information-denser at every quartile.</div>
@@ -32,7 +32,7 @@ import ShareButton from "../ShareButton.astro";
                   alt={t.title} class="w-28 h-16 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
                 <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 50%)"></div>
                 <div class="absolute bottom-1 left-2">
-                  <span class="text-[8px] font-mono text-gta-gold">T{i + 1}</span>
+                  <span class="text-[10px] font-mono text-gta-gold">T{i + 1}</span>
                 </div>
               </a>
             ))}
@@ -42,8 +42,8 @@ import ShareButton from "../ShareButton.astro";
           data-trailers={JSON.stringify(trailerAnalysis.trailers)}
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: GTA VI.AI frame-by-frame analysis · official Rockstar trailers</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis across both trailers." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: GTA VI.AI frame-by-frame analysis · official Rockstar trailers</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis across both trailers." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
         </div>
       </div>
 

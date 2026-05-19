@@ -92,12 +92,12 @@ const DELAY_THUMBS: Record<string,string> = {
       <div class="flex items-end justify-between flex-wrap gap-6">
         <div class="max-w-lg">
           <div class="flex items-center gap-2 mb-3">
-            <span class="text-[9px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">Community estimates · not official</span>
+            <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">Community estimates · not official</span>
           </div>
-          <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">
+          <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">
             Grand Theft Auto VI
           </h1>
-          <p class="text-zinc-400 text-sm max-w-sm leading-relaxed mb-5" style="font-family:'Inter',sans-serif">
+          <p class="text-zinc-400 text-sm max-w-sm leading-relaxed mb-5">
             30 years of GTA data, distilled into confidence-scored predictions.
             Every number is derived from signal evidence — not speculation.
           </p>
@@ -120,11 +120,11 @@ const DELAY_THUMBS: Record<string,string> = {
               </div>
             </div>
             <div class="absolute top-2 left-2">
-              <span class="text-[8px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Official</span>
+              <span class="text-[10px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Official</span>
             </div>
             <div class="absolute bottom-0 left-0 right-0 px-3 pb-2.5">
-              <div class="text-[10px] font-semibold text-white leading-tight" style="font-family:'Inter',sans-serif">{heroTrailer.title}</div>
-              {heroTrailer.published_at && <div class="text-[9px] font-mono text-zinc-500 mt-0.5">{heroTrailer.published_at}</div>}
+              <div class="text-[10px] font-semibold text-white leading-tight">{heroTrailer.title}</div>
+              {heroTrailer.published_at && <div class="text-[11px] font-mono text-zinc-500 mt-0.5">{heroTrailer.published_at}</div>}
             </div>
           </a>
         )}
@@ -141,7 +141,7 @@ const DELAY_THUMBS: Record<string,string> = {
       <div class="flex items-center gap-3 mb-7">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Signal Predictions</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">confidence-scored · data-derived</span>
+        <span class="text-[10px] font-mono text-zinc-500">confidence-scored · data-derived</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {predictions.map((p) => {
@@ -177,7 +177,7 @@ const DELAY_THUMBS: Record<string,string> = {
         <div class="flex items-center gap-3 mb-7">
           <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Official Trailers</span>
           <div class="flex-1 h-px bg-[#1e1e23]"></div>
-          <span class="text-[10px] font-mono text-zinc-700">{trailers.length} released · Rockstar Games</span>
+          <span class="text-[10px] font-mono text-zinc-500">{trailers.length} released · Rockstar Games</span>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {trailers.map((t: any, i: number) => (
@@ -200,12 +200,12 @@ const DELAY_THUMBS: Record<string,string> = {
                   </div>
                 </div>
                 <div class="absolute top-3 left-3">
-                  <span class="text-[9px] font-mono bg-black/60 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">Official</span>
+                  <span class="text-[11px] font-mono bg-black/60 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">Official</span>
                 </div>
               </div>
               <div class="px-4 py-3 flex items-center justify-between" style="background:#131316">
                 <div>
-                  <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">{t.title ?? `Grand Theft Auto VI — Trailer ${i + 1}`}</div>
+                  <div class="font-semibold text-zinc-200 text-sm">{t.title ?? `Grand Theft Auto VI — Trailer ${i + 1}`}</div>
                   {t.published_at && (
                     <div class="text-[11px] text-zinc-600 font-mono mt-0.5">{t.published_at}</div>
                   )}
@@ -226,7 +226,7 @@ const DELAY_THUMBS: Record<string,string> = {
         <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Cast</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">Official press kit · Rockstar Games</span>
+        <span class="text-[10px] font-mono text-zinc-500">Official press kit · Rockstar Games</span>
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         {([
@@ -260,8 +260,8 @@ const DELAY_THUMBS: Record<string,string> = {
             </div>
             <!-- Name overlay -->
             <div class="absolute bottom-0 left-0 right-0 px-2.5 pb-2.5">
-              <div class="text-[11px] font-semibold text-white leading-tight mb-0.5" style="font-family:'Inter',sans-serif">{c.name}</div>
-              <span class={`text-[8px] font-mono uppercase tracking-widest ${c.role === "Protagonist" ? "text-gta-gold" : "text-zinc-500"}`}>{c.role}</span>
+              <div class="text-[11px] font-semibold text-white leading-tight mb-0.5">{c.name}</div>
+              <span class={`text-[10px] font-mono uppercase tracking-widest ${c.role === "Protagonist" ? "text-gta-gold" : "text-zinc-500"}`}>{c.role}</span>
             </div>
             <!-- Confirmed badge -->
             <div class="absolute top-2 right-2">
@@ -286,7 +286,7 @@ const DELAY_THUMBS: Record<string,string> = {
         <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida — Confirmed Locations</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">Official press kit · Rockstar Games</span>
+        <span class="text-[10px] font-mono text-zinc-500">Official press kit · Rockstar Games</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {([
@@ -309,11 +309,11 @@ const DELAY_THUMBS: Record<string,string> = {
             </div>
             <div class="absolute bottom-0 left-0 right-0 px-4 pb-4">
               <div class="flex items-center gap-2 mb-0.5">
-                <span class="text-[8px] font-mono text-gta-teal border border-gta-teal/20 bg-gta-teal/10 px-1.5 py-0.5 rounded uppercase tracking-widest">Confirmed</span>
-                <span class="text-[8px] font-mono text-zinc-700">{loc.shots} official shots</span>
+                <span class="text-[10px] font-mono text-gta-teal border border-gta-teal/20 bg-gta-teal/10 px-1.5 py-0.5 rounded uppercase tracking-widest">Confirmed</span>
+                <span class="text-[10px] font-mono text-zinc-500">{loc.shots} official shots</span>
               </div>
-              <div class="text-sm font-bold text-white leading-tight" style="font-family:'Inter',sans-serif">{loc.name}</div>
-              <div class="text-[11px] text-zinc-400 mt-0.5" style="font-family:'Inter',sans-serif">{loc.desc}</div>
+              <div class="text-sm font-bold text-white leading-tight">{loc.name}</div>
+              <div class="text-[11px] text-zinc-400 mt-0.5">{loc.desc}</div>
             </div>
           </div>
         ))}
@@ -331,7 +331,7 @@ const DELAY_THUMBS: Record<string,string> = {
           <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
           <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Entity Analysis</span>
           <div class="flex-1 h-px bg-[#1e1e23]"></div>
-          <span class="text-[10px] font-mono text-zinc-700">Frame-by-frame · {analysisTrailers.reduce((s: number, t: any) => s + t.total_entities, 0)} reveals across {analysisTrailers.length} trailers</span>
+          <span class="text-[10px] font-mono text-zinc-500">Frame-by-frame · {analysisTrailers.reduce((s: number, t: any) => s + t.total_entities, 0)} reveals across {analysisTrailers.length} trailers</span>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -342,7 +342,7 @@ const DELAY_THUMBS: Record<string,string> = {
                 <!-- Trailer header -->
                 <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between gap-3 flex-wrap">
                   <div>
-                    <div class="text-sm font-semibold text-zinc-200 mb-0.5" style="font-family:'Inter',sans-serif">{trailer.title}</div>
+                    <div class="text-sm font-semibold text-zinc-200 mb-0.5">{trailer.title}</div>
                     <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-600">
                       <span>{trailer.published_at}</span>
                       <span class="text-zinc-800">·</span>
@@ -352,7 +352,7 @@ const DELAY_THUMBS: Record<string,string> = {
                     </div>
                   </div>
                   <div class="flex items-center gap-2">
-                    <span class="text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 border-gta-gold/20 text-gta-gold">
+                    <span class="text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 border-gta-gold/20 text-gta-gold">
                       {confirmedCount} confirmed
                     </span>
                     <a
@@ -392,15 +392,15 @@ const DELAY_THUMBS: Record<string,string> = {
                     const secs = String(event.t % 60).padStart(2, "0");
                     return (
                       <div class="px-5 py-2.5 flex items-start gap-3">
-                        <span class="text-[10px] font-mono text-zinc-700 shrink-0 w-10">{mins}:{secs}</span>
+                        <span class="text-[10px] font-mono text-zinc-500 shrink-0 w-10">{mins}:{secs}</span>
                         <span class="text-base shrink-0">{typeIcon}</span>
                         <div class="flex-1 min-w-0">
-                          <div class="text-[11px] font-semibold text-zinc-300 leading-snug" style="font-family:'Inter',sans-serif">{event.entity}</div>
+                          <div class="text-[11px] font-semibold text-zinc-300 leading-snug">{event.entity}</div>
                           {event.note && (
                             <div class="text-[10px] text-zinc-600 mt-0.5 leading-relaxed">{event.note}</div>
                           )}
                         </div>
-                        <span class={`shrink-0 text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${confColor}`}>
+                        <span class={`shrink-0 text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${confColor}`}>
                           {event.confidence}
                         </span>
                       </div>
@@ -424,12 +424,12 @@ const DELAY_THUMBS: Record<string,string> = {
         <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Confirmed Feature Tracker</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">Rockstar official + community tracking</span>
+        <span class="text-[10px] font-mono text-zinc-500">Rockstar official + community tracking</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
-            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+            <div class="font-semibold text-zinc-200 text-sm">
               What's confirmed, reported and indexed so far
             </div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Progress toward estimated full-game totals · {featuresData.categories.reduce((s, c) => s + c.confirmed + c.reported, 0)} entries tracked</div>
@@ -460,13 +460,13 @@ const DELAY_THUMBS: Record<string,string> = {
                   <!-- Icon + label -->
                   <div class="flex items-center gap-2 mb-3">
                     <span class="text-xl">{cat.icon}</span>
-                    <span class="text-sm font-bold text-zinc-200" style="font-family:'Inter',sans-serif">{cat.label}</span>
+                    <span class="text-sm font-bold text-zinc-200">{cat.label}</span>
                   </div>
                   <!-- Stats -->
                   <div class="flex items-baseline gap-1.5 mb-3">
                     <span class="text-2xl font-mono font-bold text-gta-gold">{cat.confirmed}</span>
                     <span class="text-[10px] font-mono text-zinc-600">confirmed</span>
-                    <span class="text-zinc-700 mx-1">·</span>
+                    <span class="text-zinc-500 mx-1">·</span>
                     <span class="text-base font-mono text-zinc-400">{cat.reported}</span>
                     <span class="text-[10px] font-mono text-zinc-600">reported</span>
                   </div>
@@ -477,11 +477,11 @@ const DELAY_THUMBS: Record<string,string> = {
                     {indexedPct   > 0 && <div class="h-full bg-zinc-700 ml-px" style={`width:${indexedPct}%`}></div>}
                   </div>
                   <div class="flex items-center justify-between mt-1">
-                    <span class="text-[9px] font-mono text-zinc-700">{confirmedPct}% of target</span>
-                    <span class="text-[9px] font-mono text-zinc-700">/ {cat.target}</span>
+                    <span class="text-[11px] font-mono text-zinc-500">{confirmedPct}% of target</span>
+                    <span class="text-[11px] font-mono text-zinc-500">/ {cat.target}</span>
                   </div>
                   {cat.notes && (
-                    <p class="text-[10px] text-zinc-600 mt-2 leading-snug" style="font-family:'Inter',sans-serif">{cat.notes}</p>
+                    <p class="text-[10px] text-zinc-600 mt-2 leading-snug">{cat.notes}</p>
                   )}
                 </div>
               </div>
@@ -489,8 +489,8 @@ const DELAY_THUMBS: Record<string,string> = {
           })}
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Sources: {featuresData.source}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text={`GTA VI Feature Tracker: ${featuresData.categories.reduce((s, c) => s + c.confirmed + c.reported, 0)} entries tracked — vehicles, characters, locations, weapons and more confirmed so far.`} url="https://gtavi.ai/gta-vi/intel" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Sources: {featuresData.source}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text={`GTA VI Feature Tracker: ${featuresData.categories.reduce((s, c) => s + c.confirmed + c.reported, 0)} entries tracked — vehicles, characters, locations, weapons and more confirmed so far.`} url="https://gtavi.ai/gta-vi/intel" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -505,7 +505,7 @@ const DELAY_THUMBS: Record<string,string> = {
         <span class="w-2 h-2 rounded-full bg-gta-red shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Development + Delay Timeline</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{delayData.total_delays} delay · {delayData.timeline.length} events · SEC EDGAR sourced</span>
+        <span class="text-[10px] font-mono text-zinc-500">{delayData.total_delays} delay · {delayData.timeline.length} events · SEC EDGAR sourced</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="relative p-5">
@@ -539,11 +539,11 @@ const DELAY_THUMBS: Record<string,string> = {
                   <div class={`relative z-10 mt-1 shrink-0 w-2.5 h-2.5 rounded-full border ${dotClass}`}></div>
                   <div class="flex-1 min-w-0 flex items-start gap-3">
                     <div class="flex-1">
-                      <p class={`text-[12px] font-medium leading-snug ${textClass}`} style="font-family:'Inter',sans-serif">{event.event}</p>
+                      <p class={`text-[12px] font-medium leading-snug ${textClass}`}>{event.event}</p>
                       <div class="flex items-center gap-2 mt-1">
-                        <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">{event.type.replace("_"," ")}</span>
+                        <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">{event.type.replace("_"," ")}</span>
                         <span class="text-zinc-800">·</span>
-                        <span class="text-[9px] font-mono text-zinc-700">{event.source}</span>
+                        <span class="text-[11px] font-mono text-zinc-500">{event.source}</span>
                       </div>
                     </div>
                     {ytId && (
@@ -554,7 +554,7 @@ const DELAY_THUMBS: Record<string,string> = {
                         <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 60%)"></div>
                         <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover/yt:opacity-100 transition-opacity">
                           <div class="w-6 h-6 rounded-full bg-black/60 flex items-center justify-center border border-gta-gold/30">
-                            <span class="text-white text-[8px] ml-px">▶</span>
+                            <span class="text-white text-[10px] ml-px">▶</span>
                           </div>
                         </div>
                         <div class="absolute bottom-1 left-1.5">
@@ -575,8 +575,8 @@ const DELAY_THUMBS: Record<string,string> = {
           </div>
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Sources: SEC EDGAR Take-Two 8-K filings + official announcements</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI has been delayed twice. The full timeline — and what it signals for the Nov 19, 2026 release date." url="https://gtavi.ai/gta-vi/intel" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Sources: SEC EDGAR Take-Two 8-K filings + official announcements</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI has been delayed twice. The full timeline — and what it signals for the Nov 19, 2026 release date." url="https://gtavi.ai/gta-vi/intel" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -587,10 +587,10 @@ const DELAY_THUMBS: Record<string,string> = {
     {confirmedSongs.length > 0 && (
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-green shrink-0"></span>
         <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Soundtrack — Trailer Songs</h2>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{confirmedSongs.length} confirmed · Spotify verified</span>
+        <span class="text-[10px] font-mono text-zinc-500">{confirmedSongs.length} confirmed · Spotify verified</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="divide-y divide-[#1e1e23]">
@@ -600,18 +600,18 @@ const DELAY_THUMBS: Record<string,string> = {
                 <span class="text-[#1DB954] text-xs">♪</span>
               </div>
               <div class="flex-1 min-w-0">
-                <div class="text-sm font-semibold text-zinc-200 leading-tight" style="font-family:'Inter',sans-serif">{song.title}</div>
+                <div class="text-sm font-semibold text-zinc-200 leading-tight">{song.title}</div>
                 <div class="text-[11px] font-mono text-zinc-500 mt-0.5">{song.artist} · {song.year}</div>
               </div>
               <div class="shrink-0 text-right">
-                <span class="text-[9px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">{song.trailer}</span>
+                <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">{song.trailer}</span>
               </div>
             </div>
           ))}
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: Spotify Web API · confirmed from official GTA VI trailers</span>
-          <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: Spotify Web API · confirmed from official GTA VI trailers</span>
+          <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
         </div>
       </div>
     </section>
@@ -624,7 +624,7 @@ const DELAY_THUMBS: Record<string,string> = {
       <div class="flex items-center gap-3 mb-7">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Search Signal</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">{totalTrendPts} pts · {trendsSince}–{trendsUntil} · worldwide</span>
+        <span class="text-[10px] font-mono text-zinc-500">{totalTrendPts} pts · {trendsSince}–{trendsUntil} · worldwide</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <!-- Visual header: Trailer thumbnails + keyword context -->
@@ -642,7 +642,7 @@ const DELAY_THUMBS: Record<string,string> = {
           ))}
           <div class="flex-1 px-5 py-4 flex items-start justify-between flex-wrap gap-3">
             <div>
-              <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">GTA VI Search Interest Over Time</div>
+              <div class="font-semibold text-zinc-200 text-sm">GTA VI Search Interest Over Time</div>
               <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Google Trends · worldwide · 0–100 scale</div>
             </div>
             <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
@@ -661,8 +661,8 @@ const DELAY_THUMBS: Record<string,string> = {
         </div>
         <div id="gta6-trends-chart" class="w-full h-64 px-4 py-2" data-keywords={JSON.stringify(gta6Trends.keywords)}></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-700 font-mono">Source: Google Trends via pytrends · updated {new Date(gta6Trends.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI search interest is at an all-time high and still climbing. The pre-launch hype signal is unlike any prior GTA title." url="https://gtavi.ai/gta-vi/intel" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: Google Trends via pytrends · updated {new Date(gta6Trends.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI search interest is at an all-time high and still climbing. The pre-launch hype signal is unlike any prior GTA title." url="https://gtavi.ai/gta-vi/intel" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
@@ -674,7 +674,7 @@ const DELAY_THUMBS: Record<string,string> = {
       <div class="flex items-center gap-3 mb-7">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Historical Context</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-700">gap trend extrapolated to VI</span>
+        <span class="text-[10px] font-mono text-zinc-500">gap trend extrapolated to VI</span>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         <ReleaseTimeline />
@@ -701,19 +701,19 @@ const DELAY_THUMBS: Record<string,string> = {
                   <tr class={`border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors ${isPred ? "text-gta-gold" : "text-zinc-300"}`}>
                     <td class="px-5 py-2.5 font-semibold">
                       {g.short}
-                      {isPred && <span class="ml-1.5 text-[9px] bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1 py-0.5 rounded uppercase tracking-widest align-middle">est</span>}
+                      {isPred && <span class="ml-1.5 text-[11px] bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1 py-0.5 rounded uppercase tracking-widest align-middle">est</span>}
                     </td>
-                    <td class="px-4 py-2.5 text-right">{price ? `$${price.toFixed(0)}` : <span class="text-zinc-700">—</span>}</td>
-                    <td class="px-4 py-2.5 text-right">{map ?? <span class="text-zinc-700">—</span>}</td>
-                    <td class="px-5 py-2.5 text-right">{vehicles ?? <span class="text-zinc-700">—</span>}</td>
+                    <td class="px-4 py-2.5 text-right">{price ? `$${price.toFixed(0)}` : <span class="text-zinc-500">—</span>}</td>
+                    <td class="px-4 py-2.5 text-right">{map ?? <span class="text-zinc-500">—</span>}</td>
+                    <td class="px-5 py-2.5 text-right">{vehicles ?? <span class="text-zinc-500">—</span>}</td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
           <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-            <span class="text-[10px] text-zinc-700 font-mono">est = estimated · Rockstar, Broughy1322, community records</span>
-            <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI vs every prior GTA title: map size, vehicle count, launch price. 30 years of franchise growth in one table." url="https://gtavi.ai/gta-vi/intel" size="sm" label="Share" /></div>
+            <span class="text-[10px] text-zinc-500 font-mono">est = estimated · Rockstar, Broughy1322, community records</span>
+            <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI vs every prior GTA title: map size, vehicle count, launch price. 30 years of franchise growth in one table." url="https://gtavi.ai/gta-vi/intel" size="sm" label="Share" /></div>
           </div>
         </div>
       </div>
@@ -744,7 +744,7 @@ const DELAY_THUMBS: Record<string,string> = {
         ].map(m => (
           <div class="px-5 py-5">
             <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">{m.label}</div>
-            <p class="text-xs text-zinc-500 leading-relaxed" style="font-family:'Inter',sans-serif">{m.body}</p>
+            <p class="text-xs text-zinc-500 leading-relaxed">{m.body}</p>
             {m.link && (
               <a href={m.link.href} class="mt-2 inline-block text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest">{m.link.text}</a>
             )}

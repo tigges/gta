@@ -61,7 +61,7 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         </div>
         <img src="/assets/logos/gta-vi.svg" alt="Grand Theft Auto VI"
              class="h-16 sm:h-20 w-auto mb-5 drop-shadow-lg" loading="eager" />
-        <p class="text-sm text-zinc-400 mb-8 leading-relaxed" style="font-family:'Inter',sans-serif">
+        <p class="text-sm text-zinc-400 mb-8 leading-relaxed">
           Data-backed predictions, trailer analysis, feature tracking — everything we know about Grand Theft Auto VI, verified against the source.
         </p>
         <!-- Key stats -->
@@ -95,20 +95,20 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         <div class="flex items-center gap-3">
           <span class="text-2xl">🎯</span>
           <div>
-            <div class="text-[9px] font-mono text-gta-gold/60 uppercase tracking-widest mb-0.5">Intel</div>
-            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+            <div class="text-[11px] font-mono text-gta-gold/60 uppercase tracking-widest mb-0.5">Intel</div>
+            <div class="font-semibold text-zinc-200 text-sm">
               Intel & Predictions
             </div>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3 text-xs font-mono">
           <div>
-            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Predictions</div>
+            <div class="text-zinc-600 text-[11px] uppercase tracking-widest mb-1">Predictions</div>
             <div class="text-zinc-200 font-semibold">{predictions.length}</div>
             <div class="text-zinc-600 text-[10px]">{confirmed} confirmed · {reported} reported</div>
           </div>
           <div>
-            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Features</div>
+            <div class="text-zinc-600 text-[11px] uppercase tracking-widest mb-1">Features</div>
             <div class="text-zinc-200 font-semibold">{totalFeatures}</div>
             <div class="text-zinc-600 text-[10px]">{confirmedFeatures} confirmed</div>
           </div>
@@ -131,20 +131,20 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         <div class="relative flex items-center gap-3">
           <span class="text-2xl">🎬</span>
           <div>
-            <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Trailers</div>
-            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+            <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Trailers</div>
+            <div class="font-semibold text-zinc-200 text-sm">
               Trailers & Analysis
             </div>
           </div>
         </div>
         <div class="relative grid grid-cols-2 gap-3 text-xs font-mono">
           <div>
-            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Trailer 1</div>
+            <div class="text-zinc-600 text-[11px] uppercase tracking-widest mb-1">Trailer 1</div>
             <div class="text-zinc-200 font-semibold">{(t1Views / 1e6).toFixed(0)}M views</div>
             <div class="text-zinc-600 text-[10px]">24-hr YouTube record</div>
           </div>
           <div>
-            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Trailer 2</div>
+            <div class="text-zinc-600 text-[11px] uppercase tracking-widest mb-1">Trailer 2</div>
             <div class="text-zinc-200 font-semibold">{(t2Views / 1e6).toFixed(0)}M views</div>
             <div class="text-zinc-600 text-[10px]">Apr 2025</div>
           </div>
@@ -161,19 +161,19 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         <div class="flex items-center gap-3">
           <span class="text-2xl">🛒</span>
           <div>
-            <div class="text-[9px] font-mono text-gta-gold/60 uppercase tracking-widest mb-0.5">Pre-order</div>
-            <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+            <div class="text-[11px] font-mono text-gta-gold/60 uppercase tracking-widest mb-0.5">Pre-order</div>
+            <div class="font-semibold text-zinc-200 text-sm">
               Buy GTA VI
             </div>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3 text-xs font-mono">
           <div>
-            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Platforms</div>
+            <div class="text-zinc-600 text-[11px] uppercase tracking-widest mb-1">Platforms</div>
             <div class="text-zinc-200 font-semibold">PS5 · Xbox</div>
           </div>
           <div>
-            <div class="text-zinc-600 text-[9px] uppercase tracking-widest mb-1">Launch</div>
+            <div class="text-zinc-600 text-[11px] uppercase tracking-widest mb-1">Launch</div>
             <div class="text-zinc-200 font-semibold">Nov 19, 2026</div>
           </div>
         </div>
@@ -181,7 +181,7 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
           <span class="text-[10px] font-mono text-gta-gold/70 group-hover:text-gta-gold transition-colors">
             Compare editions →
           </span>
-          <span class="ml-auto text-[9px] font-mono px-2 py-0.5 rounded" style="background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.25)">
+          <span class="ml-auto text-[11px] font-mono px-2 py-0.5 rounded" style="background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.25)">
             {daysToRelease}d to launch
           </span>
         </div>
@@ -204,7 +204,7 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
           { label: "Predicted",  value: predictions.length - confirmed - reported, color: "#818cf8", sub: "Data-backed" },
         ].map(s => (
           <div class="px-5 py-4">
-            <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
+            <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-1">{s.label}</div>
             <div class="text-2xl font-mono font-black mb-0.5" style={`color:${s.color}`}>{s.value}</div>
             <div class="text-[10px] font-mono text-zinc-600">{s.sub}</div>
           </div>
@@ -220,7 +220,7 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Signal Intelligence — Key Charts</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/charts?title=gta-vi" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
+        <a href="/charts?title=gta-vi" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
       </div>
 
       <!-- Featured: Trailer velocity (full width) -->

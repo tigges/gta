@@ -1,0 +1,63 @@
+---
+/**
+ * Badge.astro — canonical badge/pill component
+ * 
+ * SINGLE SOURCE OF TRUTH for all tier badges, confidence badges,
+ * category pills, and status indicators across the site.
+ * 
+ * Usage:
+ *   <Badge variant="confirmed" />
+ *   <Badge variant="gold" label="GTA VI" />
+ *   <Badge variant="s-tier" />
+ */
+interface Props {
+  variant: 
+    | 'confirmed'     // live/verified data — teal
+    | 'reported'      // reported/sourced — gold
+    | 'predicted'     // predicted/unverified — zinc
+    | 'official'      // Rockstar official — gold
+    | 'community'     // community/social — green
+    | 'economy'       // economy/capital — indigo
+    | 'alert'         // danger/nerf/delay — red
+    | 'projected'     // projected future — amber dimmed
+    | 'regression'    // deliberate regression — red dimmed
+    | 's-plus'        // S+ income tier — green bright
+    | 's-tier'        // S income tier — gold
+    | 'a-tier'        // A income tier — teal
+    | 'b-tier'        // B income tier — indigo
+    | 'c-tier'        // C income tier — zinc
+    | 'd-tier';       // D income tier — zinc dim
+  label?: string;     // override text (default derives from variant)
+  size?: 'sm' | 'md'; // sm=10px md=11px
+  class?: string;
+}
+
+const { variant, label, size = 'sm', class: extraClass = '' } = Astro.props;
+
+// ── Canonical colour map ─────────────────────────────────────────────────
+const VARIANTS: Record<string, { cls: string; defaultLabel: string }> = {
+  'confirmed':  { cls: 'bg-gta-teal/12 border-gta-teal/40 text-gta-teal',        defaultLabel: 'Confirmed'  },
+  'reported':   { cls: 'bg-gta-gold/12 border-gta-gold/40 text-gta-gold',        defaultLabel: 'Reported'   },
+  'predicted':  { cls: 'bg-zinc-800/60 border-zinc-700/50 text-zinc-400',         defaultLabel: 'Predicted'  },
+  'official':   { cls: 'bg-gta-gold/12 border-gta-gold/40 text-gta-gold',        defaultLabel: 'Official'   },
+  'community':  { cls: 'bg-gta-green/12 border-gta-green/40 text-gta-green',     defaultLabel: 'Community'  },
+  'economy':    { cls: 'bg-gta-indigo/12 border-gta-indigo/40 text-gta-indigo',  defaultLabel: 'Economy'    },
+  'alert':      { cls: 'bg-gta-red/12 border-gta-red/40 text-gta-red',           defaultLabel: 'Alert'      },
+  'projected':  { cls: 'bg-gta-gold/8 border-gta-gold/25 text-gta-gold/70',      defaultLabel: 'Projected'  },
+  'regression': { cls: 'bg-gta-red/8 border-gta-red/30 text-gta-red/70',         defaultLabel: 'Regression' },
+  's-plus':     { cls: 'bg-gta-green/15 border-gta-green/45 text-gta-green',     defaultLabel: 'S+'         },
+  's-tier':     { cls: 'bg-gta-gold/12 border-gta-gold/40 text-gta-gold',        defaultLabel: 'S'          },
+  'a-tier':     { cls: 'bg-gta-teal/12 border-gta-teal/40 text-gta-teal',        defaultLabel: 'A'          },
+  'b-tier':     { cls: 'bg-gta-indigo/12 border-gta-indigo/40 text-gta-indigo',  defaultLabel: 'B'          },
+  'c-tier':     { cls: 'bg-zinc-800/50 border-zinc-700/40 text-zinc-400',         defaultLabel: 'C'          },
+  'd-tier':     { cls: 'bg-zinc-900/50 border-zinc-800/40 text-zinc-500',         defaultLabel: 'D'          },
+};
+
+const config = VARIANTS[variant] ?? VARIANTS['predicted'];
+const text = label ?? config.defaultLabel;
+const sizeCls = size === 'md' ? 'text-[11px]' : 'text-[10px]';
+---
+
+<span class={`inline-flex items-center border rounded font-mono uppercase tracking-widest px-2 py-0.5 ${sizeCls} ${config.cls} ${extraClass}`}>
+  {text}
+</span>

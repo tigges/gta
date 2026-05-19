@@ -172,7 +172,7 @@ const prereqShort = prerequisite
         <span class="font-mono font-black text-xl leading-none" style={`color:${ts.color}`}>{tier}</span>
       </div>
       <div class="absolute top-3 right-3">
-        <span class="text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+        <span class="text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
           style={`color:${playColor};background:${playColor}18;border-color:${playColor}35`}>
           {GAME_LABELS[game]}
         </span>
@@ -181,7 +181,7 @@ const prereqShort = prerequisite
   ) : (
     <div class="px-4 pt-4 pb-2 flex items-center justify-between">
       <span class="font-mono font-black text-2xl leading-none" style={`color:${ts.color}`}>{tier}</span>
-      <span class="text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+      <span class="text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
         style={`color:${playColor};background:${playColor}18;border-color:${playColor}35`}>
         {GAME_LABELS[game]}
       </span>
@@ -192,18 +192,18 @@ const prereqShort = prerequisite
   <div class="px-4 pt-3 pb-2 flex-1 flex flex-col gap-2">
 
     <!-- Name -->
-    <div class="font-semibold text-zinc-200 text-sm leading-snug" style="font-family:'Inter',sans-serif">{name}</div>
+    <div class="font-semibold text-zinc-200 text-sm leading-snug">{name}</div>
 
     <!-- Type · solo · difficulty — all inline, single row -->
     <div class="flex items-center gap-1.5 flex-wrap">
-      <span class="text-[9px] font-mono uppercase tracking-widest" style={`color:${playColor}`}>
+      <span class="text-[11px] font-mono uppercase tracking-widest" style={`color:${playColor}`}>
         {play_type ?? category}
       </span>
       {solo
-        ? <span class="text-[8px] font-mono text-gta-teal border border-gta-teal/25 bg-gta-teal/8 px-1 py-0.5 rounded">solo ✓</span>
-        : min_players && <span class="text-[8px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{min_players}–{max_players}p</span>
+        ? <span class="text-[10px] font-mono text-gta-teal border border-gta-teal/25 bg-gta-teal/8 px-1 py-0.5 rounded">solo ✓</span>
+        : min_players && <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{min_players}–{max_players}p</span>
       }
-      <span class="text-[8px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{diffLabel}</span>
+      <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{diffLabel}</span>
     </div>
 
     <!-- Revenue bar — payout + run time folded into right side -->
@@ -215,12 +215,12 @@ const prereqShort = prerequisite
         </span>
         <div class="text-right leading-tight">
           {(payout_per_run_min || payout_per_run_max) && (
-            <div class="text-[9px] font-mono text-zinc-500">
+            <div class="text-[11px] font-mono text-zinc-500">
               ${((payout_per_run_max ?? payout_per_run_min ?? 0) / 1_000_000).toFixed(1)}M/run
             </div>
           )}
           {avg_run_time_min && (
-            <div class="text-[9px] font-mono text-zinc-600">{avg_run_time_min}min</div>
+            <div class="text-[11px] font-mono text-zinc-600">{avg_run_time_min}min</div>
           )}
         </div>
       </div>
@@ -231,7 +231,7 @@ const prereqShort = prerequisite
 
     <!-- Weekly sale badge -->
     {sale_discount_pct && (
-      <div class="flex items-center gap-1.5 text-[9px] font-mono">
+      <div class="flex items-center gap-1.5 text-[11px] font-mono">
         <span class="px-1.5 py-0.5 rounded font-bold tracking-wide"
           style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3)">
           🏷 {sale_discount_pct}% OFF THIS WEEK
@@ -243,17 +243,17 @@ const prereqShort = prerequisite
     {setup_cost_full && (
       <div class="grid grid-cols-2 gap-x-3 text-[10px] font-mono">
         <div>
-          <div class="text-zinc-600 uppercase tracking-widest text-[8px] mb-0.5">Setup</div>
+          <div class="text-zinc-600 uppercase tracking-widest text-[10px] mb-0.5">Setup</div>
           <div class="text-zinc-300">
             ${(setup_cost_full / 1_000_000).toFixed(1)}M
             {prereqShort && (
-              <span class="text-zinc-600 text-[8px] ml-1 font-normal">({prereqShort})</span>
+              <span class="text-zinc-600 text-[10px] ml-1 font-normal">({prereqShort})</span>
             )}
           </div>
         </div>
         {break_even_hrs && (
           <div>
-            <div class="text-zinc-600 uppercase tracking-widest text-[8px] mb-0.5">Break-even</div>
+            <div class="text-zinc-600 uppercase tracking-widest text-[10px] mb-0.5">Break-even</div>
             <div class="text-zinc-300">{break_even_hrs}h</div>
           </div>
         )}
@@ -262,16 +262,16 @@ const prereqShort = prerequisite
 
     <!-- Loot tiers: condensed to 1 line -->
     {loot_tiers && loot_tiers.length > 0 && (
-      <div class="text-[9px] font-mono text-zinc-600">
-        <span class="text-[8px] text-zinc-700 uppercase tracking-widest mr-1">Loot:</span>
+      <div class="text-[11px] font-mono text-zinc-600">
+        <span class="text-[10px] text-zinc-500 uppercase tracking-widest mr-1">Loot:</span>
         {loot_tiers.slice(0, 2).map((l: LootTier, i: number) => (
           <span>
-            {i > 0 && <span class="text-zinc-700 mx-1">·</span>}
+            {i > 0 && <span class="text-zinc-500 mx-1">·</span>}
             <span style={`color:${ts.color}`}>${(l.value / 1_000_000).toFixed(1)}M</span>
-            <span class="text-zinc-700 ml-0.5">{(l.loot as string).split(" ").slice(0, 2).join(" ")}</span>
+            <span class="text-zinc-500 ml-0.5">{(l.loot as string).split(" ").slice(0, 2).join(" ")}</span>
           </span>
         ))}
-        {loot_tiers.length > 2 && <span class="text-zinc-700 ml-1">+{loot_tiers.length - 2}</span>}
+        {loot_tiers.length > 2 && <span class="text-zinc-500 ml-1">+{loot_tiers.length - 2}</span>}
       </div>
     )}
 
@@ -279,16 +279,16 @@ const prereqShort = prerequisite
 
     <!-- Daily property fee -->
     {daily_fee && (
-      <div class="text-[9px] font-mono text-zinc-600 border-t border-[#1e1e23] pt-2 flex items-center gap-1.5">
+      <div class="text-[11px] font-mono text-zinc-600 border-t border-[#1e1e23] pt-2 flex items-center gap-1.5">
         <span style="color:#52525b">⚙</span>
         <span>${daily_fee.toLocaleString()}/day upkeep</span>
-        <span class="text-zinc-700 ml-0.5">(${Math.round(daily_fee * 365 / 1000)}k/yr)</span>
+        <span class="text-zinc-500 ml-0.5">(${Math.round(daily_fee * 365 / 1000)}k/yr)</span>
       </div>
     )}
 
     <!-- Bonus cadence / active bonus -->
     {bonus_count && (
-      <div class={`text-[9px] font-mono flex items-center gap-1.5 ${daily_fee ? "" : "border-t border-[#1e1e23] pt-2"}`}>
+      <div class={`text-[11px] font-mono flex items-center gap-1.5 ${daily_fee ? "" : "border-t border-[#1e1e23] pt-2"}`}>
         {bonusActiveNow ? (
           <span class="font-bold px-1.5 py-0.5 rounded" style="color:#22c55e;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.25)">
             🔁 BONUS ACTIVE NOW
@@ -297,7 +297,7 @@ const prereqShort = prerequisite
           <span style="color:#52525b">
             🔁 Bonus ×{bonus_count}
             {bonusDaysAgo !== null && <span> · last {bonusDaysAgo}d ago</span>}
-            {bonus_avg_gap_weeks && <span class="text-zinc-700"> · ~{Math.round(bonus_avg_gap_weeks)}w avg</span>}
+            {bonus_avg_gap_weeks && <span class="text-zinc-500"> · ~{Math.round(bonus_avg_gap_weeks)}w avg</span>}
           </span>
         )}
       </div>
@@ -305,21 +305,21 @@ const prereqShort = prerequisite
 
     <!-- Nerf indicator + peak context -->
     {last_nerfed && (
-      <div class={`text-[9px] font-mono text-amber-600/80 flex items-center gap-1.5 ${(daily_fee || bonus_count) ? "" : "border-t border-[#1e1e23] pt-2"}`}>
+      <div class={`text-[11px] font-mono text-gta-gold/80 flex items-center gap-1.5 ${(daily_fee || bonus_count) ? "" : "border-t border-[#1e1e23] pt-2"}`}>
         <span>⚡</span>
         <span>Nerfed {new Date(last_nerfed).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
         {pctDelta && peak_gta_per_hr && (
-          <span class="text-zinc-700">· was ${Math.round(peak_gta_per_hr / 1000)}k/hr ({pctDelta}%)</span>
+          <span class="text-zinc-500">· was ${Math.round(peak_gta_per_hr / 1000)}k/hr ({pctDelta}%)</span>
         )}
         {last_nerfed_notes && !pctDelta && (
-          <span class="text-zinc-700">— {(last_nerfed_notes as string).split(".")[0]}</span>
+          <span class="text-zinc-500">— {(last_nerfed_notes as string).split(".")[0]}</span>
         )}
       </div>
     )}
 
     <!-- Top tip -->
     {tips && tips[0] && (
-      <div class="rounded-lg px-2.5 py-2 text-[9px] font-mono text-zinc-400 border-t border-[#1e1e23] pt-2 flex gap-1.5 items-start">
+      <div class="rounded-lg px-2.5 py-2 text-[11px] font-mono text-zinc-400 border-t border-[#1e1e23] pt-2 flex gap-1.5 items-start">
         <span class="text-gta-gold shrink-0">▶</span>
         <span class="leading-snug">{tips[0]}</span>
       </div>
@@ -329,9 +329,9 @@ const prereqShort = prerequisite
 
   <!-- Footer: DLC + share -->
   <div class="px-4 py-2.5 border-t flex items-center justify-between gap-2" style="border-color:#1e1e23;background:#0e0e11">
-    <span class="text-[8px] font-mono text-zinc-700 truncate">{dlc?.split("(")[0]?.trim() ?? GAME_LABELS[game]}</span>
+    <span class="text-[10px] font-mono text-zinc-500 truncate">{dlc?.split("(")[0]?.trim() ?? GAME_LABELS[game]}</span>
     <div class="flex items-center gap-2 shrink-0">
-      <span class="text-[8px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <span class="text-[10px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
       <ShareButton text={shareText} url={deepLinkUrl} size="sm" label="Share" />
     </div>
   </div>

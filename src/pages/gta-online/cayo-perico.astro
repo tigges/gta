@@ -35,22 +35,22 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
     <div class="flex items-start gap-6 mb-10 flex-wrap sm:flex-nowrap">
       <div class="flex-1">
         <div class="flex items-center gap-2 mb-2">
-          <span class="text-[9px] font-mono bg-green-900/30 text-green-400 border border-green-800/40 px-1.5 py-0.5 rounded uppercase tracking-widest">S+ Tier</span>
-          {cayoBonus && <span class="text-[9px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">★ {cayoBonus.multiplier}× This Week</span>}
+          <span class="text-[11px] font-mono bg-gta-green/30 text-gta-green border border-gta-green/40 px-1.5 py-0.5 rounded uppercase tracking-widest">S+ Tier</span>
+          {cayoBonus && <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">★ {cayoBonus.multiplier}× This Week</span>}
         </div>
-        <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3" style="font-family:'Inter',sans-serif">
+        <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">
           Cayo Perico Heist — Best Solo Money Guide
         </h1>
-        <p class="text-zinc-400 leading-relaxed mb-4" style="font-family:'Inter',sans-serif">
+        <p class="text-zinc-400 leading-relaxed mb-4">
           The Cayo Perico Heist is the most efficient solo money method in GTA Online history.
           With Panther Statue as primary loot, it yields <strong class="text-gta-gold">${(effectiveHr/1000).toFixed(0)}k/hr</strong> —
           {cayoBonus ? `boosted ${cayoBonus.multiplier}× this week.` : "the highest sustained income of any solo activity."}
         </p>
         <div class="flex items-center gap-3 flex-wrap text-[11px] font-mono">
           <span class="text-zinc-500">Setup: ${(cayo.setup_cost_full/1_000_000).toFixed(1)}M GTA$</span>
-          <span class="text-zinc-700">·</span>
+          <span class="text-zinc-500">·</span>
           <span class="text-zinc-500">Break-even: {cayo.break_even_hrs} hours</span>
-          <span class="text-zinc-700">·</span>
+          <span class="text-zinc-500">·</span>
           <span class="text-gta-teal">Solo ✓</span>
         </div>
       </div>
@@ -80,7 +80,7 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
 
     <!-- Loot tiers -->
     <section class="mb-8">
-      <h2 class="text-xl font-bold text-zinc-200 mb-4" style="font-family:'Inter',sans-serif">Loot Tiers — What to Target</h2>
+      <h2 class="text-xl font-bold text-zinc-200 mb-4">Loot Tiers — What to Target</h2>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <table class="w-full text-xs font-mono">
           <thead><tr class="border-b border-[#1e1e23]">
@@ -99,20 +99,20 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
           </tbody>
         </table>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
-          <span class="text-[10px] text-zinc-700 font-mono">Only run for Panther Statue, Pink Diamond, or Bearer Bonds. Abort if primary is Cash.</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Cayo Perico loot tiers: Panther Statue $2.09M vs Cash $90K. Always check before running. Full guide." url="https://gtavi.ai/gta-online/cayo-perico" size="sm" label="Share" /></div>
+          <span class="text-[10px] text-zinc-500 font-mono">Only run for Panther Statue, Pink Diamond, or Bearer Bonds. Abort if primary is Cash.</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Cayo Perico loot tiers: Panther Statue $2.09M vs Cash $90K. Always check before running. Full guide." url="https://gtavi.ai/gta-online/cayo-perico" size="sm" label="Share" /></div>
         </div>
       </div>
     </section>
 
     <!-- Tips -->
     <section class="mb-8">
-      <h2 class="text-xl font-bold text-zinc-200 mb-4" style="font-family:'Inter',sans-serif">Strategy Tips</h2>
+      <h2 class="text-xl font-bold text-zinc-200 mb-4">Strategy Tips</h2>
       <div class="flex flex-col gap-3">
         {cayo.tips?.map((tip: string, i: number) => (
           <div class="flex items-start gap-3 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:#131316">
             <span class="text-gta-gold font-mono font-bold shrink-0">{i+1}</span>
-            <p class="text-[11px] text-zinc-400 leading-relaxed" style="font-family:'Inter',sans-serif">{tip}</p>
+            <p class="text-[11px] text-zinc-400 leading-relaxed">{tip}</p>
           </div>
         ))}
       </div>

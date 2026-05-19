@@ -19,7 +19,7 @@ const COVERS: Record<string, string> = {
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
   <div class="px-5 py-4 border-b border-[#1e1e23]">
     <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// GTA Release History</div>
-    <p class="text-[11px] text-zinc-600 mt-1" style="font-family:'Inter',sans-serif">Time between mainline entries — gap trend extrapolated to VI</p>
+    <p class="text-[11px] text-zinc-600 mt-1">Time between mainline entries — gap trend extrapolated to VI</p>
   </div>
 
   <div class="relative p-5">
@@ -69,7 +69,7 @@ const COVERS: Record<string, string> = {
               </div>
             ) : (
               <div class={`shrink-0 rounded border border-[#1e1e23] flex items-center justify-center w-9 h-12 mt-0.5`} style="background:#0a0a0d">
-                <span class="text-[8px] font-mono text-zinc-700 leading-tight text-center px-0.5">{game.short}</span>
+                <span class="text-[10px] font-mono text-zinc-500 leading-tight text-center px-0.5">{game.short}</span>
               </div>
             )}
 
@@ -80,7 +80,7 @@ const COVERS: Record<string, string> = {
                   {game.short}
                 </span>
                 {isPred && (
-                  <span class="text-[9px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1.5 py-0.5 rounded uppercase tracking-widest">
+                  <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1.5 py-0.5 rounded uppercase tracking-widest">
                     est
                   </span>
                 )}
@@ -98,7 +98,7 @@ const COVERS: Record<string, string> = {
                 {(game as any).trailer_youtube_id && (
                   <a href={`https://www.youtube.com/watch?v=${(game as any).trailer_youtube_id}`}
                     target="_blank" rel="noopener noreferrer"
-                    class="text-[11px] font-mono text-zinc-700 hover:text-gta-gold transition-colors">▶ Trailer</a>
+                    class="text-[11px] font-mono text-zinc-500 hover:text-gta-gold transition-colors">▶ Trailer</a>
                 )}
               </div>
             </div>
@@ -122,8 +122,8 @@ const COVERS: Record<string, string> = {
     )}></div>
   </div>
   <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-    <span class="text-[10px] text-zinc-700 font-mono">Source: Rockstar Games · community records · 1997–2026</span>
-    <div class="flex items-center gap-3 shrink-0"><span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA franchise timeline: GTA I (1997) → GTA VI (2026). 30 years, 8 mainline titles, and a 13-year wait for the next one." url="https://gtavi.ai/franchise" size="sm" label="Share" /></div>
+    <span class="text-[10px] text-zinc-500 font-mono">Source: Rockstar Games · community records · 1997–2026</span>
+    <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA franchise timeline: GTA I (1997) → GTA VI (2026). 30 years, 8 mainline titles, and a 13-year wait for the next one." url="https://gtavi.ai/franchise" size="sm" label="Share" /></div>
   </div>
   </div>
 

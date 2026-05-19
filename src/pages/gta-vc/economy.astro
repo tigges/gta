@@ -12,10 +12,10 @@ const economy = (economyData as any).economies.find((e: any) => e.title_id === "
     <div class="absolute inset-0" style="background:#0a0a0d"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-center gap-2 mb-4 flex-wrap">
-        <span class="bg-amber-900/30 border-amber-700/40 text-amber-400 text-[9px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest">{economy.era_label}</span>
+        <span class="bg-gta-gold/30 border-gta-gold/40 text-gta-gold text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest">{economy.era_label}</span>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2" style="font-family:'Inter',sans-serif">{economy.title_name} — Economy</h1>
-      <p class="text-zinc-300 text-sm leading-relaxed max-w-xl" style="font-family:'Inter',sans-serif">The franchise's first asset ownership loop: earn → buy business → receive passive income → earn more. The Malibu Club is the conceptual ancestor of the Acid Lab.</p>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">{economy.title_name} — Economy</h1>
+      <p class="text-zinc-300 text-sm leading-relaxed max-w-xl">The franchise's first asset ownership loop: earn → buy business → receive passive income → earn more. The Malibu Club is the conceptual ancestor of the Acid Lab.</p>
     </div>
   </section>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
@@ -34,12 +34,12 @@ const economy = (economyData as any).economies.find((e: any) => e.title_id === "
     </section>
 
     <section class="rounded-xl border border-gta-gold/15 px-6 py-5" style="background:rgba(245,158,11,0.03)">
-      <div class="text-[9px] font-mono text-gta-gold/40 uppercase tracking-widest mb-2">GTA VI Lineage</div>
+      <div class="text-[11px] font-mono text-gta-gold/40 uppercase tracking-widest mb-2">GTA VI Lineage</div>
       <p class="text-[11px] font-mono text-zinc-300 leading-relaxed">{economy.gta_vi_lineage}</p>
     </section>
     <div class="flex items-center gap-3 flex-wrap">
       <a href="/franchise/economics" class="px-4 py-2 rounded border border-[#2a2a31] text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">← Ten Economies</a>
-      <a href="/gta-sa/economy" class="px-4 py-2 rounded border border-amber-700/30 text-amber-400 text-[11px] font-mono hover:bg-amber-900/20 transition-all">San Andreas: Multi-Stream Economy →</a>
+      <a href="/gta-sa/economy" class="px-4 py-2 rounded border border-gta-gold/30 text-gta-gold text-[11px] font-mono hover:bg-gta-gold/20 transition-all">San Andreas: Multi-Stream Economy →</a>
     </div>
     <CrossLinks context="franchise" />
   </div>

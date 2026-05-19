@@ -25,8 +25,8 @@ const ownableBusinesses = businesses.filter(b =>
   <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
     <div>
       <div class="flex items-center gap-2 mb-1">
-        <span class="text-[9px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Adviser</span>
-        <span class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Personalised Income Stack Builder</span>
+        <span class="text-[11px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Adviser</span>
+        <span class="font-semibold text-zinc-200 text-sm">Personalised Income Stack Builder</span>
       </div>
       <div class="text-[11px] text-zinc-500 font-mono">Select what you own → get your personalised $/hr total + best next purchase</div>
     </div>
@@ -35,7 +35,7 @@ const ownableBusinesses = businesses.filter(b =>
   <!-- Weekly bonuses banner -->
   {weeklyBonuses.length > 0 && (
     <div class="px-5 py-3 border-b border-gta-gold/20 flex items-center gap-3 flex-wrap" style="background:rgba(245,158,11,0.06)">
-      <span class="text-[9px] font-mono text-gta-gold border border-gta-gold/25 bg-gta-gold/10 px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0">This Week</span>
+      <span class="text-[11px] font-mono text-gta-gold border border-gta-gold/25 bg-gta-gold/10 px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0">This Week</span>
       <div class="flex flex-wrap gap-2">
         {weeklyBonuses.map((b: any) => (
           <span class="text-[10px] font-mono text-gta-gold/80">
@@ -43,7 +43,7 @@ const ownableBusinesses = businesses.filter(b =>
           </span>
         ))}
       </div>
-      <span class="text-[9px] font-mono text-zinc-600 ml-auto">Bonuses applied to recommendations ↓</span>
+      <span class="text-[11px] font-mono text-zinc-600 ml-auto">Bonuses applied to recommendations ↓</span>
     </div>
   )}
 
@@ -51,7 +51,7 @@ const ownableBusinesses = businesses.filter(b =>
 
     <!-- Left: ownership checklist -->
     <div>
-      <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-3">What do you own?</div>
+      <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-3">What do you own?</div>
       <div class="flex flex-col gap-2" id="adviser-checklist">
         {ownableBusinesses.map((b: any) => (
           <label class="flex items-center gap-3 cursor-pointer group">
@@ -68,11 +68,11 @@ const ownableBusinesses = businesses.filter(b =>
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-2">
                 <span class="text-[11px] font-mono text-zinc-300 group-hover:text-zinc-100 transition-colors truncate">{b.name}</span>
-                <span class="text-[9px] font-mono shrink-0" style={`color:${b.play_type === 'passive' ? '#22c55e' : b.play_type === 'semi-passive' ? '#f59e0b' : b.play_type === 'heist' || b.category === 'heist' || b.category === 'contract' ? '#818cf8' : '#ef4444'}`}>
+                <span class="text-[11px] font-mono shrink-0" style={`color:${b.play_type === 'passive' ? '#22c55e' : b.play_type === 'semi-passive' ? '#f59e0b' : b.play_type === 'heist' || b.category === 'heist' || b.category === 'contract' ? '#818cf8' : '#ef4444'}`}>
                   ${Math.round(b.net_profit_per_hr/1000)}k/hr
                 </span>
               </div>
-              <div class="text-[9px] font-mono text-zinc-700">{b.play_type} · {b.solo ? "solo" : `${b.min_players}p min`}</div>
+              <div class="text-[11px] font-mono text-zinc-500">{b.play_type} · {b.solo ? "solo" : `${b.min_players}p min`}</div>
             </div>
           </label>
         ))}
@@ -80,7 +80,7 @@ const ownableBusinesses = businesses.filter(b =>
 
       <!-- Budget input -->
       <div class="mt-4 pt-4 border-t border-[#1e1e23]">
-        <label class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Your current budget (GTA$)</label>
+        <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Your current budget (GTA$)</label>
         <div class="flex items-center gap-2">
           <span class="text-zinc-500 font-mono text-sm">$</span>
           <input
@@ -99,24 +99,24 @@ const ownableBusinesses = businesses.filter(b =>
     <div>
       <!-- Current stack -->
       <div class="rounded-lg border border-[#2a2a31] p-4 mb-4" style="background:#0e0e11">
-        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Your current $/hr stack</div>
+        <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Your current $/hr stack</div>
         <div id="adviser-current-total" class="text-3xl font-mono font-bold text-gta-gold mb-1">$0/hr</div>
         <div id="adviser-stack-breakdown" class="flex flex-col gap-1 mt-2 text-[10px] font-mono text-zinc-500">
-          <span class="text-zinc-700">Select your businesses to see your stack →</span>
+          <span class="text-zinc-500">Select your businesses to see your stack →</span>
         </div>
       </div>
 
       <!-- Recommendations -->
       <div>
-        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Best next purchase (by ROI)</div>
+        <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Best next purchase (by ROI)</div>
         <div id="adviser-recommendations" class="flex flex-col gap-2">
-          <span class="text-[10px] font-mono text-zinc-700">Enter your budget to see recommendations →</span>
+          <span class="text-[10px] font-mono text-zinc-500">Enter your budget to see recommendations →</span>
         </div>
       </div>
 
       <!-- Synergy notes -->
       <div id="adviser-synergy" class="mt-4 hidden">
-        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Synergy detected</div>
+        <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Synergy detected</div>
         <div id="adviser-synergy-content" class="text-[10px] font-mono text-gta-teal leading-relaxed"></div>
       </div>
     </div>
@@ -143,11 +143,11 @@ const ownableBusinesses = businesses.filter(b =>
   <!-- Footer -->
   <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3" style="background:#0e0e11">
     <div class="flex items-center gap-3">
-      <span class="text-[10px] text-zinc-700 font-mono">Personalised recommendations · based on what you own and your budget</span>
+      <span class="text-[10px] text-zinc-500 font-mono">Personalised recommendations · based on what you own and your budget</span>
       <a href="/gta-online/bonuses" class="text-[10px] font-mono text-gta-teal/60 hover:text-gta-teal transition-colors tracking-widest uppercase shrink-0">Community →</a>
     </div>
     <div class="flex items-center gap-3 shrink-0">
-      <span class="text-[9px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
       <ShareButton text="Built my personalised GTA Online income stack on GTAVI.AI — shows my current $/hr total and best next purchase by ROI." url="https://gtavi.ai/gta-online/income#income-adviser" size="sm" label="Share" />
     </div>
   </div>
@@ -224,7 +224,7 @@ const ownableBusinesses = businesses.filter(b =>
     const breakdownEl = document.getElementById('adviser-stack-breakdown');
     if (breakdownEl) {
       if (stackItems.length === 0) {
-        breakdownEl.innerHTML = '<span class="text-zinc-700">Select your businesses to see your stack →</span>';
+        breakdownEl.innerHTML = '<span class="text-zinc-500">Select your businesses to see your stack →</span>';
       } else {
         const sorted = [...stackItems].sort((a, b) => b.profit - a.profit);
         breakdownEl.innerHTML = sorted.map(item => {
@@ -268,7 +268,7 @@ const ownableBusinesses = businesses.filter(b =>
               <span class="text-[11px] font-mono text-zinc-200 font-semibold">${b.name}${boostBadge}${saleBadge}</span>
               <span class="text-[11px] font-mono text-gta-gold font-bold">${formatK(effectiveHr(b))}/hr</span>
             </div>
-            <div class="flex items-center gap-3 text-[9px] font-mono text-zinc-600">
+            <div class="flex items-center gap-3 text-[11px] font-mono text-zinc-600">
               <span>Setup: ${setupDisplay}</span>
               ${roi > 0 ? `<span>Break-even: ${roi}h</span>` : '<span>Free</span>'}
               <span>${b.solo ? 'Solo ✓' : `${b.min_players}p min`}</span>

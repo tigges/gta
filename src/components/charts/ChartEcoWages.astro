@@ -21,14 +21,14 @@ const liveMetaSeries = lastMeta?.date === today
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
   <div class="px-5 py-3 border-b border-[#1e1e23]">
-    <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">GTA Online Income Ceiling — Best $/hr Per Era</div>
+    <div class="font-semibold text-zinc-200 text-sm">GTA Online Income Ceiling — Best $/hr Per Era</div>
     <div class="text-[10px] font-mono text-zinc-600 mt-0.5">Top money method per patch · community benchmarks · auto-updated nightly</div>
   </div>
   <div id="chart-wages" class="w-full" style="height:220px"
     data-series={JSON.stringify(liveMetaSeries)}
   ></div>
   <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-    <span class="text-[10px] text-zinc-700 font-mono">Source: community data · updated nightly</span>
+    <span class="text-[10px] text-zinc-500 font-mono">Source: community data · updated nightly</span>
     <ShareButton text="GTA Online economy chart: GTA Online Income Ceiling — Best $/hr Per Era" url="https://gtavi.ai/gta-online/economy" size="sm" label="Share" />
   </div>
 </div>

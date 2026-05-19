@@ -26,8 +26,8 @@ const titleCount = titles.length;
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Grand Theft Auto · 1997–2026</div>
-      <h1 class="text-4xl font-bold text-white mb-4" style="font-family:'Inter',sans-serif">Franchise History</h1>
-      <p class="text-sm text-zinc-400 max-w-lg mb-8" style="font-family:'Inter',sans-serif">
+      <h1 class="text-4xl font-bold text-white mb-4">Franchise History</h1>
+      <p class="text-sm text-zinc-400 max-w-lg mb-8">
         30 years of GTA. Sales data, critic scores, map evolution, and the full economic arc from GTA 1 to GTA VI.
       </p>
       <div class="flex flex-wrap gap-5 text-xs font-mono text-zinc-600">
@@ -49,7 +49,7 @@ const titleCount = titles.length;
          style="background:#131316">
         <div class="text-2xl">📖</div>
         <div>
-          <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors" style="font-family:'Inter',sans-serif">History & Sales</div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors">History & Sales</div>
           <div class="text-[10px] font-mono text-zinc-600">Sales figures · Metacritic scores · release timeline · map size progression</div>
         </div>
         <div class="mt-auto text-[10px] font-mono text-zinc-600 group-hover:text-zinc-400 transition-colors">Explore history →</div>
@@ -57,14 +57,14 @@ const titleCount = titles.length;
 
       <!-- Charts -->
       <a href="/franchise/charts"
-         class="group rounded-xl border border-[#1e1e23] hover:border-amber-800/40 p-6 flex flex-col gap-3 transition-all hover:bg-amber-900/[0.03]"
+         class="group rounded-xl border border-[#1e1e23] hover:border-gta-gold/40 p-6 flex flex-col gap-3 transition-all hover:bg-gta-gold/[0.03]"
          style="background:#131316">
         <div class="text-2xl">📈</div>
         <div>
-          <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors" style="font-family:'Inter',sans-serif">Charts</div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors">Charts</div>
           <div class="text-[10px] font-mono text-zinc-600">Cross-title earnings · complexity evolution · CPI pricing · sales velocity</div>
         </div>
-        <div class="mt-auto text-[10px] font-mono text-amber-600 group-hover:text-amber-400 transition-colors">View charts →</div>
+        <div class="mt-auto text-[10px] font-mono text-gta-gold group-hover:text-gta-gold transition-colors">View charts →</div>
       </a>
 
       <!-- GTA V Story -->
@@ -75,7 +75,7 @@ const titleCount = titles.length;
           <img src="/assets/logos/gta-v.png" alt="GTA V" class="h-8 w-auto" loading="lazy" />
         </div>
         <div>
-          <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors" style="font-family:'Inter',sans-serif">GTA V Story Mode</div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors">GTA V Story Mode</div>
           <div class="text-[10px] font-mono text-zinc-600">Heists · assassination stocks · vehicle benchmarks · $2B strategy</div>
         </div>
         <div class="mt-auto text-[10px] font-mono text-zinc-600 group-hover:text-zinc-400 transition-colors">Story data →</div>
@@ -100,7 +100,7 @@ const titleCount = titles.length;
              class="group flex flex-col items-center gap-1.5 hover:opacity-90 transition-opacity">
             <img src={`/assets/covers/${t.id}.jpg`} alt={t.label}
                  class="w-12 h-16 object-cover rounded border border-[#2a2a31] group-hover:border-zinc-600 transition-colors" loading="lazy" />
-            <div class="text-[8px] font-mono text-zinc-600">{t.year}</div>
+            <div class="text-[10px] font-mono text-zinc-600">{t.year}</div>
           </a>
         ))}
       </div>

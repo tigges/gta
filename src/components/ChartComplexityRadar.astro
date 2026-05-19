@@ -43,15 +43,15 @@ const isProjected = (economy as any).projected;
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
   <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
     <div>
-      <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+      <div class="font-semibold text-zinc-200 text-sm">
         Economic Complexity
-        {isProjected && <span class="ml-1 text-[9px] font-mono text-amber-500/70 border border-amber-700/30 px-1.5 py-0.5 rounded uppercase tracking-widest">Projected</span>}
+        {isProjected && <span class="ml-1 text-[11px] font-mono text-gta-gold/70 border border-gta-gold/30 px-1.5 py-0.5 rounded uppercase tracking-widest">Projected</span>}
       </div>
       <div class="text-[10px] font-mono text-zinc-400 mt-0.5">5 dimensions · franchise baseline comparison</div>
     </div>
     <div class="text-right">
       <div class="text-2xl font-mono font-black" style={`color:${isProjected ? "#f59e0b" : "#0d9488"}`}>{complexityScore}</div>
-      <div class="text-[9px] font-mono text-zinc-500">/ 17 max</div>
+      <div class="text-[11px] font-mono text-zinc-500">/ 17 max</div>
     </div>
   </div>
 
@@ -66,7 +66,7 @@ const isProjected = (economy as any).projected;
   </div>
 
   <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-    <div class="flex items-center gap-4 text-[9px] font-mono text-zinc-400">
+    <div class="flex items-center gap-4 text-[11px] font-mono text-zinc-400">
       <span class="flex items-center gap-1.5">
         <div class="w-4 h-px" style={`background:${isProjected ? "#f59e0b" : "#0d9488"};opacity:0.8`}></div>
         {economy.short ?? economy.title_name}

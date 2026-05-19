@@ -5,7 +5,7 @@ import trendsData from "../../data/gta-5/trends/search-interest.json";
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
   <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
     <div>
-      <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">Search Interest Over Time</div>
+      <div class="font-semibold text-zinc-200 text-sm">Search Interest Over Time</div>
       <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Google Trends — all GTA keywords, worldwide (0–100)</div>
     </div>
     <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
@@ -23,7 +23,7 @@ import trendsData from "../../data/gta-5/trends/search-interest.json";
   </div>
   <div id="trends-chart" class="w-full h-64 px-4 py-2" data-keywords={JSON.stringify(trendsData.keywords)}></div>
   <div class="px-5 py-3 border-t border-[#1e1e23]">
-    <span class="text-[10px] text-zinc-700 font-mono">Source: Google Trends via pytrends · Updated {new Date(trendsData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
+    <span class="text-[10px] text-zinc-500 font-mono">Source: Google Trends via pytrends · Updated {new Date(trendsData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
   </div>
 </div>
 

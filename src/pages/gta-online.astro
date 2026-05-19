@@ -50,12 +50,12 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-16">
       <div class="max-w-lg">
-        <div class="text-[10px] font-mono text-teal-500/60 uppercase tracking-[0.25em] mb-3">
+        <div class="text-[10px] font-mono text-gta-teal/60 uppercase tracking-[0.25em] mb-3">
           // GTA Online · Live Economic Intelligence
         </div>
         <img src="/assets/logos/gta-online.svg" alt="Grand Theft Auto Online"
              class="h-14 sm:h-18 w-auto mb-5 drop-shadow-lg" loading="eager" />
-        <p class="text-sm text-zinc-400 mb-8 leading-relaxed" style="font-family:'Inter',sans-serif">
+        <p class="text-sm text-zinc-400 mb-8 leading-relaxed">
           Income methods ranked, inflation modelled, weekly bonuses tracked.
           {profileCount} income sources profiled. Updated nightly.
         </p>
@@ -87,43 +87,43 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
 
       <!-- Economy -->
       <a href="/gta-online/economy"
-         class="group rounded-xl border border-[#1e1e23] hover:border-teal-800/50 p-5 flex flex-col gap-3 transition-all hover:bg-teal-900/[0.06]"
+         class="group rounded-xl border border-[#1e1e23] hover:border-gta-teal/50 p-5 flex flex-col gap-3 transition-all hover:bg-gta-teal/[0.06]"
          style="background:#131316">
         <div class="text-xl">📊</div>
         <div>
-          <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">Economy Model</div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1">Economy Model</div>
           <div class="text-[10px] font-mono text-zinc-600 leading-relaxed">GTA-PPI · inflation · passive income stack · shark card analysis</div>
         </div>
         <div class="mt-auto text-[10px] font-mono transition-colors" style="color:#0d9488">
-          <span class="group-hover:text-teal-300 transition-colors">Explore model →</span>
+          <span class="group-hover:text-gta-teal transition-colors">Explore model →</span>
         </div>
       </a>
 
       <!-- Income Sources -->
       <a href="/database?game=gta-online"
-         class="group rounded-xl border border-[#1e1e23] hover:border-amber-800/50 p-5 flex flex-col gap-3 transition-all hover:bg-amber-900/[0.04]"
+         class="group rounded-xl border border-[#1e1e23] hover:border-gta-gold/50 p-5 flex flex-col gap-3 transition-all hover:bg-gta-gold/[0.04]"
          style="background:#131316">
         <div class="text-xl">💰</div>
         <div>
-          <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">Income Sources</div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1">Income Sources</div>
           <div class="text-[10px] font-mono text-zinc-600 leading-relaxed">{profileCount} methods · S→D tier ranking · daily fee · bonus cadence</div>
         </div>
-        <div class="mt-auto text-[10px] font-mono text-amber-600 group-hover:text-amber-400 transition-colors">Browse sources →</div>
+        <div class="mt-auto text-[10px] font-mono text-gta-gold group-hover:text-gta-gold transition-colors">Browse sources →</div>
       </a>
 
       <!-- Bonuses & Promos -->
       <a href="/gta-online/bonuses"
-         class="group rounded-xl border border-[#1e1e23] hover:border-green-800/50 p-5 flex flex-col gap-3 transition-all hover:bg-green-900/[0.05]"
+         class="group rounded-xl border border-[#1e1e23] hover:border-gta-green/50 p-5 flex flex-col gap-3 transition-all hover:bg-gta-green/[0.05]"
          style="background:#131316">
         <div class="text-xl">🏷</div>
         <div>
-          <div class="font-semibold text-zinc-200 text-sm mb-1" style="font-family:'Inter',sans-serif">Bonuses & Promos</div>
+          <div class="font-semibold text-zinc-200 text-sm mb-1">Bonuses & Promos</div>
           <div class="text-[10px] font-mono text-zinc-600 leading-relaxed">
             {weekStart ? `Week of ${weekStart} · ` : ""}
             {bonuses.length + sales.length} events · {historyCount} weeks tracked
           </div>
         </div>
-        <div class="mt-auto text-[10px] font-mono text-green-600 group-hover:text-green-400 transition-colors">See this week →</div>
+        <div class="mt-auto text-[10px] font-mono text-gta-green group-hover:text-gta-green transition-colors">See this week →</div>
       </a>
     </div>
 
@@ -132,10 +132,10 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
       <div class="mb-12 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
           <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse shrink-0"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
             <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// This week{weekStart ? ` · w/c ${weekStart}` : ""}</span>
           </div>
-          <a href="/gta-online/bonuses" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full calendar →</a>
+          <a href="/gta-online/bonuses" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full calendar →</a>
         </div>
         <div class="divide-y divide-[#1e1e23]">
           {bonuses.slice(0, 4).map((b: any) => (
@@ -144,14 +144,14 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
               <span class="text-xs font-mono text-zinc-300 capitalize flex-1">
                 {(b.activity_id as string).replace(/-/g, " ")}
               </span>
-              <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">bonus</span>
+              <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">bonus</span>
             </div>
           ))}
           {sales.slice(0, 3).map((s: any) => (
             <div class="px-5 py-3 flex items-center gap-3">
               <span class="text-[11px] font-mono font-bold w-5 shrink-0" style="color:#22c55e">{s.discount_pct}%</span>
               <span class="text-xs font-mono text-zinc-300 flex-1">{s.item_description}</span>
-              <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">off</span>
+              <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">off</span>
             </div>
           ))}
         </div>
@@ -165,15 +165,15 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
       </div>
       <div class="px-5 py-5 flex items-center gap-5 flex-wrap">
         <div>
-          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Top method</div>
-          <div class="text-xl font-semibold text-zinc-200" style="font-family:'Inter',sans-serif">{topName}</div>
+          <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Top method</div>
+          <div class="text-xl font-semibold text-zinc-200">{topName}</div>
         </div>
         <div class="ml-auto text-right">
-          <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Net $/hr</div>
+          <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Net $/hr</div>
           <div class="text-3xl font-mono font-black" style="color:#0d9488">${Math.round(topGph / 1000)}k</div>
         </div>
         <a href="/database?game=gta-online"
-           class="w-full sm:w-auto px-4 py-2 rounded border border-teal-700/30 text-teal-400 text-xs font-mono hover:bg-teal-900/20 transition-all text-center">
+           class="w-full sm:w-auto px-4 py-2 rounded border border-gta-teal/30 text-gta-teal text-xs font-mono hover:bg-gta-teal/20 transition-all text-center">
           Browse all income sources →
         </a>
       </div>
@@ -187,7 +187,7 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
         <span class="w-1.5 h-1.5 rounded-full bg-gta-teal shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economy Intelligence — Key Charts</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/charts?title=gta-online" class="text-[10px] font-mono text-zinc-700 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
+        <a href="/charts?title=gta-online" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
       </div>
 
       <!-- Featured: Meta evolution (full width) -->
@@ -259,10 +259,10 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
     ═══════════════════════════════════════════════════════ -->
     <section class="mb-12">
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[9px] font-mono bg-teal-900/30 text-teal-400 border border-teal-800/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <span class="text-[11px] font-mono bg-gta-teal/30 text-gta-teal border border-gta-teal/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economic Flow Analysis</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/gta-online/economy" class="text-[10px] font-mono text-teal-400/70 hover:text-teal-400 transition-colors tracking-widest uppercase">Full model →</a>
+        <a href="/gta-online/economy" class="text-[10px] font-mono text-gta-teal/70 hover:text-gta-teal transition-colors tracking-widest uppercase">Full model →</a>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -271,12 +271,12 @@ const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
       </div>
       <ChartEcoHealth />
 
-      <div class="mt-5 rounded-xl border border-teal-800/20 px-5 py-4 flex items-center justify-between flex-wrap gap-3" style="background:#0e1a0e">
+      <div class="mt-5 rounded-xl border border-gta-teal/20 px-5 py-4 flex items-center justify-between flex-wrap gap-3" style="background:#0e1a0e">
         <div>
-          <div class="font-semibold text-teal-200 text-sm mb-0.5" style="font-family:'Inter',sans-serif">Complete Economy Model</div>
-          <div class="text-[10px] font-mono text-teal-700 leading-snug">Circular flow · Shark Card spend · savings profile · investment analysis · all 7 economy charts</div>
+          <div class="font-semibold text-gta-teal text-sm mb-0.5">Complete Economy Model</div>
+          <div class="text-[10px] font-mono text-gta-teal leading-snug">Circular flow · Shark Card spend · savings profile · investment analysis · all 7 economy charts</div>
         </div>
-        <a href="/gta-online/economy" class="shrink-0 px-4 py-2 rounded border border-teal-700/30 text-teal-400 text-[10px] font-mono hover:bg-teal-900/20 transition-all">
+        <a href="/gta-online/economy" class="shrink-0 px-4 py-2 rounded border border-gta-teal/30 text-gta-teal text-[10px] font-mono hover:bg-gta-teal/20 transition-all">
           Open Economy Model →
         </a>
       </div>
