@@ -1,0 +1,188 @@
+---
+/**
+ * ChartComplexityRadar.astro
+ * 5-axis spider/radar chart for GTA economy dimension scores.
+ * Overlays the title's scores against the franchise average.
+ */
+import type { EconomyModel } from "../types/gta";
+import economyData from "../../data/franchise/economy-models.json";
+import ShareButton from "./ShareButton.astro";
+
+interface Props {
+  titleId: string;
+  size?: number;
+  showAverage?: boolean;
+}
+
+const { titleId, size = 260, showAverage = true } = Astro.props;
+const allEconomies = (economyData as any).economies as EconomyModel[];
+const economy = allEconomies.find((e: any) => e.title_id === titleId);
+if (!economy) throw new Error(`ChartComplexityRadar: unknown titleId "${titleId}"`);
+
+const AXES = [
+  { key: "circular_flow",       label: "Circular Flow" },
+  { key: "capital_market",      label: "Capital Market" },
+  { key: "passive_income",      label: "Passive Income" },
+  { key: "inflation",           label: "Inflation" },
+  { key: "sovereign_complexity",label: "Sovereign" },
+] as const;
+
+// Franchise average per axis
+const avgScores = Object.fromEntries(
+  AXES.map(ax => [
+    ax.key,
+    allEconomies.reduce((s: number, e: any) => s + (e.dimension_scores[ax.key] ?? 0), 0) / allEconomies.length,
+  ])
+);
+
+const scores = economy.dimension_scores as Record<string, number>;
+const complexityScore = economy.complexity_score;
+const isProjected = (economy as any).projected;
+---
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+  <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
+    <div>
+      <div class="font-semibold text-zinc-200 text-sm" style="font-family:'Inter',sans-serif">
+        Economic Complexity
+        {isProjected && <span class="ml-1 text-[9px] font-mono text-amber-500/70 border border-amber-700/30 px-1.5 py-0.5 rounded uppercase tracking-widest">Projected</span>}
+      </div>
+      <div class="text-[10px] font-mono text-zinc-600 mt-0.5">5 dimensions · franchise baseline comparison</div>
+    </div>
+    <div class="text-right">
+      <div class="text-2xl font-mono font-black" style={`color:${isProjected ? "#f59e0b" : "#0d9488"}`}>{complexityScore}</div>
+      <div class="text-[9px] font-mono text-zinc-700">/ 17 max</div>
+    </div>
+  </div>
+
+  <div id={`radar-${titleId}`} class="chart-complexity-radar w-full"
+       style={`height:${size}px`}
+       data-scores={JSON.stringify(scores)}
+       data-avg={JSON.stringify(avgScores)}
+       data-axes={JSON.stringify(AXES)}
+       data-title={economy.short ?? economy.title_name}
+       data-color={isProjected ? "#f59e0b" : "#0d9488"}
+       data-projected={String(isProjected)}>
+  </div>
+
+  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+    <div class="flex items-center gap-4 text-[9px] font-mono text-zinc-600">
+      <span class="flex items-center gap-1.5">
+        <div class="w-4 h-px" style={`background:${isProjected ? "#f59e0b" : "#0d9488"};opacity:0.8`}></div>
+        {economy.short ?? economy.title_name}
+      </span>
+      <span class="flex items-center gap-1.5">
+        <div class="w-4 h-px border-t border-dashed border-zinc-600"></div>
+        Franchise avg
+      </span>
+    </div>
+    <ShareButton
+      text={`GTA economic complexity: ${economy.short ?? economy.title_name} scores ${complexityScore}/17. Circular flow, capital market, passive income, inflation, and sovereign complexity visualised.`}
+      url={`https://gtavi.ai/franchise/economics`}
+      size="sm" label="Share" />
+  </div>
+</div>
+
+<script>
+  import * as d3 from "d3";
+
+  document.querySelectorAll<HTMLElement>(".chart-complexity-radar").forEach(el => {
+    const scores   = JSON.parse(el.dataset.scores   || "{}") as Record<string,number>;
+    const avg      = JSON.parse(el.dataset.avg      || "{}") as Record<string,number>;
+    const axes     = JSON.parse(el.dataset.axes     || "[]") as { key: string; label: string }[];
+    const titleStr = el.dataset.title    ?? "";
+    const color    = el.dataset.color    ?? "#0d9488";
+    const isProj   = el.dataset.projected === "true";
+
+    const W  = el.clientWidth  || 260;
+    const H  = el.clientHeight || 260;
+    const cx = W / 2, cy = H / 2;
+    const R  = Math.min(cx, cy) - 38;
+    const maxVal = 4;
+    const n = axes.length;
+    const angleSlice = (Math.PI * 2) / n;
+
+    function toXY(i: number, val: number): [number, number] {
+      const angle = i * angleSlice - Math.PI / 2;
+      return [cx + (val / maxVal) * R * Math.cos(angle), cy + (val / maxVal) * R * Math.sin(angle)];
+    }
+
+    const svg = d3.select(el).append("svg")
+      .attr("width", "100%").attr("height", H)
+      .attr("viewBox", `0 0 ${W} ${H}`);
+
+    // Grid rings
+    [1, 2, 3, 4].forEach(level => {
+      const pts = axes.map((_, i) => toXY(i, level));
+      svg.append("polygon")
+        .attr("points", pts.map(p => p.join(",")).join(" "))
+        .attr("fill", "none")
+        .attr("stroke", level === 4 ? "#2a2a31" : "#1e1e23")
+        .attr("stroke-width", 1);
+    });
+
+    // Axis spokes
+    axes.forEach((_, i) => {
+      const [x, y] = toXY(i, maxVal);
+      svg.append("line")
+        .attr("x1", cx).attr("y1", cy).attr("x2", x).attr("y2", y)
+        .attr("stroke", "#2a2a31").attr("stroke-width", 1);
+    });
+
+    // Franchise average polygon
+    const avgPts = axes.map((ax, i) => toXY(i, avg[ax.key] ?? 0));
+    svg.append("polygon")
+      .attr("points", avgPts.map(p => p.join(",")).join(" "))
+      .attr("fill", "#52525b").attr("fill-opacity", 0.12)
+      .attr("stroke", "#52525b").attr("stroke-width", 1.5)
+      .attr("stroke-opacity", 0.4).attr("stroke-dasharray", "4,3");
+
+    // Title polygon
+    const titlePts = axes.map((ax, i) => toXY(i, scores[ax.key] ?? 0));
+    svg.append("polygon")
+      .attr("points", titlePts.map(p => p.join(",")).join(" "))
+      .attr("fill", color).attr("fill-opacity", isProj ? 0.12 : 0.18)
+      .attr("stroke", color).attr("stroke-width", 2.5)
+      .attr("stroke-opacity", isProj ? 0.65 : 0.85)
+      .attr("stroke-dasharray", isProj ? "6,4" : "none");
+
+    // Dot markers on title polygon vertices
+    axes.forEach((ax, i) => {
+      const [x, y] = toXY(i, scores[ax.key] ?? 0);
+      if ((scores[ax.key] ?? 0) > 0) {
+        svg.append("circle").attr("cx", x).attr("cy", y).attr("r", 3)
+          .attr("fill", color).attr("opacity", 0.8);
+      }
+    });
+
+    // Axis labels
+    axes.forEach((ax, i) => {
+      const [x, y] = toXY(i, maxVal + 0.75);
+      svg.append("text")
+        .attr("x", x).attr("y", y)
+        .attr("text-anchor", "middle").attr("dominant-baseline", "middle")
+        .attr("fill", "#71717a").attr("font-size", 9).attr("font-family", "monospace")
+        .text(ax.label);
+    });
+
+    // Score values on vertices
+    axes.forEach((ax, i) => {
+      const val = scores[ax.key] ?? 0;
+      if (val > 0) {
+        const [x, y] = toXY(i, val - 0.35);
+        svg.append("text")
+          .attr("x", x).attr("y", y)
+          .attr("text-anchor", "middle").attr("dominant-baseline", "middle")
+          .attr("fill", color).attr("font-size", 8).attr("font-family", "monospace")
+          .attr("font-weight", "bold").attr("opacity", 0.7)
+          .text(String(val));
+      }
+    });
+
+    // GTAVI.AI watermark
+    svg.append("text").attr("x", W - 4).attr("y", H - 5)
+      .attr("text-anchor", "end").attr("fill", "#27272a")
+      .attr("font-size", 7).attr("font-family", "monospace")
+      .text("GTAVI.AI");
+  });
+</script>
