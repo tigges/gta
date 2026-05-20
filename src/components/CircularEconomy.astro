@@ -6,7 +6,7 @@
  * - CSS keyframe animations on flow arrows (type-driven: forward/backward/pulse)
  * - SVG overflow:visible + clientWidth retry guard ensures arrows always render
  */
-import type { EconomyModel } from "../types/gta";
+import type { EconomyModel, EconomyModelsData, EconomyNode, EconomyFlow, ColorToken, FlowAnimationToken } from "../types/gta";
 import economyData from "../../data/franchise/economy-models.json";
 
 interface Props {
@@ -17,26 +17,27 @@ interface Props {
 const { titleId, mode = "full" } = Astro.props;
 const isCompact = mode === "compact";
 
-const allEconomies = (economyData as any).economies as EconomyModel[];
-const schema       = (economyData as any).color_schema;
-const economy      = allEconomies.find((e: any) => e.title_id === titleId);
+const typedData  = economyData as unknown as EconomyModelsData;
+const allEconomies = typedData.economies;
+const schema       = typedData.color_schema;
+const economy      = allEconomies.find(e => e.title_id === titleId);
 if (!economy) throw new Error(`CircularEconomy: unknown titleId "${titleId}"`);
 
 // ── Color helpers from color_schema ─────────────────────────────────────────
-const NT = schema.node_tokens as Record<string, { border: string; text: string; hex: string }>;
-const FA = schema.flow_animation as Record<string, { dir: string; duration_s: number }>;
+const NT = schema.node_tokens;
+const FA = schema.flow_animation;
 
-function nodeBorder(token: string): string { return NT[token]?.border ?? NT.zinc.border; }
-function nodeText(token: string):   string { return NT[token]?.text   ?? NT.zinc.text;   }
-function flowHex(token: string):    string { return NT[token]?.hex    ?? "#71717a";       }
+function nodeBorder(token: string): string { return NT[token]?.border ?? NT["zinc"]?.border ?? ""; }
+function nodeText(token: string):   string { return NT[token]?.text   ?? NT["zinc"]?.text   ?? ""; }
+function flowHex(token: string):    string { return NT[token]?.hex    ?? "#71717a";                }
 
 // ── Sovereign node ───────────────────────────────────────────────────────────
-const sovNode     = (economy.nodes as any[]).find((n: any) => n.type === "sovereign");
-const gridNodes   = (economy.nodes as any[]).filter((n: any) => n.type !== "sovereign");
-const nodeMap: Record<string, any> = Object.fromEntries((economy.nodes as any[]).map((n: any) => [n.id, n]));
-const flows       = economy.flows as any[];
-const isProjected = (economy as any).projected === true;
-const isRegression = (economy as any).regression_era === true;
+const sovNode     = economy.nodes.find(n => n.type === "sovereign");
+const gridNodes   = economy.nodes.filter(n => n.type !== "sovereign");
+const nodeMap: Record<string, EconomyNode> = Object.fromEntries(economy.nodes.map(n => [n.id, n]));
+const flows       = economy.flows;
+const isProjected  = economy.projected === true;
+const isRegression = economy.regression_era === true;
 
 // ── Era badge ────────────────────────────────────────────────────────────────
 const ERA_BADGE: Record<string, string> = {
@@ -47,7 +48,7 @@ const ERA_BADGE: Record<string, string> = {
   teal:  "bg-teal-900/30 border-teal-700/40 text-teal-400",
   gold:  "bg-gta-gold/10 border-gta-gold/30 text-gta-gold",
 };
-const eraBadge = ERA_BADGE[(economy as any).era_badge_color] ?? ERA_BADGE.zinc;
+const eraBadge = ERA_BADGE[economy.era_badge_color] ?? ERA_BADGE["zinc"]!;
 
 // ── Node grid positions (% of container) ────────────────────────────────────
 // All layouts use absolute positioning so JS arrow-drawing works uniformly.
@@ -96,15 +97,15 @@ const LAYOUTS: Record<string, Record<string, { top: number; left: number; width:
     "shark-cards":        { top: 78, left: 26, width: 48 },
   },
 };
-const nodePositions = LAYOUTS[(economy as any).layout_template as string] ?? {};
+const nodePositions = LAYOUTS[economy.layout_template] ?? {};
 
 const HEIGHTS: Record<string, number> = {
   "one-way": 160, "proto": 300, "loop": 300,
   "multi-stream": 420, "full-mmt": 300, "dual-territory": 380,
 };
 const containerH = isCompact
-  ? Math.round((HEIGHTS[(economy as any).layout_template as string] ?? 300) * 0.75)
-  : (HEIGHTS[(economy as any).layout_template as string] ?? 300);
+  ? Math.round((HEIGHTS[economy.layout_template] ?? 300) * 0.75)
+  : (HEIGHTS[economy.layout_template] ?? 300);
 
 // Unique ID for SVG marker namespacing per instance
 const uid = `ce-${titleId}-${Math.random().toString(36).slice(2, 6)}`;
@@ -129,7 +130,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   {/* ── Era badges ────────────────────────────────────────────────────────── */}
   <div class="flex items-center gap-2 mb-3 flex-wrap">
     <span class={`text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest ${eraBadge}`}>
-      {(economy as any).era_label}
+      {economy.era_label}
     </span>
     {isRegression && (
       <span class="text-[11px] font-mono bg-red-900/30 border border-red-600/40 text-red-400 px-2 py-0.5 rounded uppercase tracking-widest">
@@ -156,9 +157,9 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       <div class={`text-center text-[10px] font-mono leading-snug ${schema.sovereign.text_detail}`}>
         {sovNode.detail}
       </div>
-      {!isCompact && (economy as any).sovereign_levers?.length > 0 && (
+      {!isCompact && economy.sovereign_levers?.length > 0 && (
         <div class="flex flex-wrap justify-center gap-1.5 mt-2.5">
-          {(economy as any).sovereign_levers.map((lever: string) => (
+          {economy.sovereign_levers.map((lever: string) => (
             <span class={`text-[10px] font-mono border px-2 py-0.5 rounded-full ${schema.sovereign.lever_border} ${schema.sovereign.lever_text}`}>
               {lever}
             </span>
@@ -179,7 +180,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   </div>
 
   {/* ── Dual-territory: special two-region HTML layout ────────────────────── */}
-  {(economy as any).layout_template === "dual-territory" ? (
+  {economy.layout_template === "dual-territory" ? (
     <div class="w-full space-y-3">
       <div class="grid grid-cols-2 gap-3">
         {/* VC region */}
@@ -267,17 +268,17 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
          style={`height:${containerH}px;`}
          data-flows={JSON.stringify(flows)}
          data-uid={uid}
-         data-template={(economy as any).layout_template}>
+         data-template={economy.layout_template}>
 
       {/* Annotation for zero-flow titles */}
-      {((economy as any).dimensions as any).circular_flow === "none" && (
+      {economy.dimensions.circular_flow === "none" && (
         <div class="absolute bottom-3 left-0 right-0 text-center pointer-events-none" style="z-index:20">
           <span class="text-[11px] font-mono text-zinc-500">✕ no circular return — money = score only</span>
         </div>
       )}
 
       {/* "IN-GAME CIRCULAR ECONOMY" dashed border for full-mmt */}
-      {(economy as any).layout_template === "full-mmt" && (
+      {economy.layout_template === "full-mmt" && (
         <div class="absolute rounded-xl border border-dashed border-[#2a2a31] pointer-events-none"
              style="top:10%;left:0;right:0;bottom:62%;z-index:0">
           <div class="absolute -top-2.5 left-4 text-[11px] font-mono text-zinc-500 uppercase tracking-[0.2em] px-1" style="background:#0e0e11">
@@ -330,7 +331,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   )}
 
   {/* ── Flow legend ───────────────────────────────────────────────────────── */}
-  {!isCompact && flows.length > 0 && (economy as any).layout_template !== "dual-territory" && (
+  {!isCompact && flows.length > 0 && economy.layout_template !== "dual-territory" && (
     <div class="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 pt-3 border-t border-[#1e1e23]">
       {flows.map((flow: any) => {
         const hex = flowHex(flow.color_token);
@@ -351,28 +352,28 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
     <div class="grid grid-cols-2 gap-3 mt-4">
       <div class="rounded-lg border border-[#2a2a31] px-3 py-2.5" style="background:#131316">
         <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Economy Type</div>
-        <div class="text-sm font-semibold text-zinc-100">{(economy as any).economy_type}</div>
+        <div class="text-sm font-semibold text-zinc-100">{economy.economy_type}</div>
       </div>
       <div class="rounded-lg border border-[#2a2a31] px-3 py-2.5" style="background:#131316">
         <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Real-World Analogue</div>
-        <div class="text-sm font-semibold text-zinc-100">{(economy as any).real_world_analogue}</div>
+        <div class="text-sm font-semibold text-zinc-100">{economy.real_world_analogue}</div>
       </div>
-      {(economy as any).key_innovation && (
+      {economy.key_innovation && (
         <div class="col-span-2 rounded-lg border border-[#1e1e23] px-3 py-2.5" style="background:#131316">
           <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">
-            Key Innovation {"★".repeat((economy as any).innovation_stars)}
+            Key Innovation {"★".repeat(economy.innovation_stars)}
           </div>
           <div class="text-[11px] font-semibold text-zinc-200 mb-1">
-            {(economy as any).key_innovation}
+            {economy.key_innovation}
           </div>
-          {!isCompact && <div class="text-[10px] font-mono text-zinc-400 leading-snug">{(economy as any).key_innovation_note}</div>}
+          {!isCompact && <div class="text-[10px] font-mono text-zinc-400 leading-snug">{economy.key_innovation_note}</div>}
         </div>
       )}
-      {(economy as any).inflation_channels?.length > 0 && !isCompact && (
+      {economy.inflation_channels?.length > 0 && !isCompact && (
         <div class="col-span-2 rounded-lg border border-red-900/20 px-3 py-2.5" style="background:rgba(127,29,29,0.07)">
           <div class="text-[11px] font-mono text-red-400 uppercase tracking-widest mb-1.5">Inflation Channels</div>
           <div class="flex flex-col gap-1">
-            {(economy as any).inflation_channels.map((ch: string) => (
+            {economy.inflation_channels.map((ch: string) => (
               <div class="flex items-start gap-1.5">
                 <span class="text-red-400 shrink-0 text-[11px] mt-0.5">↑</span>
                 <span class="text-[11px] font-mono text-zinc-300 leading-snug">{ch}</span>
@@ -385,10 +386,10 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   )}
 
   {/* ── GTA VI lineage ────────────────────────────────────────────────────── */}
-  {!isCompact && (economy as any).gta_vi_lineage && (
+  {!isCompact && economy.gta_vi_lineage && (
     <div class="mt-3 rounded-lg border border-gta-gold/15 px-3 py-2.5" style="background:rgba(245,158,11,0.03)">
       <div class="text-[11px] font-mono text-gta-gold/70 uppercase tracking-widest mb-1">GTA VI Lineage</div>
-      <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{(economy as any).gta_vi_lineage}</p>
+      <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{economy.gta_vi_lineage}</p>
     </div>
   )}
 

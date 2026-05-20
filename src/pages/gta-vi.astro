@@ -21,28 +21,33 @@ const Featured3 = CHART_REGISTRY[gtaViConfig.featured[3]];
 const Preview0  = CHART_REGISTRY[gtaViConfig.preview[0]];
 const Preview1  = CHART_REGISTRY[gtaViConfig.preview[1]];
 
+import type { TrailersData, TrailerVelocityData, PredictionsData, FeaturesData } from "../types/gta";
+
 import trailerData  from "../../data/gta-6/trailers.json";
 import velocityData from "../../data/gta-6/trailer-velocity.json";
 import predData     from "../../data/gta-6/predictions.json";
 import featuresData from "../../data/gta-6/features.json";
 
 // Trailer view counts
-const t1 = (velocityData as any).trailers?.find((t: any) => t.youtube_id === "QdBZY2fkU-0");
-const t2 = (velocityData as any).trailers?.find((t: any) => t.youtube_id === "VQRLujxTm3c");
+const velocity = velocityData as unknown as TrailerVelocityData;
+const trailers = (trailerData as unknown as TrailersData).trailers;
+const predictions = (predData as unknown as PredictionsData).predictions;
+const featCats = ((featuresData as unknown as FeaturesData).categories ?? []);
+
+const t1 = velocity.trailers.find(t => t.youtube_id === "QdBZY2fkU-0");
+const t2 = velocity.trailers.find(t => t.youtube_id === "VQRLujxTm3c");
 const t1Views = (t1?.snapshots?.at(-1)?.views ?? 0) as number;
 const t2Views = (t2?.snapshots?.at(-1)?.views ?? 0) as number;
 const totalViews = t1Views + t2Views;
-const latestTrailer = (trailerData as any).trailers?.at(-1);
+const latestTrailer = trailers.at(-1);
 
 // Predictions
-const predictions = (predData as any).predictions as any[];
-const confirmed   = predictions.filter((p: any) => p.confidence_tier === "confirmed").length;
-const reported    = predictions.filter((p: any) => p.confidence_tier === "reported").length;
+const confirmed   = predictions.filter(p => p.confidence_tier === "confirmed").length;
+const reported    = predictions.filter(p => p.confidence_tier === "reported").length;
 
 // Features
-const featCats = ((featuresData as any).categories ?? []) as any[];
-const totalFeatures     = featCats.reduce((s: number, c: any) => s + (c.confirmed ?? 0) + (c.reported ?? 0), 0);
-const confirmedFeatures = featCats.reduce((s: number, c: any) => s + (c.confirmed ?? 0), 0);
+const totalFeatures     = featCats.reduce((s: number, c) => s + (c.confirmed ?? 0) + (c.reported ?? 0), 0);
+const confirmedFeatures = featCats.reduce((s: number, c) => s + (c.confirmed ?? 0), 0);
 
 // Release countdown
 const releaseDate  = new Date("2026-11-19T00:00:00Z");

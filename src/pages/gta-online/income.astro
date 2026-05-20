@@ -5,6 +5,11 @@ import ShareButton from "../../components/ShareButton.astro";
 import IncomeAdviser from "../../components/IncomeAdviser.astro";
 import SocialClubConnector from "../../components/SocialClubConnector.astro";
 
+import type {
+  OnlineMissionsData, BusinessProfiles, OnlineHeistsData, RevenueTiersData,
+  MetaHistoryData, WeeklyBonusesData,
+} from "../../types/gta";
+
 import onlineMissions    from "../../../data/gta-5/missions/online-top.json";
 import businessProfiles  from "../../../data/gta-5/economy/business-profiles.json";
 import onlineHeists      from "../../../data/gta-5/economy/online-heists.json";
@@ -12,22 +17,29 @@ import revenueTiers      from "../../../data/gta-5/economy/revenue-tiers.json";
 import metaHistory       from "../../../data/gta-5/economy/meta-history.json";
 import weeklyBonuses     from "../../../data/gta-5/economy/weekly-bonuses.json";
 
-const topOnline       = (onlineMissions as any).missions as any[];
-const bizProfiles     = (businessProfiles as any).businesses as any[];
-const onlineHeistList = (onlineHeists as any).heists as any[];
-const revTiers        = (revenueTiers as any).tiers as any[];
-const starterPath     = (revenueTiers as any).optimal_starter_path as any[];
-const maxBizProfitHr  = Math.max(...bizProfiles.map((b: any) => b.net_profit_per_hr));
+const onlineMissData  = onlineMissions   as unknown as OnlineMissionsData;
+const bizData         = businessProfiles as unknown as BusinessProfiles;
+const heistsData      = onlineHeists     as unknown as OnlineHeistsData;
+const tiersData       = revenueTiers     as unknown as RevenueTiersData;
+const metaData        = metaHistory      as unknown as MetaHistoryData;
+const bonusData       = weeklyBonuses    as unknown as WeeklyBonusesData;
+
+const topOnline       = onlineMissData.missions;
+const bizProfiles     = bizData.businesses;
+const onlineHeistList = heistsData.heists;
+const revTiers        = tiersData.tiers;
+const starterPath     = tiersData.optimal_starter_path;
+const maxBizProfitHr  = Math.max(...bizProfiles.map(b => b.net_profit_per_hr));
 
 const PLAY_COLOR: Record<string, string> = {
   active: "#ef4444", "semi-passive": "#f59e0b", passive: "#22c55e", heist: "#818cf8",
 };
 
-const totalSources = revTiers.reduce((s: number, t: any) => s + t.sources.length, 0);
+const totalSources = revTiers.reduce((s: number, t) => s + t.sources.length, 0);
 
 // IDs that have a generated /gta-online/income/{id} page
-const bizIds   = new Set(bizProfiles.filter((b: any) => b.net_profit_per_hr > 0).map((b: any) => b.id));
-const heistIds = new Set((onlineHeistList as any[]).map((h: any) => h.id));
+const bizIds   = new Set(bizProfiles.filter(b => b.net_profit_per_hr > 0).map(b => b.id));
+const heistIds = new Set(onlineHeistList.map(h => h.id));
 const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
 ---
 
@@ -81,8 +93,8 @@ const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
       </div>
       <IncomeAdviser
         businesses={bizProfiles}
-        weeklyBonuses={(weeklyBonuses as any).bonuses ?? []}
-        weeklySales={(weeklyBonuses as any).sales ?? []}
+        weeklyBonuses={bonusData.bonuses ?? []}
+        weeklySales={bonusData.sales ?? []}
       />
     </section>
 
@@ -403,7 +415,7 @@ const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
         <span class="text-[11px] font-mono bg-gta-indigo/30 text-gta-indigo border border-gta-indigo/40 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// $/hr Meta History — How the Top Earner Changed Across Patches</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500">{(metaHistory as any).meta_history.length} DLC milestones · 2013→2026</span>
+        <span class="text-[10px] font-mono text-zinc-500">{metaData.meta_history.length} DLC milestones · 2013→2026</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23]">
@@ -411,7 +423,7 @@ const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
           <div class="text-[11px] text-zinc-500 font-mono mt-0.5">How $/hr for the #1 method changed with each major update. Cayo Perico was nerfed 40% in Jan 2022 — still stayed #1.</div>
         </div>
         <div id="meta-shift-chart" class="w-full" style="height:280px"
-          data-history={JSON.stringify((metaHistory as any).meta_history)}
+          data-history={JSON.stringify(metaData.meta_history)}
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Source: GTAForums · community archives · manual research · patch notes</span>

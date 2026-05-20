@@ -1,8 +1,9 @@
 ---
-import releaseData from "../../data/shared/releases.json";
+import type { ReleasesData, ReleaseEntry } from "../types/gta";
+import releaseDataRaw from "../../data/shared/releases.json";
 import ShareButton from "./ShareButton.astro";
 
-const games = releaseData.games;
+const games = (releaseDataRaw as unknown as ReleasesData).games;
 
 const COVERS: Record<string, string> = {
   "GTA 1":  "/assets/covers/gta-1.jpg",
@@ -29,10 +30,10 @@ const COVERS: Record<string, string> = {
     <div class="flex flex-col gap-0">
       {games.map((game, i) => {
         const isPred = game.is_prediction;
-        const year = game.release_year ?? (game as any).release_date_estimate ?? "TBC";
-        const gap = game.gap_years_from_prev ?? (game as any).gap_years_from_prev_estimate;
-        const vehicles = game.vehicle_count ?? (game as any).vehicle_count_estimate;
-        const mapSize = game.map_size_km2 ?? (game as any).map_size_km2_estimate;
+        const year = game.release_year ?? game.release_date_estimate ?? "TBC";
+        const gap = game.gap_years_from_prev ?? game.gap_years_from_prev_estimate;
+        const vehicles = game.vehicle_count ?? game.vehicle_count_estimate;
+        const mapSize = game.map_size_km2 ?? game.map_size_km2_estimate;
         const cover = COVERS[game.short] ?? null;
 
         return (
@@ -95,8 +96,8 @@ const COVERS: Record<string, string> = {
                 {mapSize && (
                   <span class="text-[11px] text-zinc-600 font-mono">{mapSize}{isPred ? "~" : ""} km²</span>
                 )}
-                {(game as any).trailer_youtube_id && (
-                  <a href={`https://www.youtube.com/watch?v=${(game as any).trailer_youtube_id}`}
+                {game.trailer_youtube_id && (
+                  <a href={`https://www.youtube.com/watch?v=${game.trailer_youtube_id}`}
                     target="_blank" rel="noopener noreferrer"
                     class="text-[11px] font-mono text-zinc-500 hover:text-gta-gold transition-colors">▶ Trailer</a>
                 )}
@@ -112,10 +113,10 @@ const COVERS: Record<string, string> = {
   <div class="mt-4 pt-4 border-t border-[#1e1e23]">
     <p class="text-[10px] font-mono text-zinc-600 mb-3 uppercase tracking-[0.2em] px-5">Release gap (years)</p>
     <div id="gap-chart" class="w-full h-24" data-games={JSON.stringify(
-      games.filter((g) => (g.gap_years_from_prev ?? (g as any).gap_years_from_prev_estimate) != null)
+      games.filter((g) => (g.gap_years_from_prev ?? g.gap_years_from_prev_estimate) != null)
         .map((g) => ({
           short: g.short,
-          gap: g.gap_years_from_prev ?? (g as any).gap_years_from_prev_estimate,
+          gap: g.gap_years_from_prev ?? g.gap_years_from_prev_estimate,
           isPred: g.is_prediction,
           cover: COVERS[g.short] ?? null,
         }))

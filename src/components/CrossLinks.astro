@@ -11,15 +11,30 @@
  *   etc.
  */
 
-import entityIndex  from "../../data/gta-6/entities/index.json";
-import leonidaData  from "../../data/gta-6/entities/leonida-intel.json";
-import newswireData from "../../data/feeds/newswire.json";
-import redditData   from "../../data/community/reddit.json";
-import vehicleData  from "../../data/gta-5/vehicles/performance.json";
-import trailerData  from "../../data/gta-6/trailers.json";
-import predData     from "../../data/gta-6/predictions.json";
-import featuresData from "../../data/gta-6/features.json";
-import salesData    from "../../data/franchise/sales.json";
+import type {
+  EntityIndex, LeonidaData, NewswireData, RedditData,
+  VehiclesData, TrailersData, PredictionsData, FeaturesData, FranchiseSalesData,
+} from "../../types/gta";
+
+import entityIndexRaw  from "../../data/gta-6/entities/index.json";
+import leonidaRaw      from "../../data/gta-6/entities/leonida-intel.json";
+import newswireRaw     from "../../data/feeds/newswire.json";
+import redditRaw       from "../../data/community/reddit.json";
+import vehicleRaw      from "../../data/gta-5/vehicles/performance.json";
+import trailerRaw      from "../../data/gta-6/trailers.json";
+import predRaw         from "../../data/gta-6/predictions.json";
+import featuresRaw     from "../../data/gta-6/features.json";
+import salesRaw        from "../../data/franchise/sales.json";
+
+const entityIndex  = entityIndexRaw as unknown as EntityIndex;
+const leonidaData  = leonidaRaw     as unknown as LeonidaData;
+const newswireData = newswireRaw    as unknown as NewswireData;
+const redditData   = redditRaw      as unknown as RedditData;
+const vehicleData  = vehicleRaw     as unknown as VehiclesData;
+const trailerData  = trailerRaw     as unknown as TrailersData;
+const predData     = predRaw        as unknown as PredictionsData;
+const featuresData = featuresRaw    as unknown as FeaturesData;
+const salesData    = salesRaw       as unknown as FranchiseSalesData;
 
 interface Props {
   context: string;
@@ -28,15 +43,15 @@ interface Props {
 const { context, class: extraClass = "" } = Astro.props;
 
 // ── Live counts — updated every build from nightly scraper output ──────────
-const gta6Entities   = entityIndex.total + (leonidaData as any).entity_stats.total;
-const newsItems      = (newswireData as any).items.length + ((redditData as any).recent_posts?.length ?? 0);
-const gta5Vehicles   = (vehicleData as any).vehicles.length;
-const trailerCount   = (trailerData as any).trailers.length;
-const predCount      = (predData as any).predictions.length;
-const featuresTotal  = (featuresData as any).categories.reduce(
-  (s: number, c: any) => s + c.confirmed + c.reported, 0
+const gta6Entities   = entityIndex.total + (leonidaData.entity_stats?.total ?? 0);
+const newsItems      = newswireData.items.length + (redditData.recent_posts?.length ?? 0);
+const gta5Vehicles   = vehicleData.vehicles.length;
+const trailerCount   = trailerData.trailers.length;
+const predCount      = predData.predictions.length;
+const featuresTotal  = featuresData.categories.reduce(
+  (s: number, c) => s + c.confirmed + c.reported, 0
 );
-const franchiseTitles = (salesData as any).titles.length;
+const franchiseTitles = salesData.titles.length;
 
 // ── Link definitions per context ──────────────────────────────────────────
 interface CrossLink {
@@ -66,7 +81,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
   // After Cast strip (VI Intel + Home)
   "vi-intel-cast": [
     { href: "/database?type=character", icon: "👤", tier: "Database", label: "All characters",
-      sub: `${((leonidaData as any).by_category?.Characters ?? 0) + ((entityIndex as any).by_type?.character ?? 0)} indexed across both sources`,
+      sub: `${(leonidaData.by_category?.["Characters"] ?? 0) + (entityIndex.by_type?.["character"] ?? 0)} indexed across both sources`,
       color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/news", icon: "📰", tier: "News", label: "Character intel",
       sub: `${newsItems} articles tracked nightly`, color: "text-zinc-400", border: "border-zinc-700" },
@@ -77,7 +92,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
   // After Location gallery (VI Intel)
   "vi-intel-locations": [
     { href: "/database?type=location", icon: "📍", tier: "Database", label: "All locations",
-      sub: `${((leonidaData as any).by_category?.Locations ?? 0)} Leonida Intel locations`,
+      sub: `${leonidaData.by_category?.["Locations"] ?? 0} Leonida Intel locations`,
       color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/charts", icon: "🗺", tier: "Charts", label: "Region evidence heatmap",
       sub: "Confidence density per location per source", color: "text-gta-gold", border: "border-gta-gold/25" },
@@ -97,7 +112,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
   // After Trailer Analysis (VI Intel)
   "vi-intel-trailers": [
     { href: "/database?type=vehicle", icon: "🚗", tier: "Database", label: "Vehicles spotted",
-      sub: `${(leonidaData as any).by_category?.Vehicles ?? 0} GTA VI vehicles indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
+      sub: `${leonidaData.by_category?.["Vehicles"] ?? 0} GTA VI vehicles indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/database?type=character", icon: "👤", tier: "Database", label: "Characters confirmed",
       sub: "Lucia, Jason + supporting cast", color: "text-zinc-400", border: "border-zinc-700" },
     { href: "/charts", icon: "📈", tier: "Charts", label: "Trailer view velocity",

@@ -5,6 +5,12 @@ import ShareButton from "../../components/ShareButton.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 
+import type {
+  GtaPpiData, MetaHistoryData, RevenueTiersData, SpendingDistributionData,
+  SavingsProfileData, PassiveStackData, RevenueSplitData, PriceBasketData,
+  WeeklyBonusesData, ItemCatalogueData,
+} from "../../types/gta";
+
 import ppiData          from "../../../data/gta-5/economy/gta-ppi.json";
 import metaHistory      from "../../../data/gta-5/economy/meta-history.json";
 import spendingData     from "../../../data/gta-5/economy/spending-distribution.json";
@@ -16,43 +22,54 @@ import priceBasket      from "../../../data/gta-5/economy/price-basket.json";
 import weeklyBonuses    from "../../../data/gta-5/economy/weekly-bonuses.json";
 import itemCatalogue    from "../../../data/gta-5/economy/item-catalogue.json";
 
-const ppiSeries     = (ppiData as any).series as any[];
-const metaSeries    = (metaHistory as any).meta_history as any[];
+const ppi       = ppiData       as unknown as GtaPpiData;
+const meta      = metaHistory   as unknown as MetaHistoryData;
+const spending  = spendingData  as unknown as SpendingDistributionData;
+const savings   = savingsData   as unknown as SavingsProfileData;
+const passive   = passiveData   as unknown as PassiveStackData;
+const revenue   = revenueData   as unknown as RevenueSplitData;
+const tiers     = revenueTiersData as unknown as RevenueTiersData;
+const basket    = priceBasket   as unknown as PriceBasketData;
+const bonuses   = weeklyBonuses as unknown as WeeklyBonusesData;
+const catalogue = itemCatalogue as unknown as ItemCatalogueData;
+
+const ppiSeries     = ppi.series;
+const metaSeries    = meta.meta_history;
 
 // Derive live top yield from revenue-tiers.json — same source as IncomeAdviser
 // Extends the historical series with a live current endpoint automatically
-const tierSources   = ((revenueTiersData as any).tiers as any[]).flatMap((t:any) => t.sources);
-const liveTopYield  = Math.max(...tierSources.map((s:any) => s.gta_per_hr as number));
-const liveTopName   = tierSources.find((s:any) => s.gta_per_hr === liveTopYield)?.name ?? "Current meta stack";
-const lastMeta      = [...metaSeries].sort((a:any,b:any) => a.date.localeCompare(b.date)).at(-1);
+const tierSources   = tiers.tiers.flatMap(t => t.sources);
+const liveTopYield  = Math.max(...tierSources.map(s => s.gta_per_hr));
+const liveTopName   = tierSources.find(s => s.gta_per_hr === liveTopYield)?.name ?? "Current meta stack";
+const lastMeta      = [...metaSeries].sort((a, b) => a.date.localeCompare(b.date)).at(-1);
 const today         = new Date().toISOString().slice(0,10);
 // Append live data point if it differs from the last historical entry
 const liveMetaSeries = lastMeta?.date === today
   ? metaSeries
   : [...metaSeries, { date: today, patch: "Current", top_method: liveTopName, top_gta_per_hr: liveTopYield, notes: "Live — from revenue-tiers.json" }];
-const spendEras     = (spendingData as any).eras as any[];
-const passiveSeries = (passiveData as any).series as any[];
-const revYears      = (revenueData as any).years as any[];
-const basketItems   = (priceBasket as any).items as any[];
-const basketEras    = (priceBasket as any).era_prices as any[];
-const savingsStages = (savingsData as any).stages as any[];
-const savingsRate   = (savingsData as any).savings_rate_history as any[];
+const spendEras     = spending.eras;
+const passiveSeries = passive.series;
+const revYears      = revenue.years;
+const basketItems   = basket.items;
+const basketEras    = basket.era_prices;
+const savingsStages = savings.stages;
+const savingsRate   = savings.savings_rate_history;
 
 // ── Weekly sales data ─────────────────────────────────────────────────────────
-const weeklySales      = (weeklyBonuses as any).sales as any[] ?? [];
-const weekBonuses      = (weeklyBonuses as any).bonuses as any[] ?? [];
-const weekStart        = (weeklyBonuses as any).week_start as string ?? "";
-const hasSales         = weeklySales.length > 0;
+const weeklySales  = bonuses.sales ?? [];
+const weekBonuses  = bonuses.bonuses ?? [];
+const weekStart    = bonuses.week_start ?? "";
+const hasSales     = weeklySales.length > 0;
 
 // Build sale map: catalogue item_id → discount_pct
 const saleDiscountMap: Record<string, number> = {};
-weeklySales.forEach((s: any) => {
+weeklySales.forEach(s => {
   if (s.item_id) saleDiscountMap[s.item_id] = s.discount_pct;
 });
 
 // Live basket cost from catalogue + sale-adjusted basket cost
 const catalogueBySlug: Record<string, number> = {};
-((itemCatalogue as any).items as any[]).forEach((item: any) => {
+catalogue.items.forEach(item => {
   if (item.price) catalogueBySlug[item.id] = item.price;
 });
 

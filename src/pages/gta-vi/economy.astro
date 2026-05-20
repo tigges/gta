@@ -11,26 +11,32 @@ import ShareButton from "../../components/ShareButton.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 
-import economyData  from "../../../data/franchise/economy-models.json";
-import predictions  from "../../../data/gta-6/predictions.json";
-import velocityData from "../../../data/gta-6/trailer-velocity.json";
-import gta6Rpp      from "../../../data/gta-6/economy/gta-rpp.json";
+import type { EconomyModelsData, PredictionsData, TrailerVelocityData } from "../../types/gta";
+
+import economyDataRaw  from "../../../data/franchise/economy-models.json";
+import predictionsRaw  from "../../../data/gta-6/predictions.json";
+import velocityDataRaw from "../../../data/gta-6/trailer-velocity.json";
+import gta6Rpp         from "../../../data/gta-6/economy/gta-rpp.json";
+
+const economyData   = economyDataRaw  as unknown as EconomyModelsData;
+const predictions   = predictionsRaw  as unknown as PredictionsData;
+const velocityData  = velocityDataRaw as unknown as TrailerVelocityData;
 
 // GTA VI economy model entry
-const economy = (economyData as any).economies.find((e: any) => e.title_id === "gta-6");
+const economy = economyData.economies.find(e => e.title_id === "gta-6");
 
 // Economic model predictions only
-const econPreds = (predictions as any).predictions.filter(
-  (p: any) => p.prediction_method === "economic-model"
-) as any[];
+const econPreds = predictions.predictions.filter(
+  p => p.prediction_method === "economic-model"
+);
 
 // Trailer view totals for context
-const t1 = (velocityData as any).trailers?.find((t: any) => t.youtube_id === "QdBZY2fkU-0");
-const t2 = (velocityData as any).trailers?.find((t: any) => t.youtube_id === "VQRLujxTm3c");
+const t1 = velocityData.trailers.find(t => t.youtube_id === "QdBZY2fkU-0");
+const t2 = velocityData.trailers.find(t => t.youtube_id === "VQRLujxTm3c");
 const totalViews = (t1?.snapshots?.at(-1)?.views ?? 0) + (t2?.snapshots?.at(-1)?.views ?? 0);
 
 // GTA Online as predecessor reference
-const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id === "gta-online");
+const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online");
 ---
 
 <Base
@@ -104,7 +110,7 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
         <div class="rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
           <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-4">Franchise Arc — Complexity Trajectory</div>
           <div class="flex flex-col gap-2">
-            {(economyData as any).economies.map((e: any) => {
+            {economyData.economies.map((e) => {
               const pct = Math.round((e.complexity_score / 17) * 100);
               const isGtaVI = e.title_id === "gta-6";
               const isRegression = e.regression_era;
@@ -122,7 +128,7 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
             })}
           </div>
           <div class="mt-3 pt-3 border-t border-[#1e1e23] text-[11px] font-mono text-zinc-500 leading-relaxed">
-            {(economyData as any).complexity_chart_note}
+            {economyData.complexity_chart_note}
           </div>
         </div>
       </div>
@@ -215,7 +221,7 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
           The GTA-PPI (currently tracking GTA Online) is the single-market predecessor.
           GTA-RPP extends this to measure cross-territory purchasing power divergence — if Vice City wages are
           higher but prices are higher by a larger factor, Leonida players have higher real purchasing power.
-          Computed nightly from confirmed launch-day data. <span class="text-gta-teal">Status: {(gta6Rpp as any).status}.</span>
+          Computed nightly from confirmed launch-day data. <span class="text-gta-teal">Status: {(gta6Rpp as { status?: string }).status}.</span>
         </div>
       </div>
     </section>
@@ -274,11 +280,11 @@ const onlineEconomy = (economyData as any).economies.find((e: any) => e.title_id
       </div>
       <div class="rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
         <p class="text-[11px] font-mono text-zinc-500 leading-relaxed mb-4">
-          {(economy as any).summary}
+          {economy?.summary}
         </p>
         <div class="rounded-lg border border-gta-gold/15 px-4 py-3" style="background:rgba(245,158,11,0.03)">
           <div class="text-[10px] font-mono text-gta-gold/40 uppercase tracking-widest mb-1">GTA Online → GTA VI</div>
-          <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{(economy as any).gta_vi_lineage}</p>
+          <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{economy?.gta_vi_lineage}</p>
         </div>
       </div>
     </section>
