@@ -2,30 +2,53 @@
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 import ProfitCard from "../components/ProfitCard.astro";
-import entityIndex    from "../../data/gta-6/entities/index.json";
-import leonidaRaw     from "../../data/gta-6/entities/leonida-intel.json";
-import vehiclesRaw    from "../../data/gta-5/vehicles/performance.json";
-import businessProfiles from "../../data/gta-5/economy/business-profiles.json";
-import onlineHeists     from "../../data/gta-5/economy/online-heists.json";
-import revenueTiers     from "../../data/gta-5/economy/revenue-tiers.json";
-import storyMissions    from "../../data/gta-5/missions/story-missions.json";
-import onlineMissions   from "../../data/gta-5/missions/online-top.json";
-import stocksData       from "../../data/gta-5/economy/assassination-stocks.json";
+import type {
+  EntityIndex, LeonidaData, VehiclesData, BusinessProfiles,
+  OnlineHeistsData, RevenueTiersData, StoryMissionsData, OnlineMissionsData,
+  AssassinStocksData, StoryHeistsData, WeeklyBonusesData, ItemCatalogueData,
+  SaleFrequencyData, PerSourceHistoryData,
+} from "../types/gta";
+
+import entityIndexRaw    from "../../data/gta-6/entities/index.json";
+import leonidaRaw        from "../../data/gta-6/entities/leonida-intel.json";
+import vehiclesRaw       from "../../data/gta-5/vehicles/performance.json";
+import businessProfiles  from "../../data/gta-5/economy/business-profiles.json";
+import onlineHeists      from "../../data/gta-5/economy/online-heists.json";
+import revenueTiers      from "../../data/gta-5/economy/revenue-tiers.json";
+import storyMissions     from "../../data/gta-5/missions/story-missions.json";
+import onlineMissions    from "../../data/gta-5/missions/online-top.json";
+import stocksData        from "../../data/gta-5/economy/assassination-stocks.json";
 import heistsData        from "../../data/gta-5/missions/heists.json";
 import weeklyBonuses     from "../../data/gta-5/economy/weekly-bonuses.json";
 import itemCatalogue     from "../../data/gta-5/economy/item-catalogue.json";
 import saleFreqData      from "../../data/gta-5/economy/sale-frequency.json";
 import sourceHistoryData from "../../data/gta-5/economy/per-source-history.json";
 
+// ── Typed data accessors ─────────────────────────────────────────────────────
+const entityIndex     = entityIndexRaw    as unknown as EntityIndex;
+const leonida         = leonidaRaw        as unknown as LeonidaData;
+const vehicleData     = vehiclesRaw       as unknown as VehiclesData;
+const bizData         = businessProfiles  as unknown as BusinessProfiles;
+const heistsOnline    = onlineHeists      as unknown as OnlineHeistsData;
+const tiersData       = revenueTiers      as unknown as RevenueTiersData;
+const missionData     = storyMissions     as unknown as StoryMissionsData;
+const onlineMissData  = onlineMissions    as unknown as OnlineMissionsData;
+const assassinData    = stocksData        as unknown as AssassinStocksData;
+const storyHeistData  = heistsData        as unknown as StoryHeistsData;
+const bonusesData     = weeklyBonuses     as unknown as WeeklyBonusesData;
+const catalogueData   = itemCatalogue     as unknown as ItemCatalogueData;
+const saleFreq        = saleFreqData      as unknown as SaleFrequencyData;
+const sourceHistory   = sourceHistoryData as unknown as PerSourceHistoryData;
+
 // ── Weekly sale map ──────────────────────────────────────────────────────────
-const weeklySales = (weeklyBonuses as any).sales as any[] ?? [];
-const catalogueItems = (itemCatalogue as any).items as any[];
-const weekStart = (weeklyBonuses as any).week_start as string ?? "";
+const weeklySales    = bonusesData.sales ?? [];
+const catalogueItems = catalogueData.items;
+const weekStart      = bonusesData.week_start ?? "";
 const hasSalesThisWeek = weeklySales.length > 0;
 
 const saleByItemId: Record<string, number> = {};
 const saleByNameSlug: Record<string, number> = {};
-weeklySales.forEach((s: any) => {
+weeklySales.forEach(s => {
   if (s.item_id)   saleByItemId[s.item_id] = s.discount_pct;
   if (s.item_name) saleByNameSlug[s.item_name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")] = s.discount_pct;
 });
@@ -33,10 +56,10 @@ weeklySales.forEach((s: any) => {
 function getSaleDiscount(id: string): number | undefined {
   if (saleByItemId[id]) return saleByItemId[id];
   if (saleByNameSlug[id]) return saleByNameSlug[id];
-  const catItem = catalogueItems.find((c: any) => c.id === id);
+  const catItem = catalogueItems.find(c => c.id === id);
   if (catItem) {
     const nameLower = catItem.name.toLowerCase();
-    const sale = weeklySales.find((s: any) =>
+    const sale = weeklySales.find(s =>
       (s.item_description ?? "").toLowerCase().includes(nameLower.split(" ")[0]) ||
       nameLower.includes((s.item_description ?? "").toLowerCase().split(" ")[0])
     );
@@ -61,19 +84,19 @@ const DAILY_FEE_BY_ID: Record<string, number> = {
 };
 
 // ── Bonus frequency map (from sale-frequency.json) ───────────────────────────
-const bonusFreqById: Record<string, any> = {};
-((saleFreqData as any).activity_bonuses as any[]).forEach((a: any) => {
+const bonusFreqById: Record<string, SaleFrequencyData["activity_bonuses"][0]> = {};
+saleFreq.activity_bonuses.forEach(a => {
   bonusFreqById[a.activity_id] = a;
 });
 
 // ── Historical peak $/hr map (from per-source-history.json) ──────────────────
 const peakHrById: Record<string, number> = {};
-((sourceHistoryData as any).sources as any[]).forEach((s: any) => {
-  peakHrById[s.id] = Math.max(...((s.timeline as any[]).map((t: any) => t.gta_per_hr as number)));
+sourceHistory.sources.forEach(s => {
+  peakHrById[s.id] = Math.max(...s.timeline.map(t => t.gta_per_hr));
 });
 
 // ── GTA VI entities ────────────────────────────────────────────────────────
-const fandomEntities = (entityIndex as any).entities as any[];
+const fandomEntities = entityIndex.entities;
 
 const LEONIDA_WORLD_CATS = new Set([
   "Vehicles","Characters","Weapons","Locations","Animals",
@@ -86,9 +109,9 @@ const LEONIDA_TYPE_MAP: Record<string,string> = {
   Missions:"mission", Activities:"activity", Properties:"property", Radio:"radio",
 };
 
-const leonidaEntities = (leonidaRaw as any).entities
-  .filter((e: any) => LEONIDA_WORLD_CATS.has(e.category))
-  .map((e: any) => ({
+const leonidaEntities = leonida.entities
+  .filter(e => LEONIDA_WORLD_CATS.has(e.category))
+  .map(e => ({
     name:             e.name,
     type:             LEONIDA_TYPE_MAP[e.category] ?? e.category.toLowerCase(),
     confidence_tier:  e.confirmed ? "confirmed" : "indexed",
@@ -98,11 +121,11 @@ const leonidaEntities = (leonidaRaw as any).entities
   }));
 
 // Normalise fandom entities to the same shape
-const fandomNorm = fandomEntities.map((e: any) => ({
+const fandomNorm = fandomEntities.map(e => ({
   name:             e.name,
   type:             e.type,
-  confidence_tier:  e.confidence_tier,
-  franchise_debut:  e.franchise_debut,
+  confidence_tier:  e.confidence,
+  franchise_debut:  undefined as string | undefined,
   source_id:        "fandom",
   source_label:     "Fandom Wiki",
   url:              undefined,
@@ -113,16 +136,16 @@ const fandomNorm = fandomEntities.map((e: any) => ({
 const gta6Entities = [...fandomNorm, ...leonidaEntities];
 
 // ── GTA V vehicles ─────────────────────────────────────────────────────────
-const gta5Vehicles  = (vehiclesRaw as any).vehicles as any[];
-const gta5UpdatedAt = (vehiclesRaw as any).last_updated as string;
+const gta5Vehicles  = vehicleData.vehicles;
+const gta5UpdatedAt = vehicleData.last_updated;
 const gta5Classes   = [...new Set(
-  gta5Vehicles.map((v: any) => (v.class as string).replace(/ \(NR\)$/, ""))
-)].sort() as string[];
+  gta5Vehicles.map(v => v.class.replace(/ \(NR\)$/, ""))
+)].sort();
 
 // ── Stats ──────────────────────────────────────────────────────────────────
-const fandByType  = (entityIndex as any).by_type as Record<string,number>;
-const fandByConf  = (entityIndex as any).by_confidence as Record<string,number>;
-const leonidaStats = (leonidaRaw as any).entity_stats as {total:number;confirmed:number;indexed:number};
+const fandByType   = entityIndex.by_type;
+const fandByConf   = entityIndex.by_confidence;
+const leonidaStats = leonida.entity_stats;
 
 const GTA6_TYPES = ["character","location","business","mission","activity","property","vehicle","weapon","animal"] as const;
 const GTA5_TIER_LABELS: Record<string,string> = {
@@ -153,12 +176,12 @@ const TYPE_META: Record<string,{icon:string;label:string}> = {
 };
 
 // ── Economy data ────────────────────────────────────────────────────────────
-const bizProfiles    = (businessProfiles as any).businesses as any[];
-const heistList      = (onlineHeists as any).heists as any[];
-const tiers          = (revenueTiers as any).tiers as any[];
-const storyMissionList = (storyMissions as any).missions as any[];
-const onlineMissionList = (onlineMissions as any).missions as any[];
-const assassinGuide  = (stocksData as any).guide_order as any[];
+const bizProfiles       = bizData.businesses;
+const heistList         = heistsOnline.heists;
+const tiers             = tiersData.tiers;
+const storyMissionList  = missionData.missions;
+const onlineMissionList = onlineMissData.missions;
+const assassinGuide     = assassinData.guide_order;
 const maxProfitHr    = 340000; // Cayo Perico — S-tier ceiling
 
 // Tier assignment from revenue tiers data
@@ -470,7 +493,7 @@ const HEIST_THUMBS: Record<string, string> = {
                     avg_run_time_min={biz.avg_run_time_min ?? undefined}
                     loot_tiers={biz.loot_tiers ?? undefined}
                     tips={biz.tips ?? undefined}
-                    thumbnail={BIZ_THUMBS[src.id] ?? HEIST_THUMBS[src.id] ?? (biz as any).thumbnail ?? undefined}
+                    thumbnail={BIZ_THUMBS[src.id] ?? HEIST_THUMBS[src.id] ?? biz.thumbnail ?? undefined}
                     last_nerfed={biz.last_nerfed ?? undefined}
                     last_nerfed_notes={biz.last_nerfed_notes ?? undefined}
                     sale_discount_pct={getSaleDiscount(src.id)}
@@ -540,7 +563,7 @@ const HEIST_THUMBS: Record<string, string> = {
           <span>// Story Heists</span><div class="flex-1 h-px bg-[#1e1e23]"></div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {(heistsData as any).heists.filter((h: any) => h.approaches?.[0]?.player_max_cut > 0).map((h: any) => (
+          {storyHeistData.heists.filter(h => (h.approaches?.[0]?.player_max_cut ?? 0) > 0).map(h => (
             <div class="gta5eco-card" data-category="heist">
               <ProfitCard
                 id={h.id}
@@ -548,7 +571,7 @@ const HEIST_THUMBS: Record<string, string> = {
                 game="gta-5"
                 category="heist"
                 tier={h.id === "the-big-score" ? "S" : "C"}
-                net_profit_per_hr={Math.round((h.approaches?.[0]?.player_max_cut ?? 0) / ((h as any).avg_time_hr ?? 2))}
+                net_profit_per_hr={Math.round((h.approaches?.[0]?.player_max_cut ?? 0) / 2)}
                 max_profit_per_hr={42000000}
                 setup_cost_full={0}
                 play_type="heist"
@@ -558,7 +581,7 @@ const HEIST_THUMBS: Record<string, string> = {
                 solo={h.min_players === 1}
                 payout_per_run_max={h.approaches?.[0]?.player_max_cut}
                 notes={h.notes ?? undefined}
-                thumbnail={(h as any).thumbnail ?? undefined}
+                thumbnail={h.thumbnail ?? undefined}
                 share_url="https://gtavi.ai/database"
               />
             </div>
@@ -591,7 +614,7 @@ const HEIST_THUMBS: Record<string, string> = {
                 payout_per_run_max={Math.round(step.combined_return_pct * 2000000 / 100)}
                 notes={`Combined return: +${step.combined_return_pct}%. ${step.max_profit_note ?? ""}`}
                 tips={step.strategy?.slice(0,2).map((s: any) => `${s.action.toUpperCase()} ${s.ticker} (${s.exchange})${s.expected_return_pct ? ` → +${s.expected_return_pct}%` : ''}`)}
-                thumbnail={(step as any).thumbnail ?? undefined}
+                thumbnail={step.thumbnail ?? undefined}
                 share_url="https://gtavi.ai/database"
               />
             </div>

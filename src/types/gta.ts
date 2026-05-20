@@ -308,4 +308,562 @@ export interface EconomyModelsData {
   complexity_chart_note: string;
   layout_templates: Record<string, string>;
   flow_color_map: Record<string, string>;
+  color_schema: ColorSchema;
 }
+
+// ── Economy color schema (economy-models.json top-level) ────────────────────
+
+export interface ColorToken {
+  border: string;
+  text: string;
+  hex: string;
+}
+
+export interface FlowAnimationToken {
+  dir: string;
+  duration_s: number;
+}
+
+export interface ColorSchema {
+  _note?: string;
+  sovereign: Record<string, string>;
+  node_tokens: Record<string, ColorToken>;
+  flow_animation: Record<string, FlowAnimationToken>;
+}
+
+// ── Weekly bonuses (weekly-bonuses.json) ────────────────────────────────────
+
+export interface WeeklySale {
+  item_id?: string;
+  item_name?: string;
+  item_description?: string;
+  discount_pct: number;
+  source_title?: string;
+  pub_date?: string;
+}
+
+export interface WeeklyBonusEntry {
+  activity_id: string;
+  multiplier: number;
+  keyword_found?: string;
+  source_title?: string;
+  pub_date?: string;
+}
+
+export interface WeeklyBonusesData {
+  last_updated: string;
+  source: string;
+  week_start: string;
+  note?: string;
+  bonuses: WeeklyBonusEntry[];
+  sales?: WeeklySale[];
+}
+
+// ── Item catalogue (item-catalogue.json) ────────────────────────────────────
+
+export interface CatalogueItem {
+  id: string;
+  name: string;
+  price: number;
+  trade_price?: number | null;
+  dlc: string;
+  dlc_date?: string;
+  dlc_code?: string;
+  store: string;
+  manufacturer?: string;
+  catalogue_type?: string;
+}
+
+export interface ItemCatalogueData {
+  schema_version: string;
+  last_updated: string;
+  source: string;
+  note?: string;
+  item_count: number;
+  items: CatalogueItem[];
+}
+
+// ── Online heists (online-heists.json) ──────────────────────────────────────
+
+export interface HeistApproach {
+  name: string;
+  player_max_cut?: number;
+  total_take?: number;
+  optimal_crew?: Record<string, string>;
+  difficulty?: string;
+}
+
+export interface HeistLootTier {
+  loot: string;
+  value: number;
+  frequency: string;
+}
+
+export interface OnlineHeist {
+  id: string;
+  title: string;
+  dlc: string;
+  min_players: number;
+  max_players: number;
+  solo: boolean;
+  prerequisite?: string;
+  setup_cost?: number;
+  approaches: HeistApproach[];
+  loot_tiers?: HeistLootTier[];
+  player_cut_per_player?: number;
+  avg_run_time_min?: number;
+  cooldown_min?: number;
+  gta_per_hr?: number;
+  difficulty?: string;
+  notes?: string;
+}
+
+export interface OnlineHeistsData {
+  last_updated: string;
+  source: string;
+  note?: string;
+  schema_version?: string;
+  heists: OnlineHeist[];
+}
+
+// ── Story missions (story-missions.json) ────────────────────────────────────
+
+export interface StoryMission {
+  id: string;
+  title: string;
+  chapter?: number | string;
+  protagonist?: string;
+  payout: number;
+  notes?: string;
+  thumbnail?: string;
+  stock_mission?: boolean;
+}
+
+export interface StoryMissionsData {
+  last_updated: string;
+  source: string;
+  note?: string;
+  schema_version?: string;
+  missions: StoryMission[];
+}
+
+// ── Story heists (heists.json) ───────────────────────────────────────────────
+
+export interface StoryHeistApproach {
+  name: string;
+  player_max_cut?: number;
+  total_take?: number;
+  optimal_crew?: Record<string, string>;
+}
+
+export interface StoryHeist {
+  id: string;
+  title: string;
+  chapter?: number | string;
+  protagonists?: string[];
+  approaches: StoryHeistApproach[];
+  gold_medal_bonus?: number;
+  difficulty?: string;
+  replay_value?: string;
+  thumbnail?: string;
+  notes?: string;
+}
+
+export interface StoryHeistsData {
+  last_updated?: string;
+  source?: string;
+  heists: StoryHeist[];
+}
+
+// ── Franchise sales (sales.json) ─────────────────────────────────────────────
+
+export interface FranchiseSalesTitle {
+  id: string;
+  short: string;
+  full_title: string;
+  year: number;
+  launch_units_m?: number | null;
+  year1_units_m?: number | null;
+  total_units_m: number;
+  total_source?: string;
+  is_prediction?: boolean;
+}
+
+export interface FranchiseSalesData {
+  last_updated: string;
+  note?: string;
+  titles: FranchiseSalesTitle[];
+}
+
+// ── Passive stack (passive-stack.json) ──────────────────────────────────────
+
+export interface PassiveStackBusiness {
+  id: string;
+  name: string;
+  color_token: string;
+  launched: string;
+}
+
+export interface PassiveStackPoint {
+  date: string;
+  patch?: string;
+  passive_gta_per_hr: number;
+  businesses?: string[];
+}
+
+export interface PassiveStackData {
+  schema_version?: string;
+  source: string;
+  note?: string;
+  businesses: PassiveStackBusiness[];
+  series: PassiveStackPoint[];
+}
+
+// ── Shark cards (shark-cards.json) ───────────────────────────────────────────
+
+export interface SharkCard {
+  id: string;
+  name: string;
+  gta_dollars: number;
+  price_usd: number;
+  price_gbp?: number;
+  gta_per_usd: number;
+  notes?: string;
+}
+
+export interface SharkCardsData {
+  last_updated: string;
+  source: string;
+  note?: string;
+  best_value_card?: string;
+  best_gta_per_usd?: number;
+  cards: SharkCard[];
+}
+
+// ── Per-source history (per-source-history.json) ─────────────────────────────
+
+export interface SourceTimelinePoint {
+  date: string;
+  patch?: string;
+  gta_per_hr: number;
+  notes?: string;
+}
+
+export interface SourceHistory {
+  id: string;
+  name: string;
+  category: string;
+  timeline: SourceTimelinePoint[];
+}
+
+export interface PerSourceHistoryData {
+  last_updated: string;
+  source: string;
+  note?: string;
+  source_count?: number;
+  snapshot_count?: number;
+  sources: SourceHistory[];
+}
+
+// ── Vehicles performance (performance.json) ──────────────────────────────────
+
+export interface Vehicle {
+  name: string;
+  class: string;
+  tier: string | null;
+  lap_time: string | null;
+  lap_seconds: number | null;
+  top_speed_mph: number | null;
+  position_in_class?: number | null;
+}
+
+export interface VehiclesData {
+  last_updated: string;
+  source: string;
+  vehicles: Vehicle[];
+}
+
+// ── Leonida Intel entities (leonida-intel.json) ───────────────────────────────
+
+export interface LeonidaEntity {
+  name: string;
+  category: string;
+  type?: string;
+  href?: string;
+  confirmed: boolean;
+  confidence_tier?: string;
+  url?: string;
+}
+
+export interface LeonidaEntityStats {
+  total: number;
+  confirmed: number;
+  indexed: number;
+}
+
+export interface LeonidaData {
+  last_updated: string;
+  source: string;
+  total?: number;
+  total_entities?: number;
+  confirmed?: number;
+  by_category?: Record<string, number>;
+  entities: LeonidaEntity[];
+  entity_stats?: LeonidaEntityStats;
+}
+
+// ── Online missions (online-top.json) ────────────────────────────────────────
+
+export interface OnlineMission {
+  id: string;
+  title: string;
+  contact?: string;
+  gta_per_hr?: number;
+  avg_completion_min?: number;
+  payout?: number;
+  min_players?: number;
+  difficulty?: string;
+  notes?: string;
+}
+
+export interface OnlineMissionsData {
+  last_updated: string;
+  source: string;
+  note?: string;
+  schema_version?: string;
+  missions: OnlineMission[];
+}
+
+// ── Assassination stocks (assassination-stocks.json) ─────────────────────────
+
+export interface AssassinStep {
+  step: number;
+  mission_id: string;
+  title: string;
+  when: string;
+  payout_direct?: number;
+  protagonist?: string;
+  strategy?: string;
+  combined_return_pct?: number;
+  max_profit_note?: string;
+  thumbnail?: string;
+}
+
+export interface AssassinStocksData {
+  last_updated: string;
+  source: string;
+  note?: string;
+  guide_order: AssassinStep[];
+  optimal_sequence_note?: string;
+}
+
+// ── Spending distribution (spending-distribution.json) ───────────────────────
+
+export interface SpendingEra {
+  era: string;
+  date: string;
+  label: string;
+  vehicles_pct: number;
+  properties_pct: number;
+  weapons_pct: number;
+  [key: string]: string | number;
+}
+
+export interface SpendingDistributionData {
+  schema_version?: string;
+  source: string;
+  note?: string;
+  confidence?: string;
+  categories: { id: string; label: string; color_token: string; note?: string }[];
+  eras: SpendingEra[];
+}
+
+// ── Savings profile (savings-profile.json) ───────────────────────────────────
+
+export interface SavingsStage {
+  stage: number;
+  label: string;
+  rank_range?: string;
+  estimated_balance?: number;
+  note?: string;
+}
+
+export interface SavingsRatePoint {
+  year: number;
+  rate: number;
+  note?: string;
+}
+
+export interface SavingsProfileData {
+  schema_version?: string;
+  source: string;
+  note?: string;
+  confidence?: string;
+  maze_bank_cap?: number;
+  maze_bank_cap_label?: string;
+  stages: SavingsStage[];
+  savings_rate_history: SavingsRatePoint[];
+}
+
+// ── Revenue split (revenue-split.json) ───────────────────────────────────────
+
+export interface RevenueSplitYear {
+  fy: string;
+  calendar_year: number;
+  total_bn: number;
+  game_sales_bn: number;
+  recurrent_bn: number;
+  pct_recurrent: number;
+}
+
+export interface RevenueSplitData {
+  source: string;
+  note?: string;
+  years: RevenueSplitYear[];
+}
+
+// ── Price basket (price-basket.json) ─────────────────────────────────────────
+
+export interface PriceBasketItem {
+  id: string;
+  name: string;
+  category: string;
+  weight: number;
+  rationale?: string;
+  available_from?: string;
+}
+
+export interface PriceBasketEra {
+  patch: string;
+  date: string;
+  [key: string]: string | number;
+}
+
+export interface PriceBasketData {
+  schema_version?: string;
+  source: string;
+  note?: string;
+  methodology?: string;
+  base_period?: string;
+  base_label?: string;
+  items: PriceBasketItem[];
+  era_prices: PriceBasketEra[];
+}
+
+// ── Trailer velocity (trailer-velocity.json) ─────────────────────────────────
+
+export interface TrailerVelocitySnapshot {
+  fetched_at: string;
+  views: number;
+  likes?: number;
+  comments?: number;
+}
+
+export interface TrailerVelocityEntry {
+  youtube_id: string;
+  title: string;
+  published_at?: string;
+  fetch_method?: string;
+  snapshots: TrailerVelocitySnapshot[];
+}
+
+export interface TrailerVelocityData {
+  last_updated: string;
+  note?: string;
+  trailers: TrailerVelocityEntry[];
+}
+
+// ── Trailer analysis (trailer-analysis.json) ─────────────────────────────────
+
+export interface TrailerAnalysisEvent {
+  t: number;
+  type: string;
+  entity: string;
+  confidence?: string;
+  note?: string;
+}
+
+export interface TrailerAnalysisEntry {
+  id: string;
+  youtube_id: string;
+  title: string;
+  published_at?: string;
+  duration_sec: number;
+  total_entities?: number;
+  events: TrailerAnalysisEvent[];
+}
+
+export interface TrailerAnalysisData {
+  source?: string;
+  note?: string;
+  trailers: TrailerAnalysisEntry[];
+}
+
+// ── Newswire feed (newswire.json) ─────────────────────────────────────────────
+
+export interface NewswireItem {
+  source_id: string;
+  source_name: string;
+  tier?: string;
+  title: string;
+  url: string;
+  published_at: string;
+  summary?: string;
+}
+
+export interface NewswireData {
+  last_updated: string;
+  sources?: unknown[];
+  items: NewswireItem[];
+}
+
+// ── Reddit feed (reddit.json) ─────────────────────────────────────────────────
+
+export interface RedditPost {
+  title: string;
+  url: string;
+  score?: number;
+  comments?: number;
+  published_at?: string;
+  flair?: string;
+}
+
+export interface RedditData {
+  last_updated: string;
+  source?: string;
+  recent_posts?: RedditPost[];
+  subscriber_count?: number;
+}
+
+// ── Releases (releases.json) ──────────────────────────────────────────────────
+
+export interface ReleaseEntry {
+  title: string;
+  short: string;
+  release_year: number;
+  release_date?: string;
+  developer?: string;
+  publisher?: string;
+  platforms?: string[];
+  price_usd_launch?: number | null;
+  price_usd_estimate?: number | null;
+  map_size_km2?: number | null;
+  map_size_km2_estimate?: number | null;
+  vehicle_count?: number | null;
+  vehicle_count_estimate?: number | null;
+  gap_years_from_prev?: number | null;
+  gap_years_from_prev_estimate?: number | null;
+  trailer_youtube_id?: string | null;
+  is_prediction?: boolean;
+  release_date_estimate?: string | null;
+}
+
+export interface ReleasesData {
+  last_updated: string;
+  source?: string;
+  games: ReleaseEntry[];
+}
+
+
+
+

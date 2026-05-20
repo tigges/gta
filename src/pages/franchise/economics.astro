@@ -12,12 +12,17 @@ import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import ChartPreviewCard from "../../components/charts/ChartPreviewCard.astro";
 
-import economyData from "../../../data/franchise/economy-models.json";
-import salesData   from "../../../data/franchise/sales.json";
+import type { EconomyModelsData, FranchiseSalesData } from "../../types/gta";
 
-const economies = (economyData as any).economies as any[];
-const arcSummary = (economyData as any).franchise_arc_summary as string;
-const chartNote  = (economyData as any).complexity_chart_note as string;
+import economyDataRaw from "../../../data/franchise/economy-models.json";
+import salesDataRaw   from "../../../data/franchise/sales.json";
+
+const economyData = economyDataRaw as unknown as EconomyModelsData;
+const salesData   = salesDataRaw   as unknown as FranchiseSalesData;
+
+const economies  = economyData.economies;
+const arcSummary = economyData.franchise_arc_summary;
+const chartNote  = economyData.complexity_chart_note;
 
 // Economy page URLs (Decision B: GTA 1-2 has no standalone page — shown inline only)
 const ECONOMY_PAGES: Record<string, string> = {

@@ -24,25 +24,31 @@ const Preview1   = CHART_REGISTRY[goConfig.preview[1]];
 const Preview2   = CHART_REGISTRY[goConfig.preview[2]];
 const Preview3   = CHART_REGISTRY[goConfig.preview[3]];
 
+import type { WeeklyBonusesData, RevenueTiersData, BusinessProfiles } from "../types/gta";
+
 import weeklyBonuses    from "../../data/gta-5/economy/weekly-bonuses.json";
 import revenueTiers     from "../../data/gta-5/economy/revenue-tiers.json";
 import bonusHistory     from "../../data/gta-5/economy/bonus-history.json";
 import businessProfiles from "../../data/gta-5/economy/business-profiles.json";
 
-const bonuses    = ((weeklyBonuses as any).bonuses  ?? []) as any[];
-const sales      = ((weeklyBonuses as any).sales    ?? []) as any[];
-const weekStart  = (weeklyBonuses  as any).week_start as string ?? "";
+const wBonuses   = weeklyBonuses    as unknown as WeeklyBonusesData;
+const wTiers     = revenueTiers     as unknown as RevenueTiersData;
+const wBizProf   = businessProfiles as unknown as BusinessProfiles;
+
+const bonuses    = wBonuses.bonuses ?? [];
+const sales      = wBonuses.sales   ?? [];
+const weekStart  = wBonuses.week_start ?? "";
 const hasBonuses = bonuses.length > 0 || sales.length > 0;
 
 // Top income method (S-tier first source)
-const tiers        = ((revenueTiers as any).tiers ?? []) as any[];
-const sTier        = tiers.find((t: any) => t.tier === "S");
+const tiers        = wTiers.tiers ?? [];
+const sTier        = tiers.find(t => t.tier === "S");
 const topSource    = sTier?.sources?.[0];
 const topGph       = topSource?.gta_per_hr ?? 0;
 const topName      = topSource?.name ?? "Cayo + Passive Stack";
 
-const historyCount  = (bonusHistory     as any).entry_count  as number ?? 0;
-const profileCount  = (businessProfiles as any).businesses?.length      ?? 0;
+const historyCount  = (bonusHistory as { entry_count?: number }).entry_count ?? 0;
+const profileCount  = wBizProf.businesses?.length ?? 0;
 ---
 
 <Base

@@ -7,26 +7,31 @@ import Countdown from "../components/Countdown.astro";
 import NewsletterSignup from "../components/NewsletterSignup.astro";
 import ShareButton from "../components/ShareButton.astro";
 
-import type { TrailersData, Prediction } from "../types/gta";
+import type { TrailersData, Prediction, FeaturesData, TrailerVelocityData, TrailerAnalysisData, NewswireData } from "../types/gta";
 
 import releasesData      from "../../data/shared/releases.json";
 import predictionsData   from "../../data/gta-6/predictions.json";
 import trailersDataRaw   from "../../data/gta-6/trailers.json";
 import steamData         from "../../data/gta-5/meta/steam-players.json";
-import featuresData      from "../../data/gta-6/features.json";
-import trailerAnalysis   from "../../data/gta-6/trailer-analysis.json";
-import newswireData      from "../../data/feeds/newswire.json";
-import velocityData      from "../../data/gta-6/trailer-velocity.json";
+import featuresDataRaw   from "../../data/gta-6/features.json";
+import trailerAnalysisRaw from "../../data/gta-6/trailer-analysis.json";
+import newswireDataRaw   from "../../data/feeds/newswire.json";
+import velocityDataRaw   from "../../data/gta-6/trailer-velocity.json";
 
-const trailersData   = trailersDataRaw as TrailersData;
+const trailersData    = trailersDataRaw    as unknown as TrailersData;
+const featuresData    = featuresDataRaw    as unknown as FeaturesData;
+const trailerAnalysis = trailerAnalysisRaw as unknown as TrailerAnalysisData;
+const newswireData    = newswireDataRaw    as unknown as NewswireData;
+const velocityData    = velocityDataRaw    as unknown as TrailerVelocityData;
+
 const latestTrailer  = trailersData.trailers[0] ?? null;
 const trailer2Id     = "VQRLujxTm3c";
 const trailer1Id     = "QdBZY2fkU-0";
 
 // Derive live view counts from trailer-velocity.json (updated nightly)
-const velTrailers = (velocityData as any).trailers as any[];
-const vel1 = velTrailers.find((t: any) => t.youtube_id === trailer1Id);
-const vel2 = velTrailers.find((t: any) => t.youtube_id === trailer2Id);
+const velTrailers = velocityData.trailers;
+const vel1 = velTrailers.find(t => t.youtube_id === trailer1Id);
+const vel2 = velTrailers.find(t => t.youtube_id === trailer2Id);
 const t1Views = (vel1?.snapshots?.at(-1)?.views ?? 0) as number;
 const t2Views = (vel2?.snapshots?.at(-1)?.views ?? 0) as number;
 function fmtViews(n: number): string {
@@ -72,8 +77,8 @@ const CAT_THUMBS_HOME: Record<string,string> = {
   online:     "/assets/gta6/locations/Vice_City_03.jpg",
 };
 const TEASER_CATS = ["vehicles", "characters", "regions", "wildlife"];
-const featCats    = (featuresData as any).categories.filter((c: any) => TEASER_CATS.includes(c.id));
-const totalTracked = (featuresData as any).categories.reduce((s: number, c: any) => s + c.confirmed + c.reported, 0);
+const featCats    = featuresData.categories.filter(c => TEASER_CATS.includes(c.id));
+const totalTracked = featuresData.categories.reduce((s: number, c) => s + c.confirmed + c.reported, 0);
 
 // ── Frame-by-Frame teaser ─────────────────────────────────────────────────
 const TYPE_COLOR: Record<string,string> = {
@@ -85,10 +90,10 @@ const TYPE_COLOR: Record<string,string> = {
   wildlife:  "#22c55e",
   reveal:    "#f1f5f9",
 };
-const t2raw = (trailerAnalysis as any).trailers[1];
-const t2Events = ((t2raw as any).events as any[]).map((e: any) => ({
+const t2raw = trailerAnalysis.trailers[1];
+const t2Events = t2raw.events.map(e => ({
   ...e,
-  pct: +((e.t / (t2raw as any).duration_sec) * 100).toFixed(1),
+  pct: +((e.t / t2raw.duration_sec) * 100).toFixed(1),
   color: TYPE_COLOR[e.type] ?? "#71717a",
   ts: `${Math.floor(e.t/60)}:${String(e.t%60).padStart(2,"0")}`,
 }));
@@ -99,7 +104,7 @@ const t2TypeCounts = t2Events.reduce((acc: Record<string,number>, e: any) => {
 }, {} as Record<string,number>);
 
 // ── News digest ───────────────────────────────────────────────────────────
-const recentNews = ((newswireData as any).items as any[]).slice(0, 3);
+const recentNews = newswireData.items.slice(0, 3);
 const TIER_COLOR: Record<string,string> = {
   press:     "text-gta-gold",
   official:  "text-gta-teal",
@@ -260,7 +265,7 @@ const TIER_COLOR: Record<string,string> = {
             source_type={p.source_type}
             outcome_verified={p.outcome_verified}
             outcome_actual={p.outcome_actual}
-            thumbnail={predThumbnails[(p as any).id]}
+            thumbnail={predThumbnails[(p as Prediction).id]}
             compact={true}
           />
         ))}
@@ -413,13 +418,13 @@ const TIER_COLOR: Record<string,string> = {
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer 2 — Frame-by-Frame Entity Discovery</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500">{t2Events.length} entities · {(t2raw as any).duration_sec}s runtime</span>
+        <span class="text-[10px] font-mono text-zinc-500">{t2Events.length} entities · {t2raw.duration_sec}s runtime</span>
         <a href="/charts" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full analysis →</a>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23]">
           <div class="font-semibold text-zinc-200 text-sm">What Every Second of Trailer 2 Revealed</div>
-          <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Each marker = a new entity confirmed. Colour = type. {t2Events.length} entities across {(t2raw as any).duration_sec}s.</div>
+          <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Each marker = a new entity confirmed. Colour = type. {t2Events.length} entities across {t2raw.duration_sec}s.</div>
         </div>
 
         <!-- Timeline strip -->
@@ -438,7 +443,7 @@ const TIER_COLOR: Record<string,string> = {
             ))}
             <!-- Time label at end -->
             <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-zinc-500">
-              {Math.floor((t2raw as any).duration_sec/60)}:{String((t2raw as any).duration_sec%60).padStart(2,"0")}
+              {Math.floor(t2raw.duration_sec/60)}:{String(t2raw.duration_sec%60).padStart(2,"0")}
             </span>
           </div>
 
@@ -602,7 +607,7 @@ const TIER_COLOR: Record<string,string> = {
               Intelligence Digest
             </div>
             <div class="font-semibold text-zinc-200 text-sm">Latest from Rockstar + Community</div>
-            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">{(newswireData as any).items.length} stories tracked · updated nightly</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">{newswireData.items.length} stories tracked · updated nightly</div>
           </div>
           <a href="/news" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase shrink-0">Full feed →</a>
         </div>
