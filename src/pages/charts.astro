@@ -247,10 +247,10 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       </div>
       <ChartCommunity />
     </section>
-    <section class="chart-block" data-title="franchise" data-category="History">
+    <section class="chart-block" data-title="gta-vi" data-category="History">
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Prelaunch Comparison Chart</span>
+        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 text-gta-gold border-gta-gold/30">GTA VI</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Pre-launch Hype — GTA V (2013) vs GTA VI (2026)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <ChartPrelaunchComparison />
@@ -262,6 +262,14 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <ChartEntertainmentComp />
+    </section>
+    <section class="chart-block" data-title="gta-vi" data-category="Economy-RL">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 text-gta-gold border-gta-gold/30">GTA VI</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Major Game Launches — Year 1 Sales & Pre-launch Hype</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <ChartCompetitors />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
       <div class="flex items-center gap-3 mb-5">
@@ -402,23 +410,15 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     <section class="chart-block" data-title="gta-v" data-category="Community">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-400 border-zinc-700">GTA V</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Player History</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Players — DLC Events Overlay</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <ChartDlcPlayerHistory />
     </section>
-    <section class="chart-block" data-title="franchise" data-category="History">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Perf Chart</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-      </div>
-      <ChartVehiclePerformance />
-    </section>
     <section class="chart-block" data-title="gta-v" data-category="Community">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-400 border-zinc-700">GTA V</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Player History</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Player Count — Monthly Avg & Peak</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <PlayerChart />
@@ -438,6 +438,14 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <ChartMissionEarnings />
+    </section>
+    <section class="chart-block" data-title="gta-v" data-category="Performance">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-400 border-zinc-700">GTA V</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Vehicle Performance — Broughy1322 Lap Times</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <ChartVehiclePerformance />
     </section>
     <section class="chart-block" data-title="franchise" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">
@@ -479,14 +487,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       </div>
       <ChartTtwoStock />
     </section>
-    <section class="chart-block" data-title="gta-vi" data-category="Economy-RL">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 text-gta-gold border-gta-gold/30">GTA VI</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Major Game Launches — Year 1 Sales & Pre-launch Hype</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-      </div>
-      <ChartCompetitors />
-    </section>
     <section class="chart-block" data-title="franchise" data-category="History">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
@@ -509,18 +509,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 </Base>
 
 <style>
-  /* ── Per-title left border accent on chart sections ─────────────────────
-     Provides immediate visual title identification before JS badge injection. */
-  .chart-block[data-title="gta-vi"]     { border-left: 2px solid rgba(245,158,11,0.30); padding-left: 12px; }
-  .chart-block[data-title="gta-online"] { border-left: 2px solid rgba(13,148,136,0.25); padding-left: 12px; }
-  .chart-block[data-title="gta-v"]      { border-left: 2px solid rgba(113,113,122,0.20); padding-left: 12px; }
-  .chart-block[data-title="franchise"]  { border-left: 2px solid rgba(113,113,122,0.15); padding-left: 12px; }
-</style>
-
-</Base>
-
-<style>
-  /* Per-title left border accent */
+  /* Per-title left border accent on chart sections */
   .chart-block[data-title="gta-vi"]     { border-left: 2px solid rgba(245,158,11,0.30); padding-left: 12px; }
   .chart-block[data-title="gta-online"] { border-left: 2px solid rgba(13,148,136,0.25); padding-left: 12px; }
   .chart-block[data-title="gta-v"]      { border-left: 2px solid rgba(113,113,122,0.20); padding-left: 12px; }
