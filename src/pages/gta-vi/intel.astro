@@ -759,9 +759,9 @@ const DELAY_THUMBS: Record<string,string> = {
 <script>
   import * as d3 from "d3";
 
-  document.addEventListener("DOMContentLoaded", () => {
+  {
     const el = document.getElementById("gta6-trends-chart");
-    if (!el) return;
+    if (!el) throw new Error("gta6-trends-chart element not found");
 
     const keywords: { keyword: string; color: string; data: { date: string; value: number }[] }[] =
       JSON.parse(el.dataset.keywords || "[]");
@@ -833,7 +833,7 @@ const DELAY_THUMBS: Record<string,string> = {
         paths[kw]?.attr("opacity", active ? 0 : 0.9);
       });
     });
-  });
+  }
 
   // ── Character card video hover ────────────────────────────────────────────
   document.querySelectorAll<HTMLElement>(".char-card").forEach(card => {
