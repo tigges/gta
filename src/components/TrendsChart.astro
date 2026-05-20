@@ -30,9 +30,9 @@ import trendsData from "../../data/gta-5/trends/search-interest.json";
 <script>
   import * as d3 from "d3";
 
-  document.addEventListener("DOMContentLoaded", () => {
+  {
     const el = document.getElementById("trends-chart");
-    if (!el) return;
+    if (!el) throw new Error("trends-chart element not found");
 
     const keywords: { keyword: string; color: string; data: { date: string; value: number }[] }[] =
       JSON.parse(el.dataset.keywords || "[]");
@@ -116,6 +116,6 @@ import trendsData from "../../data/gta-5/trends/search-interest.json";
         paths[kw]?.attr("opacity", active ? 0 : 0.9);
       });
     });
-  });
+  }
 
 </script>

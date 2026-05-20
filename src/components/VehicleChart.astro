@@ -192,26 +192,27 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  {
     const el = document.getElementById("vehicle-chart");
-    if (!el) return;
-    allVehicles = JSON.parse(el.dataset.vehicles || "[]");
-    render(allVehicles);
+    if (el) {
+      allVehicles = JSON.parse(el.dataset.vehicles || "[]");
+      render(allVehicles);
 
-    document.querySelectorAll<HTMLButtonElement>(".class-filter").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll<HTMLButtonElement>(".class-filter").forEach((b) => {
-          b.dataset.active = "false";
-          b.classList.remove("border-gta-gold", "text-gta-gold", "bg-gta-gold/10");
-          b.classList.add("border-zinc-700", "text-zinc-500");
+      document.querySelectorAll<HTMLButtonElement>(".class-filter").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll<HTMLButtonElement>(".class-filter").forEach((b) => {
+            b.dataset.active = "false";
+            b.classList.remove("border-gta-gold", "text-gta-gold", "bg-gta-gold/10");
+            b.classList.add("border-zinc-700", "text-zinc-500");
+          });
+          btn.dataset.active = "true";
+          btn.classList.add("border-gta-gold", "text-gta-gold", "bg-gta-gold/10");
+          btn.classList.remove("border-zinc-700", "text-zinc-500");
+          activeClass = btn.dataset.class!;
+          render(allVehicles);
         });
-        btn.dataset.active = "true";
-        btn.classList.add("border-gta-gold", "text-gta-gold", "bg-gta-gold/10");
-        btn.classList.remove("border-zinc-700", "text-zinc-500");
-        activeClass = btn.dataset.class!;
-        render(allVehicles);
       });
-    });
-  });
+    }
+  }
 
 </script>

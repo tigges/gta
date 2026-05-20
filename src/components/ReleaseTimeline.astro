@@ -132,9 +132,9 @@ const COVERS: Record<string, string> = {
 <script>
   import * as d3 from "d3";
 
-  document.addEventListener("DOMContentLoaded", () => {
+  {
     const el = document.getElementById("gap-chart");
-    if (!el) return;
+    if (!el) throw new Error("gap-chart element not found");
 
     const data: { short: string; gap: number; isPred: boolean }[] = JSON.parse(el.dataset.games || "[]");
 
@@ -179,5 +179,5 @@ const COVERS: Record<string, string> = {
         .attr("font-family", "monospace")
         .text(`${d.gap}yr`);
     });
-  });
+  }
 </script>
