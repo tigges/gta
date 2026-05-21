@@ -4,37 +4,46 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── Brand (mapped to CSS vars — change var to update everywhere) ──
+        // ── Functional accents (site-wide) ────────────────────────────────
         'gta-gold':    'var(--c-brand)',
         'gta-bright':  'var(--c-brand-bright)',
         'gta-teal':    'var(--c-live)',
         'gta-red':     'var(--c-alert)',
-        'gta-green':   'var(--c-growth)',    // community, S+, passive income
-        'gta-indigo':  'var(--c-economy)',   // economy, capital, complexity
-        'gta-reddit':  'var(--c-reddit)',    // Reddit brand colour only
+        'gta-green':   'var(--c-growth)',
+        'gta-indigo':  'var(--c-economy)',
+        'gta-reddit':  'var(--c-reddit)',
 
-        // ── Surfaces ───────────────────────────────────────────────────────
-        'surface':    'var(--c-bg)',
+        // ── Title identity (3 places only: nav dot · section dot · border-left)
+        'gta-vi-coral':    'var(--c-title-vi)',
+        'gta-vi-alt':      'var(--c-title-vi-alt)',
+        'gta-online-vivid':'var(--c-title-online)',
+        'gta-sa-red':      'var(--c-title-sa)',
+        'gta-vc-pink':     'var(--c-title-vc)',
+
+        // ── Page identity resolver (inherits from data-title-context) ──────
+        'identity':    'var(--c-identity)',
+
+        // ── Surfaces ──────────────────────────────────────────────────────
+        'surface':     'var(--c-bg)',
         'surface-deep':'var(--c-bg-deep)',
-        'surface-1':  'var(--c-card)',
-        'surface-2':  'var(--c-card-raised)',
+        'surface-1':   'var(--c-card)',
+        'surface-2':   'var(--c-card-raised)',
 
-        // ── Borders ─────────────────────────────────────────────────────────
-        'border-dim': 'var(--c-border-1)',
-        'border-mid': 'var(--c-border-2)',
+        // ── Borders ───────────────────────────────────────────────────────
+        'border-dim':  'var(--c-border-1)',
+        'border-mid':  'var(--c-border-2)',
 
-        // ── Semantic text tokens (new — use these going forward) ────────────
-        //    Replaces raw text-zinc-* values with meaningful names
-        'content-0':  'var(--c-text-0)',   // hero headings
-        'content-1':  'var(--c-text-1)',   // card titles, primary values
-        'content-2':  'var(--c-text-2)',   // strong secondary
-        'content-3':  'var(--c-text-3)',   // body text
-        'content-4':  'var(--c-text-4)',   // muted labels
-        'content-5':  'var(--c-text-5)',   // section labels
-        'content-6':  'var(--c-text-6)',   // footnotes
-        'content-7':  'var(--c-text-7)',   // watermarks
+        // ── Text tokens ───────────────────────────────────────────────────
+        'content-0':   'var(--c-text-0)',
+        'content-1':   'var(--c-text-1)',
+        'content-2':   'var(--c-text-2)',
+        'content-3':   'var(--c-text-3)',
+        'content-4':   'var(--c-text-4)',
+        'content-5':   'var(--c-text-5)',
+        'content-6':   'var(--c-text-6)',
+        'content-7':   'var(--c-text-7)',
 
-        // ── Category colors ──────────────────────────────────────────────────
+        // ── Category colours ──────────────────────────────────────────────
         'cat-franchise':   'var(--c-cat-franchise)',
         'cat-community':   'var(--c-cat-community)',
         'cat-performance': 'var(--c-cat-performance)',

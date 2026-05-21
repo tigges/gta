@@ -40,6 +40,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
 ---
 
 <Base
+  titleContext="gta-vi"
   title="GTA VI Economy — Dual-Territory Currency Union"
   description="GTA VI projected economy analysis: dual-territory currency union (Vice City + Leonida), regional purchasing parity, Shark Card mechanics, and the Eurozone analogue. Updated as intelligence confirms."
   ogPage="vi-intel"
@@ -47,7 +48,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
 
   <!-- Hero header -->
   <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:260px">
-    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 70% 50%, rgba(245,158,11,0.06) 0%, transparent 65%), #0a0a0d"></div>
+    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 70% 50%, var(--c-hero-bloom) 0%, transparent 65%), #0a0a0d"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-4">
         <span class="text-[11px] font-mono bg-gta-gold/30 border border-gta-gold/40 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">ERA 5 · 2025/26</span>
@@ -85,7 +86,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="identity-dot"></span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Projected Circular Economy</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">dual-territory · all nodes projected</span>
@@ -100,7 +101,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold shrink-0"></span>
+        <span class="identity-dot"></span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Complexity — Franchise Context</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <a href="/franchise/economics" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All 10 economies →</a>
@@ -231,7 +232,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="identity-dot"></span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Structure Predictions</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{econPreds.length} model-derived</span>
@@ -282,7 +283,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
         <p class="text-[11px] font-mono text-zinc-500 leading-relaxed mb-4">
           {economy?.summary}
         </p>
-        <div class="rounded-lg border border-gta-gold/15 px-4 py-3" style="background:rgba(245,158,11,0.03)">
+        <div class="rounded-lg border border-gta-gold/15 px-4 py-3" style="background:var(--c-hero-bloom)">
           <div class="text-[10px] font-mono text-gta-gold/40 uppercase tracking-widest mb-1">GTA Online → GTA VI</div>
           <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{economy?.gta_vi_lineage}</p>
         </div>
