@@ -44,6 +44,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -70,13 +72,13 @@ import ShareButton from "../ShareButton.astro";
     // Grid
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
       .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.grid).attr("stroke-dasharray", "3,3"));
 
     // Base=100 line
     svg.append("line").attr("x1", 0).attr("x2", W).attr("y1", y(100)).attr("y2", y(100))
-      .attr("stroke", "#3f3f46").attr("stroke-dasharray", "6,3").attr("stroke-width", 1.5);
+      .attr("stroke", cc.text7).attr("stroke-dasharray", "6,3").attr("stroke-width", 1.5);
     svg.append("text").attr("x", W + 5).attr("y", y(100) + 4)
-      .attr("fill", "#52525b").attr("font-size", "8").attr("font-family", "monospace").text("base=100");
+      .attr("fill", cc.text6).attr("font-size", "8").attr("font-family", "monospace").text("base=100");
 
     // Step-line segments
     for (let i = 0; i < sorted.length - 1; i++) {
@@ -84,22 +86,22 @@ import ShareButton from "../ShareButton.astro";
       const px = x(new Date(p.date)), nx = x(new Date(n.date));
       const py = y(p.ppi), ny = y(n.ppi);
       svg.append("line").attr("x1", px).attr("x2", nx).attr("y1", py).attr("y2", py)
-        .attr("stroke", "#f59e0b").attr("stroke-width", 2);
+        .attr("stroke", cc.bar).attr("stroke-width", 2);
       svg.append("line").attr("x1", nx).attr("x2", nx).attr("y1", py).attr("y2", ny)
-        .attr("stroke", "#f59e0b").attr("stroke-width", 2);
+        .attr("stroke", cc.bar).attr("stroke-width", 2);
     }
     // Trailing dashed line to present
     const last = sorted[sorted.length - 1];
     svg.append("line").attr("x1", x(new Date(last.date))).attr("x2", W)
       .attr("y1", y(last.ppi)).attr("y2", y(last.ppi))
-      .attr("stroke", "#f59e0b").attr("stroke-width", 2).attr("stroke-dasharray", "4,3");
+      .attr("stroke", cc.bar).attr("stroke-width", 2).attr("stroke-dasharray", "4,3");
 
     // Event dots
-    const EVT_COLOR: Record<string, string> = { buff: "#22c55e", nerf: "#ef4444", basket_expansion: "#818cf8" };
+    const EVT_COLOR: Record<string, string> = { buff: cc.green, nerf: cc.red, basket_expansion: cc.indigo };
     sorted.forEach((p: any) => {
-      const col = EVT_COLOR[p.event] || "#71717a";
+      const col = EVT_COLOR[p.event] || cc.text4;
       svg.append("circle").attr("cx", x(new Date(p.date))).attr("cy", y(p.ppi)).attr("r", p.event ? 5 : 3.5)
-        .attr("fill", col).attr("stroke", "#131316").attr("stroke-width", 1.5);
+        .attr("fill", col).attr("stroke", cc.card).attr("stroke-width", 1.5);
     });
 
     // Key label annotations
@@ -108,26 +110,26 @@ import ShareButton from "../ShareButton.astro";
     if (afterHours) {
       const ax = x(new Date(afterHours.date));
       svg.append("text").attr("x", ax + 5).attr("y", y(afterHours.ppi) - 7)
-        .attr("fill", "#ef4444").attr("font-size", "8.5").attr("font-family", "monospace").text("After Hours 207↑");
+        .attr("fill", cc.red).attr("font-size", "8.5").attr("font-family", "monospace").text("After Hours 207↑");
     }
     if (cayo) {
       const cx = x(new Date(cayo.date));
       svg.append("text").attr("x", cx - 6).attr("y", y(cayo.ppi) + 16).attr("text-anchor", "end")
-        .attr("fill", "#22c55e").attr("font-size", "8.5").attr("font-family", "monospace").text("Cayo 41↓");
+        .attr("fill", cc.green).attr("font-size", "8.5").attr("font-family", "monospace").text("Cayo 41↓");
     }
 
     // X axis
     svg.append("g").attr("transform", `translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(7).tickFormat((d: any) => `'${String(d.getFullYear()).slice(2)}`))
-      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+      .call(g => g.select(".domain").attr("stroke", cc.border2))
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call(g => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "9").attr("font-family", "monospace"));
     // Y axis
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `${d}`))
       .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+      .call(g => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "9").attr("font-family", "monospace"));
     svg.append("text").attr("transform", "rotate(-90)").attr("x", -H / 2).attr("y", -40).attr("text-anchor", "middle")
-      .attr("fill", "#3f3f46").attr("font-size", "9").attr("font-family", "monospace").text("PPI (hrs to basket)");
+      .attr("fill", cc.text7).attr("font-size", "9").attr("font-family", "monospace").text("PPI (hrs to basket)");
     }
 
   // Register with chartInit so ChartPreviewCard can force-init on expand

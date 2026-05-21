@@ -50,6 +50,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -77,13 +79,13 @@ import ShareButton from "../ShareButton.astro";
 
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(d=>`$${d}`))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
 
     // $80 reference line
     svg.append("line").attr("x1",0).attr("x2",W).attr("y1",y(80)).attr("y2",y(80))
-      .attr("stroke","#f59e0b").attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
-    svg.append("text").attr("x",4).attr("y",y(80)-4).attr("fill","#f59e0b")
+      .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
+    svg.append("text").attr("x",4).attr("y",y(80)-4).attr("fill",cc.bar)
       .attr("font-size","9").attr("font-family","monospace").text("$80 GTA VI price");
 
     withReal.forEach(t => {
@@ -92,35 +94,35 @@ import ShareButton from "../ShareButton.astro";
       // Real price bar (behind, lighter)
       svg.append("rect").attr("x",bx).attr("y",y(t.price_real))
         .attr("width",bw).attr("height",H-y(t.price_real)).attr("rx",3)
-        .attr("fill",isVI?"#f59e0b":"#52525b").attr("opacity",isVI?0.15:0.25);
+        .attr("fill",isVI?cc.bar:cc.text6).attr("opacity",isVI?0.15:0.25);
 
       // Nominal price bar (front, solid)
       svg.append("rect").attr("x",bx+bw*0.15).attr("y",y(t.price_nominal))
         .attr("width",bw*0.7).attr("height",H-y(t.price_nominal)).attr("rx",2)
-        .attr("fill",isVI?"#f59e0b":"#3f3f46").attr("opacity",isVI?0.9:0.85);
+        .attr("fill",isVI?cc.bar:cc.text7).attr("opacity",isVI?0.9:0.85);
 
       // Real price label
       svg.append("text").attr("x",bx+bw/2).attr("y",y(t.price_real)-5)
-        .attr("text-anchor","middle").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace")
+        .attr("text-anchor","middle").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace")
         .text(`$${t.price_real}`);
 
       // Nominal price label
       svg.append("text").attr("x",bx+bw/2).attr("y",y(t.price_nominal)-5)
-        .attr("text-anchor","middle").attr("fill",isVI?"#f59e0b":"#a1a1aa").attr("font-size","10").attr("font-family","monospace").attr("font-weight","600")
+        .attr("text-anchor","middle").attr("fill",isVI?cc.bar:cc.text4).attr("font-size","10").attr("font-family","monospace").attr("font-weight","600")
         .text(`$${t.price_nominal}`);
     });
 
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
       .call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#71717a").attr("font-size","12").attr("font-family","monospace").attr("dy","1.2em"));
+      .call(g=>g.selectAll("text").attr("fill",cc.text4).attr("font-size","12").attr("font-family","monospace").attr("dy","1.2em"));
 
     // Legend
-    svg.append("rect").attr("x",W-130).attr("y",-18).attr("width",10).attr("height",10).attr("fill","#3f3f46").attr("opacity",0.9);
-    svg.append("text").attr("x",W-116).attr("y",-10).attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace").text("Nominal price");
-    svg.append("rect").attr("x",W-130).attr("y",-4).attr("width",10).attr("height",10).attr("fill","#52525b").attr("opacity",0.25);
-    svg.append("text").attr("x",W-116).attr("y",4).attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace").text("2026 real price");  }
+    svg.append("rect").attr("x",W-130).attr("y",-18).attr("width",10).attr("height",10).attr("fill",cc.text7).attr("opacity",0.9);
+    svg.append("text").attr("x",W-116).attr("y",-10).attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace").text("Nominal price");
+    svg.append("rect").attr("x",W-130).attr("y",-4).attr("width",10).attr("height",10).attr("fill",cc.text6).attr("opacity",0.25);
+    svg.append("text").attr("x",W-116).attr("y",4).attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace").text("2026 real price");  }
 
   registerChart("cpi-chart", init);
   if ("IntersectionObserver" in window) {

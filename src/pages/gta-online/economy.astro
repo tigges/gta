@@ -896,7 +896,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       const actor = btn.dataset.actor!;
       document.querySelectorAll<HTMLButtonElement>(".actor-btn").forEach(b => {
         const active = b.dataset.actor === actor;
-        b.style.borderColor     = active ? "rgba(245,158,11,0.5)" : "#2a2a31";
+        b.style.borderColor     = active ? "rgba(245,158,11,0.5)" : cc.border2;
         b.style.backgroundColor = active ? "rgba(245,158,11,0.08)" : "";
         b.style.color           = active ? "var(--c-brand)" : "var(--c-text-4)";
       });
@@ -1144,7 +1144,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       }
     }
     dl(yieldData,"date",d=>(d.top_gta_per_hr/maxYield)*5,cc.bar);
-    dl(revenue.filter((d:any)=>d.calendar_year>=2013),"calendar_year",d=>(d.recurrent_bn/maxRev)*4,"#fb923c");
+    dl(revenue.filter((d:any)=>d.calendar_year>=2013),"calendar_year",d=>(d.recurrent_bn/maxRev)*4,cc.orange);
     dl(passive.filter((s:any)=>s.total>0),"date",d=>(d.total/maxPass)*3,cc.green);
     dl(ppiSeries,"date",d=>((maxPPI-d.ppi)/maxPPI)*5,cc.indigo,true);
     svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))

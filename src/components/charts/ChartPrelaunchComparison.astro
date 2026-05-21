@@ -66,6 +66,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -113,12 +115,12 @@ import ShareButton from "../ShareButton.astro";
       const g = svg.append("g").attr("transform",`translate(0,${yOffset})`);
       g.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
         .call((gg: any) => gg.select(".domain").remove())
-        .call((gg: any) => gg.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+        .call((gg: any) => gg.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
       const line = d3.line<any>().x(d => x(d.m)).y(d => y(d.v)).curve(d3.curveMonotoneX);
 
       // GTA V (muted grey)
-      g.append("path").datum(gta5data).attr("fill","none").attr("stroke","#52525b")
+      g.append("path").datum(gta5data).attr("fill","none").attr("stroke",cc.text6)
         .attr("stroke-width",1.5).attr("d",line as any);
 
       // GTA VI (gold + area fill)
@@ -126,37 +128,37 @@ import ShareButton from "../ShareButton.astro";
       const defs = svg.append("defs");
       const gid = `pg-grad-${yOffset}`;
       const grad = defs.append("linearGradient").attr("id",gid).attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",panelH);
-      grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.25);
-      grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.02);
+      grad.append("stop").attr("offset","0%").attr("stop-color",cc.bar).attr("stop-opacity",0.25);
+      grad.append("stop").attr("offset","100%").attr("stop-color",cc.bar).attr("stop-opacity",0.02);
       g.append("path").datum(gta6data).attr("fill",`url(#${gid})`).attr("d",area);
-      g.append("path").datum(gta6data).attr("fill","none").attr("stroke","#f59e0b")
+      g.append("path").datum(gta6data).attr("fill","none").attr("stroke",cc.bar)
         .attr("stroke-width",2).attr("d",line as any);
 
       // Launch line
       g.append("line").attr("x1",x(0)).attr("x2",x(0)).attr("y1",0).attr("y2",panelH)
-        .attr("stroke","#ef4444").attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.4);
+        .attr("stroke",cc.red).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.4);
 
       // Panel label
-      g.append("text").attr("x",6).attr("y",12).attr("fill","#52525b")
+      g.append("text").attr("x",6).attr("y",12).attr("fill",cc.text6)
         .attr("font-size","9").attr("font-family","monospace").text(label);
 
       // Axis
       g.append("g").attr("transform",`translate(0,${panelH})`)
         .call(d3.axisBottom(x).ticks(9).tickFormat(d => `${d}m`))
-        .call((gg: any)=>gg.select(".domain").attr("stroke","#2a2a31"))
-        .call((gg: any)=>gg.selectAll(".tick line").attr("stroke","#2a2a31"))
-        .call((gg: any)=>gg.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+        .call((gg: any)=>gg.select(".domain").attr("stroke",cc.border2))
+        .call((gg: any)=>gg.selectAll(".tick line").attr("stroke",cc.border2))
+        .call((gg: any)=>gg.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
       g.append("g").call(d3.axisLeft(y).ticks(4))
-        .call((gg: any)=>gg.select(".domain").attr("stroke","#2a2a31"))
-        .call((gg: any)=>gg.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+        .call((gg: any)=>gg.select(".domain").attr("stroke",cc.border2))
+        .call((gg: any)=>gg.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     }
 
     drawPanel(0, g5, g6, "Google Trends search interest (0–100)");
     drawPanel(panelH + 20, g5reddit, g6reddit, "Reddit subscriber index (normalised to 100 at launch)");
 
     // Legend
-    svg.append("text").attr("x", W - 100).attr("y", 10).attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace").text("━ GTA V (2013)");
-    svg.append("text").attr("x", W - 100).attr("y", 22).attr("fill","#f59e0b").attr("font-size","9").attr("font-family","monospace").text("━ GTA VI (2026)");
+    svg.append("text").attr("x", W - 100).attr("y", 10).attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace").text("━ GTA V (2013)");
+    svg.append("text").attr("x", W - 100).attr("y", 22).attr("fill",cc.bar).attr("font-size","9").attr("font-family","monospace").text("━ GTA VI (2026)");
     }
 
   // Register with chartInit so ChartPreviewCard can force-init on expand

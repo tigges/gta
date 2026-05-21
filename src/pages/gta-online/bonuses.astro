@@ -3,22 +3,26 @@ import Base from "../../layouts/Base.astro";
 import ShareButton from "../../components/ShareButton.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
 
-import weeklyBonuses from "../../../data/gta-5/economy/weekly-bonuses.json";
-import bonusHistory  from "../../../data/gta-5/economy/bonus-history.json";
-import saleFreqData  from "../../../data/gta-5/economy/sale-frequency.json";
+import type { WeeklyBonusesData, SaleFrequencyData } from "../../types/gta";
 
-const bonuses      = ((weeklyBonuses as any).bonuses  ?? []) as any[];
-const sales        = ((weeklyBonuses as any).sales    ?? []) as any[];
-const weekStart    = (weeklyBonuses  as any).week_start as string ?? "";
-const historyCount = (bonusHistory   as any).entry_count as number ?? 0;
-const topActivities = ((saleFreqData as any).activity_bonuses as any[]).slice(0, 5);
+import weeklyBonusesRaw from "../../../data/gta-5/economy/weekly-bonuses.json";
+import bonusHistoryRaw  from "../../../data/gta-5/economy/bonus-history.json";
+import saleFreqRaw      from "../../../data/gta-5/economy/sale-frequency.json";
+
+const weeklyBonuses = weeklyBonusesRaw as unknown as WeeklyBonusesData;
+const saleFreqData  = saleFreqRaw      as unknown as SaleFrequencyData;
+
+const bonuses       = weeklyBonuses.bonuses  ?? [];
+const sales         = weeklyBonuses.sales    ?? [];
+const weekStart     = weeklyBonuses.week_start ?? "";
+const historyCount  = (bonusHistoryRaw as { entry_count?: number }).entry_count ?? 0;
+const topActivities = (saleFreqData.activity_bonuses ?? []).slice(0, 5);
 
 // Worker URL — community leaderboard backed by Cloudflare KV
 const WORKER_URL = "https://api.gtavi.ai";
 ---
 
 <Base
-  titleContext="gta-online"
   title="GTA Online Bonuses, Promos & Leaderboard"
   description="GTA Online weekly bonus calendar, sale intelligence, promotional history and community income leaderboard. Every Thursday's events tracked since 2013."
   ogPage="leaderboard"

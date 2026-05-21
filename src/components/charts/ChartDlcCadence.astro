@@ -37,6 +37,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -77,9 +79,9 @@ import ShareButton from "../ShareButton.astro";
 
     // Average line
     svg.append("line").attr("x1",0).attr("x2",W).attr("y1",y(avgGap)).attr("y2",y(avgGap))
-      .attr("stroke","#52525b").attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.5);
+      .attr("stroke",cc.text6).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.5);
     svg.append("text").attr("x",4).attr("y",y(avgGap)-4)
-      .attr("fill","#52525b").attr("font-size","8").attr("font-family","monospace")
+      .attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace")
       .text(`avg: ${avgGap.toFixed(1)}mo`);
 
     // GTA VI divider
@@ -87,36 +89,36 @@ import ShareButton from "../ShareButton.astro";
     if (viStartIdx > 0) {
       const divX = (x(String(viStartIdx)) ?? 0) - x.bandwidth()*0.3;
       svg.append("line").attr("x1",divX).attr("x2",divX).attr("y1",0).attr("y2",H)
-        .attr("stroke","#f59e0b").attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.4);
+        .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.4);
       svg.append("text").attr("x",divX+4).attr("y",10)
-        .attr("fill","#f59e0b").attr("font-size","8").attr("font-family","monospace").text("GTA VI →");
+        .attr("fill",cc.bar).attr("font-size","8").attr("font-family","monospace").text("GTA VI →");
     }
 
     gaps.forEach((g, i) => {
       const bx = x(String(i)) ?? 0, bw = x.bandwidth();
       svg.append("rect").attr("x",bx).attr("y",y(g.gap))
         .attr("width",bw).attr("height",H-y(g.gap)).attr("rx",2)
-        .attr("fill", g.isPred?"none":"#3f3f46")
-        .attr("stroke", g.isPred?"#f59e0b":"none").attr("stroke-width",1).attr("stroke-dasharray",g.isPred?"5,3":"0")
+        .attr("fill", g.isPred?"none":cc.text7)
+        .attr("stroke", g.isPred?cc.bar:"none").attr("stroke-width",1).attr("stroke-dasharray",g.isPred?"5,3":"0")
         .attr("opacity",0.8);
       svg.append("text").attr("x",bx+bw/2).attr("y",y(g.gap)-4)
         .attr("text-anchor","middle")
-        .attr("fill",g.isPred?"#f59e0b":"#71717a")
+        .attr("fill",g.isPred?cc.bar:cc.text4)
         .attr("font-size","8").attr("font-family","monospace")
         .text(`${g.gap}mo`);
       // Label every 4th + VI ones
       if (i % 4 === 0 || g.isPred) {
         svg.append("text").attr("x",bx+bw/2).attr("y",H+14)
           .attr("text-anchor","middle").attr("transform",`rotate(-45,${bx+bw/2},${H+14})`)
-          .attr("fill",g.isPred?"#f59e0b":"#52525b").attr("font-size","8").attr("font-family","monospace")
+          .attr("fill",g.isPred?cc.bar:cc.text6).attr("font-size","8").attr("font-family","monospace")
           .text(g.isPred?g.name:g.date.slice(0,7));
       }
     });
 
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>`${d}mo`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));  }
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));  }
 
   registerChart("dlc-cadence-chart", init);
   if ("IntersectionObserver" in window) {

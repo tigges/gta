@@ -36,6 +36,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -63,37 +65,37 @@ import ShareButton from "../ShareButton.astro";
     // Grid
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
       .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.grid).attr("stroke-dasharray", "3,3"));
 
     heists.forEach((h: any) => {
       const cx = x(h.setup_cost), cy = y(h.gta_per_hr);
       const r = rScale(h.avg_run_time_min || 30);
-      const col = h.solo ? "#f59e0b" : "#0d9488";
+      const col = h.solo ? cc.bar : cc.teal;
       svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", r)
         .attr("fill", col).attr("opacity", 0.65).attr("stroke", col).attr("stroke-width", 1.5).attr("stroke-opacity", 0.9);
       const title = (h.title as string).replace("The ", "").replace(" Heist", "").slice(0, 16);
       svg.append("text").attr("x", cx).attr("y", cy - r - 4).attr("text-anchor", "middle")
-        .attr("fill", "#c4c4d4").attr("font-size", "8.5").attr("font-family", "monospace").text(title);
+        .attr("fill", cc.text3).attr("font-size", "8.5").attr("font-family", "monospace").text(title);
       // $/hr label inside bubble
       const gphLabel = `$${Math.round(h.gta_per_hr / 1000)}k`;
       svg.append("text").attr("x", cx).attr("y", cy + 4).attr("text-anchor", "middle")
-        .attr("fill", "#fff").attr("font-size", "9").attr("font-family", "monospace").attr("font-weight", "bold")
+        .attr("fill", cc.text0).attr("font-size", "9").attr("font-family", "monospace").attr("font-weight", "bold")
         .text(gphLabel);
     });
 
     // Axes
     svg.append("g").attr("transform", `translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat((d: any) => `$${(+d / 1e6).toFixed(1)}M`))
-      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+      .call(g => g.select(".domain").attr("stroke", cc.border2))
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call(g => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "9").attr("font-family", "monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `$${Math.round(+d / 1000)}k`))
       .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+      .call(g => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "9").attr("font-family", "monospace"));
     svg.append("text").attr("x", W / 2).attr("y", H + 42).attr("text-anchor", "middle")
-      .attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace").text("Setup Cost ($) · bubble size = avg run time");
+      .attr("fill", cc.text6).attr("font-size", "9").attr("font-family", "monospace").text("Setup Cost ($) · bubble size = avg run time");
     svg.append("text").attr("transform", "rotate(-90)").attr("x", -H / 2).attr("y", -58).attr("text-anchor", "middle")
-      .attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace").text("GTA$/hr");  }
+      .attr("fill", cc.text6).attr("font-size", "9").attr("font-family", "monospace").text("GTA$/hr");  }
 
   registerChart("heist-comparison-chart", init);
   if ("IntersectionObserver" in window) {

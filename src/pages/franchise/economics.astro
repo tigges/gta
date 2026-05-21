@@ -277,6 +277,8 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
 </Base>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
 
   // Complexity arc chart
@@ -298,7 +300,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
       // Grid
       svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
         .call(g => g.select(".domain").remove())
-        .call(g => g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+        .call(g => g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
       // Regression zone shading
       const gta4 = data.findIndex((d: any) => d.short === "GTA IV");
@@ -306,7 +308,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
         const x0 = x(data[gta4].short) ?? 0;
         const x1 = (x0) + (x.bandwidth() ?? 0) + 10;
         svg.append("rect").attr("x", x0 - 5).attr("y", 0).attr("width", x.bandwidth() + 10).attr("height", H)
-          .attr("fill","#ef4444").attr("opacity",0.04);
+          .attr("fill",cc.red).attr("opacity",0.04);
       }
 
       // Line connecting all bars
@@ -315,7 +317,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
         .y((d: any) => y(d.score))
         .curve(d3.curveMonotoneX);
 
-      svg.append("path").datum(data).attr("fill","none").attr("stroke","#2a2a31")
+      svg.append("path").datum(data).attr("fill","none").attr("stroke",cc.border2)
         .attr("stroke-width",1.5).attr("stroke-dasharray","4,3")
         .attr("d", line as any);
 
@@ -344,13 +346,13 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
       // Axes
       svg.append("g").attr("transform",`translate(0,${H})`)
         .call(d3.axisBottom(x))
-        .call(g => g.select(".domain").attr("stroke","#2a2a31"))
+        .call(g => g.select(".domain").attr("stroke",cc.border2))
         .call(g => g.selectAll(".tick line").remove())
-        .call(g => g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+        .call(g => g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
 
       // GTAVI.AI watermark
       svg.append("text").attr("x",W-4).attr("y",H-4)
-        .attr("text-anchor","end").attr("fill","#27272a").attr("font-size","7").attr("font-family","monospace")
+        .attr("text-anchor","end").attr("fill",cc.text7).attr("font-size","7").attr("font-family","monospace")
         .text("GTAVI.AI");
     });
   }

@@ -32,6 +32,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -87,7 +89,7 @@ import ShareButton from "../ShareButton.astro";
                 const bg = r.confirmed ? `rgba(245,158,11,${opacity})` : `rgba(82,82,91,${opacity*0.4})`;
                 return `<td class="px-3 py-2.5 text-center">
                   <div class="inline-flex items-center justify-center w-8 h-6 rounded text-[10px] font-mono font-bold"
-                       style="background:${bg};color:${v>0?(r.confirmed?"#f59e0b":"#71717a"):"#3f3f46"}">
+                       style="background:${bg};color:${v>0?(r.confirmed?cc.bar:cc.text4):cc.text7}">
                     ${v > 0 ? v : "—"}
                   </div>
                 </td>`;

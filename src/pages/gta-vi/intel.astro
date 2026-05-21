@@ -63,7 +63,6 @@ const DELAY_THUMBS: Record<string,string> = {
 ---
 
 <Base
-  titleContext="gta-vi"
   title="Intel"
   description="Data-extrapolated predictions for GTA VI — release window, pricing, map size and vehicle count based on 30 years of GTA history."
   ogPage="vi-intel"
@@ -695,9 +694,9 @@ const DELAY_THUMBS: Record<string,string> = {
             <tbody>
               {releaseData.games.map((g) => {
                 const isPred = g.is_prediction;
-                const price    = g.price_usd_launch ?? (g as any).price_usd_estimate;
-                const map      = g.map_size_km2 ?? (g as any).map_size_km2_estimate;
-                const vehicles = g.vehicle_count ?? (g as any).vehicle_count_estimate;
+                const price    = g.price_usd_launch    ?? g.price_usd_estimate;
+                const map      = g.map_size_km2        ?? g.map_size_km2_estimate;
+                const vehicles = g.vehicle_count       ?? g.vehicle_count_estimate;
                 return (
                   <tr class={`border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors ${isPred ? "text-gta-gold" : "text-zinc-300"}`}>
                     <td class="px-5 py-2.5 font-semibold">

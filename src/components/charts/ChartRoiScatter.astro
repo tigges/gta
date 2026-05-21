@@ -33,6 +33,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -43,8 +45,8 @@ import ShareButton from "../ShareButton.astro";
 
     const bizs: any[] = JSON.parse(el.dataset.businesses || "[]");
     const PLAY_COLOR: Record<string,string> = {
-      heist:"#818cf8", passive:"#22c55e", "semi-passive":"#f59e0b", active:"#ef4444",
-      mc:"#f59e0b", ceo:"#0d9488", contract:"#0d9488", gunrunning:"#f59e0b"
+      heist:cc.indigo, passive:cc.green, "semi-passive":cc.bar, active:cc.red,
+      mc:cc.bar, ceo:cc.teal, contract:cc.teal, gunrunning:cc.bar
     };
     const margin={top:24,right:24,bottom:48,left:80};
     const W=el.clientWidth-margin.left-margin.right;
@@ -57,30 +59,30 @@ import ShareButton from "../ShareButton.astro";
     const rScale=d3.scaleSqrt().domain([0,d3.max(bizs,(b:any)=>b.break_even_hrs??0)??50]).range([4,22]);
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
     bizs.forEach((b:any) => {
       const cx=x(b.setup_cost_full), cy=y(b.net_profit_per_hr);
       const r=rScale(b.break_even_hrs??20);
-      const col=PLAY_COLOR[b.play_type??b.category]??"#71717a";
+      const col=PLAY_COLOR[b.play_type??b.category]??cc.text4;
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",r)
         .attr("fill",col).attr("opacity",0.7).attr("stroke",col).attr("stroke-width",1).attr("stroke-opacity",0.9);
       svg.append("text").attr("x",cx).attr("y",cy-r-3).attr("text-anchor","middle")
-        .attr("fill","#b8b8c4").attr("font-size","8").attr("font-family","monospace")
+        .attr("fill",cc.text3).attr("font-size","8").attr("font-family","monospace")
         .text(b.name.split(" ")[0].slice(0,10));
     });
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat((d:any)=>`$${(+d/1e6).toFixed(0)}M`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d:any)=>`$${Math.round(+d/1000)}k`))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     // Labels
     svg.append("text").attr("x",W/2).attr("y",H+40).attr("text-anchor","middle")
-      .attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Setup Cost ($)");
+      .attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace").text("Setup Cost ($)");
     svg.append("text").attr("transform","rotate(-90)").attr("x",-H/2).attr("y",-64).attr("text-anchor","middle")
-      .attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").text("Net $/hr");
+      .attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace").text("Net $/hr");
     }
 
   // Register with chartInit so ChartPreviewCard can force-init on expand

@@ -39,6 +39,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -79,20 +81,20 @@ import ShareButton from "../ShareButton.astro";
     const x = d3.scaleTime().domain(xDomain).range([0, W]);
 
     const COLOR: Record<string, string> = {
-      launch:    "#22c55e",
-      buff:      "#22c55e",
-      nerf:      "#ef4444",
-      unchanged: "#71717a",
+      launch:    cc.green,
+      buff:      cc.green,
+      nerf:      cc.red,
+      unchanged: cc.text4,
     };
 
     // Year grid lines + labels
     for (let yr = 2013; yr <= 2027; yr++) {
       const xv = x(new Date(`${yr}-01-01`));
       svg.append("line").attr("x1", xv).attr("x2", xv).attr("y1", 0).attr("y2", itemNames.length * rowH)
-        .attr("stroke", yr % 2 === 0 ? "#1e1e23" : "#161619").attr("stroke-dasharray", "3,3");
+        .attr("stroke", yr % 2 === 0 ? cc.grid : cc.card).attr("stroke-dasharray", "3,3");
       if (yr <= 2026) {
         svg.append("text").attr("x", xv + (W / 13) / 2).attr("y", itemNames.length * rowH + 16)
-          .attr("text-anchor", "middle").attr("fill", "#3f3f46").attr("font-size", "9").attr("font-family", "monospace")
+          .attr("text-anchor", "middle").attr("fill", cc.text7).attr("font-size", "9").attr("font-family", "monospace")
           .text(`'${String(yr).slice(2)}`);
       }
     }
@@ -102,29 +104,29 @@ import ShareButton from "../ShareButton.astro";
       const ym = i * rowH + rowH / 2;
       const shortName = (name as string).length > 28 ? (name as string).slice(0, 27) + "…" : name;
       svg.append("text").attr("x", -10).attr("y", ym + 4).attr("text-anchor", "end")
-        .attr("fill", "#a1a1aa").attr("font-size", "9.5").attr("font-family", "monospace")
+        .attr("fill", cc.text4).attr("font-size", "9.5").attr("font-family", "monospace")
         .text(shortName as string);
       svg.append("line").attr("x1", 0).attr("x2", W).attr("y1", ym).attr("y2", ym)
-        .attr("stroke", "#1e1e23").attr("opacity", 0.7);
+        .attr("stroke", cc.grid).attr("opacity", 0.7);
     });
 
     // Event dots
     events.forEach((ev: any) => {
       const cx  = x(ev.date);
       const cy  = itemNames.indexOf(ev.item) * rowH + rowH / 2;
-      const col = COLOR[ev.evtType] || "#71717a";
+      const col = COLOR[ev.evtType] || cc.text4;
 
       if (ev.evtType === "unchanged") {
         // Mechanical nerf: open circle (ring only)
         svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 6)
-          .attr("fill", "none").attr("stroke", "#71717a").attr("stroke-width", 1.5).attr("opacity", 0.8);
+          .attr("fill", "none").attr("stroke", cc.text4).attr("stroke-width", 1.5).attr("opacity", 0.8);
       } else {
         svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 5)
           .attr("fill", col).attr("opacity", 0.85).attr("stroke", col).attr("stroke-width", 1);
         // Second ring for nerfs (visual emphasis)
         if (ev.evtType === "nerf") {
           svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 8)
-            .attr("fill", "none").attr("stroke", "#ef4444").attr("stroke-width", 0.8).attr("opacity", 0.35);
+            .attr("fill", "none").attr("stroke", cc.red).attr("stroke-width", 0.8).attr("opacity", 0.35);
         }
       }
     });  }

@@ -2,60 +2,69 @@
 /**
  * gta-online/income/[id].astro
  * Real standalone page for each GTA Online income source.
- * Replaces the old redirect stubs at /gta-v/online/[id].
- * Generated from business-profiles.json + online-heists.json.
  */
 import type { GetStaticPaths } from "astro";
 import Base from "../../../layouts/Base.astro";
 import ProfitCard from "../../../components/ProfitCard.astro";
 import CrossLinks from "../../../components/CrossLinks.astro";
 import ShareButton from "../../../components/ShareButton.astro";
+import type {
+  BusinessProfiles, Business, OnlineHeistsData, OnlineHeist,
+  RevenueTiersData, RevenueTier, TierSource,
+  SaleFrequencyData, ActivityBonusFreq,
+  PerSourceHistoryData, SourceHistory,
+  WeeklyBonusesData, WeeklyBonus,
+} from "../../../types/gta";
 
-import businessProfiles  from "../../../../data/gta-5/economy/business-profiles.json";
-import onlineHeists      from "../../../../data/gta-5/economy/online-heists.json";
-import revenueTiers      from "../../../../data/gta-5/economy/revenue-tiers.json";
-import saleFreqData      from "../../../../data/gta-5/economy/sale-frequency.json";
-import sourceHistoryData from "../../../../data/gta-5/economy/per-source-history.json";
-import weeklyBonuses     from "../../../../data/gta-5/economy/weekly-bonuses.json";
+import businessProfilesRaw  from "../../../../data/gta-5/economy/business-profiles.json";
+import onlineHeistsRaw      from "../../../../data/gta-5/economy/online-heists.json";
+import revenueTiersRaw      from "../../../../data/gta-5/economy/revenue-tiers.json";
+import saleFreqRaw          from "../../../../data/gta-5/economy/sale-frequency.json";
+import sourceHistoryRaw     from "../../../../data/gta-5/economy/per-source-history.json";
+import weeklyBonusesRaw     from "../../../../data/gta-5/economy/weekly-bonuses.json";
 
 export const getStaticPaths: GetStaticPaths = () => {
-  const bizList   = ((businessProfiles as any).businesses as any[]).filter((b: any) => b.net_profit_per_hr > 0);
-  const heistList = ((onlineHeists as any).heists as any[]);
-  // Merge, heists override biz if same id
-  const merged: any[] = [...bizList];
-  heistList.forEach((h: any) => {
-    if (!merged.find(b => b.id === h.id)) merged.push(h);
-  });
-  return merged.map((biz: any) => ({ params: { id: biz.id }, props: { biz } }));
+  const bp = businessProfilesRaw as unknown as BusinessProfiles;
+  const hd = onlineHeistsRaw     as unknown as OnlineHeistsData;
+  const bizList   = bp.businesses.filter(b => b.net_profit_per_hr > 0);
+  const heistList = hd.heists;
+  const merged: (Business | OnlineHeist)[] = [...bizList];
+  heistList.forEach(h => { if (!merged.find(b => b.id === h.id)) merged.push(h); });
+  return merged.map(biz => ({ params: { id: biz.id }, props: { biz } }));
 };
 
 const { id } = Astro.params;
-const { biz } = Astro.props as { biz: any };
+const { biz } = Astro.props as { biz: Business | OnlineHeist };
+const bizName = (biz as Business).name ?? (biz as OnlineHeist).title;
+
+const revTiers     = revenueTiersRaw  as unknown as RevenueTiersData;
+const saleFreqData = saleFreqRaw      as unknown as SaleFrequencyData;
+const srcHistData  = sourceHistoryRaw as unknown as PerSourceHistoryData;
+const wkBonuses    = weeklyBonusesRaw as unknown as WeeklyBonusesData;
 
 // ── Tier lookup ────────────────────────────────────────────────────────────
-const tiers    = ((revenueTiers as any).tiers as any[]);
-const tierEntry = tiers.find((t: any) => t.sources.some((s: any) => s.id === id));
-const srcEntry  = tierEntry?.sources.find((s: any) => s.id === id);
+const tiers     = revTiers.tiers;
+const tierEntry = tiers.find((t: RevenueTier) => t.sources.some((s: TierSource) => s.id === id));
+const srcEntry  = tierEntry?.sources.find((s: TierSource) => s.id === id);
 const tier      = (tierEntry?.tier ?? "B") as "S"|"A"|"B"|"C"|"D";
-const maxProfitHr = Math.max(...tiers.flatMap((t: any) => t.sources.map((s: any) => s.gta_per_hr as number)));
-const netProfitHr = srcEntry?.gta_per_hr ?? biz.net_profit_per_hr ?? 0;
+const maxProfitHr = Math.max(...tiers.flatMap((t: RevenueTier) => t.sources.map((s: TierSource) => s.gta_per_hr)));
+const netProfitHr = srcEntry?.gta_per_hr ?? (biz as Business).net_profit_per_hr ?? 0;
 
 // ── Bonus cadence ─────────────────────────────────────────────────────────
-const bonusFreq = ((saleFreqData as any).activity_bonuses as any[]).find((a: any) => a.activity_id === id);
+const bonusFreq    = (saleFreqData.activity_bonuses ?? []).find((a: ActivityBonusFreq) => a.activity_id === id);
 const bonusDaysAgo = bonusFreq?.last_bonus_date
   ? Math.round((Date.now() - new Date(bonusFreq.last_bonus_date).getTime()) / (1000*60*60*24))
   : null;
 
 // ── Income history ─────────────────────────────────────────────────────────
-const srcHistory = ((sourceHistoryData as any).sources as any[]).find((s: any) => s.id === id);
-const peakHr = srcHistory ? Math.max(...srcHistory.timeline.map((t: any) => t.gta_per_hr as number)) : null;
+const srcHistory = (srcHistData.sources ?? []).find((s: SourceHistory) => s.id === id);
+const peakHr = srcHistory ? Math.max(...srcHistory.timeline.map(t => t.gta_per_hr)) : null;
 
 // ── Weekly bonus active ────────────────────────────────────────────────────
-const activeBonus = ((weeklyBonuses as any).bonuses as any[]).find((b: any) => b.activity_id === id);
+const activeBonus = (wkBonuses.bonuses ?? []).find((b: WeeklyBonus) => b.activity_id === id);
 
 // ── Related sources (same tier, first 3 excl. self) ───────────────────────
-const related = (tierEntry?.sources ?? []).filter((s: any) => s.id !== id).slice(0, 3);
-
+const related = (tierEntry?.sources ?? []).filter((s: TierSource) => s.id !== id).slice(0, 3);
 // ── Thumbnail ─────────────────────────────────────────────────────────────
 const BIZ_THUMBS: Record<string,string> = {
   "cayo-perico":          "/assets/gta5/story/blitz-play.jpg",
@@ -65,16 +74,15 @@ const BIZ_THUMBS: Record<string,string> = {
   "acid-lab":             "/assets/gta5/dlc/acid-lab.jpg",
   "agency-vip-contract":  "/assets/gta5/dlc/agency.jpg",
 };
-const thumbnail = BIZ_THUMBS[id] ?? biz.thumbnail ?? undefined;
+const thumbnail = BIZ_THUMBS[id] ?? (biz as Business).thumbnail ?? undefined;
 
 // ── SEO ───────────────────────────────────────────────────────────────────
-const title       = `${biz.name ?? biz.title} — GTA Online Income Guide`;
+const title       = `${bizName} — GTA Online Income Guide`;
 const khr         = Math.round(netProfitHr / 1000);
-const description = `${biz.name ?? biz.title}: $${khr}k/hr net in GTA Online. Full setup guide, tips, and income analysis. ${biz.solo !== false ? "Solo capable." : ""}`;
+const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide, tips, and income analysis. ${"solo" in biz ? "Solo capable." : ""}`;
 ---
 
 <Base
-  titleContext="gta-online"
   title={title}
   description={description}
   ogImage={`https://gtavi.ai/og/online/${id}.png`}
@@ -86,7 +94,7 @@ const description = `${biz.name ?? biz.title}: $${khr}k/hr net in GTA Online. Fu
       <span class="text-zinc-800">›</span>
       <a href="/gta-online/income" class="hover:text-zinc-400 transition-colors">Income Sources</a>
       <span class="text-zinc-800">›</span>
-      <span class="text-zinc-500">{biz.name ?? biz.title}</span>
+      <span class="text-zinc-500">{bizName}</span>
     </div>
   </div>
 
@@ -99,7 +107,7 @@ const description = `${biz.name ?? biz.title}: $${khr}k/hr net in GTA Online. Fu
         <!-- ProfitCard -->
         <ProfitCard
           id={id}
-          name={biz.name ?? biz.title}
+          name={bizName}
           game="gta-online"
           category={biz.category ?? (biz.min_players > 1 ? "heist" : "business")}
           tier={tier}
@@ -107,7 +115,7 @@ const description = `${biz.name ?? biz.title}: $${khr}k/hr net in GTA Online. Fu
           max_profit_per_hr={maxProfitHr}
           setup_cost_full={biz.setup_cost_full ?? undefined}
           break_even_hrs={biz.break_even_hrs ?? (biz.setup_cost_full && netProfitHr > 0 ? Math.round(biz.setup_cost_full / netProfitHr) : undefined)}
-          play_type={biz.play_type ?? (biz.solo !== false ? "active" : "heist")}
+          play_type={biz.play_type ?? ((biz as Business).solo !== false ? "active" : "heist")}
           difficulty={biz.risk === "high" ? 4 : biz.risk === "medium" ? 3 : 2}
           min_players={biz.min_players ?? 1}
           max_players={biz.max_players ?? 4}
@@ -256,8 +264,8 @@ const description = `${biz.name ?? biz.title}: $${khr}k/hr net in GTA Online. Fu
               <span class="text-[10px] font-mono text-zinc-600">{biz.patch_history.length} patches tracked</span>
             </div>
             <div class="divide-y divide-[#1e1e23]">
-              {([...biz.patch_history] as any[]).reverse().map((patch: any, ri: number) => {
-                const allVals = (biz.patch_history as any[]).map((p: any) => p.net_profit_per_hr);
+              {[...(biz as Business).patch_history].reverse().map((patch, ri: number) => {
+                const allVals = (biz as Business).patch_history.map(p => p.net_profit_per_hr);
                 const peak = Math.max(...allVals);
                 const pct  = Math.round((patch.net_profit_per_hr / peak) * 100);
                 const isCurrent = ri === 0;
@@ -307,7 +315,7 @@ const description = `${biz.name ?? biz.title}: $${khr}k/hr net in GTA Online. Fu
                 </tr>
               </thead>
               <tbody>
-                {(biz.loot_tiers as any[]).map((l: any, i: number) => (
+                {((biz as OnlineHeist).loot_tiers ?? []).map((l, i: number) => (
                   <tr class="border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors">
                     <td class="px-5 py-2.5 font-semibold text-zinc-200">{l.loot}</td>
                     <td class="px-4 py-2.5 text-right font-bold" style={`color:${i === 0 ? '#22c55e' : i === 1 ? '#f59e0b' : '#71717a'}`}>
@@ -360,7 +368,7 @@ const description = `${biz.name ?? biz.title}: $${khr}k/hr net in GTA Online. Fu
           </a>
           <div class="ml-auto">
             <ShareButton
-              text={`${biz.name ?? biz.title} — ${tier}-tier GTA Online income. $${khr}k/hr${biz.solo !== false ? ' solo' : ''}. Full guide on GTAVI.AI`}
+              text={`${bizName} — ${tier}-tier GTA Online income. $${khr}k/hr${(biz as Business).solo !== false ? ' solo' : ''}. Full guide on GTAVI.AI`}
               url={`https://gtavi.ai/gta-online/income/${id}`}
               size="sm" label="Share" />
           </div>

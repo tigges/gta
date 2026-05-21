@@ -42,6 +42,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -73,21 +75,21 @@ import ShareButton from "../ShareButton.astro";
     // Grid
     svg.append("g").call(d3.axisLeft(y1).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
     // Key event annotations
     msData.filter(d => d.event).forEach(d => {
       svg.append("line").attr("x1",x(d.date)).attr("x2",x(d.date)).attr("y1",0).attr("y2",H)
-        .attr("stroke","#2a2a31").attr("stroke-width",1).attr("stroke-dasharray","3,3");
+        .attr("stroke",cc.border2).attr("stroke-width",1).attr("stroke-dasharray","3,3");
       svg.append("text").attr("x",x(d.date)+3).attr("y",10)
-        .attr("fill","#3f3f46").attr("font-size","8").attr("font-family","monospace")
+        .attr("fill",cc.text7).attr("font-size","8").attr("font-family","monospace")
         .text((d.event ?? "").split(" ").slice(0,3).join(" "));
     });
 
     // Trends overlay (right axis)
     if (trendsKw && trendsKw.data.length > 0) {
       const tData = trendsKw.data.map(d => ({ date: new Date(d.date), value: d.value }));
-      svg.append("path").datum(tData).attr("fill","none").attr("stroke","#f59e0b")
+      svg.append("path").datum(tData).attr("fill","none").attr("stroke",cc.bar)
         .attr("stroke-width",1).attr("opacity",0.4)
         .attr("d",d3.line<any>().x(d=>x(d.date)).y(d=>y2(d.value)).curve(d3.curveMonotoneX));
     }
@@ -96,32 +98,32 @@ import ShareButton from "../ShareButton.astro";
     const area = d3.area<any>().x(d=>x(d.date)).y0(H).y1(d=>y1(d.subs)).curve(d3.curveMonotoneX);
     const defs = svg.append("defs");
     const grad = defs.append("linearGradient").attr("id","comm-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-    grad.append("stop").attr("offset","0%").attr("stop-color","#22c55e").attr("stop-opacity",0.2);
-    grad.append("stop").attr("offset","100%").attr("stop-color","#22c55e").attr("stop-opacity",0.01);
+    grad.append("stop").attr("offset","0%").attr("stop-color",cc.green).attr("stop-opacity",0.2);
+    grad.append("stop").attr("offset","100%").attr("stop-color",cc.green).attr("stop-opacity",0.01);
     svg.append("path").datum(msData).attr("fill","url(#comm-grad)").attr("d",area);
-    svg.append("path").datum(msData).attr("fill","none").attr("stroke","#22c55e").attr("stroke-width",2)
+    svg.append("path").datum(msData).attr("fill","none").attr("stroke",cc.green).attr("stroke-width",2)
       .attr("d",d3.line<any>().x(d=>x(d.date)).y(d=>y1(d.subs)).curve(d3.curveMonotoneX));
     // Dots at milestones
     msData.forEach(d => {
       svg.append("circle").attr("cx",x(d.date)).attr("cy",y1(d.subs)).attr("r",3)
-        .attr("fill","#22c55e").attr("stroke","#0e0e11").attr("stroke-width",1.5);
+        .attr("fill",cc.green).attr("stroke",cc.bg).attr("stroke-width",1.5);
     });
 
     // Axes
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y1).ticks(5).tickFormat(d => `${(+d/1_000_000).toFixed(1)}M`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
     svg.append("g").attr("transform",`translate(${W},0)`)
       .call(d3.axisRight(y2).ticks(5))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace").attr("dx","3"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace").attr("dx","3"));
     }
 
   // Register with chartInit so ChartPreviewCard can force-init on expand

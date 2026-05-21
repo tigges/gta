@@ -48,6 +48,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -62,22 +64,22 @@ import ShareButton from "../ShareButton.astro";
     const launchDate = new Date(el.dataset.launch || "2026-11-19");
 
     const TYPE_COLORS: Record<string,string> = {
-      milestone:      "#3f3f46",
-      development:    "#52525b",
-      leak:           "#ef4444",
-      trailer:        "#f59e0b",
-      date_set:       "#0d9488",
-      delay:          "#ef4444",
-      date_confirmed: "#0d9488",
+      milestone:      cc.text7,
+      development:    cc.text6,
+      leak:           cc.red,
+      trailer:        cc.bar,
+      date_set:       cc.teal,
+      delay:          cc.red,
+      date_confirmed: cc.teal,
     };
     const TYPE_FILL: Record<string,string> = {
-      trailer:        "#f59e0b",
-      delay:          "#ef4444",
-      date_confirmed: "#0d9488",
-      date_set:       "#0d9488",
-      leak:           "#ef4444",
-      development:    "#3f3f46",
-      milestone:      "#3f3f46",
+      trailer:        cc.bar,
+      delay:          cc.red,
+      date_confirmed: cc.teal,
+      date_set:       cc.teal,
+      leak:           cc.red,
+      development:    cc.text7,
+      milestone:      cc.text7,
     };
 
     // Focus on 2022–2027 (where the story is)
@@ -103,37 +105,37 @@ import ShareButton from "../ShareButton.astro";
       .attr("x", x(promisedStart)).attr("y", MID - 28)
       .attr("width", x(promisedEnd) - x(promisedStart)).attr("height", 56)
       .attr("rx", 4)
-      .attr("fill", "#0d9488").attr("fill-opacity", 0.08)
-      .attr("stroke", "#0d9488").attr("stroke-opacity", 0.2).attr("stroke-width", 1)
+      .attr("fill", cc.teal).attr("fill-opacity", 0.08)
+      .attr("stroke", cc.teal).attr("stroke-opacity", 0.2).attr("stroke-width", 1)
       .attr("stroke-dasharray", "4,3");
     svg.append("text")
       .attr("x", x(new Date("2025-07-01"))).attr("y", MID - 33)
       .attr("text-anchor","middle")
-      .attr("fill","#0d9488").attr("font-size","9").attr("font-family","monospace").attr("opacity",0.6)
+      .attr("fill",cc.teal).attr("font-size","9").attr("font-family","monospace").attr("opacity",0.6)
       .text("promised 2025 window");
 
     // ── Confirmed Nov 19, 2026 band ──────────────────────────
     svg.append("rect")
       .attr("x", x(launchDate) - 1).attr("y", MID - 28)
       .attr("width", 2).attr("height", 56)
-      .attr("fill","#f59e0b").attr("opacity",0.9);
+      .attr("fill",cc.bar).attr("opacity",0.9);
     svg.append("text")
       .attr("x", x(launchDate) + 5).attr("y", MID - 30)
-      .attr("fill","#f59e0b").attr("font-size","9").attr("font-family","monospace").attr("font-weight","700")
+      .attr("fill",cc.bar).attr("font-size","9").attr("font-family","monospace").attr("font-weight","700")
       .text("Nov 19, 2026");
 
     // ── Main spine ───────────────────────────────────────────
     svg.append("line")
       .attr("x1",0).attr("x2",W).attr("y1",MID).attr("y2",MID)
-      .attr("stroke","#2a2a31").attr("stroke-width",1.5);
+      .attr("stroke",cc.border2).attr("stroke-width",1.5);
 
     // ── Events ───────────────────────────────────────────────
     const visibleEvents = events.filter(e => new Date(e.date) >= startDate);
 
     visibleEvents.forEach((ev, i) => {
       const ex = x(new Date(ev.date));
-      const color = TYPE_COLORS[ev.type] ?? "#52525b";
-      const fill  = TYPE_FILL[ev.type] ?? "#3f3f46";
+      const color = TYPE_COLORS[ev.type] ?? cc.text6;
+      const fill  = TYPE_FILL[ev.type] ?? cc.text7;
       const above = i % 2 === 0; // alternate above/below
       const labelY = above ? MID - 52 : MID + 70;
       const tickY1 = above ? MID - 12 : MID + 12;
@@ -146,7 +148,7 @@ import ShareButton from "../ShareButton.astro";
 
       // Dot on spine
       svg.append("circle").attr("cx",ex).attr("cy",MID).attr("r", ev.type === "delay" ? 7 : 5)
-        .attr("fill", ev.type === "delay" || ev.type === "date_confirmed" || ev.type === "trailer" ? fill : "#131316")
+        .attr("fill", ev.type === "delay" || ev.type === "date_confirmed" || ev.type === "trailer" ? fill : cc.card)
         .attr("stroke",color).attr("stroke-width",ev.type === "delay" ? 2 : 1.5);
 
       // Short event label (2-3 words)
@@ -164,7 +166,7 @@ import ShareButton from "../ShareButton.astro";
       svg.append("text")
         .attr("x",ex).attr("y",labelY)
         .attr("text-anchor","middle")
-        .attr("fill", ev.type === "delay" ? "#ef4444" : ev.type === "date_confirmed" ? "#0d9488" : ev.type === "trailer" ? "#f59e0b" : "#71717a")
+        .attr("fill", ev.type === "delay" ? cc.red : ev.type === "date_confirmed" ? cc.teal : ev.type === "trailer" ? cc.bar : cc.text4)
         .attr("font-size",ev.type === "delay" ? "11" : "9")
         .attr("font-family","monospace")
         .attr("font-weight", ev.type === "delay" || ev.type === "date_confirmed" ? "700" : "400")
@@ -174,16 +176,16 @@ import ShareButton from "../ShareButton.astro";
       svg.append("text")
         .attr("x",ex).attr("y",above ? MID - 40 : MID + 84)
         .attr("text-anchor","middle")
-        .attr("fill","#3f3f46").attr("font-size","8").attr("font-family","monospace")
+        .attr("fill",cc.text7).attr("font-size","8").attr("font-family","monospace")
         .text(ev.date.slice(0,7));
     });
 
     // ── X axis (year ticks) ──────────────────────────────────
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(d3.timeYear.every(1)).tickFormat(d3.timeFormat("%Y") as any))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","11").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","11").attr("font-family","monospace"));
 
     // ── Delay annotation arrow ───────────────────────────────
     const delayEv = events.find(e => e.type === "delay");
@@ -193,14 +195,14 @@ import ShareButton from "../ShareButton.astro";
       const x2 = x(new Date(confirmEv.date)) - 8;
       const ay = MID + 4;
       svg.append("line").attr("x1",x1).attr("x2",x2).attr("y1",ay).attr("y2",ay)
-        .attr("stroke","#ef4444").attr("stroke-width",1.5).attr("opacity",0.35)
+        .attr("stroke",cc.red).attr("stroke-width",1.5).attr("opacity",0.35)
         .attr("marker-end","url(#arrow-red)");
       // Arrow marker
       const defs = svg.append("defs");
       const marker = defs.append("marker").attr("id","arrow-red")
         .attr("viewBox","0 -5 10 10").attr("refX",6).attr("refY",0)
         .attr("markerWidth",6).attr("markerHeight",6).attr("orient","auto");
-      marker.append("path").attr("d","M0,-5L10,0L0,5").attr("fill","#ef4444").attr("opacity",0.35);
+      marker.append("path").attr("d","M0,-5L10,0L0,5").attr("fill",cc.red).attr("opacity",0.35);
     }
     }
 

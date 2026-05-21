@@ -43,6 +43,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -67,7 +69,7 @@ import ShareButton from "../ShareButton.astro";
     // Grid
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
     years.forEach(yr => {
       const bx = x(yr.fy) ?? 0, bw = x.bandwidth();
@@ -76,44 +78,44 @@ import ShareButton from "../ShareButton.astro";
       // Game sales (bottom, gold)
       svg.append("rect").attr("x",bx).attr("y",y(yr.game_sales_bn))
         .attr("width",bw).attr("height",H-y(yr.game_sales_bn)).attr("rx",isPred?2:0)
-        .attr("fill","#f59e0b").attr("opacity",isPred?0.3:0.85)
-        .attr("stroke",isPred?"#f59e0b":"none").attr("stroke-dasharray",isPred?"5,3":"0").attr("stroke-width",1);
+        .attr("fill",cc.bar).attr("opacity",isPred?0.3:0.85)
+        .attr("stroke",isPred?cc.bar:"none").attr("stroke-dasharray",isPred?"5,3":"0").attr("stroke-width",1);
 
       // Recurrent (top, teal)
       svg.append("rect").attr("x",bx).attr("y",y(yr.total_bn))
         .attr("width",bw).attr("height",y(yr.game_sales_bn)-y(yr.total_bn)).attr("rx",isPred?2:0)
-        .attr("fill","#0d9488").attr("opacity",isPred?0.3:0.8)
-        .attr("stroke",isPred?"#0d9488":"none").attr("stroke-dasharray",isPred?"5,3":"0").attr("stroke-width",1);
+        .attr("fill",cc.teal).attr("opacity",isPred?0.3:0.8)
+        .attr("stroke",isPred?cc.teal:"none").attr("stroke-dasharray",isPred?"5,3":"0").attr("stroke-width",1);
 
       // % recurrent line dot
       svg.append("circle").attr("cx",bx+bw/2).attr("cy",y2(yr.pct_recurrent)).attr("r",2.5)
-        .attr("fill",isPred?"none":"#ef4444").attr("stroke","#ef4444").attr("stroke-width",isPred?1:0);
+        .attr("fill",isPred?"none":cc.red).attr("stroke",cc.red).attr("stroke-width",isPred?1:0);
     });
 
     // % recurrent line
     const lineData = years.filter(y => !y.is_prediction);
     svg.append("path").datum(lineData)
-      .attr("fill","none").attr("stroke","#ef4444").attr("stroke-width",1.5).attr("opacity",0.6)
+      .attr("fill","none").attr("stroke",cc.red).attr("stroke-width",1.5).attr("opacity",0.6)
       .attr("d",d3.line<any>().x(d=>(x(d.fy)??0)+x.bandwidth()/2).y(d=>y2(d.pct_recurrent)).curve(d3.curveMonotoneX) as any);
 
     // Right axis for % recurrent
     svg.append("g").attr("transform",`translate(${W},0)`)
       .call(d3.axisRight(y2).ticks(5).tickFormat(d=>`${d}%`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#ef4444").attr("font-size","9").attr("font-family","monospace").attr("dx","4"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.red).attr("font-size","9").attr("font-family","monospace").attr("dx","4"));
 
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).tickValues(years.filter((_,i)=>i%2===0).map(y=>y.fy)))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
       .call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace")
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace")
         .attr("transform","rotate(-30)").attr("text-anchor","end").attr("dy","0.5em"));
 
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>`$${d}B`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));  }
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));  }
 
   registerChart("revenue-split-chart", init);
   if ("IntersectionObserver" in window) {

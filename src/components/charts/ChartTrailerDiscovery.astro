@@ -48,6 +48,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -59,8 +61,8 @@ import ShareButton from "../ShareButton.astro";
     const trailers: any[] = JSON.parse(el.dataset.trailers || "[]");
 
     const TYPE_COLORS: Record<string,string> = {
-      vehicle:"#f59e0b", character:"#22c55e", location:"#38bdf8",
-      wildlife:"#a3e635", weapon:"#ef4444", audio:"#a78bfa", reveal:"#ffffff",
+      vehicle:cc.bar, character:cc.green, location:"#38bdf8",
+      wildlife:"#a3e635", weapon:cc.red, audio:cc.purple, reveal:cc.text0,
     };
 
     trailers.forEach((trailer, ti) => {
@@ -87,7 +89,7 @@ import ShareButton from "../ShareButton.astro";
 
       // Background strip
       svg.append("rect").attr("x",0).attr("y",16).attr("width",W).attr("height",stripH).attr("rx",4)
-        .attr("fill","#1a1a1e");
+        .attr("fill",cc.cardRaised);
 
       // Density heatmap (count events per 10-second bucket)
       const buckets = Math.ceil(dur / 8);
@@ -99,13 +101,13 @@ import ShareButton from "../ShareButton.astro";
         const bx = x(i * 8);
         const bw = x(8) - x(0);
         svg.append("rect").attr("x",bx).attr("y",16).attr("width",bw).attr("height",stripH).attr("rx",2)
-          .attr("fill","#f59e0b").attr("opacity", 0.05 + (c / maxCount) * 0.25);
+          .attr("fill",cc.bar).attr("opacity", 0.05 + (c / maxCount) * 0.25);
       });
 
       // Event markers
       trailer.events.forEach((ev: any, i: number) => {
         const ex = x(ev.t);
-        const color = TYPE_COLORS[ev.type] ?? "#71717a";
+        const color = TYPE_COLORS[ev.type] ?? cc.text4;
         const above = i % 2 === 0;
         const markerY = above ? 16 : 16 + stripH - 10;
 
@@ -113,7 +115,7 @@ import ShareButton from "../ShareButton.astro";
           .attr("stroke",color).attr("stroke-width",1).attr("opacity",0.6);
 
         svg.append("circle").attr("cx",ex).attr("cy",markerY+5).attr("r",4)
-          .attr("fill",color).attr("stroke","#0e0e11").attr("stroke-width",1);
+          .attr("fill",color).attr("stroke",cc.bg).attr("stroke-width",1);
 
         // Key reveals get labels
         if (ev.type === "reveal" || ev.type === "character" || (i < 3) || ev.confidence === "confirmed") {
@@ -129,7 +131,7 @@ import ShareButton from "../ShareButton.astro";
         const tx = pct * W;
         const tSec = Math.round(pct * dur);
         svg.append("text").attr("x",tx).attr("y",totalH+16)
-          .attr("text-anchor","middle").attr("fill","#3f3f46").attr("font-size","9").attr("font-family","monospace")
+          .attr("text-anchor","middle").attr("fill",cc.text7).attr("font-size","9").attr("font-family","monospace")
           .text(`${Math.floor(tSec/60)}:${String(tSec%60).padStart(2,"0")}`);
       });
     });
