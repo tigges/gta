@@ -106,6 +106,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
 
 <Base
+  titleContext="franchise"
   title="Charts"
   description="GTA franchise data visualised — sales velocity, player history, search hype, vehicle performance and more."
   ogPage="charts"
@@ -536,7 +537,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     // Title filter active states — use data-active + per-title accent colour
     const TITLE_ACCENT: Record<string, { border: string; bg: string; img: string }> = {
       "All":        { border: "#2a2a31",          bg: "transparent",           img: "1" },
-      "gta-vi":     { border: "rgba(245,158,11,0.5)", bg: "rgba(245,158,11,0.06)", img: "1" },
+      "gta-vi":     { border: "rgba(245,158,11,0.5)", bg: "var(--c-hero-bloom)", img: "1" },
       "gta-online": { border: "rgba(13,148,136,0.5)", bg: "rgba(13,148,136,0.06)", img: "1" },
       "gta-v":      { border: "rgba(113,113,122,0.5)", bg: "rgba(113,113,122,0.06)", img: "1" },
       "franchise":  { border: "rgba(113,113,122,0.5)", bg: "rgba(113,113,122,0.06)", img: "1" },

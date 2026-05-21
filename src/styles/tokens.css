@@ -87,6 +87,15 @@
   --fs-heading:  24px;   /* section headings (text-2xl) */
 }
 
+/* ── Hero bloom (per-title radial gradient overlay colour) ────────────── */
+:root                                 { --c-hero-bloom: rgba(245,158,11,0.04); }
+body[data-title-context="gta-vi"]     { --c-hero-bloom: rgba(255,107,157,0.06); }
+body[data-title-context="gta-online"] { --c-hero-bloom: rgba(0,212,232,0.05); }
+body[data-title-context="gta-v"]      { --c-hero-bloom: rgba(245,158,11,0.04); }
+body[data-title-context="gta-sa"]     { --c-hero-bloom: rgba(192,57,43,0.05); }
+body[data-title-context="gta-vc"]     { --c-hero-bloom: rgba(255,45,120,0.05); }
+body[data-title-context="gta-iv"]     { --c-hero-bloom: rgba(107,107,126,0.04); }
+
 /* ── Element base colours ──────────────────────────────────────────────── */
 body { color: var(--c-text-3); }
 h1, h2, h3 { color: var(--c-text-0); }

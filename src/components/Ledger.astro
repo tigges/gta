@@ -1,0 +1,84 @@
+---
+/**
+ * Ledger — GTA Online transaction history UI pattern.
+ *
+ * Renders change events as signed ledger entries — the UI pattern
+ * every GTA player already reads instinctively from in-game transaction
+ * history. Green = positive, Red = negative, neutral = informational.
+ *
+ * Usage:
+ *   <Ledger title="Payout History" entries={entries} />
+ *
+ * Entry shape:
+ *   { date, label, value, type: "positive"|"negative"|"neutral", icon?, sub? }
+ */
+import HudIcon from "./HudIcon.astro";
+
+export interface LedgerEntry {
+  date?: string;
+  label: string;
+  value?: string;
+  type?: "positive" | "negative" | "neutral";
+  icon?: string;
+  sub?: string;
+}
+
+interface Props {
+  title?: string;
+  entries: LedgerEntry[];
+  class?: string;
+  showHeader?: boolean;
+}
+
+const {
+  title = "Transaction Log",
+  entries,
+  class: extraClass = "",
+  showHeader = true,
+} = Astro.props;
+
+const VALUE_CLS: Record<string, string> = {
+  positive: "ledger-positive",
+  negative: "ledger-negative",
+  neutral:  "ledger-neutral",
+};
+---
+
+<div class={`rounded-xl border border-[#1e1e23] overflow-hidden ${extraClass}`} style="background:#131316">
+  {showHeader && (
+    <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5">
+      <HudIcon name="money" size={14} class="text-gta-teal" />
+      <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.18em]">{title}</span>
+    </div>
+  )}
+  <div>
+    {entries.map(entry => (
+      <div class="ledger-row">
+        {/* Activity icon */}
+        {entry.icon && (
+          <HudIcon name={entry.icon as any} size={14} class="text-zinc-600 shrink-0" />
+        )}
+
+        {/* Date/timestamp */}
+        {entry.date && (
+          <span class="ledger-meta shrink-0 w-20 text-right hidden sm:block">{entry.date}</span>
+        )}
+
+        {/* Label */}
+        <span class="ledger-neutral flex-1 min-w-0 truncate">{entry.label}</span>
+
+        {/* Sub-label */}
+        {entry.sub && (
+          <span class="ledger-meta hidden md:block text-right shrink-0 max-w-[160px] truncate">{entry.sub}</span>
+        )}
+
+        {/* Signed value */}
+        {entry.value && (
+          <span class={`font-mono font-semibold shrink-0 text-right min-w-[80px] ${VALUE_CLS[entry.type ?? "neutral"]}`}>
+            {entry.value}
+          </span>
+        )}
+      </div>
+    ))}
+  </div>
+</div>
