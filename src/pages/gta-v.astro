@@ -7,12 +7,15 @@ import ShareDropdown from "../components/ShareDropdown.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 import StockCalculator from "../components/StockCalculator.astro";
 import SocialClubConnector from "../components/SocialClubConnector.astro";
+import GamePill from "../components/GamePill.astro";
 import { Image } from "astro:assets";
 import heroGtaV from "../assets/images/hero-gta-v.jpg";
 import ChartAssassinationReturns from "../components/charts/ChartAssassinationReturns.astro";
 import ChartDlcPlayerHistory     from "../components/charts/ChartDlcPlayerHistory.astro";
+import ChartMissionEarnings      from "../components/charts/ChartMissionEarnings.astro";
 import ChartPrelaunchComparison  from "../components/charts/ChartPrelaunchComparison.astro";
 import ChartPreviewCard          from "../components/charts/ChartPreviewCard.astro";
+import { CATEGORY_BADGE_CLASSES } from "../config/categoryColors";
 
 import steamData     from "../../data/gta-5/meta/steam-players.json";
 import trendsData    from "../../data/gta-5/trends/search-interest.json";
@@ -37,9 +40,6 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
 const heists         = (heistsData as any).heists as any[];
 const bigScore       = heists.find((h: any) => h.id === "the-big-score");
 
-// TIER_COLORS for stock steps
-const RETURN_COLOR = (pct: number) =>
-  pct >= 200 ? "#22c55e" : pct >= 80 ? "#f59e0b" : "#0d9488";
 ---
 
 <Base
@@ -60,7 +60,7 @@ const RETURN_COLOR = (pct: number) =>
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-5">
-        <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] rounded px-2 py-0.5 uppercase tracking-widest">Grand Theft Auto V</span>
+        <GamePill game="gta-v" size="xs" />
         <span class="text-[10px] font-mono text-zinc-500">2013 · Rockstar Games</span>
       </div>
       <img src="/assets/logos/gta-v.png" alt="Grand Theft Auto V"
@@ -93,10 +93,11 @@ const RETURN_COLOR = (pct: number) =>
     <!-- Steam players -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-teal shrink-0"></span>
+        <GamePill game="gta-v" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Steam — Player History</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500">PC concurrent · monthly</span>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">PC concurrent · monthly</span>
       </div>
       <PlayerChart />
     </section>
@@ -104,10 +105,11 @@ const RETURN_COLOR = (pct: number) =>
     <!-- Google Trends -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-green shrink-0"></span>
+        <GamePill game="gta-v" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Google Trends — Search Interest</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500">{totalTrendPts} data points · worldwide</span>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{totalTrendPts} data points · worldwide</span>
       </div>
       <TrendsChart />
     </section>
@@ -115,10 +117,11 @@ const RETURN_COLOR = (pct: number) =>
     <!-- Vehicle benchmarks -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-red shrink-0"></span>
+        <GamePill game="gta-v" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Performance</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Broughy1322 — Vehicle Benchmarks</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500">{totalVehicles} vehicles · 25 classes</span>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{totalVehicles} vehicles · 25 classes</span>
       </div>
       <VehicleChart />
     </section>
@@ -128,10 +131,11 @@ const RETURN_COLOR = (pct: number) =>
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <GamePill game="gta-v" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Economy-IG</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mode Stock Market Calculator</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-gta-gold/70">$2B+ visual playthrough</span>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">$2B+ visual playthrough</span>
       </div>
       <StockCalculator steps={(stocksData as any).guide_order} />
     </section>
@@ -141,30 +145,13 @@ const RETURN_COLOR = (pct: number) =>
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <GamePill game="gta-v" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Economy-IG</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mission Earnings — Full Arc</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500">{payingMissions.length} paying missions · {stockMissions.length} stock missions</span>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{payingMissions.length} paying missions · {stockMissions.length} stock missions</span>
       </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
-          <div>
-            <div class="font-semibold text-zinc-200 text-sm">Earnings Curve — $250 Repossession to $41.6M Big Score</div>
-            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Each mission plotted by chapter. Gold diamonds = Lester stock missions. The Big Score is the only real money event.</div>
-          </div>
-          <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500">
-            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-gta-gold/80 inline-block"></span>Stock mission</span>
-            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-zinc-500 inline-block"></span>Standard mission</span>
-          </div>
-        </div>
-        <div id="mission-earnings-chart" class="w-full" style="height:280px"
-          data-missions={JSON.stringify(storyMissions.filter((m: any) => m.payout >= 0))}
-        ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Wiki (Fandom) · community records · updated by fetch_missions.py</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="gta-v" shareText="GTA V story mission earnings from start to finish. $250 at Repossession to $41.6M at The Big Score. The earning curve tells the whole story." size="sm" /></div>
-        </div>
-      </div>
+      <ChartMissionEarnings />
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -172,10 +159,11 @@ const RETURN_COLOR = (pct: number) =>
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <GamePill game="gta-v" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Economy-IG</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Heist Earnings — Take Breakdown</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500">{heists.length} heists · max ${((bigScore?.approaches?.[0]?.player_max_cut ?? 0) / 1_000_000).toFixed(1)}M player cut</span>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{heists.length} heists · max ${((bigScore?.approaches?.[0]?.player_max_cut ?? 0) / 1_000_000).toFixed(1)}M player cut</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23]">
@@ -249,10 +237,11 @@ const RETURN_COLOR = (pct: number) =>
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[11px] font-mono bg-gta-teal/30 text-gta-teal border border-gta-teal/40 px-2 py-0.5 rounded uppercase tracking-widest">Profile</span>
+        <GamePill game="gta-v" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Your Stats vs Community</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500">Rockstar Social Club · Phase 1</span>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">Rockstar Social Club · Phase 1</span>
       </div>
       <SocialClubConnector />
     </section>
@@ -278,39 +267,42 @@ const RETURN_COLOR = (pct: number) =>
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-4">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-red shrink-0"></span>
+        <GamePill game="gta-v" size="xs" />
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// More GTA V Charts</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/charts?title=gta-v" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
+        <a href="/charts?title=gta-v" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase shrink-0">All charts →</a>
       </div>
       <div class="flex flex-col gap-2">
 
         <ChartPreviewCard
           cardId="preview-assassination"
+          game="gta-v"
           title="Assassination Stocks — Combined Return Per Mission"
           description="Interactive $2B calculator · buy/sell windows · optimal order"
-          category="Economy-IG · GTA V Story"
-          deepLink="/charts#assassination-returns-chart"
+          category="Economy-IG"
+          deepLink="/charts#section-assassination-returns-chart"
         >
           <ChartAssassinationReturns />
         </ChartPreviewCard>
 
         <ChartPreviewCard
           cardId="preview-dlc-players"
+          game="gta-v"
           title="GTA V Steam Player History — DLC Events Overlay"
           description="Every DLC launch vs concurrent player counts · 2015–2026"
-          category="Community · GTA V"
-          deepLink="/charts#dlc-player-chart"
+          category="Community"
+          deepLink="/charts#section-dlc-player-chart"
         >
           <ChartDlcPlayerHistory />
         </ChartPreviewCard>
 
         <ChartPreviewCard
           cardId="preview-prelaunch-v"
+          game="gta-v"
           title="Pre-launch Hype — GTA V (2013) vs GTA VI (2026)"
           description="Same moment before launch · search trends · community size"
-          category="Community · V vs VI"
-          deepLink="/charts#prelaunch-comparison-chart"
+          category="Community"
+          deepLink="/charts#section-prelaunch-comparison-chart"
         >
           <ChartPrelaunchComparison />
         </ChartPreviewCard>
@@ -322,85 +314,3 @@ const RETURN_COLOR = (pct: number) =>
   </div>
 </Base>
 
-<script>
-  import * as d3 from "d3";
-
-  // ── Mission Earnings Chart ────────────────────────────────
-  (function() {
-    const el = document.getElementById("mission-earnings-chart");
-    if (!el) return;
-    const missions: any[] = JSON.parse(el.dataset.missions || "[]");
-
-    const margin = { top: 16, right: 24, bottom: 40, left: 72 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = el.clientHeight - margin.top - margin.bottom;
-
-    const svg = d3.select(el).append("svg").attr("width","100%")
-      .attr("viewBox",`0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-
-    // Use mission index as x-axis, payout as y-axis
-    const paying = missions.filter(m => m.payout >= 0);
-    const x = d3.scaleLinear().domain([0, paying.length - 1]).range([0, W]);
-    const y = d3.scaleLog().domain([100, Math.max(...paying.map(m => m.payout || 100))]).range([H, 0]).clamp(true);
-
-    // Gridlines
-    svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(() => ""))
-      .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
-
-    // Area under line
-    const defs = svg.append("defs");
-    const grad = defs.append("linearGradient").attr("id","me-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-    grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.15);
-    grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.01);
-
-    const line = d3.line<any>()
-      .x((d, i) => x(i))
-      .y(d => y(Math.max(d.payout || 0, 100)))
-      .curve(d3.curveMonotoneX);
-
-    svg.append("path").datum(paying).attr("fill","url(#me-grad)")
-      .attr("d", d3.area<any>().x((d,i) => x(i)).y0(H).y1(d => y(Math.max(d.payout||0,100))).curve(d3.curveMonotoneX));
-    svg.append("path").datum(paying).attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",1.5)
-      .attr("d", line);
-
-    // Stock mission diamonds
-    paying.forEach((m, i) => {
-      if (m.stock_mission) {
-        svg.append("polygon")
-          .attr("points", `0,-6 6,0 0,6 -6,0`)
-          .attr("transform", `translate(${x(i)},${y(Math.max(m.payout,100))})`)
-          .attr("fill","#f59e0b").attr("opacity",0.9);
-      }
-    });
-
-    // The Big Score annotation
-    const bigScore = paying.find(m => m.id === "the-big-score");
-    if (bigScore) {
-      const bi = paying.indexOf(bigScore);
-      const bx = x(bi), by = y(bigScore.payout);
-      svg.append("line").attr("x1",bx).attr("x2",bx).attr("y1",by+8).attr("y2",H)
-        .attr("stroke","#f59e0b").attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
-      svg.append("text").attr("x",bx+4).attr("y",by-4).attr("fill","#f59e0b")
-        .attr("font-size","9").attr("font-family","monospace").text("The Big Score");
-    }
-
-    // Axes
-    svg.append("g").attr("transform",`translate(0,${H})`)
-      .call(d3.axisBottom(x).ticks(5).tickFormat(d => `Mission ${d}`))
-      .call(g => g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
-
-    svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat(d => `$${Number(d)>=1000000?`${(Number(d)/1000000).toFixed(0)}M`:Number(d)>=1000?`${(Number(d)/1000).toFixed(0)}k`:String(d)}`))
-      .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").remove())
-      .call(g => g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
-
-    // GTAVI.AI watermark
-    svg.append("text").attr("x",W-4).attr("y",H-6)
-      .attr("text-anchor","end").attr("fill","#27272a").attr("font-size","8").attr("font-family","monospace")
-      .text("GTAVI.AI");
-  })();
-</script>
