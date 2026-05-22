@@ -12,13 +12,7 @@ const payingMissions = storyMissions.filter((m: any) => m.payout > 0);
 const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
 ---
 
-      <div class="flex items-center gap-3 mb-6">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mission Earnings — Full Arc</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500">{payingMissions.length} paying missions · {stockMissions.length} stock missions</span>
-      </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm">Earnings Curve — $250 Repossession to $41.6M Big Score</div>

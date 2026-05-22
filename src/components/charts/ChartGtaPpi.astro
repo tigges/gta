@@ -8,9 +8,8 @@ import gtaPpiData        from "../../../data/gta-5/economy/gta-ppi.json";
 import metaHistoryData   from "../../../data/gta-5/economy/meta-history.json";
 import ChartFooter from "../ChartFooter.astro";
 ---
-        <span class="text-[10px] font-mono text-zinc-500">{(gtaPpiData as any).series.length} patches · base 100 = Oct 2013</span>
-      </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="grid grid-cols-3 divide-x divide-[#1e1e23] border-b border-[#1e1e23]">
           {[
             { label: "Launch (base)",  value: "100",  sub: "10.7 hrs to basket",  color: "#71717a" },

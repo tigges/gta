@@ -6,9 +6,8 @@
 import propertiesData from "../../../data/gta-5/economy/properties.json";
 import ChartFooter from "../ChartFooter.astro";
 ---
-        <span class="text-[10px] font-mono text-zinc-500">{(propertiesData as any).property_count} properties · {Object.keys((propertiesData as any).type_counts).length} types</span>
-      </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23]">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5">Every Purchasable Property — Min/Max Price by Type</div>
           <div class="text-[11px] text-zinc-500 font-mono">Cheapest-to-priciest option per property type. Yellow = income-generating. Bar width = price range within type.</div>

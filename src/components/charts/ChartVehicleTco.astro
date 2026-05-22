@@ -8,9 +8,8 @@ import bizProfilesData from "../../../data/gta-5/economy/business-profiles.json"
 import ChartFooter from "../ChartFooter.astro";
 import { C_BRAND, C_ALERT, C_LIVE } from "../../config/colors";
 ---
-        <span class="text-[10px] font-mono text-zinc-500">{(vehicleModsData as any).vehicle_count} vehicles · avg upgrade ${((vehicleModsData as any).avg_upgrade_cost/1000).toFixed(0)}k</span>
-      </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm mb-0.5">
