@@ -6,6 +6,7 @@
  * with a portfolio calculator that projects the $2B playthrough.
  */
 import ShareButton from "./ShareButton.astro";
+import { C_LIVE, C_GROWTH, C_BRAND } from "../config/colors";
 
 interface Props {
   steps: any[];  // assassination-stocks.json guide_order
@@ -98,7 +99,7 @@ const { steps } = Astro.props;
               <!-- Projected balance after this step -->
               <div class="flex items-center gap-3">
                 <span class="text-[11px] font-mono text-zinc-600">Combined return:</span>
-                <span class="text-[11px] font-mono font-bold" style={`color:${step.combined_return_pct >= 300 ? '#22c55e' : step.combined_return_pct >= 80 ? '#f59e0b' : '#0d9488'}`}>
+                <span class="text-[11px] font-mono font-bold" style={`color:${step.combined_return_pct >= 300 ? C_GROWTH : step.combined_return_pct >= 80 ? C_BRAND : C_LIVE}`}>
                   +{step.combined_return_pct}%
                 </span>
                 <span class="text-[11px] font-mono text-zinc-500 ml-2">Balance after: </span>

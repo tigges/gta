@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import { C_LIVE, C_GROWTH, C_BRAND, C_CARD, C_BG_DEEP } from "../../config/colors";
 import CrossLinks from "../../components/CrossLinks.astro";
 import ReleaseTimeline from "../../components/ReleaseTimeline.astro";
 
@@ -21,7 +22,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
   ogPage="franchise"
 >
   <!-- Breadcrumb -->
-  <div class="border-b border-[#1e1e23]" style="background:#0a0a0d">
+  <div class="border-b border-[#1e1e23]" style={`background:${C_BG_DEEP}`}>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-[10px] font-mono text-zinc-600">
       <a href="/franchise" class="hover:text-zinc-400 transition-colors">Franchise</a>
       <span class="text-zinc-800">›</span>
@@ -29,7 +30,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
     </div>
   </div>
 
-  <section class="border-b border-[#1e1e23]" style="background:#0a0a0d">
+  <section class="border-b border-[#1e1e23]" style={`background:${C_BG_DEEP}`}>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Grand Theft Auto · Franchise Data</div>
       <h1 class="text-3xl font-bold text-white mb-3">History & Sales</h1>
@@ -48,7 +49,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
           <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Critic & User Scores</span>
           <div class="flex-1 h-px bg-[#1e1e23]"></div>
         </div>
-        <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
           <div class="overflow-x-auto">
             <table class="w-full text-xs font-mono">
               <thead>
@@ -68,7 +69,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
                     </td>
                     <td class="px-3 py-3 text-right text-zinc-500">{t.release_year}</td>
                     <td class="px-3 py-3 text-right">
-                      <span class="font-bold" style={`color:${t.metacritic_score >= 95 ? '#22c55e' : t.metacritic_score >= 85 ? '#f59e0b' : '#0d9488'}`}>
+                      <span class="font-bold" style={`color:${t.metacritic_score >= 95 ? C_GROWTH : t.metacritic_score >= 85 ? C_BRAND : C_LIVE}`}>
                         {t.metacritic_score}
                       </span>
                     </td>
@@ -99,7 +100,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">NA · EU · JP · Other · Source: VGChartz</span>
       </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
         <table class="w-full text-xs font-mono">
           <thead>
             <tr class="border-b border-[#1e1e23]">
@@ -141,7 +142,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
     )}
 
     <!-- Charts cross-link -->
-    <div class="rounded-xl border border-[#1e1e23] px-5 py-4 flex items-center gap-4" style="background:#131316">
+    <div class="rounded-xl border border-[#1e1e23] px-5 py-4 flex items-center gap-4" style={`background:${C_CARD}`}>
       <div class="flex-1">
         <div class="font-semibold text-zinc-200 text-sm mb-1">Franchise Data Charts</div>
         <div class="text-[10px] font-mono text-zinc-600">Sales velocity, CPI-adjusted pricing, critic divergence, DLC cadence and cross-title economic complexity.</div>

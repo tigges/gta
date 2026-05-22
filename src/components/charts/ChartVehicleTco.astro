@@ -6,6 +6,7 @@
 import vehicleModsData from "../../../data/gta-5/economy/vehicle-mods.json";
 import bizProfilesData from "../../../data/gta-5/economy/business-profiles.json";
 import ShareButton from "../ShareButton.astro";
+import { C_BRAND, C_ALERT, C_LIVE } from "../../config/colors";
 ---
 
 <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
@@ -25,9 +26,9 @@ import ShareButton from "../ShareButton.astro";
           </div>
           <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500 flex-wrap">
             <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#52525b;opacity:0.75"></span>Buy price</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#f59e0b;opacity:0.75"></span>Upgrades</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#ef4444;opacity:0.75"></span>Weapons</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#0d9488;opacity:0.75"></span>Armour</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style={`background:${C_BRAND};opacity:0.75`}></span>Upgrades</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style={`background:${C_ALERT};opacity:0.75`}></span>Weapons</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style={`background:${C_LIVE};opacity:0.75`}></span>Armour</span>
           </div>
         </div>
         <div id="vehicle-tco-chart" class="w-full"
