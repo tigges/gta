@@ -193,8 +193,15 @@ const prereqShort = prerequisite
   <!-- Main content -->
   <div class="px-4 pt-3 pb-2 flex-1 flex flex-col gap-2">
 
-    <!-- Name -->
-    <div class="font-semibold text-zinc-200 text-sm leading-snug">{name}</div>
+    <!-- Name — links to detail page for GTA Online cards -->
+    {game === "gta-online" ? (
+      <a href={`/gta-online/income/${id}`}
+         class="font-semibold text-zinc-200 text-sm leading-snug hover:text-white transition-colors">
+        {name}
+      </a>
+    ) : (
+      <div class="font-semibold text-zinc-200 text-sm leading-snug">{name}</div>
+    )}
 
     <!-- Type · solo · difficulty — all inline, single row -->
     <div class="flex items-center gap-1.5 flex-wrap">
@@ -329,9 +336,17 @@ const prereqShort = prerequisite
 
   </div>
 
-  <!-- Footer: DLC + share -->
+  <!-- Footer: DLC · Full profile link (GTA Online only) · share -->
   <div class="px-4 py-2.5 border-t flex items-center justify-between gap-2" style="border-color:#1e1e23;background:#0e0e11">
-    <span class="text-[10px] font-mono text-zinc-500 truncate">{dlc?.split("(")[0]?.trim() ?? GAME_LABELS[game]}</span>
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="text-[10px] font-mono text-zinc-500 truncate">{dlc?.split("(")[0]?.trim() ?? GAME_LABELS[game]}</span>
+      {game === "gta-online" && (
+        <a href={`/gta-online/income/${id}`}
+           class="text-[10px] font-mono text-gta-teal/60 hover:text-gta-teal transition-colors tracking-widest uppercase shrink-0">
+          Full profile →
+        </a>
+      )}
+    </div>
     <div class="flex items-center gap-2 shrink-0">
       <span class="text-[10px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
       <ShareDropdown anchorId={`profit-${id}`} shareText={shareText} size="sm" />
