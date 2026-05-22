@@ -36,6 +36,7 @@ import { C_BRAND, C_GROWTH } from "../../config/colors";
   function init() {
     const el = document.getElementById("ie-tiers-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
     const sellData: any = JSON.parse(el.dataset.sell || "{}");
     if (!sellData.top) return;

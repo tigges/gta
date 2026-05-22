@@ -38,6 +38,7 @@ import { C_GROWTH, C_ALERT } from "../../config/colors";
   function init() {
     const el = document.getElementById("price-history-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
     const items: any[] = JSON.parse(el.dataset.items || "[]");
     if (!items.length) return;

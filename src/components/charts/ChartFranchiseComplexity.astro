@@ -32,6 +32,7 @@ import ChartFooter from "../ChartFooter.astro";
   function init() {
     const el = document.getElementById("franchise-complexity-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const titles: any[] = JSON.parse(el.dataset.titles || "[]");

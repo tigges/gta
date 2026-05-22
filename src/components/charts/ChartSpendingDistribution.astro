@@ -42,6 +42,7 @@ import ChartFooter from "../ChartFooter.astro";
   function init() {
     const el = document.getElementById("spending-distribution-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
     const eras: any[] = JSON.parse(el.dataset.eras || "[]");
     if (!eras.length) return;

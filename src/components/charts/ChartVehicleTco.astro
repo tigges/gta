@@ -40,6 +40,7 @@ import { C_BRAND, C_ALERT, C_LIVE } from "../../config/colors";
   function init() {
     const el = document.getElementById("vehicle-tco-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
     const vehicles: any[] = JSON.parse(el.dataset.vehicles || "[]");
     if (!vehicles.length) return;

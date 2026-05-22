@@ -48,6 +48,7 @@ import ChartFooter from "../ChartFooter.astro";
   function init() {
     const el = document.getElementById("cpi-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
     const titles: any[] = JSON.parse(el.dataset.titles || "[]");
     const baseCpi = parseFloat(el.dataset.baseCpi || "321.5");
