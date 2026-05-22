@@ -55,11 +55,15 @@ const colour = GAME_COLOUR[game] ?? "#9898b8";
 const sizeClass = size === "xs"
   ? "text-[9px] px-1.5 py-0.5"
   : "text-[10px] px-2 py-0.5";
+
+// Dark opaque backing ensures legibility on any surface — card, image, overlay.
+// Identity colour used for text and border ring only; background is near-black.
+const bgStyle = `color:${colour};border-color:${colour}55;background:rgba(10,10,13,0.88)`;
 ---
 
 <span
-  class={`inline-flex items-center font-mono uppercase tracking-widest rounded border shrink-0 ${sizeClass} ${cls}`}
-  style={`color:${colour};border-color:${colour}40;background:${colour}12`}
+  class={`inline-flex self-start items-center font-mono uppercase tracking-widest rounded border shrink-0 whitespace-nowrap ${sizeClass} ${cls}`}
+  style={bgStyle}
 >
   {label}
 </span>
