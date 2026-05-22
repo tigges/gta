@@ -4,6 +4,8 @@ import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
+import GamePill from "../../components/GamePill.astro";
+import { CATEGORY_BADGE_CLASSES } from "../../config/categoryColors";
 import economyData from "../../../data/franchise/economy-models.json";
 const economy = (economyData as any).economies.find((e: any) => e.title_id === "gta-4");
 ---
@@ -14,8 +16,9 @@ const economy = (economyData as any).economies.find((e: any) => e.title_id === "
     <div class="absolute inset-0" style="background:#0a0a0d"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-center gap-2 mb-4 flex-wrap">
-        <span class="bg-red-900/30 border-red-600/40 text-red-400 text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest">{economy.era_label}</span>
-        <span class="text-[11px] font-mono bg-red-900/30 border border-red-600/40 text-red-400 px-2 py-0.5 rounded uppercase tracking-widest">Deliberate Regression</span>
+        <GamePill game="gta-iv" size="xs" />
+        <span class="text-[10px] font-mono text-zinc-500">{economy.era_label}</span>
+        <span class="text-[10px] font-mono text-zinc-600">· Deliberate Regression</span>
       </div>
       <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">{economy.title_name} — Economy</h1>
       <p class="text-zinc-300 text-sm leading-relaxed max-w-xl">The franchise's economic low point — and its most important turning point. Six years of innovation stripped for narrative realism. But TBOGT's nightclub mechanic planted the seed that became GTA Online's entire business empire.</p>
@@ -24,8 +27,9 @@ const economy = (economyData as any).economies.find((e: any) => e.title_id === "
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="identity-dot"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Circular Economy Model</span>
+        <GamePill game="gta-iv" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Circular Economy Model</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

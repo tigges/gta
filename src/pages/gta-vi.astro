@@ -12,6 +12,8 @@ import ChartPreviewCard        from "../components/charts/ChartPreviewCard.astro
 import ChartTrailerVelocity   from "../components/charts/ChartTrailerVelocity.astro";
 import chartConfig from "../../data/config/chart-config.json";
 import { CHART_REGISTRY } from "../config/chartRegistry";
+import GamePill from "../components/GamePill.astro";
+import { CATEGORY_BADGE_CLASSES } from "../config/categoryColors";
 
 const gtaViConfig = chartConfig.gta_vi;
 const Featured0 = CHART_REGISTRY[gtaViConfig.featured[0]];
@@ -233,8 +235,9 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
     ═══════════════════════════════════════════════════════ -->
     <section class="mb-12">
       <div class="flex items-center gap-3 mb-6">
-        <span class="identity-dot"></span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Signal Intelligence — Key Charts</span>
+        <GamePill game="gta-vi" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Signal</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Key Charts</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <a href="/charts?title=gta-vi" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
       </div>
@@ -255,6 +258,7 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
     ═══════════════════════════════════════════════════════ -->
     <section class="mb-12">
       <div class="flex items-center gap-3 mb-4">
+        <GamePill game="gta-vi" size="xs" />
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// More GTA VI Charts</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
