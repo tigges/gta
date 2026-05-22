@@ -147,6 +147,7 @@ const DELAY_THUMBS: Record<string,string> = {
         {predictions.map((p) => {
           return (
             <PredictionCard
+              id={p.id}
               title={p.title}
               value={p.value}
               confidence={p.confidence}

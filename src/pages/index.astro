@@ -253,6 +253,7 @@ const TIER_COLOR: Record<string,string> = {
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {(predictionsData.predictions as Prediction[]).map((p) => (
           <PredictionCard
+            id={(p as Prediction).id}
             title={p.title}
             value={p.value}
             confidence={p.confidence}

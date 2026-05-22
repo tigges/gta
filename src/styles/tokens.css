@@ -91,6 +91,15 @@
   --fs-heading:  24px;   /* section headings (text-2xl) */
 }
 
+/* ── Scroll anchor offset — clears sticky nav + breathing room ──────────── */
+/* Applied to all named anchor targets so hash navigation lands above the fold */
+[id^="pred-"],
+[id^="profit-"],
+[id^="section-"],
+[id^="chart-"] {
+  scroll-margin-top: 72px;
+}
+
 /* ── Hero bloom (per-title radial gradient overlay colour) ────────────── */
 :root                                 { --c-hero-bloom: rgba(245,158,11,0.04); }
 body[data-title-context="gta-vi"]     { --c-hero-bloom: rgba(255,107,157,0.06); }
