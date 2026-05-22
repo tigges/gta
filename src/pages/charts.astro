@@ -593,7 +593,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 </style>
 
 <script>
-
+  import { triggerAll } from "../assets/chartInit";
 
   // ── Category filter ─────────────────────────────────────────
   // ── Title filter ─────────────────────────────────────────────
@@ -726,10 +726,8 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
     // Support both section-{chartId} (from ShareDropdown) and raw {chartId} (legacy links)
     const resolveTarget = (id: string): HTMLElement | null => {
-      // Direct match first (covers section-* ids and pred-* ids)
       const direct = document.getElementById(id);
       if (direct) return direct;
-      // Fallback: if targetId is a D3 canvas id, find its parent section
       const canvas = document.getElementById(id);
       if (canvas) {
         const sec = canvas.closest<HTMLElement>("section.chart-block");
@@ -738,33 +736,35 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       return null;
     };
 
-    // Poll briefly to let async D3 renders settle (max 600ms)
-    let attempts = 0;
-    const tryScroll = () => {
-      const el = resolveTarget(targetId);
-      if (!el && attempts++ < 6) { setTimeout(tryScroll, 100); return; }
-      if (!el) return;
-
-      // The section that contains this element (or the element itself if it IS a section)
-      const section = (el.closest("section.chart-block") ?? el) as HTMLElement;
-
+    const doScroll = (section: HTMLElement) => {
       // If it's hidden by a category filter, reset to "All"
       if (section.style.display === "none" || section.offsetParent === null) {
         const allBtn = document.querySelector<HTMLButtonElement>('.chart-filter[data-filter="All"]');
         if (allBtn) allBtn.click();
       }
-
-      requestAnimationFrame(() => {
-        section.scrollIntoView({ behavior: "smooth", block: "start" });
-        // Brief highlight pulse so the user knows which chart was linked
-        section.style.transition = "box-shadow 0.3s";
-        section.style.boxShadow = "0 0 0 2px rgba(245,158,11,0.5)";
-        setTimeout(() => { section.style.boxShadow = ""; }, 1800);
-      });
+      section.scrollIntoView({ behavior: "instant", block: "start" });
+      // Brief highlight pulse
+      section.style.transition = "box-shadow 0.4s";
+      section.style.boxShadow = "0 0 0 2px rgba(245,158,11,0.5)";
+      setTimeout(() => { section.style.boxShadow = ""; }, 1800);
     };
-    setTimeout(tryScroll, 200);
-  });
 
-</script>
+    // Force-render ALL charts immediately so page heights are final before scrolling.
+    // Without this, D3 charts above the target render asynchronously after the scroll,
+    // pushing the target section further down the page.
+    triggerAll();
+
+    // Wait for D3 to finish painting SVGs (2 rAF cycles give layout a chance to settle),
+    // then scroll once to the correct settled position.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      // Give D3 renders a brief moment to finalise heights
+      setTimeout(() => {
+        const el = resolveTarget(targetId);
+        if (!el) return;
+        const section = (el.closest("section.chart-block") ?? el) as HTMLElement;
+        doScroll(section);
+      }, 80);
+    }));
+  })();
 
 </script>
