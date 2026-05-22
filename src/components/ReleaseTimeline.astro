@@ -1,7 +1,6 @@
 ---
 import type { ReleasesData } from "../types/gta";
 import releaseDataRaw from "../../data/shared/releases.json";
-import GamePill from "./GamePill.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 
 const games = (releaseDataRaw as unknown as ReleasesData).games;
@@ -23,12 +22,9 @@ const maxGap = Math.max(
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-  <div class="px-5 py-4 border-b border-[#1e1e23] flex items-center gap-3">
-    <GamePill game="franchise" size="xs" />
-    <div>
-      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// GTA Release History</div>
-      <p class="text-[11px] text-zinc-600 mt-0.5">Mainline entries 1997–2026 · release gap shown as bar</p>
-    </div>
+  <div class="px-5 py-4 border-b border-[#1e1e23]">
+    <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// GTA Release History</div>
+    <p class="text-[11px] text-zinc-600 mt-0.5">Mainline entries 1997–2026 · release gap shown as bar</p>
   </div>
 
   <div class="p-5">
