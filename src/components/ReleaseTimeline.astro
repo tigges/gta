@@ -15,172 +15,128 @@ const COVERS: Record<string, string> = {
   "GTA V":   "/assets/covers/gta-5.jpg",
   "GTA VI":  "/assets/covers/gta-6.jpg",
 };
+
+// Map gap_years → connector height in px (base 12px + 5px per year, capped at 72)
+const gapHeight = (yrs: number) => Math.min(72, 12 + yrs * 5);
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
   <div class="px-5 py-4 border-b border-[#1e1e23]">
     <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// GTA Release History</div>
-    <p class="text-[11px] text-zinc-600 mt-1">Time between mainline entries — gap trend extrapolated to VI</p>
+    <p class="text-[11px] text-zinc-600 mt-1">Time between mainline entries — gap years shown on connector</p>
   </div>
 
   <div class="relative p-5">
-    <!-- Vertical spine — offset to sit behind covers for entries with art -->
+    <!-- Vertical spine -->
     <div class="absolute left-[4.5rem] top-5 bottom-5 w-px bg-[#1e1e23]"></div>
 
-    <div class="flex flex-col gap-0">
+    <div class="flex flex-col">
       {games.map((game, i) => {
         const isPred = game.is_prediction;
         const year = game.release_year ?? game.release_date_estimate ?? "TBC";
-        const gap = game.gap_years_from_prev ?? game.gap_years_from_prev_estimate;
+        const gap  = game.gap_years_from_prev ?? game.gap_years_from_prev_estimate;
         const vehicles = game.vehicle_count ?? game.vehicle_count_estimate;
-        const mapSize = game.map_size_km2 ?? game.map_size_km2_estimate;
-        const cover = COVERS[game.short] ?? null;
+        const mapSize  = game.map_size_km2 ?? game.map_size_km2_estimate;
+        const cover    = COVERS[game.short] ?? null;
+        const connH    = gap ? gapHeight(gap as number) : 0;
 
         return (
-          <div class="relative flex items-start gap-3 group pb-6 last:pb-0">
-            <!-- Year label -->
-            <div class="w-14 shrink-0 text-right pt-1">
-              <span class={`text-[11px] font-mono font-bold ${isPred ? "text-gta-gold" : "text-zinc-500"}`}>
-                {year}{isPred ? "?" : ""}
-              </span>
-            </div>
+          <div class="flex flex-col">
 
-            <!-- Dot -->
-            <div class="relative z-10 mt-1.5 shrink-0">
-              <div class={`w-2.5 h-2.5 rounded-full border ${
-                isPred
-                  ? "border-gta-gold bg-gta-gold/20"
-                  : "border-[#2a2a31] bg-[#131316] group-hover:border-gta-gold/50"
-              } transition-colors`}></div>
-            </div>
-
-            <!-- Cover thumbnail (mainline III+) -->
-            {cover ? (
-              <div class="shrink-0">
-                <img
-                  src={cover}
-                  alt={game.short}
-                  class={`object-cover rounded border transition-all duration-200 group-hover:scale-105 ${
-                    isPred
-                      ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10"
-                      : "w-9 h-12 border-[#2a2a31] group-hover:border-zinc-600"
-                  }`}
-                  loading="lazy"
-                />
-              </div>
-            ) : (
-              <div class={`shrink-0 rounded border border-[#1e1e23] flex items-center justify-center w-9 h-12 mt-0.5`} style="background:#0a0a0d">
-                <span class="text-[10px] font-mono text-zinc-500 leading-tight text-center px-0.5">{game.short}</span>
+            {/* Gap connector — shown before this entry (except first) */}
+            {i > 0 && gap && (
+              <div class="relative flex items-center gap-3" style={`height:${connH}px`}>
+                {/* Year column spacer */}
+                <div class="w-14 shrink-0"></div>
+                {/* Dot column — gap label sits on the spine */}
+                <div class="w-2.5 shrink-0 flex justify-center items-center h-full">
+                  <span class={`text-[9px] font-mono px-1 relative z-10 ${isPred ? "text-gta-gold/70" : "text-zinc-600"}`}
+                        style="background:#131316">
+                    +{gap}yr
+                  </span>
+                </div>
+                {/* Cover column spacer */}
+                {cover && <div class="w-9 shrink-0"></div>}
               </div>
             )}
 
-            <!-- Content -->
-            <div class="flex-1 min-w-0 pt-0.5">
-              <div class="flex items-baseline gap-2 flex-wrap">
-                <span class={`font-mono font-semibold text-sm ${isPred ? "text-gta-gold" : "text-zinc-200"}`}>
-                  {game.short}
+            {/* Entry row */}
+            <div class="relative flex items-start gap-3 group">
+              {/* Year label */}
+              <div class="w-14 shrink-0 text-right pt-1">
+                <span class={`text-[11px] font-mono font-bold ${isPred ? "text-gta-gold" : "text-zinc-500"}`}>
+                  {year}{isPred ? "?" : ""}
                 </span>
-                {isPred && (
-                  <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1.5 py-0.5 rounded uppercase tracking-widest">
-                    est
-                  </span>
-                )}
-                {gap && (
-                  <span class="text-[10px] font-mono text-zinc-600">+{gap}yr</span>
-                )}
               </div>
-              <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-0.5">
-                {vehicles && (
-                  <span class="text-[11px] text-zinc-600 font-mono">{vehicles}{isPred ? "~" : ""} vehicles</span>
-                )}
-                {mapSize && (
-                  <span class="text-[11px] text-zinc-600 font-mono">{mapSize}{isPred ? "~" : ""} km²</span>
-                )}
-                {game.trailer_youtube_id && (
-                  <a href={`https://www.youtube.com/watch?v=${game.trailer_youtube_id}`}
-                    target="_blank" rel="noopener noreferrer"
-                    class="text-[11px] font-mono text-zinc-500 hover:text-gta-gold transition-colors">▶ Trailer</a>
-                )}
+
+              {/* Dot */}
+              <div class="relative z-10 mt-1.5 shrink-0">
+                <div class={`w-2.5 h-2.5 rounded-full border ${
+                  isPred
+                    ? "border-gta-gold bg-gta-gold/20"
+                    : "border-[#2a2a31] bg-[#131316] group-hover:border-gta-gold/50"
+                } transition-colors`}></div>
+              </div>
+
+              {/* Cover thumbnail */}
+              {cover ? (
+                <div class="shrink-0">
+                  <img
+                    src={cover}
+                    alt={game.short}
+                    class={`object-cover rounded border transition-all duration-200 group-hover:scale-105 ${
+                      isPred
+                        ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10"
+                        : "w-9 h-12 border-[#2a2a31] group-hover:border-zinc-600"
+                    }`}
+                    loading="lazy"
+                  />
+                </div>
+              ) : (
+                <div class="shrink-0 rounded border border-[#1e1e23] flex items-center justify-center w-9 h-12 mt-0.5" style="background:#0a0a0d">
+                  <span class="text-[10px] font-mono text-zinc-500 leading-tight text-center px-0.5">{game.short}</span>
+                </div>
+              )}
+
+              {/* Content */}
+              <div class="flex-1 min-w-0 pt-0.5 pb-3">
+                <div class="flex items-baseline gap-2 flex-wrap">
+                  <span class={`font-mono font-semibold text-sm ${isPred ? "text-gta-gold" : "text-zinc-200"}`}>
+                    {game.short}
+                  </span>
+                  {isPred && (
+                    <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1.5 py-0.5 rounded uppercase tracking-widest">
+                      est
+                    </span>
+                  )}
+                </div>
+                <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-0.5">
+                  {vehicles && (
+                    <span class="text-[11px] text-zinc-600 font-mono">{vehicles}{isPred ? "~" : ""} vehicles</span>
+                  )}
+                  {mapSize && (
+                    <span class="text-[11px] text-zinc-600 font-mono">{mapSize}{isPred ? "~" : ""} km²</span>
+                  )}
+                  {game.trailer_youtube_id && (
+                    <a href={`https://www.youtube.com/watch?v=${game.trailer_youtube_id}`}
+                      target="_blank" rel="noopener noreferrer"
+                      class="text-[11px] font-mono text-zinc-500 hover:text-gta-gold transition-colors">▶ Trailer</a>
+                  )}
+                </div>
               </div>
             </div>
+
           </div>
         );
       })}
     </div>
   </div>
 
-  <!-- Gap trend chart -->
-  <div class="mt-4 pt-4 border-t border-[#1e1e23]">
-    <p class="text-[10px] font-mono text-zinc-600 mb-3 uppercase tracking-[0.2em] px-5">Release gap (years)</p>
-    <div id="gap-chart" class="w-full h-24" data-games={JSON.stringify(
-      games.filter((g) => (g.gap_years_from_prev ?? g.gap_years_from_prev_estimate) != null)
-        .map((g) => ({
-          short: g.short,
-          gap: g.gap_years_from_prev ?? g.gap_years_from_prev_estimate,
-          isPred: g.is_prediction,
-          cover: COVERS[g.short] ?? null,
-        }))
-    )}></div>
-  </div>
   <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
     <span class="text-[10px] text-zinc-500 font-mono">Source: Rockstar Games · community records · 1997–2026</span>
-    <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="release-timeline" shareText="GTA franchise timeline: GTA I (1997) → GTA VI (2026). 30 years, 8 mainline titles, and a 13-year wait for the next one." size="sm" /></div>
+    <div class="flex items-center gap-3 shrink-0">
+      <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <ShareDropdown anchorId="release-timeline" shareText="GTA franchise timeline: GTA I (1997) → GTA VI (2026). 30 years, 8 mainline titles, and a 13-year wait for the next one." size="sm" />
+    </div>
   </div>
-  </div>
-
 </div>
-
-<script>
-  import { cc } from "../assets/chartColors";
-
-  import * as d3 from "d3";
-
-  {
-    const el = document.getElementById("gap-chart");
-    if (!el) throw new Error("gap-chart element not found");
-
-    const data: { short: string; gap: number; isPred: boolean }[] = JSON.parse(el.dataset.games || "[]");
-
-    const margin = { top: 4, right: 8, bottom: 24, left: 8 };
-    const W = el.clientWidth - margin.left - margin.right;
-    const H = el.clientHeight - margin.top - margin.bottom;
-
-    const svg = d3.select(el).append("svg")
-      .attr("width", "100%")
-      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    const x = d3.scaleBand().domain(data.map((d) => d.short)).range([0, W]).padding(0.25);
-    const y = d3.scaleLinear().domain([0, (d3.max(data, (d) => d.gap) ?? 15) * 1.15]).range([H, 0]);
-
-    data.forEach((d) => {
-      svg.append("rect")
-        .attr("x", x(d.short) ?? 0)
-        .attr("y", y(d.gap))
-        .attr("width", x.bandwidth())
-        .attr("height", H - y(d.gap))
-        .attr("rx", 2)
-        .attr("fill", d.isPred ? cc.bar : cc.text7)
-        .attr("opacity", d.isPred ? 0.85 : 0.7);
-
-      svg.append("text")
-        .attr("x", (x(d.short) ?? 0) + x.bandwidth() / 2)
-        .attr("y", H + 14)
-        .attr("text-anchor", "middle")
-        .attr("fill", cc.text6)
-        .attr("font-size", "9")
-        .attr("font-family", "monospace")
-        .text(d.short);
-
-      svg.append("text")
-        .attr("x", (x(d.short) ?? 0) + x.bandwidth() / 2)
-        .attr("y", y(d.gap) - 3)
-        .attr("text-anchor", "middle")
-        .attr("fill", d.isPred ? cc.bar : cc.text6)
-        .attr("font-size", "9")
-        .attr("font-family", "monospace")
-        .text(`${d.gap}yr`);
-    });
-  }
-</script>
