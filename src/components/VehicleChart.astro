@@ -1,30 +1,29 @@
 ---
 import vehicleData from "../../data/gta-5/vehicles/performance.json";
+import ShareDropdown from "./ShareDropdown.astro";
 
 // Collapse the "(NR)" suffix variants for the filter buttons so the list stays short
 const rawClasses = [...new Set(vehicleData.vehicles.map((v) => v.class))].sort();
 const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, "")))].sort();
 ---
 
-<div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
-  <div class="flex items-start justify-between flex-wrap gap-3 mb-4">
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+  <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
     <div>
-      <h3 class="font-mono font-semibold text-zinc-50 text-sm uppercase tracking-wider">
-        GTA V — Vehicle Performance (Lap Times)
-      </h3>
-      <p class="text-xs text-zinc-500 mt-0.5">
-        Broughy1322 test track · {vehicleData.vehicles.length} vehicles tested · lower is faster
-      </p>
+      <div class="font-semibold text-zinc-200 text-sm">GTA V — Vehicle Performance (Lap Times)</div>
+      <div class="text-[11px] text-zinc-500 font-mono mt-0.5">
+        Broughy1322 test track · {vehicleData.vehicles.length} vehicles · lower lap time = faster
+      </div>
     </div>
     <div class="flex flex-wrap gap-1.5">
       <button
-        class="class-filter px-2.5 py-1 rounded text-xs font-mono border border-gta-gold text-gta-gold bg-gta-gold/10 transition-colors"
+        class="class-filter px-2.5 py-1 rounded text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all"
         data-class="All"
         data-active="true"
       >All</button>
       {baseClasses.map((cls) => (
         <button
-          class="class-filter px-2.5 py-1 rounded text-xs font-mono border border-zinc-700 text-zinc-500 hover:border-gta-gold hover:text-gta-gold transition-colors"
+          class="class-filter px-2.5 py-1 rounded text-[10px] font-mono border border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 transition-all"
           data-class={cls}
           data-active="false"
         >{cls}</button>
@@ -36,9 +35,13 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
     class="w-full overflow-hidden"
     data-vehicles={JSON.stringify(vehicleData.vehicles)}
   ></div>
-  <p class="text-xs text-zinc-500 font-mono mt-3">
-    Source: Broughy1322 · Updated {new Date(vehicleData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
-  </p>
+  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+    <span class="text-[10px] text-zinc-600 font-mono">Source: Broughy1322 · Updated {new Date(vehicleData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <ShareDropdown anchorId="vehicle-chart" shareText="GTA V vehicle performance: 737 vehicles benchmarked by Broughy1322 on his standard test track. Lap times, top speeds, and tier ratings." size="sm" />
+    </div>
+  </div>
 </div>
 
 <script>

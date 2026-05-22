@@ -1,5 +1,6 @@
 ---
 import trendsData from "../../data/gta-5/trends/search-interest.json";
+import ShareDropdown from "./ShareDropdown.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -22,8 +23,12 @@ import trendsData from "../../data/gta-5/trends/search-interest.json";
     </div>
   </div>
   <div id="trends-chart" class="w-full h-64 px-4 py-2" data-keywords={JSON.stringify(trendsData.keywords)}></div>
-  <div class="px-5 py-3 border-t border-[#1e1e23]">
-    <span class="text-[10px] text-zinc-500 font-mono">Source: Google Trends via pytrends · Updated {new Date(trendsData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
+  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+    <span class="text-[10px] text-zinc-600 font-mono">Source: Google Trends via pytrends · Updated {new Date(trendsData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <ShareDropdown anchorId="trends-chart" shareText="GTA V + GTA VI Google Trends 2013–2026. GTA VI search interest is at an all-time high — dramatically outpacing GTA V at the equivalent pre-launch moment." size="sm" />
+    </div>
   </div>
 </div>
 
