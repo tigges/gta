@@ -4,6 +4,8 @@ import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
+import GamePill from "../../components/GamePill.astro";
+import { CATEGORY_BADGE_CLASSES } from "../../config/categoryColors";
 import economyData from "../../../data/franchise/economy-models.json";
 const economy = (economyData as any).economies.find((e: any) => e.title_id === "gta-vc");
 ---
@@ -14,7 +16,8 @@ const economy = (economyData as any).economies.find((e: any) => e.title_id === "
     <div class="absolute inset-0" style="background:#0a0a0d"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-center gap-2 mb-4 flex-wrap">
-        <span class="bg-gta-gold/30 border-gta-gold/40 text-gta-gold text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest">{economy.era_label}</span>
+        <GamePill game="gta-vc" size="xs" />
+        <span class="text-[10px] font-mono text-zinc-500">{economy.era_label}</span>
       </div>
       <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">{economy.title_name} — Economy</h1>
       <p class="text-zinc-300 text-sm leading-relaxed max-w-xl">The franchise's first asset ownership loop: earn → buy business → receive passive income → earn more. The Malibu Club is the conceptual ancestor of the Acid Lab.</p>
@@ -23,8 +26,9 @@ const economy = (economyData as any).economies.find((e: any) => e.title_id === "
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="identity-dot"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Circular Economy Model</span>
+        <GamePill game="gta-vc" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Circular Economy Model</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

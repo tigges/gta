@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
+import GamePill from "../components/GamePill.astro";
 import salesData   from "../../data/franchise/sales.json";
 import metacriticData from "../../data/franchise/metacritic.json";
 
@@ -26,7 +27,10 @@ const titleCount = titles.length;
       <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 30%,#0a0a0d 100%)"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
-      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Grand Theft Auto · 1997–2026</div>
+      <div class="flex items-center gap-2 mb-3">
+        <GamePill game="franchise" size="xs" />
+        <span class="text-[10px] font-mono text-zinc-600">1997–2026 · Rockstar Games</span>
+      </div>
       <h1 class="text-4xl font-bold text-white mb-4">Franchise History</h1>
       <p class="text-sm text-zinc-400 max-w-lg mb-8">
         30 years of GTA. Sales data, critic scores, map evolution, and the full economic arc from GTA 1 to GTA VI.
@@ -85,7 +89,11 @@ const titleCount = titles.length;
 
     <!-- Title cover strip -->
     <div class="mb-12">
-      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-5">// All Titles</div>
+      <div class="flex items-center gap-3 mb-5">
+        <GamePill game="franchise" size="xs" />
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// All Titles</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       <div class="flex flex-wrap gap-3">
         {([
           { id: "gta-1",  label: "GTA 1",      year: "1997" },

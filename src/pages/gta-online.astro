@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import GamePill from "../components/GamePill.astro";
+import { CATEGORY_BADGE_CLASSES } from "../config/categoryColors";
 import { C_LIVE, C_GROWTH, C_CARD, C_BG_DEEP } from "../config/colors";
 import CrossLinks from "../components/CrossLinks.astro";
 import ChartMetaEvolution    from "../components/charts/ChartMetaEvolution.astro";
@@ -204,8 +205,9 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
     ═══════════════════════════════════════════════════════ -->
     <section class="mb-12">
       <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-teal shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economy Intelligence — Key Charts</span>
+        <GamePill game="gta-online" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Economy</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Key Charts</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <a href="/charts?title=gta-online" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
       </div>
@@ -258,10 +260,11 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
     ═══════════════════════════════════════════════════════ -->
     <section class="mb-12">
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[11px] font-mono bg-gta-teal/30 text-gta-teal border border-gta-teal/40 px-2 py-0.5 rounded uppercase tracking-widest">Economy</span>
+        <GamePill game="gta-online" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economic Flow Analysis</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/gta-online/economy" class="text-[10px] font-mono text-gta-teal/70 hover:text-gta-teal transition-colors tracking-widest uppercase">Full model →</a>
+        <a href="/gta-online/economy" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full model →</a>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
