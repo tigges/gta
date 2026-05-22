@@ -27,6 +27,7 @@ import ChartFooter from "../ChartFooter.astro";
   function init() {
     const el = document.getElementById("property-cost-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
     const props: any[] = JSON.parse(el.dataset.properties || "[]");
     if (!props.length) return;

@@ -40,6 +40,7 @@ import ChartFooter from "../ChartFooter.astro";
   function init() {
     const el = document.getElementById("community-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const milestones: {date:string;subscribers:number;event:string|null}[] = JSON.parse(el.dataset.milestones || "[]");

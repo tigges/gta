@@ -50,6 +50,7 @@ const metacriticScores = (metacriticData as any).titles as any[];
   function init() {
     const el = document.getElementById("divergence-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
     const scores: any[] = JSON.parse(el.dataset.scores || "[]");
 

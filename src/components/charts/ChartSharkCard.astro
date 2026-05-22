@@ -45,6 +45,7 @@ const sharkCardData = sharkCardRaw as unknown as SharkCardsData;
   function init() {
     const el = document.getElementById("shark-card-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const history: any[] = JSON.parse(el.dataset.history || "[]");

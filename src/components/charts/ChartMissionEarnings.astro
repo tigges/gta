@@ -38,6 +38,7 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
   function init() {
     const el = document.getElementById("mission-earnings-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const missions: any[] = JSON.parse(el.dataset.missions || "[]");

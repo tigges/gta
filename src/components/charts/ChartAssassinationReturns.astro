@@ -37,6 +37,7 @@ const assassinGuide = (stocksData as any).guide_order as any[];
   function init() {
     const el = document.getElementById("assassination-returns-chart") as HTMLElement | null;
     if (!el) return;
+    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const steps: any[] = JSON.parse(el.dataset.steps || "[]");

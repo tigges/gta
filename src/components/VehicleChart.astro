@@ -82,7 +82,7 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
 
   function render(vehicles: Vehicle[]) {
     const el = document.getElementById("vehicle-chart")!;
-    el.innerHTML = "";
+    el.innerHTML = ""; // clears previous render before redraw (filter-triggered rerenders are intentional)
 
     const filtered = vehicles
       .filter((v) => v.lap_seconds !== null)
