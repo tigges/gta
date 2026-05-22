@@ -206,7 +206,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-10">
 
-    <section class="chart-block" data-title="gta-vi" data-category="Community">
+    <section id="section-trailer-velocity" class="chart-block" data-title="gta-vi" data-category="Community">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-vi" />
@@ -214,10 +214,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Trailer View Velocity</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartTrailerVelocity />
     </section>
-    <section class="chart-block" data-title="gta-vi" data-category="Community">
+    <section id="section-trailer-discovery-chart" class="chart-block" data-title="gta-vi" data-category="Community">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-vi" />
@@ -225,10 +224,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Discovery Density — What Every Second Revealed</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartTrailerDiscovery />
     </section>
-    <section class="chart-block" data-title="gta-vi" data-category="History">
+    <section id="section-delay-timeline-chart" class="chart-block" data-title="gta-vi" data-category="History">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-vi" />
@@ -236,10 +234,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Development & Delay Timeline</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartDelayTimeline />
     </section>
-    <section class="chart-block" data-title="gta-vi" data-category="Community">
+    <section id="section-region-heatmap" class="chart-block" data-title="gta-vi" data-category="Community">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-vi" />
@@ -247,10 +244,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida Region Evidence Heatmap</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartRegionHeatmap />
     </section>
-    <section class="chart-block" data-title="gta-vi" data-category="Community">
+    <section id="section-community-chart" class="chart-block" data-title="gta-vi" data-category="Community">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-vi" />
@@ -258,10 +254,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Community Anticipation Curve</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartCommunity />
     </section>
-    <section class="chart-block" data-title="gta-vi" data-category="History">
+    <section id="section-prelaunch-comparison-chart" class="chart-block" data-title="gta-vi" data-category="History">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-vi" />
@@ -269,10 +264,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Pre-launch Hype — GTA V (2013) vs GTA VI (2026)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartPrelaunchComparison />
     </section>
-    <section class="chart-block" data-title="gta-vi" data-category="Economy-RL">
+    <section id="section-entertainment-chart" class="chart-block" data-title="gta-vi" data-category="Economy-RL">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-vi" />
@@ -280,10 +274,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Global Entertainment</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartEntertainmentComp />
     </section>
-    <section class="chart-block" data-title="gta-vi" data-category="Economy-RL">
+    <section id="section-competitors-chart" class="chart-block" data-title="gta-vi" data-category="Economy-RL">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-vi" />
@@ -291,10 +284,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Major Game Launches — Year 1 Sales & Pre-launch Hype</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartCompetitors />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-income-leaderboard-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -302,10 +294,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Income Leaderboard — All Sources Ranked</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartIncomeLeaderboard />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-meta-evolution-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -313,10 +304,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Ceiling — Top $/hr Method at Each Major DLC (2013–2023)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartMetaEvolution />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-gta-ppi-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -324,10 +314,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA-PPI — In-Game Inflation Index (hours to buy standard basket)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartGtaPpi />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-passive-stack-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -335,10 +324,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Passive Income Stack — How Idle GTA$/hr Grew From 0 to $1.24M</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartPassiveStack />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-roi-scatter-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -346,10 +334,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Setup Cost vs $/hr — What's Actually Worth Buying?</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartRoiScatter />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-RL">
+    <section id="section-shark-card-chart" class="chart-block" data-title="gta-online" data-category="Economy-RL">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -357,10 +344,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Shark Card Purchasing Power — 12 Years of In-Game Inflation</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartSharkCard />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-heist-comparison-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -368,10 +354,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Heist Comparison — $/hr vs Setup Cost vs Run Time</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartHeistComparison />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-income-history-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -379,10 +364,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Income Source Price History — Nerfs, Buffs, DLC Launches</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartIncomeHistory />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-vehicle-tco-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -390,10 +374,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Vehicle TCO — What Does Going Full Meta Actually Cost?</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartVehicleTco />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-RL">
+    <section id="section-property-cost-chart" class="chart-block" data-title="gta-online" data-category="Economy-RL">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -401,10 +384,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Property Costs — Full Expenditure Registry</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartPropertyCost />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-property-daily-fee-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -412,10 +394,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Property Daily Fees — Ownership Has Ongoing Costs</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartPropertyDailyFee />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-spending-distribution-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -423,10 +404,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Spending Mix — Where GTA$ Goes Per Era</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartSpendingDistribution />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-price-history-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -434,10 +414,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Price &amp; Payout History — Every Nerf, Buff, and Launch Since 2013</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartPriceHistory />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Promotions">
+    <section id="section-bonus-heatmap" class="chart-block" data-title="gta-online" data-category="Promotions">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -445,10 +424,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Weekly Bonus Calendar — Activity Multiplier History</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartBonusHeatmap />
     </section>
-    <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+    <section id="section-ie-tiers-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-online" />
@@ -456,10 +434,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Import/Export Sell Tiers — Why Top-Range Vehicles Are 3× More Valuable</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartIeTiers />
     </section>
-    <section class="chart-block" data-title="gta-v" data-category="Economy-IG">
+    <section id="section-assassination-returns-chart" class="chart-block" data-title="gta-v" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-v" />
@@ -467,10 +444,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Assassination Stock Returns — Optimal Sequence</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartAssassinationReturns />
     </section>
-    <section class="chart-block" data-title="gta-v" data-category="Community">
+    <section id="section-dlc-player-chart" class="chart-block" data-title="gta-v" data-category="Community">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-v" />
@@ -478,10 +454,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Players — DLC Events Overlay</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartDlcPlayerHistory />
     </section>
-    <section class="chart-block" data-title="gta-v" data-category="Community">
+    <section id="section-player-chart" class="chart-block" data-title="gta-v" data-category="Community">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-v" />
@@ -489,10 +464,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Player Count — Monthly Avg & Peak</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <PlayerChart />
     </section>
-    <section class="chart-block" data-title="gta-v" data-category="Community">
+    <section id="section-trends-chart" class="chart-block" data-title="gta-v" data-category="Community">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-v" />
@@ -500,10 +474,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V + GTA VI Google Trends 2013–2026</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <TrendsChart />
     </section>
-    <section class="chart-block" data-title="gta-v" data-category="Economy-IG">
+    <section id="section-mission-earnings-chart" class="chart-block" data-title="gta-v" data-category="Economy-IG">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-v" />
@@ -511,10 +484,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mission Earnings — Full Arc</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartMissionEarnings />
     </section>
-    <section class="chart-block" data-title="gta-v" data-category="Performance">
+    <section id="section-perf-chart" class="chart-block" data-title="gta-v" data-category="Performance">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="gta-v" />
@@ -522,10 +494,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Vehicle Performance — Broughy1322 Lap Times</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartVehiclePerformance />
     </section>
-    <section class="chart-block" data-title="franchise" data-category="Economy-RL">
+    <section id="section-sales-chart" class="chart-block" data-title="franchise" data-category="Economy-RL">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="franchise" />
@@ -533,10 +504,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Franchise Sales Velocity</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartFranchiseSales />
     </section>
-    <section class="chart-block" data-title="franchise" data-category="Economy-RL">
+    <section id="section-cpi-chart" class="chart-block" data-title="franchise" data-category="Economy-RL">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="franchise" />
@@ -544,10 +514,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Launch Price — Nominal vs Inflation-Adjusted</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartCpiPricing />
     </section>
-    <section class="chart-block" data-title="franchise" data-category="History">
+    <section id="section-divergence-chart" class="chart-block" data-title="franchise" data-category="History">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="franchise" />
@@ -555,10 +524,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Critic vs User Score Divergence — The Monetisation Story</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartCriticDivergence />
     </section>
-    <section class="chart-block" data-title="franchise" data-category="History">
+    <section id="section-dlc-cadence-chart" class="chart-block" data-title="franchise" data-category="History">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="franchise" />
@@ -566,10 +534,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online DLC Cadence → GTA VI Online Prediction</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartDlcCadence />
     </section>
-    <section class="chart-block" data-title="franchise" data-category="Economy-RL">
+    <section id="section-revenue-split-chart" class="chart-block" data-title="franchise" data-category="Economy-RL">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="franchise" />
@@ -577,10 +544,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Revenue Model — Game Sales vs Online Economy</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartRevenueSplit />
     </section>
-    <section class="chart-block" data-title="franchise" data-category="Economy-RL">
+    <section id="section-ttwo-stock-chart" class="chart-block" data-title="franchise" data-category="Economy-RL">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="franchise" />
@@ -588,10 +554,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Take-Two (TTWO) Stock Price vs GTA VI Milestones</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartTtwoStock />
     </section>
-    <section class="chart-block" data-title="franchise" data-category="History">
+    <section id="section-franchise-complexity-chart" class="chart-block" data-title="franchise" data-category="History">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="franchise" />
@@ -599,17 +564,15 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Economic Complexity — 25 Years of Evolution</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      </div>
       <ChartFranchiseComplexity />
     </section>
-    <section class="chart-block" data-title="franchise" data-category="History">
+    <section id="section-franchise-earnings-chart" class="chart-block" data-title="franchise" data-category="History">
 
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="franchise" />
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Cross-Title Earnings — Max $/hr + Hours to Endgame</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-      </div>
       </div>
       <ChartFranchiseEarnings />
     </section>
@@ -624,6 +587,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
   .chart-block[data-title="gta-online"] { border-left: 2px solid rgba(13,148,136,0.25); padding-left: 12px; }
   .chart-block[data-title="gta-v"]      { border-left: 2px solid rgba(113,113,122,0.20); padding-left: 12px; }
   .chart-block[data-title="franchise"]  { border-left: 2px solid rgba(113,113,122,0.15); padding-left: 12px; }
+
+  /* Scroll offset — clears sticky nav (48px) + section header row (~24px) */
+  .chart-block { scroll-margin-top: 72px; }
 </style>
 
 <script>
@@ -758,14 +724,28 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     if (!hash || hash.length < 2) return;
     const targetId = hash.slice(1);
 
+    // Support both section-{chartId} (from ShareDropdown) and raw {chartId} (legacy links)
+    const resolveTarget = (id: string): HTMLElement | null => {
+      // Direct match first (covers section-* ids and pred-* ids)
+      const direct = document.getElementById(id);
+      if (direct) return direct;
+      // Fallback: if targetId is a D3 canvas id, find its parent section
+      const canvas = document.getElementById(id);
+      if (canvas) {
+        const sec = canvas.closest<HTMLElement>("section.chart-block");
+        if (sec) return sec;
+      }
+      return null;
+    };
+
     // Poll briefly to let async D3 renders settle (max 600ms)
     let attempts = 0;
     const tryScroll = () => {
-      const el = document.getElementById(targetId);
+      const el = resolveTarget(targetId);
       if (!el && attempts++ < 6) { setTimeout(tryScroll, 100); return; }
       if (!el) return;
 
-      // The section that contains this element
+      // The section that contains this element (or the element itself if it IS a section)
       const section = (el.closest("section.chart-block") ?? el) as HTMLElement;
 
       // If it's hidden by a category filter, reset to "All"

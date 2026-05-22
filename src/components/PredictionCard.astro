@@ -25,6 +25,7 @@ interface Props {
   thumbnail?: string | null;
   compact?: boolean; // homepage teaser mode: hides method/basis/source
   game?: "gta-vi" | "gta-online" | "gta-v" | "franchise"; // for GamePill
+  id?: string;       // canonical id from predictions.json (e.g. "pred-launch-price")
 }
 
 const {
@@ -44,9 +45,11 @@ const {
   thumbnail,
   compact = false,
   game = "gta-vi",
+  id: cardId,
 } = Astro.props;
 
-const predAnchorId = `pred-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0,40)}`;
+// Use canonical id from JSON if provided, otherwise derive from title
+const predAnchorId = cardId ?? `pred-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0,40)}`;
 
 // Tier styling driven by schema field, not computed from confidence number
 const TIER_STYLES = {
@@ -82,8 +85,9 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
 ---
 
 <div
+  id={predAnchorId}
   class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current group`}
-  style="background:#131316"
+  style="background:#131316;scroll-margin-top:72px"
 >
   <!-- Thumbnail (if provided) -->
   {thumbnail && (
