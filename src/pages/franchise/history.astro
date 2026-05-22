@@ -105,7 +105,10 @@ const COVERS: Record<string, string> = {
           </div>
           <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
             <span class="text-[10px] text-zinc-600 font-mono">Source: Metacritic.com · scores as at last review</span>
-            <ShareDropdown anchorId="metacritic-scores" shareText="GTA franchise Metacritic scores: GTA SA 95, GTA IV 98, GTA V 97. The critical arc of 25 years of Grand Theft Auto." size="sm" />
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+              <ShareDropdown anchorId="metacritic-scores" shareText="GTA franchise Metacritic scores: GTA SA 95, GTA IV 98, GTA V 97. The critical arc of 25 years of Grand Theft Auto." size="sm" />
+            </div>
           </div>
         </div>
       </section>
@@ -128,7 +131,7 @@ const COVERS: Record<string, string> = {
         <GamePill game="franchise" size="xs" />
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Regional Sales Breakdown</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500">NA · EU · JP · Other · Source: VGChartz</span>
+        <span class="text-[10px] font-mono text-zinc-500">NA · EU · JP · Other</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
         <table class="w-full text-xs font-mono">
@@ -187,7 +190,10 @@ const COVERS: Record<string, string> = {
         </table>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-600 font-mono">Source: VGChartz · regional estimates · may differ from publisher figures</span>
-          <ShareDropdown anchorId="regional-sales" shareText="GTA franchise regional sales: GTA V sold 90M in NA, 88M in EU. Total 225M copies — the best-selling franchise of the last decade." size="sm" />
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+            <ShareDropdown anchorId="regional-sales" shareText="GTA franchise regional sales: GTA V sold 90M in NA, 88M in EU. Total 225M copies — the best-selling franchise of the last decade." size="sm" />
+          </div>
         </div>
       </div>
     </section>
