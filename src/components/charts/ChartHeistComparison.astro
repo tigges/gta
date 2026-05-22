@@ -29,12 +29,11 @@ import ChartFooter from "../ChartFooter.astro";
   import { cc } from "../../assets/chartColors";
 
   import * as d3 from "d3";
-  import { registerChart } from "../../assets/chartInit";
+  import { registerChart, triggerChart } from "../../assets/chartInit";
 
   function init() {
     const el = document.getElementById("heist-comparison-chart") as HTMLElement | null;
     if (!el) return;
-    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
     const heists: any[] = JSON.parse(el.dataset.heists || "[]");
     if (!heists.length) return;
@@ -93,7 +92,7 @@ import ChartFooter from "../ChartFooter.astro";
     const obsEl = document.getElementById("heist-comparison-chart");
     if (obsEl) {
       const obs = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+        if (entries[0].isIntersecting) { triggerChart("heist-comparison-chart"); obs.disconnect(); }
       }, { rootMargin: "200px" });
       obs.observe(obsEl);
     }

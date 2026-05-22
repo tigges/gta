@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import GamePill from "../components/GamePill.astro";
 import { C_LIVE, C_GROWTH, C_CARD, C_BG_DEEP } from "../config/colors";
 import CrossLinks from "../components/CrossLinks.astro";
 import ChartMetaEvolution    from "../components/charts/ChartMetaEvolution.astro";
@@ -224,19 +225,27 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
     ═══════════════════════════════════════════════════════ -->
     <section class="mb-12">
       <div class="flex items-center gap-3 mb-4">
+        <GamePill game="gta-online" size="xs" />
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// More GTA Online Charts</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/charts?title=gta-online" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase shrink-0">All charts →</a>
       </div>
       <div class="flex flex-col gap-2">
 
-        <!-- Preview cards — order from data/config/chart-config.json gta_online.preview -->
-        {[Preview0, Preview1, Preview2, Preview3].filter(Boolean).map((Comp, i) => (
+        <!-- Preview cards with proper titles and GTA Online thumbnails -->
+        {([
+          { comp: Preview0, id: goConfig.preview[0], title: "GTA Online Weekly Bonus Calendar",          desc: "Activity multiplier history · which events Rockstar promotes most often" },
+          { comp: Preview1, id: goConfig.preview[1], title: "Setup Cost vs $/hr — Worth Buying?",       desc: "ROI bubble chart · expensive but worth it vs expensive traps" },
+          { comp: Preview2, id: goConfig.preview[2], title: "Passive Income Stack",                     desc: "How idle GTA$/hr grew from $0 to $1.24M/hr · Bunker → Acid Lab" },
+          { comp: Preview3, id: goConfig.preview[3], title: "Shark Card Purchasing Power",              desc: "12 years of in-game inflation · what a Megalodon buys today vs 2013" },
+        ] as const).filter(r => r.comp).map(({ comp: Comp, id, title, desc }) => (
           Comp && <ChartPreviewCard
-            cardId={`preview-online-${i}`}
-            title={goConfig.preview[i]}
-            description="GTA Online economy chart"
-            category="Economy · GTA Online"
-            deepLink={`/charts#${goConfig.preview[i]}`}
+            cardId={`preview-online-${id}`}
+            title={title}
+            description={desc}
+            category="Economy-IG"
+            deepLink={`/charts#section-${id}`}
+            thumbUrl="/assets/covers/gta-5.jpg"
           >
             <Comp />
           </ChartPreviewCard>

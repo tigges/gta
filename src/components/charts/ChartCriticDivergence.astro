@@ -45,12 +45,11 @@ const metacriticScores = (metacriticData as any).titles as any[];
   import { cc } from "../../assets/chartColors";
 
   import * as d3 from "d3";
-  import { registerChart } from "../../assets/chartInit";
+  import { registerChart, triggerChart } from "../../assets/chartInit";
 
   function init() {
     const el = document.getElementById("divergence-chart") as HTMLElement | null;
     if (!el) return;
-    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
     const scores: any[] = JSON.parse(el.dataset.scores || "[]");
 
@@ -130,7 +129,7 @@ const metacriticScores = (metacriticData as any).titles as any[];
     const obsEl = document.getElementById("divergence-chart");
     if (obsEl) {
       const obs = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+        if (entries[0].isIntersecting) { triggerChart("divergence-chart"); obs.disconnect(); }
       }, { rootMargin: "200px" });
       obs.observe(obsEl);
     }

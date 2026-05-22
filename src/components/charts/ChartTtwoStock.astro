@@ -36,12 +36,11 @@ import ChartFooter from "../ChartFooter.astro";
   import { cc } from "../../assets/chartColors";
 
   import * as d3 from "d3";
-  import { registerChart } from "../../assets/chartInit";
+  import { registerChart, triggerChart } from "../../assets/chartInit";
 
   function init() {
     const el = document.getElementById("ttwo-stock-chart") as HTMLElement | null;
     if (!el) return;
-    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const prices: {date:string;close:number}[] = JSON.parse(el.dataset.prices || "[]");
@@ -116,7 +115,7 @@ import ChartFooter from "../ChartFooter.astro";
     const obsEl = document.getElementById("ttwo-stock-chart");
     if (obsEl) {
       const obs = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+        if (entries[0].isIntersecting) { triggerChart("ttwo-stock-chart"); obs.disconnect(); }
       }, { rootMargin: "200px" });
       obs.observe(obsEl);
     }
