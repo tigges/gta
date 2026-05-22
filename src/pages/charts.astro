@@ -223,6 +223,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Discovery Density — What Every Second Revealed</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{trailerAnalysis.trailers[0].total_entities + trailerAnalysis.trailers[1].total_entities} entities discovered</span>
       </div>
       <ChartTrailerDiscovery />
     </section>
@@ -233,6 +234,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Development & Delay Timeline</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{delayData.total_delays} delay · {delayData.timeline.length} events</span>
       </div>
       <ChartDelayTimeline />
     </section>
@@ -243,6 +245,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida Region Evidence Heatmap</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{regionsData.regions.filter((r: any) => r.confirmed).length} confirmed regions</span>
       </div>
       <ChartRegionHeatmap />
     </section>
@@ -253,6 +256,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Community Anticipation Curve</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">r/GTAVI · Google Trends overlay</span>
       </div>
       <ChartCommunity />
     </section>
@@ -263,6 +267,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Pre-launch Hype — GTA V (2013) vs GTA VI (2026)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">both normalised to months before launch</span>
       </div>
       <ChartPrelaunchComparison />
     </section>
@@ -273,6 +278,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Global Entertainment</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">revenue billions USD</span>
       </div>
       <ChartEntertainmentComp />
     </section>
@@ -283,6 +289,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Major Game Launches — Year 1 Sales & Pre-launch Hype</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{competitorData.games.length} titles compared</span>
       </div>
       <ChartCompetitors />
     </section>
@@ -293,6 +300,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Income Leaderboard — All Sources Ranked</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/database" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase shrink-0">Full profiles →</a>
       </div>
       <ChartIncomeLeaderboard />
     </section>
@@ -303,6 +311,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Ceiling — Top $/hr Method at Each Major DLC (2013–2023)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(metaHistoryData as any).meta_history.length} patches tracked</span>
       </div>
       <ChartMetaEvolution />
     </section>
@@ -313,6 +322,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA-PPI — In-Game Inflation Index (hours to buy standard basket)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(gtaPpiData as any).series.length} patches · base 100 = Oct 2013</span>
       </div>
       <ChartGtaPpi />
     </section>
@@ -323,6 +333,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Passive Income Stack — How Idle GTA$/hr Grew From 0 to $1.24M</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">4 streams · ${((passiveStackData as any).setup_cost_total/1e6).toFixed(1)}M GTA$ setup</span>
       </div>
       <ChartPassiveStack />
     </section>
@@ -333,6 +344,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Setup Cost vs $/hr — What's Actually Worth Buying?</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/database" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase shrink-0">Full profiles →</a>
       </div>
       <ChartRoiScatter />
     </section>
@@ -343,6 +355,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Shark Card Purchasing Power — 12 Years of In-Game Inflation</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{sharkCardData.analysis?.years_span} years · {sharkCardData.analysis?.purchasing_power_ratio}× purchasing power</span>
       </div>
       <ChartSharkCard />
     </section>
@@ -353,6 +366,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Heist Comparison — $/hr vs Setup Cost vs Run Time</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(heistsData as any).heists.length} heists</span>
       </div>
       <ChartHeistComparison />
     </section>
@@ -363,6 +377,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Income Source Price History — Nerfs, Buffs, DLC Launches</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(sourceHistoryData as any).source_count} sources · {(sourceHistoryData as any).snapshot_count} patches</span>
       </div>
       <ChartIncomeHistory />
     </section>
@@ -373,6 +388,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Vehicle TCO — What Does Going Full Meta Actually Cost?</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(vehicleModsData as any).vehicle_count} vehicles</span>
       </div>
       <ChartVehicleTco />
     </section>
@@ -383,6 +399,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Property Costs — Full Expenditure Registry</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(propertiesData as any).property_count} properties</span>
       </div>
       <ChartPropertyCost />
     </section>
@@ -393,6 +410,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Property Daily Fees — Ownership Has Ongoing Costs</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">charged daily · applies offline</span>
       </div>
       <ChartPropertyDailyFee />
     </section>
@@ -403,6 +421,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Spending Mix — Where GTA$ Goes Per Era</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(spendingDistData as any).eras.length} eras</span>
       </div>
       <ChartSpendingDistribution />
     </section>
@@ -413,6 +432,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Price &amp; Payout History — Every Nerf, Buff, and Launch Since 2013</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(priceChangesData as any).change_count} events · {(priceChangesData as any).item_count} items</span>
       </div>
       <ChartPriceHistory />
     </section>
@@ -423,6 +443,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Promotions</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Weekly Bonus Calendar — Activity Multiplier History</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(bonusHistoryData as any).entry_count} weeks tracked</span>
       </div>
       <ChartBonusHeatmap />
     </section>
@@ -433,6 +454,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Import/Export Sell Tiers — Why Top-Range Vehicles Are 3× More Valuable</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">3 tiers · 3 delivery types</span>
       </div>
       <ChartIeTiers />
     </section>
@@ -443,6 +465,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Assassination Stock Returns — Optimal Sequence</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/gta-v" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase shrink-0">Full stock guide →</a>
       </div>
       <ChartAssassinationReturns />
     </section>
@@ -453,6 +476,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Players — DLC Events Overlay</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{steamData.data.length} months · DLC annotated</span>
       </div>
       <ChartDlcPlayerHistory />
     </section>
@@ -483,6 +507,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mission Earnings — Full Arc</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">GTA V · story arc earnings</span>
       </div>
       <ChartMissionEarnings />
     </section>
@@ -493,6 +518,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Performance</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Vehicle Performance — Broughy1322 Lap Times</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{vehicleData.vehicles.length} vehicles · Broughy1322</span>
       </div>
       <ChartVehiclePerformance />
     </section>
@@ -503,6 +529,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Franchise Sales Velocity</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{salesData.last_updated.slice(0,10)}</span>
       </div>
       <ChartFranchiseSales />
     </section>
@@ -513,6 +540,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Launch Price — Nominal vs Inflation-Adjusted</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">US CPI-U · all prices in 2026 dollars</span>
       </div>
       <ChartCpiPricing />
     </section>
@@ -523,6 +551,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Critic vs User Score Divergence — The Monetisation Story</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">Metacritic · critic /100 · user ×10</span>
       </div>
       <ChartCriticDivergence />
     </section>
@@ -533,6 +562,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online DLC Cadence → GTA VI Online Prediction</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{dlcData.updates.filter((u: any) => u.category === "major").length} major updates</span>
       </div>
       <ChartDlcCadence />
     </section>
@@ -543,6 +573,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Revenue Model — Game Sales vs Online Economy</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">13 fiscal years · game → recurrent shift</span>
       </div>
       <ChartRevenueSplit />
     </section>
@@ -553,6 +584,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Take-Two (TTWO) Stock Price vs GTA VI Milestones</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{ttwoStock.prices.length} months · Yahoo Finance</span>
       </div>
       <ChartTtwoStock />
     </section>
@@ -563,6 +595,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Economic Complexity — 25 Years of Evolution</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(franchiseEconData as any).title_count} titles · 1997 → 2026</span>
       </div>
       <ChartFranchiseComplexity />
     </section>
@@ -573,6 +606,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Cross-Title Earnings — Max $/hr + Hours to Endgame</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500 shrink-0">GTA II → GTA Online · normalised effort</span>
       </div>
       <ChartFranchiseEarnings />
     </section>

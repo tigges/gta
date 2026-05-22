@@ -10,9 +10,8 @@ import ChartFooter from "../ChartFooter.astro";
 
 const sharkCardData = sharkCardRaw as unknown as SharkCardsData;
 ---
-        <span class="text-[10px] font-mono text-zinc-500">{sharkCardData.analysis?.years_span} years · {sharkCardData.analysis?.purchasing_power_ratio}× real-money cost increase</span>
-      </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <!-- Key stat callouts -->
         <div class="grid grid-cols-3 divide-x divide-[#1e1e23] border-b border-[#1e1e23]">
           {[

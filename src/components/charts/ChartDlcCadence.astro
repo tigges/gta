@@ -7,9 +7,8 @@ import dlcData from "../../../data/gta-5/dlc/timeline.json";
 import velocityData from "../../../data/gta-6/trailer-velocity.json";
 import ChartFooter from "../ChartFooter.astro";
 ---
-        <span class="text-[10px] font-mono text-zinc-500">{dlcData.updates.filter((u: any) => u.category === "major").length} major updates · pattern extrapolated</span>
-      </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <!-- Thumbnail cover strip -->
         <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
           <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-8 h-11" loading="lazy" />
