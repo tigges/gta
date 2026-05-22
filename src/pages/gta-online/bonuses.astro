@@ -2,7 +2,8 @@
 import Base from "../../layouts/Base.astro";
 import ShareButton from "../../components/ShareButton.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
-
+import Ledger from "../../components/Ledger.astro";
+import type { LedgerEntry } from "../../components/Ledger.astro";
 import type { WeeklyBonusesData, SaleFrequencyData } from "../../types/gta";
 
 import weeklyBonusesRaw from "../../../data/gta-5/economy/weekly-bonuses.json";
@@ -20,8 +21,27 @@ const topActivities = (saleFreqData.activity_bonuses ?? []).slice(0, 5);
 
 // Worker URL — community leaderboard backed by Cloudflare KV
 const WORKER_URL = "https://api.gtavi.ai";
----
 
+// Ledger entries: this week's events as signed transaction rows
+const bonusLedgerEntries: LedgerEntry[] = [
+  ...bonuses.map(b => ({
+    date:  weekStart ? weekStart.slice(0, 10) : undefined,
+    label: b.activity_id.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()),
+    value: `+${b.multiplier}\u00d7 GTA$`,
+    type:  "positive" as const,
+    icon:  "money",
+    sub:   "bonus multiplier",
+  })),
+  ...sales.map(s => ({
+    date:  weekStart ? weekStart.slice(0, 10) : undefined,
+    label: s.item_description ?? s.activity_id,
+    value: `-${s.discount_pct}% sale`,
+    type:  "positive" as const,
+    icon:  "tag",
+    sub:   "discount",
+  })),
+];
+---
 <Base
   title="GTA Online Bonuses, Promos & Leaderboard"
   description="GTA Online weekly bonus calendar, sale intelligence, promotional history and community income leaderboard. Every Thursday's events tracked since 2013."
@@ -115,6 +135,15 @@ const WORKER_URL = "https://api.gtavi.ai";
           })}
         </div>
       </div>
+    )}
+
+    <!-- This week — ledger view -->
+    {bonusLedgerEntries.length > 0 && (
+      <Ledger
+        title={`This Week's Events${weekStart ? ` · w/c ${weekStart.slice(0,10)}` : ""}`}
+        entries={bonusLedgerEntries}
+        class="mb-8"
+      />
     )}
 
     <!-- Last week's winner banner (populated by JS) -->
