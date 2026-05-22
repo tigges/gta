@@ -88,7 +88,6 @@ const isProjected = (economy as any).projected;
   import * as d3 from "d3";
 
   document.querySelectorAll<HTMLElement>(".chart-complexity-radar").forEach(el => {
-    if (el.querySelector('svg')) return; // prevent double-render from IntersectionObserver + triggerChart race
     const scores   = JSON.parse(el.dataset.scores   || "{}") as Record<string,number>;
     const avg      = JSON.parse(el.dataset.avg      || "{}") as Record<string,number>;
     const axes     = JSON.parse(el.dataset.axes     || "[]") as { key: string; label: string }[];

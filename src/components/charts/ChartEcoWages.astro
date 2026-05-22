@@ -33,7 +33,7 @@ const liveMetaSeries = lastMeta?.date === today
 <script>
   import * as d3 from "d3";
   import { cc } from "../../assets/chartColors";
-  import { registerChart } from "../../assets/chartInit";
+  import { registerChart, triggerChart } from "../../assets/chartInit";
 
   const CHART_H: Record<string, number> = {
     "chart-wages": 220, "chart-spending": 220, "chart-savings": 220,
@@ -94,7 +94,7 @@ const liveMetaSeries = lastMeta?.date === today
     const obsEl = document.getElementById("chart-wages");
     if (obsEl) {
       const obs = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+        if (entries[0].isIntersecting) { triggerChart("chart-wages"); obs.disconnect(); }
       }, { rootMargin: "200px" });
       obs.observe(obsEl);
     }

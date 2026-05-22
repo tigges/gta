@@ -33,12 +33,11 @@ import { C_GROWTH, C_ALERT } from "../../config/colors";
   import { cc } from "../../assets/chartColors";
 
   import * as d3 from "d3";
-  import { registerChart } from "../../assets/chartInit";
+  import { registerChart, triggerChart } from "../../assets/chartInit";
 
   function init() {
     const el = document.getElementById("price-history-chart") as HTMLElement | null;
     if (!el) return;
-    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
     const items: any[] = JSON.parse(el.dataset.items || "[]");
     if (!items.length) return;
@@ -128,7 +127,7 @@ import { C_GROWTH, C_ALERT } from "../../config/colors";
     const obsEl = document.getElementById("price-history-chart");
     if (obsEl) {
       const obs = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+        if (entries[0].isIntersecting) { triggerChart("price-history-chart"); obs.disconnect(); }
       }, { rootMargin: "200px" });
       obs.observe(obsEl);
     }

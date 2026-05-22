@@ -23,12 +23,11 @@ import ChartFooter from "../ChartFooter.astro";
   import { cc } from "../../assets/chartColors";
 
   import * as d3 from "d3";
-  import { registerChart } from "../../assets/chartInit";
+  import { registerChart, triggerChart } from "../../assets/chartInit";
 
   function init() {
     const el = document.getElementById("property-daily-fee-chart") as HTMLElement | null;
     if (!el) return;
-    if (el.querySelector('svg')) return;
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
     const props: any[] = JSON.parse(el.dataset.properties || "[]");
     if (!props.length) return;
@@ -94,7 +93,7 @@ import ChartFooter from "../ChartFooter.astro";
     const obsEl = document.getElementById("property-daily-fee-chart");
     if (obsEl) {
       const obs = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) { init(); obs.disconnect(); }
+        if (entries[0].isIntersecting) { triggerChart("property-daily-fee-chart"); obs.disconnect(); }
       }, { rootMargin: "200px" });
       obs.observe(obsEl);
     }
