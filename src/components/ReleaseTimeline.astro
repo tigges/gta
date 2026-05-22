@@ -1,13 +1,14 @@
 ---
-import type { ReleasesData, ReleaseEntry } from "../types/gta";
+import type { ReleasesData } from "../types/gta";
 import releaseDataRaw from "../../data/shared/releases.json";
+import GamePill from "./GamePill.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 
 const games = (releaseDataRaw as unknown as ReleasesData).games;
 
 const COVERS: Record<string, string> = {
-  "GTA 1":  "/assets/covers/gta-1.jpg",
-  "GTA 2":  "/assets/covers/gta-2.jpg",
+  "GTA 1":   "/assets/covers/gta-1.jpg",
+  "GTA 2":   "/assets/covers/gta-2.jpg",
   "GTA III": "/assets/covers/gta-3.jpg",
   "GTA VC":  "/assets/covers/gta-vc.jpg",
   "GTA SA":  "/assets/covers/gta-sa.jpg",
@@ -16,69 +17,65 @@ const COVERS: Record<string, string> = {
   "GTA VI":  "/assets/covers/gta-6.jpg",
 };
 
-// Map gap_years → connector height in px (base 12px + 5px per year, capped at 72)
-const gapHeight = (yrs: number) => Math.min(72, 12 + yrs * 5);
+const maxGap = Math.max(
+  ...games.map(g => (g.gap_years_from_prev ?? g.gap_years_from_prev_estimate ?? 0) as number)
+);
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-  <div class="px-5 py-4 border-b border-[#1e1e23]">
-    <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// GTA Release History</div>
-    <p class="text-[11px] text-zinc-600 mt-1">Time between mainline entries — gap years shown on connector</p>
+  <div class="px-5 py-4 border-b border-[#1e1e23] flex items-center gap-3">
+    <GamePill game="franchise" size="xs" />
+    <div>
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// GTA Release History</div>
+      <p class="text-[11px] text-zinc-600 mt-0.5">Mainline entries 1997–2026 · release gap shown as bar</p>
+    </div>
   </div>
 
-  <div class="relative p-5">
+  <div class="p-5">
+    <!-- Column header -->
+    <div class="flex items-center gap-3 mb-3 pl-[4.5rem]">
+      <div class="w-2.5 shrink-0"></div>
+      <div class="w-10 shrink-0 sm:w-14"></div>
+      <div class="flex-1 min-w-0"></div>
+      <div class="hidden sm:flex items-center gap-2 w-52 shrink-0">
+        <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest w-8 text-right shrink-0">gap</span>
+        <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">release wait</span>
+      </div>
+    </div>
+
     <!-- Vertical spine -->
-    <div class="absolute left-[4.5rem] top-5 bottom-5 w-px bg-[#1e1e23]"></div>
+    <div class="relative">
+      <div class="absolute left-[4.5rem] top-0 bottom-0 w-px bg-[#1e1e23]"></div>
 
-    <div class="flex flex-col">
-      {games.map((game, i) => {
-        const isPred = game.is_prediction;
-        const year = game.release_year ?? game.release_date_estimate ?? "TBC";
-        const gap  = game.gap_years_from_prev ?? game.gap_years_from_prev_estimate;
-        const vehicles = game.vehicle_count ?? game.vehicle_count_estimate;
-        const mapSize  = game.map_size_km2 ?? game.map_size_km2_estimate;
-        const cover    = COVERS[game.short] ?? null;
-        const connH    = gap ? gapHeight(gap as number) : 0;
+      <div class="flex flex-col gap-0">
+        {games.map((game) => {
+          const isPred  = game.is_prediction;
+          const year    = game.release_year ?? game.release_date_estimate ?? "TBC";
+          const gap     = (game.gap_years_from_prev ?? game.gap_years_from_prev_estimate) as number | null;
+          const vehicles= game.vehicle_count ?? game.vehicle_count_estimate;
+          const mapSize = game.map_size_km2  ?? game.map_size_km2_estimate;
+          const cover   = COVERS[game.short] ?? null;
+          const barPct  = gap ? Math.round((gap / maxGap) * 100) : 0;
 
-        return (
-          <div class="flex flex-col">
-
-            {/* Gap connector — shown before this entry (except first) */}
-            {i > 0 && gap && (
-              <div class="relative flex items-center gap-3" style={`height:${connH}px`}>
-                {/* Year column spacer */}
-                <div class="w-14 shrink-0"></div>
-                {/* Dot column — gap label sits on the spine */}
-                <div class="w-2.5 shrink-0 flex justify-center items-center h-full">
-                  <span class={`text-[9px] font-mono px-1 relative z-10 ${isPred ? "text-gta-gold/70" : "text-zinc-600"}`}
-                        style="background:#131316">
-                    +{gap}yr
-                  </span>
-                </div>
-                {/* Cover column spacer */}
-                {cover && <div class="w-9 shrink-0"></div>}
-              </div>
-            )}
-
-            {/* Entry row */}
-            <div class="relative flex items-start gap-3 group">
-              {/* Year label */}
-              <div class="w-14 shrink-0 text-right pt-1">
+          return (
+            <div class="relative flex items-center gap-3 group py-2">
+              {/* Year */}
+              <div class="w-[4.5rem] shrink-0 text-right pr-3">
                 <span class={`text-[11px] font-mono font-bold ${isPred ? "text-gta-gold" : "text-zinc-500"}`}>
                   {year}{isPred ? "?" : ""}
                 </span>
               </div>
 
               {/* Dot */}
-              <div class="relative z-10 mt-1.5 shrink-0">
+              <div class="relative z-10 shrink-0">
                 <div class={`w-2.5 h-2.5 rounded-full border ${
                   isPred
                     ? "border-gta-gold bg-gta-gold/20"
-                    : "border-[#2a2a31] bg-[#131316] group-hover:border-gta-gold/50"
+                    : "border-[#2a2a31] bg-[#131316] group-hover:border-zinc-600"
                 } transition-colors`}></div>
               </div>
 
-              {/* Cover thumbnail */}
+              {/* Cover */}
               {cover ? (
                 <div class="shrink-0">
                   <img
@@ -93,19 +90,19 @@ const gapHeight = (yrs: number) => Math.min(72, 12 + yrs * 5);
                   />
                 </div>
               ) : (
-                <div class="shrink-0 rounded border border-[#1e1e23] flex items-center justify-center w-9 h-12 mt-0.5" style="background:#0a0a0d">
-                  <span class="text-[10px] font-mono text-zinc-500 leading-tight text-center px-0.5">{game.short}</span>
+                <div class="shrink-0 rounded border border-[#1e1e23] flex items-center justify-center w-9 h-12" style="background:#0a0a0d">
+                  <span class="text-[9px] font-mono text-zinc-500 leading-tight text-center px-0.5">{game.short}</span>
                 </div>
               )}
 
-              {/* Content */}
-              <div class="flex-1 min-w-0 pt-0.5 pb-3">
+              {/* Title + meta */}
+              <div class="flex-1 min-w-0">
                 <div class="flex items-baseline gap-2 flex-wrap">
                   <span class={`font-mono font-semibold text-sm ${isPred ? "text-gta-gold" : "text-zinc-200"}`}>
                     {game.short}
                   </span>
                   {isPred && (
-                    <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1.5 py-0.5 rounded uppercase tracking-widest">
+                    <span class="text-[10px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1.5 py-0.5 rounded uppercase tracking-widest">
                       est
                     </span>
                   )}
@@ -119,24 +116,43 @@ const gapHeight = (yrs: number) => Math.min(72, 12 + yrs * 5);
                   )}
                   {game.trailer_youtube_id && (
                     <a href={`https://www.youtube.com/watch?v=${game.trailer_youtube_id}`}
-                      target="_blank" rel="noopener noreferrer"
-                      class="text-[11px] font-mono text-zinc-500 hover:text-gta-gold transition-colors">▶ Trailer</a>
+                       target="_blank" rel="noopener noreferrer"
+                       class="text-[11px] font-mono text-zinc-500 hover:text-gta-gold transition-colors">▶ Trailer</a>
                   )}
                 </div>
               </div>
-            </div>
 
-          </div>
-        );
-      })}
+              {/* Gap bar — right column */}
+              <div class="hidden sm:flex items-center gap-2 w-52 shrink-0">
+                {gap ? (
+                  <>
+                    <span class={`text-[9px] font-mono w-8 text-right shrink-0 ${isPred ? "text-gta-gold/80" : "text-zinc-600"}`}>
+                      {gap}yr
+                    </span>
+                    <div class="flex-1 h-1.5 rounded-full overflow-hidden" style="background:#1e1e23">
+                      <div
+                        class="h-full rounded-full transition-all duration-500"
+                        style={`width:${barPct}%;background:${isPred ? "#f59e0b" : "#3f3f46"};opacity:${isPred ? 0.9 : 0.7}`}
+                      ></div>
+                    </div>
+                  </>
+                ) : (
+                  <span class="text-[9px] font-mono text-zinc-800 pl-10">first</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   </div>
 
   <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-    <span class="text-[10px] text-zinc-500 font-mono">Source: Rockstar Games · community records · 1997–2026</span>
-    <div class="flex items-center gap-3 shrink-0">
-      <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-      <ShareDropdown anchorId="release-timeline" shareText="GTA franchise timeline: GTA I (1997) → GTA VI (2026). 30 years, 8 mainline titles, and a 13-year wait for the next one." size="sm" />
-    </div>
+    <span class="text-[10px] text-zinc-600 font-mono">Source: Rockstar Games · community records · 1997–2026</span>
+    <ShareDropdown
+      anchorId="release-timeline"
+      shareText="GTA franchise timeline: GTA I (1997) → GTA VI (2026). 30 years, 8 mainline titles, and a 13-year wait for the next one."
+      size="sm"
+    />
   </div>
 </div>

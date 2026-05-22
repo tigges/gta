@@ -3,6 +3,8 @@ import Base from "../../layouts/Base.astro";
 import { C_LIVE, C_GROWTH, C_BRAND, C_CARD, C_BG_DEEP } from "../../config/colors";
 import CrossLinks from "../../components/CrossLinks.astro";
 import ReleaseTimeline from "../../components/ReleaseTimeline.astro";
+import GamePill from "../../components/GamePill.astro";
+import ShareDropdown from "../../components/ShareDropdown.astro";
 
 import salesData     from "../../../data/franchise/sales.json";
 import metacriticData from "../../../data/franchise/metacritic.json";
@@ -46,6 +48,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
     {scores.length > 0 && (
       <section>
         <div class="flex items-center gap-3 mb-5">
+          <GamePill game="franchise" size="xs" />
           <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Critic & User Scores</span>
           <div class="flex-1 h-px bg-[#1e1e23]"></div>
         </div>
@@ -79,13 +82,18 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
               </tbody>
             </table>
           </div>
+          <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+            <span class="text-[10px] text-zinc-600 font-mono">Source: Metacritic.com · scores as at last review</span>
+            <ShareDropdown anchorId="metacritic-scores" shareText="GTA franchise Metacritic scores: GTA SA 95, GTA IV 98, GTA V 97. The critical arc of 25 years of Grand Theft Auto." size="sm" />
+          </div>
         </div>
       </section>
     )}
 
     <!-- Release timeline -->
-    <section>
+    <section id="metacritic-scores">
       <div class="flex items-center gap-3 mb-5">
+        <GamePill game="franchise" size="xs" />
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Release Timeline</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
@@ -96,6 +104,7 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
     {vgTitles.length > 0 && (
     <section>
       <div class="flex items-center gap-3 mb-5">
+        <GamePill game="franchise" size="xs" />
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Regional Sales Breakdown</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">NA · EU · JP · Other · Source: VGChartz</span>
@@ -134,8 +143,9 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
             })}
           </tbody>
         </table>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: VGChartz · regional estimates · may differ from publisher figures</span>
+        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-600 font-mono">Source: VGChartz · regional estimates · may differ from publisher figures</span>
+          <ShareDropdown anchorId="regional-sales" shareText="GTA franchise regional sales: GTA V sold 90M in NA, 88M in EU. Total 225M copies — the best-selling franchise of the last decade." size="sm" />
         </div>
       </div>
     </section>
