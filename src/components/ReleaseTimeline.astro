@@ -1,7 +1,7 @@
 ---
 import type { ReleasesData, ReleaseEntry } from "../types/gta";
 import releaseDataRaw from "../../data/shared/releases.json";
-import ShareButton from "./ShareButton.astro";
+import ShareDropdown from "./ShareDropdown.astro";
 
 const games = (releaseDataRaw as unknown as ReleasesData).games;
 
@@ -124,7 +124,7 @@ const COVERS: Record<string, string> = {
   </div>
   <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
     <span class="text-[10px] text-zinc-500 font-mono">Source: Rockstar Games · community records · 1997–2026</span>
-    <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA franchise timeline: GTA I (1997) → GTA VI (2026). 30 years, 8 mainline titles, and a 13-year wait for the next one." url="https://gtavi.ai/franchise" size="sm" label="Share" /></div>
+    <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="release-timeline" shareText="GTA franchise timeline: GTA I (1997) → GTA VI (2026). 30 years, 8 mainline titles, and a 13-year wait for the next one." size="sm" /></div>
   </div>
   </div>
 

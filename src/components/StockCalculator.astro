@@ -5,7 +5,7 @@
  * Shows the Lester assassination sequence as a visual timeline,
  * with a portfolio calculator that projects the $2B playthrough.
  */
-import ShareButton from "./ShareButton.astro";
+import ShareDropdown from "./ShareDropdown.astro";
 import { C_LIVE, C_GROWTH, C_BRAND } from "../config/colors";
 
 interface Props {
@@ -128,11 +128,10 @@ const { steps } = Astro.props;
       </div>
       <div class="flex items-center gap-3 shrink-0">
         <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-        <ShareButton
-          text="GTA V story mode stock guide: $41.6M from Big Score becomes $2B+ with Lester assassination missions. The complete timeline."
-          url="https://gtavi.ai/database"
+        <ShareDropdown
+          anchorId="stock-calculator"
+          shareText="GTA V story mode stock guide: $41.6M from Big Score becomes $2B+ with Lester assassination missions. The complete timeline."
           size="sm"
-          label="Share"
         />
       </div>
     </div>

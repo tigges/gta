@@ -5,15 +5,9 @@
  */
 import vehicleModsData from "../../../data/gta-5/economy/vehicle-mods.json";
 import bizProfilesData from "../../../data/gta-5/economy/business-profiles.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 import { C_BRAND, C_ALERT, C_LIVE } from "../../config/colors";
 ---
-
-<section class="chart-block" data-title="gta-online" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Vehicle TCO — What Does Going Full Meta Actually Cost?</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{(vehicleModsData as any).vehicle_count} vehicles · avg upgrade ${((vehicleModsData as any).avg_upgrade_cost/1000).toFixed(0)}k</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -35,10 +29,7 @@ import { C_BRAND, C_ALERT, C_LIVE } from "../../config/colors";
           data-vehicles={JSON.stringify((vehicleModsData as any).vehicles)}
           style="min-height:500px"
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: GTABase.com · Broughy1322 · standard shop prices · trade prices shown where unlockable</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online meta vehicle costs — Oppressor Mk2 costs $5.1M fully kitted. Akula helicopter $4.8M. What going full meta actually requires." url="https://gtavi.ai/charts#vehicle-tco-chart" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="vehicle-tco-chart" sources="Source: GTABase.com · Broughy1322 · standard shop prices · trade prices shown where unlockable" shareText="GTA Online meta vehicle costs — Oppressor Mk2 costs $5.1M fully kitted. Akula helicopter $4.8M. What going full meta actually requires." />
       </div>
 
 <script>

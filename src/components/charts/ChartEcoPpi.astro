@@ -6,7 +6,7 @@
  */
 import ppiData     from "../../../data/gta-5/economy/gta-ppi.json";
 import metaHistory from "../../../data/gta-5/economy/meta-history.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 
 const ppiSeries  = (ppiData as any).series as any[];
 const metaSeries = (metaHistory as any).meta_history as any[];
@@ -20,10 +20,7 @@ const metaSeries = (metaHistory as any).meta_history as any[];
   <div id="chart-ppi" class="w-full" style="height:280px"
     data-ppi={JSON.stringify(ppiSeries)} data-yields={JSON.stringify(metaSeries)}
   ></div>
-  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-    <span class="text-[10px] text-zinc-500 font-mono">Source: community data · updated nightly</span>
-    <ShareButton text="GTA Online economy chart: GTA-PPI — Purchasing Power Index 2013–2026" url="https://gtavi.ai/gta-online/economy" size="sm" label="Share" />
-  </div>
+  <ChartFooter chartId="chart-ppi" sources="Source: community data · updated nightly" shareText="GTA Online economy chart: GTA-PPI — Purchasing Power Index 2013–2026" />
 </div>
 
 <script>

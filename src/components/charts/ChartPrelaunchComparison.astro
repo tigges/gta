@@ -9,14 +9,8 @@ import gta5Trends     from "../../../data/gta-5/trends/search-interest.json";
 import gta6Trends     from "../../../data/gta-6/trends/search-interest.json";
 import velocityData   from "../../../data/gta-6/trailer-velocity.json";
 import redditData     from "../../../data/community/reddit.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-    <section class="chart-block" data-category="Community">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-green/30 text-gta-green border border-gta-green/40 px-2 py-0.5 rounded uppercase tracking-widest">Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs GTA V — Pre-launch Signal Comparison</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">both normalised to months before launch</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -59,10 +53,7 @@ import ShareButton from "../ShareButton.astro";
           data-gta5launch="2013-09-17"
           data-gta6launch="2026-11-19"
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Sources: Google Trends via pytrends · r/GrandTheftAutoVI community records</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI is running 4.8× hotter than GTA V at the same pre-launch moment. Three signals, one conclusion." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="prelaunch-comparison-chart" sources="Sources: Google Trends via pytrends · r/GrandTheftAutoVI community records" shareText="GTA VI is running 4.8× hotter than GTA V at the same pre-launch moment. Three signals, one conclusion." />
       </div>
 
 <script>

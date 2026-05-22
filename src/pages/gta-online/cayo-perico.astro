@@ -5,7 +5,7 @@ import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
 import ProfitCard from "../../components/ProfitCard.astro";
 import StockCalculator from "../../components/StockCalculator.astro";
-import ShareButton from "../../components/ShareButton.astro";
+import ShareDropdown from "../../components/ShareDropdown.astro";
 import businessProfiles from "../../../data/gta-5/economy/business-profiles.json";
 import weeklyBonuses    from "../../../data/gta-5/economy/weekly-bonuses.json";
 
@@ -101,7 +101,7 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
         </table>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
           <span class="text-[10px] text-zinc-500 font-mono">Only run for Panther Statue, Pink Diamond, or Bearer Bonds. Abort if primary is Cash.</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Cayo Perico loot tiers: Panther Statue $2.09M vs Cash $90K. Always check before running. Full guide." url="https://gtavi.ai/gta-online/cayo-perico" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="cayo-perico" shareText="Cayo Perico loot tiers: Panther Statue $2.09M vs Cash $90K. Always check before running. Full guide." size="sm" /></div>
         </div>
       </div>
     </section>

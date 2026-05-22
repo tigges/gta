@@ -3,7 +3,7 @@ import Base from "../layouts/Base.astro";
 import PlayerChart from "../components/PlayerChart.astro";
 import TrendsChart from "../components/TrendsChart.astro";
 import VehicleChart from "../components/VehicleChart.astro";
-import ShareButton from "../components/ShareButton.astro";
+import ShareDropdown from "../components/ShareDropdown.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 import StockCalculator from "../components/StockCalculator.astro";
 import SocialClubConnector from "../components/SocialClubConnector.astro";
@@ -162,7 +162,7 @@ const RETURN_COLOR = (pct: number) =>
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Wiki (Fandom) · community records · updated by fetch_missions.py</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V story mission earnings from start to finish. $250 at Repossession to $41.6M at The Big Score. The earning curve tells the whole story." url="https://gtavi.ai/gta-v" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="gta-v" shareText="GTA V story mission earnings from start to finish. $250 at Repossession to $41.6M at The Big Score. The earning curve tells the whole story." size="sm" /></div>
         </div>
       </div>
     </section>
@@ -239,7 +239,7 @@ const RETURN_COLOR = (pct: number) =>
         )}
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Wiki (Fandom) · optimal crew minimises cut to maximise protagonist take</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V heist earnings: 3 of 5 heists pay $0 (lore). The Big Score with optimal crew = $41.6M player cut. Then invest in Lester's assassination missions for $2B+." url="https://gtavi.ai/gta-v" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="gta-v" shareText="GTA V heist earnings: 3 of 5 heists pay $0 (lore). The Big Score with optimal crew = $41.6M player cut. Then invest in Lester's assassination missions for $2B+." size="sm" /></div>
         </div>
       </div>
     </section>

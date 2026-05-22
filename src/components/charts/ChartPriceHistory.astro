@@ -4,15 +4,9 @@
  * Extracted from charts.astro.
  */
 import priceChangesData from "../../../data/gta-5/economy/price-changes.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 import { C_GROWTH, C_ALERT } from "../../config/colors";
 ---
-
-<section class="chart-block" data-title="gta-online" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Price &amp; Payout History — Every Nerf, Buff, and Launch Since 2013</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{(priceChangesData as any).change_count} events · {(priceChangesData as any).item_count} items</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -33,10 +27,7 @@ import { C_GROWTH, C_ALERT } from "../../config/colors";
           data-items={JSON.stringify((priceChangesData as any).items)}
           style="min-height:500px"
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: Rockstar Newswire · GTAForums patch notes archives · {(priceChangesData as any).last_updated?.slice(0,10)}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online price change history — every documented nerf, buff, and property launch. Contact missions were nerfed 70% in 2014 then slowly buffed back." url="https://gtavi.ai/charts#price-history-chart" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="price-history-chart" sources="Source: Rockstar Newswire · GTAForums patch notes archives · {(priceChangesData as any).last_updated?.slice(0,10)}" shareText="GTA Online price change history — every documented nerf, buff, and property launch. Contact missions were nerfed 70% in 2014 then slowly buffed back." />
       </div>
 
 <script>

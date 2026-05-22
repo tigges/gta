@@ -4,14 +4,8 @@
  * Extracted from charts.astro.
  */
 import cpiData from "../../../data/franchise/cpi.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-<section class="chart-block" data-title="franchise" data-category="Economy-RL">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Launch Price — Nominal vs Inflation-Adjusted</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">US CPI-U · all prices in 2026 dollars</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -43,10 +37,7 @@ import ShareButton from "../ShareButton.astro";
           data-titles={JSON.stringify(cpiData.titles)}
           data-base-cpi={cpiData.base_cpi}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: US Bureau of Labor Statistics CPI-U · Nominal prices from Rockstar/Take-Two</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI at $79.99 is actually cheaper than GTA III in 2001, in real inflation-adjusted dollars. The data says it's a bargain." url="https://gtavi.ai/charts#cpi-chart" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="cpi-chart" sources="Source: US Bureau of Labor Statistics CPI-U · Nominal prices from Rockstar/Take-Two" shareText="GTA VI at $79.99 is actually cheaper than GTA III in 2001, in real inflation-adjusted dollars. The data says it" />
       </div>
 
 <script>

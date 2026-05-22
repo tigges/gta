@@ -2,7 +2,7 @@
 // ── Layout + component imports ────────────────────────────────────────────
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
-import ShareButton from "../components/ShareButton.astro";
+import GamePill from "../components/GamePill.astro";
 
 // ── Data imports (for header stat strip) ─────────────────────────────────
 import salesData   from "../../data/franchise/sales.json";
@@ -207,298 +207,409 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-10">
 
     <section class="chart-block" data-title="gta-vi" data-category="Community">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 text-gta-gold border-gta-gold/30">GTA VI</span>
+        <GamePill game="gta-vi" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Trailer View Velocity</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartTrailerVelocity />
     </section>
     <section class="chart-block" data-title="gta-vi" data-category="Community">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 text-gta-gold border-gta-gold/30">GTA VI</span>
+        <GamePill game="gta-vi" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Discovery Density — What Every Second Revealed</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartTrailerDiscovery />
     </section>
     <section class="chart-block" data-title="gta-vi" data-category="History">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 text-gta-gold border-gta-gold/30">GTA VI</span>
+        <GamePill game="gta-vi" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Development & Delay Timeline</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartDelayTimeline />
     </section>
     <section class="chart-block" data-title="gta-vi" data-category="Community">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 text-gta-gold border-gta-gold/30">GTA VI</span>
+        <GamePill game="gta-vi" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida Region Evidence Heatmap</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartRegionHeatmap />
     </section>
     <section class="chart-block" data-title="gta-vi" data-category="Community">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 text-gta-gold border-gta-gold/30">GTA VI</span>
+        <GamePill game="gta-vi" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Community Anticipation Curve</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartCommunity />
     </section>
     <section class="chart-block" data-title="gta-vi" data-category="History">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 text-gta-gold border-gta-gold/30">GTA VI</span>
+        <GamePill game="gta-vi" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Pre-launch Hype — GTA V (2013) vs GTA VI (2026)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartPrelaunchComparison />
     </section>
     <section class="chart-block" data-title="gta-vi" data-category="Economy-RL">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 text-gta-gold border-gta-gold/30">GTA VI</span>
+        <GamePill game="gta-vi" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Global Entertainment</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartEntertainmentComp />
     </section>
     <section class="chart-block" data-title="gta-vi" data-category="Economy-RL">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 text-gta-gold border-gta-gold/30">GTA VI</span>
+        <GamePill game="gta-vi" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Major Game Launches — Year 1 Sales & Pre-launch Hype</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartCompetitors />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Income Leaderboard — All Sources Ranked</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartIncomeLeaderboard />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Ceiling — Top $/hr Method at Each Major DLC (2013–2023)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartMetaEvolution />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA-PPI — In-Game Inflation Index (hours to buy standard basket)</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartGtaPpi />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Passive Income Stack — How Idle GTA$/hr Grew From 0 to $1.24M</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartPassiveStack />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Setup Cost vs $/hr — What's Actually Worth Buying?</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartRoiScatter />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-RL">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Shark Card Purchasing Power — 12 Years of In-Game Inflation</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartSharkCard />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Heist Comparison — $/hr vs Setup Cost vs Run Time</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartHeistComparison />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Income Source Price History — Nerfs, Buffs, DLC Launches</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartIncomeHistory />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Vehicle TCO — What Does Going Full Meta Actually Cost?</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartVehicleTco />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-RL">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Property Costs — Full Expenditure Registry</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartPropertyCost />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Property Daily Fees — Ownership Has Ongoing Costs</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartPropertyDailyFee />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Spending Mix — Where GTA$ Goes Per Era</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartSpendingDistribution />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Price &amp; Payout History — Every Nerf, Buff, and Launch Since 2013</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartPriceHistory />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Promotions">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Promotions</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Weekly Bonus Calendar — Activity Multiplier History</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartBonusHeatmap />
     </section>
     <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-gta-teal/10 text-gta-teal border-gta-teal/30">GTA Online</span>
+        <GamePill game="gta-online" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Import/Export Sell Tiers — Why Top-Range Vehicles Are 3× More Valuable</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartIeTiers />
     </section>
     <section class="chart-block" data-title="gta-v" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-400 border-zinc-700">GTA V</span>
+        <GamePill game="gta-v" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Assassination Stock Returns — Optimal Sequence</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartAssassinationReturns />
     </section>
     <section class="chart-block" data-title="gta-v" data-category="Community">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-400 border-zinc-700">GTA V</span>
+        <GamePill game="gta-v" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Players — DLC Events Overlay</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartDlcPlayerHistory />
     </section>
     <section class="chart-block" data-title="gta-v" data-category="Community">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-400 border-zinc-700">GTA V</span>
+        <GamePill game="gta-v" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Player Count — Monthly Avg & Peak</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <PlayerChart />
     </section>
     <section class="chart-block" data-title="gta-v" data-category="Community">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-400 border-zinc-700">GTA V</span>
+        <GamePill game="gta-v" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V + GTA VI Google Trends 2013–2026</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <TrendsChart />
     </section>
     <section class="chart-block" data-title="gta-v" data-category="Economy-IG">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-400 border-zinc-700">GTA V</span>
+        <GamePill game="gta-v" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mission Earnings — Full Arc</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartMissionEarnings />
     </section>
     <section class="chart-block" data-title="gta-v" data-category="Performance">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-400 border-zinc-700">GTA V</span>
+        <GamePill game="gta-v" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Performance</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Vehicle Performance — Broughy1322 Lap Times</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartVehiclePerformance />
     </section>
     <section class="chart-block" data-title="franchise" data-category="Economy-RL">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
+        <GamePill game="franchise" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Franchise Sales Velocity</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartFranchiseSales />
     </section>
     <section class="chart-block" data-title="franchise" data-category="Economy-RL">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
+        <GamePill game="franchise" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Launch Price — Nominal vs Inflation-Adjusted</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartCpiPricing />
     </section>
     <section class="chart-block" data-title="franchise" data-category="History">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
+        <GamePill game="franchise" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Critic vs User Score Divergence — The Monetisation Story</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartCriticDivergence />
     </section>
     <section class="chart-block" data-title="franchise" data-category="History">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
+        <GamePill game="franchise" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online DLC Cadence → GTA VI Online Prediction</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartDlcCadence />
     </section>
     <section class="chart-block" data-title="franchise" data-category="Economy-RL">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
+        <GamePill game="franchise" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Revenue Model — Game Sales vs Online Economy</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartRevenueSplit />
     </section>
     <section class="chart-block" data-title="franchise" data-category="Economy-RL">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
+        <GamePill game="franchise" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Take-Two (TTWO) Stock Price vs GTA VI Milestones</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartTtwoStock />
     </section>
     <section class="chart-block" data-title="franchise" data-category="History">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
+        <GamePill game="franchise" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Economic Complexity — 25 Years of Evolution</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartFranchiseComplexity />
     </section>
     <section class="chart-block" data-title="franchise" data-category="History">
+
       <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
+        <GamePill game="franchise" />
+        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Cross-Title Earnings — Max $/hr + Hours to Endgame</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
       </div>
       <ChartFranchiseEarnings />
     </section>
@@ -509,7 +620,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
 <style>
   /* Per-title left border accent on chart sections */
-  .chart-block[data-title="gta-vi"]     { border-left: 2px solid rgba(245,158,11,0.30); padding-left: 12px; }
+  .chart-block[data-title="gta-vi"]     { border-left: 2px solid rgba(255,107,157,0.30); padding-left: 12px; }
   .chart-block[data-title="gta-online"] { border-left: 2px solid rgba(13,148,136,0.25); padding-left: 12px; }
   .chart-block[data-title="gta-v"]      { border-left: 2px solid rgba(113,113,122,0.20); padding-left: 12px; }
   .chart-block[data-title="franchise"]  { border-left: 2px solid rgba(113,113,122,0.15); padding-left: 12px; }
@@ -641,46 +752,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
   // Apply title filter AFTER chart init rAFs have queued
   requestAnimationFrame(() => applyTitleFilter());
-
-  // ── Auto-inject title chips into all chart section headers ───────────────
-  // Reads data-title from each .chart-block and prepends a mini title badge
-  // before the existing category badge — zero per-chart HTML changes needed.
-  (function injectTitleChips() {
-    const TITLE_CONFIG: Record<string, { label: string; imgSrc: string | null; color: string; bg: string; border: string }> = {
-      "gta-vi":     { label: "GTA VI",    imgSrc: "/assets/logos/gta-vi.svg",     color: "#f59e0b", bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.30)" },
-      "gta-online": { label: "GTA Online",imgSrc: "/assets/logos/gta-online.svg", color: "#0d9488", bg: "rgba(13,148,136,0.08)",  border: "rgba(13,148,136,0.30)"  },
-      "gta-v":      { label: "GTA V",     imgSrc: "/assets/logos/gta-v.png",      color: "#a1a1aa", bg: "rgba(113,113,122,0.07)", border: "rgba(113,113,122,0.25)"  },
-      "franchise":  { label: "Franchise", imgSrc: null,                           color: "#a1a1aa", bg: "rgba(113,113,122,0.07)", border: "rgba(113,113,122,0.25)"  },
-    };
-
-    document.querySelectorAll<HTMLElement>(".chart-block").forEach(section => {
-      const titleKey = section.dataset.title;
-      const cfg = titleKey ? TITLE_CONFIG[titleKey] : null;
-      if (!cfg) return;
-
-      // Find the header row (flex items-center gap-3 mb-5)
-      const header = section.querySelector<HTMLElement>(".flex.items-center.gap-3.mb-5");
-      if (!header || header.querySelector(".chart-auto-title")) return;
-
-      // Build the title chip
-      const chip = document.createElement("span");
-      chip.className = "chart-auto-title inline-flex items-center gap-1.5 shrink-0";
-      chip.style.cssText = `padding:2px 7px 2px 4px;border-radius:4px;border:1px solid ${cfg.border};background:${cfg.bg};font-size:9px;font-family:monospace;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${cfg.color};white-space:nowrap`;
-
-      if (cfg.imgSrc) {
-        const img = document.createElement("img");
-        img.src   = cfg.imgSrc;
-        img.alt   = cfg.label;
-        img.style.cssText = "height:14px;width:auto;object-fit:contain;opacity:0.9;flex-shrink:0";
-        chip.appendChild(img);
-      } else {
-        chip.textContent = cfg.label;
-      }
-
-      // Insert before the first existing badge
-      header.insertBefore(chip, header.firstChild);
-    });
-  })();
 
   (function handleChartHash() {
     const hash = window.location.hash;

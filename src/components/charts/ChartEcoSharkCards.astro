@@ -6,7 +6,7 @@
  */
 import revenueData from "../../../data/franchise/revenue-split.json";
 import passiveData from "../../../data/gta-5/economy/passive-stack.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 
 const revYears      = (revenueData as any).years as any[];
 const passiveSeries = (passiveData as any).series as any[];
@@ -20,10 +20,7 @@ const passiveSeries = (passiveData as any).series as any[];
   <div id="chart-sharkcards" class="w-full" style="height:220px"
     data-years={JSON.stringify(revYears.filter((y:any) => y.calendar_year >= 2014))} data-series={JSON.stringify(passiveSeries)}
   ></div>
-  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-    <span class="text-[10px] text-zinc-500 font-mono">Source: community data · updated nightly</span>
-    <ShareButton text="GTA Online economy chart: GTA Online Endgame Cost — Real USD 2013–2026" url="https://gtavi.ai/gta-online/economy" size="sm" label="Share" />
-  </div>
+  <ChartFooter chartId="chart-sharkcards" sources="Source: community data · updated nightly" shareText="GTA Online economy chart: GTA Online Endgame Cost — Real USD 2013–2026" />
 </div>
 
 <script>

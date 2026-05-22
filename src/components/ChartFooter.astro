@@ -1,0 +1,30 @@
+---
+/**
+ * ChartFooter — shared footer for all chart card components.
+ *
+ * Renders: sources attribution (left) + ShareDropdown (right).
+ * URL is computed from Astro.url.pathname + chartId anchor.
+ * No GTAVI.AI text — the SVG watermark stamped by charts.astro covers attribution.
+ *
+ * Usage:
+ *   <ChartFooter
+ *     chartId="competitors-chart"
+ *     sources="Publisher earnings · VGChartz · Metacritic · *predicted"
+ *     shareText="GTA VI projected year-1 vs the biggest game launches..."
+ *   />
+ */
+import ShareDropdown from "./ShareDropdown.astro";
+
+interface Props {
+  chartId:   string;   // matches the D3 container div id
+  sources:   string;   // data attribution text
+  shareText: string;   // sentence for X/Reddit post
+}
+
+const { chartId, sources, shareText } = Astro.props;
+---
+
+<div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3 flex-wrap">
+  <span class="text-[10px] text-zinc-600 font-mono leading-relaxed flex-1">{sources}</span>
+  <ShareDropdown anchorId={chartId} shareText={shareText} size="sm" />
+</div>

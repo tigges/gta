@@ -5,7 +5,7 @@
  */
 import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
-import ShareButton from "../../components/ShareButton.astro";
+import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 
@@ -113,7 +113,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] font-mono text-zinc-500">Do Hotel Assassination first. Complete remaining 4 AFTER The Big Score. Reinvest between each.</span>
-          <ShareButton text="GTA V assassination strategy: do all 5 missions after The Big Score. Multi-Target + Redwood = +380% alone. Full $2B guide on GTAVI.AI." url="https://gtavi.ai/gta-v/economy" size="sm" label="Share" />
+          <ShareDropdown anchorId="economy" shareText="GTA V assassination strategy: do all 5 missions after The Big Score. Multi-Target + Redwood = +380% alone. Full $2B guide on GTAVI.AI." size="sm" />
         </div>
       </div>
     </section>

@@ -7,14 +7,8 @@
 import bonusHistoryData  from "../../../data/gta-5/economy/bonus-history.json";
 import revenueTiersData  from "../../../data/gta-5/economy/revenue-tiers.json";
 import saleFreqData       from "../../../data/gta-5/economy/sale-frequency.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-    <section class="chart-block" data-category="Promotions">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-green/30 text-gta-green border border-gta-green/40 px-2 py-0.5 rounded uppercase tracking-widest">Promotions</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Weekly Bonus Calendar — Activity Multiplier History</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{(bonusHistoryData as any).entry_count} weeks tracked · {(saleFreqData as any).date_range?.earliest?.slice(0,4)} → present</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -36,10 +30,7 @@ import ShareButton from "../ShareButton.astro";
           data-freq={JSON.stringify((saleFreqData as any).activity_bonuses)}
           style="min-height:280px"
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: Rockstar Newswire · community archives · curated seed back to 2020 · live capture every Thursday</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online bonus calendar — which activities Rockstar has promoted and how often. The promotional pattern is more predictable than you'd think." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="bonus-heatmap" sources="Source: Rockstar Newswire · community archives · curated seed back to 2020 · live capture every Thursday" shareText="GTA Online bonus calendar — which activities Rockstar has promoted and how often. The promotional pattern is more predictable than you" />
       </div>
 
 <script>

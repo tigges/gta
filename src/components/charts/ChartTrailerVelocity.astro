@@ -5,7 +5,7 @@
  * Pure data display (no D3) — renders server-side.
  */
 import velocityData from "../../../data/gta-6/trailer-velocity.json";
-import ShareButton  from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -56,8 +56,5 @@ import ShareButton  from "../ShareButton.astro";
             );
           })}
         </div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: YouTube Data API · polled {new Date(velocityData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA VI Trailer 1 holds the 24-hour YouTube record. 279M views, 161M for Trailer 2. The hype is unlike anything in gaming." url="https://gtavi.ai/charts#trailer-velocity" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="chart" sources="Source: YouTube Data API · polled {new Date(velocityData.last_updated).toLocaleDateString(&quot;en-GB&quot;,{month:&quot;short&quot;,year:&quot;numeric&quot;,hour:&quot;2-digit&quot;,minute:&quot;2-digit&quot;})}" shareText="GTA VI Trailer 1 holds the 24-hour YouTube record. 279M views, 161M for Trailer 2. The hype is unlike anything in gaming." />
       </div>

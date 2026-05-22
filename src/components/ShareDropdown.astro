@@ -1,0 +1,211 @@
+---
+/**
+ * ShareDropdown — unified share action for all cards across the site.
+ *
+ * Single trigger button → dropdown with Copy · X · Reddit · Web Share (conditional).
+ * URL is context-aware: built from Astro.url.pathname + anchorId.
+ * Replaces ShareButton.astro everywhere.
+ *
+ * Usage:
+ *   <ShareDropdown anchorId="competitors-chart" shareText="GTA VI projected year-1..." />
+ *   <ShareDropdown anchorId="pred-launch-price" shareText="GTA VI launch price: $79.99..." />
+ */
+
+interface Props {
+  anchorId: string;  // element id to anchor to (appended as #anchorId)
+  shareText: string; // sentence used for X/Reddit post body
+  size?: "sm" | "md";
+}
+
+const { anchorId, shareText, size = "sm" } = Astro.props;
+
+const pageUrl    = `${Astro.url.origin}${Astro.url.pathname}#${anchorId}`;
+const tweetUrl   = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText + "\n\n")}&url=${encodeURIComponent(pageUrl)}`;
+const redditUrl  = `https://www.reddit.com/submit?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent(shareText)}`;
+
+// Truncate URL preview for display
+const urlPreview = pageUrl.replace("https://", "").slice(0, 48) + (pageUrl.length > 53 ? "…" : "");
+
+const btnSize = size === "md" ? "px-3 py-1.5 text-[11px]" : "px-2.5 py-1 text-[10px]";
+const dropId  = `share-drop-${anchorId}`;
+---
+
+<div class="share-dropdown-wrapper relative inline-block" data-drop-id={dropId}>
+  <button
+    class={`share-dropdown-trigger inline-flex items-center gap-1.5 font-mono rounded border transition-all duration-150 ${btnSize}`}
+    style="background:#1a1a1e;border-color:#3a3a41;color:#b8b8c4"
+    data-drop-id={dropId}
+    aria-haspopup="true"
+    aria-expanded="false"
+    type="button"
+  >
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 share-arrow-icon">
+      <path d="M12 3v10M12 3l-4 4M12 3l4 4M6 17l-3 3M18 17l3 3M12 13l-6 4M12 13l6 4"/>
+    </svg>
+    <span>Share</span>
+    <svg width="8" height="8" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0">
+      <path d="M1 1l4 4 4-4"/>
+    </svg>
+  </button>
+
+  <!-- Dropdown menu — positioned above button -->
+  <div
+    id={dropId}
+    class="share-dropdown-menu absolute bottom-full right-0 mb-1.5 rounded-lg border z-50 hidden"
+    style="background:#1a1a1e;border-color:#2a2a31;box-shadow:0 8px 32px rgba(0,0,0,0.6);min-width:220px"
+    role="menu"
+  >
+    <!-- Copy link -->
+    <button
+      class="share-copy-item w-full flex items-start gap-3 px-3.5 py-2.5 hover:bg-white/[0.04] transition-colors text-left rounded-t-lg"
+      data-url={pageUrl}
+      type="button"
+      role="menuitem"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 mt-0.5 share-item-icon">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+      </svg>
+      <div>
+        <div class="text-[11px] font-mono text-zinc-200 leading-snug copy-label">Copy link</div>
+        <div class="text-[10px] font-mono text-zinc-600 leading-snug mt-0.5 truncate" style="max-width:170px">{urlPreview}</div>
+      </div>
+    </button>
+
+    <div class="h-px mx-2" style="background:#1e1e23"></div>
+
+    <!-- Post to X -->
+    <a
+      href={tweetUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-white/[0.04] transition-colors"
+      role="menuitem"
+    >
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="shrink-0 share-item-icon">
+        <path d="M4 4l16 16M4 20L20 4"/>
+      </svg>
+      <span class="text-[11px] font-mono text-zinc-200">Post to X</span>
+    </a>
+
+    <div class="h-px mx-2" style="background:#1e1e23"></div>
+
+    <!-- Post to Reddit -->
+    <a
+      href={redditUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-white/[0.04] transition-colors"
+      role="menuitem"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="shrink-0 share-item-icon">
+        <circle cx="12" cy="12" r="9"/>
+        <circle cx="9" cy="13" r="1.2" fill="currentColor" stroke="none"/>
+        <circle cx="15" cy="13" r="1.2" fill="currentColor" stroke="none"/>
+        <path d="M9.5 16a4 4 0 0 0 5 0"/>
+        <path d="M15.5 7.5a2 2 0 1 1 2 2" stroke-linecap="round"/>
+        <circle cx="17.5" cy="9.5" r="0.8" fill="currentColor" stroke="none"/>
+        <path d="M12 9.5c1.1 0 2.2.3 3 .8M12 9.5c-1.1 0-2.2.3-3 .8"/>
+      </svg>
+      <span class="text-[11px] font-mono text-zinc-200">Post to Reddit</span>
+    </a>
+
+    <!-- Web Share — rendered only if navigator.share available (via JS) -->
+    <div class="share-native-item hidden">
+      <div class="h-px mx-2" style="background:#1e1e23"></div>
+      <button
+        class="share-native-btn w-full flex items-center gap-3 px-3.5 py-2.5 hover:bg-white/[0.04] transition-colors text-left rounded-b-lg"
+        data-url={pageUrl}
+        data-text={shareText}
+        type="button"
+        role="menuitem"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 share-item-icon">
+          <path d="M12 3v10M12 3l-4 4M12 3l4 4M6 17l-3 3M18 17l3 3M12 13l-6 4M12 13l6 4"/>
+        </svg>
+        <span class="text-[11px] font-mono text-zinc-200">More apps…</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Show native share option if API available
+  if (typeof navigator !== "undefined" && navigator.share) {
+    document.querySelectorAll<HTMLElement>(".share-native-item").forEach(el => {
+      el.classList.remove("hidden");
+    });
+  }
+
+  // Identity colour on arrow icon (reads CSS var at runtime)
+  function applyIdentityColour() {
+    const identity = getComputedStyle(document.documentElement)
+      .getPropertyValue("--c-identity").trim() || "#f59e0b";
+    document.querySelectorAll<HTMLElement>(".share-arrow-icon").forEach(el => {
+      el.style.color = identity;
+    });
+    document.querySelectorAll<HTMLElement>(".share-item-icon").forEach(el => {
+      el.style.color = identity;
+    });
+  }
+  requestAnimationFrame(applyIdentityColour);
+
+  // Toggle dropdown
+  document.querySelectorAll<HTMLButtonElement>(".share-dropdown-trigger").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const dropId = btn.dataset.dropId!;
+      const menu   = document.getElementById(dropId);
+      if (!menu) return;
+      const isOpen = !menu.classList.contains("hidden");
+      // Close all others
+      document.querySelectorAll<HTMLElement>(".share-dropdown-menu").forEach(m => {
+        m.classList.add("hidden");
+        m.previousElementSibling?.setAttribute("aria-expanded","false");
+      });
+      if (!isOpen) {
+        menu.classList.remove("hidden");
+        btn.setAttribute("aria-expanded","true");
+      }
+    });
+  });
+
+  // Close on outside click
+  document.addEventListener("click", () => {
+    document.querySelectorAll<HTMLElement>(".share-dropdown-menu").forEach(m => {
+      m.classList.add("hidden");
+    });
+    document.querySelectorAll<HTMLButtonElement>(".share-dropdown-trigger").forEach(b => {
+      b.setAttribute("aria-expanded","false");
+    });
+  });
+
+  // Copy link handler
+  document.querySelectorAll<HTMLButtonElement>(".share-copy-item").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const url = btn.dataset.url!;
+      try {
+        await navigator.clipboard.writeText(url);
+        const label = btn.querySelector<HTMLElement>(".copy-label");
+        if (label) {
+          label.textContent = "Copied!";
+          setTimeout(() => { label.textContent = "Copy link"; }, 2000);
+        }
+      } catch { /* clipboard blocked */ }
+      const menu = btn.closest<HTMLElement>(".share-dropdown-menu");
+      if (menu) menu.classList.add("hidden");
+    });
+  });
+
+  // Native Web Share handler
+  document.querySelectorAll<HTMLButtonElement>(".share-native-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const url  = btn.dataset.url!;
+      const text = btn.dataset.text!;
+      try {
+        await navigator.share({ url, text });
+      } catch { /* cancelled or unsupported */ }
+    });
+  });
+})();
+</script>

@@ -5,7 +5,7 @@
  * Extracted from gta-v.astro.
  */
 import missionsData from "../../../data/gta-5/missions/story-missions.json";
-import ShareButton  from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 import { registerChart } from "../../assets/chartInit";
 const storyMissions  = (missionsData as any).missions as any[];
 const payingMissions = storyMissions.filter((m: any) => m.payout > 0);
@@ -32,10 +32,7 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
         <div id="mission-earnings-chart" class="w-full" style="height:280px"
           data-missions={JSON.stringify(storyMissions.filter((m: any) => m.payout >= 0))}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Wiki (Fandom) · community records · updated by fetch_missions.py</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V story mission earnings from start to finish. $250 at Repossession to $41.6M at The Big Score. The earning curve tells the whole story." url="https://gtavi.ai/gta-v" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="mission-earnings-chart" sources="Source: GTA Wiki (Fandom) · community records · updated by fetch_missions.py" shareText="GTA V story mission earnings from start to finish. $250 at Repossession to $41.6M at The Big Score. The earning curve tells the whole story." />
       </div>
 
 <script>

@@ -8,7 +8,7 @@ import Base from "../../../layouts/Base.astro";
 import { C_LIVE, C_GROWTH, C_BRAND, C_ALERT, C_CARD, C_TEXT_7 } from "../../../config/colors";
 import ProfitCard from "../../../components/ProfitCard.astro";
 import CrossLinks from "../../../components/CrossLinks.astro";
-import ShareButton from "../../../components/ShareButton.astro";
+import ShareDropdown from "../../../components/ShareDropdown.astro";
 import type {
   BusinessProfiles, Business, OnlineHeistsData, OnlineHeist,
   RevenueTiersData, RevenueTier, TierSource,
@@ -368,10 +368,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
             View in Database →
           </a>
           <div class="ml-auto">
-            <ShareButton
-              text={`${bizName} — ${tier}-tier GTA Online income. $${khr}k/hr${(biz as Business).solo !== false ? ' solo' : ''}. Full guide on GTAVI.AI`}
-              url={`https://gtavi.ai/gta-online/income/${id}`}
-              size="sm" label="Share" />
+            <ShareDropdown anchorId="${id}" shareText={`${bizName} — ${tier}-tier GTA Online income. $${khr}k/hr${(biz as Business).solo !== false ? ' solo' : ''}. Full guide on GTAVI.AI`} size="sm" />
           </div>
         </div>
 

@@ -4,14 +4,8 @@
  * Extracted from charts.astro.
  */
 import spendingDistData from "../../../data/gta-5/economy/spending-distribution.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-<section class="chart-block" data-title="gta-online" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Spending Mix — Where GTA$ Goes Per Era</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{(spendingDistData as any).eras.length} eras · community-modelled</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -37,10 +31,7 @@ import ShareButton from "../ShareButton.astro";
         <div id="spending-distribution-chart" class="w-full" style="height:300px"
           data-eras={JSON.stringify((spendingDistData as any).eras)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: community surveys · GTAForums spending analysis · modelled estimates · confidence: medium</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="How GTA Online players spend their money across eras: vehicles dominated 2013–14, properties peaked 2016–17 (Bunker era), then Oppressor drove vehicles back up." url="https://gtavi.ai/charts#spending-distribution-chart" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="spending-distribution-chart" sources="Source: community surveys · GTAForums spending analysis · modelled estimates · confidence: medium" shareText="How GTA Online players spend their money across eras: vehicles dominated 2013–14, properties peaked 2016–17 (Bunker era), then Oppressor drove vehicles back up." />
       </div>
 
 <script>

@@ -43,6 +43,10 @@ export default {
         'content-6':   'var(--c-text-6)',
         'content-7':   'var(--c-text-7)',
 
+        // ── Neutral label / badge ─────────────────────────────────────────
+        'badge-text':   'var(--c-badge-text)',
+        'badge-border': 'var(--c-badge-border)',
+
         // ── Category colours ──────────────────────────────────────────────
         'cat-franchise':   'var(--c-cat-franchise)',
         'cat-community':   'var(--c-cat-community)',

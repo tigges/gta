@@ -4,14 +4,8 @@
  * Extracted from charts.astro.
  */
 import heistsData from "../../../data/gta-5/economy/online-heists.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-<section class="chart-block" data-title="gta-online" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Heist Comparison — $/hr vs Setup Cost vs Run Time</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{(heistsData as any).heists.length} heists</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -29,10 +23,7 @@ import ShareButton from "../ShareButton.astro";
         <div id="heist-comparison-chart" class="w-full" style="height:320px"
           data-heists={JSON.stringify((heistsData as any).heists)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Wiki · GTABase.com · community records · 2024 patches · Hard difficulty</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="All GTA Online heists compared: Cayo Perico wins on $/hr despite being solo. Casino Heist is the best group heist. Data-driven answer to which heist is worth doing." url="https://gtavi.ai/charts#heist-comparison-chart" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="heist-comparison-chart" sources="Source: GTA Wiki · GTABase.com · community records · 2024 patches · Hard difficulty" shareText="All GTA Online heists compared: Cayo Perico wins on $/hr despite being solo. Casino Heist is the best group heist. Data-driven answer to which heist is worth doing." />
       </div>
 
 <script>
