@@ -4,6 +4,8 @@ import CrossLinks from "../../components/CrossLinks.astro";
 import ShareButton from "../../components/ShareButton.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
+import Ledger from "../../components/Ledger.astro";
+import type { LedgerEntry } from "../../components/Ledger.astro";
 
 import type {
   GtaPpiData, MetaHistoryData, RevenueTiersData, SpendingDistributionData,
@@ -108,7 +110,6 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 ---
 
 <Base
-  titleContext="gta-online"
   title="GTA Online Economy Model"
   description="A macroeconomic analysis of GTA Online's in-game circular economy — wages, spending, savings, Shark Card injections, and the GTA-PPI purchasing power index."
   ogPage="gta-v"

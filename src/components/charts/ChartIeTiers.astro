@@ -37,6 +37,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -53,9 +55,9 @@ import ShareButton from "../ShareButton.astro";
       { key: "standard", label: "Standard" },
     ];
     const deliveries = [
-      { key: "private",    label: "Private Sell",    color: "#3f3f46" },
-      { key: "showroom",   label: "Showroom",        color: "#f59e0b" },
-      { key: "specialist", label: "Specialist Dealer", color: "#22c55e" },
+      { key: "private",    label: "Private Sell",    color: cc.text7 },
+      { key: "showroom",   label: "Showroom",        color: cc.bar },
+      { key: "specialist", label: "Specialist Dealer", color: cc.green },
     ];
 
     const rowH = 52, labelW = 106;
@@ -76,7 +78,7 @@ import ShareButton from "../ShareButton.astro";
       const groupY = ti * rowH;
       // Tier label
       svg.append("text").attr("x", -8).attr("y", groupY + rowH / 2 + 4).attr("text-anchor", "end")
-        .attr("fill", "#d4d4d8").attr("font-size", "10.5").attr("font-family", "monospace").text(tier.label);
+        .attr("fill", cc.text2).attr("font-size", "10.5").attr("font-family", "monospace").text(tier.label);
 
       deliveries.forEach((del: any, di: number) => {
         const val = sellData[tier.key]?.[del.key] || 0;
@@ -85,7 +87,7 @@ import ShareButton from "../ShareButton.astro";
         svg.append("rect").attr("x", 0).attr("y", y).attr("width", x(val)).attr("height", bh)
           .attr("rx", 2).attr("fill", del.color).attr("opacity", di === 2 ? 0.85 : 0.65);
         svg.append("text").attr("x", x(val) + 5).attr("y", y + bh - 1)
-          .attr("fill", "#a1a1aa").attr("font-size", "8.5").attr("font-family", "monospace")
+          .attr("fill", cc.text4).attr("font-size", "8.5").attr("font-family", "monospace")
           .text(`$${val.toLocaleString()}`);
       });
     });
@@ -96,7 +98,7 @@ import ShareButton from "../ShareButton.astro";
       svg.append("rect").attr("x", lx).attr("y", H - margin.bottom).attr("width", 10).attr("height", 10)
         .attr("rx", 1).attr("fill", del.color).attr("opacity", 0.75);
       svg.append("text").attr("x", lx + 13).attr("y", H - margin.bottom + 9)
-        .attr("fill", "#71717a").attr("font-size", "8.5").attr("font-family", "monospace").text(del.label);
+        .attr("fill", cc.text4).attr("font-size", "8.5").attr("font-family", "monospace").text(del.label);
     });  }
 
   registerChart("ie-tiers-chart", init);

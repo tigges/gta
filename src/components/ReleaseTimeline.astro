@@ -131,6 +131,8 @@ const COVERS: Record<string, string> = {
 </div>
 
 <script>
+  import { cc } from "../assets/chartColors";
+
   import * as d3 from "d3";
 
   {
@@ -159,14 +161,14 @@ const COVERS: Record<string, string> = {
         .attr("width", x.bandwidth())
         .attr("height", H - y(d.gap))
         .attr("rx", 2)
-        .attr("fill", d.isPred ? "#f59e0b" : "#27272a")
+        .attr("fill", d.isPred ? cc.bar : cc.text7)
         .attr("opacity", d.isPred ? 0.85 : 0.7);
 
       svg.append("text")
         .attr("x", (x(d.short) ?? 0) + x.bandwidth() / 2)
         .attr("y", H + 14)
         .attr("text-anchor", "middle")
-        .attr("fill", "#52525b")
+        .attr("fill", cc.text6)
         .attr("font-size", "9")
         .attr("font-family", "monospace")
         .text(d.short);
@@ -175,7 +177,7 @@ const COVERS: Record<string, string> = {
         .attr("x", (x(d.short) ?? 0) + x.bandwidth() / 2)
         .attr("y", y(d.gap) - 3)
         .attr("text-anchor", "middle")
-        .attr("fill", d.isPred ? "#f59e0b" : "#52525b")
+        .attr("fill", d.isPred ? cc.bar : cc.text6)
         .attr("font-size", "9")
         .attr("font-family", "monospace")
         .text(`${d.gap}yr`);

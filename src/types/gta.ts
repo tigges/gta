@@ -531,6 +531,20 @@ export interface SharkCard {
   notes?: string;
 }
 
+export interface SharkCardAnalysis {
+  launch_endgame_usd: number;
+  current_endgame_usd: number;
+  purchasing_power_ratio: number;
+  years_span: number;
+  summary?: string;
+}
+
+export interface SharkCardCostPoint {
+  date: string;
+  endgame_cost_usd: number;
+  dlc?: string;
+}
+
 export interface SharkCardsData {
   last_updated: string;
   source: string;
@@ -538,6 +552,8 @@ export interface SharkCardsData {
   best_value_card?: string;
   best_gta_per_usd?: number;
   cards: SharkCard[];
+  endgame_cost_history?: SharkCardCostPoint[];
+  analysis?: SharkCardAnalysis;
 }
 
 // ── Per-source history (per-source-history.json) ─────────────────────────────

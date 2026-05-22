@@ -47,6 +47,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -91,19 +93,19 @@ import ShareButton from "../ShareButton.astro";
       // Grid
       svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
         .call(g=>g.select(".domain").remove())
-        .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+        .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
       // Area
       const defs = svg.append("defs");
       const grad = defs.append("linearGradient").attr("id","ihs-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-      grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.25);
-      grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.01);
+      grad.append("stop").attr("offset","0%").attr("stop-color",cc.bar).attr("stop-opacity",0.25);
+      grad.append("stop").attr("offset","100%").attr("stop-color",cc.bar).attr("stop-opacity",0.01);
 
       svg.append("path").datum(extDates.map((d,i)=>({d,v:extVals[i]})))
         .attr("fill","url(#ihs-grad)")
         .attr("d",d3.area<any>().x(d=>x(d.d)).y0(H).y1(d=>y(d.v)).curve(d3.curveStepAfter));
       svg.append("path").datum(extDates.map((d,i)=>({d,v:extVals[i]})))
-        .attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",2)
+        .attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",2)
         .attr("d",d3.line<any>().x(d=>x(d.d)).y(d=>y(d.v)).curve(d3.curveStepAfter));
 
       // Event markers + nerf/buff coloring
@@ -113,8 +115,8 @@ import ShareButton from "../ShareButton.astro";
         const prev = tl[i-1];
         const isNerf = prev && event.gta_per_hr < prev.gta_per_hr;
         const isBuff = prev && event.gta_per_hr > prev.gta_per_hr;
-        const col = isNerf ? "#ef4444" : isBuff ? "#22c55e" : "#f59e0b";
-        svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",6).attr("fill",col).attr("stroke","#131316").attr("stroke-width",2);
+        const col = isNerf ? cc.red : isBuff ? cc.green : cc.bar;
+        svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",6).attr("fill",col).attr("stroke",cc.card).attr("stroke-width",2);
 
         // Value label
         const fmt = (v:number) => v>=1000000 ? `$${(v/1000000).toFixed(1)}M/hr` : `$${(v/1000).toFixed(0)}k/hr`;
@@ -123,12 +125,12 @@ import ShareButton from "../ShareButton.astro";
 
       // Axes
       svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(tl.length).tickFormat(d3.timeFormat("%Y") as any))
-        .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-        .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-        .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+        .call(g=>g.select(".domain").attr("stroke",cc.border2))
+        .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+        .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
       svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d:any)=>`$${Math.round(+d/1000)}k`))
-        .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-        .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+        .call(g=>g.select(".domain").attr("stroke",cc.border2))
+        .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
 
       // Events table
       eventsEl.innerHTML = tl.map((event:any, i:number) => {

@@ -43,6 +43,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -113,7 +115,7 @@ import ShareButton from "../ShareButton.astro";
       if (yr !== lastYear) {
         svg.append("text")
           .attr("x", i * cellW + cellW / 2).attr("y", -6)
-          .attr("text-anchor", "middle").attr("fill", "#52525b")
+          .attr("text-anchor", "middle").attr("fill", cc.text6)
           .attr("font-size", "9").attr("font-family", "monospace")
           .text(yr);
         lastYear = yr;
@@ -124,7 +126,7 @@ import ShareButton from "../ShareButton.astro";
     activities.forEach((aid: string, j: number) => {
       svg.append("text")
         .attr("x", -8).attr("y", j * cellH + cellH / 2 + 4)
-        .attr("text-anchor", "end").attr("fill", "#71717a")
+        .attr("text-anchor", "end").attr("fill", cc.text4)
         .attr("font-size", "10").attr("font-family", "monospace")
         .text((LABELS[aid] || aid).slice(0, 22));
     });
@@ -134,9 +136,9 @@ import ShareButton from "../ShareButton.astro";
       weekStarts.forEach((ws: string, i: number) => {
         const mult = weekMap[ws]?.[aid];
         const fill = !mult ? "#111114"
-                   : mult >= 3 ? "#f59e0b"
+                   : mult >= 3 ? cc.bar
                    : "#f59e0b60";
-        const border = !mult ? "#1e1e23" : mult >= 3 ? "#f59e0b" : "#f59e0b80";
+        const border = !mult ? cc.grid : mult >= 3 ? cc.bar : "#f59e0b80";
         svg.append("rect")
           .attr("x", i * cellW + 1).attr("y", j * cellH + 1)
           .attr("width", cellW - 2).attr("height", cellH - 2)
@@ -146,7 +148,7 @@ import ShareButton from "../ShareButton.astro";
           svg.append("text")
             .attr("x", i * cellW + cellW / 2).attr("y", j * cellH + cellH / 2 + 3.5)
             .attr("text-anchor", "middle").attr("dominant-baseline", "middle")
-            .attr("fill", "#09090b").attr("font-size", "7").attr("font-family", "monospace")
+            .attr("fill", cc.bgDeep).attr("font-size", "7").attr("font-family", "monospace")
             .attr("font-weight", "bold").text("3×");
         }
       });

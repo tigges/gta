@@ -33,6 +33,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -60,7 +62,7 @@ import ShareButton from "../ShareButton.astro";
     // Grid
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
     games.forEach(g => {
       const bx = x(g.id) ?? 0, bw = x.bandwidth();
@@ -81,47 +83,47 @@ import ShareButton from "../ShareButton.astro";
           .attr("width",bw*0.8).attr("height",y(lo)-y(hi)).attr("rx",2)
           .attr("fill",g.color).attr("opacity",0.12);
         svg.append("text").attr("x",bx+bw/2).attr("y",y(hi)-4)
-          .attr("text-anchor","middle").attr("fill","#71717a").attr("font-size","8").attr("font-family","monospace")
+          .attr("text-anchor","middle").attr("fill",cc.text4).attr("font-size","8").attr("font-family","monospace")
           .text(`${g.prediction_range.low}–${g.prediction_range.high}M`);
       }
 
       // Units label
       svg.append("text").attr("x",bx+bw/2).attr("y",y(units)-(isPred?24:5))
-        .attr("text-anchor","middle").attr("fill",isPred?g.color:"#a1a1aa")
+        .attr("text-anchor","middle").attr("fill",isPred?g.color:cc.text4)
         .attr("font-size",isPred?"11":"10").attr("font-family","monospace").attr("font-weight",isPred?"700":"400")
         .text(isPred?`~${units}M*`:`${units}M`);
 
       // Search dot on right axis
       if (g.search_t12) {
         svg.append("circle").attr("cx",bx+bw/2).attr("cy",y2(g.search_t12)).attr("r",isPred?7:5)
-          .attr("fill",isPred?g.color:"#0d9488").attr("opacity",isPred?0.9:0.7)
-          .attr("stroke","#0e0e11").attr("stroke-width",1);
+          .attr("fill",isPred?g.color:cc.teal).attr("opacity",isPred?0.9:0.7)
+          .attr("stroke",cc.bg).attr("stroke-width",1);
         svg.append("text").attr("x",bx+bw/2).attr("y",y2(g.search_t12)-8)
-          .attr("text-anchor","middle").attr("fill","#0d9488").attr("font-size","8").attr("font-family","monospace")
+          .attr("text-anchor","middle").attr("fill",cc.teal).attr("font-size","8").attr("font-family","monospace")
           .text(`${g.search_t12}`);
       }
 
       // Title label
       svg.append("text").attr("x",-8).attr("y",H+30).attr("text-anchor","end")
         .attr("transform",`translate(${bx+bw/2},0) rotate(-35,0,${H+30})`)
-        .attr("fill",isPred?g.color:"#71717a").attr("font-size","10").attr("font-family","monospace")
+        .attr("fill",isPred?g.color:cc.text4).attr("font-size","10").attr("font-family","monospace")
         .text(g.title.length>16?g.title.slice(0,15)+"…":g.title);
     });
 
     // Right axis — search index
     svg.append("g").attr("transform",`translate(${W},0)`)
       .call(d3.axisRight(y2).ticks(5))
-      .call(g=>g.select(".domain").attr("stroke","#0d9488"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#0d9488").attr("opacity",0.2))
-      .call(g=>g.selectAll("text").attr("fill","#0d9488").attr("font-size","9").attr("font-family","monospace").attr("dx","3"));
+      .call(g=>g.select(".domain").attr("stroke",cc.teal))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.teal).attr("opacity",0.2))
+      .call(g=>g.selectAll("text").attr("fill",cc.teal).attr("font-size","9").attr("font-family","monospace").attr("dx","3"));
     svg.append("text").attr("x",W+44).attr("y",-8)
-      .attr("fill","#0d9488").attr("font-size","8").attr("font-family","monospace").text("search");
+      .attr("fill",cc.teal).attr("font-size","8").attr("font-family","monospace").text("search");
 
     // Left axis
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>`${d}M`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
     }
 
   // Register with chartInit so ChartPreviewCard can force-init on expand

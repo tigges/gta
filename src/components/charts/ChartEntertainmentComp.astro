@@ -36,6 +36,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -48,8 +50,8 @@ import ShareButton from "../ShareButton.astro";
       JSON.parse(el.dataset.entries || "[]");
 
     const TYPE_COLORS: Record<string,string> = {
-      film: "#60a5fa", game: "#f59e0b", concert: "#a78bfa",
-      platform: "#22c55e", other: "#71717a",
+      film: "#60a5fa", game: cc.bar, concert: cc.purple,
+      platform: cc.green, other: cc.text4,
     };
 
     const margin = { top: 8, right: 80, bottom: 32, left: 220 };
@@ -66,7 +68,7 @@ import ShareButton from "../ShareButton.astro";
 
     entries.forEach((e, i) => {
       const y = i * (barH + gap);
-      const color = TYPE_COLORS[e.type] ?? "#71717a";
+      const color = TYPE_COLORS[e.type] ?? cc.text4;
       const isPred = e.is_prediction;
 
       svg.append("rect").attr("x", 0).attr("y", y)
@@ -78,7 +80,7 @@ import ShareButton from "../ShareButton.astro";
       // Name label (left)
       svg.append("text").attr("x", -8).attr("y", y + barH/2)
         .attr("text-anchor","end").attr("dominant-baseline","middle")
-        .attr("fill", isPred ? color : "#d4d4d8").attr("font-size","11").attr("font-family","monospace")
+        .attr("fill", isPred ? color : cc.text2).attr("font-size","11").attr("font-family","monospace")
         .text(e.name.length > 28 ? e.name.slice(0,27)+"…" : e.name);
 
       // Value label (right)
@@ -90,15 +92,15 @@ import ShareButton from "../ShareButton.astro";
       // Type badge
       svg.append("text").attr("x", 6).attr("y", y + barH/2)
         .attr("dominant-baseline","middle")
-        .attr("fill","#09090b").attr("font-size","8").attr("font-family","monospace").attr("font-weight","700")
+        .attr("fill",cc.bgDeep).attr("font-size","8").attr("font-family","monospace").attr("font-weight","700")
         .text(e.type.toUpperCase());
     });
 
     svg.append("g").attr("transform",`translate(0,${H+4})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat(d => `$${d}B`))
-      .call(g=>g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g=>g.selectAll("text").attr("fill","#52525b").attr("font-size","10").attr("font-family","monospace"));
+      .call(g=>g.select(".domain").attr("stroke",cc.border2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","10").attr("font-family","monospace"));
     }
 
   // Register with chartInit so ChartPreviewCard can force-init on expand

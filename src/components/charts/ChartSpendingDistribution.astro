@@ -44,6 +44,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -55,10 +57,10 @@ import ShareButton from "../ShareButton.astro";
     if (!eras.length) return;
 
     const CATS = [
-      { key: "vehicles_pct",     color: "#f59e0b", label: "Vehicles" },
-      { key: "properties_pct",   color: "#0d9488", label: "Properties" },
-      { key: "weapons_pct",      color: "#ef4444", label: "Weapons" },
-      { key: "shark_equiv_pct",  color: "#818cf8", label: "Shark equiv." },
+      { key: "vehicles_pct",     color: cc.bar, label: "Vehicles" },
+      { key: "properties_pct",   color: cc.teal, label: "Properties" },
+      { key: "weapons_pct",      color: cc.red, label: "Weapons" },
+      { key: "shark_equiv_pct",  color: cc.indigo, label: "Shark equiv." },
     ];
 
     const margin = { top: 20, right: 16, bottom: 56, left: 40 };
@@ -75,7 +77,7 @@ import ShareButton from "../ShareButton.astro";
     // Grid
     [25, 50, 75, 100].forEach(v => {
       svg.append("line").attr("x1", 0).attr("x2", W).attr("y1", y(v)).attr("y2", y(v))
-        .attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3");
+        .attr("stroke", cc.grid).attr("stroke-dasharray", "3,3");
     });
 
     // 100% stacked bars per era
@@ -90,7 +92,7 @@ import ShareButton from "../ShareButton.astro";
         // Label inside bar if big enough
         if (pct >= 8) {
           svg.append("text").attr("x", xv + x.bandwidth() / 2).attr("y", y(bottom + pct / 2) + 4)
-            .attr("text-anchor", "middle").attr("fill", "#fff").attr("font-size", "8.5").attr("font-family", "monospace")
+            .attr("text-anchor", "middle").attr("fill", cc.text0).attr("font-size", "8.5").attr("font-family", "monospace")
             .attr("opacity", 0.9).text(`${pct}%`);
         }
         bottom += pct;
@@ -100,14 +102,14 @@ import ShareButton from "../ShareButton.astro";
     // X axis
     svg.append("g").attr("transform", `translate(0,${H})`)
       .call(d3.axisBottom(x).tickFormat((d: any) => (d as string).split(" ")[0]))
-      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "8.5").attr("font-family", "monospace")
+      .call(g => g.select(".domain").attr("stroke", cc.border2))
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call(g => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "8.5").attr("font-family", "monospace")
         .attr("transform", "rotate(-30)").attr("text-anchor", "end").attr("dy", "0.3em").attr("dx", "-0.4em"));
     // Y axis
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat((d: any) => `${d}%`))
       .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));  }
+      .call(g => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "9").attr("font-family", "monospace"));  }
 
   registerChart("spending-distribution-chart", init);
   if ("IntersectionObserver" in window) {

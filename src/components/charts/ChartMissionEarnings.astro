@@ -39,6 +39,8 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -65,13 +67,13 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
     // Gridlines
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(() => ""))
       .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g => g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
 
     // Area under line
     const defs = svg.append("defs");
     const grad = defs.append("linearGradient").attr("id","me-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-    grad.append("stop").attr("offset","0%").attr("stop-color","#f59e0b").attr("stop-opacity",0.15);
-    grad.append("stop").attr("offset","100%").attr("stop-color","#f59e0b").attr("stop-opacity",0.01);
+    grad.append("stop").attr("offset","0%").attr("stop-color",cc.bar).attr("stop-opacity",0.15);
+    grad.append("stop").attr("offset","100%").attr("stop-color",cc.bar).attr("stop-opacity",0.01);
 
     const line = d3.line<any>()
       .x((d, i) => x(i))
@@ -80,7 +82,7 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
 
     svg.append("path").datum(paying).attr("fill","url(#me-grad)")
       .attr("d", d3.area<any>().x((d,i) => x(i)).y0(H).y1(d => y(Math.max(d.payout||0,100))).curve(d3.curveMonotoneX));
-    svg.append("path").datum(paying).attr("fill","none").attr("stroke","#f59e0b").attr("stroke-width",1.5)
+    svg.append("path").datum(paying).attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",1.5)
       .attr("d", line);
 
     // Stock mission diamonds
@@ -89,7 +91,7 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
         svg.append("polygon")
           .attr("points", `0,-6 6,0 0,6 -6,0`)
           .attr("transform", `translate(${x(i)},${y(Math.max(m.payout,100))})`)
-          .attr("fill","#f59e0b").attr("opacity",0.9);
+          .attr("fill",cc.bar).attr("opacity",0.9);
       }
     });
 
@@ -99,26 +101,26 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
       const bi = paying.indexOf(bigScore);
       const bx = x(bi), by = y(bigScore.payout);
       svg.append("line").attr("x1",bx).attr("x2",bx).attr("y1",by+8).attr("y2",H)
-        .attr("stroke","#f59e0b").attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
-      svg.append("text").attr("x",bx+4).attr("y",by-4).attr("fill","#f59e0b")
+        .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
+      svg.append("text").attr("x",bx+4).attr("y",by-4).attr("fill",cc.bar)
         .attr("font-size","9").attr("font-family","monospace").text("The Big Score");
     }
 
     // Axes
     svg.append("g").attr("transform",`translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat(d => `Mission ${d}`))
-      .call(g => g.select(".domain").attr("stroke","#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke","#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      .call(g => g.select(".domain").attr("stroke",cc.border2))
+      .call(g => g.selectAll(".tick line").attr("stroke",cc.border2))
+      .call(g => g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
 
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickFormat(d => `$${Number(d)>=1000000?`${(Number(d)/1000000).toFixed(0)}M`:Number(d)>=1000?`${(Number(d)/1000).toFixed(0)}k`:String(d)}`))
       .call(g => g.select(".domain").remove())
       .call(g => g.selectAll(".tick line").remove())
-      .call(g => g.selectAll("text").attr("fill","#52525b").attr("font-size","9").attr("font-family","monospace"));
+      .call(g => g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
 
     // GTAVI.AI watermark
     svg.append("text").attr("x",W-4).attr("y",H-6)
-      .attr("text-anchor","end").attr("fill","#27272a").attr("font-size","8").attr("font-family","monospace")
+      .attr("text-anchor","end").attr("fill",cc.text7).attr("font-size","8").attr("font-family","monospace")
       .text("GTAVI.AI");  }
 
   registerChart("mission-earnings-chart", init);

@@ -41,6 +41,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -69,15 +71,15 @@ import ShareButton from "../ShareButton.astro";
     const maxCost = (d3.max(sorted, (v: any) => v.total_cost_standard) ?? 1) as number;
     const x = d3.scaleLinear().domain([0, maxCost * 1.05]).range([0, W]);
 
-    const COLORS = { buy: "#52525b", upgrade: "#f59e0b", weapons: "#ef4444", armour: "#0d9488" };
+    const COLORS = { buy: cc.text6, upgrade: cc.bar, weapons: cc.red, armour: cc.teal };
 
     // Axis grid lines (light)
     [0.25, 0.5, 0.75, 1.0].forEach(frac => {
       const xv = x(maxCost * frac);
       svg.append("line").attr("x1", xv).attr("x2", xv).attr("y1", 0).attr("y2", sorted.length * rowH)
-        .attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3");
+        .attr("stroke", cc.grid).attr("stroke-dasharray", "3,3");
       svg.append("text").attr("x", xv).attr("y", -6).attr("text-anchor", "middle")
-        .attr("fill", "#3f3f46").attr("font-size", "9").attr("font-family", "monospace")
+        .attr("fill", cc.text7).attr("font-size", "9").attr("font-family", "monospace")
         .text(`$${((maxCost * frac) / 1e6).toFixed(1)}M`);
     });
 
@@ -106,28 +108,28 @@ import ShareButton from "../ShareButton.astro";
         const tx = x(v.total_cost_trade);
         svg.append("line")
           .attr("x1", tx).attr("x2", tx).attr("y1", y - 3).attr("y2", y + bh + 3)
-          .attr("stroke", "#818cf8").attr("stroke-width", 1.5).attr("stroke-dasharray", "4,2");
+          .attr("stroke", cc.indigo).attr("stroke-width", 1.5).attr("stroke-dasharray", "4,2");
       }
 
       // Total cost label
       const tot = v.total_cost_standard;
       const totTxt = tot >= 1e6 ? `$${(tot / 1e6).toFixed(2)}M` : `$${Math.round(tot / 1000)}k`;
       svg.append("text").attr("x", xOff + 6).attr("y", y + bh / 2 + 4)
-        .attr("fill", "#a1a1aa").attr("font-size", "9").attr("font-family", "monospace")
+        .attr("fill", cc.text4).attr("font-size", "9").attr("font-family", "monospace")
         .text(totTxt);
 
       // Vehicle name label
       const label = v.name.length > 24 ? v.name.slice(0, 23) + "…" : v.name;
       svg.append("text").attr("x", -8).attr("y", y + bh / 2 + 4).attr("text-anchor", "end")
-        .attr("fill", "#d4d4d8").attr("font-size", "10").attr("font-family", "monospace")
+        .attr("fill", cc.text2).attr("font-size", "10").attr("font-family", "monospace")
         .text(label);
     });
 
     // Trade price legend
     svg.append("line").attr("x1", W + 4).attr("x2", W + 16).attr("y1", -6).attr("y2", -6)
-      .attr("stroke", "#818cf8").attr("stroke-width", 1.5).attr("stroke-dasharray", "4,2");
+      .attr("stroke", cc.indigo).attr("stroke-width", 1.5).attr("stroke-dasharray", "4,2");
     svg.append("text").attr("x", W + 19).attr("y", -2)
-      .attr("fill", "#818cf8").attr("font-size", "8.5").attr("font-family", "monospace")
+      .attr("fill", cc.indigo).attr("font-size", "8.5").attr("font-family", "monospace")
       .text("trade");  }
 
   registerChart("vehicle-tco-chart", init);

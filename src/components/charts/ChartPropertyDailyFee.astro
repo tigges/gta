@@ -30,6 +30,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -76,24 +78,24 @@ import ShareButton from "../ShareButton.astro";
       const y = i * rowH + 6;
       const bh = rowH - 14;
       const isMeta = ["bunker", "nightclub", "mc-business", "acid-lab"].includes(item.type);
-      const col = isMeta ? "#f59e0b" : "#3f3f46";
+      const col = isMeta ? cc.bar : cc.text7;
 
       svg.append("rect").attr("x", 0).attr("y", y).attr("width", x(item.maxFee)).attr("height", bh)
         .attr("rx", 2).attr("fill", col).attr("opacity", 0.65);
 
       svg.append("text").attr("x", -8).attr("y", y + bh / 2 + 4).attr("text-anchor", "end")
-        .attr("fill", "#d4d4d8").attr("font-size", "10").attr("font-family", "monospace").text(item.label);
+        .attr("fill", cc.text2).attr("font-size", "10").attr("font-family", "monospace").text(item.label);
 
       const annualised = `$${Math.round(item.maxFee * 365 / 1000)}k/yr`;
       svg.append("text").attr("x", x(item.maxFee) + 6).attr("y", y + bh / 2 + 4)
-        .attr("fill", "#a1a1aa").attr("font-size", "9").attr("font-family", "monospace")
+        .attr("fill", cc.text4).attr("font-size", "9").attr("font-family", "monospace")
         .text(`$${item.maxFee.toLocaleString()}/day  (${annualised})`);
     });
 
     // Total stack label
     const totalDay = items.reduce((s: number, i: any) => s + i.maxFee, 0);
     svg.append("text").attr("x", W + 124).attr("y", items.length * rowH / 2 + 8).attr("text-anchor", "end")
-      .attr("fill", "#71717a").attr("font-size", "9").attr("font-family", "monospace")
+      .attr("fill", cc.text4).attr("font-size", "9").attr("font-family", "monospace")
       .text(`Stack total: $${totalDay.toLocaleString()}/day`);  }
 
   registerChart("property-daily-fee-chart", init);

@@ -43,6 +43,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -56,8 +58,8 @@ import ShareButton from "../ShareButton.astro";
     tiers.forEach((t: any) => t.sources.forEach((s: any) => sources.push({ ...s, tierColor: t.color, tier: t.tier })));
     sources.sort((a: any, b: any) => b.gta_per_hr - a.gta_per_hr);
     const PLAY_COLOR: Record<string,string> = {
-      heist:"#818cf8", passive:"#22c55e", semi:"#f59e0b", active:"#ef4444",
-      mc:"#f59e0b", ceo:"#f59e0b", business:"#0d9488", smuggling:"#0d9488",
+      heist:cc.indigo, passive:cc.green, semi:cc.bar, active:cc.red,
+      mc:cc.bar, ceo:cc.bar, business:cc.teal, smuggling:cc.teal,
     };
     const margin = { top:8, right:120, bottom:8, left:190 };
     const rowH = 34;
@@ -69,13 +71,13 @@ import ShareButton from "../ShareButton.astro";
     const x = d3.scaleLinear().domain([0, d3.max(sources,(s:any)=>s.gta_per_hr)??1]).range([0,W]);
     svg.append("g").call(d3.axisBottom(x).ticks(4).tickSize(sources.length*rowH).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
     let lastTier = "";
     sources.forEach((s:any) => {
       const yt = sources.indexOf(s) * rowH;
       const bh = rowH * 0.7;
       const yOff = rowH * 0.15;
-      const barColor = PLAY_COLOR[s.type] ?? "#71717a";
+      const barColor = PLAY_COLOR[s.type] ?? cc.text4;
       if (s.tier !== lastTier) {
         svg.append("text").attr("x",-margin.left+4).attr("y",yt+bh/2+yOff+3)
           .attr("fill",s.tierColor).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold").text(s.tier);
@@ -84,13 +86,13 @@ import ShareButton from "../ShareButton.astro";
       svg.append("rect").attr("x",0).attr("y",yt+yOff).attr("width",x(s.gta_per_hr)).attr("height",bh)
         .attr("rx",3).attr("fill",barColor).attr("opacity",0.8);
       svg.append("text").attr("x",-6).attr("y",yt+bh/2+yOff+4).attr("text-anchor","end")
-        .attr("fill","#b8b8c4").attr("font-size","10").attr("font-family","monospace")
+        .attr("fill",cc.text3).attr("font-size","10").attr("font-family","monospace")
         .text(s.name.length>24 ? s.name.slice(0,23)+"…" : s.name);
       svg.append("text").attr("x",x(s.gta_per_hr)+6).attr("y",yt+bh/2+yOff+4)
         .attr("fill",barColor).attr("font-size","10").attr("font-family","monospace").attr("font-weight","bold")
         .text(`$${Math.round(s.gta_per_hr/1000)}k/hr`);
       if (s.solo) svg.append("text").attr("x",x(s.gta_per_hr)+64).attr("y",yt+bh/2+yOff+4)
-        .attr("fill","#0d9488").attr("font-size","8").attr("font-family","monospace").text("solo");
+        .attr("fill",cc.teal).attr("font-size","8").attr("font-family","monospace").text("solo");
     });
     }
 

@@ -45,6 +45,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -58,7 +60,7 @@ import ShareButton from "../ShareButton.astro";
 
     const KEYS = ["bunker", "nightclub", "mc_cocaine", "acid_lab"];
     const COLORS: Record<string, string> = {
-      bunker: "#f59e0b", nightclub: "#0d9488", mc_cocaine: "#818cf8", acid_lab: "#22c55e",
+      bunker: cc.bar, nightclub: cc.teal, mc_cocaine: cc.indigo, acid_lab: cc.green,
     };
 
     const margin = { top: 20, right: 16, bottom: 60, left: 72 };
@@ -76,7 +78,7 @@ import ShareButton from "../ShareButton.astro";
     // Grid
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
       .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.grid).attr("stroke-dasharray", "3,3"));
 
     // Stacked bars (manual stack since D3.stack needs numeric keys)
     series.forEach((s: any) => {
@@ -94,7 +96,7 @@ import ShareButton from "../ShareButton.astro";
       if (s.total > 0) {
         const label = s.total >= 1e6 ? `$${(s.total / 1e6).toFixed(2)}M` : `$${Math.round(s.total / 1000)}k`;
         svg.append("text").attr("x", (x(s.date) ?? 0) + x.bandwidth() / 2).attr("y", y(s.total) - 4)
-          .attr("text-anchor", "middle").attr("fill", "#a1a1aa").attr("font-size", "8.5").attr("font-family", "monospace")
+          .attr("text-anchor", "middle").attr("fill", cc.text4).attr("font-size", "8.5").attr("font-family", "monospace")
           .text(label);
       }
     });
@@ -102,14 +104,14 @@ import ShareButton from "../ShareButton.astro";
     // X axis with patch year labels
     svg.append("g").attr("transform", `translate(0,${H})`)
       .call(d3.axisBottom(x).tickFormat((d: any) => d.slice(0, 4)))
-      .call(g => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "8.5").attr("font-family", "monospace")
+      .call(g => g.select(".domain").attr("stroke", cc.border2))
+      .call(g => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call(g => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "8.5").attr("font-family", "monospace")
         .attr("transform", "rotate(-35)").attr("text-anchor", "end").attr("dx", "-0.5em").attr("dy", "0.2em"));
     // Y axis
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `$${Math.round(+d / 1000)}k`))
       .call(g => g.select(".domain").remove()).call(g => g.selectAll(".tick line").remove())
-      .call(g => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "9").attr("font-family", "monospace"));
+      .call(g => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "9").attr("font-family", "monospace"));
     }
 
   // Register with chartInit so ChartPreviewCard can force-init on expand

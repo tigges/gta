@@ -29,6 +29,8 @@ import ShareButton from "../ShareButton.astro";
       </div>
 
 <script>
+  import { cc } from "../../assets/chartColors";
+
   import * as d3 from "d3";
   import { registerChart } from "../../assets/chartInit";
 
@@ -77,7 +79,7 @@ import ShareButton from "../ShareButton.astro";
     types.forEach(([type, v], i) => {
       const y = i * rowH + rowH * 0.15;
       const bh = rowH * 0.7;
-      const color = v.income ? "#f59e0b" : "#3f3f46";
+      const color = v.income ? cc.bar : cc.text7;
       const barW = Math.max(2, x(v.max));
       const barMin = x(v.min);
 
@@ -89,7 +91,7 @@ import ShareButton from "../ShareButton.astro";
 
       // Label
       svg.append("text").attr("x",-8).attr("y",y+bh/2+4).attr("text-anchor","end")
-        .attr("fill", v.income ? "#d4d4d8" : "#71717a").attr("font-size","10").attr("font-family","monospace")
+        .attr("fill", v.income ? cc.text2 : cc.text4).attr("font-size","10").attr("font-family","monospace")
         .text(TYPE_LABELS[type] || type);
 
       // Price range

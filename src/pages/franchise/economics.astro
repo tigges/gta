@@ -11,6 +11,8 @@ import ShareButton from "../../components/ShareButton.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import ChartPreviewCard from "../../components/charts/ChartPreviewCard.astro";
+import Ledger from "../../components/Ledger.astro";
+import type { LedgerEntry } from "../../components/Ledger.astro";
 
 import type { EconomyModelsData, FranchiseSalesData } from "../../types/gta";
 
@@ -50,7 +52,6 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
 ---
 
 <Base
-  titleContext="franchise"
   title="Franchise Economics — Ten Economies. One Franchise."
   description="The complete GTA franchise economic arc from score counter to live MMT sovereign. Every title's circular economy mapped, compared, and contextualised against real-world macroeconomic analogues."
   ogPage="franchise"
@@ -58,7 +59,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
 
   <!-- Hero -->
   <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:280px">
-    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 20% 60%, var(--c-hero-bloom) 0%, transparent 55%), #0a0a0d"></div>
+    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 20% 60%, rgba(245,158,11,0.04) 0%, transparent 55%), #0a0a0d"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-4">
         <span class="text-[11px] font-mono bg-gta-gold/30 border border-gta-gold/40 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">GTA Series · Complete Economic History 1997–2026</span>
@@ -93,7 +94,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="identity-dot"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Complexity — Full Franchise Timeline 1997–2026</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>

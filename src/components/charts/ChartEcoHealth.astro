@@ -76,7 +76,7 @@ const revYears   = (revenueData as any).years as any[];
       }
     }
     dl(yieldData,"date",d=>(d.top_gta_per_hr/maxYield)*5,cc.bar);
-    dl(revenue.filter((d:any)=>d.calendar_year>=2013),"calendar_year",d=>(d.recurrent_bn/maxRev)*4,"#fb923c");
+    dl(revenue.filter((d:any)=>d.calendar_year>=2013),"calendar_year",d=>(d.recurrent_bn/maxRev)*4,cc.orange);
     dl(passive.filter((s:any)=>s.total>0),"date",d=>(d.total/maxPass)*3,cc.green);
     dl(ppiSeries,"date",d=>((maxPPI-d.ppi)/maxPPI)*5,cc.indigo,true);
     svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))
