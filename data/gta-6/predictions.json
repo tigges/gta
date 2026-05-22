@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-05-21T00:00:00+00:00",
+  "last_updated": "2026-05-22T00:00:00+00:00",
   "note": "All predictions are community-derived. Not affiliated with Rockstar Games or Take-Two Interactive.",
   "schema_version": "2.0",
   "predictions": [
@@ -300,6 +300,131 @@
       "outcome_date": null,
       "source": "GTAVI.AI Economic Model Analysis",
       "source_type": "predicted"
+    },
+    {
+      "id": "pred-vi-shark-card-launch-price",
+      "title": "GTA VI Megalodon Shark Card launch price",
+      "value": "$99.99",
+      "unit": "USD",
+      "confidence": 55,
+      "confidence_tier": "predicted",
+      "basis": "GTA Online's Megalodon Shark Card has been $99.99 since 2013. CPI adjustment to 2026 (~35% inflation) implies a real-terms equivalent of ~$135, suggesting a nominal increase is economically justified. Take-Two has historically kept nominal prices flat while engineering real-terms inflation via payout nerfs. A price increase at the launch of a new title would be the cleanest reset point.",
+      "trailer_timestamp": null,
+      "prediction_method": "economic-model",
+      "prediction_inputs": [
+        "franchise/cpi.json → CPI-adjusted price trend 2013–2026",
+        "shark-cards.json → endgame_cost_history",
+        "shark-cards.json → analysis.purchasing_power_ratio"
+      ],
+      "prediction_range": {
+        "low": "$99.99 (nominal flat continuation)",
+        "high": "$119.99 (CPI reset)"
+      },
+      "outcome_verified": false,
+      "outcome_actual": null,
+      "outcome_date": null,
+      "source": "GTAVI.AI Economic Model Analysis — franchise/cpi.json + shark-cards.json",
+      "source_type": "predicted"
+    },
+    {
+      "id": "pred-vi-launch-top-yield",
+      "title": "GTA VI Online — top hourly yield at launch",
+      "value": "~$3M–5M GTA$/hr",
+      "unit": "GTA$/hr",
+      "confidence": 40,
+      "confidence_tier": "predicted",
+      "basis": "GTA Online launched at ~$250K/hr in 2013 and reached $2M/hr (Cayo Perico, 2020) before nerfs. The 8× yield growth over 7 years reflects both inflation and content scaling. GTA VI Online inherits the MMT sovereign model at a structurally higher yield floor. Historical nerf cadence suggests yields above $5M/hr are politically unsustainable for Rockstar's Shark Card model.",
+      "trailer_timestamp": null,
+      "prediction_method": "economic-model",
+      "prediction_inputs": [
+        "meta-history.json → yield progression 2013–2026",
+        "revenue-tiers.json → current S-tier yield floor",
+        "shark-cards.json → Shark Card / real-income equilibrium"
+      ],
+      "prediction_range": {
+        "low": "$2M/hr (continuation of current GTA Online S-tier floor)",
+        "high": "$8M/hr (new heist format with full MMT rebalancing)"
+      },
+      "outcome_verified": false,
+      "outcome_actual": null,
+      "outcome_date": null,
+      "source": "GTAVI.AI Economic Model Analysis — meta-history.json + revenue-tiers.json",
+      "source_type": "predicted"
+    },
+    {
+      "id": "pred-vi-endgame-shark-cost",
+      "title": "GTA VI endgame cost via Shark Cards at 12 months",
+      "value": "~$600–$900 USD",
+      "unit": "USD",
+      "confidence": 35,
+      "confidence_tier": "predicted",
+      "basis": "GTA Online's endgame cost via Shark Cards grew from ~$18.75 (2013) to ~$437.50 (2026) — a 23× increase over 13 years. GTA VI Online starts with a reset baseline but inherits the same structural incentive to expand the aspirational item stack. The $600–$900 range assumes a 30–100% premium over GTA Online's current endgame.",
+      "trailer_timestamp": null,
+      "prediction_method": "economic-model",
+      "prediction_inputs": [
+        "shark-cards.json → endgame_cost_history + analysis",
+        "item-catalogue.json → price inflation rate per patch era",
+        "meta-history.json → nerf cadence"
+      ],
+      "prediction_range": {
+        "low": "$437.50 (flat continuation of GTA Online ceiling)",
+        "high": "$1,200 (new high-tier aspirational vehicles + regional DLC stack)"
+      },
+      "outcome_verified": false,
+      "outcome_actual": null,
+      "outcome_date": null,
+      "source": "GTAVI.AI Economic Model Analysis — shark-cards.json endgame projection",
+      "source_type": "predicted"
+    },
+    {
+      "id": "pred-vi-first-nerf",
+      "title": "First major payout nerf within 6 months of GTA VI Online launch",
+      "value": "First nerf within 6 months",
+      "unit": null,
+      "confidence": 78,
+      "confidence_tier": "predicted",
+      "basis": "GTA Online has delivered a major payout nerf within 6–18 months of every high-yield activity launch since 2015. Structural incentive: high yields suppress Shark Card sales. The question is not if GTA VI nerfs occur, but when.",
+      "trailer_timestamp": null,
+      "prediction_method": "economic-model",
+      "prediction_inputs": [
+        "meta-history.json → nerf cadence 2013–2026",
+        "shark-cards.json → Shark Card revenue correlation with yield",
+        "bonus-history.json → patch event frequency"
+      ],
+      "prediction_range": {
+        "low": "3 months (if yield is high enough to threaten Shark Card revenue immediately)",
+        "high": "18 months (if Rockstar delays for goodwill at launch window)"
+      },
+      "outcome_verified": false,
+      "outcome_actual": null,
+      "outcome_date": null,
+      "source": "GTAVI.AI Economic Model Analysis — meta-history.json nerf cadence",
+      "source_type": "predicted"
+    },
+    {
+      "id": "pred-vi-weekly-event-cadence",
+      "title": "GTA VI Online weekly event frequency matches GTA Online",
+      "value": "Weekly bonus rotation from launch",
+      "unit": null,
+      "confidence": 88,
+      "confidence_tier": "reported",
+      "basis": "Weekly bonus events are the primary live-service engagement loop in GTA Online, operating continuously since 2017. Take-Two earnings reports consistently cite live events as a key monetisation driver. The weekly event cadence is a structural feature of the MMT sovereign model.",
+      "trailer_timestamp": null,
+      "prediction_method": "economic-model",
+      "prediction_inputs": [
+        "weekly-bonuses.json → current event format",
+        "bonus-history.json → 42+ weeks of cadence data",
+        "sale-frequency.json → activity bonus frequency analysis"
+      ],
+      "prediction_range": {
+        "low": "Bi-weekly events (reduced cadence at launch)",
+        "high": "Weekly from Day 1 (continuation of GTA Online model)"
+      },
+      "outcome_verified": false,
+      "outcome_actual": null,
+      "outcome_date": null,
+      "source": "GTAVI.AI Economic Model Analysis — bonus-history.json cadence analysis",
+      "source_type": "reported"
     }
   ]
 }
