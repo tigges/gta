@@ -77,10 +77,13 @@ const isProjected = (economy as any).projected;
         Franchise avg
       </span>
     </div>
-    <ShareDropdown
-      anchorId={`radar-${titleId}`}
-      shareText={`GTA economic complexity: ${economy.short ?? economy.title_name} scores ${complexityScore}/17. Circular flow, capital market, passive income, inflation, and sovereign complexity visualised.`}
-      size="sm" />
+    <div class="flex items-center gap-2">
+      <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <ShareDropdown
+        anchorId={`radar-${titleId}`}
+        shareText={`GTA economic complexity: ${economy.short ?? economy.title_name} scores ${complexityScore}/17. Circular flow, capital market, passive income, inflation, and sovereign complexity visualised.`}
+        size="sm" />
+    </div>
   </div>
 </div>
 

@@ -29,5 +29,8 @@ const sectionAnchor = `section-${chartId}`;
 
 <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3 flex-wrap">
   <span class="text-[10px] text-zinc-600 font-mono leading-relaxed flex-1">{sources}</span>
-  <ShareDropdown anchorId={sectionAnchor} shareText={shareText} size="sm" />
+  <div class="flex items-center gap-2 shrink-0">
+    <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+    <ShareDropdown anchorId={sectionAnchor} shareText={shareText} size="sm" />
+  </div>
 </div>
