@@ -6,6 +6,7 @@
  * Decision 3: Both — inline browser AND per-title pages.
  */
 import Base from "../../layouts/Base.astro";
+import { C_LIVE, C_GROWTH, C_ALERT, C_BRAND, C_CARD, C_TEXT_7, C_CHART_PURPLE, C_BG_DEEP } from "../../config/colors";
 import CrossLinks from "../../components/CrossLinks.astro";
 import ShareButton from "../../components/ShareButton.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
@@ -59,7 +60,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
 
   <!-- Hero -->
   <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:280px">
-    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 20% 60%, rgba(245,158,11,0.04) 0%, transparent 55%), #0a0a0d"></div>
+    <div class="absolute inset-0" style={`background:radial-gradient(ellipse at 20% 60%, rgba(245,158,11,0.04) 0%, transparent 55%), ${C_BG_DEEP}`}></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-4">
         <span class="text-[11px] font-mono bg-gta-gold/30 border border-gta-gold/40 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">GTA Series · Complete Economic History 1997–2026</span>
@@ -77,7 +78,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
           { value: "30",  label: "years of franchise",   sub: "GTA 1 → GTA VI" },
           { value: "4",   label: "real-world analogues", sub: "feudal → Eurozone" },
         ].map(s => (
-          <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
+          <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style={`background:${C_CARD}`}>
             <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
             <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug">{s.label}</div>
             <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{s.sub}</div>
@@ -98,7 +99,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Complexity — Full Franchise Timeline 1997–2026</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
         <div class="px-5 py-4 border-b border-[#1e1e23]">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5">Economic Complexity — Full Franchise Arc</div>
           <div class="text-[11px] font-mono text-zinc-400">Composite score: circular flow · capital market · passive income · inflation · sovereign complexity</div>
@@ -106,7 +107,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
         <!-- Bar chart from economy-models data -->
         <div id="complexity-arc-chart" class="w-full" style="height:280px"
              data-economies={JSON.stringify(economies.map((e: any) => ({
-               short: e.short, score: e.complexity_score, projected: e.projected, regression: e.regression_era ?? false, color: e.projected ? "#f59e0b" : e.regression_era ? "#ef4444" : "#0d9488"
+               short: e.short, score: e.complexity_score, projected: e.projected, regression: e.regression_era ?? false, color: e.projected ? C_BRAND : e.regression_era ? C_ALERT : C_LIVE
              })))}>
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
@@ -124,7 +125,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// All Economies — Overview</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
         <div class="overflow-x-auto">
           <table class="w-full text-xs font-mono" style="min-width:700px">
             <thead>
@@ -141,7 +142,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
             <tbody>
               {economies.map((e: any) => {
                 const pct = Math.round((e.complexity_score / maxComplexity) * 100);
-                const color = e.projected ? "#f59e0b" : e.regression_era ? "#ef4444" : "#0d9488";
+                const color = e.projected ? C_BRAND : e.regression_era ? C_ALERT : C_LIVE;
                 const pageUrl = ECONOMY_PAGES[e.title_id];
                 const Row = (
                   <tr class="border-b border-[#1e1e23]/50 hover:bg-white/[0.02] transition-colors">
@@ -159,22 +160,22 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
                     </td>
                     <td class="px-3 py-2.5 text-zinc-300 text-[10px] leading-snug max-w-[140px]">{e.economy_type}</td>
                     <td class="px-3 py-2.5 text-center">
-                      <span class="text-[11px]" style={`color:${e.dimension_scores.circular_flow > 0 ? "#0d9488" : "#3f3f46"}`}>
+                      <span class="text-[11px]" style={`color:${e.dimension_scores.circular_flow > 0 ? C_LIVE : C_TEXT_7}`}>
                         {"●".repeat(e.dimension_scores.circular_flow)}{"○".repeat(4 - e.dimension_scores.circular_flow)}
                       </span>
                     </td>
                     <td class="px-3 py-2.5 text-center">
-                      <span class="text-[11px]" style={`color:${e.dimension_scores.capital_market > 0 ? "#a78bfa" : "#3f3f46"}`}>
+                      <span class="text-[11px]" style={`color:${e.dimension_scores.capital_market > 0 ? C_CHART_PURPLE : C_TEXT_7}`}>
                         {"●".repeat(e.dimension_scores.capital_market)}{"○".repeat(4 - e.dimension_scores.capital_market)}
                       </span>
                     </td>
                     <td class="px-3 py-2.5 text-center">
-                      <span class="text-[11px]" style={`color:${e.dimension_scores.passive_income > 0 ? "#22c55e" : "#3f3f46"}`}>
+                      <span class="text-[11px]" style={`color:${e.dimension_scores.passive_income > 0 ? C_GROWTH : C_TEXT_7}`}>
                         {"●".repeat(e.dimension_scores.passive_income)}{"○".repeat(4 - e.dimension_scores.passive_income)}
                       </span>
                     </td>
                     <td class="px-3 py-2.5 text-center">
-                      <span class="text-[11px]" style={`color:${e.dimension_scores.inflation > 0 ? "#ef4444" : "#3f3f46"}`}>
+                      <span class="text-[11px]" style={`color:${e.dimension_scores.inflation > 0 ? C_ALERT : C_TEXT_7}`}>
                         {"●".repeat(e.dimension_scores.inflation)}{"○".repeat(4 - e.dimension_scores.inflation)}
                       </span>
                     </td>

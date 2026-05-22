@@ -7,6 +7,7 @@
  * Entirely client-side, no backend needed.
  */
 import ShareButton from "./ShareButton.astro";
+import { C_LIVE, C_GROWTH, C_BRAND, C_ALERT, C_ECONOMY } from "../config/colors";
 
 interface Props {
   businesses: any[];
@@ -68,7 +69,7 @@ const ownableBusinesses = businesses.filter(b =>
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-2">
                 <span class="text-[11px] font-mono text-zinc-300 group-hover:text-zinc-100 transition-colors truncate">{b.name}</span>
-                <span class="text-[11px] font-mono shrink-0" style={`color:${b.play_type === 'passive' ? '#22c55e' : b.play_type === 'semi-passive' ? '#f59e0b' : b.play_type === 'heist' || b.category === 'heist' || b.category === 'contract' ? '#818cf8' : '#ef4444'}`}>
+                <span class="text-[11px] font-mono shrink-0" style={`color:${b.play_type === 'passive' ? C_GROWTH : b.play_type === 'semi-passive' ? C_BRAND : b.play_type === 'heist' || b.category === 'heist' || b.category === 'contract' ? C_ECONOMY : C_ALERT}`}>
                   ${Math.round(b.net_profit_per_hr/1000)}k/hr
                 </span>
               </div>

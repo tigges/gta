@@ -1,12 +1,10 @@
 ---
+// ── Layout + component imports ────────────────────────────────────────────
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 import ShareButton from "../components/ShareButton.astro";
 
 // ── Data imports (for header stat strip) ─────────────────────────────────
-import Base from "../layouts/Base.astro";
-import CrossLinks from "../components/CrossLinks.astro";
-import ShareButton from "../components/ShareButton.astro";
 import salesData   from "../../data/franchise/sales.json";
 import steamData   from "../../data/gta-5/meta/steam-players.json";
 import dlcData     from "../../data/gta-5/dlc/timeline.json";
@@ -400,14 +398,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
       </div>
       <ChartAssassinationReturns />
     </section>
-    <section class="chart-block" data-title="franchise" data-category="Economy-RL">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Franchise Sales Velocity</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-      </div>
-      <ChartFranchiseSales />
-    </section>
     <section class="chart-block" data-title="gta-v" data-category="Community">
       <div class="flex items-center gap-3 mb-5">
         <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-400 border-zinc-700">GTA V</span>
@@ -447,6 +437,14 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
       <ChartVehiclePerformance />
+    </section>
+    <section class="chart-block" data-title="franchise" data-category="Economy-RL">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-zinc-800 text-zinc-500 border-zinc-700">Franchise</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Franchise Sales Velocity</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <ChartFranchiseSales />
     </section>
     <section class="chart-block" data-title="franchise" data-category="Economy-RL">
       <div class="flex items-center gap-3 mb-5">

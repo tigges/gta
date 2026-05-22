@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import { C_LIVE, C_GROWTH, C_CARD, C_BG_DEEP } from "../../config/colors";
 import ShareButton from "../../components/ShareButton.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
 import Ledger from "../../components/Ledger.astro";
@@ -50,7 +51,7 @@ const bonusLedgerEntries: LedgerEntry[] = [
 
   <!-- Hero -->
   <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:180px">
-    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 70% 50%, rgba(34,197,94,0.07) 0%, transparent 55%), #0a0a0d"></div>
+    <div class="absolute inset-0" style={`background:radial-gradient(ellipse at 70% 50%, rgba(34,197,94,0.07) 0%, transparent 55%), ${C_BG_DEEP}`}></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-start justify-between flex-wrap gap-4">
         <div>
@@ -73,7 +74,7 @@ const bonusLedgerEntries: LedgerEntry[] = [
 
     <!-- This week's bonuses + sales -->
     {(bonuses.length > 0 || sales.length > 0) && (
-      <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
         <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
           <div class="flex items-center gap-2">
             <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
@@ -89,7 +90,7 @@ const bonusLedgerEntries: LedgerEntry[] = [
             {bonuses.length === 0 && <div class="px-5 py-3 text-[10px] font-mono text-zinc-500">No bonuses this week</div>}
             {bonuses.map((b: any) => (
               <div class="px-5 py-3 flex items-center gap-3">
-                <span class="text-[11px] font-mono font-bold w-6 shrink-0" style="color:#0d9488">{b.multiplier}×</span>
+                <span class="text-[11px] font-mono font-bold w-6 shrink-0" style={`color:${C_LIVE}`}>{b.multiplier}×</span>
                 <span class="text-xs font-mono text-zinc-300 capitalize flex-1">{(b.activity_id as string).replace(/-/g," ")}</span>
               </div>
             ))}
@@ -99,7 +100,7 @@ const bonusLedgerEntries: LedgerEntry[] = [
             {sales.length === 0 && <div class="px-5 py-3 text-[10px] font-mono text-zinc-500">No sales this week</div>}
             {sales.map((s: any) => (
               <div class="px-5 py-3 flex items-center gap-3">
-                <span class="text-[11px] font-mono font-bold shrink-0" style="color:#22c55e">{s.discount_pct}%</span>
+                <span class="text-[11px] font-mono font-bold shrink-0" style={`color:${C_GROWTH}`}>{s.discount_pct}%</span>
                 <span class="text-xs font-mono text-zinc-300 flex-1">{s.item_description}</span>
               </div>
             ))}
@@ -110,7 +111,7 @@ const bonusLedgerEntries: LedgerEntry[] = [
 
     <!-- Most-bonused activities -->
     {topActivities.length > 0 && (
-      <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
         <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
           <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Most Frequently Bonused Activities</span>
           <a href="/charts#bonus-heatmap" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">Heatmap →</a>
@@ -126,7 +127,7 @@ const bonusLedgerEntries: LedgerEntry[] = [
                 </div>
                 <div class="shrink-0">
                   {daysSince !== null && daysSince < 8
-                    ? <span class="text-[11px] font-mono px-1.5 py-0.5 rounded" style="color:#22c55e;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3)">ACTIVE NOW</span>
+                    ? <span class="text-[11px] font-mono px-1.5 py-0.5 rounded" style={`color:${C_GROWTH};background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3)`}>ACTIVE NOW</span>
                     : <span class="text-[10px] font-mono text-zinc-600">{daysSince}d ago</span>
                   }
                 </div>
@@ -147,7 +148,7 @@ const bonusLedgerEntries: LedgerEntry[] = [
     )}
 
     <!-- Last week's winner banner (populated by JS) -->
-    <div id="lb-winner-banner" class="hidden mb-6 rounded-xl border border-gta-gold/30 overflow-hidden" style="background:#131316">
+    <div id="lb-winner-banner" class="hidden mb-6 rounded-xl border border-gta-gold/30 overflow-hidden" style={`background:${C_CARD}`}>
       <div class="px-5 py-3 border-b border-gta-gold/15 flex items-center gap-2">
         <span class="text-[11px] font-mono text-gta-gold/70 uppercase tracking-widest">Last Week's Winner</span>
         <div class="flex-1 h-px bg-gta-gold/10"></div>
@@ -181,7 +182,7 @@ const bonusLedgerEntries: LedgerEntry[] = [
     </div>
 
     <!-- Leaderboard table -->
-    <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+    <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
 
       <!-- Loading state -->
       <div id="lb-loading" class="py-16 text-center">
@@ -208,7 +209,7 @@ const bonusLedgerEntries: LedgerEntry[] = [
     <div id="lb-pagination" class="hidden flex justify-center gap-2 mt-6"></div>
 
     <!-- Call to action -->
-    <div class="mt-8 rounded-xl border border-gta-teal/20 p-5 flex items-center justify-between flex-wrap gap-4" style="background:#131316">
+    <div class="mt-8 rounded-xl border border-gta-teal/20 p-5 flex items-center justify-between flex-wrap gap-4" style={`background:${C_CARD}`}>
       <div>
         <div class="text-[10px] font-mono text-gta-teal/60 uppercase tracking-widest mb-1">Want to appear here?</div>
         <div class="text-sm font-semibold text-zinc-200">Build your income stack on GTA V → Income Adviser and opt in</div>

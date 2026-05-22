@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import { C_LIVE, C_GROWTH, C_CARD, C_BG_DEEP } from "../config/colors";
 import CrossLinks from "../components/CrossLinks.astro";
 import ChartMetaEvolution    from "../components/charts/ChartMetaEvolution.astro";
 import ChartIncomeLeaderboard from "../components/charts/ChartIncomeLeaderboard.astro";
@@ -60,7 +61,7 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
   <!-- Hero -->
   <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:320px">
     <div class="absolute inset-0"
-         style="background:radial-gradient(ellipse at 30% 50%, rgba(13,148,136,0.12) 0%, transparent 60%), linear-gradient(135deg, #0a0a0d 0%, #0e1a0e 40%, #0a0a0d 100%)">
+         style={`background:radial-gradient(ellipse at 30% 50%, rgba(13,148,136,0.12) 0%, transparent 60%), linear-gradient(135deg, ${C_BG_DEEP} 0%, #0e1a0e 40%, ${C_BG_DEEP} 100%)`}>
     </div>
     <!-- Subtle grid texture -->
     <div class="absolute inset-0 opacity-[0.03]"
@@ -80,12 +81,12 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
         <!-- Live snapshot -->
         <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-zinc-600">
           <span>
-            <span class="font-bold text-sm" style="color:#0d9488">${Math.round(topGph / 1000)}k/hr</span>
+            <span class="font-bold text-sm" style={`color:${C_LIVE}`}>${Math.round(topGph / 1000)}k/hr</span>
             <span class="ml-1">top method</span>
           </span>
           {hasBonuses && bonuses[0] && (
             <span>
-              <span class="font-bold text-sm" style="color:#22c55e">{bonuses[0].multiplier}×</span>
+              <span class="font-bold text-sm" style={`color:${C_GROWTH}`}>{bonuses[0].multiplier}×</span>
               <span class="ml-1 capitalize">{(bonuses[0].activity_id as string).replace(/-/g, " ")} this week</span>
             </span>
           )}
@@ -106,13 +107,13 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
       <!-- Economy -->
       <a href="/gta-online/economy"
          class="group rounded-xl border border-[#1e1e23] hover:border-gta-teal/50 p-5 flex flex-col gap-3 transition-all hover:bg-gta-teal/[0.06]"
-         style="background:#131316">
+         style={`background:${C_CARD}`}>
         <div class="text-xl">📊</div>
         <div>
           <div class="font-semibold text-zinc-200 text-sm mb-1">Economy Model</div>
           <div class="text-[10px] font-mono text-zinc-600 leading-relaxed">GTA-PPI · inflation · passive income stack · shark card analysis</div>
         </div>
-        <div class="mt-auto text-[10px] font-mono transition-colors" style="color:#0d9488">
+        <div class="mt-auto text-[10px] font-mono transition-colors" style={`color:${C_LIVE}`}>
           <span class="group-hover:text-gta-teal transition-colors">Explore model →</span>
         </div>
       </a>
@@ -120,7 +121,7 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
       <!-- Income Sources -->
       <a href="/database?game=gta-online"
          class="group rounded-xl border border-[#1e1e23] hover:border-gta-gold/50 p-5 flex flex-col gap-3 transition-all hover:bg-gta-gold/[0.04]"
-         style="background:#131316">
+         style={`background:${C_CARD}`}>
         <div class="text-xl">💰</div>
         <div>
           <div class="font-semibold text-zinc-200 text-sm mb-1">Income Sources</div>
@@ -132,7 +133,7 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
       <!-- Bonuses & Promos -->
       <a href="/gta-online/bonuses"
          class="group rounded-xl border border-[#1e1e23] hover:border-gta-green/50 p-5 flex flex-col gap-3 transition-all hover:bg-gta-green/[0.05]"
-         style="background:#131316">
+         style={`background:${C_CARD}`}>
         <div class="text-xl">🏷</div>
         <div>
           <div class="font-semibold text-zinc-200 text-sm mb-1">Bonuses & Promos</div>
@@ -147,7 +148,7 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
 
     <!-- This week live strip -->
     {hasBonuses && (
-      <div class="mb-12 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="mb-12 rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
         <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
           <div class="flex items-center gap-2">
             <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
@@ -158,7 +159,7 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
         <div class="divide-y divide-[#1e1e23]">
           {bonuses.slice(0, 4).map((b: any) => (
             <div class="px-5 py-3 flex items-center gap-3">
-              <span class="text-[11px] font-mono font-bold w-5 shrink-0" style="color:#0d9488">{b.multiplier}×</span>
+              <span class="text-[11px] font-mono font-bold w-5 shrink-0" style={`color:${C_LIVE}`}>{b.multiplier}×</span>
               <span class="text-xs font-mono text-zinc-300 capitalize flex-1">
                 {(b.activity_id as string).replace(/-/g, " ")}
               </span>
@@ -167,7 +168,7 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
           ))}
           {sales.slice(0, 3).map((s: any) => (
             <div class="px-5 py-3 flex items-center gap-3">
-              <span class="text-[11px] font-mono font-bold w-5 shrink-0" style="color:#22c55e">{s.discount_pct}%</span>
+              <span class="text-[11px] font-mono font-bold w-5 shrink-0" style={`color:${C_GROWTH}`}>{s.discount_pct}%</span>
               <span class="text-xs font-mono text-zinc-300 flex-1">{s.item_description}</span>
               <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">off</span>
             </div>
@@ -177,7 +178,7 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
     )}
 
     <!-- Top income method callout -->
-    <div class="mb-12 rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+    <div class="mb-12 rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
       <div class="px-5 py-3 border-b border-[#1e1e23]">
         <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Current meta ceiling</span>
       </div>
@@ -188,7 +189,7 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
         </div>
         <div class="ml-auto text-right">
           <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Net $/hr</div>
-          <div class="text-3xl font-mono font-black" style="color:#0d9488">${Math.round(topGph / 1000)}k</div>
+          <div class="text-3xl font-mono font-black" style={`color:${C_LIVE}`}>${Math.round(topGph / 1000)}k</div>
         </div>
         <a href="/database?game=gta-online"
            class="w-full sm:w-auto px-4 py-2 rounded border border-gta-teal/30 text-gta-teal text-xs font-mono hover:bg-gta-teal/20 transition-all text-center">

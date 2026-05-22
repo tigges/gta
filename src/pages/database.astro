@@ -157,10 +157,30 @@ const GTA5_TIER_LABELS: Record<string,string> = {
 
 const CONFIDENCE_TIERS = ["confirmed","reported","indexed"] as const;
 
+// active = tier IS included in results (framed/highlighted)
+// ghost  = tier filtered out (no border, dim)
 const TIER_META = {
-  confirmed: { label:"Confirmed", color:"text-gta-gold",  badge:"bg-gta-gold/10 border-gta-gold/25"  },
-  reported:  { label:"Reported",  color:"text-zinc-300",  badge:"bg-zinc-800 border-zinc-700"        },
-  indexed:   { label:"Indexed",   color:"text-zinc-600",  badge:"bg-zinc-900 border-zinc-800"        },
+  confirmed: {
+    label: "Confirmed",
+    color: "text-gta-gold",
+    badge: "bg-gta-gold/10 border-gta-gold/25",
+    active: "border border-gta-gold/40 bg-gta-gold/10 text-gta-gold",
+    ghost:  "border border-transparent bg-transparent text-zinc-700",
+  },
+  reported: {
+    label: "Reported",
+    color: "text-zinc-300",
+    badge: "bg-zinc-800 border-zinc-700",
+    active: "border border-zinc-600 bg-zinc-800/60 text-zinc-300",
+    ghost:  "border border-transparent bg-transparent text-zinc-700",
+  },
+  indexed: {
+    label: "Indexed",
+    color: "text-zinc-500",
+    badge: "bg-zinc-900 border-zinc-800",
+    active: "border border-zinc-700/60 bg-zinc-900/60 text-zinc-500",
+    ghost:  "border border-transparent bg-transparent text-zinc-700",
+  },
 };
 
 const TYPE_META: Record<string,{icon:string;label:string}> = {
@@ -344,7 +364,7 @@ const HEIST_THUMBS: Record<string, string> = {
           {CONFIDENCE_TIERS.map(tier => {
             const meta = TIER_META[tier];
             return (
-              <button class={`db-tier-filter px-2.5 py-1 rounded text-[11px] font-mono border uppercase tracking-widest transition-all ${meta.badge} ${meta.color}`} data-tier={tier} data-active="true">
+              <button class={`db-tier-filter px-2.5 py-1 rounded text-[11px] font-mono uppercase tracking-widest transition-all ${meta.active}`} data-tier={tier} data-active="true">
                 {meta.label}
               </button>
             );
@@ -960,14 +980,33 @@ const HEIST_THUMBS: Record<string, string> = {
     });
   });
 
-  // ── GTA VI tier filter ────────────────────────────────────────────────────
+  // ── GTA VI tier filter (ghost/framed toggle) ─────────────────────────────
+  const TIER_ACTIVE_CLASSES: Record<string, string[]> = {
+    confirmed: ["border","border-gta-gold/40","bg-gta-gold/10","text-gta-gold"],
+    reported:  ["border","border-zinc-600","bg-zinc-800/60","text-zinc-300"],
+    indexed:   ["border","border-zinc-700/60","bg-zinc-900/60","text-zinc-500"],
+  };
+  const TIER_GHOST_CLASSES = ["border","border-transparent","bg-transparent","text-zinc-700"];
+
   document.querySelectorAll<HTMLButtonElement>(".db-tier-filter").forEach(btn => {
     btn.addEventListener("click", () => {
       const tier = btn.dataset.tier!;
-      const active = btn.dataset.active === "true";
-      btn.dataset.active = active ? "false" : "true";
-      btn.style.opacity = active ? "0.35" : "1";
-      if (active) activeTiers.delete(tier); else activeTiers.add(tier);
+      const wasActive = btn.dataset.active === "true";
+      const nowActive = !wasActive;
+      btn.dataset.active = nowActive ? "true" : "false";
+      btn.style.opacity = "";
+
+      // Swap class sets
+      const activeSet = TIER_ACTIVE_CLASSES[tier] ?? [];
+      if (nowActive) {
+        TIER_GHOST_CLASSES.forEach(c => btn.classList.remove(c));
+        activeSet.forEach(c => btn.classList.add(c));
+      } else {
+        activeSet.forEach(c => btn.classList.remove(c));
+        TIER_GHOST_CLASSES.forEach(c => btn.classList.add(c));
+      }
+
+      if (wasActive) activeTiers.delete(tier); else activeTiers.add(tier);
       currentPage = 0;
       renderGta6();
     });

@@ -5,6 +5,7 @@
  */
 import priceChangesData from "../../../data/gta-5/economy/price-changes.json";
 import ShareButton from "../ShareButton.astro";
+import { C_GROWTH, C_ALERT } from "../../config/colors";
 ---
 
 <section class="chart-block" data-title="gta-online" data-category="Economy-IG">
@@ -23,8 +24,8 @@ import ShareButton from "../ShareButton.astro";
             <div class="text-[11px] text-zinc-500 font-mono">Every documented nerf, buff, and item launch. Green = increase / launch. Red = nerf. Gray ring = mechanical change (same price, reduced value).</div>
           </div>
           <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-500 flex-wrap">
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#22c55e"></span>Buff / Launch</span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#ef4444"></span>Nerf</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full inline-block" style={`background:${C_GROWTH}`}></span>Buff / Launch</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full inline-block" style={`background:${C_ALERT}`}></span>Nerf</span>
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full inline-block border" style="background:transparent;border-color:#71717a"></span>Mechanical nerf</span>
           </div>
         </div>
