@@ -15,6 +15,18 @@ const titles    = (salesData as any).titles as any[];
 const scores    = ((metacriticData as any).titles as any[]);
 const releases  = (releasesData as any).releases as any[];
 const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.total_m);
+
+// Cover images by game id (used in both tables)
+const COVERS: Record<string, string> = {
+  "gta-1":  "/assets/covers/gta-1.jpg",
+  "gta-2":  "/assets/covers/gta-2.jpg",
+  "gta-3":  "/assets/covers/gta-3.jpg",
+  "gta-vc": "/assets/covers/gta-vc.jpg",
+  "gta-sa": "/assets/covers/gta-sa.jpg",
+  "gta-4":  "/assets/covers/gta-4.jpg",
+  "gta-5":  "/assets/covers/gta-5.jpg",
+  "gta-6":  "/assets/covers/gta-6.jpg",
+};
 ---
 
 <Base
@@ -64,16 +76,25 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
                 </tr>
               </thead>
               <tbody>
-                {scores.filter((t: any) => t.metacritic_score).sort((a: any, b: any) => b.release_year - a.release_year).map((t: any) => (
-                  <tr class="border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors">
+                {scores.filter((t: any) => t.critic_score).sort((a: any, b: any) => b.year - a.year).map((t: any) => (
+                  <tr class="border-b border-[#1e1e23]/50 hover:bg-white/[0.02] transition-colors">
                     <td class="px-5 py-3">
-                      <div class="font-semibold text-zinc-200">{t.short ?? t.id}</div>
-                      <div class="text-[11px] text-zinc-500">{t.platform ?? ""}</div>
+                      <div class="flex items-center gap-3">
+                        {COVERS[t.id] && (
+                          <img src={COVERS[t.id]} alt={t.short}
+                               class="w-8 h-11 object-cover rounded border border-[#2a2a31] shrink-0"
+                               loading="lazy" />
+                        )}
+                        <div>
+                          <div class="font-semibold text-zinc-200">{t.short ?? t.id}</div>
+                          <div class="text-[10px] font-mono text-zinc-600">{t.platform ?? ""}</div>
+                        </div>
+                      </div>
                     </td>
-                    <td class="px-3 py-3 text-right text-zinc-500">{t.release_year}</td>
+                    <td class="px-3 py-3 text-right text-zinc-500">{t.year}</td>
                     <td class="px-3 py-3 text-right">
-                      <span class="font-bold" style={`color:${t.metacritic_score >= 95 ? C_GROWTH : t.metacritic_score >= 85 ? C_BRAND : C_LIVE}`}>
-                        {t.metacritic_score}
+                      <span class="font-bold text-sm" style={`color:${t.critic_score >= 95 ? C_GROWTH : t.critic_score >= 85 ? C_BRAND : C_LIVE}`}>
+                        {t.critic_score}
                       </span>
                     </td>
                     <td class="px-5 py-3 text-right text-zinc-500">{t.user_score ?? "—"}</td>
@@ -114,10 +135,22 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
           <thead>
             <tr class="border-b border-[#1e1e23]">
               <th class="text-left px-5 py-2.5 text-zinc-600 font-normal">Title</th>
-              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">NA</th>
-              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">EU</th>
-              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">JP</th>
-              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Other</th>
+              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">
+                <span class="text-base leading-none" title="North America">🇺🇸</span>
+                <span class="text-[10px] ml-1">NA</span>
+              </th>
+              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">
+                <span class="text-base leading-none" title="Europe">🇪🇺</span>
+                <span class="text-[10px] ml-1">EU</span>
+              </th>
+              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">
+                <span class="text-base leading-none" title="Japan">🇯🇵</span>
+                <span class="text-[10px] ml-1">JP</span>
+              </th>
+              <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">
+                <span class="text-base leading-none" title="Rest of World">🌍</span>
+                <span class="text-[10px] ml-1">Other</span>
+              </th>
               <th class="text-right px-5 py-2.5 text-zinc-600 font-normal">Total</th>
             </tr>
           </thead>
@@ -126,17 +159,26 @@ const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.t
               const totalMax = Math.max(...vgTitles.map((x: any) => x.total_m));
               const barPct = Math.round((t.total_m / totalMax) * 100);
               return (
-                <tr class="border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors">
+                <tr class="border-b border-[#1e1e23]/50 hover:bg-white/[0.02] transition-colors">
                   <td class="px-5 py-3">
-                    <div class="text-zinc-200 font-semibold mb-1">{t.short}</div>
-                    <div class="h-1 rounded-full bg-[#1e1e23] overflow-hidden w-24">
-                      <div class="h-full rounded-full bg-gta-gold/60" style={`width:${barPct}%`}></div>
+                    <div class="flex items-center gap-3">
+                      {COVERS[t.id] && (
+                        <img src={COVERS[t.id]} alt={t.short}
+                             class="w-8 h-11 object-cover rounded border border-[#2a2a31] shrink-0"
+                             loading="lazy" />
+                      )}
+                      <div>
+                        <div class="text-zinc-200 font-semibold">{t.short}</div>
+                        <div class="h-1 rounded-full bg-[#1e1e23] overflow-hidden w-20 mt-1.5">
+                          <div class="h-full rounded-full bg-gta-gold/50" style={`width:${barPct}%`}></div>
+                        </div>
+                      </div>
                     </div>
                   </td>
                   <td class="px-4 py-3 text-right text-zinc-400">{t.na_m?.toFixed(1) ?? "—"}M</td>
                   <td class="px-4 py-3 text-right text-zinc-400">{t.eu_m?.toFixed(1) ?? "—"}M</td>
-                  <td class="px-4 py-3 text-right text-zinc-600">{t.jp_m?.toFixed(1) ?? "—"}M</td>
-                  <td class="px-4 py-3 text-right text-zinc-600">{t.other_m?.toFixed(1) ?? "—"}M</td>
+                  <td class="px-4 py-3 text-right text-zinc-500">{t.jp_m?.toFixed(1) ?? "—"}M</td>
+                  <td class="px-4 py-3 text-right text-zinc-500">{t.other_m?.toFixed(1) ?? "—"}M</td>
                   <td class="px-5 py-3 text-right font-bold text-gta-gold">{t.total_m?.toFixed(2)}M</td>
                 </tr>
               );
