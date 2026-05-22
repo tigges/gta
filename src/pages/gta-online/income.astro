@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
-import ShareButton from "../../components/ShareButton.astro";
+import ShareDropdown from "../../components/ShareDropdown.astro";
 import IncomeAdviser from "../../components/IncomeAdviser.astro";
 import SocialClubConnector from "../../components/SocialClubConnector.astro";
 
@@ -170,7 +170,7 @@ const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Source: GTABase.com · community benchmarks · net after costs · 2024 patches</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online income ranked S→C tier. Cayo Perico ($340k/hr) and Acid Lab ($290k/hr) are the clear S-tier meta. Full breakdown." url="https://gtavi.ai/gta-online/income" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="income" shareText="GTA Online income ranked S→C tier. Cayo Perico ($340k/hr) and Acid Lab ($290k/hr) are the clear S-tier meta. Full breakdown." size="sm" /></div>
         </div>
       </div>
     </section>
@@ -213,7 +213,7 @@ const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Community-verified optimal path · 2024 patches</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Optimal GTA Online income path: First Dose (free) → Acid Lab → Kosatka → Nightclub → Bunker → Cocaine. Result: $500k+/hr combined passive+active." url="https://gtavi.ai/gta-online/income" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="income" shareText="Optimal GTA Online income path: First Dose (free) → Acid Lab → Kosatka → Nightclub → Bunker → Cocaine. Result: $500k+/hr combined passive+active." size="sm" /></div>
         </div>
       </div>
     </section>
@@ -274,7 +274,7 @@ const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Wiki · GTABase.com · community benchmarks · 2024 patches</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online business ROI: Acid Lab breaks even in 10hrs at $290k/hr. Nightclub takes 50hrs but earns passively. Full setup cost vs return breakdown." url="https://gtavi.ai/gta-online/income" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="income" shareText="GTA Online business ROI: Acid Lab breaks even in 10hrs at $290k/hr. Nightclub takes 50hrs but earns passively. Full setup cost vs return breakdown." size="sm" /></div>
         </div>
       </div>
     </section>
@@ -343,7 +343,7 @@ const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Wiki (Fandom) · community records · Hard difficulty · 2024 patches</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online heists ranked by $/hr. Cayo Perico ($340k/hr solo) dominates. Diamond Casino Heist with Diamonds ($3.62M) is the best multi-player run." url="https://gtavi.ai/gta-online/income" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="income" shareText="GTA Online heists ranked by $/hr. Cayo Perico ($340k/hr solo) dominates. Diamond Casino Heist with Diamonds ($3.62M) is the best multi-player run." size="sm" /></div>
         </div>
       </div>
     </section>
@@ -403,7 +403,7 @@ const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Sources: GTABase.com · GTA Fandom Wiki · community benchmarks · 2024 patches</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text={`Best GTA Online solo missions ranked by GTA$/hr. #1: ${topOnline[0]?.title} at $${Math.round(topOnline[0]?.gta_per_hr/1000)}k/hr. Full ranking.`} url="https://gtavi.ai/gta-online/income" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="income" shareText={`Best GTA Online solo missions ranked by GTA$/hr. #1: ${topOnline[0]?.title} at $${Math.round(topOnline[0]?.gta_per_hr/1000)}k/hr. Full ranking.`} size="sm" /></div>
         </div>
       </div>
     </section>
@@ -428,7 +428,7 @@ const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
         ></div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Source: GTAForums · community archives · manual research · patch notes</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="The history of GTA Online money: from $250K Contact Missions (2013) to $1.2M/hr Cayo Perico (2022+). Every meta shift charted." url="https://gtavi.ai/gta-online/income" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="income" shareText="The history of GTA Online money: from $250K Contact Missions (2013) to $1.2M/hr Cayo Perico (2022+). Every meta shift charted." size="sm" /></div>
         </div>
       </div>
     </section>

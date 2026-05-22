@@ -1,0 +1,65 @@
+---
+/**
+ * GamePill — GTA title version identifier pill.
+ *
+ * Renders a small pill with the game's identity colour from --c-identity
+ * resolved via the game prop. Used top-left on every card across the site.
+ *
+ * Usage:
+ *   <GamePill game="gta-vi" />
+ *   <GamePill game="gta-online" size="xs" />
+ */
+
+interface Props {
+  game:
+    | "gta-vi"
+    | "gta-online"
+    | "gta-v"
+    | "gta-sa"
+    | "gta-vc"
+    | "gta-iv"
+    | "gta-iii"
+    | "franchise";
+  size?: "xs" | "sm";
+  class?: string;
+}
+
+const { game, size = "sm", class: cls = "" } = Astro.props;
+
+const GAME_LABEL: Record<string, string> = {
+  "gta-vi":     "GTA VI",
+  "gta-online": "GTA Online",
+  "gta-v":      "GTA V",
+  "gta-sa":     "GTA SA",
+  "gta-vc":     "GTA VC",
+  "gta-iv":     "GTA IV",
+  "gta-iii":    "GTA III",
+  "franchise":  "Franchise",
+};
+
+// Identity hex — mirrors tokens.css --c-title-* values
+const GAME_COLOUR: Record<string, string> = {
+  "gta-vi":     "#ff6b9d",
+  "gta-online": "#00d4e8",
+  "gta-v":      "#f59e0b",
+  "gta-sa":     "#c0392b",
+  "gta-vc":     "#ff2d78",
+  "gta-iv":     "#6b6b7e",
+  "gta-iii":    "#9898b8",
+  "franchise":  "#f59e0b",
+};
+
+const label  = GAME_LABEL[game]  ?? game.toUpperCase();
+const colour = GAME_COLOUR[game] ?? "#9898b8";
+
+const sizeClass = size === "xs"
+  ? "text-[9px] px-1.5 py-0.5"
+  : "text-[10px] px-2 py-0.5";
+---
+
+<span
+  class={`inline-flex items-center font-mono uppercase tracking-widest rounded border shrink-0 ${sizeClass} ${cls}`}
+  style={`color:${colour};border-color:${colour}40;background:${colour}12`}
+>
+  {label}
+</span>

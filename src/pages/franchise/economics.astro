@@ -8,7 +8,7 @@
 import Base from "../../layouts/Base.astro";
 import { C_LIVE, C_GROWTH, C_ALERT, C_BRAND, C_CARD, C_TEXT_7, C_CHART_PURPLE, C_BG_DEEP } from "../../config/colors";
 import CrossLinks from "../../components/CrossLinks.astro";
-import ShareButton from "../../components/ShareButton.astro";
+import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import ChartPreviewCard from "../../components/charts/ChartPreviewCard.astro";
@@ -112,7 +112,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
         </div>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
           <span class="text-[11px] font-mono text-zinc-500 leading-relaxed max-w-2xl">{chartNote}</span>
-          <ShareButton text="GTA franchise economic complexity: from score counter (1) to Full MMT sovereign (17). Every title's economy visualised. GTAVI.AI." url="https://gtavi.ai/franchise/economics" size="sm" label="Share" />
+          <ShareDropdown anchorId="economics" shareText="GTA franchise economic complexity: from score counter (1) to Full MMT sovereign (17). Every title's economy visualised. GTAVI.AI." size="sm" />
         </div>
       </div>
     </section>

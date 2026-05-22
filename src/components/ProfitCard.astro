@@ -7,7 +7,8 @@
  * notes removed from render (kept in Props for backward-compat). Contextual
  * enrichment rows added: daily fee, bonus frequency, peak $/hr delta.
  */
-import ShareButton from "./ShareButton.astro";
+import GamePill from "./GamePill.astro";
+import ShareDropdown from "./ShareDropdown.astro";
 
 interface LootTier {
   loot: string;
@@ -131,10 +132,15 @@ const shareText = game === "gta-online"
   : `${name} — ${tier}-tier · $${khr}k/hr. GTA economic intelligence on GTAVI.AI`;
 
 const deepLinkUrl = game === "gta-online"
-  ? `https://gtavi.ai/gta-online/income/${id}`
-  : game === "gta-5"
-  ? `${share_url}?game=gta-5#profit-${id}`
-  : `${share_url}#profit-${id}`;
+  ? `${Astro.url.origin}/gta-online/income/${id}`
+  : `${Astro.url.origin}${Astro.url.pathname}#profit-${id}`;
+
+// Map game prop to GamePill game value
+const GAME_PILL_MAP: Record<string, string> = {
+  "gta-online": "gta-online",
+  "gta-5":      "gta-v",
+  "gta-6":      "gta-vi",
+};
 
 // Bonus recency
 const bonusDaysAgo = bonus_last_date
@@ -168,23 +174,18 @@ const prereqShort = prerequisite
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         loading="lazy" />
       <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 30%,#131316 100%)"></div>
-      <div class="absolute top-3 left-3 flex items-center gap-2">
-        <span class="font-mono font-black text-xl leading-none" style={`color:${ts.color}`}>{tier}</span>
+      <div class="absolute top-2 left-2">
+        <GamePill game={GAME_PILL_MAP[game] as any} size="xs" />
       </div>
-      <div class="absolute top-3 right-3">
-        <span class="text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
-          style={`color:${playColor};background:${playColor}18;border-color:${playColor}35`}>
-          {GAME_LABELS[game]}
-        </span>
+      <div class="absolute top-2 right-2">
+        <span class="font-mono font-black text-lg leading-none px-1.5 py-0.5 rounded"
+          style={`color:${ts.color};background:${ts.color}18;border:1px solid ${ts.border}`}>{tier}</span>
       </div>
     </div>
   ) : (
-    <div class="px-4 pt-4 pb-2 flex items-center justify-between">
+    <div class="px-4 pt-3 pb-2 flex items-center justify-between">
+      <GamePill game={GAME_PILL_MAP[game] as any} size="xs" />
       <span class="font-mono font-black text-2xl leading-none" style={`color:${ts.color}`}>{tier}</span>
-      <span class="text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
-        style={`color:${playColor};background:${playColor}18;border-color:${playColor}35`}>
-        {GAME_LABELS[game]}
-      </span>
     </div>
   )}
 
@@ -332,7 +333,7 @@ const prereqShort = prerequisite
     <span class="text-[10px] font-mono text-zinc-500 truncate">{dlc?.split("(")[0]?.trim() ?? GAME_LABELS[game]}</span>
     <div class="flex items-center gap-2 shrink-0">
       <span class="text-[10px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-      <ShareButton text={shareText} url={deepLinkUrl} size="sm" label="Share" />
+      <ShareDropdown anchorId={`profit-${id}`} shareText={shareText} size="sm" />
     </div>
   </div>
 </div>

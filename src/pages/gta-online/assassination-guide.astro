@@ -4,7 +4,7 @@
 import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
 import StockCalculator from "../../components/StockCalculator.astro";
-import ShareButton from "../../components/ShareButton.astro";
+import ShareDropdown from "../../components/ShareDropdown.astro";
 import stocksData from "../../../data/gta-5/economy/assassination-stocks.json";
 ---
 
@@ -84,7 +84,7 @@ import stocksData from "../../../data/gta-5/economy/assassination-stocks.json";
         </table>
         <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
           <span class="text-[10px] text-zinc-500 font-mono">Source: GTA Wiki · GTAForums community guides · LCN/BAWSAQ exchange data</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA V assassination missions: Multi-Target + Redwood Cigarettes = +300% return. The interactive $2B calculator at GTAVI.AI." url="https://gtavi.ai/gta-online/assassination-guide" size="sm" label="Share" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="assassination-guide" shareText="GTA V assassination missions: Multi-Target + Redwood Cigarettes = +300% return. The interactive $2B calculator at GTAVI.AI." size="sm" /></div>
         </div>
       </div>
     </section>

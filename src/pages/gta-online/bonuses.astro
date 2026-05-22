@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { C_LIVE, C_GROWTH, C_CARD, C_BG_DEEP } from "../../config/colors";
-import ShareButton from "../../components/ShareButton.astro";
+import ShareDropdown from "../../components/ShareDropdown.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
 import Ledger from "../../components/Ledger.astro";
 import type { LedgerEntry } from "../../components/Ledger.astro";
@@ -64,7 +64,7 @@ const bonusLedgerEntries: LedgerEntry[] = [
           </p>
         </div>
         <div class="flex items-center gap-3 shrink-0">
-          <ShareButton text="GTA Online weekly bonuses, promotions and community income leaderboard — {historyCount} weeks tracked since 2013. GTAVI.AI" url="https://gtavi.ai/gta-online/bonuses" size="sm" label="Share" />
+          <ShareDropdown anchorId="bonuses" shareText="GTA Online weekly bonuses, promotions and community income leaderboard — {historyCount} weeks tracked since 2013. GTAVI.AI" size="sm" />
         </div>
       </div>
     </div>

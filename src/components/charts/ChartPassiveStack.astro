@@ -5,14 +5,8 @@
  * Can be embedded on any page; D3 init deferred via IntersectionObserver.
  */
 import passiveStackData  from "../../../data/gta-5/economy/passive-stack.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-    <section class="chart-block" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Passive Income Stack — How Idle GTA$/hr Grew From 0 to $1.24M</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">4 streams · ${((passiveStackData as any).setup_cost_total/1e6).toFixed(1)}M GTA$ setup</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -38,10 +32,7 @@ import ShareButton from "../ShareButton.astro";
         <div id="passive-stack-chart" class="w-full" style="height:300px"
           data-series={JSON.stringify((passiveStackData as any).series)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: GTABase.com · business-profiles.json · GTAForums patch notes · community benchmarks</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online passive income history: from $0 in 2013 to $1.24M/hr AFK in 2022. The Acid Lab was the last major passive income leap before GTA VI." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="passive-stack-chart" sources="Source: GTABase.com · business-profiles.json · GTAForums patch notes · community benchmarks" shareText="GTA Online passive income history: from $0 in 2013 to $1.24M/hr AFK in 2022. The Acid Lab was the last major passive income leap before GTA VI." />
       </div>
 
 <script>

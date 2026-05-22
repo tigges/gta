@@ -7,7 +7,7 @@
 import type { EconomyModel } from "../types/gta";
 import { C_LIVE, C_BRAND } from "../config/colors";
 import economyData from "../../data/franchise/economy-models.json";
-import ShareButton from "./ShareButton.astro";
+import ShareDropdown from "./ShareDropdown.astro";
 
 interface Props {
   titleId: string;
@@ -77,10 +77,10 @@ const isProjected = (economy as any).projected;
         Franchise avg
       </span>
     </div>
-    <ShareButton
-      text={`GTA economic complexity: ${economy.short ?? economy.title_name} scores ${complexityScore}/17. Circular flow, capital market, passive income, inflation, and sovereign complexity visualised.`}
-      url={`https://gtavi.ai/franchise/economics`}
-      size="sm" label="Share" />
+    <ShareDropdown
+      anchorId={`radar-${titleId}`}
+      shareText={`GTA economic complexity: ${economy.short ?? economy.title_name} scores ${complexityScore}/17. Circular flow, capital market, passive income, inflation, and sovereign complexity visualised.`}
+      size="sm" />
   </div>
 </div>
 

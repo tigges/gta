@@ -49,6 +49,10 @@ export const C_TEXT_5     = "#b4b4cc";   // section labels
 export const C_TEXT_6     = "#6b6b7e";   // source footnotes (minimum)
 export const C_TEXT_7     = "#3f3f46";   // SVG watermarks ONLY
 
+// ── Neutral label / badge ─────────────────────────────────────────────────
+export const C_BADGE_TEXT   = "#d4d4d8";  // near-white — taxonomy label text
+export const C_BADGE_BORDER = "#6b6b7e";  // visible neutral border
+
 // ── Chart / D3 specific ───────────────────────────────────────────────────
 export const C_CHART_AXIS    = C_TEXT_5;
 export const C_CHART_GRID    = C_BORDER_1;

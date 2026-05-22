@@ -10,7 +10,7 @@
  * Phase 2: scrape public profile page for rank/cash/missions data
  * Phase 3: full leaderboard with opt-in community ranking
  */
-import ShareButton from "./ShareButton.astro";
+import ShareDropdown from "./ShareDropdown.astro";
 
 // Community benchmarks (from aggregate community data)
 const BENCHMARKS = {
@@ -117,7 +117,7 @@ const BENCHMARKS = {
     </div>
     <div class="flex items-center gap-3 shrink-0">
       <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-      <ShareButton text="Just checked my GTA Online stats on GTAVI.AI — see how you compare to the community. Income adviser + weekly bonus tracker included." url="https://gtavi.ai/gta-v" size="sm" label="Share" />
+      <ShareDropdown anchorId="social-club" shareText="Just checked my GTA Online stats on GTAVI.AI — see how you compare to the community. Income adviser + weekly bonus tracker included." size="sm" />
     </div>
   </div>
 </div>

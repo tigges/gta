@@ -4,14 +4,8 @@
  * Extracted from charts.astro.
  */
 import revenueSplit from "../../../data/franchise/revenue-split.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-<section class="chart-block" data-title="franchise" data-category="Economy-RL">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Revenue Model — Game Sales vs Online Economy</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">13 fiscal years · game → recurrent shift</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -36,10 +30,7 @@ import ShareButton from "../ShareButton.astro";
         <div id="revenue-split-chart" class="w-full" style="height:320px"
           data-years={JSON.stringify(revenueSplit.years)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Sources: Take-Two IR quarterly earnings · Wedbush Securities analyst estimates · DFC Intelligence (GTA VI)</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Shark Cards have generated billions for Take-Two. The revenue shift that fundamentally changed how Rockstar makes games." url="https://gtavi.ai/charts#revenue-split-chart" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="revenue-split-chart" sources="Sources: Take-Two IR quarterly earnings · Wedbush Securities analyst estimates · DFC Intelligence (GTA VI)" shareText="Shark Cards have generated billions for Take-Two. The revenue shift that fundamentally changed how Rockstar makes games." />
       </div>
 
 <script>

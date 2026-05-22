@@ -1,6 +1,7 @@
 ---
-import ShareButton from "./ShareButton.astro";
 import { C_LIVE, C_BRAND, C_CARD } from "../config/colors";
+import GamePill from "./GamePill.astro";
+import ShareDropdown from "./ShareDropdown.astro";
 
 interface PredictionRange {
   low: string;
@@ -23,6 +24,7 @@ interface Props {
   outcome_actual?: string | null;
   thumbnail?: string | null;
   compact?: boolean; // homepage teaser mode: hides method/basis/source
+  game?: "gta-vi" | "gta-online" | "gta-v" | "franchise"; // for GamePill
 }
 
 const {
@@ -41,7 +43,10 @@ const {
   outcome_actual,
   thumbnail,
   compact = false,
+  game = "gta-vi",
 } = Astro.props;
+
+const predAnchorId = `pred-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0,40)}`;
 
 // Tier styling driven by schema field, not computed from confidence number
 const TIER_STYLES = {
@@ -86,12 +91,19 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
       <img src={thumbnail} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
       <div class="absolute inset-0" style={`background:linear-gradient(to bottom,transparent 20%,${C_CARD} 100%)`}></div>
       <div class="absolute inset-0" style={`background:linear-gradient(to bottom, ${confidence_tier === 'confirmed' ? '#10b98108' : confidence_tier === 'reported' ? `${C_BRAND}08` : '#52525b08'} 0%, transparent 100%)`}></div>
+      <!-- GamePill — absolute top-left over image -->
+      <div class="absolute top-2 left-2">
+        <GamePill game={game} size="xs" />
+      </div>
     </div>
   )}
 
-  <!-- Top: title + tier badge -->
-  <div class={`flex items-start justify-between px-4 pb-2 ${thumbnail ? "pt-2" : "pt-4"}`}>
-    <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.18em] leading-snug">{title}</span>
+  <!-- Top: GamePill (no thumb) + title + tier badge -->
+  <div class={`flex items-start justify-between px-4 pb-2 ${thumbnail ? "pt-2" : "pt-3"}`}>
+    <div class="flex flex-col gap-1 flex-1 min-w-0">
+      {!thumbnail && <GamePill game={game} size="xs" class="mb-0.5" />}
+      <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.18em] leading-snug">{title}</span>
+    </div>
     <span class={`text-[11px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ml-2 ${tier.badgeBg}`}>
       {tier.label}
     </span>
@@ -160,11 +172,10 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
   <!-- Share strip -->
   <div class="px-4 pb-3 flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
     <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-    <ShareButton
-      text={`GTA VI ${title}: ${value}${unit ? " " + unit : ""} — ${confidence}% confidence. Data-driven, not speculation.`}
-      url="https://gtavi.ai/vi-intel"
+    <ShareDropdown
+      anchorId={predAnchorId}
+      shareText={`GTA VI ${title}: ${value}${unit ? " " + unit : ""} — ${confidence}% confidence. Data-driven, not speculation.`}
       size="sm"
-      label="Share"
     />
   </div>
 

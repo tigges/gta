@@ -6,14 +6,8 @@
  */
 import ttwoStock         from "../../../data/franchise/ttwo-stock.json";
 import delayData         from "../../../data/gta-6/delay-timeline.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-    <section class="chart-block" data-category="Economy-RL">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-blue-900/30 text-blue-400 border border-blue-800/40 px-2 py-0.5 rounded uppercase tracking-widest">RL Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Take-Two (TTWO) Stock Price vs GTA VI Milestones</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{ttwoStock.prices.length} months · Yahoo Finance</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -36,10 +30,7 @@ import ShareButton from "../ShareButton.astro";
           data-prices={JSON.stringify(ttwoStock.prices)}
           data-annotations={JSON.stringify(ttwoStock.annotations)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: Yahoo Finance (TTWO) · Not investment advice · Updated {new Date(ttwoStock.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="Take-Two stock tracks GTA announcement cycles almost perfectly. The market reaction to every trailer and delay, charted." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="ttwo-stock-chart" sources="Source: Yahoo Finance (TTWO) · Not investment advice · Updated {new Date(ttwoStock.last_updated).toLocaleDateString(&quot;en-GB&quot;,{month:&quot;short&quot;,year:&quot;numeric&quot;})}" shareText="Take-Two stock tracks GTA announcement cycles almost perfectly. The market reaction to every trailer and delay, charted." />
       </div>
 
 <script>

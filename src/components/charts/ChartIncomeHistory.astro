@@ -5,14 +5,8 @@
  */
 import sourceHistoryData from "../../../data/gta-5/economy/per-source-history.json";
 import revenueTiersData from "../../../data/gta-5/economy/revenue-tiers.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-<section class="chart-block" data-title="gta-online" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Income Source Price History — Nerfs, Buffs, DLC Launches</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{(sourceHistoryData as any).source_count} sources · {(sourceHistoryData as any).snapshot_count} patch snapshots</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -40,10 +34,7 @@ import ShareButton from "../ShareButton.astro";
           data-sources={JSON.stringify((sourceHistoryData as any).sources)}
         ></div>
         <div id="income-history-events" class="px-5 py-3 border-t border-[#1e1e23] divide-y divide-[#1e1e23]"></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: GTAForums patch notes archives + Rockstar Newswire · community benchmarks</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online income source history — every major nerf, buff, and DLC launch charted. Cayo Perico was nerfed 40% in 2021 then partially restored." url="https://gtavi.ai/charts#income-history-chart" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="income-history-chart" sources="Source: GTAForums patch notes archives + Rockstar Newswire · community benchmarks" shareText="GTA Online income source history — every major nerf, buff, and DLC launch charted. Cayo Perico was nerfed 40% in 2021 then partially restored." />
       </div>
 
 <script>

@@ -4,15 +4,9 @@
  * Extracted from charts.astro.
  */
 import metacriticData from "../../../data/franchise/metacritic.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 const metacriticScores = (metacriticData as any).titles as any[];
 ---
-
-<section class="chart-block" data-title="franchise" data-category="History">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Critic vs User Score Divergence — The Monetisation Story</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">Metacritic · critic /100 · user ×10</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -45,10 +39,7 @@ const metacriticScores = (metacriticData as any).titles as any[];
         <div id="divergence-chart" class="w-full" style="height:300px"
           data-scores={JSON.stringify(metacriticScores)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: Metacritic.com · GTA VI prediction based on franchise trajectory</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA SA had perfect critic/user alignment. GTA IV opened a 22-point gap. Will GTA VI close it? The historical pattern." url="https://gtavi.ai/charts#divergence-chart" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="divergence-chart" sources="Source: Metacritic.com · GTA VI prediction based on franchise trajectory" shareText="GTA SA had perfect critic/user alignment. GTA IV opened a 22-point gap. Will GTA VI close it? The historical pattern." />
       </div>
 
 <script>

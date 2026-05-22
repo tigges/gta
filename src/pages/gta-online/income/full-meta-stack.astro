@@ -6,7 +6,7 @@
  * Cayo Perico, Agency/GF contracts, and passive businesses for $1.7M/hr.
  */
 import Base from "../../../layouts/Base.astro";
-import ShareButton from "../../../components/ShareButton.astro";
+import ShareDropdown from "../../../components/ShareDropdown.astro";
 import CrossLinks from "../../../components/CrossLinks.astro";
 import revenueTiersData from "../../../../data/gta-5/economy/revenue-tiers.json";
 import weeklyBonuses    from "../../../../data/gta-5/economy/weekly-bonuses.json";
@@ -248,10 +248,7 @@ const bonusFreqs = COMPONENTS.map(comp => ({
         Economy model →
       </a>
       <div class="ml-auto">
-        <ShareButton
-          text="GTA Online full meta stack: Cayo Perico + Agency contracts + passives = $1.7M+/hr solo. The optimal 2024 income strategy."
-          url="https://gtavi.ai/gta-online/income/full-meta-stack"
-          size="sm" label="Share" />
+        <ShareDropdown anchorId="full-meta-stack" shareText="GTA Online full meta stack: Cayo Perico + Agency contracts + passives = $1.7M+/hr solo. The optimal 2024 income strategy." size="sm" />
       </div>
     </div>
 

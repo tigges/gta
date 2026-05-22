@@ -6,14 +6,8 @@
  */
 import redditData        from "../../../data/community/reddit.json";
 import gta6Trends        from "../../../data/gta-6/trends/search-interest.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-    <section class="chart-block" data-category="Community">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-green/30 text-gta-green border border-gta-green/40 px-2 py-0.5 rounded uppercase tracking-widest">Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Community Anticipation Curve</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">Reddit r/GTAVI subscriber growth · Google Trends overlay</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -35,10 +29,7 @@ import ShareButton from "../ShareButton.astro";
           data-milestones={JSON.stringify(redditData.historical_milestones)}
           data-trends={JSON.stringify(gta6Trends.keywords.find(k => k.keyword === "GTA 6"))}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Sources: r/GrandTheftAutoVI community records · Google Trends via pytrends · {redditData.credentials_required ? "Live Reddit polling needs REDDIT_CLIENT_ID secret" : "Live polling active"}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="r/GrandTheftAutoVI hit 1.5M+ subscribers before launch. The community growth curve looks unlike any prior game release." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="community-chart" sources="Sources: r/GrandTheftAutoVI community records · Google Trends via pytrends · {redditData.credentials_required ? &quot;Live Reddit polling needs REDDIT_CLIENT_ID secret&quot; : &quot;Live polling active&quot;}" shareText="r/GrandTheftAutoVI hit 1.5M+ subscribers before launch. The community growth curve looks unlike any prior game release." />
       </div>
 
 <script>

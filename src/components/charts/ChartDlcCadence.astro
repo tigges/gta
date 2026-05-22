@@ -5,14 +5,8 @@
  */
 import dlcData from "../../../data/gta-5/dlc/timeline.json";
 import velocityData from "../../../data/gta-6/trailer-velocity.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-<section class="chart-block" data-title="franchise" data-category="History">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online DLC Cadence → GTA VI Online Prediction</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{dlcData.updates.filter((u: any) => u.category === "major").length} major updates · pattern extrapolated</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -30,10 +24,7 @@ import ShareButton from "../ShareButton.astro";
         <div id="dlc-cadence-chart" class="w-full" style="height:300px"
           data-dlc={JSON.stringify(dlcData.updates.filter((u: any) => u.category === "major" || u.category === "launch"))}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: Rockstar Games official announcements · GTA Online update history 2013–2024</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online had 38 major content drops over 11 years. Here's what that cadence predicts for GTA VI Online post-launch." url="https://gtavi.ai/charts#dlc-cadence-chart" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="dlc-cadence-chart" sources="Source: Rockstar Games official announcements · GTA Online update history 2013–2024" shareText="GTA Online had 38 major content drops over 11 years. Here" />
       </div>
 
 <script>

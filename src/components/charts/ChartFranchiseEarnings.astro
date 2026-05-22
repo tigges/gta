@@ -5,14 +5,8 @@
  * Can be embedded on any page; D3 init deferred via IntersectionObserver.
  */
 import franchiseEconData from "../../../data/franchise/economic-history.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-    <section class="chart-block" data-category="History">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-zinc-800 text-zinc-500 border border-zinc-700 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Cross-Title Earnings — Max $/hr + Hours to Endgame</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">GTA II → GTA Online · normalised effort metric</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -25,10 +19,7 @@ import ShareButton from "../ShareButton.astro";
         <div id="franchise-earnings-chart" class="w-full" style="height:360px"
           data-effort={JSON.stringify((franchiseEconData as any).effort_chart_data)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">hours_to_aspirational = aspirational_price ÷ best_hourly_rate per title · Sources: community records · GTA Fandom Wiki</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA franchise earnings compared across titles: how many hours does it take to buy the era's most aspirational item? GTA V story wins — 0.5 hrs." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="franchise-earnings-chart" sources="hours_to_aspirational = aspirational_price ÷ best_hourly_rate per title · Sources: community records · GTA Fandom Wiki" shareText="GTA franchise earnings compared across titles: how many hours does it take to buy the era" />
       </div>
 
 <script>

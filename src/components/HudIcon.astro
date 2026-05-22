@@ -29,7 +29,11 @@ interface Props {
     | "economy"      // economy circular
     | "passive"      // passive income / stack
     | "shark"        // shark cards
-    | "star";        // weekly event / bonus star
+    | "star"         // weekly event / bonus star
+    | "link"         // copy link / chain
+    | "share-x"      // X (Twitter) platform
+    | "share-reddit" // Reddit / Snoo silhouette
+    | "share-branch";// share broadcast / more apps
   size?: number;
   class?: string;
 }
@@ -56,6 +60,10 @@ const PATHS: Record<string, string> = {
   passive:   `<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>`,
   shark:     `<path d="M2 12h4l2-5 4 10 2-5h8"/><path d="M18 7c0 4-6 6-6 11"/>`,
   star:      `<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>`,
+  link:      `<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>`,
+  "share-x": `<path d="M4 4l16 16M4 20L20 4" stroke-linecap="round"/>`,
+  "share-reddit": `<circle cx="12" cy="12" r="9"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M9.5 16a4 4 0 0 0 5 0"/><path d="M15.5 7.5a2 2 0 1 1 2 2" stroke-linecap="round"/><circle cx="17.5" cy="9.5" r="0.8" fill="currentColor"/><path d="M12 9.5c1.1 0 2.2.3 3 .8M12 9.5c-1.1 0-2.2.3-3 .8"/>`,
+  "share-branch": `<path d="M12 3v10M12 3l-4 4M12 3l4 4M6 17l-3 3M18 17l3 3M12 13l-6 4M12 13l6 4" stroke-linecap="round" stroke-linejoin="round"/>`,
 };
 ---
 

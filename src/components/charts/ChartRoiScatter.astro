@@ -6,14 +6,8 @@
  */
 import revenueTiersData  from "../../../data/gta-5/economy/revenue-tiers.json";
 import bizProfilesData   from "../../../data/gta-5/economy/business-profiles.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-    <section class="chart-block" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Setup Cost vs $/hr — What's Actually Worth Buying?</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <a href="/database" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full profiles →</a>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -26,10 +20,7 @@ import ShareButton from "../ShareButton.astro";
         <div id="roi-scatter-chart" class="w-full" style="height:380px"
           data-businesses={JSON.stringify((bizProfilesData as any).businesses.filter((b: any) => b.setup_cost_full > 0 && b.net_profit_per_hr > 0))}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: GTABase.com · community benchmarks · 2024 patches · bubble = break-even hours</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online setup cost vs $/hr: Kosatka is top-right (high cost, highest return, fast payback). Some businesses are expensive traps. The ROI chart." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="roi-scatter-chart" sources="Source: GTABase.com · community benchmarks · 2024 patches · bubble = break-even hours" shareText="GTA Online setup cost vs $/hr: Kosatka is top-right (high cost, highest return, fast payback). Some businesses are expensive traps. The ROI chart." />
       </div>
 
 <script>

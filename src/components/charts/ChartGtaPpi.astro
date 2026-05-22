@@ -6,14 +6,8 @@
  */
 import gtaPpiData        from "../../../data/gta-5/economy/gta-ppi.json";
 import metaHistoryData   from "../../../data/gta-5/economy/meta-history.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 ---
-
-    <section class="chart-block" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA-PPI — In-Game Inflation Index (hours to buy standard basket)</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{(gtaPpiData as any).series.length} patches · base 100 = Oct 2013</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -37,10 +31,7 @@ import ShareButton from "../ShareButton.astro";
         <div id="gta-ppi-chart" class="w-full" style="height:280px"
           data-series={JSON.stringify((gtaPpiData as any).series)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: computed from price-basket.json + meta-history.json · GTAForums patch notes archives</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online's hidden inflation: the economy got 2× harder in 2017–18 via payout nerfs, not price hikes. Cayo Perico reversed it to an all-time low in 2020." url="https://gtavi.ai/charts" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="gta-ppi-chart" sources="Source: computed from price-basket.json + meta-history.json · GTAForums patch notes archives" shareText="GTA Online" />
       </div>
 
 <script>

@@ -4,15 +4,9 @@
  * Extracted from charts.astro.
  */
 import vehicleCargoData from "../../../data/gta-5/economy/vehicle-cargo.json";
-import ShareButton from "../ShareButton.astro";
+import ChartFooter from "../ChartFooter.astro";
 import { C_BRAND, C_GROWTH } from "../../config/colors";
 ---
-
-<section class="chart-block" data-title="gta-online" data-category="Economy-IG">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[11px] font-mono bg-gta-gold/30 text-gta-gold border border-gta-gold/40 px-2 py-0.5 rounded uppercase tracking-widest">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Import/Export Sell Tiers — Why Top-Range Vehicles Are 3× More Valuable</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">3 tiers · 3 delivery types</span>
       </div>
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -31,10 +25,7 @@ import { C_BRAND, C_GROWTH } from "../../config/colors";
           data-sell={JSON.stringify((vehicleCargoData as any).sell_prices_net)}
           style="min-height:240px"
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: GTABase.com · GTA Wiki · community records · no-damage assumption · net of setup mods</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareButton text="GTA Online Import/Export sell prices: top-range specialist delivers 5× more than standard private. Always prioritise top-range sources." url="https://gtavi.ai/charts#ie-tiers-chart" size="sm" label="Share" /></div>
-        </div>
+        <ChartFooter chartId="ie-tiers-chart" sources="Source: GTABase.com · GTA Wiki · community records · no-damage assumption · net of setup mods" shareText="GTA Online Import/Export sell prices: top-range specialist delivers 5× more than standard private. Always prioritise top-range sources." />
       </div>
 
 <script>
