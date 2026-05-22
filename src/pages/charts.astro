@@ -593,8 +593,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 </style>
 
 <script>
-  import { triggerAll } from "../assets/chartInit";
-
   // ── Category filter ─────────────────────────────────────────
   // ── Title filter ─────────────────────────────────────────────
   let activeTitle = "All";
@@ -719,52 +717,35 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
   // Apply title filter AFTER chart init rAFs have queued
   requestAnimationFrame(() => applyTitleFilter());
 
+  // ── Hash navigation — filter activation only ─────────────────────────────
+  // Native browser hash scrolling already handles the scroll correctly:
+  //   - section ids exist in static HTML ✓
+  //   - chart divs have explicit heights → layout is stable before D3 renders ✓
+  //   - scroll-margin-top: 72px in CSS clears the sticky nav ✓
+  // This handler's ONLY job: reset category/title filters if they would hide
+  // the target section, then let the browser re-scroll natively.
   (function handleChartHash() {
     const hash = window.location.hash;
     if (!hash || hash.length < 2) return;
     const targetId = hash.slice(1);
 
-    // Support both section-{chartId} (from ShareDropdown) and raw {chartId} (legacy links)
-    const resolveTarget = (id: string): HTMLElement | null => {
-      const direct = document.getElementById(id);
-      if (direct) return direct;
-      const canvas = document.getElementById(id);
-      if (canvas) {
-        const sec = canvas.closest<HTMLElement>("section.chart-block");
-        if (sec) return sec;
-      }
-      return null;
-    };
+    setTimeout(() => {
+      const el = document.getElementById(targetId);
+      if (!el) return;
+      const section = (el.closest<HTMLElement>("section.chart-block") ?? el) as HTMLElement;
 
-    const doScroll = (section: HTMLElement) => {
-      // If it's hidden by a category filter, reset to "All"
+      // Only act if the section is hidden by an active filter
       if (section.style.display === "none" || section.offsetParent === null) {
-        const allBtn = document.querySelector<HTMLButtonElement>('.chart-filter[data-filter="All"]');
-        if (allBtn) allBtn.click();
+        // Reset category + title filters so the section becomes visible
+        document.querySelector<HTMLButtonElement>('.chart-filter[data-filter="All"]')?.click();
+        document.querySelector<HTMLButtonElement>('.chart-title-filter[data-title="All"]')?.click();
+        // After filter reset re-renders the DOM, scroll to the section
+        setTimeout(() => {
+          section.scrollIntoView({ behavior: "instant", block: "start" });
+        }, 50);
       }
-      section.scrollIntoView({ behavior: "instant", block: "start" });
-      // Brief highlight pulse
-      section.style.transition = "box-shadow 0.4s";
-      section.style.boxShadow = "0 0 0 2px rgba(245,158,11,0.5)";
-      setTimeout(() => { section.style.boxShadow = ""; }, 1800);
-    };
-
-    // Force-render ALL charts immediately so page heights are final before scrolling.
-    // Without this, D3 charts above the target render asynchronously after the scroll,
-    // pushing the target section further down the page.
-    triggerAll();
-
-    // Wait for D3 to finish painting SVGs (2 rAF cycles give layout a chance to settle),
-    // then scroll once to the correct settled position.
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      // Give D3 renders a brief moment to finalise heights
-      setTimeout(() => {
-        const el = resolveTarget(targetId);
-        if (!el) return;
-        const section = (el.closest("section.chart-block") ?? el) as HTMLElement;
-        doScroll(section);
-      }, 80);
-    }));
+      // If already visible: do nothing — browser native scroll already landed correctly.
+    }, 100);
   })();
 
 </script>
