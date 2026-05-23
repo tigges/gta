@@ -16,6 +16,11 @@ import ChartMissionEarnings      from "../components/charts/ChartMissionEarnings
 import ChartPrelaunchComparison  from "../components/charts/ChartPrelaunchComparison.astro";
 import ChartPreviewCard          from "../components/charts/ChartPreviewCard.astro";
 import { CATEGORY_BADGE_CLASSES } from "../config/categoryColors";
+import { getChart } from "../config/allCharts";
+
+const rAssassination = getChart("assassination-returns-chart")!;
+const rDlcPlayer     = getChart("dlc-player-chart")!;
+const rPrelaunch     = getChart("prelaunch-comparison-chart")!;
 
 import steamData     from "../../data/gta-5/meta/steam-players.json";
 import trendsData    from "../../data/gta-5/trends/search-interest.json";
@@ -276,10 +281,10 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
 
         <ChartPreviewCard
           cardId="preview-assassination"
-          title="Assassination Stocks — Combined Return Per Mission"
-          description="Interactive $2B calculator · buy/sell windows · optimal order"
-          category="Economy-IG"
-          deepLink="/charts#section-assassination-returns-chart"
+          title={rAssassination.label}
+          description={rAssassination.shareText}
+          category={rAssassination.badge}
+          deepLink={`/charts#section-${rAssassination.id}`}
           thumbUrl="/assets/covers/gta-5.jpg"
         >
           <ChartAssassinationReturns />
@@ -287,10 +292,10 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
 
         <ChartPreviewCard
           cardId="preview-dlc-players"
-          title="GTA V Steam Player History — DLC Events Overlay"
-          description="Every DLC launch vs concurrent player counts · 2015–2026"
-          category="Community"
-          deepLink="/charts#section-dlc-player-chart"
+          title={rDlcPlayer.label}
+          description={rDlcPlayer.shareText}
+          category={rDlcPlayer.badge}
+          deepLink={`/charts#section-${rDlcPlayer.id}`}
           thumbUrl="/assets/covers/gta-5.jpg"
         >
           <ChartDlcPlayerHistory />
@@ -298,10 +303,10 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
 
         <ChartPreviewCard
           cardId="preview-prelaunch-v"
-          title="Pre-launch Hype — GTA V (2013) vs GTA VI (2026)"
-          description="Same moment before launch · search trends · community size"
-          category="Community"
-          deepLink="/charts#section-prelaunch-comparison-chart"
+          title={rPrelaunch.label}
+          description={rPrelaunch.shareText}
+          category={rPrelaunch.badge}
+          deepLink={`/charts#section-${rPrelaunch.id}`}
           thumbUrl="/assets/covers/gta-5.jpg"
         >
           <ChartPrelaunchComparison />

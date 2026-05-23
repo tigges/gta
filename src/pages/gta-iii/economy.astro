@@ -6,8 +6,11 @@ import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import GamePill from "../../components/GamePill.astro";
 import { CATEGORY_BADGE_CLASSES } from "../../config/categoryColors";
+import CardFooter from "../../components/CardFooter.astro";
+import { getEconomyModel } from "../../config/economyModels";
 import economyData from "../../../data/franchise/economy-models.json";
 const economy = (economyData as any).economies.find((e: any) => e.title_id === "gta-3");
+const ecoModel = getEconomyModel("gta-3")!;
 ---
 <Base
   titleContext="gta-iii"
@@ -34,6 +37,7 @@ const economy = (economyData as any).economies.find((e: any) => e.title_id === "
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 rounded-xl border border-[#1e1e23] p-5" style="background:#0e0e11">
           <CircularEconomy titleId="gta-3" mode="full" />
+        <CardFooter anchorId={ecoModel.anchorId} sources="Source: curated · GTA Fandom Wiki · franchise economic analysis" shareText={ecoModel.shareText} />
         </div>
         <ChartComplexityRadar titleId="gta-3" size={260} />
       </div>

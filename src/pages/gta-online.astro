@@ -4,28 +4,19 @@ import GamePill from "../components/GamePill.astro";
 import { CATEGORY_BADGE_CLASSES } from "../config/categoryColors";
 import { C_LIVE, C_GROWTH, C_CARD, C_BG_DEEP } from "../config/colors";
 import CrossLinks from "../components/CrossLinks.astro";
-import ChartMetaEvolution    from "../components/charts/ChartMetaEvolution.astro";
-import ChartIncomeLeaderboard from "../components/charts/ChartIncomeLeaderboard.astro";
-import ChartGtaPpi           from "../components/charts/ChartGtaPpi.astro";
-import ChartBonusHeatmap     from "../components/charts/ChartBonusHeatmap.astro";
-import ChartRoiScatter       from "../components/charts/ChartRoiScatter.astro";
-import ChartPassiveStack     from "../components/charts/ChartPassiveStack.astro";
-import ChartSharkCard        from "../components/charts/ChartSharkCard.astro";
-import ChartEcoWages         from "../components/charts/ChartEcoWages.astro";
-import ChartEcoPpi           from "../components/charts/ChartEcoPpi.astro";
-import ChartEcoHealth        from "../components/charts/ChartEcoHealth.astro";
-import ChartPreviewCard      from "../components/charts/ChartPreviewCard.astro";
-import chartConfig from "../../data/config/chart-config.json";
-import { CHART_REGISTRY } from "../config/chartRegistry";
+import ChartEcoWages  from "../components/charts/ChartEcoWages.astro";
+import ChartEcoPpi    from "../components/charts/ChartEcoPpi.astro";
+import ChartEcoHealth from "../components/charts/ChartEcoHealth.astro";
+import ChartPreviewCard from "../components/charts/ChartPreviewCard.astro";
+import { HUB_CONFIG, getChart } from "../config/allCharts";
 
-const goConfig   = chartConfig.gta_online;
-const Featured0  = CHART_REGISTRY[goConfig.featured[0]];
-const Featured1  = CHART_REGISTRY[goConfig.featured[1]];
-const Featured2  = CHART_REGISTRY[goConfig.featured[2]];
-const Preview0   = CHART_REGISTRY[goConfig.preview[0]];
-const Preview1   = CHART_REGISTRY[goConfig.preview[1]];
-const Preview2   = CHART_REGISTRY[goConfig.preview[2]];
-const Preview3   = CHART_REGISTRY[goConfig.preview[3]];
+const featuredCharts = HUB_CONFIG["gta-online"].featured.map(id => getChart(id)).filter(Boolean) as NonNullable<ReturnType<typeof getChart>>[];
+const previewCharts  = HUB_CONFIG["gta-online"].preview.map(id => getChart(id)).filter(Boolean)  as NonNullable<ReturnType<typeof getChart>>[];
+
+const [f0, f1, f2] = featuredCharts;
+const F0 = f0?.component;
+const F1 = f1?.component;
+const F2 = f2?.component;
 
 import type { WeeklyBonusesData, RevenueTiersData, BusinessProfiles } from "../types/gta";
 
@@ -212,12 +203,12 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
         <a href="/charts?title=gta-online" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
       </div>
 
-      <!-- Featured charts — order from data/config/chart-config.json gta_online.featured -->
-      {Featured0 && <div class="mb-6"><Featured0 /></div>}
-      {Featured1 && Featured2 && (
+      <!-- Featured charts — order from HUB_CONFIG["gta-online"].featured in allCharts.ts -->
+      {F0 && <div class="mb-6"><F0 /></div>}
+      {F1 && F2 && (
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Featured1 />
-          <Featured2 />
+          <F1 />
+          <F2 />
         </div>
       )}
     </section>
@@ -234,24 +225,21 @@ const profileCount  = wBizProf.businesses?.length ?? 0;
       </div>
       <div class="flex flex-col gap-2">
 
-        <!-- Preview cards with proper titles and GTA Online thumbnails -->
-        {([
-          { comp: Preview0, id: goConfig.preview[0], title: "GTA Online Weekly Bonus Calendar",          desc: "Activity multiplier history · which events Rockstar promotes most often" },
-          { comp: Preview1, id: goConfig.preview[1], title: "Setup Cost vs $/hr — Worth Buying?",       desc: "ROI bubble chart · expensive but worth it vs expensive traps" },
-          { comp: Preview2, id: goConfig.preview[2], title: "Passive Income Stack",                     desc: "How idle GTA$/hr grew from $0 to $1.24M/hr · Bunker → Acid Lab" },
-          { comp: Preview3, id: goConfig.preview[3], title: "Shark Card Purchasing Power",              desc: "12 years of in-game inflation · what a Megalodon buys today vs 2013" },
-        ] as const).filter(r => r.comp).map(({ comp: Comp, id, title, desc }) => (
-          Comp && <ChartPreviewCard
-            cardId={`preview-online-${id}`}
-            title={title}
-            description={desc}
-            category="Economy-IG"
-            deepLink={`/charts#section-${id}`}
-            thumbUrl="/assets/covers/gta-5.jpg"
-          >
-            <Comp />
-          </ChartPreviewCard>
-        ))}
+        {previewCharts.map((chart, i) => {
+          const Comp = chart.component;
+          return (
+            <ChartPreviewCard
+              cardId={`preview-online-${chart.id}`}
+              title={chart.label}
+              description={chart.shareText}
+              category={chart.badge}
+              deepLink={`/charts#section-${chart.id}`}
+              thumbUrl="/assets/covers/gta-5.jpg"
+            >
+              <Comp />
+            </ChartPreviewCard>
+          );
+        })}
       </div>
     </section>
 
