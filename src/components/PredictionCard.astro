@@ -55,27 +55,27 @@ const predAnchorId = cardId ?? `pred-${title.toLowerCase().replace(/[^a-z0-9]+/g
 const TIER_STYLES = {
   confirmed: {
     label: "CONFIRMED",
-    color: "text-gta-teal",
-    bar: "bg-emerald-500",
+    color: "text-emerald-300",
+    bar: "bg-emerald-400",
     border: "border-l-gta-teal",
     bg: "bg-emerald-500/5",
-    badgeBg: "bg-emerald-900/30 border-emerald-800/40 text-emerald-400",
+    badgeBg: "bg-emerald-900/20 border-emerald-500/60 text-emerald-200",
   },
   reported: {
     label: "REPORTED",
-    color: "text-gta-gold",
-    bar: "bg-gta-gold",
+    color: "text-amber-300",
+    bar: "bg-amber-400",
     border: "border-l-gta-gold",
     bg: "bg-gta-gold/5",
-    badgeBg: "bg-amber-900/30 border-amber-800/40 text-amber-400",
+    badgeBg: "bg-amber-900/20 border-amber-500/60 text-amber-200",
   },
   predicted: {
     label: "PREDICTED",
-    color: "text-zinc-400",
-    bar: "bg-zinc-500",
-    border: "border-l-zinc-600",
+    color: "text-zinc-200",
+    bar: "bg-zinc-400",
+    border: "border-l-zinc-500",
     bg: "bg-zinc-600/5",
-    badgeBg: "bg-zinc-800/50 border-zinc-700/40 text-zinc-400",
+    badgeBg: "bg-zinc-700/30 border-zinc-400/50 text-zinc-100",
   },
 };
 
@@ -106,7 +106,7 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
   <div class={`flex items-start justify-between px-4 pb-2 ${thumbnail ? "pt-2" : "pt-3"}`}>
     <div class="flex flex-col gap-1 flex-1 min-w-0">
       {!thumbnail && <GamePill game={game} size="xs" class="mb-0.5" />}
-      <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.18em] leading-snug">{title}</span>
+      <span class="text-[10px] font-mono text-zinc-200 uppercase tracking-[0.18em] leading-snug">{title}</span>
     </div>
     <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ml-2 ${tier.badgeBg}`}>
       {tier.label}
@@ -122,7 +122,7 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
   <!-- Confidence bar -->
   <div class="px-4 pb-3">
     <div class="flex items-center justify-between mb-1.5">
-      <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">Confidence</span>
+      <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Confidence</span>
       <span class={`text-[11px] font-mono font-semibold ${tier.color}`}>{confidence}%</span>
     </div>
     <div class="h-0.5 rounded-full" style="background:#1e1e23">
@@ -144,7 +144,7 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
   <!-- Basis text -->
   {!compact && (
   <div class="px-4 pb-3 flex-1">
-    <p class="text-[11px] text-zinc-500 leading-relaxed">{basis}</p>
+    <p class="text-[11px] text-zinc-400 leading-relaxed">{basis}</p>
   </div>
   )}
 
