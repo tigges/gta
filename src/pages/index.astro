@@ -267,7 +267,7 @@ const TIER_COLOR: Record<string,string> = {
             source_type={p.source_type}
             outcome_verified={p.outcome_verified}
             outcome_actual={p.outcome_actual}
-            thumbnail={predThumbnails[(p as Prediction).id]}
+              thumbnail={(p as any).thumbnail ?? predThumbnails[(p as Prediction).id]}
             compact={true}
           />
         ))}

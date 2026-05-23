@@ -89,28 +89,30 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
   class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current group`}
   style="background:#131316;scroll-margin-top:72px"
 >
-  <!-- Thumbnail (if provided) -->
+  <!-- Image strip (optional) — pills float over it -->
   {thumbnail && (
     <div class="relative h-28 overflow-hidden">
       <img src={thumbnail} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
-      <div class="absolute inset-0" style={`background:linear-gradient(to bottom,transparent 20%,${C_CARD} 100%)`}></div>
-      <div class="absolute inset-0" style={`background:linear-gradient(to bottom, ${confidence_tier === 'confirmed' ? '#10b98108' : confidence_tier === 'reported' ? `${C_BRAND}08` : '#52525b08'} 0%, transparent 100%)`}></div>
-      <!-- GamePill — absolute top-left over image -->
-      <div class="absolute top-2 left-2">
-        <GamePill game={game} size="xs" />
-      </div>
+      <!-- Bottom fade into card background -->
+      <div class="absolute inset-0" style={`background:linear-gradient(to bottom,rgba(0,0,0,0.35) 0%,transparent 35%,${C_CARD} 100%)`}></div>
     </div>
   )}
 
-  <!-- Top: GamePill (no thumb) + title + tier badge -->
-  <div class={`flex items-start justify-between px-4 pb-2 ${thumbnail ? "pt-2" : "pt-3"}`}>
-    <div class="flex flex-col gap-1 flex-1 min-w-0">
-      {!thumbnail && <GamePill game={game} size="xs" class="mb-0.5" />}
-      <span class="text-[10px] font-mono text-zinc-200 uppercase tracking-[0.18em] leading-snug">{title}</span>
-    </div>
-    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ml-2 ${tier.badgeBg}`}>
+  <!-- Pills bar — absolute over image when thumbnail present, normal flow otherwise.
+       Both GamePill and tier badge always on the same baseline. -->
+  <div class={thumbnail
+    ? "absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-2.5 z-10"
+    : "flex items-center justify-between px-4 pt-3 pb-2"
+  }>
+    <GamePill game={game} size="xs" />
+    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ${tier.badgeBg}`}>
       {tier.label}
     </span>
+  </div>
+
+  <!-- Title text — sits just below the image (or below the pills row when no image) -->
+  <div class={`px-4 pb-2 ${thumbnail ? "pt-2" : ""}`}>
+    <span class="text-[10px] font-mono text-zinc-200 uppercase tracking-[0.18em] leading-snug">{title}</span>
   </div>
 
   <!-- Value + unit -->
