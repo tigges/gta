@@ -161,7 +161,7 @@ const DELAY_THUMBS: Record<string,string> = {
               source_type={p.source_type}
               outcome_verified={p.outcome_verified}
               outcome_actual={p.outcome_actual}
-              thumbnail={PRED_THUMBS[p.id] ?? null}
+              thumbnail={(p as any).thumbnail ?? PRED_THUMBS[p.id] ?? null}
             />
           );
         })}
