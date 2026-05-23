@@ -1,0 +1,75 @@
+---
+/**
+ * ChartSection.astro — canonical chart section wrapper
+ *
+ * Renders the full section chrome (GamePill + badge + label + rule + meta)
+ * from the allCharts registry. Every chart on every page that wraps its
+ * content with this component gets the canonical card contract header
+ * automatically — no per-chart hand-authoring needed.
+ *
+ * Usage (static meta from registry):
+ *   <ChartSection chartId="bonus-heatmap">
+ *     <ChartBonusHeatmap />
+ *   </ChartSection>
+ *
+ * Usage (dynamic meta computed from data):
+ *   <ChartSection chartId="perf-chart" meta={`${count} vehicles · Broughy1322`}>
+ *     <ChartVehiclePerformance />
+ *   </ChartSection>
+ *
+ * Usage (link-type right-side element):
+ *   <ChartSection chartId="income-leaderboard-chart" metaHref="/database" metaLabel="Full profiles →">
+ *     <ChartIncomeLeaderboard />
+ *   </ChartSection>
+ */
+
+import { getChart } from "../config/allCharts";
+import GamePill from "./GamePill.astro";
+import { CATEGORY_BADGE_CLASSES } from "../config/categoryColors";
+
+interface Props {
+  chartId: string;
+  /**
+   * Dynamic meta string override.
+   * When provided, replaces the registry meta value.
+   * Pass undefined (or omit) to use the registry value.
+   * Pass null explicitly to suppress the meta element entirely.
+   */
+  meta?: string | null;
+  /** When set, the right-side element renders as an anchor instead of text */
+  metaHref?: string;
+  metaLabel?: string;
+}
+
+const { chartId, meta: metaOverride, metaHref, metaLabel } = Astro.props;
+
+const chart = getChart(chartId);
+if (!chart) throw new Error(`[ChartSection] Unknown chart id: "${chartId}". Add it to allCharts.ts.`);
+
+// Resolution order: explicit prop > registry value
+const displayMeta = metaOverride !== undefined ? metaOverride : chart.meta;
+---
+
+<section
+  id={`section-${chart.id}`}
+  class="chart-block"
+  data-title={chart.game}
+  data-category={chart.category}
+>
+  <div class="flex items-center gap-3 mb-5">
+    <GamePill game={chart.game} size="xs" />
+    <span class={CATEGORY_BADGE_CLASSES}>{chart.badge}</span>
+    <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// {chart.label}</span>
+    <div class="flex-1 h-px bg-[#1e1e23]"></div>
+    {metaHref && metaLabel && (
+      <a
+        href={metaHref}
+        class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase shrink-0"
+      >{metaLabel}</a>
+    )}
+    {!metaHref && displayMeta && (
+      <span class="text-[10px] font-mono text-zinc-500 shrink-0">{displayMeta}</span>
+    )}
+  </div>
+  <slot />
+</section>

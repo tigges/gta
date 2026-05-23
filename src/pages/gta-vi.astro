@@ -3,25 +3,22 @@ import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 import { Image } from "astro:assets";
 import heroGtaVI from "../assets/images/hero-gta-vi.jpg";
-import ChartDelayTimeline      from "../components/charts/ChartDelayTimeline.astro";
-import ChartRegionHeatmap      from "../components/charts/ChartRegionHeatmap.astro";
-import ChartCommunity          from "../components/charts/ChartCommunity.astro";
-import ChartPrelaunchComparison from "../components/charts/ChartPrelaunchComparison.astro";
-import ChartTrailerDiscovery   from "../components/charts/ChartTrailerDiscovery.astro";
-import ChartPreviewCard        from "../components/charts/ChartPreviewCard.astro";
-import ChartTrailerVelocity   from "../components/charts/ChartTrailerVelocity.astro";
-import chartConfig from "../../data/config/chart-config.json";
-import { CHART_REGISTRY } from "../config/chartRegistry";
+import ChartPreviewCard from "../components/charts/ChartPreviewCard.astro";
 import GamePill from "../components/GamePill.astro";
 import { CATEGORY_BADGE_CLASSES } from "../config/categoryColors";
+import { HUB_CONFIG, getChart } from "../config/allCharts";
 
-const gtaViConfig = chartConfig.gta_vi;
-const Featured0 = CHART_REGISTRY[gtaViConfig.featured[0]];
-const Featured1 = CHART_REGISTRY[gtaViConfig.featured[1]];
-const Featured2 = CHART_REGISTRY[gtaViConfig.featured[2]];
-const Featured3 = CHART_REGISTRY[gtaViConfig.featured[3]];
-const Preview0  = CHART_REGISTRY[gtaViConfig.preview[0]];
-const Preview1  = CHART_REGISTRY[gtaViConfig.preview[1]];
+const featuredCharts = HUB_CONFIG["gta-vi"].featured.map(id => getChart(id)).filter(Boolean) as NonNullable<ReturnType<typeof getChart>>[];
+const previewCharts  = HUB_CONFIG["gta-vi"].preview.map(id => getChart(id)).filter(Boolean)  as NonNullable<ReturnType<typeof getChart>>[];
+
+const [f0, f1, f2, f3] = featuredCharts;
+const F0 = f0?.component;
+const F1 = f1?.component;
+const F2 = f2?.component;
+const F3 = f3?.component;
+const [p0, p1] = previewCharts;
+const P0 = p0?.component;
+const P1 = p1?.component;
 
 import type { TrailersData, TrailerVelocityData, PredictionsData, FeaturesData } from "../types/gta";
 
@@ -242,13 +239,13 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
         <a href="/charts?title=gta-vi" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All charts →</a>
       </div>
 
-      <!-- Featured charts — order from data/config/chart-config.json gta_vi.featured -->
-      {Featured0 && <div class="mb-6"><Featured0 /></div>}
-      {Featured1 && <div class="mb-6"><Featured1 /></div>}
-      {Featured2 && Featured3 && (
+      <!-- Featured charts — order from HUB_CONFIG["gta-vi"].featured in allCharts.ts -->
+      {F0 && <div class="mb-6"><F0 /></div>}
+      {F1 && <div class="mb-6"><F1 /></div>}
+      {F2 && F3 && (
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Featured2 />
-          <Featured3 />
+          <F2 />
+          <F3 />
         </div>
       )}
     </section>
@@ -264,18 +261,18 @@ const daysToRelease = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
       </div>
       <div class="flex flex-col gap-2">
 
-        {Preview0 && (
-          <ChartPreviewCard cardId="preview-0" title={gtaViConfig.preview[0]}
-            description="GTA VI intelligence chart" category="Community · GTA VI"
-            deepLink={`/charts#${gtaViConfig.preview[0]}`}>
-            <Preview0 />
+        {p0 && P0 && (
+          <ChartPreviewCard cardId={`preview-vi-0`}
+            title={p0.label} description={p0.shareText} category={p0.badge}
+            deepLink={`/charts#section-${p0.id}`}>
+            <P0 />
           </ChartPreviewCard>
         )}
-        {Preview1 && (
-          <ChartPreviewCard cardId="preview-1" title={gtaViConfig.preview[1]}
-            description="GTA VI intelligence chart" category="Community · GTA VI"
-            deepLink={`/charts#${gtaViConfig.preview[1]}`}>
-            <Preview1 />
+        {p1 && P1 && (
+          <ChartPreviewCard cardId={`preview-vi-1`}
+            title={p1.label} description={p1.shareText} category={p1.badge}
+            deepLink={`/charts#section-${p1.id}`}>
+            <P1 />
           </ChartPreviewCard>
         )}
       </div>

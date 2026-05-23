@@ -1,36 +1,22 @@
 ---
 /**
- * ChartFooter — shared footer for all chart card components.
+ * ChartFooter.astro — backward-compatibility shim over CardFooter.
  *
- * Renders: sources attribution (left) + ShareDropdown (right).
- * URL is computed from Astro.url.pathname + chartId anchor.
- * No GTAVI.AI text — the SVG watermark stamped by charts.astro covers attribution.
+ * All chart components currently import ChartFooter. This shim preserves
+ * that interface unchanged while delegating to CardFooter.
  *
- * Usage:
- *   <ChartFooter
- *     chartId="competitors-chart"
- *     sources="Publisher earnings · VGChartz · Metacritic · *predicted"
- *     shareText="GTA VI projected year-1 vs the biggest game launches..."
- *   />
+ * Phase 4 migration: chart components can be updated to import CardFooter
+ * directly, after which this shim can be deleted.
  */
-import ShareDropdown from "./ShareDropdown.astro";
+import CardFooter from "./CardFooter.astro";
 
 interface Props {
-  chartId:   string;   // matches the D3 container div id
-  sources:   string;   // data attribution text
-  shareText: string;   // sentence for X/Reddit post
+  chartId:   string;
+  sources:   string;
+  shareText: string;
 }
 
 const { chartId, sources, shareText } = Astro.props;
-// Share URL anchors to the section wrapper (section-{chartId}), not the D3 canvas div.
-// This ensures the URL scrolls to the top of the chart card including its header row.
-const sectionAnchor = `section-${chartId}`;
 ---
 
-<div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3 flex-wrap">
-  <span class="text-[10px] text-zinc-600 font-mono leading-relaxed flex-1">{sources}</span>
-  <div class="flex items-center gap-2 shrink-0">
-    <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-    <ShareDropdown anchorId={sectionAnchor} shareText={shareText} size="sm" />
-  </div>
-</div>
+<CardFooter chartId={chartId} sources={sources} shareText={shareText} />

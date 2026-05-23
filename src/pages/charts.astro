@@ -1,86 +1,35 @@
 ---
-// ── Layout + component imports ────────────────────────────────────────────
+// ── Layout + registry ─────────────────────────────────────────────────────────
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
-import GamePill from "../components/GamePill.astro";
+import ChartSection from "../components/ChartSection.astro";
+import { CHARTS_PAGE_ORDER, getChart } from "../config/allCharts";
 
-// ── Data imports (for header stat strip) ─────────────────────────────────
-import salesData   from "../../data/franchise/sales.json";
-import steamData   from "../../data/gta-5/meta/steam-players.json";
-import dlcData     from "../../data/gta-5/dlc/timeline.json";
-import gta5Trends  from "../../data/gta-5/trends/search-interest.json";
-import gta6Trends  from "../../data/gta-6/trends/search-interest.json";
-import vehicleData from "../../data/gta-5/vehicles/performance.json";
-import velocityData   from "../../data/gta-6/trailer-velocity.json";
-import redditData     from "../../data/community/reddit.json";
-import entertainData  from "../../data/franchise/entertainment-comps.json";
-import delayData        from "../../data/gta-6/delay-timeline.json";
-import cpiData          from "../../data/franchise/cpi.json";
-import trailerAnalysis  from "../../data/gta-6/trailer-analysis.json";
-import revenueSplit     from "../../data/franchise/revenue-split.json";
-import regionsData      from "../../data/franchise/regions-evidence.json";
-import stocksData       from "../../data/gta-5/economy/assassination-stocks.json";
-import revenueTiersData from "../../data/gta-5/economy/revenue-tiers.json";
-import releasesData     from "../../data/shared/releases.json";
-import bizProfilesData  from "../../data/gta-5/economy/business-profiles.json";
-import metacriticData   from "../../data/franchise/metacritic.json";
-import ttwoStock        from "../../data/franchise/ttwo-stock.json";
-import competitorData   from "../../data/franchise/competitors.json";
-import bonusHistoryData from "../../data/gta-5/economy/bonus-history.json";
-import saleFreqData     from "../../data/gta-5/economy/sale-frequency.json";
-import sharkCardData    from "../../data/gta-5/economy/shark-cards.json";
-import propertiesData   from "../../data/gta-5/economy/properties.json";
-import franchiseEconData    from "../../data/franchise/economic-history.json";
-import priceChangesData    from "../../data/gta-5/economy/price-changes.json";
-import sourceHistoryData   from "../../data/gta-5/economy/per-source-history.json";
-import vehicleModsData     from "../../data/gta-5/economy/vehicle-mods.json";
-import gtaPpiData          from "../../data/gta-5/economy/gta-ppi.json";
-import passiveStackData    from "../../data/gta-5/economy/passive-stack.json";
-import metaHistoryData     from "../../data/gta-5/economy/meta-history.json";
-import heistsData          from "../../data/gta-5/economy/online-heists.json";
-import spendingDistData    from "../../data/gta-5/economy/spending-distribution.json";
-import vehicleCargoData    from "../../data/gta-5/economy/vehicle-cargo.json";
+// ── Data imports (for dynamic meta strings + page header strip) ───────────────
+import salesData         from "../../data/franchise/sales.json";
+import steamData         from "../../data/gta-5/meta/steam-players.json";
+import dlcData           from "../../data/gta-5/dlc/timeline.json";
+import vehicleData       from "../../data/gta-5/vehicles/performance.json";
+import velocityData      from "../../data/gta-6/trailer-velocity.json";
+import trailerAnalysis   from "../../data/gta-6/trailer-analysis.json";
+import delayData         from "../../data/gta-6/delay-timeline.json";
+import regionsData       from "../../data/franchise/regions-evidence.json";
+import competitorData    from "../../data/franchise/competitors.json";
+import ttwoStock         from "../../data/franchise/ttwo-stock.json";
+import franchiseEconData from "../../data/franchise/economic-history.json";
+import bonusHistoryData  from "../../data/gta-5/economy/bonus-history.json";
+import sharkCardData     from "../../data/gta-5/economy/shark-cards.json";
+import propertiesData    from "../../data/gta-5/economy/properties.json";
+import priceChangesData  from "../../data/gta-5/economy/price-changes.json";
+import sourceHistoryData from "../../data/gta-5/economy/per-source-history.json";
+import vehicleModsData   from "../../data/gta-5/economy/vehicle-mods.json";
+import gtaPpiData        from "../../data/gta-5/economy/gta-ppi.json";
+import passiveStackData  from "../../data/gta-5/economy/passive-stack.json";
+import metaHistoryData   from "../../data/gta-5/economy/meta-history.json";
+import heistsData        from "../../data/gta-5/economy/online-heists.json";
+import spendingDistData  from "../../data/gta-5/economy/spending-distribution.json";
 
-// ── Chart components (all 37 — order driven by data/config/chart-config.json) ──
-import ChartAssassinationReturns from "../components/charts/ChartAssassinationReturns.astro";
-import ChartBonusHeatmap from "../components/charts/ChartBonusHeatmap.astro";
-import ChartCommunity from "../components/charts/ChartCommunity.astro";
-import ChartCompetitors from "../components/charts/ChartCompetitors.astro";
-import ChartCpiPricing from "../components/charts/ChartCpiPricing.astro";
-import ChartCriticDivergence from "../components/charts/ChartCriticDivergence.astro";
-import ChartDelayTimeline from "../components/charts/ChartDelayTimeline.astro";
-import ChartDlcCadence from "../components/charts/ChartDlcCadence.astro";
-import ChartDlcPlayerHistory from "../components/charts/ChartDlcPlayerHistory.astro";
-import ChartEntertainmentComp from "../components/charts/ChartEntertainmentComp.astro";
-import ChartFranchiseComplexity from "../components/charts/ChartFranchiseComplexity.astro";
-import ChartFranchiseEarnings from "../components/charts/ChartFranchiseEarnings.astro";
-import ChartFranchiseSales from "../components/charts/ChartFranchiseSales.astro";
-import ChartGtaPpi from "../components/charts/ChartGtaPpi.astro";
-import ChartHeistComparison from "../components/charts/ChartHeistComparison.astro";
-import ChartIeTiers from "../components/charts/ChartIeTiers.astro";
-import ChartIncomeHistory from "../components/charts/ChartIncomeHistory.astro";
-import ChartIncomeLeaderboard from "../components/charts/ChartIncomeLeaderboard.astro";
-import ChartMetaEvolution from "../components/charts/ChartMetaEvolution.astro";
-import ChartMissionEarnings from "../components/charts/ChartMissionEarnings.astro";
-import ChartPassiveStack from "../components/charts/ChartPassiveStack.astro";
-import ChartPrelaunchComparison from "../components/charts/ChartPrelaunchComparison.astro";
-import ChartPriceHistory from "../components/charts/ChartPriceHistory.astro";
-import ChartPropertyCost from "../components/charts/ChartPropertyCost.astro";
-import ChartPropertyDailyFee from "../components/charts/ChartPropertyDailyFee.astro";
-import ChartRegionHeatmap from "../components/charts/ChartRegionHeatmap.astro";
-import ChartRevenueSplit from "../components/charts/ChartRevenueSplit.astro";
-import ChartRoiScatter from "../components/charts/ChartRoiScatter.astro";
-import ChartSharkCard from "../components/charts/ChartSharkCard.astro";
-import ChartSpendingDistribution from "../components/charts/ChartSpendingDistribution.astro";
-import ChartTrailerDiscovery from "../components/charts/ChartTrailerDiscovery.astro";
-import ChartTrailerVelocity from "../components/charts/ChartTrailerVelocity.astro";
-import ChartTtwoStock from "../components/charts/ChartTtwoStock.astro";
-import ChartVehiclePerformance from "../components/charts/ChartVehiclePerformance.astro";
-import ChartVehicleTco from "../components/charts/ChartVehicleTco.astro";
-import PlayerChart from "../components/PlayerChart.astro";
-import TrendsChart from "../components/TrendsChart.astro";
-
-const metacriticScores = metacriticData.titles;
+// ── Filter system constants ───────────────────────────────────────────────────
 const CATEGORIES = ["All", "Economy-IG", "Economy-RL", "Promotions", "Performance", "Community", "History"] as const;
 const CAT_LABELS: Record<string, string> = {
   "All":        "All",
@@ -91,15 +40,49 @@ const CAT_LABELS: Record<string, string> = {
   "Community":  "🌐 Community",
   "History":    "📖 Franchise History",
 };
-// Economy data
-const assassinGuide  = (stocksData as any).guide_order as any[];
-// Pre-compute stats for header strip
-const gta5 = salesData.titles.find(t => t.id === "gta-5");
-const gta6 = salesData.titles.find(t => t.id === "gta-6");
+
+// ── Page header stats ─────────────────────────────────────────────────────────
 const t1 = velocityData.trailers.find((t: any) => t.youtube_id === "QdBZY2fkU-0");
 const t2 = velocityData.trailers.find((t: any) => t.youtube_id === "VQRLujxTm3c");
 const t1Views = t1?.snapshots?.at(-1)?.views ?? 0;
 const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
+
+// ── Dynamic meta strings — chart IDs that need build-time data ────────────────
+// Static metas live in allCharts.ts. Dynamic ones (computed from data files)
+// are overridden here via the ChartSection meta prop.
+const DYNAMIC_METAS: Record<string, string> = {
+  "trailer-discovery-chart":    `${trailerAnalysis.trailers[0].total_entities + trailerAnalysis.trailers[1].total_entities} entities discovered`,
+  "delay-timeline-chart":       `${delayData.total_delays} delay · ${delayData.timeline.length} events`,
+  "region-heatmap":             `${regionsData.regions.filter((r: any) => r.confirmed).length} confirmed regions`,
+  "competitors-chart":          `${competitorData.games.length} titles compared`,
+  "meta-evolution-chart":       `${(metaHistoryData as any).meta_history.length} patches tracked`,
+  "gta-ppi-chart":              `${(gtaPpiData as any).series.length} patches · base 100 = Oct 2013`,
+  "passive-stack-chart":        `4 streams · $${((passiveStackData as any).setup_cost_total / 1e6).toFixed(1)}M GTA$ setup`,
+  "shark-card-chart":           `${sharkCardData.analysis?.years_span} years · ${sharkCardData.analysis?.purchasing_power_ratio}× purchasing power`,
+  "heist-comparison-chart":     `${(heistsData as any).heists.length} heists`,
+  "income-history-chart":       `${(sourceHistoryData as any).source_count} sources · ${(sourceHistoryData as any).snapshot_count} patches`,
+  "vehicle-tco-chart":          `${(vehicleModsData as any).vehicle_count} vehicles`,
+  "property-cost-chart":        `${(propertiesData as any).property_count} properties`,
+  "spending-distribution-chart":`${(spendingDistData as any).eras.length} eras`,
+  "price-history-chart":        `${(priceChangesData as any).change_count} events · ${(priceChangesData as any).item_count} items`,
+  "bonus-heatmap":              `${(bonusHistoryData as any).entry_count} weeks tracked`,
+  "dlc-player-chart":           `${steamData.data.length} months · DLC annotated`,
+  "perf-chart":                 `${vehicleData.vehicles.length} vehicles · Broughy1322`,
+  "sales-chart":                salesData.last_updated.slice(0, 10),
+  "dlc-cadence-chart":          `${dlcData.updates.filter((u: any) => u.category === "major").length} major updates`,
+  "ttwo-stock-chart":           `${ttwoStock.prices.length} months · Yahoo Finance`,
+  "franchise-complexity-chart": `${(franchiseEconData as any).title_count} titles · 1997 → 2026`,
+};
+
+// ── Link-type right-side elements (anchor instead of text span) ───────────────
+const LINK_METAS: Record<string, { href: string; label: string }> = {
+  "income-leaderboard-chart":    { href: "/database", label: "Full profiles →" },
+  "roi-scatter-chart":           { href: "/database", label: "Full profiles →" },
+  "assassination-returns-chart": { href: "/gta-v",    label: "Full stock guide →" },
+};
+
+// ── Build the ordered chart list ──────────────────────────────────────────────
+const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) as NonNullable<ReturnType<typeof getChart>>[];
 ---
 
 
@@ -206,412 +189,22 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-10">
 
-    <section id="section-trailer-velocity" class="chart-block" data-title="gta-vi" data-category="Community">
+    {chartsInOrder.map((chart) => {
+      const Comp = chart.component;
+      const link = LINK_METAS[chart.id];
+      return (
+        <ChartSection
+          chartId={chart.id}
+          meta={DYNAMIC_METAS[chart.id]}
+          metaHref={link?.href}
+          metaLabel={link?.label}
+        >
+          <Comp />
+        </ChartSection>
+      );
+    })}
 
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-vi" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Trailer View Velocity</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-      </div>
-      <ChartTrailerVelocity />
-    </section>
-    <section id="section-trailer-discovery-chart" class="chart-block" data-title="gta-vi" data-category="Community">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-vi" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Discovery Density — What Every Second Revealed</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{trailerAnalysis.trailers[0].total_entities + trailerAnalysis.trailers[1].total_entities} entities discovered</span>
-      </div>
-      <ChartTrailerDiscovery />
-    </section>
-    <section id="section-delay-timeline-chart" class="chart-block" data-title="gta-vi" data-category="History">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-vi" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Development & Delay Timeline</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{delayData.total_delays} delay · {delayData.timeline.length} events</span>
-      </div>
-      <ChartDelayTimeline />
-    </section>
-    <section id="section-region-heatmap" class="chart-block" data-title="gta-vi" data-category="Community">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-vi" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida Region Evidence Heatmap</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{regionsData.regions.filter((r: any) => r.confirmed).length} confirmed regions</span>
-      </div>
-      <ChartRegionHeatmap />
-    </section>
-    <section id="section-community-chart" class="chart-block" data-title="gta-vi" data-category="Community">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-vi" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Community Anticipation Curve</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">r/GTAVI · Google Trends overlay</span>
-      </div>
-      <ChartCommunity />
-    </section>
-    <section id="section-prelaunch-comparison-chart" class="chart-block" data-title="gta-vi" data-category="History">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-vi" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Pre-launch Hype — GTA V (2013) vs GTA VI (2026)</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">both normalised to months before launch</span>
-      </div>
-      <ChartPrelaunchComparison />
-    </section>
-    <section id="section-entertainment-chart" class="chart-block" data-title="gta-vi" data-category="Economy-RL">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-vi" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Global Entertainment</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">revenue billions USD</span>
-      </div>
-      <ChartEntertainmentComp />
-    </section>
-    <section id="section-competitors-chart" class="chart-block" data-title="gta-vi" data-category="Economy-RL">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-vi" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI vs Major Game Launches — Year 1 Sales & Pre-launch Hype</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{competitorData.games.length} titles compared</span>
-      </div>
-      <ChartCompetitors />
-    </section>
-    <section id="section-income-leaderboard-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Income Leaderboard — All Sources Ranked</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/database" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase shrink-0">Full profiles →</a>
-      </div>
-      <ChartIncomeLeaderboard />
-    </section>
-    <section id="section-meta-evolution-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Ceiling — Top $/hr Method at Each Major DLC (2013–2023)</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(metaHistoryData as any).meta_history.length} patches tracked</span>
-      </div>
-      <ChartMetaEvolution />
-    </section>
-    <section id="section-gta-ppi-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA-PPI — In-Game Inflation Index (hours to buy standard basket)</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(gtaPpiData as any).series.length} patches · base 100 = Oct 2013</span>
-      </div>
-      <ChartGtaPpi />
-    </section>
-    <section id="section-passive-stack-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Passive Income Stack — How Idle GTA$/hr Grew From 0 to $1.24M</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">4 streams · ${((passiveStackData as any).setup_cost_total/1e6).toFixed(1)}M GTA$ setup</span>
-      </div>
-      <ChartPassiveStack />
-    </section>
-    <section id="section-roi-scatter-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Setup Cost vs $/hr — What's Actually Worth Buying?</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/database" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase shrink-0">Full profiles →</a>
-      </div>
-      <ChartRoiScatter />
-    </section>
-    <section id="section-shark-card-chart" class="chart-block" data-title="gta-online" data-category="Economy-RL">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Shark Card Purchasing Power — 12 Years of In-Game Inflation</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{sharkCardData.analysis?.years_span} years · {sharkCardData.analysis?.purchasing_power_ratio}× purchasing power</span>
-      </div>
-      <ChartSharkCard />
-    </section>
-    <section id="section-heist-comparison-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Heist Comparison — $/hr vs Setup Cost vs Run Time</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(heistsData as any).heists.length} heists</span>
-      </div>
-      <ChartHeistComparison />
-    </section>
-    <section id="section-income-history-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Income Source Price History — Nerfs, Buffs, DLC Launches</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(sourceHistoryData as any).source_count} sources · {(sourceHistoryData as any).snapshot_count} patches</span>
-      </div>
-      <ChartIncomeHistory />
-    </section>
-    <section id="section-vehicle-tco-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Meta Vehicle TCO — What Does Going Full Meta Actually Cost?</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(vehicleModsData as any).vehicle_count} vehicles</span>
-      </div>
-      <ChartVehicleTco />
-    </section>
-    <section id="section-property-cost-chart" class="chart-block" data-title="gta-online" data-category="Economy-RL">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Property Costs — Full Expenditure Registry</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(propertiesData as any).property_count} properties</span>
-      </div>
-      <ChartPropertyCost />
-    </section>
-    <section id="section-property-daily-fee-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Property Daily Fees — Ownership Has Ongoing Costs</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">charged daily · applies offline</span>
-      </div>
-      <ChartPropertyDailyFee />
-    </section>
-    <section id="section-spending-distribution-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Spending Mix — Where GTA$ Goes Per Era</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(spendingDistData as any).eras.length} eras</span>
-      </div>
-      <ChartSpendingDistribution />
-    </section>
-    <section id="section-price-history-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Price &amp; Payout History — Every Nerf, Buff, and Launch Since 2013</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(priceChangesData as any).change_count} events · {(priceChangesData as any).item_count} items</span>
-      </div>
-      <ChartPriceHistory />
-    </section>
-    <section id="section-bonus-heatmap" class="chart-block" data-title="gta-online" data-category="Promotions">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Promotions</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online Weekly Bonus Calendar — Activity Multiplier History</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(bonusHistoryData as any).entry_count} weeks tracked</span>
-      </div>
-      <ChartBonusHeatmap />
-    </section>
-    <section id="section-ie-tiers-chart" class="chart-block" data-title="gta-online" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-online" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Import/Export Sell Tiers — Why Top-Range Vehicles Are 3× More Valuable</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">3 tiers · 3 delivery types</span>
-      </div>
-      <ChartIeTiers />
-    </section>
-    <section id="section-assassination-returns-chart" class="chart-block" data-title="gta-v" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-v" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Assassination Stock Returns — Optimal Sequence</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/gta-v" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase shrink-0">Full stock guide →</a>
-      </div>
-      <ChartAssassinationReturns />
-    </section>
-    <section id="section-dlc-player-chart" class="chart-block" data-title="gta-v" data-category="Community">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-v" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Players — DLC Events Overlay</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{steamData.data.length} months · DLC annotated</span>
-      </div>
-      <ChartDlcPlayerHistory />
-    </section>
-    <section id="section-player-chart" class="chart-block" data-title="gta-v" data-category="Community">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-v" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Steam Player Count — Monthly Avg & Peak</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-      </div>
-      <PlayerChart />
-    </section>
-    <section id="section-trends-chart" class="chart-block" data-title="gta-v" data-category="Community">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-v" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V + GTA VI Google Trends 2013–2026</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-      </div>
-      <TrendsChart />
-    </section>
-    <section id="section-mission-earnings-chart" class="chart-block" data-title="gta-v" data-category="Economy-IG">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-v" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">IG Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mission Earnings — Full Arc</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">GTA V · story arc earnings</span>
-      </div>
-      <ChartMissionEarnings />
-    </section>
-    <section id="section-perf-chart" class="chart-block" data-title="gta-v" data-category="Performance">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="gta-v" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">Performance</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Vehicle Performance — Broughy1322 Lap Times</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{vehicleData.vehicles.length} vehicles · Broughy1322</span>
-      </div>
-      <ChartVehiclePerformance />
-    </section>
-    <section id="section-sales-chart" class="chart-block" data-title="franchise" data-category="Economy-RL">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="franchise" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Franchise Sales Velocity</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{salesData.last_updated.slice(0,10)}</span>
-      </div>
-      <ChartFranchiseSales />
-    </section>
-    <section id="section-cpi-chart" class="chart-block" data-title="franchise" data-category="Economy-RL">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="franchise" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Launch Price — Nominal vs Inflation-Adjusted</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">US CPI-U · all prices in 2026 dollars</span>
-      </div>
-      <ChartCpiPricing />
-    </section>
-    <section id="section-divergence-chart" class="chart-block" data-title="franchise" data-category="History">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="franchise" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Critic vs User Score Divergence — The Monetisation Story</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">Metacritic · critic /100 · user ×10</span>
-      </div>
-      <ChartCriticDivergence />
-    </section>
-    <section id="section-dlc-cadence-chart" class="chart-block" data-title="franchise" data-category="History">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="franchise" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Online DLC Cadence → GTA VI Online Prediction</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{dlcData.updates.filter((u: any) => u.category === "major").length} major updates</span>
-      </div>
-      <ChartDlcCadence />
-    </section>
-    <section id="section-revenue-split-chart" class="chart-block" data-title="franchise" data-category="Economy-RL">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="franchise" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA V Revenue Model — Game Sales vs Online Economy</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">13 fiscal years · game → recurrent shift</span>
-      </div>
-      <ChartRevenueSplit />
-    </section>
-    <section id="section-ttwo-stock-chart" class="chart-block" data-title="franchise" data-category="Economy-RL">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="franchise" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">RL Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Take-Two (TTWO) Stock Price vs GTA VI Milestones</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{ttwoStock.prices.length} months · Yahoo Finance</span>
-      </div>
-      <ChartTtwoStock />
-    </section>
-    <section id="section-franchise-complexity-chart" class="chart-block" data-title="franchise" data-category="History">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="franchise" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA Economic Complexity — 25 Years of Evolution</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">{(franchiseEconData as any).title_count} titles · 1997 → 2026</span>
-      </div>
-      <ChartFranchiseComplexity />
-    </section>
-    <section id="section-franchise-earnings-chart" class="chart-block" data-title="franchise" data-category="History">
-
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="franchise" size="xs" />
-        <span class="border border-badge-border text-badge-text bg-transparent text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded">History</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Cross-Title Earnings — Max $/hr + Hours to Endgame</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">GTA II → GTA Online · normalised effort</span>
-      </div>
-      <ChartFranchiseEarnings />
-    </section>
-
-        <CrossLinks context="charts" />
+    <CrossLinks context="charts" />
   </div>
 </Base>
 
@@ -638,38 +231,30 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     document.querySelectorAll<HTMLElement>(".chart-block").forEach(block => {
       const blockTitle = block.dataset.title;
       const show = activeTitle === "All" || !blockTitle || blockTitle === activeTitle;
-      // Always set display to ensure previously-hidden blocks are restored
       block.style.display = show ? "" : "none";
     });
-    // Title filter active states — use data-active + per-title accent colour
     const TITLE_ACCENT: Record<string, { border: string; bg: string; img: string }> = {
-      "All":        { border: "#2a2a31",          bg: "transparent",           img: "1" },
-      "gta-vi":     { border: "rgba(245,158,11,0.5)", bg: "var(--c-hero-bloom)", img: "1" },
-      "gta-online": { border: "rgba(13,148,136,0.5)", bg: "rgba(13,148,136,0.06)", img: "1" },
-      "gta-v":      { border: "rgba(113,113,122,0.5)", bg: "rgba(113,113,122,0.06)", img: "1" },
-      "franchise":  { border: "rgba(113,113,122,0.5)", bg: "rgba(113,113,122,0.06)", img: "1" },
+      "All":        { border: "#2a2a31",               bg: "transparent",              img: "1" },
+      "gta-vi":     { border: "rgba(245,158,11,0.5)",  bg: "var(--c-hero-bloom)",      img: "1" },
+      "gta-online": { border: "rgba(13,148,136,0.5)",  bg: "rgba(13,148,136,0.06)",    img: "1" },
+      "gta-v":      { border: "rgba(113,113,122,0.5)", bg: "rgba(113,113,122,0.06)",   img: "1" },
+      "franchise":  { border: "rgba(113,113,122,0.5)", bg: "rgba(113,113,122,0.06)",   img: "1" },
     };
     document.querySelectorAll<HTMLButtonElement>(".chart-title-filter").forEach(b => {
-      const title  = b.dataset.title ?? "All";
+      const title    = b.dataset.title ?? "All";
       const isActive = title === activeTitle || (activeTitle === "All" && title === "All");
-      const accent = TITLE_ACCENT[title] ?? TITLE_ACCENT["All"];
-      b.style.borderColor    = isActive ? accent.border : "rgba(42,42,49,1)";
-      b.style.backgroundColor = isActive ? accent.bg   : "transparent";
+      const accent   = TITLE_ACCENT[title] ?? TITLE_ACCENT["All"];
+      b.style.borderColor     = isActive ? accent.border : "rgba(42,42,49,1)";
+      b.style.backgroundColor = isActive ? accent.bg     : "transparent";
       const img = b.querySelector<HTMLImageElement>("img");
       if (img) img.style.opacity = isActive ? "1" : "0.5";
-      // Text buttons (All / Franchise)
-      if (!img) {
-        b.style.color = isActive ? "#f59e0b" : "";
-      }
+      if (!img) b.style.color = isActive ? "#f59e0b" : "";
     });
   }
-  // Apply title filter AFTER charts render (via rAF) to avoid hiding elements
-  // before D3 reads their clientWidth
   document.querySelectorAll<HTMLButtonElement>(".chart-title-filter").forEach(btn => {
     btn.addEventListener("click", () => {
       activeTitle = btn.dataset.title!;
       applyTitleFilter();
-      // Re-apply category filter too
       document.querySelector<HTMLButtonElement>('.chart-filter[data-filter="All"]')?.click();
     });
   });
@@ -693,7 +278,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
         const cat = block.dataset.category!;
         const show = filter === "All"
           || cat === filter
-          // "Economy-IG" filter also shows plain "Economy" legacy blocks
           || (filter === "Economy-IG" && cat === "Economy")
           || (filter === "Economy-RL" && cat === "Economy");
         block.style.display = show ? "" : "none";
@@ -702,10 +286,9 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
   });
 
   // ── Watermark: stamped on all chart SVGs after D3 renders ────
-  // Runs once after all chart builders complete via requestAnimationFrame.
   function stampChartWatermarks() {
     document.querySelectorAll<SVGSVGElement>("[id$='-chart'] svg, #trailer-discovery-chart svg, #region-heatmap svg").forEach(svg => {
-      if (svg.querySelector(".gtavi-wm")) return; // already stamped
+      if (svg.querySelector(".gtavi-wm")) return;
       const vb = svg.getAttribute("viewBox")?.split(" ").map(Number);
       if (!vb || vb.length < 4) return;
       const [,, vw, vh] = vb;
@@ -725,9 +308,6 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
   requestAnimationFrame(() => requestAnimationFrame(stampChartWatermarks));
 
   // ── Resilient chart initialisation ─────────────────────────────────────────
-  // Wraps each chart init in try/catch + clientWidth guard.
-  // If el.clientWidth is 0 (element hidden or not laid out), retries after rAF.
-  // If D3 throws, shows a "data updating" fallback instead of a broken chart.
   function runChart(id: string, fn: (el: HTMLElement) => void): void {
     const el = document.getElementById(id) as HTMLElement | null;
     if (!el) return;
@@ -748,38 +328,24 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
     requestAnimationFrame(() => tryRender(0));
   }
 
-  // Apply title filter AFTER chart init rAFs have queued
   requestAnimationFrame(() => applyTitleFilter());
 
   // ── Hash navigation — filter activation only ─────────────────────────────
-  // Native browser hash scrolling already handles the scroll correctly:
-  //   - section ids exist in static HTML ✓
-  //   - chart divs have explicit heights → layout is stable before D3 renders ✓
-  //   - scroll-margin-top: 72px in CSS clears the sticky nav ✓
-  // This handler's ONLY job: reset category/title filters if they would hide
-  // the target section, then let the browser re-scroll natively.
   (function handleChartHash() {
     const hash = window.location.hash;
     if (!hash || hash.length < 2) return;
     const targetId = hash.slice(1);
-
     setTimeout(() => {
       const el = document.getElementById(targetId);
       if (!el) return;
       const section = (el.closest<HTMLElement>("section.chart-block") ?? el) as HTMLElement;
-
-      // Only act if the section is hidden by an active filter
       if (section.style.display === "none" || section.offsetParent === null) {
-        // Reset category + title filters so the section becomes visible
         document.querySelector<HTMLButtonElement>('.chart-filter[data-filter="All"]')?.click();
         document.querySelector<HTMLButtonElement>('.chart-title-filter[data-title="All"]')?.click();
-        // After filter reset re-renders the DOM, scroll to the section
         setTimeout(() => {
           section.scrollIntoView({ behavior: "instant", block: "start" });
         }, 50);
       }
-      // If already visible: do nothing — browser native scroll already landed correctly.
     }, 100);
   })();
-
 </script>

@@ -1,0 +1,59 @@
+---
+/**
+ * CardFooter.astro — universal card footer for all card-shaped components.
+ *
+ * Works for both data charts and non-chart interactive cards.
+ *
+ * When a chartId is provided, sources and shareText are looked up from
+ * the allCharts registry — no per-instance prop duplication needed.
+ * Explicit props override registry values.
+ *
+ * Usage — chart card (registry lookup):
+ *   <CardFooter chartId="bonus-heatmap" />
+ *
+ * Usage — chart card (prop override):
+ *   <CardFooter chartId="player-chart" sources="SteamCharts · updated {date}" />
+ *
+ * Usage — non-chart card (explicit props):
+ *   <CardFooter
+ *     anchorId="eco-gta-iii"
+ *     sources="Source: curated · GTA Fandom Wiki"
+ *     shareText="GTA III's economy is the franchise baseline."
+ *   />
+ */
+
+import ShareDropdown from "./ShareDropdown.astro";
+import { getChart } from "../config/allCharts";
+
+interface Props {
+  /** Chart ID — looks up sources and shareText from the allCharts registry */
+  chartId?: string;
+  /** Source attribution. Overrides registry value when chartId is provided. */
+  sources?: string;
+  /** Share text for X/Reddit. Overrides registry value when chartId is provided. */
+  shareText?: string;
+  /**
+   * Scroll anchor for the share URL.
+   * Defaults to "section-{chartId}" when chartId is provided.
+   * Must be provided explicitly for non-chart cards.
+   */
+  anchorId?: string;
+}
+
+const { chartId, sources: sourcesOverride, shareText: shareTextOverride, anchorId: anchorIdOverride } = Astro.props;
+
+// Registry lookup
+const chart = chartId ? getChart(chartId) : undefined;
+
+const sources   = sourcesOverride   ?? chart?.sources   ?? "";
+const shareText = shareTextOverride ?? chart?.shareText ?? "";
+const anchorId  = anchorIdOverride  ?? (chartId ? `section-${chartId}` : "");
+---
+
+<div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3 flex-wrap">
+  <span class="text-[10px] text-zinc-600 font-mono leading-relaxed flex-1">{sources}</span>
+  <div class="flex items-center gap-2 shrink-0">
+    <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+    <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
+  </div>
+</div>
