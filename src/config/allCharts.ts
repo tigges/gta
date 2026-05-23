@@ -397,10 +397,10 @@ export const ALL_CHARTS: ChartMeta[] = [
     game:      "gta-online",
     category:  "Economy-IG",
     badge:     "IG Economy",
-    label:     "Spending Mix — Where GTA$ Goes Per Era",
+    label:     "Spending Mix — Where GTA$ Goes Over the Years",
     meta:      null, // dynamic: eras.length
     sources:   "Source: community surveys · GTAForums spending analysis · modelled estimates · confidence: medium",
-    shareText: "How GTA Online players spend their money across eras: vehicles dominated 2013–14, properties peaked 2016–17 (Bunker era), then Oppressor drove vehicles back up.",
+    shareText: "How GTA Online players spend their money: vehicles dominated 2013–14, properties peaked 2016–17 (Bunker update), then Oppressor drove vehicles back up.",
     pages:     ["charts"],
   },
 
@@ -495,7 +495,7 @@ export const ALL_CHARTS: ChartMeta[] = [
     game:      "gta-online",
     category:  "Economy-IG",
     badge:     "IG Economy",
-    label:     "GTA$ Spending Distribution — How Player Money Flows Each Era",
+    label:     "GTA$ Spending Distribution — How Player Money Flows Over the Years",
     meta:      "vehicles · properties · weapons",
     sources:   "Source: community surveys · GTAForums spending analysis · modelled estimates",
     shareText: "Where GTA$ actually goes: properties overtook vehicles in 2016 and never looked back. The Bunker era reshaped how GTA Online players spend.",
