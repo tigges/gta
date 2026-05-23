@@ -932,7 +932,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     const svg = d3.select(el).append("svg").attr("width","100%")
       .attr("viewBox",`0 0 ${totalW} ${totalH}`)
       .append("g").attr("transform",`translate(${ml},${mt})`);
-    const x = d3.scaleTime().domain([new Date("2013-01-01"),new Date("2026-01-01")]).range([0,W]);
+    const domainEnd = new Date(series.at(-1)?.date ?? Date.now());
+    domainEnd.setMonth(domainEnd.getMonth() + 3);
+    const x = d3.scaleTime().domain([new Date("2013-01-01"), domainEnd]).range([0,W]);
     const y = d3.scaleLinear().domain([0,(d3.max(series,(d:any)=>d.top_gta_per_hr)??2e6)*1.2]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
@@ -948,7 +950,14 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     series.forEach((d:any,i:number)=>{
       const cx=x(new Date(d.date)),cy=y(d.top_gta_per_hr),isLast=i===series.length-1;
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3).attr("fill",isLast?cc.bar:cc.bg).attr("stroke",cc.bar).attr("stroke-width",1.5);
-      if(isLast) svg.append("text").attr("x",cx+8).attr("y",cy+4).attr("fill",cc.bar).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold").text(`$${Math.round(d.top_gta_per_hr/1000)}K/hr`);
+      if(isLast) {
+        const v = d.top_gta_per_hr;
+        const lbl = `$${v>=1e6?(v/1e6).toFixed(1)+"M":Math.round(v/1000)+"K"}/hr`;
+        const nearEdge = cx > W - 72;
+        svg.append("text").attr("x", nearEdge ? cx-8 : cx+8).attr("y",cy+4)
+          .attr("fill",cc.bar).attr("font-size","11").attr("font-family","monospace")
+          .attr("font-weight","bold").attr("text-anchor", nearEdge ? "end" : "start").text(lbl);
+      }
     });
     [{date:"2020-12-15",label:"Cayo",color:cc.green},{date:"2022-01-20",label:"Nerf",color:cc.red},{date:"2022-12-13",label:"Acid Lab",color:cc.teal}].forEach(a=>{
       const xp=x(new Date(a.date));
@@ -1082,7 +1091,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     const series:any[]=JSON.parse(el.dataset.series||"[]");
     const ml=56,mr=60,mt=16,mb=48;
     const svg=d3.select(el).append("svg").attr("width","100%").attr("viewBox",`0 0 ${totalW} ${totalH}`).append("g").attr("transform",`translate(${ml},${mt})`);
-    const x=d3.scaleTime().domain([new Date("2013-01-01"),new Date("2026-01-01")]).range([0,W]);
+    const ppiDomainEnd = new Date(series.at(-1)?.date ?? Date.now());
+    ppiDomainEnd.setMonth(ppiDomainEnd.getMonth() + 3);
+    const x=d3.scaleTime().domain([new Date("2013-01-01"), ppiDomainEnd]).range([0,W]);
     const y=d3.scaleLinear().domain([0,(d3.max(series,(s:any)=>s.ppi)??200)*1.2]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
@@ -1100,7 +1111,13 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       const cx=x(new Date(s.date)),cy=y(s.ppi),isLast=i===series.length-1;
       const dotColor=s.event==="nerf"?cc.red:s.event==="buff"?cc.green:s.event==="basket_expansion"?cc.purple:cc.bar;
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3.5).attr("fill",isLast?cc.red:cc.bg).attr("stroke",dotColor).attr("stroke-width",1.5);
-      if(isLast) svg.append("text").attr("x",cx+7).attr("y",cy+4).attr("fill",cc.red).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold").text(`PPI ${s.ppi}`);
+      if(isLast) {
+        const nearEdge = cx > W - 60;
+        svg.append("text").attr("x", nearEdge ? cx-8 : cx+7).attr("y",cy+4)
+          .attr("fill",cc.red).attr("font-size","11").attr("font-family","monospace")
+          .attr("font-weight","bold").attr("text-anchor", nearEdge ? "end" : "start")
+          .text(`PPI ${s.ppi}`);
+      }
     });
     [{date:"2018-07-24",label:"Oppressor +153%",color:cc.purple},{date:"2020-12-15",label:"Cayo all-time low",color:cc.green},{date:"2022-01-20",label:"Cayo nerf",color:cc.red}].forEach(a=>{
       const xp=x(new Date(a.date));
@@ -1125,7 +1142,10 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     const passive:any[]=JSON.parse(el.dataset.passive||"[]");
     const ml=40,mr=24,mt=16,mb=48;
     const svg=d3.select(el).append("svg").attr("width","100%").attr("viewBox",`0 0 ${totalW} ${totalH}`).append("g").attr("transform",`translate(${ml},${mt})`);
-    const x=d3.scaleTime().domain([new Date("2013-01-01"),new Date("2026-01-01")]).range([0,W]);
+    const allHealthDates = [...yieldData.map((d:any)=>new Date(d.date)), ...ppiSeries.map((d:any)=>new Date(d.date))];
+    const healthDomainEnd = new Date(d3.max(allHealthDates) ?? new Date());
+    healthDomainEnd.setMonth(healthDomainEnd.getMonth() + 3);
+    const x=d3.scaleTime().domain([new Date("2013-01-01"), healthDomainEnd]).range([0,W]);
     const y=d3.scaleLinear().domain([0,6]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(6).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
@@ -1141,7 +1161,11 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       if(last){
         const lx=x(new Date(String(last[dateKey]))),ly=y(Math.min(6,Math.max(0,valFn(last))));
         svg.append("circle").attr("cx",lx).attr("cy",ly).attr("r",4).attr("fill",color).attr("stroke",cc.bg).attr("stroke-width",1.5);
-        svg.append("text").attr("x",lx+7).attr("y",ly+4).attr("fill",color).attr("font-size","9").attr("font-family","monospace").attr("font-weight","bold").text(valFn(last).toFixed(1));
+        const nearEdge = lx > W - 36;
+        svg.append("text").attr("x", nearEdge ? lx-6 : lx+7).attr("y",ly+4)
+          .attr("fill",color).attr("font-size","9").attr("font-family","monospace")
+          .attr("font-weight","bold").attr("text-anchor", nearEdge ? "end" : "start")
+          .text(valFn(last).toFixed(1));
       }
     }
     dl(yieldData,"date",d=>(d.top_gta_per_hr/maxYield)*5,cc.bar);

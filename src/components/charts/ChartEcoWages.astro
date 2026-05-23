@@ -56,7 +56,10 @@ const liveMetaSeries = lastMeta?.date === today
     const svg = d3.select(el).append("svg").attr("width","100%")
       .attr("viewBox",`0 0 ${totalW} ${totalH}`)
       .append("g").attr("transform",`translate(${ml},${mt})`);
-    const x = d3.scaleTime().domain([new Date("2013-01-01"),new Date("2026-01-01")]).range([0,W]);
+    // Domain end: 3 months past the last data point so the live dot never extrapolates outside W
+    const domainEnd = new Date(series.at(-1)?.date ?? Date.now());
+    domainEnd.setMonth(domainEnd.getMonth() + 3);
+    const x = d3.scaleTime().domain([new Date("2013-01-01"), domainEnd]).range([0,W]);
     const y = d3.scaleLinear().domain([0,(d3.max(series,(d:any)=>d.top_gta_per_hr)??2e6)*1.2]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
@@ -72,7 +75,14 @@ const liveMetaSeries = lastMeta?.date === today
     series.forEach((d:any,i:number)=>{
       const cx=x(new Date(d.date)),cy=y(d.top_gta_per_hr),isLast=i===series.length-1;
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3).attr("fill",isLast?cc.bar:cc.bg).attr("stroke",cc.bar).attr("stroke-width",1.5);
-      if(isLast) svg.append("text").attr("x",cx+8).attr("y",cy+4).attr("fill",cc.bar).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold").text(`$${Math.round(d.top_gta_per_hr/1000)}K/hr`);
+      if(isLast) {
+        const v = d.top_gta_per_hr;
+        const lbl = `$${v>=1e6?(v/1e6).toFixed(1)+"M":Math.round(v/1000)+"K"}/hr`;
+        const nearEdge = cx > W - 72;
+        svg.append("text").attr("x", nearEdge ? cx-8 : cx+8).attr("y",cy+4)
+          .attr("fill",cc.bar).attr("font-size","11").attr("font-family","monospace")
+          .attr("font-weight","bold").attr("text-anchor", nearEdge ? "end" : "start").text(lbl);
+      }
     });
     [{date:"2020-12-15",label:"Cayo",color:cc.green},{date:"2022-01-20",label:"Nerf",color:cc.red},{date:"2022-12-13",label:"Acid Lab",color:cc.teal}].forEach(a=>{
       const xp=x(new Date(a.date));

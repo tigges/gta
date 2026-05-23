@@ -5,20 +5,18 @@
  * Self-contained; D3 init deferred via IntersectionObserver.
  */
 import ppiData     from "../../../data/gta-5/economy/gta-ppi.json";
-import metaHistory from "../../../data/gta-5/economy/meta-history.json";
 import ChartFooter from "../ChartFooter.astro";
 
-const ppiSeries  = (ppiData as any).series as any[];
-const metaSeries = (metaHistory as any).meta_history as any[];
+const ppiSeries = (ppiData as any).series as any[];
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
   <div class="px-5 py-3 border-b border-[#1e1e23]">
     <div class="font-semibold text-zinc-200 text-sm">GTA-PPI — Purchasing Power Index 2013–2026</div>
-    <div class="text-[10px] font-mono text-zinc-600 mt-0.5">GTA$ real value vs real-world inflation · updated nightly</div>
+    <div class="text-[10px] font-mono text-zinc-600 mt-0.5">GTA$ real value over the years · updated nightly · base 100 = Oct 2013</div>
   </div>
   <div id="chart-ppi" class="w-full" style="height:280px"
-    data-ppi={JSON.stringify(ppiSeries)} data-yields={JSON.stringify(metaSeries)}
+    data-series={JSON.stringify(ppiSeries)}
   ></div>
   <ChartFooter chartId="chart-ppi" sources="Source: community data · updated nightly" shareText="GTA Online economy chart: GTA-PPI — Purchasing Power Index 2013–2026" />
 </div>
@@ -29,12 +27,11 @@ const metaSeries = (metaHistory as any).meta_history as any[];
   import { registerChart, triggerChart } from "../../assets/chartInit";
 
   const CHART_H: Record<string, number> = {
-    "chart-wages": 220, "chart-spending": 220, "chart-savings": 220,
-    "chart-sharkcards": 220, "chart-investment": 200, "chart-ppi": 280, "chart-health": 280,
+    "chart-ppi": 280,
   };
   function getDims(id: string, ml:number, mr:number, mt:number, mb:number) {
     const el = document.getElementById(id) as HTMLElement;
-    const totalH = CHART_H[id] ?? 220;
+    const totalH = CHART_H[id] ?? 280;
     const totalW = el?.clientWidth || 600;
     const W = totalW - ml - mr;
     const H = totalH - mt - mb;
@@ -47,10 +44,16 @@ const metaSeries = (metaHistory as any).meta_history as any[];
     const series:any[]=JSON.parse(el.dataset.series||"[]");
     const ml=56,mr=60,mt=16,mb=48;
     const svg=d3.select(el).append("svg").attr("width","100%").attr("viewBox",`0 0 ${totalW} ${totalH}`).append("g").attr("transform",`translate(${ml},${mt})`);
-    const x=d3.scaleTime().domain([new Date("2013-01-01"),new Date("2026-01-01")]).range([0,W]);
+
+    // Domain end: 3 months past last data point so the live dot never overflows W
+    const domainEnd = new Date(series.at(-1)?.date ?? Date.now());
+    domainEnd.setMonth(domainEnd.getMonth() + 3);
+    const x=d3.scaleTime().domain([new Date("2013-01-01"), domainEnd]).range([0,W]);
+
     const y=d3.scaleLinear().domain([0,(d3.max(series,(s:any)=>s.ppi)??200)*1.2]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
+    // baseline 100 label — inside the right margin
     svg.append("line").attr("x1",0).attr("x2",W).attr("y1",y(100)).attr("y2",y(100)).attr("stroke",cc.text6).attr("stroke-width",1).attr("stroke-dasharray","4,2");
     svg.append("text").attr("x",W+4).attr("y",y(100)+4).attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace").text("100");
     const defs=svg.append("defs");
@@ -65,7 +68,13 @@ const metaSeries = (metaHistory as any).meta_history as any[];
       const cx=x(new Date(s.date)),cy=y(s.ppi),isLast=i===series.length-1;
       const dotColor=s.event==="nerf"?cc.red:s.event==="buff"?cc.green:s.event==="basket_expansion"?cc.purple:cc.bar;
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3.5).attr("fill",isLast?cc.red:cc.bg).attr("stroke",dotColor).attr("stroke-width",1.5);
-      if(isLast) svg.append("text").attr("x",cx+7).attr("y",cy+4).attr("fill",cc.red).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold").text(`PPI ${s.ppi}`);
+      if(isLast) {
+        const nearEdge = cx > W - 60;
+        svg.append("text").attr("x", nearEdge ? cx-8 : cx+7).attr("y",cy+4)
+          .attr("fill",cc.red).attr("font-size","11").attr("font-family","monospace")
+          .attr("font-weight","bold").attr("text-anchor", nearEdge ? "end" : "start")
+          .text(`PPI ${s.ppi}`);
+      }
     });
     [{date:"2018-07-24",label:"Oppressor +153%",color:cc.purple},{date:"2020-12-15",label:"Cayo all-time low",color:cc.green},{date:"2022-01-20",label:"Cayo nerf",color:cc.red}].forEach(a=>{
       const xp=x(new Date(a.date));
@@ -77,12 +86,11 @@ const metaSeries = (metaHistory as any).meta_history as any[];
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(5))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").remove())
-      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));  }
+      .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
+  }
 
-  // Register with chartInit so ChartPreviewCard can force-init on expand
   registerChart("chart-ppi", init);
 
-  // Also lazy-init via IntersectionObserver for directly-visible charts
   if ("IntersectionObserver" in window) {
     const obsEl = document.getElementById("chart-ppi");
     if (obsEl) {
