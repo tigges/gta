@@ -256,3 +256,10 @@ Every push to `main` triggers `.github/workflows/static.yml`:
 Nightly at 03:00 UTC, `.github/workflows/fetch-data.yml` runs all active scrapers and commits any changed JSON with `[skip ci]`.
 
 Bump `src/config/version.ts` when shipping a meaningful release.
+
+---
+
+## Cursor Cloud agent rules
+
+- **No autonomous screenshots or screen recordings.** Never use the `computerUse` subagent, `RecordScreen`, or any screenshot tool on your own initiative. If visual confirmation of a UI change is needed, ask the user to share a screenshot instead — this is faster and cheaper.
+- Communicate this rule explicitly in every chat handover note under a "Agent rules" section so the next agent does not repeat the behaviour.
