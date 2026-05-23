@@ -263,3 +263,12 @@ Bump `src/config/version.ts` when shipping a meaningful release.
 
 - **No autonomous screenshots or screen recordings.** Never use the `computerUse` subagent, `RecordScreen`, or any screenshot tool on your own initiative. If visual confirmation of a UI change is needed, ask the user to share a screenshot instead — this is faster and cheaper.
 - Communicate this rule explicitly in every chat handover note under a "Agent rules" section so the next agent does not repeat the behaviour.
+
+- **Version bump — mandatory on every session, no exceptions.** Every session that touches code, data, UI, or scrapers must bump `src/config/version.ts` before merging to `main`. Patch bump (`x.y.Z+1`) for fixes and minor tweaks; minor bump (`x.Y+1.0`) for new features; major bump (`X+1.0.0`) for full redesigns. Also update `SITE_VERSION_DATE` to today (`YYYY-MM-DD`). The version is displayed in the ops bar on every page — it must always reflect the latest release.
+
+- **Tag the previous release before starting work.** At the start of every session, before creating a feature branch, tag the current `main` with `release/v{current_version}` and push the tag. This bookmarks the last known-good state and makes rollback trivial.
+  ```bash
+  git tag release/vX.Y.Z origin/main && git push origin release/vX.Y.Z
+  ```
+
+- **New projects: establish version infrastructure first.** If starting a new project that does not yet have a version file, create `src/config/version.ts` (or equivalent for the stack) with `SITE_VERSION`, `SITE_VERSION_DATE`, and `SITE_VERSION_LABEL` constants before any other work. Wire the version into a visible location (footer, ops bar, or page meta) so it is always observable. Document the file path in this `AGENTS.md`.
