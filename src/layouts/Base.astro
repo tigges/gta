@@ -2,6 +2,7 @@
 import { SITE_VERSION_LABEL, SITE_VERSION_DATE } from "../config/version";
 import "../styles/tokens.css";
 import HudIcon from "../components/HudIcon.astro";
+import weeklyBonusesRaw from "../../data/gta-5/economy/weekly-bonuses.json";
 
 interface Props {
   title?: string;
@@ -46,6 +47,11 @@ interface NavGroup {
   dropdown: DropdownItem[] | null;
 }
 
+// ── Nav data ──────────────────────────────────────────────────────────────
+// Each section is either a direct link (dropdown: null) or opens a mega-panel.
+// Mega-panel tiles: up to 3, each with icon + title + sub-description.
+// Direct-link sections navigate in one tap — no panel needed.
+
 const navGroups: NavGroup[] = [
   {
     href: "/gta-vi",
@@ -53,35 +59,51 @@ const navGroups: NavGroup[] = [
     activePaths: ["/gta-vi", "/gta-vi/intel", "/gta-vi/trailers", "/gta-vi/economy", "/gta-vi/buy"],
     identityColor: "var(--c-title-vi)",
     dropdown: [
-      { href: "/gta-vi/intel",    iconName: "intel",   label: "Intel & Predictions", sub: "Predictions · features · cast · locations" },
-      { href: "/gta-vi/trailers", iconName: "trailer", label: "Trailers & Analysis",  sub: "2 trailers · view velocity · entity index" },
-      { href: "/gta-vi/economy",  iconName: "economy", label: "Economy Preview",      sub: "Day-1 ready · price benchmarks · predictions" },
-      { href: "/gta-vi/buy",      iconName: "buy",     label: "Pre-order",            sub: "PS5 · Xbox · editions · retailers" },
+      { href: "/gta-vi/intel",    iconName: "intel",   label: "Intel & Predictions", sub: "17 predictions · features · confirmed & reported" },
+      { href: "/gta-vi/trailers", iconName: "trailer", label: "Trailers & Analysis",  sub: "Trailer 1 & 2 · view velocity · entity index" },
+      { href: "/gta-vi/buy",      iconName: "buy",     label: "Pre-order GTA VI",    sub: "PS5 · Xbox Series X|S · edition guide" },
     ],
   },
   {
     href: "/gta-online",
     label: "GTA Online",
-    activePaths: ["/gta-online", "/gta-online/economy", "/gta-online/income", "/gta-v/income-calculator", "/gta-v/cayo-perico", "/database", "/gta-online/bonuses"],
+    activePaths: ["/gta-online", "/gta-online/economy", "/gta-online/income", "/gta-online/bonuses", "/database"],
     identityColor: "var(--c-title-online)",
     dropdown: [
-      { href: "/gta-online/economy",       iconName: "chart",    label: "Economy",           sub: "GTA-PPI · inflation · passive stack" },
-      { href: "/database?game=gta-online", iconName: "money",    label: "Income Sources",    sub: "S→D tier · 28 methods · ProfitCards" },
-      { href: "/charts",                   iconName: "trending", label: "Charts",            sub: "Economy · promotions · meta evolution" },
-      { href: "/gta-online/bonuses",       iconName: "tag",      label: "Bonuses & Promos",  sub: "Weekly calendar · sale intelligence" },
+      { href: "/gta-online/economy",       iconName: "economy", label: "Economy Model",     sub: "GTA-PPI · inflation · passive income stack" },
+      { href: "/database?game=gta-online", iconName: "money",   label: "Income Sources",   sub: "S→D tier · all methods ranked · profiles" },
+      { href: "/gta-online/bonuses",       iconName: "tag",     label: "Bonuses & Promos", sub: "This week's events · sale calendar · history" },
     ],
+  },
+  {
+    href: "/gta-v",
+    label: "GTA V",
+    activePaths: ["/gta-v"],
+    identityColor: "var(--c-title-v)",
+    dropdown: null,
+  },
+  {
+    href: "/charts",
+    label: "Charts",
+    activePaths: ["/charts"],
+    identityColor: "var(--c-text-4)",
+    dropdown: null,
+  },
+  {
+    href: "/database",
+    label: "Database",
+    activePaths: ["/database"],
+    identityColor: "var(--c-text-4)",
+    dropdown: null,
   },
   {
     href: "/franchise",
     label: "Franchise",
-    activePaths: ["/franchise", "/franchise/economics", "/gta-iii", "/gta-vc", "/gta-sa", "/gta-iv"],
+    activePaths: ["/franchise", "/franchise/economics", "/franchise/history", "/franchise/charts", "/gta-iii", "/gta-vc", "/gta-sa", "/gta-iv"],
     identityColor: "var(--c-brand)",
     dropdown: [
+      { href: "/franchise/history",   iconName: "history",  label: "History & Sales",  sub: "30 years · 8 titles · sales · Metacritic" },
       { href: "/franchise/economics", iconName: "economy",  label: "Economic History", sub: "Ten economies · circular flow · 1997–2026" },
-      { href: "/franchise/history",   iconName: "history",  label: "History & Sales",  sub: "30 years · 8 titles · sales · scores" },
-      { href: "/franchise/charts",    iconName: "trending", label: "Charts",           sub: "Cross-title · complexity · earnings" },
-      { href: "/gta-v",               iconName: "briefcase",label: "GTA V Story",      sub: "Heists · assassination guide · vehicles" },
-      { href: "/database",            iconName: "database", label: "Data Browser",     sub: "All entities · income · vehicles" },
     ],
   },
   {
@@ -92,6 +114,13 @@ const navGroups: NavGroup[] = [
     dropdown: null,
   },
 ];
+
+// Live GTA Online bonus strip for the mega-panel
+const weeklyBonuses = weeklyBonusesRaw as any;
+const topBonus = weeklyBonuses.bonuses?.[0];
+const liveStripText = topBonus
+  ? `${topBonus.multiplier}x ${String(topBonus.activity_id).replace(/-/g, " ")} - w/c ${weeklyBonuses.week_start ?? ""}`
+  : "Updated weekly";
 
 function isNavActive(group: NavGroup): boolean {
   return group.activePaths.some(
@@ -161,98 +190,193 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       </div>
     </div>
 
-    <!-- Nav -->
-    <header id="main-nav" class="border-b border-[#1e1e23] sticky top-0 z-50 transition-all duration-300" style="background:rgba(14,14,17,0.95);backdrop-filter:blur(12px)">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-12">
+    <!-- ═══════════════════════════════════════════════════════
+         NAV — MCT + Pause Menu model
+         Desktop: 64px bar · all tabs always visible · mega-panel on click
+         Mobile:  logo + grid icon → full-screen 2-col tile launcher
+    ═══════════════════════════════════════════════════════ -->
+    <header id="main-nav" class="border-b border-[#1e1e23] sticky top-0 z-50" style="background:rgba(14,14,17,0.97);backdrop-filter:blur(16px)">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center h-16 gap-6">
 
-        <!-- Wordmark: GTAVI in pink-coral gradient · .AI in amber -->
-        <a href="/" class="flex items-center gap-1.5 group" aria-label="GTA VI.AI — home">
+        <!-- Wordmark -->
+        <a href="/" class="flex items-center gap-1.5 group shrink-0" aria-label="GTA VI.AI — home">
           <span class="font-mono font-bold text-lg leading-none tracking-tight select-none text-gradient-vi group-hover:opacity-90 transition-opacity">GTAVI</span>
           <span class="text-xs font-mono text-gta-gold border border-gta-gold/30 rounded px-1.5 py-0.5 tracking-widest group-hover:border-gta-gold/55 group-hover:bg-gta-gold/5 transition-all">.AI</span>
         </a>
 
-        <!-- Desktop nav -->
-        <nav class="hidden sm:flex items-center gap-0.5">
+        <!-- Desktop nav — all tabs always visible (Pause Menu model) -->
+        <nav class="hidden md:flex items-center gap-1 flex-1">
           {navGroups.map(group => {
             const active = isNavActive(group);
-            const baseCls = [
-              "relative px-3 py-1.5 rounded text-xs font-mono tracking-wide transition-all duration-150",
-              active
-                ? "text-white bg-white/5"
-                : "text-zinc-400 hover:text-zinc-200 hover:bg-white/4",
-            ].join(" ");
-
+            // Direct links (no mega-panel)
             if (!group.dropdown) return (
-              <a href={group.href} class={baseCls}>
+              <a
+                href={group.href}
+                class={[
+                  "relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150",
+                  active ? "text-white bg-white/6" : "text-zinc-400 hover:text-zinc-200 hover:bg-white/4",
+                ].join(" ")}
+              >
                 {active && (
-                  <span
-                    class="absolute bottom-0 left-3 right-3 h-px rounded-full"
-                    style={`background:${group.identityColor};opacity:0.7`}
-                  />
+                  <span class="absolute bottom-1 left-3 right-3 h-0.5 rounded-full" style={`background:${group.identityColor}`} />
                 )}
                 {group.label}
               </a>
             );
-
+            // Mega-panel triggers
             return (
-              <div class="group relative">
-                <a href={group.href} class={baseCls + " flex items-center gap-1"}>
-                  {active && (
-                    <span
-                      class="absolute bottom-0 left-3 right-3 h-px rounded-full"
-                      style={`background:${group.identityColor};opacity:0.7`}
-                    />
-                  )}
-                  {group.label}
-                  <svg class="w-2.5 h-2.5 opacity-40 group-hover:opacity-80 transition-opacity mt-px shrink-0"
-                       viewBox="0 0 10 6" fill="none" stroke="currentColor"
-                       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 1l4 4 4-4"/>
-                  </svg>
-                </a>
-                <!-- Dropdown panel -->
-                <div class="absolute left-0 top-full pt-1.5 w-64 z-50
-                            invisible opacity-0 pointer-events-none
-                            group-hover:visible group-hover:opacity-100 group-hover:pointer-events-auto
-                            transition-all duration-150">
-                  <div class="rounded-xl border border-[#1e1e23] shadow-2xl shadow-black/60 overflow-hidden"
-                       style="background:#0a0a0d">
-                    <!-- Identity accent bar at top of dropdown -->
-                    <div class="h-0.5 w-full" style={`background:linear-gradient(90deg,${group.identityColor},transparent)`} />
-                    {group.dropdown.map((item, i) => (
-                      <a href={item.href}
-                         class={["group/di flex items-start gap-3 px-4 py-3 hover:bg-white/[0.03] transition-colors",
-                                 i > 0 ? "border-t border-[#1e1e23]" : ""].join(" ")}>
-                        <HudIcon name={item.iconName as any} size={16} class="text-zinc-600 group-hover/di:text-zinc-400 transition-colors mt-0.5 shrink-0" />
-                        <div class="flex-1 min-w-0">
-                          <div class="text-[11px] font-semibold text-zinc-300 group-hover/di:text-white transition-colors mb-0.5">{item.label}</div>
-                          <div class="text-[10px] font-mono text-zinc-700 leading-snug">{item.sub}</div>
-                        </div>
-                        <span class="text-zinc-600 group-hover/di:text-zinc-400 font-mono text-[10px] ml-auto shrink-0 mt-1 transition-colors">→</span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <button
+                data-nav-trigger={group.label}
+                class={[
+                  "relative flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 cursor-pointer",
+                  active ? "text-white bg-white/6" : "text-zinc-400 hover:text-zinc-200 hover:bg-white/4",
+                ].join(" ")}
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                {active && (
+                  <span class="absolute bottom-1 left-3 right-3 h-0.5 rounded-full" style={`background:${group.identityColor}`} />
+                )}
+                {group.label}
+                <svg class="w-2.5 h-2.5 opacity-40 mt-px shrink-0 nav-chevron transition-transform duration-200"
+                     viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 1l4 4 4-4"/>
+                </svg>
+              </button>
             );
           })}
         </nav>
 
-        <!-- Pre-order CTA -->
+        <!-- Pre-order CTA (desktop) -->
         <a href="/gta-vi/buy"
-           class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded border border-gta-vi-coral/30 text-gta-vi-coral text-xs font-mono tracking-wide hover:bg-gta-vi-coral/8 hover:border-gta-vi-coral/50 transition-all ml-2">
-          Pre-order <span class="opacity-50 text-[10px]">›</span>
+           class="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gta-vi-coral/30 text-gta-vi-coral text-xs font-mono tracking-wide hover:bg-gta-vi-coral/8 hover:border-gta-vi-coral/50 transition-all shrink-0">
+          Pre-order
         </a>
 
-        <!-- Mobile hamburger -->
-        <button id="mobile-menu-btn"
-                class="sm:hidden p-2 rounded text-zinc-500 hover:text-zinc-200 hover:bg-white/4 transition-all"
-                aria-label="Open menu">
+        <!-- Mobile grid-icon trigger -->
+        <button id="mobile-nav-open"
+                class="md:hidden ml-auto p-2 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-white/5 transition-all"
+                aria-label="Open navigation">
+          <!-- 3×3 grid icon — signals app launcher, not hamburger -->
           <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h8a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+            <rect x="2" y="2" width="5" height="5" rx="1"/>
+            <rect x="7.5" y="2" width="5" height="5" rx="1"/>
+            <rect x="13" y="2" width="5" height="5" rx="1"/>
+            <rect x="2" y="7.5" width="5" height="5" rx="1"/>
+            <rect x="7.5" y="7.5" width="5" height="5" rx="1"/>
+            <rect x="13" y="7.5" width="5" height="5" rx="1"/>
+            <rect x="2" y="13" width="5" height="5" rx="1"/>
+            <rect x="7.5" y="13" width="5" height="5" rx="1"/>
+            <rect x="13" y="13" width="5" height="5" rx="1"/>
           </svg>
         </button>
       </div>
+
+      <!-- ═══════════════════════════════════════════════════════
+           MEGA-PANELS — fixed below sticky header, full viewport width
+           MCT model: all destinations visible simultaneously, no drilling
+      ═══════════════════════════════════════════════════════ -->
+
+      <!-- GTA VI panel -->
+      <div id="nav-panel-GTA VI"
+           class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-[#1e1e23] shadow-2xl shadow-black/70"
+           style="top:64px;background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
+        <div class="h-0.5" style="background:linear-gradient(90deg,var(--c-title-vi),transparent)"></div>
+        <div class="max-w-7xl mx-auto px-6 py-6">
+          <div class="grid grid-cols-3 gap-4">
+            {navGroups.find(g => g.label === "GTA VI")?.dropdown?.map(item => (
+              <a href={item.href}
+                 class="group/pt flex items-start gap-4 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all"
+                 style="background:#131316">
+                <HudIcon name={item.iconName as any} size={20} class="text-zinc-500 group-hover/pt:text-zinc-300 transition-colors mt-0.5 shrink-0" />
+                <div>
+                  <div class="text-sm font-semibold text-zinc-200 group-hover/pt:text-white transition-colors mb-1">{item.label}</div>
+                  <div class="text-xs font-mono text-zinc-600 leading-snug">{item.sub}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- GTA Online panel -->
+      <div id="nav-panel-GTA Online"
+           class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-[#1e1e23] shadow-2xl shadow-black/70"
+           style="top:64px;background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
+        <div class="h-0.5" style="background:linear-gradient(90deg,var(--c-title-online),transparent)"></div>
+        <div class="max-w-7xl mx-auto px-6 py-6">
+          <div class="grid grid-cols-3 gap-4 mb-4">
+            {navGroups.find(g => g.label === "GTA Online")?.dropdown?.map(item => (
+              <a href={item.href}
+                 class="group/pt flex items-start gap-4 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all"
+                 style="background:#131316">
+                <HudIcon name={item.iconName as any} size={20} class="text-zinc-500 group-hover/pt:text-zinc-300 transition-colors mt-0.5 shrink-0" />
+                <div>
+                  <div class="text-sm font-semibold text-zinc-200 group-hover/pt:text-white transition-colors mb-1">{item.label}</div>
+                  <div class="text-xs font-mono text-zinc-600 leading-snug">{item.sub}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+          <!-- Live strip (MCT status bar) -->
+          <a href="/gta-online/bonuses"
+             class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg border border-[#1e1e23] hover:border-gta-teal/30 hover:bg-gta-teal/[0.03] transition-all group/ls"
+             style="background:#0e1a0e">
+            <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
+            <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Live this week</span>
+            <span class="text-[11px] font-mono text-gta-teal capitalize">{liveStripText}</span>
+            <span class="ml-auto text-[10px] font-mono text-zinc-700 group-hover/ls:text-zinc-500 transition-colors">See all →</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Franchise panel -->
+      <div id="nav-panel-Franchise"
+           class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-[#1e1e23] shadow-2xl shadow-black/70"
+           style="top:64px;background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
+        <div class="h-0.5" style="background:linear-gradient(90deg,var(--c-brand),transparent)"></div>
+        <div class="max-w-7xl mx-auto px-6 py-6">
+          <div class="grid grid-cols-2 gap-4 mb-5">
+            {navGroups.find(g => g.label === "Franchise")?.dropdown?.map(item => (
+              <a href={item.href}
+                 class="group/pt flex items-start gap-4 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all"
+                 style="background:#131316">
+                <HudIcon name={item.iconName as any} size={20} class="text-zinc-500 group-hover/pt:text-zinc-300 transition-colors mt-0.5 shrink-0" />
+                <div>
+                  <div class="text-sm font-semibold text-zinc-200 group-hover/pt:text-white transition-colors mb-1">{item.label}</div>
+                  <div class="text-xs font-mono text-zinc-600 leading-snug">{item.sub}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+          <!-- Cover strip — all 8 titles, one tap each -->
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] font-mono text-zinc-700 uppercase tracking-widest shrink-0">All titles</span>
+            {([
+              { id: "gta-1",  year: "1997", href: "/franchise" },
+              { id: "gta-2",  year: "1999", href: "/franchise" },
+              { id: "gta-3",  year: "2001", href: "/gta-iii/economy" },
+              { id: "gta-vc", year: "2002", href: "/gta-vc/economy" },
+              { id: "gta-sa", year: "2004", href: "/gta-sa/economy" },
+              { id: "gta-4",  year: "2008", href: "/gta-iv/economy" },
+              { id: "gta-5",  year: "2013", href: "/gta-v" },
+              { id: "gta-6",  year: "2026", href: "/gta-vi" },
+            ] as const).map(t => (
+              <a href={t.href} class="group/cv flex flex-col items-center gap-1">
+                <img src={`/assets/covers/${t.id}.jpg`} alt={t.id.toUpperCase()}
+                     class="w-9 h-12 object-cover rounded border border-[#2a2a31] group-hover/cv:border-gta-gold/40 transition-colors" loading="lazy" />
+                <span class="text-[9px] font-mono text-zinc-700 group-hover/cv:text-zinc-500 transition-colors">{t.year}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Shared backdrop — dims page content behind open panel -->
+      <div id="nav-panel-backdrop"
+           class="hidden fixed inset-0 z-[48]"
+           style="top:64px;background:rgba(0,0,0,0.55)"></div>
     </header>
 
     <!-- Main content area with background grid -->
@@ -287,86 +411,193 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       </div>
     </footer>
 
-    <!-- Mobile nav drawer -->
-    <div id="mobile-nav" class="fixed inset-0 z-[100] hidden" role="dialog" aria-label="Navigation menu">
-      <div id="mobile-nav-backdrop" class="absolute inset-0" style="background:rgba(0,0,0,0.72);backdrop-filter:blur(4px)"></div>
-      <div class="absolute right-0 top-0 h-full w-72 max-w-[88vw] flex flex-col border-l border-[#1e1e23] shadow-2xl"
-           style="background:#0a0a0d">
-        <div class="flex items-center justify-between px-5 h-12 border-b border-[#1e1e23] shrink-0">
-          <a href="/" class="font-mono font-bold text-base leading-none flex items-center gap-1">
-            <span class="text-gradient-vi">GTAVI</span>
-            <span class="text-gta-gold text-xs">.AI</span>
-          </a>
-          <button id="mobile-nav-close" class="text-zinc-600 hover:text-zinc-300 p-1 rounded transition-colors" aria-label="Close menu">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
-          </button>
-        </div>
-        <div class="flex-1 overflow-y-auto py-2">
-          {navGroups.map(group => (
-            group.dropdown ? (
-              <div class="mobile-section">
-                <button class="mobile-toggle w-full flex items-center justify-between px-5 py-3 text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-500 hover:text-zinc-200 hover:bg-white/3 transition-colors text-left">
-                  <span class="flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${group.identityColor};opacity:0.6`} />
-                    {group.label}
-                  </span>
-                  <svg class="chevron w-3 h-3 shrink-0 transition-transform" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 1l4 4 4-4"/>
-                  </svg>
-                </button>
-                <div class="mobile-items hidden border-l border-[#1e1e23] ml-5 mb-1">
-                  {group.dropdown.map(item => (
-                    <a href={item.href}
-                       class="flex items-center gap-2.5 px-4 py-2.5 text-[11px] font-mono text-zinc-500 hover:text-zinc-200 hover:bg-white/3 transition-colors">
-                      <HudIcon name={item.iconName as any} size={14} class="text-zinc-600 shrink-0" />
-                      <span>{item.label}</span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ) : (
+    <!-- ═══════════════════════════════════════════════════════
+         MOBILE NAV — Full-screen app launcher (phone grid model)
+         Top level: 2-col tile grid — all sections visible at once
+         Section tile (with sub-pages): tapping shows sub-list + back
+         Direct link tiles: navigate immediately
+    ═══════════════════════════════════════════════════════ -->
+    <div id="mobile-nav" class="fixed inset-0 z-[100] hidden flex-col" role="dialog" aria-label="Navigation menu"
+         style="background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
+
+      <!-- Mobile nav header bar -->
+      <div class="flex items-center justify-between px-4 h-16 border-b border-[#1e1e23] shrink-0">
+        <a href="/" class="font-mono font-bold text-lg leading-none flex items-center gap-1.5">
+          <span class="text-gradient-vi">GTAVI</span>
+          <span class="text-gta-gold text-xs border border-gta-gold/30 rounded px-1.5 py-0.5">.AI</span>
+        </a>
+        <button id="mobile-nav-close" class="text-zinc-500 hover:text-zinc-200 p-2 rounded-lg hover:bg-white/5 transition-all" aria-label="Close menu">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Main grid view — all sections at once -->
+      <div id="mobile-grid" class="flex-1 overflow-y-auto p-4">
+        <div class="grid grid-cols-2 gap-3">
+          {navGroups.map(group => {
+            if (!group.dropdown) return (
               <a href={group.href}
-                 class="flex items-center gap-2 px-5 py-3 text-[10px] font-mono uppercase tracking-[0.15em] text-zinc-500 hover:text-zinc-200 hover:bg-white/3 transition-colors">
-                <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${group.identityColor};opacity:0.5`} />
-                {group.label}
+                 class="flex flex-col gap-2 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all active:bg-white/5"
+                 style="background:#131316">
+                <div class="flex items-center justify-between">
+                  <span class="font-semibold text-zinc-200 text-sm">{group.label}</span>
+                  <span class="text-zinc-600 text-xs">→</span>
+                </div>
+                <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.6`}></span>
               </a>
-            )
-          ))}
-          <div class="mx-5 mt-4 pt-4 border-t border-[#1e1e23]">
-            <a href="/gta-vi/buy"
-               class="flex items-center justify-center gap-2 py-2.5 rounded border border-gta-vi-coral/25 bg-gta-vi-coral/5 text-gta-vi-coral text-[11px] font-mono hover:bg-gta-vi-coral/10 hover:border-gta-vi-coral/40 transition-all">
-              <HudIcon name="buy" size={14} class="text-gta-vi-coral" />
-              Pre-order GTA VI
-            </a>
-          </div>
+            );
+            return (
+              <button
+                data-mobile-section={group.label}
+                class="flex flex-col gap-2 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all active:bg-white/5 text-left w-full"
+                style="background:#131316">
+                <div class="flex items-center justify-between">
+                  <span class="font-semibold text-zinc-200 text-sm">{group.label}</span>
+                  <span class="text-zinc-600 text-xs">›</span>
+                </div>
+                <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.6`}></span>
+                <span class="text-[10px] font-mono text-zinc-600 leading-snug">
+                  {group.dropdown.map(d => d.label).join(" · ")}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <!-- Pre-order CTA -->
+        <a href="/gta-vi/buy"
+           class="flex items-center justify-center gap-2 mt-4 py-3 rounded-xl border border-gta-vi-coral/30 bg-gta-vi-coral/5 text-gta-vi-coral text-sm font-medium hover:bg-gta-vi-coral/10 transition-all">
+          Pre-order GTA VI
+        </a>
+
+        <!-- Live strip -->
+        <div class="flex items-center gap-2 mt-3 px-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
+          <span class="text-[10px] font-mono text-zinc-600 capitalize">{liveStripText}</span>
         </div>
       </div>
+
+      <!-- Sub-section views (one per section with dropdown, hidden by default) -->
+      {navGroups.filter(g => g.dropdown).map(group => (
+        <div id={`mobile-sub-${group.label}`} class="mobile-sub hidden flex-col flex-1 overflow-y-auto">
+          <!-- Sub-header with back button -->
+          <div class="flex items-center gap-3 px-4 py-3 border-b border-[#1e1e23] shrink-0">
+            <button data-mobile-back class="flex items-center gap-1.5 text-zinc-500 hover:text-zinc-200 transition-colors text-sm">
+              <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13L5 8l5-5"/>
+              </svg>
+              All
+            </button>
+            <span class="text-sm font-semibold text-zinc-200">{group.label}</span>
+            <span class="ml-auto w-6 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.7`}></span>
+          </div>
+          <!-- Sub-destination list — flat, one tap each -->
+          <div class="flex-1 p-4 flex flex-col gap-3">
+            {group.dropdown?.map(item => (
+              <a href={item.href}
+                 class="group/ms flex items-start gap-4 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all"
+                 style="background:#131316">
+                <HudIcon name={item.iconName as any} size={20} class="text-zinc-500 group-hover/ms:text-zinc-300 transition-colors mt-0.5 shrink-0" />
+                <div>
+                  <div class="text-sm font-semibold text-zinc-200 group-hover/ms:text-white transition-colors mb-0.5">{item.label}</div>
+                  <div class="text-[11px] font-mono text-zinc-600 leading-snug">{item.sub}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
 
     <script>
-      const mobileNav      = document.getElementById("mobile-nav");
-      const mobileBackdrop = document.getElementById("mobile-nav-backdrop");
-      const mobileOpenBtn  = document.getElementById("mobile-menu-btn");
-      const mobileCloseBtn = document.getElementById("mobile-nav-close");
+      // ── Desktop mega-panel logic ─────────────────────────────────────────────
+      const backdrop    = document.getElementById("nav-panel-backdrop");
+      const allPanels   = document.querySelectorAll<HTMLElement>(".nav-mega-panel");
+      const allTriggers = document.querySelectorAll<HTMLButtonElement>("[data-nav-trigger]");
+      let   openPanel: HTMLElement | null = null;
 
-      function openMobileNav()  { mobileNav?.classList.remove("hidden"); document.body.style.overflow = "hidden"; }
-      function closeMobileNav() { mobileNav?.classList.add("hidden");    document.body.style.overflow = "";       }
-
-      mobileOpenBtn?.addEventListener("click", openMobileNav);
-      mobileCloseBtn?.addEventListener("click", closeMobileNav);
-      mobileBackdrop?.addEventListener("click", closeMobileNav);
-
-      document.querySelectorAll<HTMLButtonElement>(".mobile-toggle").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const section = btn.closest<HTMLElement>(".mobile-section");
-          const items   = section?.querySelector<HTMLElement>(".mobile-items");
-          const chevron = btn.querySelector<SVGElement>(".chevron");
-          const isOpen  = !items?.classList.contains("hidden");
-          items?.classList.toggle("hidden");
-          if (chevron) (chevron as HTMLElement).style.transform = isOpen ? "" : "rotate(180deg)";
+      function closeAllPanels() {
+        allPanels.forEach(p => p.classList.add("hidden"));
+        backdrop?.classList.add("hidden");
+        allTriggers.forEach(t => {
+          t.setAttribute("aria-expanded", "false");
+          const chevron = t.querySelector<HTMLElement>(".nav-chevron");
+          if (chevron) chevron.style.transform = "";
         });
+        openPanel = null;
+        document.body.style.overflow = "";
+      }
+
+      allTriggers.forEach(trigger => {
+        trigger.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const label  = trigger.dataset.navTrigger!;
+          const panel  = document.getElementById(`nav-panel-${label}`);
+          if (!panel) return;
+
+          if (openPanel === panel) {
+            closeAllPanels();
+            return;
+          }
+          closeAllPanels();
+          panel.classList.remove("hidden");
+          backdrop?.classList.remove("hidden");
+          trigger.setAttribute("aria-expanded", "true");
+          const chevron = trigger.querySelector<HTMLElement>(".nav-chevron");
+          if (chevron) chevron.style.transform = "rotate(180deg)";
+          openPanel = panel;
+        });
+      });
+
+      backdrop?.addEventListener("click", closeAllPanels);
+
+      // Close on Escape
+      document.addEventListener("keydown", e => { if (e.key === "Escape") closeAllPanels(); });
+
+      // ── Mobile nav logic ─────────────────────────────────────────────────────
+      const mobileNav   = document.getElementById("mobile-nav");
+      const mobileGrid  = document.getElementById("mobile-grid");
+      const openBtn     = document.getElementById("mobile-nav-open");
+      const closeBtn    = document.getElementById("mobile-nav-close");
+
+      function openMobileNav() {
+        mobileNav?.classList.remove("hidden");
+        mobileNav?.classList.add("flex");
+        document.body.style.overflow = "hidden";
+        // Always start at top-level grid
+        showMobileGrid();
+      }
+      function closeMobileNav() {
+        mobileNav?.classList.add("hidden");
+        mobileNav?.classList.remove("flex");
+        document.body.style.overflow = "";
+      }
+      function showMobileGrid() {
+        mobileGrid?.classList.remove("hidden");
+        document.querySelectorAll<HTMLElement>(".mobile-sub").forEach(s => {
+          s.classList.add("hidden");
+          s.classList.remove("flex");
+        });
+      }
+      function showMobileSub(label: string) {
+        mobileGrid?.classList.add("hidden");
+        const sub = document.getElementById(`mobile-sub-${label}`);
+        if (sub) { sub.classList.remove("hidden"); sub.classList.add("flex"); }
+      }
+
+      openBtn?.addEventListener("click", openMobileNav);
+      closeBtn?.addEventListener("click", closeMobileNav);
+
+      // Section tile buttons → show sub-list
+      document.querySelectorAll<HTMLButtonElement>("[data-mobile-section]").forEach(btn => {
+        btn.addEventListener("click", () => showMobileSub(btn.dataset.mobileSection!));
+      });
+
+      // Back buttons → return to grid
+      document.querySelectorAll<HTMLButtonElement>("[data-mobile-back]").forEach(btn => {
+        btn.addEventListener("click", showMobileGrid);
       });
     </script>
 
