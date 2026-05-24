@@ -105,11 +105,12 @@ SOURCES = [
 ]
 
 # SEC EDGAR Atom feed for Take-Two Interactive 8-K filings
-# CIK 0000945114 = Take-Two Interactive Software Inc.
+# CIK 0000946581 = Take-Two Interactive Software Inc. (NASDAQ: TTWO)
+# NOTE: CIK 0000945114 was Global Industrial Co (GIC) — wrong company.
 EDGAR_8K_URL = (
     "https://www.sec.gov/cgi-bin/browse-edgar"
-    "?action=getcompany&CIK=0000945114&type=8-K"
-    "&dateb=&owner=include&count=20&search_text=&output=atom"
+    "?action=getcompany&CIK=0000946581&type=8-K"
+    "&dateb=&owner=include&count=10&search_text=&output=atom"
 )
 EDGAR_HEADERS = {
     "User-Agent": "GTAVI.AI research bot contact@gtavi.ai",
@@ -281,10 +282,76 @@ def _edgar_title(summary_html: str, date_str: str) -> str:
     return f"Take-Two 8-K · {month_str} — {label_str}"
 
 
+def _get_ex99_url(index_url: str) -> str | None:
+    """From an EDGAR filing index page, return the URL of the EX-99.1 press release."""
+    try:
+        import time
+        time.sleep(0.25)
+        resp = requests.get(index_url, headers={**EDGAR_HEADERS, "Accept": "text/html"}, timeout=15)
+        if not resp.ok:
+            return None
+        soup = BeautifulSoup(resp.text, "lxml")
+        for row in soup.find_all("tr"):
+            row_text = row.get_text(" ", strip=True)
+            # EX-99.1 = press release exhibit
+            if "EX-99" in row_text or "99.1" in row_text:
+                a = row.find("a", href=re.compile(r"\.htm$", re.I))
+                if a:
+                    href = a["href"]
+                    href = re.sub(r"^/ix\?doc=", "", href)  # strip XBRL viewer prefix
+                    return f"https://www.sec.gov{href}" if href.startswith("/") else href
+        return None
+    except Exception:
+        return None
+
+
+def _extract_pr_headline(doc_url: str) -> str:
+    """Fetch an EDGAR press-release exhibit and extract the headline + first key figure."""
+    try:
+        import time, warnings
+        from bs4 import XMLParsedAsHTMLWarning
+        warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
+        time.sleep(0.25)
+        resp = requests.get(doc_url, headers={**EDGAR_HEADERS, "Accept": "text/html"}, timeout=20)
+        if not resp.ok:
+            return ""
+        soup = BeautifulSoup(resp.content[:80_000], "lxml")
+        texts: list[str] = []
+        for el in soup.find_all(string=True):
+            t = re.sub(r"\s+", " ", el.strip())
+            # Skip pure number/symbol lines and very short strings
+            if len(t) > 30 and not re.match(r"^[\d\s,\.\$\%\(\)\-\/\*]+$", t):
+                texts.append(t)
+            if len(texts) >= 20:
+                break
+        headline = ""
+        key_line = ""
+        for t in texts:
+            tl = t.lower()
+            if not headline and (
+                "reports" in tl or "announces" in tl or "take-two" in tl
+                or "interactive" in tl or "fiscal" in tl
+            ):
+                headline = t
+            if not key_line and (
+                "billion" in tl or "million" in tl
+                or "bookings" in tl or "revenue" in tl
+                or "guidance" in tl
+            ):
+                key_line = t
+            if headline and key_line:
+                break
+        if headline and key_line and headline != key_line:
+            return f"{headline} — {key_line}"[:300]
+        return (headline or key_line)[:300]
+    except Exception:
+        return ""
+
+
 def fetch_edgar_8k() -> list[dict]:
     """Fetch recent Take-Two 8-K filings from SEC EDGAR Atom feed.
-    8-Ks capture material events: delay announcements, date confirmations,
-    earnings guidance changes — high-signal official news."""
+    For each filing, attempts to fetch the EX-99.1 press release to extract
+    an actual headline + key figure. Falls back to Item-code descriptor."""
     try:
         import time
         time.sleep(0.15)  # EDGAR rate limit — 10 req/s max
@@ -297,7 +364,7 @@ def fetch_edgar_8k() -> list[dict]:
         entries = soup.find_all("entry")
         results = []
 
-        for entry in entries:
+        for entry in entries[:5]:  # cap at 5 most recent filings
             link    = entry.find("link")
             updated = entry.find("updated") or entry.find("published")
             summary = entry.find("summary") or entry.find("content")
@@ -309,6 +376,13 @@ def fetch_edgar_8k() -> list[dict]:
             if not date_text:
                 continue
 
+            # Attempt to extract a real headline from the EX-99.1 press release
+            pr_summary = ""
+            if link_href:
+                ex_url = _get_ex99_url(link_href)
+                if ex_url:
+                    pr_summary = _extract_pr_headline(ex_url)
+
             results.append({
                 "source_id":    "sec-edgar",
                 "source_name":  "SEC EDGAR (Take-Two 8-K)",
@@ -316,11 +390,11 @@ def fetch_edgar_8k() -> list[dict]:
                 "title":        _edgar_title(summ_html, date_text),
                 "url":          link_href,
                 "published_at": f"{date_text}T00:00:00Z",
-                "summary":      _strip_html(summ_html)[:200],
+                "summary":      pr_summary or _strip_html(summ_html)[:200],
             })
 
-        print(f"  ✓ SEC EDGAR 8-K: {len(results)} filings")
-        return results[:10]  # latest 10
+        print(f"  ✓ SEC EDGAR 8-K: {len(results)} filings (press-release enriched)")
+        return results
 
     except Exception as e:
         print(f"  ✗ SEC EDGAR 8-K: {e}")
