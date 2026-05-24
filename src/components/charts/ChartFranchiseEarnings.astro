@@ -5,7 +5,7 @@
  * Can be embedded on any page; D3 init deferred via IntersectionObserver.
  */
 import franchiseEconData from "../../../data/franchise/economic-history.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -18,7 +18,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="franchise-earnings-chart" class="w-full" style="height:360px"
           data-effort={JSON.stringify((franchiseEconData as any).effort_chart_data)}
         ></div>
-        <ChartFooter chartId="franchise-earnings-chart" sources="hours_to_aspirational = aspirational_price ÷ best_hourly_rate per title · Sources: community records · GTA Fandom Wiki" shareText="GTA franchise earnings compared across titles: how many hours does it take to buy the era" />
+        <CardFooter chartId="franchise-earnings-chart" sources="hours_to_aspirational = aspirational_price ÷ best_hourly_rate per title · Sources: community records · GTA Fandom Wiki" shareText="GTA franchise earnings compared across titles: how many hours does it take to buy the era" />
       </div>
 
 <script>

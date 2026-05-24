@@ -3,7 +3,9 @@ Aggregate GTA VI intelligence from multiple RSS/press sources.
 
 Sources (in priority order):
 - Rockstar Newswire HTML scrape — official announcements
+- SEC EDGAR Take-Two 8-K filings — material event disclosures (delay announcements)
 - Rockstar Intel RSS — #1 credible specialist press
+- GTAForums GTA VI subforum RSS — community megathreads, first-look leaks
 - Kotaku GTA 6 tag RSS — broke Florida/Vice City story
 - Eurogamer RSS — filtered for GTA content
 - Insider Gaming RSS — leaked Take-Two data accurately
@@ -47,6 +49,13 @@ SOURCES = [
         "filter_gta": False,  # all content is GTA-related
     },
     {
+        "id": "gtaforums-vi",
+        "name": "GTAForums",
+        "url": "https://gtaforums.com/forum/367-grand-theft-auto-vi/?rss",
+        "tier": "community",
+        "filter_gta": False,  # GTA VI subforum — all relevant
+    },
+    {
         "id": "kotaku-gta",
         "name": "Kotaku",
         "url": "https://kotaku.com/tag/grand-theft-auto-6/rss",
@@ -68,6 +77,18 @@ SOURCES = [
         "filter_gta": True,
     },
 ]
+
+# SEC EDGAR Atom feed for Take-Two Interactive 8-K filings
+# CIK 0000945114 = Take-Two Interactive Software Inc.
+EDGAR_8K_URL = (
+    "https://www.sec.gov/cgi-bin/browse-edgar"
+    "?action=getcompany&CIK=0000945114&type=8-K"
+    "&dateb=&owner=include&count=20&search_text=&output=atom"
+)
+EDGAR_HEADERS = {
+    "User-Agent": "GTAVI.AI research bot contact@gtavi.ai",
+    "Accept": "application/atom+xml",
+}
 
 
 def parse_date(raw: str | None) -> str | None:
@@ -178,14 +199,63 @@ def fetch_rockstar_newswire() -> list[dict]:
         return []
 
 
+def fetch_edgar_8k() -> list[dict]:
+    """Fetch recent Take-Two 8-K filings from SEC EDGAR Atom feed.
+    8-Ks capture material events: delay announcements, date confirmations,
+    earnings guidance changes — high-signal official news."""
+    try:
+        import time
+        time.sleep(0.15)  # EDGAR rate limit — 10 req/s max
+        resp = requests.get(EDGAR_8K_URL, headers=EDGAR_HEADERS, timeout=20)
+        if not resp.ok:
+            print(f"  ✗ SEC EDGAR 8-K: HTTP {resp.status_code}")
+            return []
+
+        soup = BeautifulSoup(resp.text, "lxml-xml")
+        entries = soup.find_all("entry")
+        results = []
+
+        for entry in entries:
+            title = entry.find("title")
+            link  = entry.find("link")
+            updated = entry.find("updated") or entry.find("published")
+            summary = entry.find("summary") or entry.find("content")
+
+            title_text = title.get_text(strip=True) if title else ""
+            link_href  = link.get("href", "") if link else ""
+            date_text  = updated.get_text(strip=True)[:10] if updated else None
+            summ_text  = (summary.get_text(strip=True) if summary else "")[:200]
+
+            if not title_text:
+                continue
+
+            results.append({
+                "source_id":    "sec-edgar",
+                "source_name":  "SEC EDGAR (Take-Two 8-K)",
+                "tier":         "official",
+                "title":        f"Take-Two 8-K: {title_text}",
+                "url":          link_href,
+                "published_at": f"{date_text}T00:00:00Z" if date_text else None,
+                "summary":      summ_text,
+            })
+
+        print(f"  ✓ SEC EDGAR 8-K: {len(results)} filings")
+        return results[:10]  # latest 10
+
+    except Exception as e:
+        print(f"  ✗ SEC EDGAR 8-K: {e}")
+        return []
+
+
 def main() -> None:
     print("Fetching intelligence feeds...")
     all_items: list[dict] = []
 
-    # Official source first
+    # Official sources first
     all_items.extend(fetch_rockstar_newswire())
+    all_items.extend(fetch_edgar_8k())
 
-    # Press sources
+    # Press + community sources
     for source in SOURCES:
         all_items.extend(fetch_rss(source))
 

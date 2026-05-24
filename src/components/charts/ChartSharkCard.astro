@@ -6,7 +6,7 @@
  */
 import type { SharkCardsData } from "../../types/gta";
 import sharkCardRaw from "../../../data/gta-5/economy/shark-cards.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 
 const sharkCardData = sharkCardRaw as unknown as SharkCardsData;
 ---
@@ -35,7 +35,7 @@ const sharkCardData = sharkCardRaw as unknown as SharkCardsData;
         <div id="shark-card-chart" class="w-full" style="height:320px"
           data-history={JSON.stringify(sharkCardData.endgame_cost_history ?? [])}
         ></div>
-        <ChartFooter chartId="shark-card-chart" sources="Real-money figures = endgame GTA$ ÷ Megalodon rate ($80k GTA$/USD). Shark Card prices unchanged since 2013 launch." shareText="GTAVI.AI — data-driven GTA intelligence." />
+        <CardFooter chartId="shark-card-chart" sources="Real-money figures = endgame GTA$ ÷ Megalodon rate ($80k GTA$/USD). Shark Card prices unchanged since 2013 launch." shareText="GTAVI.AI — data-driven GTA intelligence." />
       </div>
 
 <script>

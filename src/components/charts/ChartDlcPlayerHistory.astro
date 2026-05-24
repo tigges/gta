@@ -6,7 +6,7 @@
  */
 import steamData         from "../../../data/gta-5/meta/steam-players.json";
 import dlcData           from "../../../data/gta-5/dlc/timeline.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -27,7 +27,7 @@ import ChartFooter from "../ChartFooter.astro";
           data-players={JSON.stringify(steamData.data)}
           data-dlc={JSON.stringify(dlcData.updates)}
         ></div>
-        <ChartFooter chartId="dlc-player-chart" sources="Sources: SteamCharts · Rockstar Games official announcements · updated {new Date(steamData.last_updated).toLocaleDateString(&quot;en-GB&quot;,{month:&quot;short&quot;,year:&quot;numeric&quot;})}" shareText="GTA V still pulls tens of thousands of concurrent Steam players, 11 years after launch. Every DLC spike visible in the data." />
+        <CardFooter chartId="dlc-player-chart" sources="Sources: SteamCharts · Rockstar Games official announcements · updated {new Date(steamData.last_updated).toLocaleDateString(&quot;en-GB&quot;,{month:&quot;short&quot;,year:&quot;numeric&quot;})}" shareText="GTA V still pulls tens of thousands of concurrent Steam players, 11 years after launch. Every DLC spike visible in the data." />
       </div>
 
 <script>

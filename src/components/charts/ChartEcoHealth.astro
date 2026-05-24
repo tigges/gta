@@ -8,7 +8,7 @@ import ppiData     from "../../../data/gta-5/economy/gta-ppi.json";
 import metaHistory from "../../../data/gta-5/economy/meta-history.json";
 import revenueData from "../../../data/franchise/revenue-split.json";
 import passiveData from "../../../data/gta-5/economy/passive-stack.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 
 const ppiSeries    = (ppiData as any).series as any[];
 const metaSeries   = (metaHistory as any).meta_history as any[];
@@ -26,7 +26,7 @@ const passiveSeries= (passiveData as any).series as any[];
     data-revenue={JSON.stringify(revYears.filter((y:any) => y.calendar_year >= 2013))}
     data-passive={JSON.stringify(passiveSeries)}
   ></div>
-  <ChartFooter chartId="chart-health" sources="Source: community data · updated nightly" shareText="GTA Online economy chart: GTA Online Economy Health Score — Composite Index" />
+  <CardFooter chartId="chart-health" sources="Source: community data · updated nightly" shareText="GTA Online economy chart: GTA Online Economy Health Score — Composite Index" />
 </div>
 
 <script>

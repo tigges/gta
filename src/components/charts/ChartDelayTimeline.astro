@@ -5,7 +5,7 @@
  * Can be embedded on any page; D3 init deferred via IntersectionObserver.
  */
 import delayData         from "../../../data/gta-6/delay-timeline.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -33,7 +33,7 @@ import ChartFooter from "../ChartFooter.astro";
           data-events={JSON.stringify(delayData.timeline)}
           data-launch={delayData.confirmed_launch}
         ></div>
-        <ChartFooter chartId="delay-timeline-chart" sources="Sources: SEC EDGAR Take-Two 8-K filings · Rockstar Games official announcements" shareText="GTA VI has been delayed twice. The full timeline — and what it signals for the Nov 19, 2026 release date." />
+        <CardFooter chartId="delay-timeline-chart" sources="Sources: SEC EDGAR Take-Two 8-K filings · Rockstar Games official announcements" shareText="GTA VI has been delayed twice. The full timeline — and what it signals for the Nov 19, 2026 release date." />
       </div>
 
 <script>

@@ -5,7 +5,7 @@
  */
 import sourceHistoryData from "../../../data/gta-5/economy/per-source-history.json";
 import revenueTiersData from "../../../data/gta-5/economy/revenue-tiers.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -33,7 +33,7 @@ import ChartFooter from "../ChartFooter.astro";
           data-sources={JSON.stringify((sourceHistoryData as any).sources)}
         ></div>
         <div id="income-history-events" class="px-5 py-3 border-t border-[#1e1e23] divide-y divide-[#1e1e23]"></div>
-        <ChartFooter chartId="income-history-chart" sources="Source: GTAForums patch notes archives + Rockstar Newswire · community benchmarks" shareText="GTA Online income source history — every major nerf, buff, and DLC launch charted. Cayo Perico was nerfed 40% in 2021 then partially restored." />
+        <CardFooter chartId="income-history-chart" sources="Source: GTAForums patch notes archives + Rockstar Newswire · community benchmarks" shareText="GTA Online income source history — every major nerf, buff, and DLC launch charted. Cayo Perico was nerfed 40% in 2021 then partially restored." />
       </div>
 
 <script>

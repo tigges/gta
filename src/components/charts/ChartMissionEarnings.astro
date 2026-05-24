@@ -5,7 +5,7 @@
  * Extracted from gta-v.astro.
  */
 import missionsData from "../../../data/gta-5/missions/story-missions.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 import { registerChart, triggerChart } from "../../assets/chartInit";
 const storyMissions  = (missionsData as any).missions as any[];
 const payingMissions = storyMissions.filter((m: any) => m.payout > 0);
@@ -26,7 +26,7 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
         <div id="mission-earnings-chart" class="w-full" style="height:280px"
           data-missions={JSON.stringify(storyMissions.filter((m: any) => m.payout >= 0))}
         ></div>
-        <ChartFooter chartId="mission-earnings-chart" sources="Source: GTA Wiki (Fandom) · community records · updated by fetch_missions.py" shareText="GTA V story mission earnings from start to finish. $250 at Repossession to $41.6M at The Big Score. The earning curve tells the whole story." />
+        <CardFooter chartId="mission-earnings-chart" sources="Source: GTA Wiki (Fandom) · community records · updated by fetch_missions.py" shareText="GTA V story mission earnings from start to finish. $250 at Repossession to $41.6M at The Big Score. The earning curve tells the whole story." />
       </div>
 
 <script>

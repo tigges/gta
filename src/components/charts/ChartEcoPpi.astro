@@ -5,7 +5,7 @@
  * Self-contained; D3 init deferred via IntersectionObserver.
  */
 import ppiData     from "../../../data/gta-5/economy/gta-ppi.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 
 const ppiSeries = (ppiData as any).series as any[];
 ---
@@ -18,7 +18,7 @@ const ppiSeries = (ppiData as any).series as any[];
   <div id="chart-ppi" class="w-full" style="height:280px"
     data-series={JSON.stringify(ppiSeries)}
   ></div>
-  <ChartFooter chartId="chart-ppi" sources="Source: community data · updated nightly" shareText="GTA Online economy chart: GTA-PPI — Purchasing Power Index 2013–2026" />
+  <CardFooter chartId="chart-ppi" sources="Source: community data · updated nightly" shareText="GTA Online economy chart: GTA-PPI — Purchasing Power Index 2013–2026" />
 </div>
 
 <script>

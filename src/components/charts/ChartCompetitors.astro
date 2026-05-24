@@ -6,7 +6,7 @@
  */
 import competitorData    from "../../../data/franchise/competitors.json";
 import salesData         from "../../../data/franchise/sales.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -19,7 +19,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="competitors-chart" class="w-full" style="height:380px"
           data-games={JSON.stringify(competitorData.games)}
         ></div>
-        <ChartFooter chartId="competitors-chart" sources="Sources: Publisher earnings · VGChartz · Metacritic · Google Trends · DFC Intelligence (GTA VI) · *predicted" shareText="GTA VI projected year-1 vs the biggest game launches of the last decade. Every metric points to an unprecedented release." />
+        <CardFooter chartId="competitors-chart" sources="Sources: Publisher earnings · VGChartz · Metacritic · Google Trends · DFC Intelligence (GTA VI) · *predicted" shareText="GTA VI projected year-1 vs the biggest game launches of the last decade. Every metric points to an unprecedented release." />
       </div>
 
 <script>

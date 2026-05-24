@@ -5,7 +5,7 @@
  * Can be embedded on any page; D3 init deferred via IntersectionObserver.
  */
 import franchiseEconData from "../../../data/franchise/economic-history.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -20,7 +20,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="franchise-complexity-chart" class="w-full px-5 py-4"
           data-titles={JSON.stringify((franchiseEconData as any).titles.filter((t: any) => t.complexity_score !== null))}
         ></div>
-        <ChartFooter chartId="franchise-complexity-chart" sources="Source: curated research · GTAForums · GTA Fandom Wiki · complexity score = count of active economic mechanics" shareText="GTA" />
+        <CardFooter chartId="franchise-complexity-chart" sources="Source: curated research · GTAForums · GTA Fandom Wiki · complexity score = count of active economic mechanics" shareText="GTA" />
       </div>
 
 <script>

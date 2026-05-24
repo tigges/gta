@@ -5,7 +5,7 @@
  * Can be embedded on any page; D3 init deferred via IntersectionObserver.
  */
 import passiveStackData  from "../../../data/gta-5/economy/passive-stack.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -31,7 +31,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="passive-stack-chart" class="w-full" style="height:300px"
           data-series={JSON.stringify((passiveStackData as any).series)}
         ></div>
-        <ChartFooter chartId="passive-stack-chart" sources="Source: GTABase.com · business-profiles.json · GTAForums patch notes · community benchmarks" shareText="GTA Online passive income history: from $0 in 2013 to $1.24M/hr AFK in 2022. The Acid Lab was the last major passive income leap before GTA VI." />
+        <CardFooter chartId="passive-stack-chart" sources="Source: GTABase.com · business-profiles.json · GTAForums patch notes · community benchmarks" shareText="GTA Online passive income history: from $0 in 2013 to $1.24M/hr AFK in 2022. The Acid Lab was the last major passive income leap before GTA VI." />
       </div>
 
 <script>

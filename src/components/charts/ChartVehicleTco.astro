@@ -5,7 +5,7 @@
  */
 import vehicleModsData from "../../../data/gta-5/economy/vehicle-mods.json";
 import bizProfilesData from "../../../data/gta-5/economy/business-profiles.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 import { C_BRAND, C_ALERT, C_LIVE } from "../../config/colors";
 ---
 
@@ -28,7 +28,7 @@ import { C_BRAND, C_ALERT, C_LIVE } from "../../config/colors";
           data-vehicles={JSON.stringify((vehicleModsData as any).vehicles)}
           style="min-height:500px"
         ></div>
-        <ChartFooter chartId="vehicle-tco-chart" sources="Source: GTABase.com · Broughy1322 · standard shop prices · trade prices shown where unlockable" shareText="GTA Online meta vehicle costs — Oppressor Mk2 costs $5.1M fully kitted. Akula helicopter $4.8M. What going full meta actually requires." />
+        <CardFooter chartId="vehicle-tco-chart" sources="Source: GTABase.com · Broughy1322 · standard shop prices · trade prices shown where unlockable" shareText="GTA Online meta vehicle costs — Oppressor Mk2 costs $5.1M fully kitted. Akula helicopter $4.8M. What going full meta actually requires." />
       </div>
 
 <script>

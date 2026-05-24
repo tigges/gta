@@ -6,7 +6,7 @@
  */
 import metaHistory      from "../../../data/gta-5/economy/meta-history.json";
 import revenueTiersData from "../../../data/gta-5/economy/revenue-tiers.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 
 const metaSeries    = (metaHistory as any).meta_history as any[];
 const tierSources   = ((revenueTiersData as any).tiers as any[]).flatMap((t:any) => t.sources);
@@ -27,7 +27,7 @@ const liveMetaSeries = lastMeta?.date === today
   <div id="chart-wages" class="w-full" style="height:220px"
     data-series={JSON.stringify(liveMetaSeries)}
   ></div>
-  <ChartFooter chartId="chart-wages" sources="Source: community data · updated nightly" shareText="GTA Online economy chart: GTA Online Income Ceiling — Best $/hr Over the Years" />
+  <CardFooter chartId="chart-wages" sources="Source: community data · updated nightly" shareText="GTA Online economy chart: GTA Online Income Ceiling — Best $/hr Over the Years" />
 </div>
 
 <script>

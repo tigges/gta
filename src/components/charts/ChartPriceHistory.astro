@@ -4,7 +4,7 @@
  * Extracted from charts.astro.
  */
 import priceChangesData from "../../../data/gta-5/economy/price-changes.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 import { C_GROWTH, C_ALERT } from "../../config/colors";
 ---
 
@@ -26,7 +26,7 @@ import { C_GROWTH, C_ALERT } from "../../config/colors";
           data-items={JSON.stringify((priceChangesData as any).items)}
           style="min-height:500px"
         ></div>
-        <ChartFooter chartId="price-history-chart" sources="Source: Rockstar Newswire · GTAForums patch notes archives · {(priceChangesData as any).last_updated?.slice(0,10)}" shareText="GTA Online price change history — every documented nerf, buff, and property launch. Contact missions were nerfed 70% in 2014 then slowly buffed back." />
+        <CardFooter chartId="price-history-chart" sources="Source: Rockstar Newswire · GTAForums patch notes archives · {(priceChangesData as any).last_updated?.slice(0,10)}" shareText="GTA Online price change history — every documented nerf, buff, and property launch. Contact missions were nerfed 70% in 2014 then slowly buffed back." />
       </div>
 
 <script>

@@ -6,7 +6,7 @@
  */
 import redditData        from "../../../data/community/reddit.json";
 import gta6Trends        from "../../../data/gta-6/trends/search-interest.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -28,7 +28,7 @@ import ChartFooter from "../ChartFooter.astro";
           data-milestones={JSON.stringify(redditData.historical_milestones)}
           data-trends={JSON.stringify(gta6Trends.keywords.find(k => k.keyword === "GTA 6"))}
         ></div>
-        <ChartFooter chartId="community-chart" sources="Sources: r/GrandTheftAutoVI community records · Google Trends via pytrends · {redditData.credentials_required ? &quot;Live Reddit polling needs REDDIT_CLIENT_ID secret&quot; : &quot;Live polling active&quot;}" shareText="r/GrandTheftAutoVI hit 1.5M+ subscribers before launch. The community growth curve looks unlike any prior game release." />
+        <CardFooter chartId="community-chart" sources="Sources: r/GrandTheftAutoVI community records · Google Trends via pytrends · {redditData.credentials_required ? &quot;Live Reddit polling needs REDDIT_CLIENT_ID secret&quot; : &quot;Live polling active&quot;}" shareText="r/GrandTheftAutoVI hit 1.5M+ subscribers before launch. The community growth curve looks unlike any prior game release." />
       </div>
 
 <script>

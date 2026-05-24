@@ -5,7 +5,7 @@
  * Can be embedded on any page; D3 init deferred via IntersectionObserver.
  */
 import revenueTiersData  from "../../../data/gta-5/economy/revenue-tiers.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -29,7 +29,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="income-leaderboard-chart" class="w-full" style="min-height:380px"
           data-tiers={JSON.stringify((revenueTiersData as any).tiers)}
         ></div>
-        <ChartFooter chartId="income-leaderboard-chart" sources="Source: GTABase.com · community benchmarks · net after costs · 2024 patches" shareText="GTA Online income ranked S→C tier by net GTA$/hr. Cayo Perico $340k solo. Full profiles and tips in the Database." />
+        <CardFooter chartId="income-leaderboard-chart" sources="Source: GTABase.com · community benchmarks · net after costs · 2024 patches" shareText="GTA Online income ranked S→C tier by net GTA$/hr. Cayo Perico $340k solo. Full profiles and tips in the Database." />
       </div>
 
 <script>

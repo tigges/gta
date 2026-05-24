@@ -5,7 +5,7 @@
  * Can be embedded on any page; D3 init deferred via IntersectionObserver.
  */
 import regionsData       from "../../../data/franchise/regions-evidence.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -18,7 +18,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="region-heatmap" class="w-full overflow-x-auto"
           data-regions={JSON.stringify(regionsData.regions)}
         ></div>
-        <ChartFooter chartId="region-heatmap" sources="Sources: Rockstar press kit · Trailer analysis · Leonida Intel community mapping" shareText="Every confirmed GTA VI region from official trailer analysis. The Leonida map is the largest open world Rockstar has ever built." />
+        <CardFooter chartId="region-heatmap" sources="Sources: Rockstar press kit · Trailer analysis · Leonida Intel community mapping" shareText="Every confirmed GTA VI region from official trailer analysis. The Leonida map is the largest open world Rockstar has ever built." />
       </div>
 
 <script>

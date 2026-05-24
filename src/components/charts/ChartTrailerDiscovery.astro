@@ -5,7 +5,7 @@
  * Can be embedded on any page; D3 init deferred via IntersectionObserver.
  */
 import trailerAnalysis   from "../../../data/gta-6/trailer-analysis.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -34,7 +34,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="trailer-discovery-chart" class="w-full px-5 py-4"
           data-trailers={JSON.stringify(trailerAnalysis.trailers)}
         ></div>
-        <ChartFooter chartId="trailer-discovery-chart" sources="Source: GTA VI.AI frame-by-frame analysis · official Rockstar trailers" shareText="GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis across both trailers." />
+        <CardFooter chartId="trailer-discovery-chart" sources="Source: GTA VI.AI frame-by-frame analysis · official Rockstar trailers" shareText="GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis across both trailers." />
       </div>
 
 <script>

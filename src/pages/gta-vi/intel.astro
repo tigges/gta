@@ -7,8 +7,12 @@ import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 
 import type { TrailersData, Prediction } from "../../types/gta";
+import IncomePredictionCard from "../../components/IncomePredictionCard.astro";
+import GamePill from "../../components/GamePill.astro";
+import { CATEGORY_BADGE_CLASSES } from "../../config/categoryColors";
 
 import predictionsData from "../../../data/gta-6/predictions.json";
+import incomeData from "../../../data/gta-6/income-predictions.json";
 import trailersDataRaw from "../../../data/gta-6/trailers.json";
 import releaseData     from "../../../data/shared/releases.json";
 import gta6Trends      from "../../../data/gta-6/trends/search-interest.json";
@@ -165,6 +169,38 @@ const DELAY_THUMBS: Record<string,string> = {
             />
           );
         })}
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         INCOME PREDICTIONS — GTA VI Online
+    ═══════════════════════════════════════════════════════ -->
+    <section class="mt-16">
+      <div class="flex items-center gap-3 mb-7">
+        <GamePill game="gta-vi" size="xs" />
+        <span class={CATEGORY_BADGE_CLASSES}>Economy-IG</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Online — Predicted Income Sources</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-500">pre-launch estimates · trailer-confirmed activities</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {(incomeData as any).income_predictions.map((p: any) => (
+          <IncomePredictionCard
+            id={p.id}
+            name={p.name}
+            category={p.category}
+            region={p.region}
+            confidence_tier={p.confidence_tier}
+            confidence_score={p.confidence_score}
+            thumbnail={p.thumbnail}
+            trailer_evidence={p.trailer_evidence}
+            predicted_payout_per_run={p.predicted_payout_per_run}
+            predicted_gta_per_hr={p.predicted_gta_per_hr}
+            analogous_gta_online={p.analogous_gta_online}
+            basis={p.basis}
+            prediction_range={p.prediction_range}
+          />
+        ))}
       </div>
     </section>
 

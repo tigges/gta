@@ -5,7 +5,7 @@
  */
 import dlcData from "../../../data/gta-5/dlc/timeline.json";
 import velocityData from "../../../data/gta-6/trailer-velocity.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -23,7 +23,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="dlc-cadence-chart" class="w-full" style="height:300px"
           data-dlc={JSON.stringify(dlcData.updates.filter((u: any) => u.category === "major" || u.category === "launch"))}
         ></div>
-        <ChartFooter chartId="dlc-cadence-chart" sources="Source: Rockstar Games official announcements · GTA Online update history 2013–2024" shareText="GTA Online had 38 major content drops over 11 years. Here" />
+        <CardFooter chartId="dlc-cadence-chart" sources="Source: Rockstar Games official announcements · GTA Online update history 2013–2024" shareText="GTA Online had 38 major content drops over 11 years. Here" />
       </div>
 
 <script>

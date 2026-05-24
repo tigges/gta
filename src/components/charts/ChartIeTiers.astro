@@ -4,7 +4,7 @@
  * Extracted from charts.astro.
  */
 import vehicleCargoData from "../../../data/gta-5/economy/vehicle-cargo.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 import { C_BRAND, C_GROWTH } from "../../config/colors";
 ---
 
@@ -24,7 +24,7 @@ import { C_BRAND, C_GROWTH } from "../../config/colors";
           data-sell={JSON.stringify((vehicleCargoData as any).sell_prices_net)}
           style="min-height:240px"
         ></div>
-        <ChartFooter chartId="ie-tiers-chart" sources="Source: GTABase.com · GTA Wiki · community records · no-damage assumption · net of setup mods" shareText="GTA Online Import/Export sell prices: top-range specialist delivers 5× more than standard private. Always prioritise top-range sources." />
+        <CardFooter chartId="ie-tiers-chart" sources="Source: GTABase.com · GTA Wiki · community records · no-damage assumption · net of setup mods" shareText="GTA Online Import/Export sell prices: top-range specialist delivers 5× more than standard private. Always prioritise top-range sources." />
       </div>
 
 <script>

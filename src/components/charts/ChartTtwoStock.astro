@@ -6,7 +6,7 @@
  */
 import ttwoStock         from "../../../data/franchise/ttwo-stock.json";
 import delayData         from "../../../data/gta-6/delay-timeline.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -29,7 +29,7 @@ import ChartFooter from "../ChartFooter.astro";
           data-prices={JSON.stringify(ttwoStock.prices)}
           data-annotations={JSON.stringify(ttwoStock.annotations)}
         ></div>
-        <ChartFooter chartId="ttwo-stock-chart" sources="Source: Yahoo Finance (TTWO) · Not investment advice · Updated {new Date(ttwoStock.last_updated).toLocaleDateString(&quot;en-GB&quot;,{month:&quot;short&quot;,year:&quot;numeric&quot;})}" shareText="Take-Two stock tracks GTA announcement cycles almost perfectly. The market reaction to every trailer and delay, charted." />
+        <CardFooter chartId="ttwo-stock-chart" sources="Source: Yahoo Finance (TTWO) · Not investment advice · Updated {new Date(ttwoStock.last_updated).toLocaleDateString(&quot;en-GB&quot;,{month:&quot;short&quot;,year:&quot;numeric&quot;})}" shareText="Take-Two stock tracks GTA announcement cycles almost perfectly. The market reaction to every trailer and delay, charted." />
       </div>
 
 <script>

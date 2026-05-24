@@ -4,7 +4,7 @@
  * Extracted from charts.astro.
  */
 import spendingDistData from "../../../data/gta-5/economy/spending-distribution.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -30,7 +30,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="spending-distribution-chart" class="w-full" style="height:300px"
           data-eras={JSON.stringify((spendingDistData as any).eras)}
         ></div>
-        <ChartFooter chartId="spending-distribution-chart" sources="Source: community surveys · GTAForums spending analysis · modelled estimates · confidence: medium" shareText="How GTA Online players spend their money across eras: vehicles dominated 2013–14, properties peaked 2016–17 (Bunker era), then Oppressor drove vehicles back up." />
+        <CardFooter chartId="spending-distribution-chart" sources="Source: community surveys · GTAForums spending analysis · modelled estimates · confidence: medium" shareText="How GTA Online players spend their money across eras: vehicles dominated 2013–14, properties peaked 2016–17 (Bunker era), then Oppressor drove vehicles back up." />
       </div>
 
 <script>

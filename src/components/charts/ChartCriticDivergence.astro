@@ -4,7 +4,7 @@
  * Extracted from charts.astro.
  */
 import metacriticData from "../../../data/franchise/metacritic.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 const metacriticScores = (metacriticData as any).titles as any[];
 ---
 
@@ -38,7 +38,7 @@ const metacriticScores = (metacriticData as any).titles as any[];
         <div id="divergence-chart" class="w-full" style="height:300px"
           data-scores={JSON.stringify(metacriticScores)}
         ></div>
-        <ChartFooter chartId="divergence-chart" sources="Source: Metacritic.com · GTA VI prediction based on franchise trajectory" shareText="GTA SA had perfect critic/user alignment. GTA IV opened a 22-point gap. Will GTA VI close it? The historical pattern." />
+        <CardFooter chartId="divergence-chart" sources="Source: Metacritic.com · GTA VI prediction based on franchise trajectory" shareText="GTA SA had perfect critic/user alignment. GTA IV opened a 22-point gap. Will GTA VI close it? The historical pattern." />
       </div>
 
 <script>

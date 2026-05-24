@@ -6,7 +6,7 @@
  */
 import entertainData     from "../../../data/franchise/entertainment-comps.json";
 import salesData         from "../../../data/franchise/sales.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -22,7 +22,7 @@ import ChartFooter from "../ChartFooter.astro";
         </div>
         <div id="entertainment-chart" class="w-full" style="height:420px"
           data-entries={JSON.stringify(entertainData.entries.slice(0, 14))}></div>
-        <ChartFooter chartId="entertainment-chart" sources="Sources: Box Office Mojo (worldwide lifetime) · Take-Two IR · Spotify IR · DFC Intelligence · *projected" shareText="GTA VI is projected to outgross the biggest movie openings in history. The entertainment revenue comparison is staggering." />
+        <CardFooter chartId="entertainment-chart" sources="Sources: Box Office Mojo (worldwide lifetime) · Take-Two IR · Spotify IR · DFC Intelligence · *projected" shareText="GTA VI is projected to outgross the biggest movie openings in history. The entertainment revenue comparison is staggering." />
       </div>
 
 <script>
