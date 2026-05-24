@@ -151,7 +151,7 @@ def fetch_rss(source: dict) -> list[dict]:
 
             title_text = title.get_text(strip=True) if title else ""
             link_text  = link.get_text(strip=True) if link else ""
-            desc_text  = (desc.get_text(strip=True) if desc else "")[:300]
+            desc_text  = (desc.get_text(strip=True) if desc else "")[:500]
 
             if not title_text or not link_text:
                 continue
@@ -166,7 +166,7 @@ def fetch_rss(source: dict) -> list[dict]:
                 "title":       title_text,
                 "url":         link_text,
                 "published_at": parse_date(pub.get_text(strip=True) if pub else None),
-                "summary":     re.sub(r"<[^>]+>", "", desc_text).strip()[:200],
+                "summary":     _strip_html(desc_text)[:200],
             })
 
         print(f"  ✓ {source['name']}: {len(results)} items")
@@ -247,6 +247,40 @@ GTAFORUMS_SEED = [
 ]
 
 
+def _strip_html(text: str) -> str:
+    """Strip HTML tags and decode HTML entities from a string."""
+    if not text:
+        return ""
+    clean = BeautifulSoup(text, "html.parser").get_text(" ", strip=True)
+    return re.sub(r"\s{2,}", " ", clean).strip()
+
+
+def _edgar_title(summary_html: str, date_str: str) -> str:
+    """Build a human-readable 8-K title from the filing date + disclosed Items."""
+    # Map Item codes → short labels (Item 2.02 etc.)
+    ITEM_LABELS: dict[str, str] = {
+        "2.02": "Results of Operations",
+        "7.01": "Reg FD Disclosure",
+        "8.01": "Other Events",
+        "9.01": "Financial Statements",
+        "5.02": "Director/Officer Change",
+        "5.07": "Security Holders Vote",
+        "1.01": "Material Agreement",
+        "2.01": "Asset Acquisition",
+    }
+    found = re.findall(r"Item\s+(\d+\.\d+)", summary_html)
+    labels = [ITEM_LABELS.get(code, f"Item {code}") for code in dict.fromkeys(found)]
+    label_str = " · ".join(labels[:2]) if labels else "Current Report"
+    # Format date: "2026-05-05" → "May 2026"
+    try:
+        from datetime import date as _date
+        d = _date.fromisoformat(date_str[:10])
+        month_str = d.strftime("%b %Y")
+    except Exception:
+        month_str = date_str[:7]
+    return f"Take-Two 8-K · {month_str} — {label_str}"
+
+
 def fetch_edgar_8k() -> list[dict]:
     """Fetch recent Take-Two 8-K filings from SEC EDGAR Atom feed.
     8-Ks capture material events: delay announcements, date confirmations,
@@ -264,27 +298,25 @@ def fetch_edgar_8k() -> list[dict]:
         results = []
 
         for entry in entries:
-            title = entry.find("title")
-            link  = entry.find("link")
+            link    = entry.find("link")
             updated = entry.find("updated") or entry.find("published")
             summary = entry.find("summary") or entry.find("content")
 
-            title_text = title.get_text(strip=True) if title else ""
             link_href  = link.get("href", "") if link else ""
-            date_text  = updated.get_text(strip=True)[:10] if updated else None
-            summ_text  = (summary.get_text(strip=True) if summary else "")[:200]
+            date_text  = (updated.get_text(strip=True) if updated else "")[:10]
+            summ_html  = summary.get_text(strip=True) if summary else ""
 
-            if not title_text:
+            if not date_text:
                 continue
 
             results.append({
                 "source_id":    "sec-edgar",
                 "source_name":  "SEC EDGAR (Take-Two 8-K)",
                 "tier":         "official",
-                "title":        f"Take-Two 8-K: {title_text}",
+                "title":        _edgar_title(summ_html, date_text),
                 "url":          link_href,
-                "published_at": f"{date_text}T00:00:00Z" if date_text else None,
-                "summary":      summ_text,
+                "published_at": f"{date_text}T00:00:00Z",
+                "summary":      _strip_html(summ_html)[:200],
             })
 
         print(f"  ✓ SEC EDGAR 8-K: {len(results)} filings")

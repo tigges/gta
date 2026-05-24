@@ -112,6 +112,14 @@ function relativeTime(iso: string | null): string {
   return new Date(iso).toLocaleDateString("en-GB", { day:"numeric", month:"short" });
 }
 
+function stripHtml(text: string | null | undefined): string {
+  if (!text) return "";
+  return text.replace(/<[^>]+>/g, "").replace(/&[a-z#0-9]+;/gi, c => {
+    const map: Record<string,string> = { "&amp;":"&","&lt;":"<","&gt;":">","&quot;":'"',"&#39;":"'","&#8217;":"'","&#8216;":"'","&#8220;":'"',"&#8221;":'"',"&nbsp;":" " };
+    return map[c] ?? c;
+  }).replace(/\s{2,}/g, " ").trim();
+}
+
 // Group by source for the breakdown
 const bySource = pressItems.reduce<Record<string, number>>((acc, i) => {
   acc[i.source_name] = (acc[i.source_name] ?? 0) + 1;
@@ -229,7 +237,7 @@ const updatedAt = feedData.last_updated;
                   </div>
                   {item.summary && (
                     <p class="text-[11px] text-zinc-600 leading-relaxed line-clamp-2 mb-2">
-                      {item.summary}
+                      {stripHtml(item.summary)}
                     </p>
                   )}
                   <div class="flex items-center gap-2 flex-wrap">
