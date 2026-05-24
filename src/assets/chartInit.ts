@@ -6,30 +6,42 @@
  * ChartPreviewCard calls triggerChart(id) when a card is expanded, ensuring
  * charts that were hidden at viewport-entry time are initialised with the
  * correct (now non-zero) clientWidth.
+ *
+ * Registry is stored on `window` rather than module scope so it survives
+ * any Astro/Vite chunk-splitting that might produce multiple module instances.
  */
 
-const _registry = new Map<string, () => void>();
-const _done     = new Set<string>();
+declare global {
+  interface Window {
+    __chartReg?: Map<string, () => void>;
+    __chartDone?: Set<string>;
+  }
+}
+
+function reg(): Map<string, () => void> {
+  return (window.__chartReg ??= new Map());
+}
+function done(): Set<string> {
+  return (window.__chartDone ??= new Set());
+}
 
 export function registerChart(id: string, fn: () => void): void {
-  if (_done.has(id)) return;
-  // Wrap fn so any call path (IntersectionObserver or triggerChart) marks
-  // the chart done and prevents a second render race.
+  if (done().has(id)) return;
   const guarded = () => {
-    if (_done.has(id)) return;   // already rendered by another call path
-    _done.add(id);
-    _registry.delete(id);
+    if (done().has(id)) return;
+    done().add(id);
+    reg().delete(id);
     fn();
   };
-  _registry.set(id, guarded);
+  reg().set(id, guarded);
 }
 
 export function triggerChart(id: string): void {
-  const fn = _registry.get(id);
-  if (fn) fn(); // guarded wrapper handles _done tracking
+  const fn = reg().get(id);
+  if (fn) fn();
 }
 
 export function triggerAll(): void {
-  _registry.forEach(fn => fn()); // guarded wrappers handle dedup
-  _registry.clear();
+  reg().forEach(fn => fn());
+  reg().clear();
 }
