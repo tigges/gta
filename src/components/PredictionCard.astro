@@ -26,6 +26,8 @@ interface Props {
   compact?: boolean; // homepage teaser mode: hides method/basis/source
   game?: "gta-vi" | "gta-online" | "gta-v" | "franchise"; // for GamePill
   id?: string;       // canonical id from predictions.json (e.g. "pred-launch-price")
+  /** When provided (compact mode only): renders "Full analysis →" link in footer */
+  detailHref?: string;
 }
 
 const {
@@ -46,6 +48,7 @@ const {
   compact = false,
   game = "gta-vi",
   id: cardId,
+  detailHref,
 } = Astro.props;
 
 // Use canonical id from JSON if provided, otherwise derive from title
@@ -178,11 +181,19 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
   <!-- Share strip -->
   <div class="px-4 pb-3 flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
     <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-    <ShareDropdown
-      anchorId={predAnchorId}
-      shareText={`GTA VI ${title}: ${value}${unit ? " " + unit : ""} — ${confidence}% confidence. Data-driven, not speculation.`}
-      size="sm"
-    />
+    <div class="flex items-center gap-2.5">
+      {compact && detailHref && (
+        <a href={detailHref}
+           class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors uppercase tracking-widest">
+          Full analysis →
+        </a>
+      )}
+      <ShareDropdown
+        anchorId={predAnchorId}
+        shareText={`GTA VI ${title}: ${value}${unit ? " " + unit : ""} — ${confidence}% confidence. Data-driven, not speculation.`}
+        size="sm"
+      />
+    </div>
   </div>
 
   <!-- Outcome banner (post-launch) -->
