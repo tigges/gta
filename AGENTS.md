@@ -295,4 +295,6 @@ Bump `src/config/version.ts` when shipping a meaningful release.
   git tag release/vX.Y.Z origin/main && git push origin release/vX.Y.Z
   ```
 
+- **Handover note version format.** In chat handover scripts only, the current version must be written in the format `GTAVI_AI_v1_75_0` (project prefix + underscores instead of dots). Example: `GTAVI_AI_v1_76_0`. This applies to the version token in the handover note header and any inline version references within the handover text. It does NOT affect `src/config/version.ts`, git tags, commit messages, or any other file — those continue to use the standard `1.76.0` format.
+
 - **New projects: establish version infrastructure first.** If starting a new project that does not yet have a version file, create `src/config/version.ts` (or equivalent for the stack) with `SITE_VERSION`, `SITE_VERSION_DATE`, and `SITE_VERSION_LABEL` constants before any other work. Wire the version into a visible location (footer, ops bar, or page meta) so it is always observable. Document the file path in this `AGENTS.md`.
