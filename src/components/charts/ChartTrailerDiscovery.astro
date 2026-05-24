@@ -147,7 +147,7 @@ import CardFooter from "../CardFooter.astro";
     if (obsEl) {
       const obs = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) { triggerChart("trailer-discovery-chart"); obs.disconnect(); }
-      }, { rootMargin: "200px" });
+      }, { rootMargin: "10000px" });
       obs.observe(obsEl);
     }
   } else { init(); }
