@@ -62,7 +62,7 @@ export interface ChartMeta {
    */
   meta: string | null;
 
-  /** Source citation rendered in ChartFooter / CardFooter */
+  /** Source citation rendered in CardFooter */
   sources: string;
 
   /** Pre-written share copy for ShareDropdown */

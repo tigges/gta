@@ -162,6 +162,16 @@ jobs:
       - name: Fetch intelligence news feeds
         run: python scrapers/fetch_newswire.py
 
+      - name: Monitor gaming conference & publisher YouTube channels
+        continue-on-error: true
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: python scrapers/fetch_conference_news.py
+
+      - name: Monitor GTA VI pre-order retailer listings
+        continue-on-error: true
+        run: python scrapers/fetch_preorder_listings.py
+
       # ── GTA VI entities ────────────────────────────────────────────────────
 
       - name: Fetch Leonida Intel entity index
