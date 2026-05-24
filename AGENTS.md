@@ -288,12 +288,21 @@ Bump `src/config/version.ts` when shipping a meaningful release.
 - **No autonomous screenshots or screen recordings.** Never use the `computerUse` subagent, `RecordScreen`, or any screenshot tool on your own initiative. If visual confirmation of a UI change is needed, ask the user to share a screenshot instead — this is faster and cheaper.
 - Communicate this rule explicitly in every chat handover note under a "Agent rules" section so the next agent does not repeat the behaviour.
 
-- **Always use the central colour token system — no raw hex values in components.** This rule applies to this project and all other projects. Every colour used in a component, inline style, or script must reference the central token system:
-  - In `.astro` / CSS: use `var(--c-*)` CSS custom properties defined in `src/styles/tokens.css`
-  - In Tailwind class strings: use the mapped utility classes (`text-zinc-*`, `bg-*`) which are remapped to tokens via `tokens.css`
-  - In TypeScript / D3 / JS runtime code: use the named exports from `src/config/colors.ts`
-  - **Never write a raw hex literal** (e.g. `#1a1a1e`, `color:#b8b8c4`) directly in a component, inline `style` attribute, or script. If a colour you need does not yet have a token, add it to `tokens.css` and `colors.ts` first, then reference the new token.
-  - When touching an existing component that contains hardcoded hex values, replace them with the correct token references as part of the same commit — do not leave orphaned hex values behind.
+- **Always use the central design token system — no hardcoded values in components.** This rule applies to this project and all other projects. Every visual property — colour, font family, font size, font weight, spacing, and surface — must reference the central token system. Never reach for a raw literal value in a component.
+
+  **Colours:**
+  - In `.astro` / CSS: `var(--c-*)` from `src/styles/tokens.css`
+  - In Tailwind class strings: mapped utility classes (`text-zinc-*`, `bg-*`) per `tokens.css`
+  - In TypeScript / D3 / JS: named exports from `src/config/colors.ts`
+  - Never write a raw hex literal (e.g. `#1a1a1e`, `color:#b8b8c4`). If a colour has no token yet, add it to `tokens.css` and `colors.ts` first.
+
+  **Typography (font family, size, weight):**
+  - Always use the Tailwind font utilities: `font-sans`, `font-mono`, `font-bold`, `text-sm`, `text-[11px]` etc.
+  - Font families are defined in `tokens.css` as `--font-sans` and `--font-mono`. Never write `style="font-family:..."` inline.
+  - Font sizes follow the scale defined in `tokens.css` (`--fs-micro` 10px, `--fs-label` 11px, `--fs-body` 14px etc.). Use the corresponding Tailwind class; never write a raw `px` size that isn't in the scale.
+  - Never write `style="font-size:..."` or `style="font-weight:..."` inline.
+
+  **General rule:** When touching an existing component that contains any hardcoded visual value (hex colour, raw font size, inline font-family, orphan pixel value), replace it with the correct token reference in the same commit. Do not leave orphaned raw values behind.
 
 - **Version bump — mandatory on every session, no exceptions.** Every session that touches code, data, UI, or scrapers must bump `src/config/version.ts` before merging to `main`. Patch bump (`x.y.Z+1`) for fixes and minor tweaks; minor bump (`x.Y+1.0`) for new features; major bump (`X+1.0.0`) for full redesigns. Also update `SITE_VERSION_DATE` to today (`YYYY-MM-DD`). The version is displayed in the ops bar on every page — it must always reflect the latest release.
 
