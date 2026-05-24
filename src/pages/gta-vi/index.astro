@@ -47,8 +47,10 @@ const totalEntities = (trailerAnalysis.trailers?.[0]?.total_entities ?? 0) + (tr
 const heroTrailer = trailers[1] ?? trailers[0];
 const confirmedLaunch = delayData.confirmed_launch as string | undefined;
 
-// Top predictions (featured: first 6)
-const featuredPredictions = predictions.slice(0, 6);
+// GTA VI hub: predictions tagged for "gta-vi", sorted by display_order
+const featuredPredictions = (predictions as Prediction[])
+  .filter((p: Prediction) => (p.pages ?? []).includes("gta-vi"))
+  .sort((a: Prediction, b: Prediction) => (a.display_order ?? 99) - (b.display_order ?? 99));
 
 // Top income sources (first 4 — mix of confirmed + reported)
 const featuredIncome = incomeList

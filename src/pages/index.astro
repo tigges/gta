@@ -53,6 +53,11 @@ const predThumbnails: Record<string, string> = {
   "pred-vehicles-launch": "/assets/gta6/locations/Port_Gellhorn_01.jpg",
 };
 
+// Home page: top-ranked predictions tagged for "home", sorted by display_order
+const homePredictions = (predictionsData.predictions as Prediction[])
+  .filter((p: Prediction) => (p.pages ?? []).includes("home"))
+  .sort((a: Prediction, b: Prediction) => (a.display_order ?? 99) - (b.display_order ?? 99));
+
 // Cover art map for release timeline table
 const RELEASE_COVERS: Record<string, string> = {
   "GTA 1":  "/assets/covers/gta-1.jpg",
@@ -251,7 +256,7 @@ const TIER_COLOR: Record<string,string> = {
         <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full analysis →</a>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {(predictionsData.predictions as Prediction[]).map((p) => (
+        {homePredictions.map((p: Prediction) => (
           <PredictionCard
             id={(p as Prediction).id}
             title={p.title}
