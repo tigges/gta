@@ -1,20 +1,21 @@
 ---
 /**
  * /gta-vi — Grand Theft Auto VI hub page.
- * Layered architecture: Predictions → Charts → Economy → Income Sources.
- * Entry point for all GTA VI intelligence on GTAVI.AI.
+ * Layered architecture: Predictions → Charts (full) → Economy → Nav tiles.
+ * Charts rendered full-size, not collapsed.
  */
 import Base from "../../layouts/Base.astro";
 import GamePill from "../../components/GamePill.astro";
 import PredictionCard from "../../components/PredictionCard.astro";
 import IncomePredictionCard from "../../components/IncomePredictionCard.astro";
-import CircularEconomy from "../../components/CircularEconomy.astro";
+import ExpenditureCard from "../../components/ExpenditureCard.astro";
+import EconomyCircle from "../../components/EconomyCircle.astro";
+import ChartSection from "../../components/ChartSection.astro";
 import Countdown from "../../components/Countdown.astro";
-import ChartPreviewCard from "../../components/charts/ChartPreviewCard.astro";
-import ChartTrailerVelocity    from "../../components/charts/ChartTrailerVelocity.astro";
-import ChartDelayTimeline      from "../../components/charts/ChartDelayTimeline.astro";
-import ChartRegionHeatmap      from "../../components/charts/ChartRegionHeatmap.astro";
-import ChartPrelaunchComparison from "../../components/charts/ChartPrelaunchComparison.astro";
+
+import ChartTrailerDiscovery   from "../../components/charts/ChartTrailerDiscovery.astro";
+import ChartCpiPricing         from "../../components/charts/ChartCpiPricing.astro";
+import ChartRevenueSplit       from "../../components/charts/ChartRevenueSplit.astro";
 
 import type { Prediction, TrailersData } from "../../types/gta";
 import { getChart } from "../../config/allCharts";
@@ -45,51 +46,41 @@ const totalViews = t1Views + t2Views;
 const confirmedRegions = regionsData.regions?.filter((r: any) => r.confirmed)?.length ?? 0;
 const totalEntities = (trailerAnalysis.trailers?.[0]?.total_entities ?? 0) + (trailerAnalysis.trailers?.[1]?.total_entities ?? 0);
 const heroTrailer = trailers[1] ?? trailers[0];
-const confirmedLaunch = delayData.confirmed_launch as string | undefined;
-
-// GTA VI hub: predictions tagged for "gta-vi", sorted by display_order
-const featuredPredictions = (predictions as Prediction[])
-  .filter((p: Prediction) => (p.pages ?? []).includes("gta-vi"))
-  .sort((a: Prediction, b: Prediction) => (a.display_order ?? 99) - (b.display_order ?? 99));
-
-// Top income sources (first 4 — mix of confirmed + reported)
-const featuredIncome = incomeList
-  .sort((a: any, b: any) => {
-    const tierOrder: Record<string, number> = { confirmed: 0, reported: 1, predicted: 2 };
-    return (tierOrder[a.confidence_tier] ?? 2) - (tierOrder[b.confidence_tier] ?? 2);
-  })
-  .slice(0, 4);
-
-// Chart registry entries
-const rVelocity  = getChart("trailer-velocity")!;
-const rDelay     = getChart("delay-timeline-chart")!;
-const rRegions   = getChart("region-heatmap")!;
-const rPrelaunch = getChart("prelaunch-comparison-chart")!;
-
-// Thumb images for charts
-const CHART_THUMBS: Record<string, string> = {
-  "trailer-velocity":       `https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg`,
-  "delay-timeline-chart":   "/assets/gta6/locations/Port_Gellhorn_01.jpg",
-  "region-heatmap":         "/assets/gta6/locations/Leonida_Keys_02.jpg",
-  "prelaunch-comparison-chart": "/assets/gta6/locations/Vice_City_06.jpg",
-};
 
 const formatViews = (n: number) =>
   n >= 1e9 ? `${(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${(n / 1e6).toFixed(0)}M` : n.toString();
+
+// Predictions — tagged for "gta-vi", sorted by display_order
+const hubPredictions = predictions
+  .filter((p: Prediction) => (p.pages ?? []).includes("gta-vi"))
+  .sort((a: Prediction, b: Prediction) => (a.display_order ?? 99) - (b.display_order ?? 99));
+
+// Top 2 income cards (confirmed + reported first)
+const featuredIncome = incomeList
+  .sort((a: any, b: any) => {
+    const t: Record<string, number> = { confirmed: 0, reported: 1, predicted: 2 };
+    return (t[a.confidence_tier] ?? 2) - (t[b.confidence_tier] ?? 2);
+  })
+  .slice(0, 2);
+
+// Chart meta overrides
+const rDiscovery = getChart("trailer-discovery-chart")!;
+const rCpi       = getChart("cpi-chart")!;
+const rRevenue   = getChart("revenue-split-chart")!;
+const discoveryMeta = `${totalEntities} entities discovered`;
 ---
 
 <Base
   titleContext="gta-vi"
   title="GTA VI — Intelligence Hub"
-  description="The complete GTA VI intelligence hub: confidence-scored predictions, trailer analysis, release timeline, economy model, and income source forecasts — all data-driven."
+  description="The complete GTA VI intelligence hub: confidence-scored predictions, trailer analysis, release timeline, and economy model — all data-driven."
   ogPage="vi-intel"
 >
 
   <!-- ═══════════════════════════════════════════════════════
-       HERO — Split character backdrop + countdown
+       HERO
   ═══════════════════════════════════════════════════════ -->
-  <section class="relative overflow-hidden border-b border-[#1e1e23]" style="min-height:400px;display:flex;align-items:flex-end">
-    <!-- Split character backgrounds -->
+  <section class="relative overflow-hidden border-b border-[#1e1e23]" style="min-height:380px;display:flex;align-items:flex-end">
     <div class="absolute inset-0 flex">
       <div class="flex-1 relative overflow-hidden">
         <img src="/assets/gta6/characters/Lucia_Caminos_03.jpg" alt="Lucia Caminos"
@@ -102,9 +93,7 @@ const formatViews = (n: number) =>
         <div class="absolute inset-0" style="background:linear-gradient(to left,#0e0e11 0%,transparent 40%,transparent 50%,#0e0e11 100%)"></div>
       </div>
     </div>
-    <!-- Top/bottom fades -->
     <div class="absolute inset-0" style="background:linear-gradient(to bottom,#0e0e11 0%,transparent 20%,transparent 55%,#0e0e11 100%)"></div>
-
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-16 w-full">
       <div class="flex items-end justify-between flex-wrap gap-6">
         <div class="max-w-xl">
@@ -114,32 +103,20 @@ const formatViews = (n: number) =>
               Intelligence Hub
             </span>
           </div>
-          <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">
-            Grand Theft Auto VI
-          </h1>
+          <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">Grand Theft Auto VI</h1>
           <p class="text-zinc-400 text-sm leading-relaxed mb-5 max-w-sm">
-            30 years of franchise data, distilled into signal intelligence.
-            Every prediction confidence-scored. Every number sourced.
+            30 years of franchise data, distilled into signal intelligence. Every prediction confidence-scored. Every number sourced.
           </p>
           <Countdown variant="hero" />
         </div>
-
-        <!-- Latest trailer card -->
         {heroTrailer && (
           <a href={`https://www.youtube.com/watch?v=${heroTrailer.youtube_id}`}
-            target="_blank" rel="noopener noreferrer"
-            class="group relative overflow-hidden rounded-xl border border-[#2a2a31] hover:border-gta-gold/40 transition-all shrink-0 hidden sm:block"
-            style="width:240px">
-            <img src={`https://img.youtube.com/vi/${heroTrailer.youtube_id}/mqdefault.jpg`}
-              alt={heroTrailer.title}
-              class="w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              style="height:135px" loading="eager" />
+             target="_blank" rel="noopener noreferrer"
+             class="group relative overflow-hidden rounded-xl border border-[#2a2a31] hover:border-gta-gold/40 transition-all shrink-0 hidden sm:block"
+             style="width:240px">
+            <img src={`https://img.youtube.com/vi/${heroTrailer.youtube_id}/mqdefault.jpg`} alt={heroTrailer.title}
+              class="w-full object-cover transition-transform duration-500 group-hover:scale-105" style="height:135px" loading="eager" />
             <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 55%)"></div>
-            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <div class="w-10 h-10 rounded-full bg-black/60 border border-gta-gold/30 flex items-center justify-center">
-                <span class="text-white ml-0.5">▶</span>
-              </div>
-            </div>
             <div class="absolute top-2 left-2">
               <span class="text-[10px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Official</span>
             </div>
@@ -149,16 +126,15 @@ const formatViews = (n: number) =>
           </a>
         )}
       </div>
-
       <!-- Key stats strip -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8 max-w-2xl">
         {[
-          { value: `${predictions.length}`,      label: "predictions",       sub: "confidence-scored" },
-          { value: totalViews > 0 ? formatViews(totalViews) : "200M+", label: "trailer views",    sub: "T1 + T2 combined" },
-          { value: `${confirmedRegions}`,          label: "confirmed regions", sub: "Leonida map" },
-          { value: `${totalEntities}`,             label: "entities discovered", sub: "frame-by-frame" },
+          { value: `${hubPredictions.length}`,                          label: "predictions",          sub: "confidence-scored" },
+          { value: totalViews > 0 ? formatViews(totalViews) : "200M+",  label: "trailer views",        sub: "T1 + T2 combined" },
+          { value: `${confirmedRegions}`,                               label: "confirmed regions",    sub: "Leonida map" },
+          { value: `${totalEntities}`,                                  label: "entities discovered",  sub: "frame-by-frame" },
         ].map(s => (
-          <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
+          <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:var(--c-card)">
             <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
             <div class="text-[11px] text-zinc-400 mt-0.5">{s.label}</div>
             <div class="text-[10px] font-mono text-zinc-600">{s.sub}</div>
@@ -175,9 +151,9 @@ const formatViews = (n: number) =>
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center justify-between gap-3 mb-6">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 min-w-0">
           <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-          <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Signal Intelligence — {predictions.length} Predictions</span>
+          <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Signal Intelligence</span>
           <div class="flex-1 h-px bg-[#1e1e23]"></div>
         </div>
         <a href="/gta-vi/intel"
@@ -185,8 +161,8 @@ const formatViews = (n: number) =>
           All {predictions.length} →
         </a>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {featuredPredictions.map((p) => (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {hubPredictions.map((p: Prediction) => (
           <PredictionCard
             id={p.id}
             title={p.title}
@@ -202,159 +178,106 @@ const formatViews = (n: number) =>
             source_type={p.source_type}
             outcome_verified={p.outcome_verified}
             outcome_actual={p.outcome_actual}
-            thumbnail={p.thumbnail}
+            thumbnail={(p as any).thumbnail}
             compact={true}
             game="gta-vi"
             detailHref={`/gta-vi/intel#${p.id}`}
           />
         ))}
       </div>
-      <div class="mt-4 flex justify-center">
-        <a href="/gta-vi/intel"
-           class="text-[11px] font-mono text-gta-gold/70 hover:text-gta-gold border border-gta-gold/20 hover:border-gta-gold/50 px-5 py-2 rounded transition-colors uppercase tracking-widest">
-          View all {predictions.length} predictions →
-        </a>
-      </div>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         LAYER 2: FEATURED CHARTS
+         LAYER 2: CHARTS — full size, not collapsed
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center justify-between gap-3 mb-6">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 min-w-0">
           <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-          <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Data Charts — Live Signals</span>
+          <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Data Charts</span>
           <div class="flex-1 h-px bg-[#1e1e23]"></div>
         </div>
-        <a href="/charts"
+        <a href="/charts?title=gta-vi"
            class="shrink-0 text-[11px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
-          All charts →
+          All GTA VI charts →
         </a>
       </div>
-      <div class="flex flex-col gap-3">
-        <!-- Trailer Velocity -->
-        <ChartPreviewCard
-          cardId="hub-velocity"
-          title={rVelocity.label}
-          description={rVelocity.sources.replace("Source: ", "").split("·")[0].trim()}
-          category={rVelocity.badge}
-          deepLink={`/charts#section-${rVelocity.id}`}
-          thumbUrl={CHART_THUMBS["trailer-velocity"]}
-          game="gta-vi"
-        >
-          <ChartTrailerVelocity />
-        </ChartPreviewCard>
-
-        <!-- Delay Timeline -->
-        <ChartPreviewCard
-          cardId="hub-delay"
-          title={rDelay.label}
-          description={`${delayData.total_delays} delay · ${delayData.timeline.length} events`}
-          category={rDelay.badge}
-          deepLink={`/charts#section-${rDelay.id}`}
-          thumbUrl={CHART_THUMBS["delay-timeline-chart"]}
-          game="gta-vi"
-        >
-          <ChartDelayTimeline />
-        </ChartPreviewCard>
-
-        <!-- Region Heatmap -->
-        <ChartPreviewCard
-          cardId="hub-regions"
-          title={rRegions.label}
-          description={`${confirmedRegions} confirmed regions · Leonida map`}
-          category={rRegions.badge}
-          deepLink={`/charts#section-${rRegions.id}`}
-          thumbUrl={CHART_THUMBS["region-heatmap"]}
-          game="gta-vi"
-        >
-          <ChartRegionHeatmap />
-        </ChartPreviewCard>
-
-        <!-- Pre-launch Comparison -->
-        <ChartPreviewCard
-          cardId="hub-prelaunch"
-          title={rPrelaunch.label}
-          description="both normalised to months before launch"
-          category={rPrelaunch.badge}
-          deepLink={`/charts#section-${rPrelaunch.id}`}
-          thumbUrl={CHART_THUMBS["prelaunch-comparison-chart"]}
-          game="gta-vi"
-        >
-          <ChartPrelaunchComparison />
-        </ChartPreviewCard>
+      <div class="flex flex-col gap-8">
+        <ChartSection chartId="trailer-discovery-chart" meta={discoveryMeta}>
+          <ChartTrailerDiscovery />
+        </ChartSection>
+        <ChartSection chartId="cpi-chart">
+          <ChartCpiPricing />
+        </ChartSection>
+        <ChartSection chartId="revenue-split-chart">
+          <ChartRevenueSplit />
+        </ChartSection>
       </div>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         LAYER 3: ECONOMY MODEL (compact)
+         LAYER 3: ECONOMY — diagram + income + expenditure
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-6">
         <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economy Model — Projected Dual-Territory</span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The GTA Economy</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <!-- Card top bar -->
-        <div class="h-px w-full" style="background:linear-gradient(90deg,var(--c-identity),transparent 60%)"></div>
-        <div class="flex items-center justify-between px-5 pt-4 pb-2">
-          <div>
-            <div class="flex items-center gap-2 mb-0.5">
-              <GamePill game="gta-vi" size="xs" />
-              <span class="text-[10px] font-mono bg-gta-gold/20 border border-gta-gold/30 text-gta-gold px-1.5 py-0.5 rounded uppercase tracking-widest">Projected</span>
-            </div>
-            <div class="text-sm font-semibold text-zinc-100 mt-1">GTA VI Economy — Dual-Territory Currency Union</div>
-            <div class="text-[11px] font-mono text-zinc-500 mt-0.5">Vice City + Leonida · Regional purchasing parity · Eurozone analogue</div>
+
+      <!-- Circular economy diagram -->
+      <div class="mb-6">
+        <EconomyCircle game="gta-online" fullEconomyHref="/gta-vi/economy" />
+      </div>
+
+      <!-- Income + Expenditure cards: 2-col split -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Income side (Y) -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-live)">Y — Income</span>
+            <div class="flex-1 h-px" style="background:rgba(13,148,136,0.2)"></div>
+            <a href="/gta-vi/intel#income-predictions"
+               class="text-[10px] font-mono uppercase tracking-widest transition-colors"
+               style="color:var(--c-live);opacity:0.6" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+              All {incomeList.length} →
+            </a>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {featuredIncome.map((entry: any) => (
+              <IncomePredictionCard
+                id={entry.id}
+                name={entry.name}
+                category={entry.category}
+                region={entry.region}
+                confidence_tier={entry.confidence_tier}
+                confidence_score={entry.confidence_score}
+                thumbnail={entry.thumbnail}
+                trailer_evidence={entry.trailer_evidence}
+                predicted_payout_per_run={entry.predicted_payout_per_run}
+                predicted_gta_per_hr={entry.predicted_gta_per_hr}
+                analogous_gta_online={entry.analogous_gta_online}
+                basis={entry.basis}
+                prediction_range={entry.prediction_range}
+                detailHref={`/gta-vi/intel#income-pred-${entry.id}`}
+              />
+            ))}
           </div>
         </div>
-        <div class="px-5 pb-2">
-          <CircularEconomy titleId="gta-6" mode="compact" fullModelHref="/gta-vi/economy" />
-        </div>
-      </div>
-    </section>
 
-    <!-- ═══════════════════════════════════════════════════════
-         LAYER 4: INCOME PREDICTIONS
-    ═══════════════════════════════════════════════════════ -->
-    <section>
-      <div class="flex items-center justify-between gap-3 mb-6">
-        <div class="flex items-center gap-3">
-          <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-          <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// GTA VI Income Sources — {incomeList.length} Predicted</span>
-          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <!-- Expenditure side (C+I) -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-brand)">C+I — Expenditure</span>
+            <div class="flex-1 h-px" style="background:rgba(245,158,11,0.2)"></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <ExpenditureCard id="nightclub" />
+            <ExpenditureCard id="megalodon" />
+          </div>
         </div>
-        <a href="/gta-vi/intel#income-predictions"
-           class="shrink-0 text-[11px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
-          All {incomeList.length} →
-        </a>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {featuredIncome.map((entry: any) => (
-          <IncomePredictionCard
-            id={entry.id}
-            name={entry.name}
-            category={entry.category}
-            region={entry.region}
-            confidence_tier={entry.confidence_tier}
-            confidence_score={entry.confidence_score}
-            thumbnail={entry.thumbnail}
-            trailer_evidence={entry.trailer_evidence}
-            predicted_payout_per_run={entry.predicted_payout_per_run}
-            predicted_gta_per_hr={entry.predicted_gta_per_hr}
-            analogous_gta_online={entry.analogous_gta_online}
-            basis={entry.basis}
-            prediction_range={entry.prediction_range}
-            detailHref={`/gta-vi/intel#income-pred-${entry.id}`}
-          />
-        ))}
-      </div>
-      <div class="mt-4 flex justify-center">
-        <a href="/gta-vi/intel#income-predictions"
-           class="text-[11px] font-mono text-gta-gold/70 hover:text-gta-gold border border-gta-gold/20 hover:border-gta-gold/50 px-5 py-2 rounded transition-colors uppercase tracking-widest">
-          All {incomeList.length} income predictions →
-        </a>
+
       </div>
     </section>
 
@@ -369,42 +292,14 @@ const formatViews = (n: number) =>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {[
-          {
-            href: "/gta-vi/intel",
-            label: "Intel & Predictions",
-            sub: `${predictions.length} predictions · features confirmed & reported · GTA VI analysis`,
-            badge: "Intelligence",
-            accent: "border-gta-gold/30",
-            thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
-          },
-          {
-            href: "/gta-vi/trailers",
-            label: "Trailers & Analysis",
-            sub: "Trailer 1 & 2 · view velocity · frame-by-frame entity discovery index",
-            badge: "Analysis",
-            accent: "border-zinc-600/40",
-            thumb: `https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg`,
-          },
-          {
-            href: "/gta-vi/economy",
-            label: "Economy Model",
-            sub: "Dual-territory currency union · purchasing parity · Shark Card predictions",
-            badge: "Economy",
-            accent: "border-teal-700/30",
-            thumb: "/assets/gta6/locations/Vice_City_03.jpg",
-          },
-          {
-            href: "/gta-vi/buy",
-            label: "Pre-order Guide",
-            sub: "PS5 · Xbox Series X|S · edition comparison · retailer watchlist",
-            badge: "Pre-order",
-            accent: "border-emerald-700/30",
-            thumb: "/assets/gta6/locations/Ambrosia_02.jpg",
-          },
+          { href: "/gta-vi/intel",    label: "Intelligence & Predictions", sub: `${predictions.length} signals · confirmed · reported · predicted`, badge: "Intelligence", thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg" },
+          { href: "/gta-vi/trailers", label: "Trailers & Analysis",        sub: "Trailer 1 & 2 · view velocity · entity index",                    badge: "Analysis",       thumb: `https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg` },
+          { href: "/gta-vi/economy",  label: "Economy & Income",           sub: "Circular model · income sources · Shark Card mechanics",           badge: "Economy",        thumb: "/assets/gta6/locations/Vice_City_03.jpg" },
+          { href: "/gta-vi/buy",      label: "Pre-order Guide",            sub: "PS5 · Xbox Series X|S · edition comparison · retailer watchlist",  badge: "Pre-order",      thumb: "/assets/gta6/locations/Ambrosia_02.jpg" },
         ].map(tile => (
           <a href={tile.href}
-             class={`group relative overflow-hidden rounded-xl border ${tile.accent} hover:border-zinc-500/50 transition-all`}
-             style="background:#131316">
+             class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] transition-all"
+             style="background:var(--c-card)">
             <div class="h-px w-full" style="background:linear-gradient(90deg,var(--c-identity),transparent 60%)"></div>
             <div class="flex items-center gap-4 p-4">
               <div class="shrink-0 w-20 h-12 rounded-lg overflow-hidden border border-[#2a2a31]">
@@ -413,7 +308,7 @@ const formatViews = (n: number) =>
               <div class="flex-1 min-w-0">
                 <div class="text-[10px] font-mono text-zinc-500 mb-0.5 uppercase tracking-widest">{tile.badge}</div>
                 <div class="text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors truncate">{tile.label}</div>
-                <div class="text-[11px] font-mono text-zinc-500 leading-snug mt-0.5 line-clamp-2">{tile.sub}</div>
+                <div class="text-[11px] font-mono text-zinc-500 leading-snug mt-0.5 line-clamp-1">{tile.sub}</div>
               </div>
               <svg class="shrink-0 w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8h10M9 4l4 4-4 4" />
