@@ -93,6 +93,15 @@ SOURCES = [
         "tier": "press",
         "filter_gta": True,
     },
+    # Bloomberg — Zelnick gives Bloomberg interviews with material Take-Two / GTA VI
+    # pricing and release hints. Filter strictly for GTA keywords.
+    {
+        "id": "bloomberg-tech",
+        "name": "Bloomberg Technology",
+        "url": "https://feeds.bloomberg.com/technology/news.rss",
+        "tier": "press",
+        "filter_gta": True,
+    },
 ]
 
 # SEC EDGAR Atom feed for Take-Two Interactive 8-K filings
