@@ -141,7 +141,7 @@ const featuredIncome = incomeList
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-14">
 
     <!-- ═══════════════════════════════════════════════════════
-         LAYER 1: SIGNAL PREDICTIONS
+         LAYER 1: SIGNAL PREDICTIONS — 3-page carousel, 4 per page
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center justify-between gap-3 mb-6">
@@ -155,29 +155,63 @@ const featuredIncome = incomeList
           All {predictions.length} →
         </a>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {hubPredictions.map((p: Prediction) => (
-          <PredictionCard
-            id={p.id}
-            title={p.title}
-            value={p.value}
-            confidence={p.confidence}
-            confidence_tier={p.confidence_tier}
-            basis={p.basis}
-            unit={p.unit}
-            trailer_timestamp={p.trailer_timestamp}
-            prediction_method={p.prediction_method}
-            prediction_range={p.prediction_range}
-            source={p.source}
-            source_type={p.source_type}
-            outcome_verified={p.outcome_verified}
-            outcome_actual={p.outcome_actual}
-            thumbnail={(p as any).thumbnail}
-            compact={true}
-            game="gta-vi"
-            detailHref={`/gta-vi/intel#${p.id}`}
-          />
-        ))}
+
+      <!-- Carousel viewport: overflow-hidden clips pages 2 and 3 -->
+      <div id="pred-viewport" class="overflow-hidden">
+        <!-- Track: 3 full-width panels side-by-side -->
+        <div id="pred-track" class="flex" style="transition:transform 0.35s cubic-bezier(0.4,0,0.2,1)">
+          {([0, 4, 8] as const).map((offset) => (
+            <div class="w-full shrink-0 grid grid-cols-2 lg:grid-cols-4 gap-3">
+              {hubPredictions.slice(offset, offset + 4).map((p: Prediction) => (
+                <PredictionCard
+                  id={p.id}
+                  title={p.title}
+                  value={p.value}
+                  confidence={p.confidence}
+                  confidence_tier={p.confidence_tier}
+                  basis={p.basis}
+                  unit={p.unit}
+                  trailer_timestamp={p.trailer_timestamp}
+                  prediction_method={p.prediction_method}
+                  prediction_range={p.prediction_range}
+                  source={p.source}
+                  source_type={p.source_type}
+                  outcome_verified={p.outcome_verified}
+                  outcome_actual={p.outcome_actual}
+                  thumbnail={(p as any).thumbnail}
+                  compact={true}
+                  game="gta-vi"
+                  detailHref={`/gta-vi/intel#${p.id}`}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Controls: prev · dots · next -->
+      <div class="flex items-center justify-center gap-3 mt-4">
+        <button id="pred-prev"
+          class="w-8 h-8 rounded-full border border-[#2a2a31] flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:border-zinc-600 transition-all disabled:opacity-25 disabled:cursor-default"
+          aria-label="Previous">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 2L4 7l5 5"/>
+          </svg>
+        </button>
+        <div class="flex items-center gap-1.5">
+          {[0, 1, 2].map((i) => (
+            <button class="pred-dot rounded-full transition-all duration-200" data-page={i}
+              style="width:6px;height:6px;background:#2a2a31" aria-label={`Page ${i + 1}`} />
+          ))}
+        </div>
+        <button id="pred-next"
+          class="w-8 h-8 rounded-full border border-[#2a2a31] flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:border-zinc-600 transition-all disabled:opacity-25 disabled:cursor-default"
+          aria-label="Next">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 2l5 5-5 5"/>
+          </svg>
+        </button>
+        <span id="pred-page-label" class="text-[10px] font-mono text-zinc-600 ml-1">1 / 3</span>
       </div>
     </section>
 
