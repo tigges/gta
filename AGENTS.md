@@ -288,6 +288,13 @@ Bump `src/config/version.ts` when shipping a meaningful release.
 - **No autonomous screenshots or screen recordings.** Never use the `computerUse` subagent, `RecordScreen`, or any screenshot tool on your own initiative. If visual confirmation of a UI change is needed, ask the user to share a screenshot instead — this is faster and cheaper.
 - Communicate this rule explicitly in every chat handover note under a "Agent rules" section so the next agent does not repeat the behaviour.
 
+- **Always use the central colour token system — no raw hex values in components.** This rule applies to this project and all other projects. Every colour used in a component, inline style, or script must reference the central token system:
+  - In `.astro` / CSS: use `var(--c-*)` CSS custom properties defined in `src/styles/tokens.css`
+  - In Tailwind class strings: use the mapped utility classes (`text-zinc-*`, `bg-*`) which are remapped to tokens via `tokens.css`
+  - In TypeScript / D3 / JS runtime code: use the named exports from `src/config/colors.ts`
+  - **Never write a raw hex literal** (e.g. `#1a1a1e`, `color:#b8b8c4`) directly in a component, inline `style` attribute, or script. If a colour you need does not yet have a token, add it to `tokens.css` and `colors.ts` first, then reference the new token.
+  - When touching an existing component that contains hardcoded hex values, replace them with the correct token references as part of the same commit — do not leave orphaned hex values behind.
+
 - **Version bump — mandatory on every session, no exceptions.** Every session that touches code, data, UI, or scrapers must bump `src/config/version.ts` before merging to `main`. Patch bump (`x.y.Z+1`) for fixes and minor tweaks; minor bump (`x.Y+1.0`) for new features; major bump (`X+1.0.0`) for full redesigns. Also update `SITE_VERSION_DATE` to today (`YYYY-MM-DD`). The version is displayed in the ops bar on every page — it must always reflect the latest release.
 
 - **Tag the previous release before starting work.** At the start of every session, before creating a feature branch, tag the current `main` with `release/v{current_version}` and push the tag. This bookmarks the last known-good state and makes rollback trivial.
