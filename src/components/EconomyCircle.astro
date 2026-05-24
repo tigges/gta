@@ -1,0 +1,105 @@
+---
+/**
+ * EconomyCircle.astro — simplified fixed circular economy diagram.
+ *
+ * Three-column visual: Income (Y) · Player (Balance) · Expenditure (C+I)
+ * Color-coded: teal left, gold centre, amber right.
+ * Pure HTML/CSS — no JavaScript, no D3.
+ * Works for any GTA title. Pass fullEconomyHref for the "Full model →" link.
+ */
+import GamePill from "./GamePill.astro";
+
+interface Props {
+  game?: "gta-vi" | "gta-online" | "gta-v" | "gta-sa" | "gta-vc" | "gta-iv" | "gta-iii" | "franchise";
+  fullEconomyHref?: string;
+}
+
+const { game = "gta-online", fullEconomyHref } = Astro.props;
+---
+
+<div class="w-full rounded-xl border border-[#1e1e23] overflow-hidden" style="background:var(--c-card)">
+
+  <!-- Column grid -->
+  <div class="grid grid-cols-3 min-h-[160px]">
+
+    <!-- LEFT: Income (Y) — teal -->
+    <div class="flex flex-col justify-between p-4 border-r border-[#1e1e23]"
+         style="border-left:3px solid var(--c-live);background:rgba(13,148,136,0.04)">
+      <div>
+        <div class="text-4xl font-mono font-black leading-none mb-1" style="color:var(--c-live)">Y</div>
+        <div class="text-[10px] font-mono uppercase tracking-[0.2em] mb-3" style="color:var(--c-live)">Income</div>
+        <div class="flex flex-col gap-1">
+          <span class="text-[10px] font-mono text-zinc-500">● Active earn</span>
+          <span class="text-[10px] font-mono text-zinc-500">● Business cycles</span>
+          <span class="text-[10px] font-mono text-zinc-500">● Passive returns</span>
+        </div>
+      </div>
+      <div class="text-[9px] font-mono uppercase tracking-widest mt-3" style="color:var(--c-live);opacity:0.5">
+        Y grows → next cycle
+      </div>
+    </div>
+
+    <!-- CENTRE: Player (Balance) — gold -->
+    <div class="flex flex-col items-center justify-center p-4 border-r border-[#1e1e23] gap-3"
+         style="background:rgba(245,158,11,0.03)">
+      <div class="flex items-center gap-2 w-full justify-center">
+        <span class="text-lg font-mono" style="color:var(--c-live)">←</span>
+        <div class="text-center">
+          <div class="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-600 mb-0.5">Player</div>
+          <div class="text-sm font-mono font-black" style="color:var(--c-brand)">Balance</div>
+          <div class="text-[10px] font-mono text-zinc-500">GTA$</div>
+        </div>
+        <span class="text-lg font-mono" style="color:var(--c-brand)">→</span>
+      </div>
+      <div class="w-full border-t border-[#1e1e23] pt-2.5 text-center">
+        <div class="text-[9px] font-mono uppercase tracking-widest text-zinc-700 mb-0.5">+ J Injection</div>
+        <div class="text-[10px] font-mono text-zinc-600">Shark Cards · GTA+</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Expenditure (C+I) — amber -->
+    <div class="flex flex-col justify-between p-4"
+         style="border-right:3px solid var(--c-brand);background:rgba(245,158,11,0.04)">
+      <div>
+        <div class="text-4xl font-mono font-black leading-none mb-1" style="color:var(--c-brand)">C+I</div>
+        <div class="text-[10px] font-mono uppercase tracking-[0.2em] mb-3" style="color:var(--c-brand)">Expenditure</div>
+        <div class="flex flex-col gap-2">
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[11px] font-mono font-bold" style="color:var(--c-alert)">C</span>
+              <span class="text-[10px] font-mono text-zinc-500">Consumption</span>
+            </div>
+            <div class="text-[9px] font-mono text-zinc-700 pl-4">Ammo · clothes · services</div>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[11px] font-mono font-bold" style="color:var(--c-brand)">I</span>
+              <span class="text-[10px] font-mono text-zinc-500">Investment</span>
+            </div>
+            <div class="text-[9px] font-mono text-zinc-700 pl-4">Property · businesses · assets</div>
+          </div>
+        </div>
+      </div>
+      <div class="text-[9px] font-mono uppercase tracking-widest mt-3" style="color:var(--c-brand);opacity:0.5">
+        I returns to Y
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer: formula + game pill + full economy link -->
+  <div class="px-4 py-2.5 border-t border-[#1e1e23] flex items-center justify-between gap-3 flex-wrap"
+       style="background:rgba(0,0,0,0.2)">
+    <div class="flex items-center gap-2.5">
+      <GamePill {game} size="xs" />
+      <span class="text-[10px] font-mono text-zinc-700 tracking-widest">(Y + J) = C + I</span>
+    </div>
+    {fullEconomyHref && (
+      <a href={fullEconomyHref}
+         class="text-[11px] font-mono uppercase tracking-widest transition-colors"
+         style="color:var(--c-brand);opacity:0.7"
+         onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+        Full model →
+      </a>
+    )}
+  </div>
+</div>
