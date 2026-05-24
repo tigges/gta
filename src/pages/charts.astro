@@ -259,6 +259,9 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
     });
   });
 
+  // Apply on page load (activates any ?title= URL param immediately)
+  applyTitleFilter();
+
   document.querySelectorAll<HTMLButtonElement>(".chart-filter").forEach(btn => {
     btn.addEventListener("click", () => {
       const filter = btn.dataset.filter!;

@@ -21,7 +21,9 @@ import delayData       from "../../../data/gta-6/delay-timeline.json";
 import trailerAnalysis from "../../../data/gta-6/trailer-analysis.json";
 import spotifyData     from "../../../data/franchise/spotify.json";
 
-const predictions    = predictionsData.predictions as Prediction[];
+const predictions    = (predictionsData.predictions as Prediction[])
+  .slice()
+  .sort((a, b) => (a.display_order ?? 99) - (b.display_order ?? 99));
 const trailersData   = trailersDataRaw as TrailersData;
 const trailers       = trailersData.trailers;
 const heroTrailer    = trailers[1] ?? trailers[0]; // prefer Trailer 2 for hero

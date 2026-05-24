@@ -35,6 +35,10 @@ export interface Prediction {
   outcome_date: string | null;
   source: string;
   source_type: "official" | "reported" | "predicted";
+  /** Editorial rank — lower = higher priority. Demand score supplements this once Plausible data flows. */
+  display_order?: number;
+  /** Pages this prediction appears on as a compact teaser card. intel always shows all predictions. */
+  pages?: string[];
 }
 
 export interface PredictionsData {
