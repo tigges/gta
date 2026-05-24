@@ -569,6 +569,9 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       // Close on Escape
       document.addEventListener("keydown", e => { if (e.key === "Escape") closeAllPanels(); });
 
+      // Close on scroll (desktop panel stays anchored to header, but feels broken when scrolled)
+      window.addEventListener("scroll", closeAllPanels, { passive: true });
+
       // ── Mobile nav logic ─────────────────────────────────────────────────────
       const mobileNav   = document.getElementById("mobile-nav");
       const mobileGrid  = document.getElementById("mobile-grid");
