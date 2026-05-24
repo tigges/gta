@@ -76,6 +76,23 @@ SOURCES = [
         "tier": "press",
         "filter_gta": True,
     },
+    # Strauss Zelnick / executive interview tracker
+    # CEO interviews in financial/entertainment press contain material GTA VI hints
+    # (pricing stance, release confidence, marketing timing) before EDGAR filings.
+    {
+        "id": "variety-gaming",
+        "name": "Variety",
+        "url": "https://variety.com/v/gaming/feed/",
+        "tier": "press",
+        "filter_gta": True,
+    },
+    {
+        "id": "the-game-business",
+        "name": "The Game Business",
+        "url": "https://www.thegamebusiness.com/feed",
+        "tier": "press",
+        "filter_gta": True,
+    },
 ]
 
 # SEC EDGAR Atom feed for Take-Two Interactive 8-K filings
@@ -199,6 +216,28 @@ def fetch_rockstar_newswire() -> list[dict]:
         return []
 
 
+GTAFORUMS_SEED = [
+    {
+        "source_id":    "gtaforums-vi",
+        "source_name":  "GTAForums",
+        "tier":         "community",
+        "title":        "GTA VI — Official Speculation & Discussion Megathread",
+        "url":          "https://gtaforums.com/topic/885289-official-gta-vi-speculation-discussion/",
+        "published_at": "2024-01-01T00:00:00Z",
+        "summary":      "The primary GTA VI speculation megathread on GTAForums — the longest-running and most comprehensive community discussion thread for Grand Theft Auto VI.",
+    },
+    {
+        "source_id":    "gtaforums-vi",
+        "source_name":  "GTAForums",
+        "tier":         "community",
+        "title":        "GTA VI — Leaked Footage & Development Analysis",
+        "url":          "https://gtaforums.com/topic/887948-gta-vi-source-code-leak/",
+        "published_at": "2024-01-01T00:00:00Z",
+        "summary":      "GTAForums analysis thread covering the September 2022 development leak — 90 alpha clips confirmed authentic by Rockstar. Detailed breakdown of economy, map, and mechanics visible in footage.",
+    },
+]
+
+
 def fetch_edgar_8k() -> list[dict]:
     """Fetch recent Take-Two 8-K filings from SEC EDGAR Atom feed.
     8-Ks capture material events: delay announcements, date confirmations,
@@ -257,7 +296,12 @@ def main() -> None:
 
     # Press + community sources
     for source in SOURCES:
-        all_items.extend(fetch_rss(source))
+        items = fetch_rss(source)
+        # GTAForums blocks server IPs (403) — fall back to curated seed
+        if source["id"] == "gtaforums-vi" and not items:
+            print(f"  ↩ GTAForums 403 — using curated seed ({len(GTAFORUMS_SEED)} items)")
+            items = GTAFORUMS_SEED
+        all_items.extend(items)
 
     # Deduplicate by URL
     seen: set[str] = set()

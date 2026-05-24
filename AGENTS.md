@@ -102,7 +102,9 @@ python3 scrapers/fetch_trailers.py
 | `fetch_ttwo_stock.py` | `franchise/ttwo-stock.json` | ✅ | Yahoo Finance; no API key |
 | `fetch_franchise_sales.py` | `franchise/sales.json` | ✅ | Curated seed + VGChartz enrichment |
 | `fetch_reddit.py` | `community/reddit.json` | ✅ | Needs Reddit creds for live count; RSS fallback for posts |
-| `fetch_newswire.py` | `feeds/newswire.json` | ✅ | RSS scrape; no API key |
+| `fetch_newswire.py` | `feeds/newswire.json` | ✅ | Multi-source: Rockstar, EDGAR 8-K, Kotaku, Rockstar Intel, Variety, The Game Business; GTAForums curated seed fallback |
+| `fetch_conference_news.py` | `feeds/conference-news.json` | ✅ | YouTube conference channel watcher; needs `YOUTUBE_API_KEY` |
+| `fetch_preorder_listings.py` | `feeds/preorder-listings.json` | ✅ | Retailer listing monitor; PS Store wishlist live as of May 2026 |
 | `fetch_metacritic.py` | `franchise/metacritic.json` | ❌ | Curated seed — run manually if scores change |
 | `fetch_igdb.py` | `franchise/igdb.json` | ✅ | Needs `TWITCH_CLIENT_ID` + `TWITCH_CLIENT_SECRET` |
 | `fetch_spotify.py` | `franchise/spotify.json` | ✅ | Needs `SPOTIFY_CLIENT_ID` + `SPOTIFY_CLIENT_SECRET` |
@@ -206,6 +208,28 @@ The version is displayed in the ops bar on every page (`Base.astro`) and in the 
 
 Charts live in `src/pages/charts.astro` as self-contained D3 sections.
 Import the data file at the top, add an HTML container (`<div id="my-chart">`), and write the D3 initialisation in the `<script>` block using the `data-*` attribute pattern already established.
+
+### GTA VI income predictions
+
+Edit `data/gta-6/income-predictions.json`. Schema version `1.0`. Rendered by `IncomePredictionCard.astro` on `/gta-vi/intel`.
+
+```jsonc
+{
+  "id": "vi-*",
+  "name": "",
+  "category": "",              // "heist" | "business" | "passive" | "mission"
+  "region": "",                // "vice-city" | "leonida" | "both"
+  "confidence_tier": "",       // "confirmed" | "reported" | "predicted"
+  "confidence_score": 0,       // 0–100
+  "thumbnail": null,           // /assets/gta6/... path
+  "trailer_evidence": null,    // "T2 — 0:15" or null
+  "predicted_payout_per_run": null,
+  "predicted_gta_per_hr": null,
+  "analogous_gta_online": null, // business-profiles.json id or null
+  "basis": "",
+  "prediction_range": { "low": "", "high": "" }
+}
+```
 
 ### Updating predictions
 
