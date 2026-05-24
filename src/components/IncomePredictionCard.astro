@@ -29,12 +29,15 @@ interface Props {
   analogous_gta_online?: string | null;
   basis: string;
   prediction_range?: { low: string; high: string } | null;
+  /** When provided: renders "Full analysis →" link in footer */
+  detailHref?: string;
 }
 
 const {
   id, name, category, region, confidence_tier, confidence_score,
   thumbnail, trailer_evidence, predicted_payout_per_run,
   predicted_gta_per_hr, analogous_gta_online, basis, prediction_range,
+  detailHref,
 } = Astro.props;
 
 const TIER_STYLES = {
@@ -159,6 +162,14 @@ const shareText = `GTA VI predicted income: ${name} — ${predicted_gta_per_hr ?
   <!-- Footer -->
   <div class="px-4 pb-3 flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
     <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-    <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
+    <div class="flex items-center gap-2.5">
+      {detailHref && (
+        <a href={detailHref}
+           class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors uppercase tracking-widest">
+          Full analysis →
+        </a>
+      )}
+      <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
+    </div>
   </div>
 </div>

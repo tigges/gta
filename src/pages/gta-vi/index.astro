@@ -203,6 +203,7 @@ const formatViews = (n: number) =>
             thumbnail={p.thumbnail}
             compact={true}
             game="gta-vi"
+            detailHref={`/gta-vi/intel#${p.id}`}
           />
         ))}
       </div>
@@ -343,6 +344,7 @@ const formatViews = (n: number) =>
             analogous_gta_online={entry.analogous_gta_online}
             basis={entry.basis}
             prediction_range={entry.prediction_range}
+            detailHref={`/gta-vi/intel#income-pred-${entry.id}`}
           />
         ))}
       </div>
