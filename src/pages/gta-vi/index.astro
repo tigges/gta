@@ -322,3 +322,53 @@ const discoveryMeta = `${totalEntities} entities discovered`;
   </div>
 
 </Base>
+
+<script>
+  import { triggerAll } from "../../assets/chartInit";
+
+  // ── Prediction carousel ───────────────────────────────────────────────────
+  const viewport   = document.getElementById("pred-viewport")!;
+  const track      = document.getElementById("pred-track")!;
+  const prevBtn    = document.getElementById("pred-prev") as HTMLButtonElement;
+  const nextBtn    = document.getElementById("pred-next") as HTMLButtonElement;
+  const dots       = document.querySelectorAll<HTMLButtonElement>(".pred-dot");
+  const pageLabel  = document.getElementById("pred-page-label");
+  const TOTAL      = 3;
+  let   page       = 0;
+
+  function goTo(p: number) {
+    page = Math.max(0, Math.min(TOTAL - 1, p));
+    track.style.transform = `translateX(-${page * viewport.clientWidth}px)`;
+    dots.forEach((d, i) => {
+      const active = i === page;
+      d.style.width      = active ? "16px" : "6px";
+      d.style.background = active ? "var(--c-brand, #f59e0b)" : "#2a2a31";
+    });
+    if (pageLabel) pageLabel.textContent = `${page + 1} / ${TOTAL}`;
+    if (prevBtn) prevBtn.disabled = page === 0;
+    if (nextBtn) nextBtn.disabled = page === TOTAL - 1;
+  }
+
+  prevBtn?.addEventListener("click", () => goTo(page - 1));
+  nextBtn?.addEventListener("click", () => goTo(page + 1));
+  dots.forEach((d) => d.addEventListener("click", () => goTo(Number(d.dataset.page))));
+  window.addEventListener("resize", () => {
+    track.style.transition = "none";
+    goTo(page);
+    requestAnimationFrame(() => { track.style.transition = ""; });
+  });
+  goTo(0);
+
+  // ── Chart safety net ─────────────────────────────────────────────────────
+  // The chart components use IntersectionObserver (rootMargin 200px) for lazy
+  // init, but on a long hub page the intersection can fire before clientWidth
+  // is non-zero. triggerAll() acts as a guaranteed second-chance render.
+  function safetyTrigger() {
+    requestAnimationFrame(() => requestAnimationFrame(triggerAll));
+  }
+  if (document.readyState === "complete") {
+    safetyTrigger();
+  } else {
+    window.addEventListener("load", safetyTrigger, { once: true });
+  }
+</script>
