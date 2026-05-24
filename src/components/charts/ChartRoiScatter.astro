@@ -6,7 +6,7 @@
  */
 import revenueTiersData  from "../../../data/gta-5/economy/revenue-tiers.json";
 import bizProfilesData   from "../../../data/gta-5/economy/business-profiles.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -19,7 +19,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="roi-scatter-chart" class="w-full" style="height:380px"
           data-businesses={JSON.stringify((bizProfilesData as any).businesses.filter((b: any) => b.setup_cost_full > 0 && b.net_profit_per_hr > 0))}
         ></div>
-        <ChartFooter chartId="roi-scatter-chart" sources="Source: GTABase.com · community benchmarks · 2024 patches · bubble = break-even hours" shareText="GTA Online setup cost vs $/hr: Kosatka is top-right (high cost, highest return, fast payback). Some businesses are expensive traps. The ROI chart." />
+        <CardFooter chartId="roi-scatter-chart" sources="Source: GTABase.com · community benchmarks · 2024 patches · bubble = break-even hours" shareText="GTA Online setup cost vs $/hr: Kosatka is top-right (high cost, highest return, fast payback). Some businesses are expensive traps. The ROI chart." />
       </div>
 
 <script>

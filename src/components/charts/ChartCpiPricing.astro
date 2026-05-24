@@ -4,7 +4,7 @@
  * Extracted from charts.astro.
  */
 import cpiData from "../../../data/franchise/cpi.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -36,7 +36,7 @@ import ChartFooter from "../ChartFooter.astro";
           data-titles={JSON.stringify(cpiData.titles)}
           data-base-cpi={cpiData.base_cpi}
         ></div>
-        <ChartFooter chartId="cpi-chart" sources="Source: US Bureau of Labor Statistics CPI-U · Nominal prices from Rockstar/Take-Two" shareText="GTA VI at $79.99 is actually cheaper than GTA III in 2001, in real inflation-adjusted dollars. The data says it" />
+        <CardFooter chartId="cpi-chart" sources="Source: US Bureau of Labor Statistics CPI-U · Nominal prices from Rockstar/Take-Two" shareText="GTA VI at $79.99 is actually cheaper than GTA III in 2001, in real inflation-adjusted dollars. The data says it" />
       </div>
 
 <script>

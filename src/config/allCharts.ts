@@ -76,6 +76,18 @@ export interface ChartMeta {
    * Points to the canonical chart ID this one is a narrative variant of.
    */
   relatedId?: string;
+
+  /**
+   * Editorial promotion weight (default 0).
+   * Used to bubble charts to the top of discovery surfaces (hub page teasers,
+   * homepage, future demand-ordered /charts).
+   *   0    = standard order (CHARTS_PAGE_ORDER or demand score)
+   *   50   = newly published — gets a visibility boost for ~30 days
+   *   100  = actively promoted by editorial decision
+   * When Plausible demand scores are added (Stream 3 Phase B), final sort =
+   *   weight + demandScore descending within each title group.
+   */
+  weight?: number;
 }
 
 // ── Chart component imports ────────────────────────────────────────────────────

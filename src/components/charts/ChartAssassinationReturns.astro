@@ -5,7 +5,7 @@
  * Can be embedded on any page; D3 init deferred via IntersectionObserver.
  */
 import stocksData    from "../../../data/gta-5/economy/assassination-stocks.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 const assassinGuide = (stocksData as any).guide_order as any[];
 ---
 
@@ -25,7 +25,7 @@ const assassinGuide = (stocksData as any).guide_order as any[];
         <div id="assassination-returns-chart" class="w-full" style="height:220px"
           data-steps={JSON.stringify(assassinGuide)}
         ></div>
-        <ChartFooter chartId="assassination-returns-chart" sources="Source: GTA Wiki · community guides · LCN/BAWSAQ exchange data · 2024 verified" shareText="GTA V assassination missions ranked by combined stock return. Multi-Target (Debonaire + Redwood) delivers 380% combined — the best single play in the game." />
+        <CardFooter chartId="assassination-returns-chart" sources="Source: GTA Wiki · community guides · LCN/BAWSAQ exchange data · 2024 verified" shareText="GTA V assassination missions ranked by combined stock return. Multi-Target (Debonaire + Redwood) delivers 380% combined — the best single play in the game." />
       </div>
 
 <script>

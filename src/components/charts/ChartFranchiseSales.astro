@@ -5,7 +5,7 @@
  * Can be embedded on any page; D3 init deferred via IntersectionObserver.
  */
 import salesData         from "../../../data/franchise/sales.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -37,7 +37,7 @@ import ChartFooter from "../ChartFooter.astro";
         </div>
         <div id="sales-chart" class="w-full" style="height:320px"
           data-titles={JSON.stringify(salesData.titles)}></div>
-        <ChartFooter chartId="sales-chart" sources="Sources: Take-Two IR · DFC Intelligence (GTA VI projection)" shareText="GTA V sold 225M copies. Here's how every GTA title stacks up — franchise sales velocity charted." />
+        <CardFooter chartId="sales-chart" sources="Sources: Take-Two IR · DFC Intelligence (GTA VI projection)" shareText="GTA V sold 225M copies. Here's how every GTA title stacks up — franchise sales velocity charted." />
       </div>
 
 <script>

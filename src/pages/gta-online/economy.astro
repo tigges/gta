@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
+import CardFooter from "../../components/CardFooter.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import Ledger from "../../components/Ledger.astro";
 import type { LedgerEntry } from "../../components/Ledger.astro";
@@ -195,6 +196,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="lg:col-span-2 rounded-xl border border-[#1e1e23] p-5" style="background:#0e0e11">
         <CircularEconomy titleId="gta-online" mode="full" />
+        <CardFooter anchorId="eco-gta-online" sources="Source: GTAVI.AI Economic Model Analysis · GTA Online 2013–2026 · community benchmarks" shareText="GTA Online's economy is a Full MMT Sovereign: Rockstar controls the money supply, wages, and inflation. 10 years of data modelled across 5 circular flows." />
       </div>
       <div class="flex flex-col gap-4">
         <ChartComplexityRadar titleId="gta-online" size={260} />

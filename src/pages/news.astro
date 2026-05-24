@@ -49,22 +49,52 @@ const redditItems = redditPosts.map((p: any) => ({
   summary:      null,
 }));
 
-// Merge and sort newest first (null dates go to end)
-const allItems = [...pressItems, ...redditItems].sort((a, b) => {
-  if (!a.published_at) return 1;
-  if (!b.published_at) return -1;
-  return new Date(b.published_at).getTime() - new Date(a.published_at).getTime();
-});
+// Split into signal news (official + press + community) and weekly bonus posts
+// Official items first within each tier group, then newest-first by date
+function dateMs(item: any): number {
+  return item.published_at ? new Date(item.published_at).getTime() : 0;
+}
+const TIER_ORDER: Record<string, number> = { official: 0, press: 1, community: 2 };
+
+const signalItems = [...pressItems, ...redditItems]
+  .filter(i => !isWeeklyBonus(i))
+  .sort((a, b) => {
+    const ta = TIER_ORDER[a.tier ?? "press"] ?? 1;
+    const tb = TIER_ORDER[b.tier ?? "press"] ?? 1;
+    if (ta !== tb) return ta - tb;
+    return dateMs(b) - dateMs(a);
+  });
+
+const bonusItems = pressItems
+  .filter(isWeeklyBonus)
+  .sort((a, b) => dateMs(b) - dateMs(a))
+  .slice(0, 4);
+
+// Legacy alias for remaining template references
+const allItems = signalItems;
 
 // Source config
 const SOURCE_META: Record<string, { color: string; badge: string; tier: string }> = {
-  "rockstar-newswire": { color: "text-gta-gold",  badge: "bg-gta-gold/10 border-gta-gold/20",    tier: "OFFICIAL"   },
-  "rockstar-intel":    { color: "text-gta-gold", badge: "bg-gta-gold/8 border-gta-gold/25",   tier: "PRESS"      },
-  "kotaku":            { color: "text-zinc-300",  badge: "bg-zinc-800 border-zinc-700",            tier: "PRESS"      },
-  "eurogamer":         { color: "text-zinc-300",  badge: "bg-zinc-800 border-zinc-700",            tier: "PRESS"      },
-  "insider-gaming":    { color: "text-gta-teal",  badge: "bg-gta-teal/10 border-gta-teal/20",     tier: "PRESS"      },
-  "reddit":            { color: "text-gta-reddit", badge: "bg-gta-reddit/10 border-gta-reddit/20", tier: "COMMUNITY"  },
+  "rockstar-newswire": { color: "text-gta-gold",   badge: "bg-gta-gold/10 border-gta-gold/20",       tier: "OFFICIAL"   },
+  "sec-edgar":         { color: "text-gta-gold",   badge: "bg-gta-gold/10 border-gta-gold/20",       tier: "OFFICIAL"   },
+  "rockstar-intel":    { color: "text-gta-gold",   badge: "bg-gta-gold/8 border-gta-gold/25",        tier: "PRESS"      },
+  "kotaku":            { color: "text-zinc-300",   badge: "bg-zinc-800 border-zinc-700",              tier: "PRESS"      },
+  "kotaku-gta":        { color: "text-zinc-300",   badge: "bg-zinc-800 border-zinc-700",              tier: "PRESS"      },
+  "eurogamer":         { color: "text-zinc-300",   badge: "bg-zinc-800 border-zinc-700",              tier: "PRESS"      },
+  "insider-gaming":    { color: "text-gta-teal",   badge: "bg-gta-teal/10 border-gta-teal/20",       tier: "PRESS"      },
+  "gtaforums-vi":      { color: "text-amber-300",  badge: "bg-amber-900/20 border-amber-600/30",     tier: "COMMUNITY"  },
+  "reddit":            { color: "text-gta-reddit", badge: "bg-gta-reddit/10 border-gta-reddit/20",   tier: "COMMUNITY"  },
 };
+
+// Weekly bonus posts from Newswire — these have their own dedicated page,
+// so we separate them into a smaller "promotions" strip rather than
+// letting them dominate the main news feed.
+function isWeeklyBonus(item: any): boolean {
+  const t = (item.title ?? "").toLowerCase();
+  return t.includes("this week in gta") || t.includes("gta online: bonuses")
+    || t.includes("weekly update") || t.includes("bonus gta$")
+    || t.includes("bonus and sale");
+}
 
 function sourceMeta(id: string) {
   return SOURCE_META[id] ?? { color: "text-zinc-400", badge: "bg-zinc-800/50 border-zinc-700", tier: "PRESS" };
@@ -255,9 +285,9 @@ const updatedAt = feedData.last_updated;
           </div>
           <div class="divide-y divide-[#1e1e23]">
             {[
-              { tier: "OFFICIAL",  color: "text-gta-gold",    badge: "bg-gta-gold/10 border-gta-gold/20",      desc: "Rockstar Games or Take-Two direct announcements." },
+              { tier: "OFFICIAL",  color: "text-gta-gold",    badge: "bg-gta-gold/10 border-gta-gold/20",      desc: "Rockstar Games, Take-Two IR, or SEC EDGAR filings. Highest credibility." },
               { tier: "PRESS",     color: "text-gta-gold",   badge: "bg-gta-gold/8 border-gta-gold/25",    desc: "Specialist and mainstream gaming press. Credibility varies by outlet." },
-              { tier: "COMMUNITY", color: "text-gta-reddit",  badge: "bg-gta-reddit/10 border-gta-reddit/20",  desc: "Reddit r/GTA6 top posts — community discussion and leaks." },
+              { tier: "COMMUNITY", color: "text-amber-300",   badge: "bg-amber-900/20 border-amber-600/30",    desc: "GTAForums megathreads and Reddit r/GTA6 — first-look leaks and discussion." },
             ].map(s => (
               <div class="px-4 py-3">
                 <div class="flex items-center gap-2 mb-1">

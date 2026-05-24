@@ -7,7 +7,7 @@
 import bonusHistoryData  from "../../../data/gta-5/economy/bonus-history.json";
 import revenueTiersData  from "../../../data/gta-5/economy/revenue-tiers.json";
 import saleFreqData       from "../../../data/gta-5/economy/sale-frequency.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -29,7 +29,7 @@ import ChartFooter from "../ChartFooter.astro";
           data-freq={JSON.stringify((saleFreqData as any).activity_bonuses)}
           style="min-height:280px"
         ></div>
-        <ChartFooter chartId="bonus-heatmap" sources="Source: Rockstar Newswire · community archives · curated seed back to 2020 · live capture every Thursday" shareText="GTA Online bonus calendar — which activities Rockstar has promoted and how often. The promotional pattern is more predictable than you" />
+        <CardFooter chartId="bonus-heatmap" sources="Source: Rockstar Newswire · community archives · curated seed back to 2020 · live capture every Thursday" shareText="GTA Online bonus calendar — which activities Rockstar has promoted and how often. The promotional pattern is more predictable than you" />
       </div>
 
 <script>

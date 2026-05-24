@@ -4,7 +4,7 @@
  * Extracted from charts.astro.
  */
 import heistsData from "../../../data/gta-5/economy/online-heists.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -22,7 +22,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="heist-comparison-chart" class="w-full" style="height:320px"
           data-heists={JSON.stringify((heistsData as any).heists)}
         ></div>
-        <ChartFooter chartId="heist-comparison-chart" sources="Source: GTA Wiki · GTABase.com · community records · 2024 patches · Hard difficulty" shareText="All GTA Online heists compared: Cayo Perico wins on $/hr despite being solo. Casino Heist is the best group heist. Data-driven answer to which heist is worth doing." />
+        <CardFooter chartId="heist-comparison-chart" sources="Source: GTA Wiki · GTABase.com · community records · 2024 patches · Hard difficulty" shareText="All GTA Online heists compared: Cayo Perico wins on $/hr despite being solo. Casino Heist is the best group heist. Data-driven answer to which heist is worth doing." />
       </div>
 
 <script>

@@ -9,6 +9,7 @@ import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
+import CardFooter from "../../components/CardFooter.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 
 import type { EconomyModelsData, PredictionsData, TrailerVelocityData } from "../../types/gta";
@@ -93,6 +94,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
       </div>
       <div class="rounded-xl border border-[#1e1e23] p-6" style="background:#0e0e11">
         <CircularEconomy titleId="gta-6" mode="full" />
+        <CardFooter anchorId="eco-gta-vi" sources="Source: GTAVI.AI Economic Model — predicted pre-launch · GTA Online precedent · trailer analysis" shareText="GTA VI predicted economy: Full MMT sovereign with dual-territory model. Predicted to surpass GTA Online in complexity at launch. 10 active income predictions tracked." />
       </div>
     </section>
 

@@ -6,7 +6,7 @@
  */
 import gtaPpiData        from "../../../data/gta-5/economy/gta-ppi.json";
 import metaHistoryData   from "../../../data/gta-5/economy/meta-history.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -30,7 +30,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="gta-ppi-chart" class="w-full" style="height:280px"
           data-series={JSON.stringify((gtaPpiData as any).series)}
         ></div>
-        <ChartFooter chartId="gta-ppi-chart" sources="Source: computed from price-basket.json + meta-history.json · GTAForums patch notes archives" shareText="GTA Online" />
+        <CardFooter chartId="gta-ppi-chart" sources="Source: computed from price-basket.json + meta-history.json · GTAForums patch notes archives" shareText="GTA Online" />
       </div>
 
 <script>

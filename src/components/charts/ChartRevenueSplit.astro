@@ -4,7 +4,7 @@
  * Extracted from charts.astro.
  */
 import revenueSplit from "../../../data/franchise/revenue-split.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -29,7 +29,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="revenue-split-chart" class="w-full" style="height:320px"
           data-years={JSON.stringify(revenueSplit.years)}
         ></div>
-        <ChartFooter chartId="revenue-split-chart" sources="Sources: Take-Two IR quarterly earnings · Wedbush Securities analyst estimates · DFC Intelligence (GTA VI)" shareText="Shark Cards have generated billions for Take-Two. The revenue shift that fundamentally changed how Rockstar makes games." />
+        <CardFooter chartId="revenue-split-chart" sources="Sources: Take-Two IR quarterly earnings · Wedbush Securities analyst estimates · DFC Intelligence (GTA VI)" shareText="Shark Cards have generated billions for Take-Two. The revenue shift that fundamentally changed how Rockstar makes games." />
       </div>
 
 <script>

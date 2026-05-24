@@ -6,7 +6,7 @@
  */
 import metaHistoryData   from "../../../data/gta-5/economy/meta-history.json";
 import revenueTiersData  from "../../../data/gta-5/economy/revenue-tiers.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -23,7 +23,7 @@ import ChartFooter from "../ChartFooter.astro";
         <div id="meta-evolution-chart" class="w-full" style="height:300px"
           data-history={JSON.stringify((metaHistoryData as any).meta_history)}
         ></div>
-        <ChartFooter chartId="meta-evolution-chart" sources="Source: GTAForums · GTA Wiki · community archives · GTABase" shareText="10 years of GTA Online money metas charted: from $250k/hr contact missions in 2013 to $2M/hr Cayo Perico in 2020 — one update changed everything." />
+        <CardFooter chartId="meta-evolution-chart" sources="Source: GTAForums · GTA Wiki · community archives · GTABase" shareText="10 years of GTA Online money metas charted: from $250k/hr contact missions in 2013 to $2M/hr Cayo Perico in 2020 — one update changed everything." />
       </div>
 
 <script>

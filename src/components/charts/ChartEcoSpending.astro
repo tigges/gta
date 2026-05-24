@@ -5,7 +5,7 @@
  * Self-contained; D3 init deferred via IntersectionObserver.
  */
 import spendingData from "../../../data/gta-5/economy/spending-distribution.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 
 const spendEras = (spendingData as any).eras as any[];
 ---
@@ -18,7 +18,7 @@ const spendEras = (spendingData as any).eras as any[];
   <div id="chart-spending" class="w-full" style="height:220px"
     data-eras={JSON.stringify(spendEras)}
   ></div>
-  <ChartFooter chartId="chart-spending" sources="Source: community data · updated nightly" shareText="GTA Online economy chart: GTA$ Spending Distribution — How Player Money Flows Over the Years" />
+  <CardFooter chartId="chart-spending" sources="Source: community data · updated nightly" shareText="GTA Online economy chart: GTA$ Spending Distribution — How Player Money Flows Over the Years" />
 </div>
 
 <script>

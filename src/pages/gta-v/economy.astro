@@ -8,6 +8,7 @@ import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
+import CardFooter from "../../components/CardFooter.astro";
 
 import economyData  from "../../../data/franchise/economy-models.json";
 import stocksData   from "../../../data/gta-5/economy/assassination-stocks.json";
@@ -69,6 +70,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 rounded-xl border border-[#1e1e23] p-5" style="background:#0e0e11">
           <CircularEconomy titleId="gta-5" mode="full" />
+          <CardFooter anchorId="eco-gta-v" sources="Source: curated · GTA Fandom Wiki · franchise economic analysis" shareText="GTA V's economy: capital market model — missions, stock assassinations, heists. The $2B strategy is the most sophisticated single-player money system in GTA history." />
         </div>
         <ChartComplexityRadar titleId="gta-5" size={260} />
       </div>

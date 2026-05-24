@@ -5,7 +5,7 @@
  * Pure data display (no D3) — renders server-side.
  */
 import velocityData from "../../../data/gta-6/trailer-velocity.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -56,5 +56,5 @@ import ChartFooter from "../ChartFooter.astro";
             );
           })}
         </div>
-        <ChartFooter chartId="trailer-velocity" sources={`Source: YouTube Data API · polled ${new Date(velocityData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}`} shareText="GTA VI Trailer 1 holds the 24-hour YouTube record. 279M views, 161M for Trailer 2. The hype is unlike anything in gaming." />
+        <CardFooter chartId="trailer-velocity" sources={`Source: YouTube Data API · polled ${new Date(velocityData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}`} shareText="GTA VI Trailer 1 holds the 24-hour YouTube record. 279M views, 161M for Trailer 2. The hype is unlike anything in gaming." />
       </div>

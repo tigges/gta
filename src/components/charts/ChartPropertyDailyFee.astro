@@ -4,7 +4,7 @@
  * Extracted from charts.astro.
  */
 import propertiesData from "../../../data/gta-5/economy/properties.json";
-import ChartFooter from "../ChartFooter.astro";
+import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
@@ -16,7 +16,7 @@ import ChartFooter from "../ChartFooter.astro";
           data-properties={JSON.stringify((propertiesData as any).properties)}
           style="min-height:220px"
         ></div>
-        <ChartFooter chartId="property-daily-fee-chart" sources="Source: GTA Wiki · GTABase.com · GTA Online daily utility fee system" shareText="GTA Online" />
+        <CardFooter chartId="property-daily-fee-chart" sources="Source: GTA Wiki · GTABase.com · GTA Online daily utility fee system" shareText="GTA Online" />
       </div>
 
 <script>
