@@ -204,3 +204,21 @@ const showRange = prediction_range && prediction_range.low !== prediction_range.
     </div>
   )}
 </div>
+
+<script define:vars={{ predAnchorId }}>
+  // Fire a Plausible custom event when this prediction card enters the viewport.
+  // Same demand-signal pattern as ChartView — powers future display_order recalculation.
+  // Event: "PredictionView" with prop predictionId — tracked in Plausible dashboard.
+  if ("IntersectionObserver" in window && typeof window.plausible === "function") {
+    const el = document.getElementById(predAnchorId);
+    if (el) {
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          (window as any).plausible("PredictionView", { props: { predictionId: predAnchorId } });
+          obs.disconnect();
+        }
+      }, { threshold: 0.4 });
+      obs.observe(el);
+    }
+  }
+</script>

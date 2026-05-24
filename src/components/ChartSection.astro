@@ -77,13 +77,13 @@ const displayMeta = metaOverride !== undefined ? metaOverride : chart.meta;
 <script define:vars={{ chartId: chart.id }}>
   // Fire a Plausible custom event when this chart section enters the viewport.
   // Powers the demand-driven ordering system (Stream 3 Phase B).
-  // Event: "Chart View" with prop chartId — visible in Plausible dashboard.
+  // Event: "ChartView" with prop chartId — tracked in Plausible dashboard.
   if ("IntersectionObserver" in window && typeof window.plausible === "function") {
     const el = document.getElementById(`section-${chartId}`);
     if (el) {
       const obs = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          (window as any).plausible("Chart View", { props: { chartId } });
+          (window as any).plausible("ChartView", { props: { chartId } });
           obs.disconnect();
         }
       }, { threshold: 0.3 });
