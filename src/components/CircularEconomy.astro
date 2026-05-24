@@ -12,9 +12,11 @@ import economyData from "../../data/franchise/economy-models.json";
 interface Props {
   titleId: string;
   mode?: "full" | "compact";
+  /** In compact mode: URL to the full economy page. Shows "Full model →" CTA. */
+  fullModelHref?: string;
 }
 
-const { titleId, mode = "full" } = Astro.props;
+const { titleId, mode = "full", fullModelHref } = Astro.props;
 const isCompact = mode === "compact";
 
 const typedData  = economyData as unknown as EconomyModelsData;
@@ -128,21 +130,35 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 <div class="ce-wrapper" data-ce-uid={uid}>
 
   {/* ── Era badges ────────────────────────────────────────────────────────── */}
-  <div class="flex items-center gap-2 mb-3 flex-wrap">
-    <span class={`text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest ${eraBadge}`}>
-      {economy.era_label}
-    </span>
-    {isRegression && (
-      <span class="text-[11px] font-mono bg-red-900/30 border border-red-600/40 text-red-400 px-2 py-0.5 rounded uppercase tracking-widest">
-        Deliberate Regression
+  {!isCompact && (
+    <div class="flex items-center gap-2 mb-3 flex-wrap">
+      <span class={`text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest ${eraBadge}`}>
+        {economy.era_label}
       </span>
-    )}
-    {isProjected && (
-      <span class="text-[11px] font-mono bg-gta-gold/20 border border-gta-gold/30 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">
-        Projected
+      {isRegression && (
+        <span class="text-[11px] font-mono bg-red-900/30 border border-red-600/40 text-red-400 px-2 py-0.5 rounded uppercase tracking-widest">
+          Deliberate Regression
+        </span>
+      )}
+      {isProjected && (
+        <span class="text-[11px] font-mono bg-gta-gold/20 border border-gta-gold/30 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">
+          Projected
+        </span>
+      )}
+    </div>
+  )}
+  {isCompact && (
+    <div class="flex items-center gap-2 mb-2 flex-wrap">
+      <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${eraBadge}`}>
+        {economy.era_label}
       </span>
-    )}
-  </div>
+      {isProjected && (
+        <span class="text-[10px] font-mono bg-gta-gold/20 border border-gta-gold/30 text-gta-gold px-1.5 py-0.5 rounded uppercase tracking-widest">
+          Projected
+        </span>
+      )}
+    </div>
+  )}
 
   {/* ── Sovereign box ─────────────────────────────────────────────────────── */}
   {sovNode && (
@@ -390,6 +406,17 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
     <div class="mt-3 rounded-lg border border-gta-gold/15 px-3 py-2.5" style="background:rgba(245,158,11,0.03)">
       <div class="text-[11px] font-mono text-gta-gold/70 uppercase tracking-widest mb-1">GTA VI Lineage</div>
       <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{economy.gta_vi_lineage}</p>
+    </div>
+  )}
+
+  {/* ── Compact mode CTA ──────────────────────────────────────────────────── */}
+  {isCompact && fullModelHref && (
+    <div class="mt-3 flex items-center justify-between">
+      <span class="text-[10px] font-mono text-zinc-500">Player-centred model · nodes = money flows</span>
+      <a href={fullModelHref}
+         class="text-[11px] font-mono text-gta-gold/80 hover:text-gta-gold border border-gta-gold/20 hover:border-gta-gold/50 px-3 py-1 rounded transition-colors uppercase tracking-widest">
+        Full model →
+      </a>
     </div>
   )}
 
