@@ -1,0 +1,162 @@
+---
+/**
+ * ExpenditureCard.astro — GTA expenditure card.
+ *
+ * Two variants:
+ *   investment — asset purchase that generates future Y income (Nightclub, Bunker, etc.)
+ *   injection  — real-money purchase that injects GTA$ into player balance (Shark Cards, GTA+)
+ *
+ * Draft data is hardcoded here. Migrate to expenditure.json once design is validated.
+ *
+ * Card contract:
+ *   TOP-LEFT   GamePill game="gta-online"
+ *   TOP-RIGHT  variant badge (INVESTMENT | INJECTION)
+ *   Body       variant-specific fields
+ *   BOTTOM     GTAVI.AI + Share
+ */
+import GamePill from "./GamePill.astro";
+import ShareDropdown from "./ShareDropdown.astro";
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+
+// ── Draft data — hardcoded until expenditure.json schema is validated ────────
+const EXPENDITURE_DATA: Record<string, {
+  variant: "investment" | "injection";
+  name: string;
+  subtitle: string;
+  thumbnail: string;
+  fields: { label: string; value: string }[];
+  note: string;
+  shareText: string;
+}> = {
+  "nightclub": {
+    variant: "investment",
+    name: "Maze Bank Arena Nightclub",
+    subtitle: "GTA Online · Passive business",
+    thumbnail: "/assets/gta6/locations/Vice_City_04.jpg",
+    fields: [
+      { label: "Purchase Cost",   value: "$1.7M GTA$" },
+      { label: "Passive Yield",   value: "~$25K–50K / hr" },
+      { label: "Break-even",      value: "~34–68 hrs" },
+      { label: "Income type",     value: "Passive / Semi-passive" },
+    ],
+    note: "Generates passive income from bar, merchandise, and cargo. Requires periodic restocking.",
+    shareText: "Maze Bank Nightclub in GTA Online: $1.7M cost, ~$50K/hr optimised. 34 hours to break-even. The blueprint for GTA VI passive income.",
+  },
+  "bunker": {
+    variant: "investment",
+    name: "Farmhouse Bunker",
+    subtitle: "GTA Online · Supply business",
+    thumbnail: "/assets/gta6/locations/Grassrivers_01.jpg",
+    fields: [
+      { label: "Purchase Cost",   value: "$1.165M GTA$" },
+      { label: "Supply Yield",    value: "~$35K / hr" },
+      { label: "Break-even",      value: "~33 hrs" },
+      { label: "Income type",     value: "Semi-passive" },
+    ],
+    note: "Supply-run based. Staff sell automatically but supplies must be restocked manually or purchased.",
+    shareText: "Sandy Shores Bunker: $1.165M → $35K/hr supply yield. Core of the GTA Online passive income stack since 2017.",
+  },
+  "megalodon": {
+    variant: "injection",
+    name: "Megalodon Shark Card",
+    subtitle: "GTA Online · Real-money injection",
+    thumbnail: "/assets/gta6/locations/Vice_City_06.jpg",
+    fields: [
+      { label: "Real-money Cost",     value: "$99.99 USD" },
+      { label: "GTA$ Received",       value: "8,000,000 GTA$" },
+      { label: "Rate",                value: "$80,040 GTA$ / USD" },
+      { label: "Endgame Coverage",    value: "~1.8% of meta cost" },
+    ],
+    note: "Bypasses Y earn entirely. GTA$ injected directly to Balance. Price unchanged since 2013 — real-terms value down 35% via inflation.",
+    shareText: "The Megalodon Shark Card in 2026: $99.99 USD buys 1.8% of the GTA Online endgame. The same card bought 5.3% in 2013. 23× inflation in 13 years.",
+  },
+  "gta-plus": {
+    variant: "injection",
+    name: "GTA+ Subscription",
+    subtitle: "GTA Online · Monthly subscription",
+    thumbnail: "/assets/gta6/locations/Ambrosia_02.jpg",
+    fields: [
+      { label: "Monthly Cost",        value: "$5.99 USD" },
+      { label: "Monthly GTA$",        value: "500,000 GTA$" },
+      { label: "Rate",                value: "$83,472 GTA$ / USD" },
+      { label: "Additional perks",    value: "Vehicles · clothing · properties" },
+    ],
+    note: "Recurring subscription model. GTA$ injection at month start plus rotating exclusive benefits. ~8.3% of the Megalodon value per month.",
+    shareText: "GTA+ at $5.99/month gives 500K GTA$ + exclusive perks. The subscription model that will likely expand significantly in GTA VI.",
+  },
+};
+
+const entry = EXPENDITURE_DATA[id];
+if (!entry) throw new Error(`ExpenditureCard: unknown id "${id}"`);
+
+const anchorId = `exp-${id}`;
+const isInvestment = entry.variant === "investment";
+
+const VARIANT_STYLES = {
+  investment: {
+    label:      "INVESTMENT",
+    badgeBg:    "bg-amber-900/20 border-amber-500/60 text-amber-200",
+    border:     "border-l-amber-500",
+    valueCls:   "text-gta-gold",
+  },
+  injection: {
+    label:      "INJECTION",
+    badgeBg:    "bg-indigo-900/20 border-indigo-500/60 text-indigo-200",
+    border:     "border-l-indigo-400",
+    valueCls:   "text-indigo-300",
+  },
+};
+const style = VARIANT_STYLES[entry.variant];
+---
+
+<div
+  id={anchorId}
+  class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${style.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] group`}
+  style="background:var(--c-card);scroll-margin-top:72px"
+>
+  <!-- Thumbnail -->
+  <div class="relative h-24 overflow-hidden shrink-0">
+    <img src={entry.thumbnail} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
+    <div class="absolute inset-0" style="background:linear-gradient(to bottom,rgba(0,0,0,0.3) 0%,transparent 30%,var(--c-card) 100%)"></div>
+  </div>
+
+  <!-- Pills bar -->
+  <div class="absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-2.5 z-10">
+    <GamePill game="gta-online" size="xs" />
+    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ${style.badgeBg}`}>
+      {style.label}
+    </span>
+  </div>
+
+  <!-- Name -->
+  <div class="px-4 pt-2 pb-1">
+    <div class="text-[11px] font-mono text-zinc-200 leading-snug">{entry.name}</div>
+    <div class="text-[10px] font-mono text-zinc-600 mt-0.5">{entry.subtitle}</div>
+  </div>
+
+  <!-- Fields -->
+  <div class="px-4 pb-3 flex flex-col gap-1.5 flex-1">
+    {entry.fields.map(f => (
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest shrink-0">{f.label}</span>
+        <span class={`text-[11px] font-mono font-semibold text-right ${style.valueCls}`}>{f.value}</span>
+      </div>
+    ))}
+  </div>
+
+  <!-- Note -->
+  <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5">
+    <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{entry.note}</p>
+  </div>
+
+  <!-- Footer -->
+  <div class="px-4 pb-3 mt-auto flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
+    <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+    <ShareDropdown anchorId={anchorId} shareText={entry.shareText} size="sm" />
+  </div>
+</div>

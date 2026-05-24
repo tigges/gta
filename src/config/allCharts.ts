@@ -638,7 +638,7 @@ export const ALL_CHARTS: ChartMeta[] = [
     meta:      "US CPI-U · all prices in 2026 dollars",
     sources:   "Source: US Bureau of Labor Statistics CPI-U · Nominal prices from Rockstar/Take-Two",
     shareText: "GTA VI at $79.99 is actually cheaper than GTA III in 2001, in real inflation-adjusted dollars. The data says it's not overpriced.",
-    pages:     ["charts"],
+    pages:     ["charts", "gta-vi"],
   },
 
   {
@@ -677,7 +677,7 @@ export const ALL_CHARTS: ChartMeta[] = [
     meta:      "13 fiscal years · game → recurrent shift",
     sources:   "Sources: Take-Two IR quarterly earnings · Wedbush Securities analyst estimates · DFC Intelligence (GTA VI)",
     shareText: "Shark Cards have generated billions for Take-Two. The revenue shift that fundamentally changed how Rockstar makes games.",
-    pages:     ["charts"],
+    pages:     ["charts", "gta-vi"],
   },
 
   {
