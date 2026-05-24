@@ -269,6 +269,7 @@ const TIER_COLOR: Record<string,string> = {
             outcome_actual={p.outcome_actual}
               thumbnail={(p as any).thumbnail ?? predThumbnails[(p as Prediction).id]}
             compact={true}
+            detailHref={`/gta-vi/intel#${(p as Prediction).id}`}
           />
         ))}
       </div>
