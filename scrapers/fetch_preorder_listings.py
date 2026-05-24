@@ -79,29 +79,49 @@ def check_amazon() -> dict:
 
 
 def check_bestbuy() -> dict:
+    """Best Buy scraper — returns 'unknown' on timeout (bot detection) rather than 'error'."""
+    bb_url = "https://www.bestbuy.com/site/searchpage.jsp?st=grand+theft+auto+6"
+    # Best Buy applies aggressive bot detection that causes connection hangs on server IPs.
+    # Use a session with realistic browser headers and a tight 12 s timeout.
+    session = requests.Session()
+    bb_headers = {
+        **HEADERS,
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
+        "Cache-Control": "max-age=0",
+    }
     try:
-        resp = requests.get(
-            "https://www.bestbuy.com/site/searchpage.jsp?st=grand+theft+auto+6",
-            headers=HEADERS, timeout=20,
-        )
+        resp = session.get(bb_url, headers=bb_headers, timeout=12, allow_redirects=True)
+        if not resp.ok:
+            return {"retailer": "Best Buy US", "status": "unknown",
+                    "note": f"HTTP {resp.status_code} — bot-gated or geo-blocked", "url": bb_url}
+
         soup = BeautifulSoup(resp.text, "lxml")
-        # Best Buy search results use data-sku-id attributes
         items = soup.find_all(class_=re.compile(r"sku-title|product-title"))
         for item in items:
             if contains_gta6(item.get_text()):
-                # Check for pre-order button
                 card = item.find_parent(class_=re.compile(r"sku-item|list-item"))
                 pre_order_btn = card.find(string=re.compile(r"pre.order|add to cart", re.I)) if card else None
                 status = "pre_order" if pre_order_btn else "wishlist"
                 return {
                     "retailer": "Best Buy US",
                     "status": status,
-                    "url": "https://www.bestbuy.com/site/searchpage.jsp?st=grand+theft+auto+6",
+                    "url": bb_url,
                     "found_title": item.get_text(strip=True)[:80],
                 }
-        return {"retailer": "Best Buy US", "status": "not_live", "url": "https://www.bestbuy.com/site/searchpage.jsp?st=grand+theft+auto+6"}
+        return {"retailer": "Best Buy US", "status": "not_live", "url": bb_url}
+
+    except requests.exceptions.Timeout:
+        # Timeout = bot-detection hang (not a real error — data is simply unavailable)
+        return {"retailer": "Best Buy US", "status": "unknown",
+                "note": "unreachable from server IP (timeout — bot detection)", "url": bb_url}
     except Exception as e:
-        return {"retailer": "Best Buy US", "status": "error", "error": str(e)[:100]}
+        return {"retailer": "Best Buy US", "status": "error", "error": str(e)[:120], "url": bb_url}
 
 
 def check_gamestop() -> dict:
