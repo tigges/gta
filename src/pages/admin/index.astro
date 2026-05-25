@@ -1,0 +1,63 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const tools = [
+  {
+    href:  "/admin/predictions",
+    label: "Prediction Ranks",
+    sub:   "Reorder predictions · toggle Home / Hub visibility · copy JSON patch",
+    icon:  "intel",
+    color: "var(--c-brand)",
+  },
+  {
+    href:  "/admin/proposals",
+    label: "Prediction Proposals",
+    sub:   "Review nightly auto-update proposals · accept or reject · copy patch",
+    icon:  "intel",
+    color: "var(--c-live)",
+  },
+  {
+    href:  "/admin/charts",
+    label: "Chart Ranks",
+    sub:   "Reorder charts page order · filter by game · copy JSON patch",
+    icon:  "chart",
+    color: "var(--c-economy)",
+  },
+];
+---
+
+<Base title="Admin" description="GTAVI.AI admin tools">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 py-16">
+
+    <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Admin</div>
+    <h1 class="text-2xl font-bold text-white mb-1">Admin Tools</h1>
+    <p class="text-[11px] font-mono text-zinc-600 mb-10">
+      All changes are in-memory only — copy the JSON patch and apply via GitHub editor.
+    </p>
+
+    <div class="flex flex-col gap-3">
+      {tools.map(t => (
+        <a
+          href={t.href}
+          class="group flex items-start gap-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] px-5 py-4 transition-colors"
+          style="background:var(--c-card)"
+        >
+          <div class="w-1 self-stretch rounded-full shrink-0 mt-0.5" style={`background:${t.color}`}></div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors mb-0.5">{t.label}</div>
+            <div class="text-[11px] font-mono text-zinc-500 leading-snug">{t.sub}</div>
+          </div>
+          <span class="text-zinc-600 group-hover:text-zinc-400 transition-colors text-sm shrink-0 self-center">→</span>
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-10 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:var(--c-card)">
+      <p class="text-[10px] font-mono text-zinc-600">
+        Admin pages are public URLs — read-only operations, no server writes.
+        Direct URL access only; not linked from the main nav.
+      </p>
+    </div>
+
+  </div>
+</Base>
