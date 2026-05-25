@@ -37,13 +37,14 @@ const GAME_LABEL: Record<string, string> = {
   "franchise":  "Franchise",
 };
 
-// Identity hex — mirrors tokens.css --c-title-* values
+// Identity — reads from --c-title-* tokens defined in tokens.css
+// CSS var() with hardcoded fallback for runtime safety
 const GAME_COLOUR: Record<string, string> = {
-  "gta-vi":     "#ff6b9d",
-  "gta-online": "#00d4e8",
-  "gta-v":      "#f59e0b",
-  "gta-sa":     "#c0392b",
-  "gta-vc":     "#ff2d78",
+  "gta-vi":     "var(--c-title-vi,#ff6b9d)",
+  "gta-online": "var(--c-title-online,#00d4e8)",
+  "gta-v":      "var(--c-title-v,#f59e0b)",
+  "gta-sa":     "var(--c-title-sa,#c0392b)",
+  "gta-vc":     "var(--c-title-vc,#ff2d78)",
   "gta-iv":     "#6b6b7e",
   "gta-iii":    "#9898b8",
   "franchise":  "#f59e0b",

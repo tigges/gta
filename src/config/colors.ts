@@ -26,6 +26,21 @@ export const C_TITLE_ONLINE   = "#00d4e8";  // GTA Online vivid cyan
 export const C_TITLE_SA       = "#c0392b";  // GTA SA street red
 export const C_TITLE_VC       = "#ff2d78";  // GTA VC neon pink
 // GTA V + Franchise → C_BRAND (amber, intentional overlap)
+// ── Economy semantic aliases ──────────────────────────────────────────────
+export const C_INCOME       = C_LIVE;    // Y-axis income = teal
+export const C_EXPENDITURE  = C_BRAND;   // C+I expenditure = gold
+
+// ── Confidence tier constants ────────────────────────────────────────────
+export const C_TIER_CONFIRMED = "#34d399";  // emerald-400
+export const C_TIER_REPORTED  = C_BRAND;    // gold
+export const C_TIER_PREDICTED = "#9898b8";  // = C_TEXT_4
+
+// ── Play type constants ──────────────────────────────────────────────────
+export const C_PLAY_PASSIVE = C_GROWTH;   // green
+export const C_PLAY_SEMI    = C_BRAND;    // gold
+export const C_PLAY_ACTIVE  = C_ALERT;    // red
+export const C_PLAY_HEIST   = C_ECONOMY;  // indigo
+export const C_PLAY_MISSION = C_LIVE;     // teal
 // GTA IV            → C_TEXT_6 (subdued — regression era)
 // GTA III           → C_TEXT_4 (muted)
 
