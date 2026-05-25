@@ -9,6 +9,7 @@
  */
 import GamePill from "./GamePill.astro";
 import ShareDropdown from "./ShareDropdown.astro";
+import { playColor as getPlayColor } from "../assets/chartColors";
 
 interface LootTier {
   loot: string;
@@ -234,7 +235,7 @@ const prereqShort = prerequisite
         </div>
       </div>
       <div class="h-1.5 rounded-full bg-[#1e1e23] overflow-hidden">
-        <div class="h-full rounded-full" style={`width:${barPct}%;background:${ts.color};opacity:var(--o-secondary)`}></div>
+        <div class="h-full rounded-full" style={`width:${barPct}%;background:${ts.color};opacity:0.85`}></div>
       </div>
     </div>
 

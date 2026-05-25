@@ -1,0 +1,210 @@
+---
+/**
+ * /intelligence — GTAVI.AI mission, methodology, and dual-economy model.
+ * The permanent home for what was scattered across the intel page and footer.
+ */
+import Base from "../layouts/Base.astro";
+import HudIcon from "../components/HudIcon.astro";
+import CrossLinks from "../components/CrossLinks.astro";
+---
+
+<Base
+  title="Intelligence"
+  description="Follow the GTA$ — GTAVI.AI's mission, methodology, and dual-economy model explained. How we source, score and predict GTA's in-game and real-world economies."
+  ogPage="vi-intel"
+  titleContext="gta-vi"
+>
+
+  <!-- Hero -->
+  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:320px;display:flex;align-items:flex-end">
+    <div class="absolute inset-0">
+      <img src="/assets/gta6/locations/Vice_City_03.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 40%" aria-hidden="true" />
+      <div class="absolute inset-0" style="background:linear-gradient(to right,#0a0a0d 0%,#0a0a0dcc 60%,#0a0a0d88 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,#0a0a0d 100%)"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-12 pt-16 w-full">
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Mission & Methodology</div>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">Follow the GTA$</h1>
+      <p class="text-zinc-400 text-sm max-w-xl leading-relaxed">
+        GTAVI.AI bridges two economies: the GTA$ system inside the game,
+        and the real-world revenue machine behind it. Every number sourced.
+        Every prediction confidence-scored. Every trend tracked.
+      </p>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-14">
+
+    <!-- ── The dual economy ─────────────────────────────────────── -->
+    <section>
+      <div class="flex items-center gap-3 mb-7">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The Dual Economy</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- In-game economy -->
+        <div class="rounded-xl border overflow-hidden" style="background:#131316;border-color:var(--c-income,#0d9488);border-color:rgba(13,148,136,0.3)">
+          <div class="px-6 py-5 border-b border-[#1e1e23]">
+            <div class="flex items-center gap-3 mb-2">
+              <HudIcon name="economy" size={18} class="text-gta-teal" />
+              <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-income,#0d9488)">In-Game Economy</span>
+            </div>
+            <div class="text-lg font-semibold text-zinc-100">Where the GTA$ flows</div>
+          </div>
+          <div class="px-6 py-5 flex flex-col gap-3">
+            {[
+              { icon: "mission",    label: "Active earn",      desc: "Missions, heists, contracts — ranked by net GTA$/hr" },
+              { icon: "cycle",      label: "Business cycles",  desc: "Passive income stacks, daily fees, supply costs" },
+              { icon: "passive",    label: "Passive returns",  desc: "Nightclub, Bunker, Acid Lab — time-value of GTA$" },
+              { icon: "shark-card", label: "J Injection",      desc: "Shark Cards, GTA+ — real money entering the system" },
+              { icon: "bank",       label: "Maze Bank",        desc: "Savings mechanics — and why credit never materialised" },
+            ].map(item => (
+              <div class="flex items-start gap-3">
+                <HudIcon name={item.icon as any} size={14} class="text-gta-teal mt-0.5 shrink-0" />
+                <div>
+                  <span class="text-[11px] font-mono text-zinc-300">{item.label}</span>
+                  <span class="text-[11px] text-zinc-600"> — {item.desc}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Real-world economy -->
+        <div class="rounded-xl border overflow-hidden" style="background:#131316;border-color:rgba(245,158,11,0.3)">
+          <div class="px-6 py-5 border-b border-[#1e1e23]">
+            <div class="flex items-center gap-3 mb-2">
+              <HudIcon name="investment" size={18} class="text-gta-gold" />
+              <span class="text-[10px] font-mono uppercase tracking-widest text-gta-gold">Real-World Economy</span>
+            </div>
+            <div class="text-lg font-semibold text-zinc-100">Where the real money goes</div>
+          </div>
+          <div class="px-6 py-5 flex flex-col gap-3">
+            {[
+              { icon: "dollar",       label: "Franchise revenue",  desc: "Take-Two earnings — game sales vs. recurrent model" },
+              { icon: "shark-card",   label: "Shark Card inflation", desc: "Purchasing power erosion over 13 years: 23× rise" },
+              { icon: "subscription", label: "GTA+ subscription",  desc: "Real-money monthly subscription layer on top of GTA$" },
+              { icon: "property",     label: "CPI-adjusted pricing", desc: "What each GTA title actually cost in 2026 dollars" },
+              { icon: "hub",          label: "Stock market signal", desc: "TTWO share price reaction to every GTA VI announcement" },
+            ].map(item => (
+              <div class="flex items-start gap-3">
+                <HudIcon name={item.icon as any} size={14} class="text-gta-gold mt-0.5 shrink-0" />
+                <div>
+                  <span class="text-[11px] font-mono text-zinc-300">{item.label}</span>
+                  <span class="text-[11px] text-zinc-600"> — {item.desc}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── The intelligence layer ────────────────────────────────── -->
+    <section>
+      <div class="flex items-center gap-3 mb-7">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The Intelligence Layer</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          {
+            icon: "intel",
+            label: "Predictions",
+            desc: "Confidence-scored economic signals. Release date, launch price, income yields, Shark Card trajectory — all sourced from data, not speculation.",
+            href: "/gta-vi/intel",
+            cta: "View predictions →",
+            color: "var(--c-brand)",
+          },
+          {
+            icon: "chart",
+            label: "Charts",
+            desc: "Every economic data series visualised. Nightly updates. Filterable by game and category.",
+            href: "/charts",
+            cta: "View charts →",
+            color: "var(--c-economy)",
+          },
+          {
+            icon: "database",
+            label: "Economy Register",
+            desc: "Every income source, business, vehicle and entity indexed. GTA VI entities sourced from Fandom Wiki and Leonida Intel.",
+            href: "/database",
+            cta: "Browse register →",
+            color: "var(--c-live)",
+          },
+          {
+            icon: "trailer",
+            label: "Trailer Evidence",
+            desc: "Frame-by-frame extraction of economic intelligence from official trailers. What's confirmed vs. what's indexed.",
+            href: "/gta-vi/trailers",
+            cta: "View analysis →",
+            color: "var(--c-alert)",
+          },
+        ].map(item => (
+          <a href={item.href} class="group rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] transition-all flex flex-col overflow-hidden" style="background:#131316">
+            <div class="h-0.5 w-full" style={`background:linear-gradient(90deg,${item.color},transparent)`}></div>
+            <div class="flex-1 px-5 py-4 flex flex-col gap-3">
+              <div class="flex items-center gap-2">
+                <HudIcon name={item.icon as any} size={16} style={`color:${item.color}`} />
+                <span class="text-[10px] font-mono uppercase tracking-widest" style={`color:${item.color}`}>{item.label}</span>
+              </div>
+              <p class="text-[11px] text-zinc-500 leading-relaxed flex-1">{item.desc}</p>
+              <span class="text-[10px] font-mono transition-colors group-hover:opacity-100 opacity-60 mt-auto" style={`color:${item.color}`}>{item.cta}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- ── Methodology ────────────────────────────────────────────── -->
+    <section>
+      <div class="flex items-center gap-3 mb-7">
+        <span class="w-1.5 h-1.5 rounded-full bg-zinc-700 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-500 tracking-[0.2em] uppercase">// Methodology & Signal Standards</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+
+      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+        <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
+          {[
+            {
+              label: "Confidence scoring",
+              body: "Confidence reflects how many independent signals agree. 97%+ = official source or confirmed data. 80%+ = multiple corroborating sources. Below 50% = single source or high-variance extrapolation. Tier (confirmed/reported/predicted) is set editorially, never automatically.",
+            },
+            {
+              label: "Data sources",
+              body: "Release dates from Rockstar announcements and SEC EDGAR 8-K filings. Pricing from CPI-U adjusted franchise history. Income data from GTABase.com, GTAForums, and Broughy1322's benchmark sheet. Entity data from GTA Fandom Wiki and Leonida Intel. All scrapers run nightly.",
+              link: { href: "/charts", text: "View all charts →" },
+            },
+            {
+              label: "Not affiliated",
+              body: "GTAVI.AI is a community data project. Not affiliated with Rockstar Games or Take-Two Interactive. All game assets © Rockstar Games / Take-Two Interactive. All predictions are community-derived. Treat every prediction as informed analysis, not official information.",
+            },
+          ].map(m => (
+            <div class="px-6 py-6">
+              <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">{m.label}</div>
+              <p class="text-[11px] text-zinc-500 leading-relaxed">{m.body}</p>
+              {m.link && (
+                <a href={m.link.href} class="mt-3 inline-block text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest">{m.link.text}</a>
+              )}
+            </div>
+          ))}
+        </div>
+        <div class="px-6 py-3 border-t border-[#1e1e23] flex items-center justify-between">
+          <span class="text-[10px] text-zinc-700 font-mono">Data refreshed nightly · 03:00 UTC</span>
+          <span class="text-[10px] font-mono text-zinc-700 tracking-widest">GTAVI.AI</span>
+        </div>
+      </div>
+    </section>
+
+    <CrossLinks context="charts" />
+
+  </div>
+
+</Base>

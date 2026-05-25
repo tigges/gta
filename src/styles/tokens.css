@@ -61,6 +61,35 @@
   --c-badge-text:    #d4d4d8;  /* near-white — all taxonomy labels / neutral pills */
   --c-badge-border:  #6b6b7e;  /* visible neutral border — framing without colour signal */
 
+
+  /* ── Game title identity ─────────────────────────────────────────────────
+     Used by GamePill, nav accents, --c-identity per-page, charts.astro.   */
+  --c-title-vi:        #ff6b9d;             /* GTA VI pink-coral */
+  --c-title-online:    #00d4e8;             /* GTA Online vivid cyan */
+  --c-title-v:         var(--c-brand);      /* GTA V = brand gold (intentional) */
+  --c-title-franchise: var(--c-brand);      /* Franchise = brand gold */
+  --c-title-sa:        #c0392b;             /* GTA SA street red */
+  --c-title-vc:        #ff2d78;             /* GTA VC neon pink */
+
+  /* ── Economy Y / C+I semantic aliases ────────────────────────────────────
+     Use instead of --c-live / --c-brand when the intent is economy flow.  */
+  --c-income:          var(--c-live);       /* Y-axis — teal = active, live income */
+  --c-expenditure:     var(--c-brand);      /* C+I-axis — gold = GTA$ outflow */
+
+  /* ── Confidence tier tokens ──────────────────────────────────────────────
+     Single source for confirmed / reported / predicted across all cards.  */
+  --c-tier-confirmed:  #34d399;             /* emerald-400 */
+  --c-tier-reported:   var(--c-brand);      /* gold — reported / uncertain */
+  --c-tier-predicted:  var(--c-text-4);     /* muted zinc — speculative */
+
+  /* ── Play type tokens ─────────────────────────────────────────────────────
+     Income source activity type. Mirror of playColor() in chartColors.ts. */
+  --c-play-passive:    var(--c-growth);     /* green — passive income */
+  --c-play-semi:       var(--c-brand);      /* gold — semi-active */
+  --c-play-active:     var(--c-alert);      /* red — active grind */
+  --c-play-heist:      var(--c-economy);    /* indigo — heist type */
+  --c-play-mission:    var(--c-live);       /* teal — mission type */
+
   /* ── Category / badge colours ─────────────────────────── */
   --c-cat-franchise:   #f59e0b;  /* = brand gold */
   --c-cat-community:   #22c55e;  /* = growth green */
