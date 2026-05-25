@@ -4,7 +4,7 @@
  * Rows are server-rendered for instant paint; JS handles reorder/filter/patch.
  */
 import Base from "../../layouts/Base.astro";
-import { CHARTS_PAGE_ORDER } from "../../config/allCharts";
+import { CHARTS_PAGE_ORDER, getAllCharts } from "../../config/allCharts";
 
 const GAME_COLOR: Record<string, string> = {
   "gta-vi":     "var(--c-title-vi,#ff6b9d)",
@@ -13,29 +13,16 @@ const GAME_COLOR: Record<string, string> = {
   "franchise":  "var(--c-brand,#f59e0b)",
 };
 
-function gameFromId(id: string): string {
-  if (id.includes("gta6") || id.includes("trailer") || id.includes("delay") ||
-      id.includes("region") || id.includes("competitor") || id.includes("prelaunch") ||
-      id.includes("cpi") || id.includes("revenue-split") || id.includes("dlc-cadence") ||
-      id.includes("franchise-complexity") || id.includes("franchise-earnings") ||
-      id.includes("ttwo") || id.includes("sales") || id.includes("price-history") ||
-      id.includes("franchise")) return "franchise";
-  if (id.includes("gta-online") || id.includes("eco-") || id.includes("shark") ||
-      id.includes("passive") || id.includes("meta-") || id.includes("heist") ||
-      id.includes("income") || id.includes("property") || id.includes("spending") ||
-      id.includes("roi") || id.includes("tco") || id.includes("bonus") ||
-      id.includes("ie-tiers") || id.includes("gta-ppi")) return "gta-online";
-  if (id.includes("perf-chart") || id.includes("assassination") ||
-      id.includes("dlc-player") || id.includes("steam") || id.includes("gta-v") ||
-      id.includes("community")) return "gta-v";
-  if (id.startsWith("trailer-") || id.startsWith("gta6") || id.includes("vi-")) return "gta-vi";
-  return "franchise";
-}
+// Use canonical ALL_CHARTS metadata — more reliable than heuristic ID matching.
+const _allCharts = getAllCharts();
+const chartGameMap: Record<string, string> = Object.fromEntries(
+  _allCharts.map(c => [c.id, c.game])
+);
 
 const chartItems = CHARTS_PAGE_ORDER.map((id, i) => ({
   id,
   order: i + 1,
-  game: gameFromId(id),
+  game: chartGameMap[id] ?? "franchise",
   label: id.replace(/-chart$/, "").replace(/-/g, " "),
 }));
 ---
