@@ -93,6 +93,7 @@ const { fullEconomyHref } = Astro.props;
           <div class="blip-sm" style="--bc:var(--c-growth)">
             <HudIcon name="dollar" size={16} style="color:#fff"/>
           </div>
+          <span class="cycle-note" style="color:var(--c-growth)">Y grows &#8594; next cycle</span>
         </div>
         <div class="icon-row">
           <div class="icon-item">
@@ -104,7 +105,6 @@ const { fullEconomyHref } = Astro.props;
             <span class="icon-label">Passive</span>
           </div>
         </div>
-        <div class="cycle-note" style="color:var(--c-growth)">Y grows &#8594; next cycle</div>
       </div>
     </div>
 
@@ -144,6 +144,7 @@ const { fullEconomyHref } = Astro.props;
       <div class="box-inner">
         <div class="box-header">
           <span class="box-title" style="color:var(--c-economy)">INVESTMENT</span>
+          <span class="cycle-note" style="color:var(--c-economy)">I returns to Y &#8594;</span>
         </div>
         <div class="icon-row">
           <div class="icon-item">
@@ -155,7 +156,6 @@ const { fullEconomyHref } = Astro.props;
             <span class="icon-label">Business</span>
           </div>
         </div>
-        <div class="cycle-note" style="color:var(--c-economy)">I returns to Y &#8594;</div>
       </div>
     </div>
 
@@ -340,18 +340,21 @@ const { fullEconomyHref } = Astro.props;
 }
 
 .box-inner { padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; }
-.box-header { display: flex; align-items: center; gap: 8px; }
+/* flex-wrap lets cycle-note push right on desktop and reflow on mobile */
+.box-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .box-title { font-size: clamp(.8rem,2vw,1.1rem); font-weight: 900; line-height: 1; }
 .icon-row { display: flex; gap: 12px; }
 .icon-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .icon-label { font-size: 8px; color: rgba(255,255,255,.65); text-align: center; }
 
-/* Cycle note — sits immediately below icons, no push to bottom */
+/* Cycle note — lives in box-header, pushed to the right */
 .cycle-note {
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: .1em;
   opacity: .65;
+  margin-left: auto;
+  text-align: right;
 }
 
 /* = and + dividers */
@@ -389,5 +392,53 @@ const { fullEconomyHref } = Astro.props;
 .full-link {
   font-size: 10px; text-transform: uppercase; letter-spacing: .12em;
   color: var(--c-brand); opacity: .6; text-decoration: none; transition: opacity .2s;
+}
+
+/* ── Mobile (≤599px) ─────────────────────────────────────────────────── */
+@media (max-width: 599px) {
+  /* Injection row: tighter gap, smaller headline */
+  .inject-inner  { gap: 16px; }
+  .inject-title  { font-size: 1.4rem; }
+  .blip          { width: 42px; height: 42px; }
+
+  /* Mid-row: hide flanking super-headers, show circle only */
+  .income-super,
+  .expend-super  { display: none; }
+  .mid-row       { display: flex; justify-content: center; padding: 10px 16px; }
+
+  /* Circle: slightly smaller */
+  .ring-wrap     { width: 96px; height: 96px; }
+  .ring {
+    -webkit-mask: radial-gradient(circle, transparent 33px, black 35px);
+    mask:         radial-gradient(circle, transparent 33px, black 35px);
+  }
+  .ring-centre   { inset: 10px; }
+  .gta-label     { font-size: 9px; }
+
+  /* Arrows: smaller */
+  .tri-in, .tri-out {
+    border-top-width:    16px;
+    border-bottom-width: 16px;
+    border-left-width:   20px;
+  }
+
+  /* Box row: compact padding */
+  .box-inner     { padding: 10px 8px; gap: 6px; }
+  .box-title     { font-size: .7rem; }
+
+  /* Icons: stack vertically, each item becomes a horizontal blip+label row */
+  .icon-row      { flex-direction: column; gap: 4px; }
+  .icon-item     { flex-direction: row; gap: 8px; align-items: center; }
+  .blip-lg       { width: 40px; height: 40px; border-width: 2px; }
+  .icon-label    { font-size: 8px; text-align: left; }
+
+  /* Cycle note: drop margin-left:auto so it spans full width below title */
+  .cycle-note    { margin-left: 0; width: 100%; letter-spacing: 0; }
+
+  /* Dividers: narrower */
+  .divider-eq,
+  .divider-plus  { width: 16px; }
+  .eq-sign,
+  .plus-sign     { font-size: .9rem; }
 }
 </style>
