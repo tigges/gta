@@ -759,7 +759,6 @@ export function getChartsForPage(page: PageSlug): ChartMeta[] {
  */
 export const CHARTS_PAGE_ORDER: string[] = [
   // GTA VI
-  "trailer-velocity",
   "trailer-discovery-chart",
   "delay-timeline-chart",
   "region-heatmap",
@@ -767,6 +766,7 @@ export const CHARTS_PAGE_ORDER: string[] = [
   "prelaunch-comparison-chart",
   "entertainment-chart",
   "competitors-chart",
+  "trailer-velocity",           // view velocity moved to end of GTA VI block
   // GTA Online
   "income-leaderboard-chart",
   "meta-evolution-chart",
@@ -802,8 +802,8 @@ export const CHARTS_PAGE_ORDER: string[] = [
   "divergence-chart",
   "dlc-cadence-chart",
   "revenue-split-chart",
+  "franchise-complexity-chart", // complexity moved before TTWO stock
   "ttwo-stock-chart",
-  "franchise-complexity-chart",
   "franchise-earnings-chart",
 ];
 
