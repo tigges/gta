@@ -1,25 +1,43 @@
 ---
 /**
  * /admin/charts — Chart rank and visibility dashboard.
- * Same pattern as /admin/predictions. Changes are in-memory only.
- * Use "Copy JSON patch" → paste into allCharts.ts via GitHub editor.
+ * Rows are server-rendered for instant paint; JS handles reorder/filter/patch.
  */
 import Base from "../../layouts/Base.astro";
-import { CHARTS_PAGE_ORDER, getAllCharts } from "../../config/allCharts";
+import { CHARTS_PAGE_ORDER } from "../../config/allCharts";
 
-const allCharts = getAllCharts ? getAllCharts() : [];
-
-// Build display list from CHARTS_PAGE_ORDER
 const GAME_COLOR: Record<string, string> = {
   "gta-vi":     "var(--c-title-vi,#ff6b9d)",
   "gta-online": "var(--c-title-online,#00d4e8)",
   "gta-v":      "var(--c-title-v,#f59e0b)",
   "franchise":  "var(--c-brand,#f59e0b)",
 };
-const GAME_LABEL: Record<string, string> = {
-  "gta-vi": "GTA VI", "gta-online": "GTA Online",
-  "gta-v": "GTA V", "franchise": "Franchise",
-};
+
+function gameFromId(id: string): string {
+  if (id.includes("gta6") || id.includes("trailer") || id.includes("delay") ||
+      id.includes("region") || id.includes("competitor") || id.includes("prelaunch") ||
+      id.includes("cpi") || id.includes("revenue-split") || id.includes("dlc-cadence") ||
+      id.includes("franchise-complexity") || id.includes("franchise-earnings") ||
+      id.includes("ttwo") || id.includes("sales") || id.includes("price-history") ||
+      id.includes("franchise")) return "franchise";
+  if (id.includes("gta-online") || id.includes("eco-") || id.includes("shark") ||
+      id.includes("passive") || id.includes("meta-") || id.includes("heist") ||
+      id.includes("income") || id.includes("property") || id.includes("spending") ||
+      id.includes("roi") || id.includes("tco") || id.includes("bonus") ||
+      id.includes("ie-tiers") || id.includes("gta-ppi")) return "gta-online";
+  if (id.includes("perf-chart") || id.includes("assassination") ||
+      id.includes("dlc-player") || id.includes("steam") || id.includes("gta-v") ||
+      id.includes("community")) return "gta-v";
+  if (id.startsWith("trailer-") || id.startsWith("gta6") || id.includes("vi-")) return "gta-vi";
+  return "franchise";
+}
+
+const chartItems = CHARTS_PAGE_ORDER.map((id, i) => ({
+  id,
+  order: i + 1,
+  game: gameFromId(id),
+  label: id.replace(/-chart$/, "").replace(/-/g, " "),
+}));
 ---
 
 <Base title="Chart Ranks" titleContext="gta-vi">
@@ -35,7 +53,7 @@ const GAME_LABEL: Record<string, string> = {
       </div>
     </div>
 
-    <!-- Changes bar -->
+    <!-- Changes bar (hidden until a change is made) -->
     <div id="changes-bar" class="hidden mb-4 rounded-lg border border-gta-gold/30 px-4 py-3 flex items-center justify-between gap-4" style="background:rgba(245,158,11,0.06)">
       <span class="text-[11px] font-mono text-gta-gold"><span id="change-count">0</span> unsaved change(s)</span>
       <div class="flex gap-2">
@@ -48,32 +66,47 @@ const GAME_LABEL: Record<string, string> = {
     <div class="flex items-center gap-2 mb-4 text-[10px] font-mono">
       <span class="text-zinc-600 mr-1">Filter:</span>
       {[
-        { id: "all",       label: "All" },
-        { id: "gta-vi",    label: "GTA VI" },
-        { id: "gta-online",label: "GTA Online" },
-        { id: "gta-v",     label: "GTA V" },
-        { id: "franchise", label: "Franchise" },
+        { id: "all",        label: "All" },
+        { id: "gta-vi",     label: "GTA VI" },
+        { id: "gta-online", label: "GTA Online" },
+        { id: "gta-v",      label: "GTA V" },
+        { id: "franchise",  label: "Franchise" },
       ].map(f => (
         <button class="chart-view-filter px-2.5 py-1 rounded border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
                 data-filter={f.id}>{f.label}</button>
       ))}
     </div>
 
-    <!-- Chart list -->
-    <div id="chart-list" class="flex flex-col gap-1"
-         data-charts={JSON.stringify(CHARTS_PAGE_ORDER.map((id, i) => ({
-           id,
-           order: i + 1,
-           label: id.replace(/-chart$/, "").replace(/-/g, " "),
-         })))}>
+    <!-- Chart list — server-rendered for instant paint -->
+    <div id="chart-list" class="flex flex-col gap-1">
+      {chartItems.map(c => (
+        <div class="chart-row rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-colors group"
+             data-id={c.id} data-order={c.order} data-game={c.game}
+             style="background:var(--c-card)">
+          <div class="flex items-center gap-3 px-3 py-2.5">
+            <span class="chart-rank text-[11px] font-mono text-zinc-600 w-6 text-right shrink-0"
+                  style="font-variant-numeric:tabular-nums">{c.order}</span>
+            <div class="flex flex-col gap-px shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button class="move-up text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]" title="Move up">▲</button>
+              <button class="move-dn text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]" title="Move down">▼</button>
+            </div>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border shrink-0"
+                  style={`color:${GAME_COLOR[c.game]};border-color:color-mix(in srgb,${GAME_COLOR[c.game]} 30%,transparent)`}>
+              {c.game.replace("gta-", "").toUpperCase()}
+            </span>
+            <span class="flex-1 text-[11px] font-mono text-zinc-300 truncate capitalize">{c.label}</span>
+            <span class="text-[9px] font-mono text-zinc-700 shrink-0 truncate max-w-[160px]">{c.id}</span>
+          </div>
+        </div>
+      ))}
     </div>
 
     <!-- How to apply -->
     <div class="mt-6 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:var(--c-card)">
       <p class="text-[10px] font-mono text-zinc-600">
         Changes are in-memory only. ▲/▼ reorders the <span class="text-zinc-400">CHARTS_PAGE_ORDER</span> array.
-        When done, click <span class="text-zinc-400">Copy JSON patch</span> — the patch is a reordered array
-        you paste into <span class="text-zinc-400">src/config/allCharts.ts</span> via the GitHub editor.
+        When done, click <span class="text-zinc-400">Copy JSON patch</span> — paste into
+        <span class="text-zinc-400">src/config/allCharts.ts</span> via the GitHub editor.
       </p>
     </div>
 
@@ -81,99 +114,63 @@ const GAME_LABEL: Record<string, string> = {
 </Base>
 
 <script>
-  // ── State ─────────────────────────────────────────────────────────────────
-  const listEl = document.getElementById("chart-list")!;
-  const raw: { id: string; order: number; label: string }[] =
-    JSON.parse(listEl.dataset.charts || "[]");
-
-  const GAME_COLOR: Record<string, string> = {
-    "gta-vi":     "var(--c-title-vi,#ff6b9d)",
-    "gta-online": "var(--c-title-online,#00d4e8)",
-    "gta-v":      "var(--c-title-v,#f59e0b)",
-    "franchise":  "var(--c-brand,#f59e0b)",
-  };
-
-  // We only have IDs here — derive game from the ID prefix patterns
-  function gameFromId(id: string): string {
-    if (id.includes("gta6") || id.includes("trailer") || id.includes("delay") ||
-        id.includes("region") || id.includes("competitor") || id.includes("prelaunch") ||
-        id.includes("cpi") || id.includes("revenue-split") || id.includes("dlc-cadence") ||
-        id.includes("franchise-complexity") || id.includes("franchise-earnings") ||
-        id.includes("ttwo") || id.includes("sales") || id.includes("price-history") ||
-        id.includes("franchise")) return "franchise";
-    if (id.includes("gta-online") || id.includes("eco-") || id.includes("shark") ||
-        id.includes("passive") || id.includes("meta-") || id.includes("heist") ||
-        id.includes("income") || id.includes("property") || id.includes("spending") ||
-        id.includes("roi") || id.includes("tco") || id.includes("bonus") ||
-        id.includes("ie-tiers") || id.includes("gta-ppi")) return "gta-online";
-    if (id.includes("perf-chart") || id.includes("assassination") ||
-        id.includes("dlc-player") || id.includes("steam") || id.includes("gta-v") ||
-        id.includes("community")) return "gta-v";
-    if (id.startsWith("trailer-") || id.startsWith("gta6") || id.includes("vi-")) return "gta-vi";
-    return "franchise";
-  }
-
-  let state = raw.map(r => ({ ...r, game: gameFromId(r.id) }));
-  const original = JSON.parse(JSON.stringify(state));
+  const listEl    = document.getElementById("chart-list")!;
+  const rows      = () => Array.from(listEl.querySelectorAll<HTMLElement>(".chart-row"));
   let activeFilter = "all";
 
-  // ── Render ─────────────────────────────────────────────────────────────────
-  function render() {
-    const sorted = [...state].sort((a, b) => a.order - b.order);
-    const filtered = sorted.filter(c =>
-      activeFilter === "all" || c.game === activeFilter
-    );
+  // ── Track original order for change detection ─────────────────────────────
+  const originalOrder: Record<string, number> = {};
+  rows().forEach(r => { originalOrder[r.dataset.id!] = Number(r.dataset.order); });
 
-    listEl.innerHTML = sorted.map((c, si) => {
-      const visible = activeFilter === "all" || c.game === activeFilter;
-      const gameColor = GAME_COLOR[c.game] ?? "#9898b8";
-      const changed = c.order !== original.find((o: any) => o.id === c.id)?.order;
-      return `<div class="chart-row rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-colors group"
-                   data-id="${c.id}" data-order="${c.order}" data-game="${c.game}"
-                   style="background:var(--c-card);display:${visible ? "" : "none"}">
-        <div class="flex items-center gap-3 px-3 py-2.5">
-          <span class="text-[11px] font-mono text-zinc-600 w-6 text-right shrink-0" style="font-variant-numeric:tabular-nums">${c.order}</span>
-          <div class="flex flex-col gap-px shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button class="move-up text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]">▲</button>
-            <button class="move-dn text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]">▼</button>
-          </div>
-          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border shrink-0" style="color:${gameColor};border-color:${gameColor}30">
-            ${c.game.replace("gta-", "").toUpperCase()}
-          </span>
-          <span class="flex-1 text-[11px] font-mono text-zinc-300 truncate capitalize">${c.label}</span>
-          <span class="text-[9px] font-mono text-zinc-700 shrink-0 truncate max-w-[160px]">${c.id}</span>
-          ${changed ? '<span class="text-[9px] font-mono text-gta-gold shrink-0">●</span>' : ""}
-        </div>
-      </div>`;
-    }).join("");
-
-    // Re-attach listeners
+  // ── Attach move listeners ─────────────────────────────────────────────────
+  function attachListeners() {
     listEl.querySelectorAll<HTMLElement>(".chart-row").forEach(row => {
-      const id = row.dataset.id!;
-      row.querySelector(".move-up")?.addEventListener("click", () => move(id, -1));
-      row.querySelector(".move-dn")?.addEventListener("click", () => move(id,  1));
+      row.querySelector(".move-up")?.addEventListener("click", () => move(row, -1));
+      row.querySelector(".move-dn")?.addEventListener("click", () => move(row,  1));
     });
   }
 
-  function move(id: string, dir: -1 | 1) {
-    const sorted = [...state].sort((a, b) => a.order - b.order);
-    const idx = sorted.findIndex(c => c.id === id);
+  function move(row: HTMLElement, dir: -1 | 1) {
+    const allRows = rows().filter(r => r.style.display !== "none");
+    const idx = allRows.indexOf(row);
     const swapIdx = idx + dir;
-    if (swapIdx < 0 || swapIdx >= sorted.length) return;
-    [sorted[idx].order, sorted[swapIdx].order] = [sorted[swapIdx].order, sorted[idx].order];
-    state = state.map(c => sorted.find(s => s.id === c.id) ?? c);
-    render();
+    if (swapIdx < 0 || swapIdx >= allRows.length) return;
+    const target = allRows[swapIdx];
+    // Swap data-order and displayed rank number
+    const a = Number(row.dataset.order), b = Number(target.dataset.order);
+    row.dataset.order    = String(b);
+    target.dataset.order = String(a);
+    row.querySelector(".chart-rank")!.textContent    = String(b).padStart(2, " ");
+    target.querySelector(".chart-rank")!.textContent = String(a).padStart(2, " ");
+    // Swap DOM position
+    if (dir === -1) listEl.insertBefore(row, target);
+    else            listEl.insertBefore(target, row);
     updateChanges();
   }
 
   function updateChanges() {
-    const n = state.filter((c, i) => c.order !== original[i]?.order).length;
+    const changed = rows().filter(r =>
+      Number(r.dataset.order) !== originalOrder[r.dataset.id!]
+    );
     const bar = document.getElementById("changes-bar")!;
-    bar.classList.toggle("hidden", n === 0);
-    document.getElementById("change-count")!.textContent = String(n);
+    bar.classList.toggle("hidden", changed.length === 0);
+    document.getElementById("change-count")!.textContent = String(changed.length);
+    // Highlight changed rows
+    rows().forEach(r => {
+      const isChanged = Number(r.dataset.order) !== originalOrder[r.dataset.id!];
+      const dot = r.querySelector(".changed-dot");
+      if (isChanged && !dot) {
+        const s = document.createElement("span");
+        s.className = "changed-dot text-[9px] font-mono text-gta-gold shrink-0";
+        s.textContent = "●";
+        r.querySelector(".flex")?.appendChild(s);
+      } else if (!isChanged && dot) {
+        dot.remove();
+      }
+    });
   }
 
-  // ── View filter ─────────────────────────────────────────────────────────────
+  // ── View filter ───────────────────────────────────────────────────────────
   document.querySelectorAll<HTMLButtonElement>(".chart-view-filter").forEach(btn => {
     btn.addEventListener("click", () => {
       activeFilter = btn.dataset.filter!;
@@ -182,14 +179,18 @@ const GAME_LABEL: Record<string, string> = {
         b.style.borderColor = active ? "color-mix(in srgb,var(--c-brand) 40%,transparent)" : "";
         b.style.color = active ? "var(--c-brand)" : "";
       });
-      render();
+      rows().forEach(r => {
+        r.style.display = (activeFilter === "all" || r.dataset.game === activeFilter) ? "" : "none";
+      });
     });
   });
 
-  // ── Copy patch ───────────────────────────────────────────────────────────────
+  // ── Copy patch ────────────────────────────────────────────────────────────
   document.getElementById("copy-patch")?.addEventListener("click", () => {
-    const newOrder = [...state].sort((a, b) => a.order - b.order).map(c => `  "${c.id}"`);
-    const patch = `// Paste this as the CHARTS_PAGE_ORDER array in src/config/allCharts.ts:\nexport const CHARTS_PAGE_ORDER = [\n${newOrder.join(",\n")},\n];`;
+    const ordered = rows()
+      .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order))
+      .map(r => `  "${r.dataset.id}"`);
+    const patch = `// Paste this as the CHARTS_PAGE_ORDER array in src/config/allCharts.ts:\nexport const CHARTS_PAGE_ORDER = [\n${ordered.join(",\n")},\n];`;
     navigator.clipboard.writeText(patch).then(() => {
       const btn = document.getElementById("copy-patch")!;
       const orig = btn.textContent;
@@ -198,12 +199,20 @@ const GAME_LABEL: Record<string, string> = {
     });
   });
 
-  // ── Reset ────────────────────────────────────────────────────────────────────
+  // ── Reset ─────────────────────────────────────────────────────────────────
   document.getElementById("reset-changes")?.addEventListener("click", () => {
-    state = JSON.parse(JSON.stringify(original));
-    render();
+    // Re-sort rows back to originalOrder
+    const sorted = rows().sort((a, b) =>
+      originalOrder[a.dataset.id!] - originalOrder[b.dataset.id!]
+    );
+    sorted.forEach(r => {
+      const orig = originalOrder[r.dataset.id!];
+      r.dataset.order = String(orig);
+      r.querySelector(".chart-rank")!.textContent = String(orig).padStart(2, " ");
+      listEl.appendChild(r);
+    });
     updateChanges();
   });
 
-  render();
+  attachListeners();
 </script>
