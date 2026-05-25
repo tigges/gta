@@ -399,29 +399,55 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 
     <!-- Footer -->
     <footer class="border-t border-[#1e1e23] mt-24" style="background:#0a0a0d">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+
+      <!-- About section -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 border-b border-[#1e1e23]">
+        <div class="text-[9px] font-mono text-zinc-600 tracking-[0.25em] uppercase mb-5">// About GTAVI.AI</div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-10 gap-y-6">
           <div>
-            <!-- Wordmark mirrors nav logo -->
-            <div class="font-mono font-bold text-xl mb-1 leading-none tracking-tight flex items-center gap-1">
-              <span class="text-white mr-1">GTA</span><span class="text-gta-gold">VI</span>
-              <span class="text-sm font-mono font-bold text-white border-2 border-zinc-200/70 rounded pl-0.5 pr-1.5 py-0.5 tracking-widest leading-none">.AI</span>
-            </div>
-            <p class="text-xs text-zinc-700 font-mono max-w-sm mt-2">
-              Community data project. Not affiliated with Rockstar Games or Take-Two Interactive.<br />
-              All game assets © Rockstar Games / Take-Two Interactive.
+            <div class="text-[9px] font-mono tracking-[0.2em] uppercase mb-2" style="color:var(--c-live)">The mission</div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">
+              GTAVI.AI follows the GTA$ — the in-game currency, the Shark Card
+              economy, and the real-world revenue machine behind both.
             </p>
           </div>
-          <div class="flex flex-col items-start sm:items-end gap-1">
+          <div>
+            <div class="text-[9px] font-mono tracking-[0.2em] uppercase mb-2" style="color:var(--c-brand)">The method</div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">
+              Every income source ranked. Every nerf tracked. Every GTA VI
+              prediction confidence-scored from 30 years of franchise data.
+            </p>
+          </div>
+          <div>
+            <div class="text-[9px] font-mono tracking-[0.2em] uppercase mb-2" style="color:var(--c-text-4)">The assets</div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">
+              The trailers are evidence. The database is the ledger.
+              The charts are the record.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <!-- Wordmark -->
+          <div class="font-mono font-bold text-xl leading-none tracking-tight flex items-center gap-1">
+            <span class="text-white mr-1">GTA</span><span class="text-gta-gold">VI</span>
+            <span class="text-sm font-mono font-bold text-white border-2 border-zinc-200/70 rounded pl-0.5 pr-1.5 py-0.5 tracking-widest leading-none">.AI</span>
+          </div>
+          <!-- Legal links + data note -->
+          <div class="flex items-center gap-4 flex-wrap">
             <div class="flex items-center gap-1.5">
               <span class="w-1.5 h-1.5 rounded-full bg-gta-teal"></span>
               <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">Data refreshed nightly</span>
             </div>
-            <span class="text-[10px] font-mono text-zinc-500">GTA VI launches Nov 19, 2026</span>
-            <span class="text-[10px] font-mono text-zinc-700">{SITE_VERSION_LABEL} · {SITE_VERSION_DATE}</span>
+            <a href="/terms" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Terms</a>
+            <a href="/privacy" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Privacy</a>
           </div>
         </div>
       </div>
+
     </footer>
 
     <!-- ═══════════════════════════════════════════════════════
