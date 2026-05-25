@@ -10,12 +10,10 @@ import PredictionCard from "../../components/PredictionCard.astro";
 import IncomePredictionCard from "../../components/IncomePredictionCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
 import EconomyCircle from "../../components/EconomyCircle.astro";
-import ChartSection from "../../components/ChartSection.astro";
 import Countdown from "../../components/Countdown.astro";
-
-import ChartTrailerDiscovery   from "../../components/charts/ChartTrailerDiscovery.astro";
-import ChartCpiPricing         from "../../components/charts/ChartCpiPricing.astro";
-import ChartRevenueSplit       from "../../components/charts/ChartRevenueSplit.astro";
+import ChartTeaserCpi          from "../../components/charts/ChartTeaserCpi.astro";
+import ChartTeaserRevenueSplit  from "../../components/charts/ChartTeaserRevenueSplit.astro";
+import ChartTeaserSearchSignal  from "../../components/charts/ChartTeaserSearchSignal.astro";
 
 import type { Prediction, TrailersData } from "../../types/gta";
 import { getChart } from "../../config/allCharts";
@@ -67,7 +65,7 @@ const featuredIncome = incomeList
 <Base
   titleContext="gta-vi"
   title="GTA VI — Intelligence Hub"
-  description="The complete GTA VI intelligence hub: confidence-scored predictions, trailer analysis, release timeline, and economy model — all data-driven."
+  description="Follow the GTA VI economy — confidence-scored predictions, income yields, Shark Card projections and launch-day economic analysis."
   ogPage="vi-intel"
 >
 
@@ -79,15 +77,15 @@ const featuredIncome = incomeList
       <div class="flex-1 relative overflow-hidden">
         <img src="/assets/gta6/characters/Lucia_Caminos_03.jpg" alt="Lucia Caminos"
           class="w-full h-full object-cover object-top" loading="eager" />
-        <div class="absolute inset-0" style="background:linear-gradient(to right,#0e0e11 0%,transparent 40%,transparent 50%,#0e0e11 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg) 0%,transparent 40%,transparent 50%,var(--c-bg) 100%)"></div>
       </div>
       <div class="flex-1 relative overflow-hidden">
         <img src="/assets/gta6/characters/Jason_Duval_02.jpg" alt="Jason Duval"
           class="w-full h-full object-cover object-top" loading="eager" />
-        <div class="absolute inset-0" style="background:linear-gradient(to left,#0e0e11 0%,transparent 40%,transparent 50%,#0e0e11 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to left,var(--c-bg) 0%,transparent 40%,transparent 50%,var(--c-bg) 100%)"></div>
       </div>
     </div>
-    <div class="absolute inset-0" style="background:linear-gradient(to bottom,#0e0e11 0%,transparent 20%,transparent 55%,#0e0e11 100%)"></div>
+    <div class="absolute inset-0" style="background:linear-gradient(to bottom,var(--c-bg) 0%,transparent 20%,transparent 55%,var(--c-bg) 100%)"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-16 w-full">
       <div class="flex items-end justify-between flex-wrap gap-6">
         <div class="max-w-xl">
@@ -110,7 +108,7 @@ const featuredIncome = incomeList
              style="width:240px">
             <img src={`https://img.youtube.com/vi/${heroTrailer.youtube_id}/mqdefault.jpg`} alt={heroTrailer.title}
               class="w-full object-cover transition-transform duration-500 group-hover:scale-105" style="height:135px" loading="eager" />
-            <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 55%)"></div>
+            <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%,transparent 55%)"></div>
             <div class="absolute top-2 left-2">
               <span class="text-[10px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Official</span>
             </div>
@@ -202,7 +200,7 @@ const featuredIncome = incomeList
         <div class="flex items-center gap-1.5">
           {[0, 1, 2].map((i) => (
             <button class="pred-dot rounded-full transition-all duration-200" data-page={i}
-              style="width:6px;height:6px;background:#2a2a31" aria-label={`Page ${i + 1}`} />
+              style="width:6px;height:6px;background:var(--c-border-2)" aria-label={`Page ${i + 1}`} />
           ))}
         </div>
         <button id="pred-next"
@@ -217,7 +215,7 @@ const featuredIncome = incomeList
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         LAYER 2: CHARTS — preview cards linking to /charts
+         LAYER 2: CHARTS — static CSS teasers
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center justify-between gap-3 mb-6">
@@ -231,52 +229,10 @@ const featuredIncome = incomeList
           All GTA VI charts →
         </a>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {([
-          {
-            id:    "trailer-discovery-chart",
-            game:  "GTA VI",
-            badge: "Community",
-            label: "Trailer Discovery Density",
-            desc:  `${totalEntities} entities confirmed frame-by-frame across both official trailers. Trailer 2 is denser at every quartile.`,
-            color: "var(--c-live)",
-          },
-          {
-            id:    "cpi-chart",
-            game:  "Franchise",
-            badge: "RL Economy",
-            label: "Launch Price — Inflation-Adjusted",
-            desc:  "GTA VI at $79.99 is cheaper in real terms than GTA III in 2001. 30 years of franchise pricing, CPI-adjusted.",
-            color: "var(--c-brand)",
-          },
-          {
-            id:    "revenue-split-chart",
-            game:  "Franchise",
-            badge: "RL Economy",
-            label: "GTA V Revenue Model",
-            desc:  "By FY2022, 90% of GTA revenue was recurrent (Online). Why GTA VI Online will matter more than its box price.",
-            color: "var(--c-brand)",
-          },
-        ] as const).map(c => (
-          <a href={`/charts#section-${c.id}`}
-             class="group flex flex-col overflow-hidden rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] transition-all"
-             style="background:var(--c-card)">
-            <div class="h-0.5 w-full" style={`background:linear-gradient(90deg,${c.color},transparent 70%)`}></div>
-            <div class="flex-1 px-5 py-5 flex flex-col gap-3">
-              <div class="flex items-center gap-2">
-                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded uppercase tracking-widest border"
-                  style={`color:${c.color};border-color:${c.color}30;background:${c.color}10`}>{c.badge}</span>
-                <span class="text-[10px] font-mono text-zinc-600">{c.game}</span>
-              </div>
-              <div class="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors leading-snug">{c.label}</div>
-              <p class="text-[11px] font-mono text-zinc-500 leading-relaxed flex-1">{c.desc}</p>
-              <div class="flex items-center justify-between mt-auto pt-3 border-t border-[#1e1e23]">
-                <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">GTAVI.AI</span>
-                <span class="text-[11px] font-mono text-zinc-400 group-hover:text-zinc-200 transition-colors">View chart →</span>
-              </div>
-            </div>
-          </a>
-        ))}
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <ChartTeaserCpi />
+        <ChartTeaserRevenueSplit />
+        <ChartTeaserSearchSignal />
       </div>
     </section>
 
@@ -286,27 +242,27 @@ const featuredIncome = incomeList
     <section>
       <div class="flex items-center gap-3 mb-6">
         <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The GTA Economy</span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The Dual Economy — where does the money go?</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
 
       <!-- Circular economy diagram -->
       <div class="mb-6">
-        <EconomyCircle game="gta-online" fullEconomyHref="/gta-vi/economy" />
+        <EconomyCircle fullEconomyHref="/gta-vi/economy" />
       </div>
 
-      <!-- Income + Expenditure cards: 2-col split -->
+      <!-- Income + Expenditure cards: 2-col split with teal/orange column borders -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        <!-- Income side (Y) -->
-        <div>
+        <!-- Income side (Y) — teal left border matches economy circle income arc -->
+        <div class="rounded-xl border border-[#1e1e23] px-4 pt-3 pb-4" style="border-left:3px solid var(--c-income);background:rgba(13,148,136,0.03)">
           <div class="flex items-center gap-2 mb-3">
-            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-live)">Y — Income</span>
+            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-income)">Y — Income</span>
             <div class="flex-1 h-px" style="background:rgba(13,148,136,0.2)"></div>
             <a href="/gta-vi/intel#section-income-predictions"
                class="text-[10px] font-mono uppercase tracking-widest transition-colors"
                style="color:var(--c-live);opacity:var(--o-tertiary)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
-              All {incomeList.length} →
+              All Income Cards →
             </a>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -331,20 +287,23 @@ const featuredIncome = incomeList
           </div>
         </div>
 
-        <!-- Expenditure side (C+I) -->
-        <div>
+        <!-- Expenditure side (C+I) — orange right border matches economy circle expenditure arc -->
+        <div class="rounded-xl border border-[#1e1e23] px-4 pt-3 pb-4" style="border-right:3px solid var(--c-flow-spending);background:rgba(249,115,22,0.03)">
           <div class="flex items-center gap-2 mb-3">
-            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-brand)">C+I — Expenditure</span>
+            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending)">C+I — Expenditure</span>
             <div class="flex-1 h-px" style="background:rgba(245,158,11,0.2)"></div>
+            <!-- No dedicated GTA VI I&C database yet — links to economy model page.
+                 TODO: build /gta-vi/intel#section-expenditure-predictions once
+                 investment & consumption prediction cards are added. -->
             <a href="/gta-vi/economy"
                class="text-[10px] font-mono uppercase tracking-widest transition-colors shrink-0"
                style="color:var(--c-brand);opacity:var(--o-secondary)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='var(--o-secondary)'">
-              Full economy →
+              All I &amp; C Cards →
             </a>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <ExpenditureCard id="nightclub" />
-            <ExpenditureCard id="megalodon" />
+            <ExpenditureCard id="bunker" />
           </div>
         </div>
 
@@ -410,7 +369,7 @@ const featuredIncome = incomeList
     dots.forEach((d, i) => {
       const active = i === page;
       d.style.width      = active ? "16px" : "6px";
-      d.style.background = active ? "var(--c-brand, #f59e0b)" : "#2a2a31";
+      d.style.background = active ? "var(--c-brand)" : "var(--c-border-2)";
     });
     if (pageLabel) pageLabel.textContent = `${page + 1} / ${TOTAL}`;
     if (prevBtn) prevBtn.disabled = page === 0;
@@ -423,7 +382,36 @@ const featuredIncome = incomeList
   window.addEventListener("resize", () => {
     track.style.transition = "none";
     goTo(page);
-    requestAnimationFrame(() => { track.style.transition = ""; });
+    requestAnimationFrame(() => { track.style.transition = "transform 0.35s cubic-bezier(0.4,0,0.2,1)"; });
   });
   goTo(0);
+
+  // ── Chart trigger: poll window.__chartReg until hub charts register, then fire ──
+  // Chart component scripts run in a separate bundle and may register after this
+  // script executes. Poll rAF until all 3 hub charts are in the registry, then
+  // trigger them. This guarantees execution regardless of bundle load order.
+  const HUB_CHARTS = ["trailer-discovery-chart", "cpi-chart", "revenue-split-chart"];
+  let pollAttempts = 0;
+
+  function pollAndTriggerCharts() {
+    const reg = (window as any).__chartReg as Map<string, () => void> | undefined;
+    if (!reg) { if (pollAttempts++ < 60) requestAnimationFrame(pollAndTriggerCharts); return; }
+
+    HUB_CHARTS.forEach(id => {
+      const fn = reg.get(id);
+      if (fn) { fn(); }
+    });
+
+    const remaining = HUB_CHARTS.filter(id => reg.has(id));
+    if (remaining.length < HUB_CHARTS.length && pollAttempts++ < 60) {
+      requestAnimationFrame(pollAndTriggerCharts);
+    }
+  }
+
+  if (document.readyState === "complete") {
+    requestAnimationFrame(pollAndTriggerCharts);
+  } else {
+    window.addEventListener("load", () => requestAnimationFrame(pollAndTriggerCharts), { once: true });
+  }
+
 </script>

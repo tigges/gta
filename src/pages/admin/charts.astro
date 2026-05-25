@@ -1,0 +1,213 @@
+---
+/**
+ * /admin/charts — Chart rank and visibility dashboard.
+ * Rows are server-rendered for instant paint; JS handles reorder/filter/patch.
+ */
+import Base from "../../layouts/Base.astro";
+import { CHARTS_PAGE_ORDER, getAllCharts } from "../../config/allCharts";
+
+const GAME_COLOR: Record<string, string> = {
+  "gta-vi":     "var(--c-title-vi,#ff6b9d)",
+  "gta-online": "var(--c-title-online,#00d4e8)",
+  "gta-v":      "var(--c-title-v,#f59e0b)",
+  "franchise":  "var(--c-brand,#f59e0b)",
+};
+
+// Use canonical ALL_CHARTS metadata — more reliable than heuristic ID matching.
+const _allCharts = getAllCharts();
+const chartGameMap: Record<string, string> = Object.fromEntries(
+  _allCharts.map(c => [c.id, c.game])
+);
+
+const chartItems = CHARTS_PAGE_ORDER.map((id, i) => ({
+  id,
+  order: i + 1,
+  game: chartGameMap[id] ?? "franchise",
+  label: id.replace(/-chart$/, "").replace(/-/g, " "),
+}));
+---
+
+<Base title="Chart Ranks" titleContext="gta-vi">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+
+    <div class="mb-6 flex items-start justify-between flex-wrap gap-4">
+      <div>
+        <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">// Admin · Charts</div>
+        <h1 class="text-2xl font-bold text-white">Chart Rank Board</h1>
+        <p class="text-[11px] font-mono text-zinc-500 mt-1">
+          {CHARTS_PAGE_ORDER.length} charts in /charts page order · Edit visibility per game hub
+        </p>
+      </div>
+    </div>
+
+    <!-- Changes bar (hidden until a change is made) -->
+    <div id="changes-bar" class="hidden mb-4 rounded-lg border border-gta-gold/30 px-4 py-3 flex items-center justify-between gap-4" style="background:rgba(245,158,11,0.06)">
+      <span class="text-[11px] font-mono text-gta-gold"><span id="change-count">0</span> unsaved change(s)</span>
+      <div class="flex gap-2">
+        <button id="copy-patch" class="text-[11px] font-mono border border-gta-gold/40 text-gta-gold px-3 py-1 rounded hover:bg-gta-gold/10 transition-all">Copy JSON patch</button>
+        <button id="reset-changes" class="text-[11px] font-mono border border-zinc-700 text-zinc-500 px-3 py-1 rounded hover:border-zinc-600 hover:text-zinc-300 transition-all">Reset</button>
+      </div>
+    </div>
+
+    <!-- View filter -->
+    <div class="flex items-center gap-2 mb-4 text-[10px] font-mono">
+      <span class="text-zinc-600 mr-1">Filter:</span>
+      {[
+        { id: "all",        label: "All" },
+        { id: "gta-vi",     label: "GTA VI" },
+        { id: "gta-online", label: "GTA Online" },
+        { id: "gta-v",      label: "GTA V" },
+        { id: "franchise",  label: "Franchise" },
+      ].map(f => (
+        <button class="chart-view-filter px-2.5 py-1 rounded border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+                data-filter={f.id}>{f.label}</button>
+      ))}
+    </div>
+
+    <!-- Chart list — server-rendered for instant paint -->
+    <div id="chart-list" class="flex flex-col gap-1">
+      {chartItems.map(c => (
+        <div class="chart-row rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-colors group"
+             data-id={c.id} data-order={c.order} data-game={c.game}
+             style="background:var(--c-card)">
+          <div class="flex items-center gap-3 px-3 py-2.5">
+            <span class="chart-rank text-[11px] font-mono text-zinc-600 w-6 text-right shrink-0"
+                  style="font-variant-numeric:tabular-nums">{c.order}</span>
+            <div class="flex flex-col gap-px shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button class="move-up text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]" title="Move up">▲</button>
+              <button class="move-dn text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]" title="Move down">▼</button>
+            </div>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border shrink-0"
+                  style={`color:${GAME_COLOR[c.game]};border-color:color-mix(in srgb,${GAME_COLOR[c.game]} 30%,transparent)`}>
+              {c.game.replace("gta-", "").toUpperCase()}
+            </span>
+            <span class="flex-1 text-[11px] font-mono text-zinc-300 truncate capitalize">{c.label}</span>
+            <span class="text-[9px] font-mono text-zinc-700 shrink-0 truncate max-w-[160px]">{c.id}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- How to apply -->
+    <div class="mt-6 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:var(--c-card)">
+      <p class="text-[10px] font-mono text-zinc-600">
+        Changes are in-memory only. ▲/▼ reorders the <span class="text-zinc-400">CHARTS_PAGE_ORDER</span> array.
+        When done, click <span class="text-zinc-400">Copy JSON patch</span> — paste into
+        <span class="text-zinc-400">src/config/allCharts.ts</span> via the GitHub editor.
+      </p>
+    </div>
+
+  </div>
+</Base>
+
+<script>
+  const listEl    = document.getElementById("chart-list")!;
+  const rows      = () => Array.from(listEl.querySelectorAll<HTMLElement>(".chart-row"));
+  let activeFilter = "all";
+
+  // ── Track original order for change detection ─────────────────────────────
+  const originalOrder: Record<string, number> = {};
+  rows().forEach(r => { originalOrder[r.dataset.id!] = Number(r.dataset.order); });
+
+  // ── Move a row up or down ─────────────────────────────────────────────────
+  function move(row: HTMLElement, dir: number) {
+    const allRows = rows().filter(r => r.style.display !== "none");
+    const idx     = allRows.indexOf(row);
+    const swapIdx = idx + dir;
+    if (swapIdx < 0 || swapIdx >= allRows.length) return;
+
+    const sibling = allRows[swapIdx];
+
+    // Swap data-order values
+    const a = Number(row.dataset.order);
+    const b = Number(sibling.dataset.order);
+    row.dataset.order     = String(b);
+    sibling.dataset.order = String(a);
+    (row.querySelector(".chart-rank") as HTMLElement).textContent     = String(b);
+    (sibling.querySelector(".chart-rank") as HTMLElement).textContent = String(a);
+
+    // Move DOM nodes: for "down", insert row after sibling; for "up", insert row before sibling
+    if (dir > 0) {
+      sibling.after(row);   // row goes after sibling  → row moved down
+    } else {
+      sibling.before(row);  // row goes before sibling → row moved up
+    }
+    updateChanges();
+  }
+
+  // ── Delegated click on container (survives DOM reordering) ────────────────
+  listEl.addEventListener("click", (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>(".move-up, .move-dn");
+    if (!btn) return;
+    const row = btn.closest<HTMLElement>(".chart-row");
+    if (!row) return;
+    move(row, btn.classList.contains("move-up") ? -1 : 1);
+  });
+
+  function updateChanges() {
+    const changed = rows().filter(r =>
+      Number(r.dataset.order) !== originalOrder[r.dataset.id!]
+    );
+    const bar = document.getElementById("changes-bar")!;
+    bar.classList.toggle("hidden", changed.length === 0);
+    document.getElementById("change-count")!.textContent = String(changed.length);
+    // Highlight changed rows
+    rows().forEach(r => {
+      const isChanged = Number(r.dataset.order) !== originalOrder[r.dataset.id!];
+      const dot = r.querySelector(".changed-dot");
+      if (isChanged && !dot) {
+        const s = document.createElement("span");
+        s.className = "changed-dot text-[9px] font-mono text-gta-gold shrink-0";
+        s.textContent = "●";
+        r.querySelector(".flex")?.appendChild(s);
+      } else if (!isChanged && dot) {
+        dot.remove();
+      }
+    });
+  }
+
+  // ── View filter ───────────────────────────────────────────────────────────
+  document.querySelectorAll<HTMLButtonElement>(".chart-view-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeFilter = btn.dataset.filter!;
+      document.querySelectorAll<HTMLButtonElement>(".chart-view-filter").forEach(b => {
+        const active = b.dataset.filter === activeFilter;
+        b.style.borderColor = active ? "color-mix(in srgb,var(--c-brand) 40%,transparent)" : "";
+        b.style.color = active ? "var(--c-brand)" : "";
+      });
+      rows().forEach(r => {
+        r.style.display = (activeFilter === "all" || r.dataset.game === activeFilter) ? "" : "none";
+      });
+    });
+  });
+
+  // ── Copy patch ────────────────────────────────────────────────────────────
+  document.getElementById("copy-patch")?.addEventListener("click", () => {
+    const ordered = rows()
+      .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order))
+      .map(r => `  "${r.dataset.id}"`);
+    const patch = `// Paste this as the CHARTS_PAGE_ORDER array in src/config/allCharts.ts:\nexport const CHARTS_PAGE_ORDER = [\n${ordered.join(",\n")},\n];`;
+    navigator.clipboard.writeText(patch).then(() => {
+      const btn = document.getElementById("copy-patch")!;
+      const orig = btn.textContent;
+      btn.textContent = "Copied ✓";
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    });
+  });
+
+  // ── Reset ─────────────────────────────────────────────────────────────────
+  document.getElementById("reset-changes")?.addEventListener("click", () => {
+    // Re-sort rows back to originalOrder
+    const sorted = rows().sort((a, b) =>
+      originalOrder[a.dataset.id!] - originalOrder[b.dataset.id!]
+    );
+    sorted.forEach(r => {
+      const orig = originalOrder[r.dataset.id!];
+      r.dataset.order = String(orig);
+      (r.querySelector(".chart-rank") as HTMLElement).textContent = String(orig);
+      listEl.appendChild(r);
+    });
+    updateChanges();
+  });
+
+</script>

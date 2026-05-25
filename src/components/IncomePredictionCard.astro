@@ -14,6 +14,8 @@
  */
 import GamePill from "./GamePill.astro";
 import ShareDropdown from "./ShareDropdown.astro";
+import { TIER_STYLES } from "../config/tierStyles";
+import { C_CARD } from "../config/colors";
 
 interface Props {
   id: string;
@@ -40,11 +42,6 @@ const {
   detailHref,
 } = Astro.props;
 
-const TIER_STYLES = {
-  confirmed: { label: "CONFIRMED", badgeBg: "bg-emerald-900/20 border-emerald-500/60 text-emerald-200", bar: "bg-emerald-400", color: "text-emerald-300", border: "border-l-emerald-500" },
-  reported:  { label: "REPORTED",  badgeBg: "bg-amber-900/20 border-amber-500/60 text-amber-200",     bar: "bg-amber-400",   color: "text-amber-300",   border: "border-l-amber-500"   },
-  predicted: { label: "PREDICTED", badgeBg: "bg-zinc-700/30 border-zinc-400/50 text-zinc-100",         bar: "bg-zinc-400",    color: "text-zinc-200",    border: "border-l-zinc-500"    },
-};
 const tier = TIER_STYLES[confidence_tier] ?? TIER_STYLES.predicted;
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -65,13 +62,13 @@ const shareText = `GTA VI predicted income: ${name} — ${predicted_gta_per_hr ?
 <div
   id={anchorId}
   class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] group`}
-  style="background:#131316;scroll-margin-top:72px"
+  style="background:var(--c-card);scroll-margin-top:72px"
 >
   <!-- Image strip — pills float over it -->
   {thumbnail && (
     <div class="relative h-28 overflow-hidden">
       <img src={thumbnail} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
-      <div class="absolute inset-0" style="background:linear-gradient(to bottom,rgba(0,0,0,0.35) 0%,transparent 35%,#131316 100%)"></div>
+      <div class="absolute inset-0" style={`background:linear-gradient(to bottom,rgba(0,0,0,0.35) 0%,transparent 35%,${C_CARD} 100%)`}></div>
     </div>
   )}
 
@@ -127,7 +124,7 @@ const shareText = `GTA VI predicted income: ${name} — ${predicted_gta_per_hr ?
       <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Confidence</span>
       <span class={`text-[10px] font-mono font-semibold ${tier.color}`}>{confidence_score}%</span>
     </div>
-    <div class="h-0.5 rounded-full" style="background:#1e1e23">
+    <div class="h-0.5 rounded-full" style="background:var(--c-border-1)">
       <div class={`h-full rounded-full ${tier.bar} transition-all duration-700`} style={`width:${confidence_score}%`}></div>
     </div>
   </div>

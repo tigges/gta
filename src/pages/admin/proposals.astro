@@ -218,8 +218,8 @@ function getPredCurrent(id: string, field: string): string {
       navigator.clipboard.writeText(text).then(() => {
         const orig = btn.textContent;
         btn.textContent = "Copied ✓";
-        btn.style.borderColor = "rgba(245,158,11,0.5)";
-        btn.style.color = "#f59e0b";
+        btn.style.borderColor = "color-mix(in srgb,var(--c-brand) 50%,transparent)";
+        btn.style.color = "var(--c-brand)";
         setTimeout(() => {
           btn.textContent = orig;
           btn.style.borderColor = "";

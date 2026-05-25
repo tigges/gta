@@ -1,0 +1,340 @@
+---
+/**
+ * /admin/predictions — Prediction rank board.
+ * View and edit prediction titles, ranks, and page visibility.
+ * Changes are in-memory only; use "Copy JSON patch" to apply.
+ */
+import Base from "../../layouts/Base.astro";
+import predictionsRaw from "../../../data/gta-6/predictions.json";
+
+const predictions = [...(predictionsRaw as any).predictions]
+  .sort((a: any, b: any) => (a.display_order ?? 99) - (b.display_order ?? 99));
+
+const TIER_COLOR: Record<string, string> = {
+  confirmed: "text-emerald-300 border-emerald-500/40 bg-emerald-900/20",
+  reported:  "text-amber-300  border-amber-500/40  bg-amber-900/20",
+  predicted: "text-zinc-400   border-zinc-600       bg-zinc-800/40",
+};
+
+const HOME_LIMIT = predictions.filter((p: any) => (p.pages ?? []).includes("home")).length;
+const HUB_LIMIT  = predictions.filter((p: any) => (p.pages ?? []).includes("gta-vi")).length;
+---
+
+<Base title="Prediction Ranks" titleContext="gta-vi">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+
+    <!-- Header -->
+    <div class="mb-6 flex items-start justify-between flex-wrap gap-4">
+      <div>
+        <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">// Admin · Predictions</div>
+        <h1 class="text-2xl font-bold text-white">Prediction Rank Board</h1>
+        <p class="text-[11px] font-mono text-zinc-500 mt-1">
+          {predictions.length} predictions · Home shows top {HOME_LIMIT} · GTA VI hub shows top {HUB_LIMIT} · Intel shows all
+        </p>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- View filter -->
+        <div class="flex items-center gap-1 text-[10px] font-mono">
+          <span class="text-zinc-600 mr-1">View:</span>
+          {[
+            { id: "all",    label: `All ${predictions.length}` },
+            { id: "home",   label: `Home (${HOME_LIMIT})` },
+            { id: "gta-vi", label: `Hub (${HUB_LIMIT})` },
+            { id: "intel",  label: "Intel only" },
+          ].map(f => (
+            <button class="view-filter px-2.5 py-1 rounded border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+                    data-filter={f.id}>{f.label}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Changes bar (hidden until edits made) -->
+    <div id="changes-bar" class="hidden mb-4 rounded-lg border border-gta-gold/30 px-4 py-3 flex items-center justify-between gap-4" style="background:rgba(245,158,11,0.06)">
+      <span class="text-[11px] font-mono text-gta-gold"><span id="change-count">0</span> unsaved change(s)</span>
+      <div class="flex gap-2">
+        <button id="copy-patch" class="text-[11px] font-mono border border-gta-gold/40 text-gta-gold px-3 py-1 rounded hover:bg-gta-gold/10 transition-all">
+          Copy JSON patch
+        </button>
+        <button id="reset-changes" class="text-[11px] font-mono border border-zinc-700 text-zinc-500 px-3 py-1 rounded hover:border-zinc-600 hover:text-zinc-300 transition-all">
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Prediction list -->
+    <div id="pred-list" class="flex flex-col gap-1">
+      {predictions.map((p: any, i: number) => {
+        const pages = p.pages ?? [];
+        const onHome = pages.includes("home");
+        const onHub  = pages.includes("gta-vi");
+        const isHomeCutoff = p.display_order === HOME_LIMIT;
+        const isHubCutoff  = p.display_order === HUB_LIMIT;
+
+        return (
+          <>
+            <div
+              class="pred-row rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-colors group"
+              data-id={p.id}
+              data-order={p.display_order}
+              data-pages={JSON.stringify(pages)}
+              data-title={p.title}
+              data-short={p.short_value ?? ""}
+              data-tier={p.confidence_tier}
+              style="background:var(--c-card)"
+            >
+              <div class="flex items-center gap-3 px-3 py-2.5">
+
+                <!-- Rank number -->
+                <span class="pred-rank text-[11px] font-mono text-zinc-600 w-5 text-right shrink-0"
+                      style="font-variant-numeric:tabular-nums">{p.display_order}</span>
+
+                <!-- Move buttons -->
+                <div class="flex flex-col gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button class="move-up text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]" title="Move up">▲</button>
+                  <button class="move-dn text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]" title="Move down">▼</button>
+                </div>
+
+                <!-- Tier badge -->
+                <span class={`text-[8px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ${TIER_COLOR[p.confidence_tier] ?? TIER_COLOR.predicted}`}>
+                  {p.confidence_tier.slice(0, 4)}
+                </span>
+
+                <!-- Title (editable) -->
+                <span
+                  class="pred-title flex-1 text-[11px] font-mono text-zinc-200 cursor-text hover:text-white transition-colors min-w-0 truncate"
+                  contenteditable="true"
+                  spellcheck="false"
+                  title="Click to edit title"
+                >{p.title}</span>
+
+                <!-- short_value -->
+                {p.short_value && (
+                  <span class="text-[10px] font-mono text-zinc-600 shrink-0 hidden sm:block">→ {p.short_value}</span>
+                )}
+
+                <!-- Page pills -->
+                <div class="flex items-center gap-1 shrink-0">
+                  <button class="page-toggle text-[9px] font-mono px-1.5 py-0.5 rounded border transition-all"
+                          data-page="home"
+                          style={onHome ? "color:var(--c-brand);border-color:color-mix(in srgb,var(--c-brand) 40%,transparent);background:color-mix(in srgb,var(--c-brand) 8%,transparent)" : "color:var(--c-text-6);border-color:var(--c-border-2)"}>
+                    Home
+                  </button>
+                  <button class="page-toggle text-[9px] font-mono px-1.5 py-0.5 rounded border transition-all"
+                          data-page="gta-vi"
+                          style={onHub ? "color:var(--c-title-vi);border-color:color-mix(in srgb,var(--c-title-vi) 40%,transparent);background:color-mix(in srgb,var(--c-title-vi) 8%,transparent)" : "color:var(--c-text-6);border-color:var(--c-border-2)"}>
+                    Hub
+                  </button>
+                </div>
+
+                <!-- Confidence -->
+                <span class="text-[10px] font-mono text-zinc-600 shrink-0 w-7 text-right">{p.confidence}%</span>
+              </div>
+            </div>
+
+            {/* Cutoff markers */}
+            {isHomeCutoff && (
+              <div class="flex items-center gap-2 py-1 px-3">
+                <div class="flex-1 h-px bg-gta-gold/20"></div>
+                <span class="text-[9px] font-mono text-gta-gold/50 uppercase tracking-widest">↑ home page cutoff</span>
+                <div class="flex-1 h-px bg-gta-gold/20"></div>
+              </div>
+            )}
+            {isHubCutoff && !isHomeCutoff && (
+              <div class="flex items-center gap-2 py-1 px-3">
+                <div class="flex-1 h-px" style="background:rgba(255,107,157,0.2)"></div>
+                <span class="text-[9px] font-mono uppercase tracking-widest" style="color:rgba(255,107,157,0.5)">↑ hub page cutoff</span>
+                <div class="flex-1 h-px" style="background:rgba(255,107,157,0.2)"></div>
+              </div>
+            )}
+          </>
+        );
+      })}
+    </div>
+
+    <!-- How to apply footer -->
+    <div class="mt-6 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:var(--c-card)">
+      <p class="text-[10px] font-mono text-zinc-600">
+        Changes are in-memory only. Click titles to edit. Use ▲/▼ to rerank. Toggle Home/Hub pills for page visibility.
+        When done, click <span class="text-zinc-400">Copy JSON patch</span> and paste into
+        <span class="text-zinc-400">data/gta-6/predictions.json</span> via the GitHub editor.
+      </p>
+    </div>
+
+  </div>
+</Base>
+
+<script>
+  // ── State ─────────────────────────────────────────────────────────────────
+  interface PredState {
+    id: string; order: number; title: string; short: string;
+    pages: string[]; tier: string;
+  }
+
+  const rows = () => Array.from(document.querySelectorAll<HTMLElement>(".pred-row"));
+  let state: PredState[] = rows().map(r => ({
+    id:    r.dataset.id!,
+    order: parseInt(r.dataset.order!),
+    title: r.dataset.title!,
+    short: r.dataset.short ?? "",
+    pages: JSON.parse(r.dataset.pages!),
+    tier:  r.dataset.tier!,
+  }));
+
+  const original = JSON.parse(JSON.stringify(state));
+  let activeFilter = "all";
+
+  // ── Change tracking ───────────────────────────────────────────────────────
+  function countChanges(): number {
+    return state.filter((s, i) => {
+      const o = original[i];
+      return s.order !== o.order || s.title !== o.title ||
+             JSON.stringify(s.pages) !== JSON.stringify(o.pages);
+    }).length;
+  }
+
+  function updateChangesBar() {
+    const n = countChanges();
+    const bar = document.getElementById("changes-bar")!;
+    const cnt = document.getElementById("change-count")!;
+    bar.classList.toggle("hidden", n === 0);
+    cnt.textContent = String(n);
+  }
+
+  // ── Re-render list ────────────────────────────────────────────────────────
+  function rerender() {
+    const list = document.getElementById("pred-list")!;
+    const sorted = [...state].sort((a, b) => a.order - b.order);
+
+    // Filter
+    const filtered = sorted.filter(s => {
+      if (activeFilter === "home")   return s.pages.includes("home");
+      if (activeFilter === "gta-vi") return s.pages.includes("gta-vi");
+      if (activeFilter === "intel")  return !s.pages.includes("home") && !s.pages.includes("gta-vi");
+      return true;
+    });
+
+    // Update each existing row's rank display and button state
+    sorted.forEach((s, sortedIdx) => {
+      const row = list.querySelector<HTMLElement>(`.pred-row[data-id="${s.id}"]`);
+      if (!row) return;
+
+      // Show/hide based on filter
+      const visible = activeFilter === "all" || filtered.some(f => f.id === s.id);
+      row.style.display = visible ? "" : "none";
+
+      // Update rank
+      const rankEl = row.querySelector<HTMLElement>(".pred-rank");
+      if (rankEl) rankEl.textContent = String(s.order);
+
+      // Update page pills
+      row.querySelectorAll<HTMLButtonElement>(".page-toggle").forEach(btn => {
+        const page = btn.dataset.page!;
+        const active = s.pages.includes(page);
+        if (page === "home") {
+          btn.style.color = active ? "var(--c-brand)" : "var(--c-text-6)";
+          btn.style.borderColor = active ? "color-mix(in srgb,var(--c-brand) 40%,transparent)" : "var(--c-border-2)";
+          btn.style.background = active ? "color-mix(in srgb,var(--c-brand) 8%,transparent)" : "";
+        } else {
+          btn.style.color = active ? "var(--c-title-vi)" : "var(--c-text-6)";
+          btn.style.borderColor = active ? "color-mix(in srgb,var(--c-title-vi) 40%,transparent)" : "var(--c-border-2)";
+          btn.style.background = active ? "color-mix(in srgb,var(--c-title-vi) 8%,transparent)" : "";
+        }
+      });
+    });
+  }
+
+  // ── Move up/down ──────────────────────────────────────────────────────────
+  function moveRow(id: string, dir: -1 | 1) {
+    const sorted = [...state].sort((a, b) => a.order - b.order);
+    const idx = sorted.findIndex(s => s.id === id);
+    const swapIdx = idx + dir;
+    if (swapIdx < 0 || swapIdx >= sorted.length) return;
+    const a = sorted[idx], b = sorted[swapIdx];
+    [a.order, b.order] = [b.order, a.order];
+    state = state.map(s => sorted.find(x => x.id === s.id) ?? s);
+    rerender();
+    updateChangesBar();
+  }
+
+  // ── Event delegation ──────────────────────────────────────────────────────
+  document.getElementById("pred-list")!.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const row = target.closest<HTMLElement>(".pred-row");
+    if (!row) return;
+    const id = row.dataset.id!;
+
+    if (target.classList.contains("move-up")) { moveRow(id, -1); return; }
+    if (target.classList.contains("move-dn")) { moveRow(id,  1); return; }
+
+    if (target.classList.contains("page-toggle")) {
+      const page = target.dataset.page!;
+      const s = state.find(x => x.id === id)!;
+      s.pages = s.pages.includes(page)
+        ? s.pages.filter(p => p !== page)
+        : [...s.pages, page];
+      rerender();
+      updateChangesBar();
+    }
+  });
+
+  // Title edits
+  document.getElementById("pred-list")!.addEventListener("input", (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.classList.contains("pred-title")) return;
+    const id = target.closest<HTMLElement>(".pred-row")?.dataset.id;
+    if (!id) return;
+    const s = state.find(x => x.id === id);
+    if (s) s.title = target.textContent?.trim() ?? s.title;
+    updateChangesBar();
+  });
+
+  // ── View filter ───────────────────────────────────────────────────────────
+  document.querySelectorAll<HTMLButtonElement>(".view-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeFilter = btn.dataset.filter!;
+      document.querySelectorAll<HTMLButtonElement>(".view-filter").forEach(b => {
+        const active = b.dataset.filter === activeFilter;
+        b.style.borderColor = active ? "rgba(245,158,11,0.4)" : "";
+        b.style.color = active ? "#f59e0b" : "";
+      });
+      rerender();
+    });
+  });
+
+  // ── Copy JSON patch ───────────────────────────────────────────────────────
+  document.getElementById("copy-patch")?.addEventListener("click", () => {
+    const patch: Record<string, any> = {};
+    state.forEach((s, i) => {
+      const o = original.find((x: any) => x.id === s.id)!;
+      const changes: any = {};
+      if (s.order !== o.order)  changes.display_order = s.order;
+      if (s.title !== o.title)  changes.title = s.title;
+      if (JSON.stringify(s.pages) !== JSON.stringify(o.pages)) changes.pages = s.pages;
+      if (Object.keys(changes).length) patch[s.id] = changes;
+    });
+
+    const text = JSON.stringify(patch, null, 2);
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById("copy-patch")!;
+      const orig = btn.textContent;
+      btn.textContent = "Copied ✓";
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    });
+  });
+
+  // ── Reset ─────────────────────────────────────────────────────────────────
+  document.getElementById("reset-changes")?.addEventListener("click", () => {
+    state = JSON.parse(JSON.stringify(original));
+    // Restore title text in DOM
+    state.forEach(s => {
+      const titleEl = document.querySelector<HTMLElement>(`.pred-row[data-id="${s.id}"] .pred-title`);
+      if (titleEl) titleEl.textContent = s.title;
+    });
+    rerender();
+    updateChangesBar();
+  });
+
+  // Init
+  rerender();
+</script>

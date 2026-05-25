@@ -20,7 +20,7 @@ const SITE_BASE = import.meta.env.SITE ?? "https://gtavi.ai";
 
 const {
   title = "GTA VI.AI",
-  description = "Data-driven intelligence across every GTA generation — live signals, franchise analytics, and what the numbers say about GTA VI.",
+  description = "Follow the GTA$ — GTA's dual economy tracked, predicted and explained. In-game income, Shark Card mechanics, and what the numbers say about GTA VI.",
   ogImage,
   ogPage,
   titleContext,
@@ -59,10 +59,11 @@ const navGroups: NavGroup[] = [
     activePaths: ["/gta-vi", "/gta-vi/intel", "/gta-vi/trailers", "/gta-vi/economy", "/gta-vi/buy"],
     identityColor: "var(--c-title-vi)",
     dropdown: [
-      { href: "/gta-vi",          iconName: "intel",   label: "GTA VI Hub",          sub: "Predictions · charts · economy · overview" },
-      { href: "/gta-vi/intel",    iconName: "intel",   label: "Intel & Predictions", sub: "17 predictions · features · confirmed & reported" },
-      { href: "/gta-vi/trailers", iconName: "trailer", label: "Trailers & Analysis",  sub: "Trailer 1 & 2 · view velocity · entity index" },
-      { href: "/gta-vi/buy",      iconName: "buy",     label: "Pre-order GTA VI",    sub: "PS5 · Xbox Series X|S · edition guide" },
+      { href: "/gta-vi",          iconName: "intel",   label: "GTA VI",         sub: "Hub · predictions · charts · economy · overview" },
+      { href: "/gta-vi/intel",    iconName: "intel",   label: "Predictions",    sub: "Confidence-scored signals · confirmed & reported" },
+      { href: "/charts?title=gta-vi", iconName: "chart", label: "Charts",       sub: "GTA VI data charts · trends · release analysis" },
+      { href: "/gta-vi/economy",  iconName: "economy", label: "Economy",        sub: "Circular model · income sources · Shark Card" },
+      { href: "/gta-vi/buy",      iconName: "buy",     label: "Buy",            sub: "PS5 · Xbox Series X|S · edition comparison" },
     ],
   },
   {
@@ -149,7 +150,9 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
     <meta name="twitter:card"       content="summary_large_image" />
     <meta name="twitter:image"      content={resolvedOgImage} />
 
+    <link rel="icon" type="image/png" href="/assets/logos/gtavi_ai_logo_transparent.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/assets/logos/GTA_VI_AI_ICON.png" />
 
     <!-- Fonts: Inter (body) + JetBrains Mono (data) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -180,13 +183,22 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
         <div class="flex items-center gap-4">
           <span class="flex items-center gap-1.5">
             <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse"></span>
-            <span class="text-[10px] font-mono text-zinc-600 tracking-widest uppercase">Live intelligence</span>
+            <span class="text-[10px] font-mono text-zinc-400 tracking-widest uppercase">Follow the GTA$</span>
           </span>
           <span class="hidden sm:block text-[10px] font-mono text-zinc-500">GTA VI · Nov 19 2026</span>
         </div>
         <div class="flex items-center gap-2">
           <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTA VI.AI</span>
           <span class="text-[10px] font-mono text-zinc-500 border border-[#2a2a31] rounded px-1">{SITE_VERSION_LABEL}</span>
+          <span id="staging-badge" style="display:none" class="text-[10px] font-mono text-amber-400 border border-amber-500/40 bg-amber-500/10 rounded px-1.5 tracking-widest">staging</span>
+          <script is:inline>
+            if (location.hostname.includes("staging") || location.hostname.includes("pages.dev")) {
+              document.getElementById("staging-badge").style.display = "inline";
+            }
+          </script>
+          {import.meta.env.SITE?.includes("staging") && (
+            <span class="text-[10px] font-mono text-amber-400 border border-amber-500/40 bg-amber-500/10 rounded px-1.5 tracking-widest">staging</span>
+          )}
         </div>
       </div>
     </div>
@@ -329,7 +341,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
             <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
             <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Live this week</span>
             <span class="text-[11px] font-mono text-gta-teal capitalize">{liveStripText}</span>
-            <span class="ml-auto text-[10px] font-mono text-zinc-500 group-hover/ls:text-zinc-500 transition-colors">See all →</span>
+            <span class="ml-auto text-[10px] font-mono text-zinc-700 group-hover/ls:text-zinc-500 transition-colors">See all →</span>
           </a>
         </div>
       </div>
@@ -355,7 +367,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
           </div>
           <!-- Cover strip — all 8 titles, one tap each -->
           <div class="flex items-center gap-3">
-            <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest shrink-0">All titles</span>
+            <span class="text-[10px] font-mono text-zinc-700 uppercase tracking-widest shrink-0">All titles</span>
             {([
               { id: "gta-1",  year: "1997", href: "/franchise" },
               { id: "gta-2",  year: "1999", href: "/franchise" },
@@ -369,7 +381,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
               <a href={t.href} class="group/cv flex flex-col items-center gap-1">
                 <img src={`/assets/covers/${t.id}.jpg`} alt={t.id.toUpperCase()}
                      class="w-9 h-12 object-cover rounded border border-[#2a2a31] group-hover/cv:border-gta-gold/40 transition-colors" loading="lazy" />
-                <span class="text-[10px] font-mono text-zinc-500 group-hover/cv:text-zinc-500 transition-colors">{t.year}</span>
+                <span class="text-[9px] font-mono text-zinc-700 group-hover/cv:text-zinc-500 transition-colors">{t.year}</span>
               </a>
             ))}
           </div>
@@ -389,29 +401,56 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 
     <!-- Footer -->
     <footer class="border-t border-[#1e1e23] mt-24" style="background:#0a0a0d">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+
+      <!-- About section -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 border-b border-[#1e1e23]">
+        <div class="text-[9px] font-mono text-zinc-600 tracking-[0.25em] uppercase mb-5">// About GTAVI.AI</div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-10 gap-y-6">
           <div>
-            <!-- Wordmark mirrors nav logo -->
-            <div class="font-mono font-bold text-xl mb-1 leading-none tracking-tight flex items-center gap-1">
-              <span class="text-white mr-1">GTA</span><span class="text-gta-gold">VI</span>
-              <span class="text-sm font-mono font-bold text-white border-2 border-zinc-200/70 rounded pl-0.5 pr-1.5 py-0.5 tracking-widest leading-none">.AI</span>
-            </div>
-            <p class="text-xs text-zinc-500 font-mono max-w-sm mt-2">
-              Community data project. Not affiliated with Rockstar Games or Take-Two Interactive.<br />
-              All game assets © Rockstar Games / Take-Two Interactive.
+            <div class="text-[9px] font-mono tracking-[0.2em] uppercase mb-2" style="color:var(--c-live)">The mission</div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">
+              GTAVI.AI follows the GTA$ — the in-game currency, the Shark Card
+              economy, and the real-world revenue machine behind both.
             </p>
           </div>
-          <div class="flex flex-col items-start sm:items-end gap-1">
-            <div class="flex items-center gap-1.5">
-              <span class="w-1.5 h-1.5 rounded-full bg-gta-teal"></span>
-              <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">Data refreshed nightly</span>
-            </div>
-            <span class="text-[10px] font-mono text-zinc-500">GTA VI launches Nov 19, 2026</span>
-            <span class="text-[10px] font-mono text-zinc-500">{SITE_VERSION_LABEL} · {SITE_VERSION_DATE}</span>
+          <div>
+            <div class="text-[9px] font-mono tracking-[0.2em] uppercase mb-2" style="color:var(--c-brand)">The method</div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">
+              Every income source ranked. Every nerf tracked. Every GTA VI
+              prediction confidence-scored from 30 years of franchise data.
+            </p>
+          </div>
+          <div>
+            <div class="text-[9px] font-mono tracking-[0.2em] uppercase mb-2" style="color:var(--c-text-4)">The assets</div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">
+              The trailers are evidence. The database is the ledger.
+              The charts are the record.
+            </p>
           </div>
         </div>
       </div>
+
+      <!-- Bottom bar -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <!-- Wordmark -->
+          <div class="font-mono font-bold text-xl leading-none tracking-tight flex items-center gap-1">
+            <span class="text-white mr-1">GTA</span><span class="text-gta-gold">VI</span>
+            <span class="text-sm font-mono font-bold text-white border-2 border-zinc-200/70 rounded pl-0.5 pr-1.5 py-0.5 tracking-widest leading-none">.AI</span>
+          </div>
+          <!-- Legal links — centre -->
+          <div class="flex items-center gap-4">
+            <a href="/terms"   class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Terms</a>
+            <a href="/privacy" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Privacy</a>
+          </div>
+          <!-- Data note — right -->
+          <div class="flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-gta-teal"></span>
+            <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">Data refreshed nightly</span>
+          </div>
+        </div>
+      </div>
+
     </footer>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -453,7 +492,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
                   <span class="font-semibold text-zinc-200 text-sm">{group.label}</span>
                   <span class="text-zinc-600 text-xs">→</span>
                 </div>
-                <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:var(--o-tertiary)`}></span>
+                <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.6`}></span>
                 {hasHub && group.dropdown && (
                   <span class="text-[10px] font-mono text-zinc-600 leading-snug">
                     {group.dropdown.slice(1).map(d => d.label).join(" · ")}
@@ -470,7 +509,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
                   <span class="font-semibold text-zinc-200 text-sm">{group.label}</span>
                   <span class="text-zinc-600 text-xs">›</span>
                 </div>
-                <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:var(--o-tertiary)`}></span>
+                <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.6`}></span>
                 <span class="text-[10px] font-mono text-zinc-600 leading-snug">
                   {group.dropdown.map(d => d.label).join(" · ")}
                 </span>
@@ -504,7 +543,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
               All
             </button>
             <span class="text-sm font-semibold text-zinc-200">{group.label}</span>
-            <span class="ml-auto w-6 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:var(--o-secondary)`}></span>
+            <span class="ml-auto w-6 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.7`}></span>
           </div>
           <!-- Sub-destination list — flat, one tap each -->
           <div class="flex-1 p-4 flex flex-col gap-3">
@@ -568,9 +607,6 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 
       // Close on Escape
       document.addEventListener("keydown", e => { if (e.key === "Escape") closeAllPanels(); });
-
-      // Close on scroll (desktop panel stays anchored to header, but feels broken when scrolled)
-      window.addEventListener("scroll", closeAllPanels, { passive: true });
 
       // ── Mobile nav logic ─────────────────────────────────────────────────────
       const mobileNav   = document.getElementById("mobile-nav");

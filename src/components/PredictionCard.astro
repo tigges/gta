@@ -1,5 +1,6 @@
 ---
 import { C_CARD } from "../config/colors";
+import { TIER_STYLES } from "../config/tierStyles";
 import GamePill from "./GamePill.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 
@@ -43,21 +44,6 @@ const {
 
 const predAnchorId = cardId ?? `pred-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0,40)}`;
 
-const TIER_STYLES = {
-  confirmed: {
-    label: "CONFIRMED", color: "text-emerald-300", bar: "bg-emerald-400",
-    border: "border-l-gta-teal", badgeBg: "bg-emerald-900/20 border-emerald-500/60 text-emerald-200",
-  },
-  reported: {
-    label: "REPORTED", color: "text-amber-300", bar: "bg-amber-400",
-    border: "border-l-gta-gold", badgeBg: "bg-amber-900/20 border-amber-500/60 text-amber-200",
-  },
-  predicted: {
-    label: "PREDICTED", color: "text-zinc-200", bar: "bg-zinc-400",
-    border: "border-l-zinc-500", badgeBg: "bg-zinc-700/30 border-zinc-400/50 text-zinc-100",
-  },
-};
-
 const tier = TIER_STYLES[confidence_tier] ?? TIER_STYLES.predicted;
 const showRange = prediction_range && prediction_range.low !== prediction_range.high;
 
@@ -80,13 +66,13 @@ const valueFontClass =
   <div
     id={predAnchorId}
     class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current group h-full`}
-    style="background:#131316;scroll-margin-top:72px"
+    style="background:var(--c-card);scroll-margin-top:72px"
   >
     <!-- Thumbnail: always h-32, dark fallback if absent -->
     <div class="relative h-32 overflow-hidden shrink-0">
       {thumbnail
         ? <img src={thumbnail} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
-        : <div class="w-full h-full" style="background:#0e0e11" />
+        : <div class="w-full h-full" style="background:var(--c-bg)" />
       }
       <div class="absolute inset-0" style={`background:linear-gradient(to bottom,rgba(0,0,0,0.45) 0%,transparent 40%,${C_CARD} 100%)`}></div>
       <!-- Pills float over thumbnail -->
@@ -121,7 +107,7 @@ const valueFontClass =
           <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Confidence</span>
           <span class={`text-[10px] font-mono font-semibold ${tier.color}`}>{confidence}%</span>
         </div>
-        <div class="h-0.5 rounded-full" style="background:#1e1e23">
+        <div class="h-0.5 rounded-full" style="background:var(--c-border-1)">
           <div class={`h-full rounded-full ${tier.bar} transition-all duration-700`} style={`width:${confidence}%`}></div>
         </div>
       </div>
@@ -142,7 +128,7 @@ const valueFontClass =
   <div
     id={predAnchorId}
     class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current group`}
-    style="background:#131316;scroll-margin-top:72px"
+    style="background:var(--c-card);scroll-margin-top:72px"
   >
     {thumbnail && (
       <div class="relative h-28 overflow-hidden">
@@ -178,7 +164,7 @@ const valueFontClass =
         <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Confidence</span>
         <span class={`text-[11px] font-mono font-semibold ${tier.color}`}>{confidence}%</span>
       </div>
-      <div class="h-0.5 rounded-full" style="background:#1e1e23">
+      <div class="h-0.5 rounded-full" style="background:var(--c-border-1)">
         <div class={`h-full rounded-full ${tier.bar} transition-all duration-700`} style={`width:${confidence}%`}></div>
       </div>
     </div>
@@ -224,7 +210,7 @@ const valueFontClass =
     </div>
 
     {outcome_verified && outcome_actual && (
-      <div class="px-4 py-2 border-t border-gta-teal/30" style="background:#0a1a0e">
+      <div class="px-4 py-2 border-t border-gta-teal/30" style="background:color-mix(in srgb,var(--c-growth) 8%,var(--c-bg-deep))">
         <div class="text-[11px] font-mono text-gta-teal uppercase tracking-widest mb-0.5">Actual</div>
         <p class="text-[11px] font-mono text-gta-teal font-semibold">{outcome_actual}</p>
       </div>

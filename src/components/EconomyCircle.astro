@@ -1,105 +1,446 @@
 ---
 /**
- * EconomyCircle.astro — simplified fixed circular economy diagram.
+ * EconomyCircle.astro — GTA circular economy diagram v9.
  *
- * Three-column visual: Income (Y) · Player (Balance) · Expenditure (C+I)
- * Color-coded: teal left, gold centre, amber right.
- * Pure HTML/CSS — no JavaScript, no D3.
- * Works for any GTA title. Pass fullEconomyHref for the "Full model →" link.
+ * Layout:
+ *   Row 1 (full): INJECTION — Shark Card | ROCKSTAR INJECTION J↓ | GTA+
+ *   Row 2 (mid):  INCOME super-header (left) | Circle (centre) | EXPENDITURE super-header (right)
+ *   Row 3 (bot):  INCOME (left, 40%) | CONSUMPTION (centre, 30%) | INVESTMENT (right, 30%)
+ *
+ * Equation: INCOME [=] CONSUMPTION [+] INVESTMENT
+ * Y, C, I letters on TOP BORDERS of each box.
+ * Injection ring arc centred at 12 o'clock (injection blue at top).
  */
-import GamePill from "./GamePill.astro";
+import HudIcon from "./HudIcon.astro";
 
 interface Props {
-  game?: "gta-vi" | "gta-online" | "gta-v" | "gta-sa" | "gta-vc" | "gta-iv" | "gta-iii" | "franchise";
   fullEconomyHref?: string;
 }
-
-const { game = "gta-online", fullEconomyHref } = Astro.props;
+const { fullEconomyHref } = Astro.props;
 ---
 
-<div class="w-full rounded-xl border border-[#1e1e23] overflow-hidden" style="background:var(--c-card)">
+<div class="eco-wrap">
 
-  <!-- Column grid -->
-  <div class="grid grid-cols-3 min-h-[160px]">
-
-    <!-- LEFT: Income (Y) — teal -->
-    <div class="flex flex-col justify-between p-4 border-r border-[#1e1e23]"
-         style="border-left:3px solid var(--c-live);background:rgba(13,148,136,0.04)">
-      <div>
-        <div class="text-4xl font-mono font-black leading-none mb-1" style="color:var(--c-live)">Y</div>
-        <div class="text-[10px] font-mono uppercase tracking-[0.2em] mb-3" style="color:var(--c-live)">Income</div>
-        <div class="flex flex-col gap-1">
-          <span class="text-[10px] font-mono text-zinc-500">● Active earn</span>
-          <span class="text-[10px] font-mono text-zinc-500">● Business cycles</span>
-          <span class="text-[10px] font-mono text-zinc-500">● Passive returns</span>
-        </div>
+  <!-- ── ROW 1: INJECTION (full width) ──────────────────────────────── -->
+  <div class="inject-row">
+    <div class="inject-inner">
+      <div class="inject-item">
+        <div class="blip" style="--bc:var(--c-title-online)"><HudIcon name="shark-card" size={28} style="color:#fff"/></div>
+        <span class="item-label" style="color:var(--c-title-online)">Shark Card</span>
       </div>
-      <div class="text-[10px] font-mono uppercase tracking-widest mt-3" style="color:var(--c-live)">
-        Y grows → next cycle
+
+      <div class="inject-centre">
+        <span class="rockstar-label">Rockstar</span>
+        <span class="inject-title">INJECTION</span>
+        <span class="j-arrow">J &#8595;</span>
+      </div>
+
+      <div class="inject-item">
+        <div class="blip" style="--bc:var(--c-title-online)"><HudIcon name="subscription" size={28} style="color:#fff"/></div>
+        <span class="item-label" style="color:var(--c-title-online)">GTA+</span>
       </div>
     </div>
-
-    <!-- CENTRE: Player (Balance) — gold -->
-    <div class="flex flex-col items-center justify-center p-4 border-r border-[#1e1e23] gap-3"
-         style="background:rgba(245,158,11,0.03)">
-      <div class="flex items-center gap-2 w-full justify-center">
-        <span class="text-lg font-mono" style="color:var(--c-live)">←</span>
-        <div class="text-center">
-          <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600 mb-0.5">Player</div>
-          <div class="text-sm font-mono font-black" style="color:var(--c-brand)">Balance</div>
-          <div class="text-[10px] font-mono text-zinc-500">GTA$</div>
-        </div>
-        <span class="text-lg font-mono" style="color:var(--c-brand)">→</span>
-      </div>
-      <div class="w-full border-t border-[#1e1e23] pt-2.5 text-center">
-        <div class="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-0.5">+ J Injection</div>
-        <div class="text-[10px] font-mono text-zinc-500">Shark Cards · GTA+</div>
-      </div>
-    </div>
-
-    <!-- RIGHT: Expenditure (C+I) — amber -->
-    <div class="flex flex-col justify-between p-4"
-         style="border-right:3px solid var(--c-brand);background:rgba(245,158,11,0.04)">
-      <div>
-        <div class="text-4xl font-mono font-black leading-none mb-1" style="color:var(--c-brand)">C+I</div>
-        <div class="text-[10px] font-mono uppercase tracking-[0.2em] mb-3" style="color:var(--c-brand)">Expenditure</div>
-        <div class="flex flex-col gap-2">
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-[11px] font-mono font-bold" style="color:var(--c-alert)">C</span>
-              <span class="text-[10px] font-mono text-zinc-500">Consumption</span>
-            </div>
-            <div class="text-[10px] font-mono text-zinc-500 pl-4">Ammo · clothes · services</div>
-          </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-[11px] font-mono font-bold" style="color:var(--c-brand)">I</span>
-              <span class="text-[10px] font-mono text-zinc-500">Investment</span>
-            </div>
-            <div class="text-[10px] font-mono text-zinc-500 pl-4">Property · businesses · assets</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-[10px] font-mono uppercase tracking-widest mt-3" style="color:var(--c-brand)">
-        I returns to Y
-      </div>
-    </div>
+    <span class="online-note">&#42; Only in GTA Online for now</span>
   </div>
 
-  <!-- Footer: formula + game pill + full economy link -->
-  <div class="px-4 py-2.5 border-t border-[#1e1e23] flex items-center justify-between gap-3 flex-wrap"
-       style="background:rgba(0,0,0,0.2)">
-    <div class="flex items-center gap-2.5">
-      <GamePill {game} size="xs" />
-      <span class="text-[10px] font-mono text-zinc-500 tracking-widest">(Y + J) = C + I</span>
+  <!-- ── ROW 2: INCOME super-header · Circle · EXPENDITURE super-header ── -->
+  <div class="mid-row">
+
+    <!-- INCOME super-header — mirrors EXPENDITURE on right -->
+    <div class="income-super">
+      <div class="income-super-inner">
+        <HudIcon name="dollar" size={26} style="color:var(--c-income)"/>
+        <span class="income-title">INCOME</span>
+      </div>
     </div>
-    {fullEconomyHref && (
-      <a href={fullEconomyHref}
-         class="text-[11px] font-mono uppercase tracking-widest transition-colors"
-         style="color:var(--c-brand);opacity:var(--o-secondary)"
-         onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='var(--o-secondary)'">
-        Full model →
+
+    <!-- Circle hub -->
+    <div class="circle-hub">
+      <!-- Income arrow in (green, pointing right into circle) -->
+      <div class="tri-in"></div>
+
+      <!-- Circle ring -->
+      <div class="ring-wrap">
+        <div class="ring"></div>
+        <div class="ring-centre">
+          <HudIcon name="bank" size={28} style="color:var(--c-title-online)"/>
+          <span class="gta-label">GTA$</span>
+        </div>
+      </div>
+
+      <!-- Expenditure arrow out (orange, pointing right out of circle) -->
+      <div class="tri-out"></div>
+    </div>
+
+    <!-- EXPENDITURE super-header — spans right half -->
+    <div class="expend-super">
+      <div class="expend-super-inner">
+        <HudIcon name="buy" size={26} style="color:var(--c-flow-spending)"/>
+        <span class="expend-title">EXPENDITURE</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── ROW 3: Three boxes with Y/C/I top border labels ───────────── -->
+  <div class="box-row">
+
+    <!-- INCOME box -->
+    <div class="box income-box">
+      <div class="box-top-label" style="color:var(--c-growth)">Y</div>
+      <div class="box-inner">
+        <div class="box-header">
+          <span class="box-title" style="color:var(--c-growth)">INCOME</span>
+          <span class="cycle-note" style="color:var(--c-growth)">Y grows &#8594; next cycle</span>
+        </div>
+        <div class="icon-row">
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-live)"><HudIcon name="mission" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Missions</span>
+          </div>
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-growth)"><HudIcon name="passive" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Passive</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- = divider -->
+    <div class="divider-eq">
+      <span class="eq-sign">=</span>
+    </div>
+
+    <!-- CONSUMPTION box -->
+    <div class="box consump-box">
+      <div class="box-top-label" style="color:var(--c-flow-spending)">C</div>
+      <div class="box-inner">
+        <div class="box-header">
+          <span class="box-title" style="color:var(--c-flow-spending)">CONSUMPTION</span>
+        </div>
+        <div class="icon-row">
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-flow-spending)"><HudIcon name="clothing" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Clothing</span>
+          </div>
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-flow-spending)"><HudIcon name="ammo" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Ammo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- + divider -->
+    <div class="divider-plus">
+      <span class="plus-sign">+</span>
+    </div>
+
+    <!-- INVESTMENT box -->
+    <div class="box invest-box">
+      <div class="box-top-label" style="color:var(--c-economy)">I</div>
+      <div class="box-inner">
+        <div class="box-header">
+          <span class="box-title" style="color:var(--c-economy)">INVESTMENT</span>
+          <span class="cycle-note" style="color:var(--c-economy)">I returns to Y &#8594;</span>
+        </div>
+        <div class="icon-row">
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-economy)"><HudIcon name="property" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Property</span>
+          </div>
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-economy)"><HudIcon name="briefcase" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Business</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {fullEconomyHref && (
+    <div class="eco-footer">
+      <a href={fullEconomyHref} class="full-link"
+         onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+        Full model &#8594;
       </a>
-    )}
-  </div>
+    </div>
+  )}
+
 </div>
+
+<style>
+/* ── Root ─────────────────────────────────────────────────────────── */
+.eco-wrap {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--c-border-1);
+  overflow: hidden;
+  background: var(--c-card);
+  font-family: var(--font-mono,monospace);
+}
+
+/* ── Row 1: Injection ──────────────────────────────────────────────── */
+.inject-row {
+  position: relative;
+  border-bottom: 1px solid var(--c-border-1);
+  background: color-mix(in srgb, var(--c-title-online) 5%, transparent);
+  padding: 12px 16px;
+}
+.inject-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+}
+.inject-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.item-label  { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
+.inject-centre { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.rockstar-label { font-size: 9px; color: var(--c-title-online); opacity: var(--o-tertiary); letter-spacing: .25em; text-transform: uppercase; }
+.inject-title { font-size: 2rem; font-weight: 900; line-height: 1; color: var(--c-title-online); }
+.j-arrow { font-size: 1.1rem; font-weight: 700; color: var(--c-title-online); }
+.online-note {
+  position: absolute; top: 8px; right: 12px;
+  font-size: 8px; color: var(--c-text-5); opacity: var(--o-secondary);
+}
+
+/* ── Row 2: INCOME super-header · Circle · EXPENDITURE super-header ── */
+.mid-row {
+  display: grid;
+  grid-template-columns: 40% auto 1fr;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--c-border-1);
+  background: rgba(0,0,0,0.2);
+}
+
+/* INCOME super-header — mirrors EXPENDITURE, right-aligned to sit flush with left arrow */
+.income-super {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 12px;
+}
+.income-super-inner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
+  border: 1.5px solid color-mix(in srgb, var(--c-income) 35%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--c-income) 7%, transparent);
+}
+.income-title {
+  font-size: clamp(1rem,2.5vw,1.6rem);
+  font-weight: 900;
+  color: var(--c-income);
+  letter-spacing: -.01em;
+}
+
+.circle-hub {
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 0;
+  justify-content: center;
+}
+.ring-wrap {
+  position: relative;
+  width: 120px; height: 120px;
+  flex-shrink: 0;
+  z-index: 5;
+}
+.ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  /* from 137.5deg puts the injection (teal-blue) arc centred at 12 o'clock */
+  background: conic-gradient(
+    from 137.5deg,
+    var(--c-economy)        0deg  75deg,
+    var(--c-growth)        75deg 200deg,
+    var(--c-title-online) 200deg 245deg,
+    var(--c-flow-spending) 245deg 325deg,
+    var(--c-economy)      325deg 360deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 42px, black 44px);
+  mask:         radial-gradient(circle, transparent 42px, black 44px);
+  opacity: .95;
+}
+.ring-centre {
+  position: absolute; inset: 14px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c-bg-deep) 90%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--c-title-online) 30%, transparent);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 2px;
+}
+.gta-label { font-size: 11px; font-weight: 900; color: var(--c-title-online); }
+
+/* CSS triangle arrows */
+.tri-in {
+  width: 0; height: 0;
+  border-top: 22px solid transparent;
+  border-bottom: 22px solid transparent;
+  border-left: 28px solid color-mix(in srgb, var(--c-growth) 80%, transparent);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--c-growth) 40%, transparent));
+}
+.tri-out {
+  width: 0; height: 0;
+  border-top: 22px solid transparent;
+  border-bottom: 22px solid transparent;
+  border-left: 28px solid color-mix(in srgb, var(--c-flow-spending) 80%, transparent);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--c-flow-spending) 40%, transparent));
+}
+
+/* EXPENDITURE super-header */
+.expend-super {
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+}
+.expend-super-inner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
+  border: 1.5px solid color-mix(in srgb, var(--c-flow-spending) 35%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--c-flow-spending) 7%, transparent);
+}
+.expend-title {
+  font-size: clamp(1rem,2.5vw,1.6rem);
+  font-weight: 900;
+  color: var(--c-flow-spending);
+  letter-spacing: -.01em;
+}
+
+/* ── Row 3: Three boxes ────────────────────────────────────────────── */
+.box-row {
+  display: flex;
+  align-items: stretch;
+}
+.box {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+.income-box  { background: rgba(15,55,20,.9);  }
+.consump-box { background: rgba(50,18,4,.85);  }
+.invest-box  { background: rgba(22,18,50,.85); }
+
+/* Y / C / I on the top border */
+.box-top-label {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  font-weight: 900;
+  background: var(--c-card);
+  padding: 0 4px;
+  z-index: 10;
+  line-height: 1;
+}
+
+.box-inner { padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+/* flex-wrap lets cycle-note push right on desktop and reflow on mobile */
+.box-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.box-title { font-size: clamp(.8rem,2vw,1.1rem); font-weight: 900; line-height: 1; }
+.icon-row { display: flex; gap: 12px; }
+.icon-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.icon-label { font-size: 8px; color: rgba(255,255,255,.65); text-align: center; }
+
+/* Cycle note — lives in box-header, pushed to the right */
+.cycle-note {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  opacity: .65;
+  margin-left: auto;
+  text-align: right;
+}
+
+/* = and + dividers */
+.divider-eq, .divider-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  flex-shrink: 0;
+  background: rgba(0,0,0,.3);
+  border-left: 1px solid var(--c-border-1);
+  border-right: 1px solid var(--c-border-1);
+}
+.eq-sign   { font-size: 1.4rem; font-weight: 900; color: var(--c-flow-spending); }
+.plus-sign { font-size: 1.4rem; font-weight: 900; color: var(--c-economy); }
+
+/* ── Blip sizes ────────────────────────────────────────────────────── */
+.blip, .blip-sm, .blip-lg {
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--bc) 25%, transparent);
+  border: 2px solid color-mix(in srgb, var(--bc) 55%, transparent);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.blip    { width: 52px; height: 52px; }
+.blip-sm { width: 36px; height: 36px; border-width: 1.5px; }
+.blip-lg { width: 52px; height: 52px; border-width: 2px; }
+
+/* ── Optional full-model footer ─────────────────────────────────────── */
+.eco-footer {
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 8px 16px;
+  border-top: 1px solid var(--c-border-1);
+  background: var(--c-card);
+}
+.full-link {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--c-brand); opacity: .6; text-decoration: none; transition: opacity .2s;
+}
+
+/* ── Mobile (≤599px) ─────────────────────────────────────────────────── */
+@media (max-width: 599px) {
+  /* Injection row: tighter gap, smaller headline */
+  .inject-inner  { gap: 16px; }
+  .inject-title  { font-size: 1.4rem; }
+  .blip          { width: 42px; height: 42px; }
+
+  /* Mid-row: hide flanking super-headers, show circle only */
+  .income-super,
+  .expend-super  { display: none; }
+  .mid-row       { display: flex; justify-content: center; padding: 10px 16px; }
+
+  /* Circle: slightly smaller */
+  .ring-wrap     { width: 96px; height: 96px; }
+  .ring {
+    -webkit-mask: radial-gradient(circle, transparent 33px, black 35px);
+    mask:         radial-gradient(circle, transparent 33px, black 35px);
+  }
+  .ring-centre   { inset: 10px; }
+  .gta-label     { font-size: 9px; }
+
+  /* Arrows: smaller */
+  .tri-in, .tri-out {
+    border-top-width:    16px;
+    border-bottom-width: 16px;
+    border-left-width:   20px;
+  }
+
+  /* Box row: compact padding */
+  .box-inner     { padding: 10px 8px; gap: 6px; }
+  .box-title     { font-size: .7rem; }
+
+  /* Icons: stack vertically, each item becomes a horizontal blip+label row */
+  .icon-row      { flex-direction: column; gap: 4px; }
+  .icon-item     { flex-direction: row; gap: 8px; align-items: center; }
+  .blip-lg       { width: 42px; height: 42px; border-width: 2px; }
+  .icon-label    { font-size: 8px; text-align: left; }
+
+  /* Cycle note: drop margin-left:auto so it spans full width below title */
+  .cycle-note    { margin-left: 0; width: 100%; letter-spacing: 0; }
+
+  /* Dividers: narrower */
+  .divider-eq,
+  .divider-plus  { width: 16px; }
+  .eq-sign,
+  .plus-sign     { font-size: .9rem; }
+}
+</style>
