@@ -1,13 +1,14 @@
 ---
 /**
- * EconomyCircle.astro — GTA circular economy diagram v5.
+ * EconomyCircle.astro — GTA circular economy diagram v7.
  *
- * - INJECTION as big header, Rockstar as subtitle
- * - Y / INCOME same visual weight; C+I / EXPENDITURE same
- * - Icons: large 64px blip circles, 30px icons — immediately visible
- * - No left border on income box (cards below already carry green)
- * - C and I sections properly sized and vertically proportioned
- * - Formula tiny in footer
+ * Bold hero-scale redesign:
+ * - "INCOME" / "EXPENDITURE" text fills the box like a poster header
+ * - 80px blip icons — immediately legible, GTA map-blip style
+ * - Large CSS triangle arrows flanking the circle
+ * - Rich vivid backgrounds: forest green / dark burnt orange
+ * - CONSUMPTION / INVESTMENT as clear sub-sections in the right box
+ * - INJECTION centered above with Shark Card + GTA+ blips (real images when available)
  */
 import HudIcon from "./HudIcon.astro";
 import GamePill from "./GamePill.astro";
@@ -20,32 +21,30 @@ interface Props {
 const { game = "gta-online", fullEconomyHref } = Astro.props;
 ---
 
-<div class="w-full rounded-xl border border-[#1e1e23] overflow-hidden" style="background:var(--c-card)">
+<div class="w-full rounded-xl border border-[#1e1e23] overflow-hidden eco-root">
 
-  <!-- ── INJECTION — top section, centred ────────────────────────────── -->
-  <div class="relative border-b border-[#1e1e23]" style="background:rgba(0,212,232,0.05)">
-    <div class="flex flex-col items-center gap-2 py-4">
-      <!-- Sub-label: Rockstar -->
-      <span class="text-[10px] font-mono uppercase tracking-[0.3em]" style="color:var(--c-title-online);opacity:0.6">Rockstar</span>
-      <!-- Main title: INJECTION -->
-      <span class="text-3xl font-mono font-black leading-none" style="color:var(--c-title-online)">INJECTION</span>
-      <!-- Icons + down arrow -->
-      <div class="flex items-center gap-10 mt-1">
-        <div class="flex flex-col items-center gap-1.5" style="opacity:0.45">
-          <div class="blip-lg" style="--blip-col:var(--c-title-online,#00d4e8)">
-            <HudIcon name="shark-card" size={28} style="color:#fff" />
+  <!-- ── INJECTION — centred above ─────────────────────────────────────── -->
+  <div class="relative border-b border-[#1e1e23] inject-bar">
+    <div class="flex flex-col items-center gap-2 py-4 px-4">
+      <span class="text-[10px] font-mono uppercase tracking-[0.35em]" style="color:var(--c-title-online);opacity:0.6">Rockstar</span>
+      <span class="text-4xl font-mono font-black leading-none" style="color:var(--c-title-online)">INJECTION</span>
+      <div class="flex items-center gap-12 mt-2">
+        <!-- Shark Card blip (muted — GTA Online only) -->
+        <div class="flex flex-col items-center gap-2" style="opacity:0.5">
+          <div class="blip-xl" style="--bc:var(--c-title-online,#00d4e8)">
+            <HudIcon name="shark-card" size={36} style="color:#fff" />
           </div>
           <span class="text-[9px] font-mono" style="color:var(--c-title-online)">Shark Card</span>
         </div>
-
-        <div class="flex flex-col items-center gap-1">
-          <span class="text-2xl font-mono font-black" style="color:var(--c-title-online)">J</span>
-          <span class="text-base font-bold" style="color:var(--c-title-online)">&#8595;</span>
+        <!-- J arrow down -->
+        <div class="flex flex-col items-center gap-0">
+          <span class="text-3xl font-mono font-black" style="color:var(--c-title-online)">J</span>
+          <span class="text-xl font-bold" style="color:var(--c-title-online)">&#8595;</span>
         </div>
-
-        <div class="flex flex-col items-center gap-1.5" style="opacity:0.45">
-          <div class="blip-lg" style="--blip-col:var(--c-title-online,#00d4e8)">
-            <HudIcon name="subscription" size={28} style="color:#fff" />
+        <!-- GTA+ blip (muted — GTA Online only) -->
+        <div class="flex flex-col items-center gap-2" style="opacity:0.5">
+          <div class="blip-xl" style="--bc:var(--c-title-online,#00d4e8)">
+            <HudIcon name="subscription" size={36} style="color:#fff" />
           </div>
           <span class="text-[9px] font-mono" style="color:var(--c-title-online)">GTA+</span>
         </div>
@@ -54,135 +53,132 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
     <span class="absolute right-3 top-3 text-[8px] font-mono" style="color:var(--c-text-6)">&#42; GTA Online only</span>
   </div>
 
-  <!-- ── Main three-column ───────────────────────────────────────────── -->
-  <div class="main-grid">
+  <!-- ── Main three columns ──────────────────────────────────────────────── -->
+  <div class="eco-grid">
 
-    <!-- LEFT: Y — INCOME -->
-    <div class="income-box p-5 flex flex-col gap-5">
-      <!-- Header: Y + INCOME at same weight -->
-      <div class="flex items-baseline gap-3">
-        <span class="text-5xl font-mono font-black leading-none" style="color:var(--c-growth,#22c55e)">Y</span>
-        <span class="text-3xl font-mono font-black leading-none" style="color:var(--c-growth,#22c55e)">INCOME</span>
+    <!-- LEFT: INCOME ─────────────────────────────────────────────────── -->
+    <div class="income-box flex flex-col gap-4 p-6">
+
+      <!-- Hero label -->
+      <div class="flex items-center gap-3">
+        <span class="eco-hero" style="color:#fff">INCOME</span>
+        <div class="blip-md" style="--bc:var(--c-growth,#22c55e)">
+          <HudIcon name="dollar" size={22} style="color:#fff" />
+        </div>
       </div>
 
-      <!-- Large icon blips -->
-      <div class="flex items-center gap-4">
+      <!-- Icon blips row -->
+      <div class="flex items-start gap-3 mt-1">
         <div class="flex flex-col items-center gap-1.5">
-          <div class="blip-lg" style="--blip-col:var(--c-live,#0d9488)">
-            <HudIcon name="mission" size={30} style="color:#fff" />
+          <div class="blip-xl" style="--bc:var(--c-live,#0d9488)">
+            <HudIcon name="mission" size={36} style="color:#fff" />
           </div>
-          <span class="text-[9px] font-mono" style="color:var(--c-live);opacity:0.8">Missions</span>
+          <span class="blip-label">Missions</span>
         </div>
         <div class="flex flex-col items-center gap-1.5">
-          <div class="blip-lg" style="--blip-col:var(--c-growth,#22c55e)">
-            <HudIcon name="passive" size={30} style="color:#fff" />
+          <div class="blip-xl" style="--bc:var(--c-growth,#22c55e)">
+            <HudIcon name="passive" size={36} style="color:#fff" />
           </div>
-          <span class="text-[9px] font-mono" style="color:var(--c-growth);opacity:0.8">Passive</span>
+          <span class="blip-label">Passive</span>
         </div>
         <div class="flex flex-col items-center gap-1.5">
-          <div class="blip-lg" style="--blip-col:var(--c-growth,#22c55e)">
-            <HudIcon name="cycle" size={30} style="color:#fff" />
+          <div class="blip-xl" style="--bc:var(--c-growth,#22c55e)">
+            <HudIcon name="cycle" size={36} style="color:#fff" />
           </div>
-          <span class="text-[9px] font-mono" style="color:var(--c-growth);opacity:0.8">Cycles</span>
+          <span class="blip-label">Cycles</span>
         </div>
       </div>
 
       <!-- Caption -->
-      <div class="mt-auto text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-income,#0d9488)">
+      <div class="mt-auto text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-growth);opacity:0.65">
         Y grows &#8594; next cycle
       </div>
     </div>
 
-    <!-- CENTRE: circle + arrows -->
+    <!-- CENTRE: circle + triangle arrows ─────────────────────────────── -->
     <div class="centre-col">
-      <span class="arrow-green">&#8594;</span>
+      <!-- Left arrow: Balance → Income (green) -->
+      <div class="tri-left"></div>
 
+      <!-- The circle -->
       <div class="relative circle-wrapper">
-        <!-- Conic ring with aligned colours + directional arrows -->
         <div class="circle-ring"></div>
-
-        <!-- Flow arrows at transition points on the ring -->
-        <!-- Top-left: income → balance (green ▶) -->
-        <span class="ring-arrow" style="top:14px;left:18px;color:#22c55e;transform:rotate(-35deg)">&#9658;</span>
-        <!-- Top-right: injection → expenditure (blue ▶) -->
-        <span class="ring-arrow" style="top:14px;right:18px;color:#00d4e8;transform:rotate(35deg)">&#9658;</span>
-        <!-- Bottom-right: investment circling (purple ▶) -->
-        <span class="ring-arrow" style="bottom:14px;right:18px;color:#818cf8;transform:rotate(145deg)">&#9658;</span>
-        <!-- Bottom-left: return to income (purple→green ▶) -->
-        <span class="ring-arrow" style="bottom:14px;left:18px;color:#818cf8;transform:rotate(-145deg)">&#9658;</span>
-
-        <!-- Centre disc: Balance / Maze Bank -->
+        <!-- Flow arrows on ring -->
+        <span class="ring-arrow" style="top:10px;left:14px;color:#22c55e;transform:rotate(-35deg)">&#9658;</span>
+        <span class="ring-arrow" style="top:10px;right:14px;color:#00d4e8;transform:rotate(35deg)">&#9658;</span>
+        <span class="ring-arrow" style="bottom:10px;right:14px;color:#818cf8;transform:rotate(145deg)">&#9658;</span>
+        <span class="ring-arrow" style="bottom:10px;left:14px;color:#818cf8;transform:rotate(-145deg)">&#9658;</span>
+        <!-- Centre -->
         <div class="circle-centre">
-          <HudIcon name="bank" size={30} style="color:var(--c-title-online,#00d4e8)" />
-          <span class="text-[11px] font-mono font-black leading-tight" style="color:var(--c-title-online,#00d4e8)">GTA$</span>
-          <HudIcon name="dollar" size={14} style="color:var(--c-title-online,#00d4e8);opacity:0.45" />
+          <HudIcon name="bank" size={32} style="color:var(--c-title-online,#00d4e8)" />
+          <span style="font-size:13px;font-family:monospace;font-weight:900;color:var(--c-title-online,#00d4e8);margin-top:2px">GTA$</span>
         </div>
-
         <div class="circle-return">
-          <span class="text-[8px] font-mono uppercase tracking-widest" style="color:var(--c-economy,#818cf8);opacity:0.7">I &#8594; Y</span>
+          <span class="text-[8px] font-mono uppercase tracking-widest" style="color:#818cf8;opacity:0.7">I &#8594; Y</span>
         </div>
       </div>
 
-      <span class="arrow-orange">&#8594;</span>
+      <!-- Right arrow: Balance → Expenditure (orange) -->
+      <div class="tri-right"></div>
     </div>
 
-    <!-- RIGHT: C+I — two vertical columns (C left | I right) -->
+    <!-- RIGHT: EXPENDITURE ───────────────────────────────────────────── -->
     <div class="expend-box flex flex-col">
-      <!-- Shared header -->
-      <div class="flex items-baseline gap-3 p-5 pb-3 border-b border-[#1e1e23]">
-        <span class="text-5xl font-mono font-black leading-none" style="color:var(--c-flow-spending,#f97316)">C+I</span>
-        <span class="text-xl font-mono font-black leading-none" style="color:var(--c-flow-spending,#f97316)">EXPEND.</span>
+
+      <!-- Hero label -->
+      <div class="flex items-center gap-3 p-6 pb-3">
+        <span class="eco-hero" style="color:var(--c-flow-spending,#f97316)">EXPENDITURE</span>
+        <div class="blip-md" style="--bc:var(--c-flow-spending,#f97316)">
+          <HudIcon name="buy" size={22} style="color:#fff" />
+        </div>
       </div>
 
-      <!-- Two-column split: C | I -->
-      <div class="flex flex-1">
+      <!-- C | I split -->
+      <div class="flex flex-1 border-t border-[#1e1e23]">
 
-        <!-- C — Consumption (left column, orange) -->
-        <div class="flex flex-col gap-3 p-4 flex-1 ci-col-c">
-          <span class="text-[11px] font-mono font-bold uppercase tracking-widest" style="color:var(--c-flow-spending,#f97316)">C</span>
-          <span class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending);opacity:0.7">Consumption</span>
-          <div class="flex flex-col gap-3">
+        <!-- C — Consumption -->
+        <div class="flex flex-col gap-3 p-4 flex-1 c-col">
+          <span class="text-xl font-mono font-black" style="color:var(--c-flow-spending,#f97316)">CONSUMPTION</span>
+          <div class="flex items-start gap-3">
             <div class="flex flex-col items-center gap-1.5">
-              <div class="blip-lg" style="--blip-col:var(--c-flow-spending,#f97316)">
-                <HudIcon name="clothing" size={28} style="color:#fff" />
+              <div class="blip-xl" style="--bc:var(--c-flow-spending,#f97316)">
+                <HudIcon name="clothing" size={36} style="color:#fff" />
               </div>
-              <span class="text-[8px] font-mono" style="color:var(--c-flow-spending);opacity:0.8">Clothing</span>
+              <span class="blip-label">Clothing</span>
             </div>
             <div class="flex flex-col items-center gap-1.5">
-              <div class="blip-lg" style="--blip-col:var(--c-flow-spending,#f97316)">
-                <HudIcon name="ammo" size={28} style="color:#fff" />
+              <div class="blip-xl" style="--bc:var(--c-flow-spending,#f97316)">
+                <HudIcon name="ammo" size={36} style="color:#fff" />
               </div>
-              <span class="text-[8px] font-mono" style="color:var(--c-flow-spending);opacity:0.8">Ammo</span>
+              <span class="blip-label">Ammo</span>
             </div>
           </div>
-          <div class="mt-auto text-[8px] font-mono leading-snug" style="color:var(--c-flow-spending);opacity:0.5">
-            Services<br/>Clothes
+          <div class="mt-auto text-[8px] font-mono leading-snug" style="color:var(--c-flow-spending);opacity:0.55">
+            Ammo &#183; clothes &#183; services
           </div>
         </div>
 
-        <!-- Vertical divider -->
-        <div class="w-px self-stretch" style="background:rgba(129,140,248,0.2)"></div>
+        <div class="w-px" style="background:rgba(129,140,248,0.25)"></div>
 
-        <!-- I — Investment (right column, purple) -->
-        <div class="flex flex-col gap-3 p-4 flex-1 ci-col-i">
-          <span class="text-[11px] font-mono font-bold uppercase tracking-widest" style="color:var(--c-economy,#818cf8)">I</span>
-          <span class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-economy);opacity:0.7">Investment</span>
-          <div class="flex flex-col gap-3">
+        <!-- I — Investment -->
+        <div class="flex flex-col gap-3 p-4 flex-1 i-col">
+          <span class="text-xl font-mono font-black" style="color:var(--c-economy,#818cf8)">INVESTMENT</span>
+          <div class="flex items-start gap-3">
             <div class="flex flex-col items-center gap-1.5">
-              <div class="blip-lg" style="--blip-col:var(--c-economy,#818cf8)">
-                <HudIcon name="property" size={28} style="color:#fff" />
+              <div class="blip-xl" style="--bc:var(--c-economy,#818cf8)">
+                <HudIcon name="property" size={36} style="color:#fff" />
               </div>
-              <span class="text-[8px] font-mono" style="color:var(--c-economy);opacity:0.8">Property</span>
+              <span class="blip-label" style="color:var(--c-economy)">Property</span>
             </div>
             <div class="flex flex-col items-center gap-1.5">
-              <div class="blip-lg" style="--blip-col:var(--c-economy,#818cf8)">
-                <HudIcon name="briefcase" size={28} style="color:#fff" />
+              <div class="blip-xl" style="--bc:var(--c-economy,#818cf8)">
+                <HudIcon name="briefcase" size={36} style="color:#fff" />
               </div>
-              <span class="text-[8px] font-mono" style="color:var(--c-economy);opacity:0.8">Business</span>
+              <span class="blip-label" style="color:var(--c-economy)">Business</span>
             </div>
           </div>
-          <div class="mt-auto text-[8px] font-mono leading-snug" style="color:var(--c-economy);opacity:0.5">
-            I returns<br/>to Y &#8594;
+          <div class="mt-auto text-[8px] font-mono leading-snug" style="color:var(--c-economy);opacity:0.55">
+            I returns to Y &#8594;
           </div>
         </div>
 
@@ -191,11 +187,11 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 
   </div>
 
-  <!-- ── Footer ─────────────────────────────────────────────────────── -->
-  <div class="flex items-center justify-between px-5 py-2.5 border-t border-[#1e1e23]">
+  <!-- ── Footer ────────────────────────────────────────────────────────── -->
+  <div class="flex items-center justify-between px-5 py-2.5 border-t border-[#1e1e23]" style="background:var(--c-card)">
     <div class="flex items-center gap-3">
       <GamePill {game} size="xs" />
-      <span class="text-[8px] font-mono opacity-40" style="color:var(--c-text-4)">(Y + J) = C + I</span>
+      <span class="text-[8px] font-mono" style="color:var(--c-text-4);opacity:0.4">(Y + J) = C + I</span>
     </div>
     {fullEconomyHref && (
       <a href={fullEconomyHref}
@@ -210,93 +206,125 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 </div>
 
 <style>
-  /* ── Grid ──────────────────────────────────────────────────────────── */
-  .main-grid {
+  .eco-root { }
+
+  /* ── Injection bar ─────────────────────────────────────────────────── */
+  .inject-bar { background: rgba(0,212,232,0.06); }
+
+  /* ── Main grid ─────────────────────────────────────────────────────── */
+  .eco-grid {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
-    min-height: 260px;
+    min-height: 280px;
   }
 
-  /* ── Surfaces ──────────────────────────────────────────────────────── */
-  .income-box {
-    background: rgba(34, 197, 94, 0.18);
-    /* No left border — cards below already carry the green identity */
-  }
-  .expend-box {
-    background: rgba(249, 115, 22, 0.16);
-    /* No right border here either — cards below carry orange/purple */
+  /* ── Coloured surfaces — vivid & punchy ────────────────────────────── */
+  .income-box  { background: rgba(15, 60, 20, 0.95);  }
+  .expend-box  { background: rgba(55, 20, 5, 0.90);   }
+  .c-col       { background: rgba(249, 115, 22, 0.10); }
+  .i-col       { background: rgba(129, 140, 248, 0.10); }
+
+  /* ── Hero text ─────────────────────────────────────────────────────── */
+  .eco-hero {
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    font-family: var(--font-mono, monospace);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.02em;
   }
 
-  /* ── Centre column ─────────────────────────────────────────────────── */
+  /* ── Blip sizes ────────────────────────────────────────────────────── */
+  /* Large 80px — main icons */
+  .blip-xl {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--bc) 28%, transparent);
+    border: 3px solid color-mix(in srgb, var(--bc) 60%, transparent);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  /* Medium 48px — header icon */
+  .blip-md {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--bc) 28%, transparent);
+    border: 2.5px solid color-mix(in srgb, var(--bc) 60%, transparent);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .blip-label {
+    font-size: 9px;
+    font-family: var(--font-mono, monospace);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+  }
+
+  /* ── Centre column with triangle arrows ────────────────────────────── */
   .centre-col {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 16px 12px;
-    border-left: 1px solid #1e1e23;
-    border-right: 1px solid #1e1e23;
-    padding-bottom: 28px; /* space for I→Y label */
+    padding: 16px 0;
+    padding-bottom: 32px;
+    position: relative;
   }
-  .arrow-green { font-size: 1.25rem; font-weight: 700; color: #22c55e; }
-  .arrow-orange { font-size: 1.25rem; font-weight: 700; color: #f97316; }
-
-  /* ── GTA blip badges (large) ────────────────────────────────────────── */
-  .blip-lg {
-    width:  64px;
-    height: 64px;
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--blip-col) 20%, transparent);
-    border: 2.5px solid color-mix(in srgb, var(--blip-col) 50%, transparent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  /* CSS triangle arrows — large, solid, pointing right/left */
+  .tri-right {
+    width: 0; height: 0;
+    border-top: 28px solid transparent;
+    border-bottom: 28px solid transparent;
+    border-left: 36px solid rgba(249,115,22,0.8);
+    filter: drop-shadow(0 0 6px rgba(249,115,22,0.4));
+  }
+  .tri-left {
+    width: 0; height: 0;
+    border-top: 28px solid transparent;
+    border-bottom: 28px solid transparent;
+    border-right: 36px solid rgba(34,197,94,0.8);
+    filter: drop-shadow(0 0 6px rgba(34,197,94,0.4));
   }
 
   /* ── Circle ────────────────────────────────────────────────────────── */
   .circle-wrapper {
-    width: 140px;
-    height: 140px;
-    position: relative;
-    flex-shrink: 0;
+    width: 160px; height: 160px;
+    position: relative; flex-shrink: 0;
+    margin: 0 -28px;
+    z-index: 10;
   }
   .circle-ring {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     border-radius: 50%;
     background: conic-gradient(
-      from 120deg,
-      #22c55e  0deg   90deg,
-      #00d4e8  90deg  125deg,
-      #f97316  125deg 220deg,
-      #818cf8  220deg 330deg,
-      #22c55e  330deg 360deg
+      from 0deg,
+      #818cf8   0deg   75deg,
+      #22c55e  75deg  200deg,
+      #00d4e8 200deg  245deg,
+      #f97316 245deg  325deg,
+      #818cf8 325deg  360deg
     );
-    -webkit-mask: radial-gradient(circle, transparent 52px, black 54px);
-    mask:         radial-gradient(circle, transparent 52px, black 54px);
+    -webkit-mask: radial-gradient(circle, transparent 58px, black 61px);
+    mask:         radial-gradient(circle, transparent 58px, black 61px);
+    opacity: 0.95;
+  }
+  .ring-arrow {
+    position: absolute;
+    font-size: 10px;
     opacity: 0.9;
   }
   .circle-centre {
-    position: absolute;
-    inset: 18px;
+    position: absolute; inset: 22px;
     border-radius: 50%;
-    background: rgba(0, 212, 232, 0.08);
-    border: 1.5px solid rgba(0, 212, 232, 0.3);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1px;
+    background: rgba(10,10,14,0.85);
+    border: 2px solid rgba(0,212,232,0.35);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 2px;
   }
-  .ci-col-c { background: rgba(249,115,22,0.10); }
-  .ci-col-i { background: rgba(129,140,248,0.10); }
   .circle-return {
-    position: absolute;
-    bottom: -22px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: absolute; bottom: -22px;
+    left: 50%; transform: translateX(-50%);
     white-space: nowrap;
   }
 </style>
