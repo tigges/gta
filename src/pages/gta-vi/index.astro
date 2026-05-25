@@ -10,12 +10,10 @@ import PredictionCard from "../../components/PredictionCard.astro";
 import IncomePredictionCard from "../../components/IncomePredictionCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
 import EconomyCircle from "../../components/EconomyCircle.astro";
-import ChartSection from "../../components/ChartSection.astro";
 import Countdown from "../../components/Countdown.astro";
-
-import ChartTrailerDiscovery   from "../../components/charts/ChartTrailerDiscovery.astro";
-import ChartCpiPricing         from "../../components/charts/ChartCpiPricing.astro";
-import ChartRevenueSplit       from "../../components/charts/ChartRevenueSplit.astro";
+import ChartTeaserCpi          from "../../components/charts/ChartTeaserCpi.astro";
+import ChartTeaserRevenueSplit  from "../../components/charts/ChartTeaserRevenueSplit.astro";
+import ChartTeaserSearchSignal  from "../../components/charts/ChartTeaserSearchSignal.astro";
 
 import type { Prediction, TrailersData } from "../../types/gta";
 import { getChart } from "../../config/allCharts";
@@ -217,7 +215,7 @@ const featuredIncome = incomeList
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         LAYER 2: CHARTS — full chart components
+         LAYER 2: CHARTS — static CSS teasers
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center justify-between gap-3 mb-6">
@@ -231,16 +229,10 @@ const featuredIncome = incomeList
           All GTA VI charts →
         </a>
       </div>
-      <div class="flex flex-col gap-8">
-        <ChartSection chartId="trailer-discovery-chart" meta={`${totalEntities} entities confirmed`}>
-          <ChartTrailerDiscovery />
-        </ChartSection>
-        <ChartSection chartId="cpi-chart">
-          <ChartCpiPricing />
-        </ChartSection>
-        <ChartSection chartId="revenue-split-chart">
-          <ChartRevenueSplit />
-        </ChartSection>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <ChartTeaserCpi />
+        <ChartTeaserRevenueSplit />
+        <ChartTeaserSearchSignal />
       </div>
     </section>
 
