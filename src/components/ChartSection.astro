@@ -39,11 +39,11 @@ interface Props {
   /** When set, the right-side element renders as an anchor instead of text */
   metaHref?: string;
   metaLabel?: string;
-  /** Optional second GamePill rendered after the primary one (e.g. comparison charts) */
-  secondaryGame?: "gta-vi" | "gta-online" | "gta-v" | "franchise";
+  /** Additional GamePills after the primary one. Accepts any number of game ids. */
+  secondaryGames?: Array<"gta-vi" | "gta-online" | "gta-v" | "franchise">;
 }
 
-const { chartId, meta: metaOverride, metaHref, metaLabel, secondaryGame } = Astro.props;
+const { chartId, meta: metaOverride, metaHref, metaLabel, secondaryGames } = Astro.props;
 
 const chart = getChart(chartId);
 if (!chart) throw new Error(`[ChartSection] Unknown chart id: "${chartId}". Add it to allCharts.ts.`);
@@ -60,7 +60,7 @@ const displayMeta = metaOverride !== undefined ? metaOverride : chart.meta;
 >
   <div class="flex items-center gap-3 mb-5">
     <GamePill game={chart.game} size="xs" />
-    {secondaryGame && <GamePill game={secondaryGame} size="xs" />}
+    {secondaryGames && secondaryGames.map(g => <GamePill game={g} size="xs" />)}
     <span class={CATEGORY_BADGE_CLASSES}>{chart.badge}</span>
     <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// {chart.label}</span>
     <div class="flex-1 h-px bg-[#1e1e23]"></div>

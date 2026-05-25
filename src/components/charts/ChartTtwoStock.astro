@@ -46,7 +46,7 @@ import CardFooter from "../CardFooter.astro";
     const prices: {date:string;close:number}[] = JSON.parse(el.dataset.prices || "[]");
     const annotations: {date:string;label:string;type:string;color:string}[] = JSON.parse(el.dataset.annotations || "[]");
 
-    const margin = { top: 24, right: 20, bottom: 32, left: 56 };
+    const margin = { top: 24, right: 120, bottom: 32, left: 56 };
     const W = el.clientWidth - margin.left - margin.right;
     const H = el.clientHeight - margin.top - margin.bottom;
 
@@ -81,17 +81,21 @@ import CardFooter from "../CardFooter.astro";
     svg.append("path").datum(data).attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",2)
       .attr("d",d3.line<any>().x(d=>x(d.date)).y(d=>y(d.close)).curve(d3.curveMonotoneX));
 
-    // Annotation labels (alternating above/below)
+    // Annotation labels (alternating above/below, anchored to stay within chart)
     annotations.forEach((a, i) => {
       const ax = x(new Date(a.date));
-      // Find price near this date
       const nearby = data.find(d => Math.abs(d.date.getTime() - new Date(a.date).getTime()) < 1000*60*60*24*45);
       const ay = nearby ? y(nearby.close) : H/2;
       const above = i % 2 === 0;
+      // Right-half labels anchor left (text goes left of the line to stay in chart)
+      const rightHalf = ax > W * 0.6;
       svg.append("circle").attr("cx",ax).attr("cy",ay).attr("r",4)
         .attr("fill",a.color).attr("stroke",cc.bg).attr("stroke-width",1.5);
-      svg.append("text").attr("x",ax).attr("y",above?ay-10:ay+18)
-        .attr("text-anchor","middle").attr("fill",a.color).attr("font-size","8").attr("font-family","monospace")
+      svg.append("text")
+        .attr("x", rightHalf ? ax - 6 : ax + 6)
+        .attr("y", above ? ay - 10 : ay + 18)
+        .attr("text-anchor", rightHalf ? "end" : "start")
+        .attr("fill",a.color).attr("font-size","8").attr("font-family","monospace")
         .text(a.label);
     });
 

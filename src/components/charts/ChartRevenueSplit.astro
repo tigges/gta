@@ -8,11 +8,7 @@ import CardFooter from "../CardFooter.astro";
 ---
 
 <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <!-- Thumbnail cover strip -->
-        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5 overflow-x-auto">
-          <img src="/assets/covers/gta-5.jpg" alt="GTA V" class="rounded border object-cover border-[#2a2a31] w-8 h-11" loading="lazy" />
-              <img src="/assets/covers/gta-6.jpg" alt="GTA VI" class="rounded border object-cover border-[#2a2a31] w-8 h-11 border-gta-gold/40 shadow shadow-gta-gold/10" loading="lazy" />
-        </div>
+
         <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm mb-0.5">
@@ -21,9 +17,9 @@ import CardFooter from "../CardFooter.astro";
             <div class="text-[11px] text-zinc-500 font-mono">By FY2022, 90% of GTA revenue was recurrent (Online). This is why GTA VI Online will matter more than its $80 price tag.</div>
           </div>
           <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-gta-gold/80 inline-block"></span>Base game sales</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-gta-teal/80 inline-block"></span>Recurrent (Online/Shark Cards)</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm border border-gta-gold/30 bg-gta-gold/10 inline-block"></span>GTA VI projected</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:var(--c-brand)"></span>Base game sales</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:var(--c-live)"></span>Recurrent (Online/Shark Cards)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="border:1px dashed var(--c-brand);opacity:0.6"></span>GTA VI projected</span>
           </div>
         </div>
         <div id="revenue-split-chart" class="w-full" style="height:320px"
