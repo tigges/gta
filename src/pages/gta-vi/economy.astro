@@ -11,6 +11,7 @@ import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
+import GamePill from "../../components/GamePill.astro";
 
 import type { EconomyModelsData, PredictionsData, TrailerVelocityData } from "../../types/gta";
 
@@ -52,7 +53,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
     <div class="absolute inset-0" style="background:radial-gradient(ellipse at 70% 50%, var(--c-hero-bloom) 0%, transparent 65%), #0a0a0d"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-4">
-        <span class="text-[11px] font-mono bg-gta-gold/30 border border-gta-gold/40 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">ERA 5 · 2025/26</span>
+        <GamePill game="gta-vi" size="xs" />
         <span class="text-[11px] font-mono bg-gta-gold/20 border border-gta-gold/30 text-gta-gold/80 px-2 py-0.5 rounded uppercase tracking-widest">Projected</span>
       </div>
       <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">
