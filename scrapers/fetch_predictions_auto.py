@@ -159,8 +159,11 @@ class PredictionUpdater:
     def propose(self, pred_id: str, field: str, current_val, proposed_val,
                 rationale: str, confidence_delta: int = 0) -> None:
         """Add a proposal that requires human review."""
+        # Determine if this modifies an existing prediction or adds a new one
+        is_existing = any(p["id"] == pred_id for p in self.predictions.values())
         self.proposals.append({
             "id": pred_id,
+            "type": "modify" if is_existing else "new",
             "field": field,
             "current": current_val,
             "proposed": proposed_val,
