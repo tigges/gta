@@ -657,7 +657,7 @@ export const ALL_CHARTS: ChartMeta[] = [
   {
     id:        "dlc-cadence-chart",
     component: ChartDlcCadence,
-    game:      "franchise",
+    game:      "gta-vi",
     category:  "History",
     badge:     "History",
     label:     "GTA Online DLC Cadence → GTA VI Online Prediction",
@@ -670,7 +670,7 @@ export const ALL_CHARTS: ChartMeta[] = [
   {
     id:        "revenue-split-chart",
     component: ChartRevenueSplit,
-    game:      "franchise",
+    game:      "gta-vi",
     category:  "Economy-RL",
     badge:     "RL Economy",
     label:     "GTA V Revenue Model — Game Sales vs Online Economy",
@@ -683,7 +683,7 @@ export const ALL_CHARTS: ChartMeta[] = [
   {
     id:        "ttwo-stock-chart",
     component: ChartTtwoStock,
-    game:      "franchise",
+    game:      "gta-vi",
     category:  "Economy-RL",
     badge:     "RL Economy",
     label:     "Take-Two (TTWO) Stock Price vs GTA VI Milestones",
@@ -696,7 +696,7 @@ export const ALL_CHARTS: ChartMeta[] = [
   {
     id:        "franchise-complexity-chart",
     component: ChartFranchiseComplexity,
-    game:      "franchise",
+    game:      "gta-vi",
     category:  "History",
     badge:     "History",
     label:     "GTA Economic Complexity — 25 Years of Evolution",

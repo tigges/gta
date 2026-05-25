@@ -18,7 +18,7 @@ import CardFooter from "../CardFooter.astro";
           </div>
         </div>
         <div id="franchise-complexity-chart" class="w-full px-5 py-4"
-          data-titles={JSON.stringify((franchiseEconData as any).titles.filter((t: any) => t.complexity_score !== null))}
+          data-titles={JSON.stringify((franchiseEconData as any).titles.filter((t: any) => t.complexity_score !== null && t.complexity_score !== undefined))}
         ></div>
         <CardFooter chartId="franchise-complexity-chart" sources="Source: curated research · GTAForums · GTA Fandom Wiki · complexity score = count of active economic mechanics" shareText="GTA" />
       </div>
@@ -40,10 +40,10 @@ import CardFooter from "../CardFooter.astro";
     const FEATURE_ICONS: Record<string,string> = {
       "mission_income":"Missions","passive_income":"Passive","property_market":"Property",
       "businesses":"Business","investment":"Investment","multiplayer_economy":"Multiplayer",
-      "microtransactions":"Microtx",
+      "microtransactions":"Microtx","dual_territory":"Dual-Terr","mobile_persistence":"Mobile",
     };
 
-    const rowH = 52, labelW = 140;
+    const rowH = 66, labelW = 150;
     const margin = {top:8, right:80, bottom:8, left:labelW};
     const W = el.clientWidth - margin.left - margin.right;
     const H = titles.length * rowH + margin.top + margin.bottom;
@@ -63,8 +63,19 @@ import CardFooter from "../CardFooter.astro";
       const color = score >= 8 ? cc.bar : score >= 5 ? cc.teal : cc.text7;
 
       // Bar
-      svg.append("rect").attr("x",0).attr("y",y).attr("width",barW).attr("height",rowH-12)
-        .attr("rx",3).attr("fill",color).attr("opacity",0.75);
+      const isPred = !!(t as any).is_prediction;
+      svg.append("rect").attr("x",0).attr("y",y).attr("width",barW).attr("height",rowH-22)
+        .attr("rx",3)
+        .attr("fill", isPred ? "none" : color)
+        .attr("stroke", isPred ? color : "none")
+        .attr("stroke-width", isPred ? 1.5 : 0)
+        .attr("stroke-dasharray", isPred ? "6,3" : "0")
+        .attr("opacity", isPred ? 1 : 0.75);
+      if (isPred) {
+        // Semi-transparent fill for prediction
+        svg.append("rect").attr("x",0).attr("y",y).attr("width",barW).attr("height",rowH-22)
+          .attr("rx",3).attr("fill",color).attr("opacity",0.15);
+      }
 
       // Score label
       svg.append("text").attr("x",barW+6).attr("y",y+(rowH-12)/2+4)
@@ -80,11 +91,11 @@ import CardFooter from "../CardFooter.astro";
       if (t.complexity_breakdown) {
         const features = Object.entries(t.complexity_breakdown as Record<string,boolean>).filter(([,v])=>v);
         features.forEach(([key], fi) => {
-          const dotX = fi * 70;
-          svg.append("rect").attr("x",dotX).attr("y",y+rowH-12).attr("width",64).attr("height",10).attr("rx",2)
-            .attr("fill",color).attr("opacity",0.2);
-          svg.append("text").attr("x",dotX+32).attr("y",y+rowH-3).attr("text-anchor","middle")
-            .attr("fill",color).attr("font-size","7").attr("font-family","monospace")
+          const dotX = fi * 84;
+          svg.append("rect").attr("x",dotX).attr("y",y+rowH-18).attr("width",80).attr("height",14).attr("rx",2)
+            .attr("fill",color).attr("opacity",0.35);
+          svg.append("text").attr("x",dotX+40).attr("y",y+rowH-7).attr("text-anchor","middle")
+            .attr("fill",color).attr("font-size","9").attr("font-family","monospace")
             .text(FEATURE_ICONS[key] || key);
         });
       }
