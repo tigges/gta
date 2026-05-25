@@ -1,24 +1,22 @@
 ---
 /**
- * EconomyCircle.astro — GTA circular economy diagram v8 (Option A).
+ * EconomyCircle.astro — GTA circular economy diagram v9.
  *
  * Layout:
  *   Row 1 (full): INJECTION — Shark Card | ROCKSTAR INJECTION J↓ | GTA+
- *   Row 2 (mid):  Circle centred, EXPENDITURE spanning right half
+ *   Row 2 (mid):  INCOME super-header (left) | Circle (centre) | EXPENDITURE super-header (right)
  *   Row 3 (bot):  INCOME (left, 40%) | CONSUMPTION (centre, 30%) | INVESTMENT (right, 30%)
  *
- * Equation reads left-to-right: INCOME $ [=] CONSUMPTION [+] INVESTMENT
- * Y, C, I letters appear on TOP BORDERS of each box (connecting from circle).
- * EXPENDITURE spans both C and I as a super-header.
+ * Equation: INCOME [=] CONSUMPTION [+] INVESTMENT
+ * Y, C, I letters on TOP BORDERS of each box.
+ * Injection ring arc centred at 12 o'clock (injection blue at top).
  */
 import HudIcon from "./HudIcon.astro";
-import GamePill from "./GamePill.astro";
 
 interface Props {
-  game?: "gta-vi" | "gta-online" | "gta-v" | "gta-sa" | "gta-vc" | "gta-iv" | "gta-iii" | "franchise";
   fullEconomyHref?: string;
 }
-const { game = "gta-online", fullEconomyHref } = Astro.props;
+const { fullEconomyHref } = Astro.props;
 ---
 
 <div class="eco-wrap">
@@ -26,7 +24,7 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
   <!-- ── ROW 1: INJECTION (full width) ──────────────────────────────── -->
   <div class="inject-row">
     <div class="inject-inner">
-      <div class="inject-item" style="opacity:var(--o-tertiary)">
+      <div class="inject-item">
         <div class="blip" style="--bc:var(--c-title-online)"><HudIcon name="shark-card" size={28} style="color:#fff"/></div>
         <span class="item-label" style="color:var(--c-title-online)">Shark Card</span>
       </div>
@@ -37,29 +35,26 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
         <span class="j-arrow">J &#8595;</span>
       </div>
 
-      <div class="inject-item" style="opacity:var(--o-tertiary)">
+      <div class="inject-item">
         <div class="blip" style="--bc:var(--c-title-online)"><HudIcon name="subscription" size={28} style="color:#fff"/></div>
         <span class="item-label" style="color:var(--c-title-online)">GTA+</span>
       </div>
     </div>
-    <span class="online-note">&#42; GTA Online only</span>
   </div>
 
-  <!-- ── ROW 2: Circle (centred) + EXPENDITURE super-header (right) ── -->
+  <!-- ── ROW 2: INCOME super-header · Circle · EXPENDITURE super-header ── -->
   <div class="mid-row">
 
-    <!-- Left spacer (aligns with INCOME column) -->
-    <div class="mid-left-space"></div>
+    <!-- INCOME super-header — mirrors EXPENDITURE on right -->
+    <div class="income-super">
+      <div class="income-super-inner">
+        <HudIcon name="dollar" size={26} style="color:var(--c-income)"/>
+        <span class="income-title">INCOME</span>
+      </div>
+    </div>
 
     <!-- Circle hub -->
     <div class="circle-hub">
-      <!-- Y label on left edge of circle -->
-      <span class="hub-letter hub-y">Y</span>
-      <!-- C label on bottom-left -->
-      <span class="hub-letter hub-c">C</span>
-      <!-- I label on bottom-right -->
-      <span class="hub-letter hub-i">I</span>
-
       <!-- Income arrow in (green, pointing right into circle) -->
       <div class="tri-in"></div>
 
@@ -67,7 +62,7 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
       <div class="ring-wrap">
         <div class="ring"></div>
         <div class="ring-centre">
-          <HudIcon name="bank" size={28} style="color:#00d4e8"/>
+          <HudIcon name="bank" size={28} style="color:var(--c-title-online)"/>
           <span class="gta-label">GTA$</span>
         </div>
       </div>
@@ -79,7 +74,7 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
     <!-- EXPENDITURE super-header — spans right half -->
     <div class="expend-super">
       <div class="expend-super-inner">
-        <HudIcon name="buy" size={26} style="color:var(--c-flow-spending,#f97316)"/>
+        <HudIcon name="buy" size={26} style="color:var(--c-flow-spending)"/>
         <span class="expend-title">EXPENDITURE</span>
       </div>
     </div>
@@ -91,25 +86,25 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 
     <!-- INCOME box -->
     <div class="box income-box">
-      <div class="box-top-label" style="color:var(--c-growth,#22c55e)">Y</div>
+      <div class="box-top-label" style="color:var(--c-growth)">Y</div>
       <div class="box-inner">
         <div class="box-header">
-          <span class="box-title" style="color:var(--c-growth,#22c55e)">INCOME</span>
-          <div class="blip-sm" style="--bc:var(--c-growth,#22c55e)">
+          <span class="box-title" style="color:var(--c-growth)">INCOME</span>
+          <div class="blip-sm" style="--bc:var(--c-growth)">
             <HudIcon name="dollar" size={16} style="color:#fff"/>
           </div>
         </div>
         <div class="icon-row">
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-live,#0d9488)"><HudIcon name="mission" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-live)"><HudIcon name="mission" size={30} style="color:#fff"/></div>
             <span class="icon-label">Missions</span>
           </div>
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-growth,#22c55e)"><HudIcon name="passive" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-growth)"><HudIcon name="passive" size={30} style="color:#fff"/></div>
             <span class="icon-label">Passive</span>
           </div>
         </div>
-        <div class="box-footer" style="color:var(--c-growth)">Y grows &#8594; next cycle</div>
+        <div class="cycle-note" style="color:var(--c-growth)">Y grows &#8594; next cycle</div>
       </div>
     </div>
 
@@ -120,22 +115,21 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 
     <!-- CONSUMPTION box -->
     <div class="box consump-box">
-      <div class="box-top-label" style="color:var(--c-flow-spending,#f97316)">C</div>
+      <div class="box-top-label" style="color:var(--c-flow-spending)">C</div>
       <div class="box-inner">
         <div class="box-header">
-          <span class="box-title" style="color:var(--c-flow-spending,#f97316)">CONSUMPTION</span>
+          <span class="box-title" style="color:var(--c-flow-spending)">CONSUMPTION</span>
         </div>
         <div class="icon-row">
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-flow-spending,#f97316)"><HudIcon name="clothing" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-flow-spending)"><HudIcon name="clothing" size={30} style="color:#fff"/></div>
             <span class="icon-label">Clothing</span>
           </div>
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-flow-spending,#f97316)"><HudIcon name="ammo" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-flow-spending)"><HudIcon name="ammo" size={30} style="color:#fff"/></div>
             <span class="icon-label">Ammo</span>
           </div>
         </div>
-        <div class="box-footer" style="color:var(--c-flow-spending);opacity:0.5">Ammo &#183; clothes &#183; services</div>
       </div>
     </div>
 
@@ -146,40 +140,35 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 
     <!-- INVESTMENT box -->
     <div class="box invest-box">
-      <div class="box-top-label" style="color:var(--c-economy,#818cf8)">I</div>
+      <div class="box-top-label" style="color:var(--c-economy)">I</div>
       <div class="box-inner">
         <div class="box-header">
-          <span class="box-title" style="color:var(--c-economy,#818cf8)">INVESTMENT</span>
+          <span class="box-title" style="color:var(--c-economy)">INVESTMENT</span>
         </div>
         <div class="icon-row">
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-economy,#818cf8)"><HudIcon name="property" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-economy)"><HudIcon name="property" size={30} style="color:#fff"/></div>
             <span class="icon-label">Property</span>
           </div>
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-economy,#818cf8)"><HudIcon name="briefcase" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-economy)"><HudIcon name="briefcase" size={30} style="color:#fff"/></div>
             <span class="icon-label">Business</span>
           </div>
         </div>
-        <div class="box-footer" style="color:var(--c-economy)">I returns to Y &#8594;</div>
+        <div class="cycle-note" style="color:var(--c-economy)">I returns to Y &#8594;</div>
       </div>
     </div>
 
   </div>
 
-  <!-- ── Footer ─────────────────────────────────────────────────────── -->
-  <div class="eco-footer">
-    <div class="footer-left">
-      <GamePill {game} size="xs"/>
-      <span class="formula">(Y + J) = C + I</span>
-    </div>
-    {fullEconomyHref && (
+  {fullEconomyHref && (
+    <div class="eco-footer">
       <a href={fullEconomyHref} class="full-link"
          onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
         Full model &#8594;
       </a>
-    )}
-  </div>
+    </div>
+  )}
 
 </div>
 
@@ -213,9 +202,8 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 .rockstar-label { font-size: 9px; color: var(--c-title-online); opacity: var(--o-tertiary); letter-spacing: .25em; text-transform: uppercase; }
 .inject-title { font-size: 2rem; font-weight: 900; line-height: 1; color: var(--c-title-online); }
 .j-arrow { font-size: 1.1rem; font-weight: 700; color: var(--c-title-online); }
-.online-note { position: absolute; top: 8px; right: 12px; font-size: 8px; color: var(--c-text-6,#52525b); }
 
-/* ── Row 2: Circle + EXPENDITURE super-header ──────────────────────── */
+/* ── Row 2: INCOME super-header · Circle · EXPENDITURE super-header ── */
 .mid-row {
   display: grid;
   grid-template-columns: 40% auto 1fr;
@@ -224,7 +212,27 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
   border-bottom: 1px solid var(--c-border-1);
   background: rgba(0,0,0,0.2);
 }
-.mid-left-space { } /* empty spacer matching income column width */
+
+/* INCOME super-header — mirrors EXPENDITURE, right-aligned to sit flush with left arrow */
+.income-super {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 12px;
+}
+.income-super-inner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
+  border: 1.5px solid color-mix(in srgb, var(--c-income) 35%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--c-income) 7%, transparent);
+}
+.income-title {
+  font-size: clamp(1rem,2.5vw,1.6rem);
+  font-weight: 900;
+  color: var(--c-income);
+  letter-spacing: -.01em;
+}
 
 .circle-hub {
   display: flex;
@@ -242,8 +250,9 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 .ring {
   position: absolute; inset: 0;
   border-radius: 50%;
+  /* from 137.5deg puts the injection (teal-blue) arc centred at 12 o'clock */
   background: conic-gradient(
-    from 0deg,
+    from 137.5deg,
     var(--c-economy)        0deg  75deg,
     var(--c-growth)        75deg 200deg,
     var(--c-title-online) 200deg 245deg,
@@ -263,16 +272,6 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
   align-items: center; justify-content: center; gap: 2px;
 }
 .gta-label { font-size: 11px; font-weight: 900; color: var(--c-title-online); }
-
-/* Hub letter labels on circle edges */
-.hub-letter {
-  position: absolute;
-  font-size: 13px; font-weight: 900;
-  z-index: 6;
-}
-.hub-y { left: -4px; top: 50%; transform: translateY(-50%); color: var(--c-growth); }
-.hub-c { bottom: 2px; left: 18px; color: var(--c-flow-spending); }
-.hub-i { bottom: 2px; right: 18px; color: var(--c-economy); }
 
 /* CSS triangle arrows */
 .tri-in {
@@ -308,7 +307,7 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 .expend-title {
   font-size: clamp(1rem,2.5vw,1.6rem);
   font-weight: 900;
-  color: var(--c-flow-spending,#f97316);
+  color: var(--c-flow-spending);
   letter-spacing: -.01em;
 }
 
@@ -340,13 +339,20 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
   line-height: 1;
 }
 
-.box-inner { padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; min-height: 160px; }
+.box-inner { padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; }
 .box-header { display: flex; align-items: center; gap: 8px; }
 .box-title { font-size: clamp(.8rem,2vw,1.1rem); font-weight: 900; line-height: 1; }
 .icon-row { display: flex; gap: 12px; }
 .icon-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .icon-label { font-size: 8px; color: rgba(255,255,255,.65); text-align: center; }
-.box-footer { margin-top: auto; font-size: 8px; text-transform: uppercase; letter-spacing: .1em; opacity: .65; }
+
+/* Cycle note — sits immediately below icons, no push to bottom */
+.cycle-note {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  opacity: .65;
+}
 
 /* = and + dividers */
 .divider-eq, .divider-plus {
@@ -359,8 +365,8 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
   border-left: 1px solid var(--c-border-1);
   border-right: 1px solid var(--c-border-1);
 }
-.eq-sign   { font-size: 1.4rem; font-weight: 900; color: var(--c-flow-spending,#f97316); }
-.plus-sign { font-size: 1.4rem; font-weight: 900; color: var(--c-economy,#818cf8); }
+.eq-sign   { font-size: 1.4rem; font-weight: 900; color: var(--c-flow-spending); }
+.plus-sign { font-size: 1.4rem; font-weight: 900; color: var(--c-economy); }
 
 /* ── Blip sizes ────────────────────────────────────────────────────── */
 .blip, .blip-sm, .blip-lg {
@@ -373,17 +379,15 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 .blip-sm { width: 36px; height: 36px; border-width: 1.5px; }
 .blip-lg { width: 68px; height: 68px; border-width: 2.5px; }
 
-/* ── Footer ────────────────────────────────────────────────────────── */
+/* ── Optional full-model footer ─────────────────────────────────────── */
 .eco-footer {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: flex-end;
   padding: 8px 16px;
   border-top: 1px solid var(--c-border-1);
   background: var(--c-card);
 }
-.footer-left { display: flex; align-items: center; gap: 10px; }
-.formula { font-size: 8px; color: var(--c-text-4,#9898b8); opacity: .4; }
 .full-link {
   font-size: 10px; text-transform: uppercase; letter-spacing: .12em;
-  color: var(--c-brand,#f59e0b); opacity: .6; text-decoration: none; transition: opacity .2s;
+  color: var(--c-brand); opacity: .6; text-decoration: none; transition: opacity .2s;
 }
 </style>
