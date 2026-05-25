@@ -34,8 +34,8 @@ const maxGap = Math.max(
       <div class="w-10 shrink-0 sm:w-14"></div>
       <div class="flex-1 min-w-0"></div>
       <div class="hidden sm:flex items-center gap-2 w-52 shrink-0">
-        <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest w-8 text-right shrink-0">gap</span>
-        <span class="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">release wait</span>
+        <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest w-8 text-right shrink-0">gap</span>
+        <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">release wait</span>
       </div>
     </div>
 
@@ -87,7 +87,7 @@ const maxGap = Math.max(
                 </div>
               ) : (
                 <div class="shrink-0 rounded border border-[#1e1e23] flex items-center justify-center w-9 h-12" style="background:#0a0a0d">
-                  <span class="text-[9px] font-mono text-zinc-500 leading-tight text-center px-0.5">{game.short}</span>
+                  <span class="text-[10px] font-mono text-zinc-500 leading-tight text-center px-0.5">{game.short}</span>
                 </div>
               )}
 
@@ -122,7 +122,7 @@ const maxGap = Math.max(
               <div class="hidden sm:flex items-center gap-2 w-52 shrink-0">
                 {gap ? (
                   <>
-                    <span class={`text-[9px] font-mono w-8 text-right shrink-0 ${isPred ? "text-gta-gold/80" : "text-zinc-600"}`}>
+                    <span class={`text-[10px] font-mono w-8 text-right shrink-0 ${isPred ? "text-gta-gold/80" : "text-zinc-600"}`}>
                       {gap}yr
                     </span>
                     <div class="flex-1 h-1.5 rounded-full overflow-hidden" style="background:#1e1e23">
@@ -133,7 +133,7 @@ const maxGap = Math.max(
                     </div>
                   </>
                 ) : (
-                  <span class="text-[9px] font-mono text-zinc-800 pl-10">first</span>
+                  <span class="text-[10px] font-mono text-zinc-600 pl-10">first</span>
                 )}
               </div>
             </div>

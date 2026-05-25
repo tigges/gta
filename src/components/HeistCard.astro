@@ -125,7 +125,7 @@ const DIFFICULTY_COLOR: Record<string, string> = {
                 <span class="text-[11px] font-mono text-zinc-400">{a.name}</span>
                 <span class={`text-[11px] font-mono font-bold ${a === bestApproach ? "text-gta-gold" : "text-zinc-500"}`}>
                   {a.player_max_cut > 0 ? fmt(a.player_max_cut) : "$0"}
-                  {a === bestApproach && <span class="text-[9px] text-gta-gold/60 ml-1">optimal</span>}
+                  {a === bestApproach && <span class="text-[10px] text-gta-gold/60 ml-1">optimal</span>}
                 </span>
               </div>
             ))}
