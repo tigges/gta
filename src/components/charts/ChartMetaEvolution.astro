@@ -91,7 +91,7 @@ import CardFooter from "../CardFooter.astro";
         .attr("fill", col).attr("stroke", cc.card).attr("stroke-width", 1.5);
       if (LABEL_PATCHES.has(p.patch)) {
         const shortMethod = (p.top_method as string).length > 18 ? (p.top_method as string).slice(0, 17) + "…" : p.top_method;
-        svg.append("text").attr("x", cx + 6).attr("y", cy + 4)
+        svg.append("text").attr("x", cx + 6).attr("y", cy - 10)
           .attr("fill", col).attr("font-size", "8").attr("font-family", "monospace")
           .text(shortMethod as string);
       }
