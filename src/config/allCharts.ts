@@ -739,6 +739,10 @@ export const ALL_CHARTS: ChartMeta[] = [
 /** O(1) lookup by chart ID */
 const _byId = new Map<string, ChartMeta>(ALL_CHARTS.map(c => [c.id, c]));
 
+export function getAllCharts(): ChartMeta[] {
+  return ALL_CHARTS;
+}
+
 export function getChart(id: string): ChartMeta | undefined {
   return _byId.get(id);
 }
