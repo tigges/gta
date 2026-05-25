@@ -26,6 +26,13 @@ const GITHUB_BASE =
 function getPredTitle(id: string): string {
   return predictions.find((p: any) => p.id === id)?.title ?? id;
 }
+function getProposalType(proposal: any): "modify" | "new" {
+  // "new" if the proposal adds a whole new prediction (no matching existing id)
+  // "modify" if it changes a field on an existing prediction
+  const exists = predictions.some((p: any) => p.id === proposal.id);
+  return exists ? "modify" : "new";
+}
+
 function getPredCurrent(id: string, field: string): string {
   const p = predictions.find((p: any) => p.id === id);
   if (!p) return "—";
@@ -99,8 +106,20 @@ function getPredCurrent(id: string, field: string): string {
               <!-- Card header -->
               <div class="px-5 py-3 border-b border-[#1e1e23] flex items-start justify-between gap-4 flex-wrap">
                 <div>
-                  <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">
-                    {proposal.id}  ·  field: <span class="text-gta-gold">{proposal.field}</span>
+                  <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-1 flex items-center gap-2">
+                    {getProposalType(proposal) === "modify" ? (
+                      <span class="border border-zinc-700 bg-zinc-800/60 text-zinc-400 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-widest">
+                        ✏ Modify existing
+                      </span>
+                    ) : (
+                      <span class="border border-gta-teal/30 bg-gta-teal/10 text-gta-teal px-1.5 py-0.5 rounded text-[9px] uppercase tracking-widest">
+                        + New prediction
+                      </span>
+                    )}
+                    <span>{proposal.id}</span>
+                    {getProposalType(proposal) === "modify" && (
+                      <span>· field: <span class="text-gta-gold">{proposal.field}</span></span>
+                    )}
                   </div>
                   <div class="text-sm font-semibold text-zinc-200">{predTitle}</div>
                 </div>
