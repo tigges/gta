@@ -94,6 +94,7 @@ export interface ChartMeta {
 
 // GTA VI
 import ChartTrailerVelocity      from "../components/charts/ChartTrailerVelocity.astro";
+import ChartGta6SearchTrends   from "../components/charts/ChartGta6SearchTrends.astro";
 import ChartTrailerDiscovery     from "../components/charts/ChartTrailerDiscovery.astro";
 import ChartDelayTimeline        from "../components/charts/ChartDelayTimeline.astro";
 import ChartRegionHeatmap        from "../components/charts/ChartRegionHeatmap.astro";
@@ -162,6 +163,19 @@ export const ALL_CHARTS: ChartMeta[] = [
     meta:      null, // no right-side element for this chart
     sources:   "Source: YouTube Data API · polled nightly",
     shareText: "GTA VI Trailer 1 holds the 24-hour YouTube record. 179M views and counting. The hype is unlike anything in gaming.",
+    pages:     ["charts", "gta-vi"],
+  },
+
+  {
+    id:        "gta6-search-trends-chart",
+    component: ChartGta6SearchTrends,
+    game:      "gta-vi",
+    category:  "Community",
+    badge:     "Community",
+    label:     "GTA VI Search Signal — Google Trends 2020–2026",
+    meta:      null,  // dynamic: total data points in chart
+    sources:   "Source: Google Trends via pytrends · worldwide · 0–100 scale",
+    shareText: "GTA VI search interest is at an all-time high and still climbing. T1 (Dec 2023) and T2 (May 2025) peaks visible in worldwide data.",
     pages:     ["charts", "gta-vi"],
   },
 
