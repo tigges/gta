@@ -101,76 +101,76 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
       <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 0%, #0a0a0d 100%)"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
-      <div class="flex items-start justify-between flex-wrap gap-4">
+
+      <!-- Top row: headline left · cover strip right (clickable filter) -->
+      <div class="flex items-start justify-between flex-wrap gap-4 mb-6">
         <div>
           <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Data Intelligence</div>
           <h1 class="text-3xl font-bold text-white mb-2">Charts</h1>
           <p class="text-sm text-zinc-400 max-w-lg">
             The GTA franchise quantified. Every chart is filterable, sourced, and updated nightly.
           </p>
-          <!-- Game cover strip -->
-          <div class="flex items-center gap-2.5 mt-5">
-            {([
-              { id: "gta-1",  short: "GTA 1"  },
-              { id: "gta-2",  short: "GTA 2"  },
-              { id: "gta-3",  short: "GTA III" },
-              { id: "gta-vc", short: "GTA VC"  },
-              { id: "gta-sa", short: "GTA SA"  },
-              { id: "gta-4",  short: "GTA IV"  },
-              { id: "gta-5",  short: "GTA V"   },
-              { id: "gta-6",  short: "GTA VI"  },
-            ] as const).map(g => (
-              <div class="flex flex-col items-center gap-1 group">
-                <img
-                  src={`/assets/covers/${g.id}.jpg`}
-                  alt={g.short}
-                  class={`rounded border object-cover transition-all duration-200 group-hover:scale-105 group-hover:border-gta-gold/40 ${g.id === "gta-6" ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10" : "w-9 h-12 border-[#2a2a31]"}`}
-                  loading="eager"
-                />
-                <span class={`text-[10px] font-mono tracking-widest ${g.id === "gta-6" ? "text-gta-gold" : "text-zinc-500"}`}>{g.short}</span>
-              </div>
-            ))}
-          </div>
         </div>
-        <!-- Title filters — logo-based, GTA VI first (most recent), backwards in time -->
-        <div class="flex flex-wrap items-center gap-2 pb-4 border-b border-[#1e1e23] mb-3">
 
-          {/* All Titles */}
-          <button class="chart-title-filter flex items-center gap-1.5 px-3 py-1.5 rounded border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 text-[11px] font-mono"
-                  data-title="All">
-            <span class="text-[10px] font-mono">All</span>
-          </button>
-
-          {/* GTA VI */}
-          <button class="chart-title-filter flex items-center gap-2 px-2.5 py-1.5 rounded border transition-all border-[#2a2a31] hover:border-gta-gold/40 group"
-                  data-title="gta-vi" aria-label="GTA VI">
-            <img src="/assets/logos/gta-vi.svg" alt="GTA VI"
-                 class="h-5 w-auto opacity-60 group-hover:opacity-90 transition-opacity" />
-          </button>
-
-          {/* GTA Online */}
-          <button class="chart-title-filter flex items-center gap-2 px-2.5 py-1.5 rounded border transition-all border-[#2a2a31] hover:border-gta-teal/40 group"
-                  data-title="gta-online" aria-label="GTA Online">
-            <img src="/assets/logos/gta-online.svg" alt="GTA Online"
-                 class="h-5 w-auto opacity-60 group-hover:opacity-90 transition-opacity" />
-          </button>
-
-          {/* GTA V */}
-          <button class="chart-title-filter flex items-center gap-2 px-2.5 py-1.5 rounded border transition-all border-[#2a2a31] hover:border-zinc-500 group"
-                  data-title="gta-v" aria-label="GTA V">
-            <img src="/assets/logos/gta-v.png" alt="GTA V"
-                 class="h-5 w-auto opacity-60 group-hover:opacity-90 transition-opacity" />
-          </button>
-
-          {/* Franchise */}
-          <button class="chart-title-filter flex items-center gap-1.5 px-3 py-1.5 rounded border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300 text-[10px] font-mono uppercase tracking-widest"
-                  data-title="franchise">
-            Franchise
-          </button>
-
+        <!-- Cover strip — clickable title filters -->
+        <div id="cover-strip" class="flex items-end gap-2 flex-wrap">
+          {([
+            { id: "gta-1",  short: "GTA 1",   title: "franchise" },
+            { id: "gta-2",  short: "GTA 2",   title: "franchise" },
+            { id: "gta-3",  short: "GTA III",  title: "franchise" },
+            { id: "gta-vc", short: "GTA VC",   title: "franchise" },
+            { id: "gta-sa", short: "GTA SA",   title: "franchise" },
+            { id: "gta-4",  short: "GTA IV",   title: "franchise" },
+            { id: "gta-5",  short: "GTA V",    title: "gta-v"     },
+            { id: "gta-6",  short: "GTA VI",   title: "gta-vi"    },
+          ] as const).map(g => (
+            <button
+              class="cover-title-filter flex flex-col items-center gap-1 group transition-all"
+              data-title={g.title}
+              data-cover-id={g.id}
+              aria-label={`Filter by ${g.short}`}
+            >
+              <img
+                src={`/assets/covers/${g.id}.jpg`}
+                alt={g.short}
+                class={`rounded border object-cover transition-all duration-200 group-hover:scale-105 group-hover:border-gta-gold/40 ${g.id === "gta-6" ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10" : "w-9 h-12 border-[#2a2a31]"}`}
+                loading="eager"
+              />
+              <span class={`text-[10px] font-mono tracking-widest ${g.id === "gta-6" ? "text-gta-gold" : "text-zinc-500"}`}>{g.short}</span>
+            </button>
+          ))}
         </div>
-        <!-- Category filters -->
-        <div class="flex flex-wrap gap-2 self-end pb-1">
+      </div>
+
+      <!-- Filter bar: title pills + category pills stacked -->
+      <div class="border-t border-[#1e1e23] pt-4 flex flex-col gap-3">
+
+        <!-- Row 1: Title filter — GamePill-style buttons -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[10px] font-mono text-zinc-700 uppercase tracking-widest shrink-0 mr-1">Title</span>
+          <button class="chart-title-filter px-3 py-1 rounded border text-[10px] font-mono uppercase tracking-widest transition-all"
+                  data-title="All" style="border-color:#2a2a31;color:#71717a">All</button>
+          <button class="chart-title-filter px-3 py-1 rounded border text-[10px] font-mono uppercase tracking-widest transition-all"
+                  data-title="gta-vi"
+                  style="color:var(--c-title-vi);border-color:color-mix(in srgb,var(--c-title-vi) 25%,transparent);background:color-mix(in srgb,var(--c-title-vi) 8%,transparent)"
+                  >GTA VI</button>
+          <button class="chart-title-filter px-3 py-1 rounded border text-[10px] font-mono uppercase tracking-widest transition-all"
+                  data-title="gta-online"
+                  style="color:var(--c-title-online);border-color:color-mix(in srgb,var(--c-title-online) 25%,transparent);background:color-mix(in srgb,var(--c-title-online) 8%,transparent)"
+                  >GTA Online</button>
+          <button class="chart-title-filter px-3 py-1 rounded border text-[10px] font-mono uppercase tracking-widest transition-all"
+                  data-title="gta-v"
+                  style="color:var(--c-title-v,#9898b8);border-color:color-mix(in srgb,var(--c-title-v,#9898b8) 25%,transparent);background:color-mix(in srgb,var(--c-title-v,#9898b8) 8%,transparent)"
+                  >GTA V</button>
+          <button class="chart-title-filter px-3 py-1 rounded border text-[10px] font-mono uppercase tracking-widest transition-all"
+                  data-title="franchise"
+                  style="color:var(--c-brand);border-color:color-mix(in srgb,var(--c-brand) 25%,transparent);background:color-mix(in srgb,var(--c-brand) 8%,transparent)"
+                  >Franchise</button>
+        </div>
+
+        <!-- Row 2: Category filter -->
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[10px] font-mono text-zinc-700 uppercase tracking-widest shrink-0 mr-1 self-center">Type</span>
           {CATEGORIES.map(cat => (
             <button
               class="chart-filter px-3 py-1.5 rounded text-[11px] font-mono border transition-all"
@@ -183,6 +183,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
             >{CAT_LABELS[cat] ?? cat}</button>
           ))}
         </div>
+
       </div>
     </div>
   </section>
@@ -227,73 +228,100 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
 </style>
 
 <script>
-  // ── Category filter ─────────────────────────────────────────
-  // ── Title filter ─────────────────────────────────────────────
-  let activeTitle = "All";
-  const titleParams = new URLSearchParams(window.location.search);
-  if (titleParams.has("title")) {
-    activeTitle = titleParams.get("title")!;
-  }
-  function applyTitleFilter() {
+  // ── Filter state ────────────────────────────────────────────────────────────
+  let activeTitle    = "All";
+  let activeCategory = "All";
+
+  // Honour ?title= URL param on load
+  const titleParam = new URLSearchParams(window.location.search).get("title");
+  if (titleParam) activeTitle = titleParam;
+
+  // ── Identity accent colours for title pill active-state ring ────────────
+  const TITLE_ACCENT: Record<string, string> = {
+    "All":        "rgba(42,42,49,1)",
+    "gta-vi":     "var(--c-title-vi,#ff6b9d)",
+    "gta-online": "var(--c-title-online,#00d4e8)",
+    "gta-v":      "var(--c-title-v,#9898b8)",
+    "franchise":  "var(--c-brand,#f59e0b)",
+  };
+
+  // ── Unified filter: both axes applied together ───────────────────────────
+  function applyFilters() {
     document.querySelectorAll<HTMLElement>(".chart-block").forEach(block => {
-      const blockTitle = block.dataset.title;
-      const show = activeTitle === "All" || !blockTitle || blockTitle === activeTitle;
-      block.style.display = show ? "" : "none";
+      const bt = block.dataset.title ?? "";
+      const bc = block.dataset.category ?? "";
+      const titleMatch = activeTitle === "All" || !bt || bt === activeTitle;
+      const catMatch   = activeCategory === "All" || !bc || bc === activeCategory
+        || (activeCategory === "Economy-IG" && bc === "Economy")
+        || (activeCategory === "Economy-RL" && bc === "Economy");
+      block.style.display = (titleMatch && catMatch) ? "" : "none";
     });
-    const TITLE_ACCENT: Record<string, { border: string; bg: string; img: string }> = {
-      "All":        { border: "#2a2a31",               bg: "transparent",              img: "1" },
-      "gta-vi":     { border: "rgba(245,158,11,0.5)",  bg: "var(--c-hero-bloom)",      img: "1" },
-      "gta-online": { border: "rgba(13,148,136,0.5)",  bg: "rgba(13,148,136,0.06)",    img: "1" },
-      "gta-v":      { border: "rgba(113,113,122,0.5)", bg: "rgba(113,113,122,0.06)",   img: "1" },
-      "franchise":  { border: "rgba(113,113,122,0.5)", bg: "rgba(113,113,122,0.06)",   img: "1" },
-    };
+
+    // Title pill visual state
     document.querySelectorAll<HTMLButtonElement>(".chart-title-filter").forEach(b => {
-      const title    = b.dataset.title ?? "All";
-      const isActive = title === activeTitle || (activeTitle === "All" && title === "All");
-      const accent   = TITLE_ACCENT[title] ?? TITLE_ACCENT["All"];
-      b.style.borderColor     = isActive ? accent.border : "rgba(42,42,49,1)";
-      b.style.backgroundColor = isActive ? accent.bg     : "transparent";
+      const t = b.dataset.title ?? "All";
+      const isActive = t === activeTitle;
+      b.style.opacity     = isActive ? "1" : "0.45";
+      b.style.outline     = isActive ? `2px solid ${TITLE_ACCENT[t] ?? TITLE_ACCENT["All"]}` : "none";
+      b.style.outlineOffset = "2px";
+    });
+
+    // Cover strip visual state
+    document.querySelectorAll<HTMLButtonElement>(".cover-title-filter").forEach(b => {
+      const t = b.dataset.title ?? "";
+      const isActive = t === activeTitle;
       const img = b.querySelector<HTMLImageElement>("img");
-      if (img) img.style.opacity = isActive ? "1" : "0.5";
-      if (!img) b.style.color = isActive ? "#f59e0b" : "";
+      if (img) {
+        img.style.opacity     = isActive ? "1" : (activeTitle === "All" ? "0.7" : "0.3");
+        img.style.borderColor = isActive ? "rgba(245,158,11,0.7)" : "";
+      }
+      const lbl = b.querySelector<HTMLElement>("span");
+      if (lbl) lbl.style.opacity = isActive ? "1" : (activeTitle === "All" ? "0.7" : "0.35");
+    });
+
+    // Category pill visual state
+    document.querySelectorAll<HTMLButtonElement>(".chart-filter").forEach(b => {
+      const active = b.dataset.filter === activeCategory;
+      b.className = b.className
+        .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
+        .replace(/border-\[#2a2a31\]|text-zinc-500/g, "")
+        .trim();
+      b.classList.add(...(active
+        ? ["border-gta-gold/40", "text-gta-gold", "bg-gta-gold/8"]
+        : ["border-[#2a2a31]", "text-zinc-500"]
+      ));
     });
   }
+
+  // ── Title pill click ──────────────────────────────────────────────────────
   document.querySelectorAll<HTMLButtonElement>(".chart-title-filter").forEach(btn => {
     btn.addEventListener("click", () => {
       activeTitle = btn.dataset.title!;
-      applyTitleFilter();
-      document.querySelector<HTMLButtonElement>('.chart-filter[data-filter="All"]')?.click();
+      applyFilters();
     });
   });
 
-  // Apply on page load (activates any ?title= URL param immediately)
-  applyTitleFilter();
+  // ── Cover strip click (toggle: same title click → reset to All) ──────────
+  document.querySelectorAll<HTMLButtonElement>(".cover-title-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const t = btn.dataset.title!;
+      activeTitle = activeTitle === t ? "All" : t;
+      applyFilters();
+    });
+  });
 
+  // ── Category pill click ───────────────────────────────────────────────────
   document.querySelectorAll<HTMLButtonElement>(".chart-filter").forEach(btn => {
     btn.addEventListener("click", () => {
-      const filter = btn.dataset.filter!;
-      document.querySelectorAll<HTMLButtonElement>(".chart-filter").forEach(b => {
-        const active = b.dataset.filter === filter;
-        b.className = b.className
-          .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
-          .replace(/border-\[#2a2a31\]|text-zinc-500/g, "")
-          .trim();
-        b.classList.add(
-          ...(active
-            ? ["border-gta-gold/40", "text-gta-gold", "bg-gta-gold/8"]
-            : ["border-[#2a2a31]", "text-zinc-500"])
-        );
-      });
-      document.querySelectorAll<HTMLElement>(".chart-block").forEach(block => {
-        const cat = block.dataset.category!;
-        const show = filter === "All"
-          || cat === filter
-          || (filter === "Economy-IG" && cat === "Economy")
-          || (filter === "Economy-RL" && cat === "Economy");
-        block.style.display = show ? "" : "none";
-      });
+      activeCategory = btn.dataset.filter!;
+      applyFilters();
     });
   });
+
+  // Apply on load
+  applyFilters();
+
+
 
   // ── Watermark: stamped on all chart SVGs after D3 renders ────
   function stampChartWatermarks() {
@@ -338,7 +366,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
     requestAnimationFrame(() => tryRender(0));
   }
 
-  requestAnimationFrame(() => applyTitleFilter());
+  requestAnimationFrame(() => applyFilters());
 
   // ── Hash navigation — filter activation only ─────────────────────────────
   (function handleChartHash() {
@@ -350,8 +378,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
       if (!el) return;
       const section = (el.closest<HTMLElement>("section.chart-block") ?? el) as HTMLElement;
       if (section.style.display === "none" || section.offsetParent === null) {
-        document.querySelector<HTMLButtonElement>('.chart-filter[data-filter="All"]')?.click();
-        document.querySelector<HTMLButtonElement>('.chart-title-filter[data-title="All"]')?.click();
+        activeCategory = "All"; activeTitle = "All"; applyFilters();
         setTimeout(() => {
           section.scrollIntoView({ behavior: "instant", block: "start" });
         }, 50);
