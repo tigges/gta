@@ -22,7 +22,7 @@ import { C_BRAND, C_GROWTH } from "../../config/colors";
         </div>
         <div id="ie-tiers-chart" class="w-full"
           data-sell={JSON.stringify((vehicleCargoData as any).sell_prices_net)}
-          style="min-height:240px"
+          
         ></div>
         <CardFooter chartId="ie-tiers-chart" sources="Source: GTABase.com · GTA Wiki · community records · no-damage assumption · net of setup mods" shareText="GTA Online Import/Export sell prices: top-range specialist delivers 5× more than standard private. Always prioritise top-range sources." />
       </div>
@@ -52,7 +52,7 @@ import { C_BRAND, C_GROWTH } from "../../config/colors";
     ];
 
     const rowH = 52, labelW = 106;
-    const margin = { top: 16, right: 100, bottom: 24, left: labelW };
+    const margin = { top: 16, right: 100, bottom: 48, left: labelW };
     const W = el.clientWidth - margin.left - margin.right;
     const H = tiers.length * rowH + margin.top + margin.bottom;
 

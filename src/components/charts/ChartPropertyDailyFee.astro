@@ -68,7 +68,7 @@ import CardFooter from "../CardFooter.astro";
       const y = i * rowH + 6;
       const bh = rowH - 14;
       const isMeta = ["bunker", "nightclub", "mc-business", "acid-lab"].includes(item.type);
-      const col = isMeta ? cc.bar : cc.text7;
+      const col = isMeta ? cc.bar : cc.text5;
 
       svg.append("rect").attr("x", 0).attr("y", y).attr("width", x(item.maxFee)).attr("height", bh)
         .attr("rx", 2).attr("fill", col).attr("opacity", 0.65);

@@ -19,7 +19,7 @@ import CardFooter from "../CardFooter.astro";
             <span class="flex items-center gap-1.5"><span class="text-zinc-600">◉</span> = longer run</span>
           </div>
         </div>
-        <div id="heist-comparison-chart" class="w-full" style="height:320px"
+        <div id="heist-comparison-chart" class="w-full" style="height:400px"
           data-heists={JSON.stringify((heistsData as any).heists)}
         ></div>
         <CardFooter chartId="heist-comparison-chart" sources="Source: GTA Wiki · GTABase.com · community records · 2024 patches · Hard difficulty" shareText="All GTA Online heists compared: Cayo Perico wins on $/hr despite being solo. Casino Heist is the best group heist. Data-driven answer to which heist is worth doing." />
@@ -64,8 +64,12 @@ import CardFooter from "../CardFooter.astro";
       svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", r)
         .attr("fill", col).attr("opacity", 0.65).attr("stroke", col).attr("stroke-width", 1.5).attr("stroke-opacity", 0.9);
       const title = (h.title as string).replace("The ", "").replace(" Heist", "").slice(0, 16);
-      svg.append("text").attr("x", cx).attr("y", cy - r - 4).attr("text-anchor", "middle")
-        .attr("fill", cc.text3).attr("font-size", "8.5").attr("font-family", "monospace").text(title);
+      const titleY = cy - r - 6;
+      const titleW = title.length * 4.8;
+      svg.append("rect").attr("x", cx - titleW/2 - 3).attr("y", titleY - 9).attr("width", titleW + 6).attr("height", 12)
+        .attr("rx", 2).attr("fill", cc.card).attr("opacity", 0.85);
+      svg.append("text").attr("x", cx).attr("y", titleY).attr("text-anchor", "middle")
+        .attr("fill", cc.text2).attr("font-size", "8.5").attr("font-family", "monospace").text(title);
       // $/hr label inside bubble
       const gphLabel = `$${Math.round(h.gta_per_hr / 1000)}k`;
       svg.append("text").attr("x", cx).attr("y", cy + 4).attr("text-anchor", "middle")
