@@ -1,0 +1,128 @@
+---
+/**
+ * ChartTeaserSearchSignal — static CSS sparkline for GTA VI search interest.
+ * Shows GTA 6 search trend with T1/T2 peaks marked. No D3, always renders.
+ */
+import trendsData from "../../../data/gta-6/trends/search-interest.json";
+
+const gta6kw = (trendsData as any).keywords.find((k: any) => k.keyword === "GTA 6") as any;
+const gta5kw = (trendsData as any).keywords.find((k: any) => k.keyword === "GTA V") as any;
+
+// Sample ~36 points evenly from the last 4 years for the sparkline
+const all6 = gta6kw?.data ?? [];
+const all5 = gta5kw?.data ?? [];
+const SAMPLES = 48;
+const step = Math.max(1, Math.floor(all6.length / SAMPLES));
+const samples6 = all6.filter((_: any, i: number) => i % step === 0).slice(-SAMPLES);
+const samples5 = all5.filter((_: any, i: number) => i % step === 0).slice(-SAMPLES);
+const max6 = Math.max(...samples6.map((d: any) => d.value), 1);
+
+// Find T1 and T2 approximate positions
+const T1_DATE = "2023-12-04";
+const T2_DATE = "2025-05-06";
+const t1Idx = samples6.findIndex((d: any) => d.date >= T1_DATE.slice(0,7));
+const t2Idx = samples6.findIndex((d: any) => d.date >= T2_DATE.slice(0,7));
+
+const BAR_MAX_H = 56; // px
+const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" });
+---
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+  <!-- Header -->
+  <div class="px-5 py-4 border-b border-[#1e1e23]">
+    <div class="font-semibold text-zinc-200 text-sm mb-0.5">
+      GTA VI Search Interest — Two Trailer Spikes, Trend Still Rising
+    </div>
+    <div class="text-[11px] text-zinc-500 font-mono">
+      Google Trends · worldwide · 0–100 scale · GTA 6 vs GTA V
+    </div>
+  </div>
+
+  <!-- Sparkline -->
+  <div class="px-5 pt-4 pb-2">
+    <div class="relative" style={`height:${BAR_MAX_H + 28}px`}>
+      <!-- T1 marker line -->
+      {t1Idx >= 0 && (
+        <div class="absolute top-0 bottom-8 w-px"
+             style={`left:${Math.round((t1Idx / (SAMPLES - 1)) * 100)}%;background:var(--c-alert);opacity:0.4`}>
+          <span class="absolute -top-1 left-2 text-[9px] font-mono whitespace-nowrap"
+                style="color:var(--c-alert)">T1</span>
+        </div>
+      )}
+      <!-- T2 marker line -->
+      {t2Idx >= 0 && (
+        <div class="absolute top-0 bottom-8 w-px"
+             style={`left:${Math.round((t2Idx / (SAMPLES - 1)) * 100)}%;background:var(--c-alert);opacity:0.4`}>
+          <span class="absolute -top-1 left-2 text-[9px] font-mono whitespace-nowrap"
+                style="color:var(--c-alert)">T2</span>
+        </div>
+      )}
+
+      <!-- GTA V bars (faint, background) -->
+      <div class="absolute bottom-8 left-0 right-0 flex items-end gap-px" style={`height:${BAR_MAX_H}px`}>
+        {samples5.map((d: any) => {
+          const h = Math.max(1, Math.round((d.value / max6) * BAR_MAX_H));
+          return (
+            <div class="flex-1 rounded-sm"
+                 style={`height:${h}px;background:var(--c-text-6);opacity:0.3`}></div>
+          );
+        })}
+      </div>
+
+      <!-- GTA 6 bars (gold, foreground) -->
+      <div class="absolute bottom-8 left-0 right-0 flex items-end gap-px" style={`height:${BAR_MAX_H}px`}>
+        {samples6.map((d: any) => {
+          const h = Math.max(1, Math.round((d.value / max6) * BAR_MAX_H));
+          const isT1 = t1Idx >= 0 && Math.abs(samples6.indexOf(d) - t1Idx) < 2;
+          const isT2 = t2Idx >= 0 && Math.abs(samples6.indexOf(d) - t2Idx) < 2;
+          return (
+            <div class="flex-1 rounded-sm transition-all duration-300"
+                 style={`height:${h}px;background:${isT1 || isT2 ? "var(--c-alert)" : "var(--c-brand)"};opacity:${isT1 || isT2 ? "0.9" : "0.7"}`}></div>
+          );
+        })}
+      </div>
+
+      <!-- X axis labels -->
+      <div class="absolute bottom-0 left-0 right-0 flex items-center justify-between">
+        <span class="text-[9px] font-mono text-zinc-700">2020</span>
+        <span class="text-[9px] font-mono text-zinc-700">2022</span>
+        <span class="text-[9px] font-mono text-zinc-700">2024</span>
+        <span class="text-[9px] font-mono text-zinc-700">2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="px-5 pb-3 flex items-center gap-4 text-[9px] font-mono text-zinc-600">
+    <span class="flex items-center gap-1">
+      <span class="w-2.5 h-1.5 rounded-sm inline-block" style="background:var(--c-brand);opacity:0.7"></span>
+      GTA 6
+    </span>
+    <span class="flex items-center gap-1">
+      <span class="w-2.5 h-1.5 rounded-sm inline-block" style="background:var(--c-text-6);opacity:0.5"></span>
+      GTA V
+    </span>
+    <span class="flex items-center gap-1">
+      <span class="w-2.5 h-1.5 rounded-sm inline-block" style="background:var(--c-alert);opacity:0.7"></span>
+      Trailer spike
+    </span>
+  </div>
+
+  <!-- Key stat -->
+  <div class="px-5 pb-4">
+    <div class="rounded-lg border border-[#1e1e23] px-4 py-2.5 flex items-center justify-between gap-4" style="background:rgba(245,158,11,0.04)">
+      <span class="text-[11px] font-mono text-zinc-400">
+        GTA VI is running <span class="text-gta-gold font-semibold">4.8× hotter</span> than GTA V was at the equivalent pre-launch moment
+      </span>
+      <a href="/charts#section-prelaunch-comparison-chart"
+         class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-gta-gold transition-colors uppercase tracking-widest whitespace-nowrap">
+        Full chart →
+      </a>
+    </div>
+  </div>
+
+  <div class="px-5 pb-3 flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
+    <span class="text-[10px] text-zinc-600 font-mono">Source: Google Trends via pytrends · updated {updatedAt}</span>
+    <span class="text-[10px] font-mono text-zinc-700 tracking-widest">GTAVI.AI</span>
+  </div>
+</div>
