@@ -19,6 +19,9 @@ interface Props {
 
 const { anchorId, shareText, size = "sm" } = Astro.props;
 
+// Build the canonical page URL at build time for X/Reddit link hrefs.
+// The clipboard copy handler overrides this with window.location at runtime
+// so staging.gtavi.ai shares copy the correct staging URL, not production.
 const pageUrl    = `${Astro.url.origin}${Astro.url.pathname}#${anchorId}`;
 const tweetUrl   = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText + "\n\n")}&url=${encodeURIComponent(pageUrl)}`;
 const redditUrl  = `https://www.reddit.com/submit?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent(shareText)}`;
@@ -59,6 +62,7 @@ const dropId  = `share-drop-${anchorId}`;
     <button
       class="share-copy-item w-full flex items-start gap-3 px-3.5 py-2.5 hover:bg-white/[0.04] transition-colors text-left rounded-t-lg"
       data-url={pageUrl}
+      data-anchor={anchorId}
       type="button"
       role="menuitem"
     >
@@ -112,13 +116,14 @@ const dropId  = `share-drop-${anchorId}`;
     <!-- Web Share — rendered only if navigator.share available (via JS) -->
     <div class="share-native-item hidden">
       <div class="h-px mx-2" style="background:var(--c-border-1)"></div>
-      <button
-        class="share-native-btn w-full flex items-center gap-3 px-3.5 py-2.5 hover:bg-white/[0.04] transition-colors text-left rounded-b-lg"
-        data-url={pageUrl}
-        data-text={shareText}
-        type="button"
-        role="menuitem"
-      >
+        <button
+          class="share-native-btn w-full flex items-center gap-3 px-3.5 py-2.5 hover:bg-white/[0.04] transition-colors text-left rounded-b-lg"
+          data-url={pageUrl}
+          data-anchor={anchorId}
+          data-text={shareText}
+          type="button"
+          role="menuitem"
+        >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 share-item-icon">
           <path d="M12 3v10M12 3l-4 4M12 3l4 4M6 17l-3 3M18 17l3 3M12 13l-6 4M12 13l6 4"/>
         </svg>
@@ -183,7 +188,11 @@ const dropId  = `share-drop-${anchorId}`;
   // Copy link handler
   document.querySelectorAll<HTMLButtonElement>(".share-copy-item").forEach(btn => {
     btn.addEventListener("click", async () => {
-      const url = btn.dataset.url!;
+      // Build URL at runtime so staging.gtavi.ai copies a staging link, not production.
+      const anchor = btn.dataset.anchor;
+      const url = anchor
+        ? `${window.location.origin}${window.location.pathname}#${anchor}`
+        : btn.dataset.url!;
       try {
         await navigator.clipboard.writeText(url);
         const label = btn.querySelector<HTMLElement>(".copy-label");
@@ -200,7 +209,10 @@ const dropId  = `share-drop-${anchorId}`;
   // Native Web Share handler
   document.querySelectorAll<HTMLButtonElement>(".share-native-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
-      const url  = btn.dataset.url!;
+      const anchor = btn.dataset.anchor;
+      const url = anchor
+        ? `${window.location.origin}${window.location.pathname}#${anchor}`
+        : btn.dataset.url!;
       const text = btn.dataset.text!;
       try {
         await navigator.share({ url, text });
