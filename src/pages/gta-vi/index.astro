@@ -390,4 +390,33 @@ const featuredIncome = incomeList
     requestAnimationFrame(() => { track.style.transition = ""; });
   });
   goTo(0);
+
+  // ── Chart trigger: poll window.__chartReg until hub charts register, then fire ──
+  // Chart component scripts run in a separate bundle and may register after this
+  // script executes. Poll rAF until all 3 hub charts are in the registry, then
+  // trigger them. This guarantees execution regardless of bundle load order.
+  const HUB_CHARTS = ["trailer-discovery-chart", "cpi-chart", "revenue-split-chart"];
+  let pollAttempts = 0;
+
+  function pollAndTriggerCharts() {
+    const reg = (window as any).__chartReg as Map<string, () => void> | undefined;
+    if (!reg) { if (pollAttempts++ < 60) requestAnimationFrame(pollAndTriggerCharts); return; }
+
+    HUB_CHARTS.forEach(id => {
+      const fn = reg.get(id);
+      if (fn) { fn(); }
+    });
+
+    const remaining = HUB_CHARTS.filter(id => reg.has(id));
+    if (remaining.length < HUB_CHARTS.length && pollAttempts++ < 60) {
+      requestAnimationFrame(pollAndTriggerCharts);
+    }
+  }
+
+  if (document.readyState === "complete") {
+    requestAnimationFrame(pollAndTriggerCharts);
+  } else {
+    window.addEventListener("load", () => requestAnimationFrame(pollAndTriggerCharts), { once: true });
+  }
+
 </script>
