@@ -53,7 +53,7 @@ import CardFooter from "../CardFooter.astro";
 
     const titles: any[] = JSON.parse(el.dataset.titles || "[]");
 
-    const margin = { top: 20, right: 30, bottom: 80, left: 60 };
+    const margin = { top: 20, right: 30, bottom: 36, left: 60 };
     const W = el.clientWidth - margin.left - margin.right;
     const H = el.clientHeight - margin.top - margin.bottom;
 
@@ -117,39 +117,16 @@ import CardFooter from "../CardFooter.astro";
       }
     });
 
-    // X axis — cover images instead of text labels
-    const COVER_URLS: Record<string,string> = {
-      "GTA 1":  "/assets/covers/gta-1.jpg",
-      "GTA 2":  "/assets/covers/gta-2.jpg",
-      "GTA III": "/assets/covers/gta-3.jpg",
-      "GTA VC":  "/assets/covers/gta-vc.jpg",
-      "GTA SA":  "/assets/covers/gta-sa.jpg",
-      "GTA IV":  "/assets/covers/gta-4.jpg",
-      "GTA V":   "/assets/covers/gta-5.jpg",
-      "GTA VI":  "/assets/covers/gta-6.jpg",
-    };
-
+    // X axis — text labels
     const xAxisG = svg.append("g").attr("transform", `translate(0,${H})`);
     xAxisG.call(d3.axisBottom(x))
       .call(g => g.select(".domain").attr("stroke", cc.border2))
       .call(g => g.selectAll(".tick line").remove())
       .call(g => g.selectAll("text").remove());
 
-    // Add cover art images as tick marks
-    const imgW = Math.min(x.bandwidth() * 0.75, 48);
-    const imgH = Math.round(imgW * 1.4);
     titles.forEach(t => {
       const cx = (x(t.short) ?? 0) + x.bandwidth() / 2;
-      const src = COVER_URLS[t.short];
-      if (!src) return;
-      xAxisG.append("image")
-        .attr("href", src)
-        .attr("x", cx - imgW / 2)
-        .attr("y", 8)
-        .attr("width", imgW)
-        .attr("height", imgH)
-        .attr("clip-path", `inset(0 round 4px)`)
-        .style("border-radius", "4px");
+      const imgW = 0, imgH = 0;  // no images — keep variable for compat
       xAxisG.append("text")
         .attr("x", cx).attr("y", imgH + 22)
         .attr("text-anchor", "middle")

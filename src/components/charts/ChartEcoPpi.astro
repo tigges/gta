@@ -70,7 +70,7 @@ const ppiSeries = (ppiData as any).series as any[];
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isLast?5:3.5).attr("fill",isLast?cc.red:cc.bg).attr("stroke",dotColor).attr("stroke-width",1.5);
       if(isLast) {
         const nearEdge = cx > W - 60;
-        svg.append("text").attr("x", nearEdge ? cx-8 : cx+7).attr("y",cy+4)
+        svg.append("text").attr("x", nearEdge ? cx-8 : cx+7).attr("y",cy-14)
           .attr("fill",cc.red).attr("font-size","11").attr("font-family","monospace")
           .attr("font-weight","bold").attr("text-anchor", nearEdge ? "end" : "start")
           .text(`PPI ${s.ppi}`);
