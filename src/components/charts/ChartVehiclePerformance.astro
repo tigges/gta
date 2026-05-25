@@ -38,7 +38,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -96,7 +96,7 @@ import CardFooter from "../CardFooter.astro";
 
         svg.append("rect").attr("x", x(v.lap_seconds??maxL)).attr("y",y)
           .attr("width", Math.max(bw,2)).attr("height",barH).attr("rx",3)
-          .attr("fill",color).attr("opacity",0.85);
+          .attr("fill",color).attr("opacity",op.secondary);
 
         svg.append("text").attr("x",-8).attr("y",y+barH/2)
           .attr("text-anchor","end").attr("dominant-baseline","middle")
@@ -111,7 +111,7 @@ import CardFooter from "../CardFooter.astro";
 
         if (i < 3) {
           svg.append("rect").attr("x", x(v.lap_seconds??maxL)+6).attr("y",y+4)
-            .attr("width",18).attr("height",16).attr("rx",2).attr("fill",cc.bgDeep).attr("opacity",0.7);
+            .attr("width",18).attr("height",16).attr("rx",2).attr("fill",cc.bgDeep).attr("opacity",op.secondary);
           svg.append("text").attr("x",x(v.lap_seconds??maxL)+15).attr("y",y+barH/2)
             .attr("text-anchor","middle").attr("dominant-baseline","middle")
             .attr("fill",color).attr("font-size","9").attr("font-family","monospace").attr("font-weight","700")

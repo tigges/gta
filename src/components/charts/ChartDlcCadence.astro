@@ -23,7 +23,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -65,7 +65,7 @@ import CardFooter from "../CardFooter.astro";
 
     // Average line
     svg.append("line").attr("x1",0).attr("x2",W).attr("y1",y(avgGap)).attr("y2",y(avgGap))
-      .attr("stroke",cc.text6).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.5);
+      .attr("stroke",cc.text6).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",op.tertiary);
     svg.append("text").attr("x",4).attr("y",y(avgGap)-4)
       .attr("fill",cc.text6).attr("font-size","8").attr("font-family","monospace")
       .text(`avg: ${avgGap.toFixed(1)}mo`);
@@ -75,7 +75,7 @@ import CardFooter from "../CardFooter.astro";
     if (viStartIdx > 0) {
       const divX = (x(String(viStartIdx)) ?? 0) - x.bandwidth()*0.3;
       svg.append("line").attr("x1",divX).attr("x2",divX).attr("y1",0).attr("y2",H)
-        .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.4);
+        .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",op.muted);
       svg.append("text").attr("x",divX+4).attr("y",10)
         .attr("fill",cc.bar).attr("font-size","8").attr("font-family","monospace").text("GTA VI →");
     }
@@ -86,7 +86,7 @@ import CardFooter from "../CardFooter.astro";
         .attr("width",bw).attr("height",H-y(g.gap)).attr("rx",2)
         .attr("fill", g.isPred?"none":cc.text7)
         .attr("stroke", g.isPred?cc.bar:"none").attr("stroke-width",1).attr("stroke-dasharray",g.isPred?"5,3":"0")
-        .attr("opacity",0.8);
+        .attr("opacity",op.secondary);
       svg.append("text").attr("x",bx+bw/2).attr("y",y(g.gap)-4)
         .attr("text-anchor","middle")
         .attr("fill",g.isPred?cc.bar:cc.text4)

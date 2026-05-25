@@ -32,7 +32,7 @@ const liveMetaSeries = lastMeta?.date === today
 
 <script>
   import * as d3 from "d3";
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
   import { registerChart, triggerChart } from "../../assets/chartInit";
 
   const CHART_H: Record<string, number> = {
@@ -86,7 +86,7 @@ const liveMetaSeries = lastMeta?.date === today
     });
     [{date:"2020-12-15",label:"Cayo",color:cc.green},{date:"2022-01-20",label:"Nerf",color:cc.red},{date:"2022-12-13",label:"Acid Lab",color:cc.teal}].forEach(a=>{
       const xp=x(new Date(a.date));
-      svg.append("line").attr("x1",xp).attr("x2",xp).attr("y1",0).attr("y2",H).attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.6);
+      svg.append("line").attr("x1",xp).attr("x2",xp).attr("y1",0).attr("y2",H).attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",op.tertiary);
       svg.append("text").attr("x",xp+3).attr("y",12).attr("fill",a.color).attr("font-size","8").attr("font-family","monospace").text(a.label);
     });
     svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))

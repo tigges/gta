@@ -29,7 +29,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -70,7 +70,7 @@ import CardFooter from "../CardFooter.astro";
         lastTier = s.tier;
       }
       svg.append("rect").attr("x",0).attr("y",yt+yOff).attr("width",x(s.gta_per_hr)).attr("height",bh)
-        .attr("rx",3).attr("fill",barColor).attr("opacity",0.8);
+        .attr("rx",3).attr("fill",barColor).attr("opacity",op.secondary);
       svg.append("text").attr("x",-6).attr("y",yt+bh/2+yOff+4).attr("text-anchor","end")
         .attr("fill",cc.text3).attr("font-size","10").attr("font-family","monospace")
         .text(s.name.length>24 ? s.name.slice(0,23)+"…" : s.name);

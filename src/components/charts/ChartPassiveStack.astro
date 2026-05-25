@@ -22,7 +22,7 @@ import CardFooter from "../CardFooter.astro";
               { label: "Acid Lab",     color: "#22c55e" },
             ].map(l => (
               <span class="flex items-center gap-1.5">
-                <span class="w-3 h-3 rounded-sm inline-block" style={`background:${l.color};opacity:0.8`}></span>
+                <span class="w-3 h-3 rounded-sm inline-block" style={`background:${l.color};opacity:var(--o-secondary)`}></span>
                 {l.label}
               </span>
             ))}
@@ -35,7 +35,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -79,7 +79,7 @@ import CardFooter from "../CardFooter.astro";
         const xv = x(s.date) ?? 0;
         svg.append("rect").attr("x", xv).attr("y", y(yBottom + val))
           .attr("width", x.bandwidth()).attr("height", Math.max(0, y(yBottom) - y(yBottom + val)))
-          .attr("fill", COLORS[k]).attr("opacity", 0.82);
+          .attr("fill", COLORS[k]).attr("opacity",op.secondary);
         yBottom += val;
       });
       // Total label on top

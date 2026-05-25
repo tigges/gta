@@ -38,7 +38,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -102,7 +102,7 @@ import CardFooter from "../CardFooter.astro";
         const markerY = above ? 16 : 16 + stripH - 10;
 
         svg.append("line").attr("x1",ex).attr("x2",ex).attr("y1",16).attr("y2",16+stripH)
-          .attr("stroke",color).attr("stroke-width",1).attr("opacity",0.6);
+          .attr("stroke",color).attr("stroke-width",1).attr("opacity",op.tertiary);
 
         svg.append("circle").attr("cx",ex).attr("cy",markerY+5).attr("r",4)
           .attr("fill",color).attr("stroke",cc.bg).attr("stroke-width",1);

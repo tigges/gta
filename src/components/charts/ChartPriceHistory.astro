@@ -30,7 +30,7 @@ import { C_GROWTH, C_ALERT } from "../../config/colors";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -98,7 +98,7 @@ import { C_GROWTH, C_ALERT } from "../../config/colors";
         .attr("fill", cc.text4).attr("font-size", "9.5").attr("font-family", "monospace")
         .text(shortName as string);
       svg.append("line").attr("x1", 0).attr("x2", W).attr("y1", ym).attr("y2", ym)
-        .attr("stroke", cc.grid).attr("opacity", 0.7);
+        .attr("stroke", cc.grid).attr("opacity",op.secondary);
     });
 
     // Event dots
@@ -110,14 +110,14 @@ import { C_GROWTH, C_ALERT } from "../../config/colors";
       if (ev.evtType === "unchanged") {
         // Mechanical nerf: open circle (ring only)
         svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 6)
-          .attr("fill", "none").attr("stroke", cc.text4).attr("stroke-width", 1.5).attr("opacity", 0.8);
+          .attr("fill", "none").attr("stroke", cc.text4).attr("stroke-width", 1.5).attr("opacity",op.secondary);
       } else {
         svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 5)
-          .attr("fill", col).attr("opacity", 0.85).attr("stroke", col).attr("stroke-width", 1);
+          .attr("fill", col).attr("opacity",op.secondary).attr("stroke", col).attr("stroke-width", 1);
         // Second ring for nerfs (visual emphasis)
         if (ev.evtType === "nerf") {
           svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 8)
-            .attr("fill", "none").attr("stroke", cc.red).attr("stroke-width", 0.8).attr("opacity", 0.35);
+            .attr("fill", "none").attr("stroke", cc.red).attr("stroke-width", 0.8).attr("opacity",op.muted);
         }
       }
     });  }

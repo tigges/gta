@@ -34,7 +34,7 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
           <span class="text-[10px] font-mono text-zinc-500">● Passive returns</span>
         </div>
       </div>
-      <div class="text-[10px] font-mono uppercase tracking-widest mt-3 text-zinc-500">
+      <div class="text-[10px] font-mono uppercase tracking-widest mt-3" style="color:var(--c-live)">
         Y grows → next cycle
       </div>
     </div>
@@ -80,7 +80,7 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
           </div>
         </div>
       </div>
-      <div class="text-[10px] font-mono uppercase tracking-widest mt-3 text-zinc-500">
+      <div class="text-[10px] font-mono uppercase tracking-widest mt-3" style="color:var(--c-brand)">
         I returns to Y
       </div>
     </div>
@@ -96,8 +96,8 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
     {fullEconomyHref && (
       <a href={fullEconomyHref}
          class="text-[11px] font-mono uppercase tracking-widest transition-colors"
-         style="color:var(--c-brand);opacity:0.7"
-         onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+         style="color:var(--c-brand);opacity:var(--o-secondary)"
+         onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='var(--o-secondary)'">
         Full model →
       </a>
     )}

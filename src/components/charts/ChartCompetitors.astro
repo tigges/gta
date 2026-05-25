@@ -23,7 +23,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -71,7 +71,7 @@ import CardFooter from "../CardFooter.astro";
         const lo = parseFloat(g.prediction_range.low), hi = parseFloat(g.prediction_range.high);
         svg.append("rect").attr("x",bx+bw*0.1).attr("y",y(hi))
           .attr("width",bw*0.8).attr("height",y(lo)-y(hi)).attr("rx",2)
-          .attr("fill",g.color).attr("opacity",0.12);
+          .attr("fill",g.color).attr("opacity",op.muted);
         svg.append("text").attr("x",bx+bw/2).attr("y",y(hi)-4)
           .attr("text-anchor","middle").attr("fill",cc.text4).attr("font-size","8").attr("font-family","monospace")
           .text(`${g.prediction_range.low}–${g.prediction_range.high}M`);
@@ -104,7 +104,7 @@ import CardFooter from "../CardFooter.astro";
     svg.append("g").attr("transform",`translate(${W},0)`)
       .call(d3.axisRight(y2).ticks(5))
       .call(g=>g.select(".domain").attr("stroke",cc.teal))
-      .call(g=>g.selectAll(".tick line").attr("stroke",cc.teal).attr("opacity",0.2))
+      .call(g=>g.selectAll(".tick line").attr("stroke",cc.teal).attr("opacity",op.muted))
       .call(g=>g.selectAll("text").attr("fill",cc.teal).attr("font-size","9").attr("font-family","monospace").attr("dx","3"));
     svg.append("text").attr("x",W+44).attr("y",-8)
       .attr("fill",cc.teal).attr("font-size","8").attr("font-family","monospace").text("search");

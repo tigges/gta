@@ -19,7 +19,7 @@ import CardFooter from "../CardFooter.astro";
           <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
             <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:var(--c-brand)"></span>Base game sales</span>
             <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:var(--c-live)"></span>Recurrent (Online/Shark Cards)</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="border:1px dashed var(--c-brand);opacity:0.6"></span>GTA VI projected</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="border:1px dashed var(--c-brand);opacity:var(--o-tertiary)"></span>GTA VI projected</span>
           </div>
         </div>
         <div id="revenue-split-chart" class="w-full" style="height:320px"
@@ -29,7 +29,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -81,7 +81,7 @@ import CardFooter from "../CardFooter.astro";
     // % recurrent line
     const lineData = years.filter(y => !y.is_prediction);
     svg.append("path").datum(lineData)
-      .attr("fill","none").attr("stroke",cc.red).attr("stroke-width",1.5).attr("opacity",0.6)
+      .attr("fill","none").attr("stroke",cc.red).attr("stroke-width",1.5).attr("opacity",op.tertiary)
       .attr("d",d3.line<any>().x(d=>(x(d.fy)??0)+x.bandwidth()/2).y(d=>y2(d.pct_recurrent)).curve(d3.curveMonotoneX) as any);
 
     // Right axis for % recurrent

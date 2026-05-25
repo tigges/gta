@@ -25,7 +25,7 @@ const passiveSeries = (passiveData as any).series as any[];
 
 <script>
   import * as d3 from "d3";
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
   import { registerChart, triggerChart } from "../../assets/chartInit";
 
   const CHART_H: Record<string, number> = {
@@ -52,7 +52,7 @@ const passiveSeries = (passiveData as any).series as any[];
     const y=d3.scaleLinear().domain([0,yMax]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove()).call(g=>g.selectAll(".tick line").attr("stroke",cc.grid).attr("stroke-dasharray","3,3"));
-    years.forEach((yr:any)=>{ const bx=x(String(yr.calendar_year))??0,bh=Math.max(0,H-y(yr.recurrent_bn)); svg.append("rect").attr("x",bx).attr("y",y(yr.recurrent_bn)).attr("width",x.bandwidth()).attr("height",bh).attr("rx",2).attr("fill",cc.indigo).attr("opacity",0.8); });
+    years.forEach((yr:any)=>{ const bx=x(String(yr.calendar_year))??0,bh=Math.max(0,H-y(yr.recurrent_bn)); svg.append("rect").attr("x",bx).attr("y",y(yr.recurrent_bn)).attr("width",x.bandwidth()).attr("height",bh).attr("rx",2).attr("fill",cc.indigo).attr("opacity",op.secondary); });
     const peak=years.reduce((a:any,b:any)=>b.recurrent_bn>a.recurrent_bn?b:a);
     const px=(x(String(peak.calendar_year))??0)+x.bandwidth()/2;
     svg.append("text").attr("x",px).attr("y",y(peak.recurrent_bn)-5).attr("text-anchor","middle").attr("fill",cc.indigo).attr("font-size","9").attr("font-family","monospace").attr("font-weight","bold").text(`$${peak.recurrent_bn}B`);

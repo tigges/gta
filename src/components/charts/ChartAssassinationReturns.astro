@@ -26,7 +26,7 @@ const assassinGuide = (stocksData as any).guide_order as any[];
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -55,7 +55,7 @@ const assassinGuide = (stocksData as any).guide_order as any[];
       svg.append("rect")
         .attr("x",0).attr("y",y(s.title)??0)
         .attr("width",x(pct)).attr("height",y.bandwidth())
-        .attr("rx",3).attr("fill",color).attr("opacity",0.8);
+        .attr("rx",3).attr("fill",color).attr("opacity",op.secondary);
       const labelX = x(pct) + 6;
       const atEdge = labelX > W - 40;
       svg.append("text")

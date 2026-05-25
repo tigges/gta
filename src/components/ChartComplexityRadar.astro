@@ -69,7 +69,7 @@ const isProjected = (economy as any).projected;
   <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
     <div class="flex items-center gap-4 text-[11px] font-mono text-zinc-400">
       <span class="flex items-center gap-1.5">
-        <div class="w-4 h-px" style={`background:${isProjected ? C_BRAND : C_LIVE};opacity:0.8`}></div>
+        <div class="w-4 h-px" style={`background:${isProjected ? C_BRAND : C_LIVE};opacity:var(--o-secondary)`}></div>
         {economy.short ?? economy.title_name}
       </span>
       <span class="flex items-center gap-1.5">

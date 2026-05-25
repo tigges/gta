@@ -42,7 +42,7 @@ const metacriticScores = (metacriticData as any).titles as any[];
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -90,7 +90,7 @@ const metacriticScores = (metacriticData as any).titles as any[];
         .attr("stroke", isPred?cc.red:cc.text6)
         .attr("stroke-width", isPred?2:1.5)
         .attr("stroke-dasharray", isPred?"5,3":"0")
-        .attr("opacity",0.7);
+        .attr("opacity",op.secondary);
 
       // Critic dot (gold)
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",isPred?7:6)

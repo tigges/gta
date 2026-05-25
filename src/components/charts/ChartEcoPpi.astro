@@ -23,7 +23,7 @@ const ppiSeries = (ppiData as any).series as any[];
 
 <script>
   import * as d3 from "d3";
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
   import { registerChart, triggerChart } from "../../assets/chartInit";
 
   const CHART_H: Record<string, number> = {
@@ -78,7 +78,7 @@ const ppiSeries = (ppiData as any).series as any[];
     });
     [{date:"2018-07-24",label:"Oppressor +153%",color:cc.purple},{date:"2020-12-15",label:"Cayo all-time low",color:cc.green},{date:"2022-01-20",label:"Cayo nerf",color:cc.red}].forEach(a=>{
       const xp=x(new Date(a.date));
-      svg.append("line").attr("x1",xp).attr("x2",xp).attr("y1",0).attr("y2",H).attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.5);
+      svg.append("line").attr("x1",xp).attr("x2",xp).attr("y1",0).attr("y2",H).attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",op.tertiary);
       svg.append("text").attr("x",xp+3).attr("y",16).attr("fill",a.color).attr("font-size","7.5").attr("font-family","monospace").text(a.label);
     });
     svg.append("g").attr("transform",`translate(0,${H})`).call(d3.axisBottom(x).ticks(6).tickFormat((d:any)=>`${new Date(d).getFullYear()}`))

@@ -214,7 +214,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
           ].map(s => (
             <div class="rounded-lg border border-[#2a2a31] px-4 py-3 text-center" style="background:#131316">
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1">{s.label}</div>
-              <div class="text-2xl font-mono font-black" style={`color:${s.color};opacity:0.4`}>{s.value}</div>
+              <div class="text-2xl font-mono font-black" style={`color:${s.color};opacity:var(--o-muted)`}>{s.value}</div>
               <div class="text-[11px] font-mono text-zinc-500 mt-1">{s.sub}</div>
             </div>
           ))}

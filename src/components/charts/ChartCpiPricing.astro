@@ -40,7 +40,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -74,7 +74,7 @@ import CardFooter from "../CardFooter.astro";
 
     // $80 reference line
     svg.append("line").attr("x1",0).attr("x2",W).attr("y1",y(80)).attr("y2",y(80))
-      .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
+      .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",op.muted);
     svg.append("text").attr("x",4).attr("y",y(80)-4).attr("fill",cc.bar)
       .attr("font-size","9").attr("font-family","monospace").text("$80 GTA VI price");
 
@@ -109,9 +109,9 @@ import CardFooter from "../CardFooter.astro";
       .call(g=>g.selectAll("text").attr("fill",cc.text4).attr("font-size","12").attr("font-family","monospace").attr("dy","1.2em"));
 
     // Legend
-    svg.append("rect").attr("x",W-130).attr("y",-18).attr("width",10).attr("height",10).attr("fill",cc.text7).attr("opacity",0.9);
+    svg.append("rect").attr("x",W-130).attr("y",-18).attr("width",10).attr("height",10).attr("fill",cc.text7).attr("opacity",op.primary);
     svg.append("text").attr("x",W-116).attr("y",-10).attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace").text("Nominal price");
-    svg.append("rect").attr("x",W-130).attr("y",-4).attr("width",10).attr("height",10).attr("fill",cc.text6).attr("opacity",0.25);
+    svg.append("rect").attr("x",W-130).attr("y",-4).attr("width",10).attr("height",10).attr("fill",cc.text6).attr("opacity",op.muted);
     svg.append("text").attr("x",W-116).attr("y",4).attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace").text("2026 real price");  }
 
   registerChart("cpi-chart", init);
