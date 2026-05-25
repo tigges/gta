@@ -1,3 +1,3 @@
-export const SITE_VERSION = "1.87.6";
+export const SITE_VERSION = "1.87.7";
 export const SITE_VERSION_DATE = "2026-05-24";
 export const SITE_VERSION_LABEL = `v${SITE_VERSION}`;
