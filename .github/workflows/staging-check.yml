@@ -1,0 +1,40 @@
+name: Staging — Build Check
+
+# Runs on every push to the staging branch.
+# Build validation only — Cloudflare Pages handles the actual deploy to staging.gtavi.ai.
+# To go live: merge staging → main (triggers static.yml → GitHub Pages → gtavi.ai).
+
+on:
+  push:
+    branches: ["staging"]
+  pull_request:
+    branches: ["staging"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build & type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type check
+        run: npx astro check
+
+      - name: Build
+        run: npm run build
+
+      - name: Confirm dist/ was produced
+        run: |
+          echo "Build output:"
+          ls dist/ | head -20
+          echo "Pages built: $(find dist -name '*.html' | wc -l)"
