@@ -11,6 +11,7 @@ import IncomePredictionCard from "../../components/IncomePredictionCard.astro";
 import GamePill from "../../components/GamePill.astro";
 import { CATEGORY_BADGE_CLASSES } from "../../config/categoryColors";
 
+import ChartGta6SearchTrends from "../../components/charts/ChartGta6SearchTrends.astro";
 import predictionsData from "../../../data/gta-6/predictions.json";
 import incomeData from "../../../data/gta-6/income-predictions.json";
 import trailersDataRaw from "../../../data/gta-6/trailers.json";
@@ -665,6 +666,10 @@ const DELAY_THUMBS: Record<string,string> = {
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
         <span class="text-[10px] font-mono text-zinc-500">{totalTrendPts} pts · {trendsSince}–{trendsUntil} · worldwide</span>
       </div>
+      <ChartGta6SearchTrends />
+    </section>
+
+    <!-- OLD INLINE CHART REMOVED — kept as comment for reference
       <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
         <!-- Visual header: Trailer thumbnails + keyword context -->
         <div class="flex border-b border-[#1e1e23]">

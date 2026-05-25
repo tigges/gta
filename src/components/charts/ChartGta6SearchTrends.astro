@@ -1,0 +1,160 @@
+---
+/**
+ * ChartGta6SearchTrends
+ * GTA VI keyword search interest over time — Google Trends via pytrends.
+ * Extracted from intel.astro and registered as a reusable chart component.
+ */
+import trendsData from "../../../data/gta-6/trends/search-interest.json";
+import trailersData from "../../../data/gta-6/trailers.json";
+import CardFooter from "../CardFooter.astro";
+
+const keywords = trendsData.keywords;
+const trailers = (trailersData as any).trailers ?? [];
+const totalPts = keywords.reduce((s: number, k: any) => s + k.data.length, 0);
+const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" });
+---
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+  <!-- Header: trailer thumbnails + keyword toggles -->
+  <div class="flex border-b border-[#1e1e23]">
+    {trailers.slice(0, 2).map((t: any, i: number) => (
+      <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
+         class="relative overflow-hidden group shrink-0" style="width:140px">
+        <img src={`https://img.youtube.com/vi/${t.youtube_id}/mqdefault.jpg`}
+             alt={t.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+             style="height:80px" loading="lazy" />
+        <div class="absolute inset-0" style="background:linear-gradient(to right,transparent 50%,#131316 100%)"></div>
+        <div class="absolute bottom-1.5 left-2">
+          <span class="text-[10px] font-mono text-gta-gold uppercase tracking-widest">T{i + 1}</span>
+        </div>
+      </a>
+    ))}
+    <div class="flex-1 px-5 py-4 flex items-start justify-between flex-wrap gap-3">
+      <div>
+        <div class="font-semibold text-zinc-200 text-sm mb-0.5">GTA VI Search Interest Over Time</div>
+        <div class="text-[11px] text-zinc-500 font-mono">Google Trends · worldwide · 0–100 scale · {totalPts} data points</div>
+      </div>
+      <!-- Keyword toggles -->
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+        {keywords.map((kw: any) => (
+          <button
+            class="gta6-search-toggle flex items-center gap-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors"
+            data-keyword={kw.keyword}
+            data-active="true"
+          >
+            <span class="w-2.5 h-0.5 rounded inline-block" style={`background:${kw.color}`}></span>
+            {kw.keyword}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart canvas -->
+  <div id="gta6-search-trends-chart" class="w-full h-64 px-4 py-2"
+       data-keywords={JSON.stringify(keywords)}></div>
+
+  <CardFooter
+    chartId="gta6-search-trends-chart"
+    sources={`Source: Google Trends via pytrends · updated ${updatedAt}`}
+    shareText="GTA VI search interest is at an all-time high and still climbing. T1 (Dec 2023) and T2 (May 2025) peaks visible in worldwide data."
+  />
+</div>
+
+<script>
+  import * as d3 from "d3";
+  import { registerChart, triggerChart } from "../../assets/chartInit";
+  import { op } from "../../assets/chartColors";
+
+  function init() {
+    const el = document.getElementById("gta6-search-trends-chart") as HTMLElement | null;
+    if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
+
+    const keywords: { keyword: string; color: string; data: { date: string; value: number }[] }[] =
+      JSON.parse(el.dataset.keywords || "[]");
+
+    const allSeries = keywords.map((kw) => ({
+      ...kw,
+      data: kw.data.map((d) => ({ date: new Date(d.date), value: d.value })),
+    }));
+
+    const margin = { top: 10, right: 16, bottom: 28, left: 36 };
+    const W = el.clientWidth - margin.left - margin.right;
+    const H = el.clientHeight - margin.top - margin.bottom;
+
+    const svg = d3.select(el).append("svg")
+      .attr("width", "100%")
+      .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const allDates = allSeries.flatMap((s) => s.data.map((d) => d.date));
+    const x = d3.scaleTime().domain(d3.extent(allDates) as [Date, Date]).range([0, W]);
+    const y = d3.scaleLinear().domain([0, 100]).range([H, 0]);
+
+    // Grid
+    svg.append("g")
+      .call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(() => ""))
+      .call((g) => g.select(".domain").remove())
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+
+    const lineGen = d3.line<{ date: Date; value: number }>()
+      .x((d) => x(d.date)).y((d) => y(d.value)).curve(d3.curveMonotoneX);
+
+    const paths: Record<string, any> = {};
+    allSeries.forEach((kw) => {
+      paths[kw.keyword] = svg.append("path")
+        .datum(kw.data).attr("fill", "none").attr("stroke", kw.color)
+        .attr("stroke-width", 1.5).attr("opacity", op.primary).attr("d", lineGen as any);
+    });
+
+    // Trailer annotations
+    [
+      { date: new Date("2023-12-04"), label: "T1" },
+      { date: new Date("2025-05-06"), label: "T2" },
+    ].forEach(({ date, label }) => {
+      svg.append("line")
+        .attr("x1", x(date)).attr("x2", x(date)).attr("y1", 0).attr("y2", H)
+        .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "3,3")
+        .attr("opacity", op.tertiary);
+      svg.append("text")
+        .attr("x", x(date) + 4).attr("y", 10)
+        .attr("fill", "#ef4444").attr("font-size", "9").attr("font-family", "monospace").text(label);
+    });
+
+    // Axes
+    svg.append("g").attr("transform", `translate(0,${H})`)
+      .call(d3.axisBottom(x).ticks(5).tickFormat(d3.timeFormat("%Y") as any))
+      .call((g) => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call((g) => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
+    svg.append("g").call(d3.axisLeft(y).ticks(4))
+      .call((g) => g.select(".domain").attr("stroke", "#2a2a31"))
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
+      .call((g) => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
+
+    // Keyword toggle buttons
+    document.querySelectorAll<HTMLButtonElement>(".gta6-search-toggle").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const kw = btn.dataset.keyword!;
+        const active = btn.dataset.active === "true";
+        btn.dataset.active = active ? "false" : "true";
+        btn.style.opacity = active ? String(op.muted) : "1";
+        paths[kw]?.attr("opacity", active ? 0 : op.primary);
+      });
+    });
+  }
+
+  registerChart("gta6-search-trends-chart", init);
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("gta6-search-trends-chart");
+    if (obsEl) {
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { triggerChart("gta6-search-trends-chart"); obs.disconnect(); }
+      }, { rootMargin: "200px" });
+      obs.observe(obsEl);
+    }
+  } else { init(); }
+</script>
