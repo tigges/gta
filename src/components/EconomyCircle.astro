@@ -112,60 +112,66 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
       <span class="arrow-orange">&#8594;</span>
     </div>
 
-    <!-- RIGHT: C+I — EXPENDITURE -->
-    <div class="expend-box p-5 flex flex-col gap-4">
-      <!-- Header: C+I + EXPENDITURE at same weight -->
-      <div class="flex items-baseline gap-3">
+    <!-- RIGHT: C+I — two vertical columns (C left | I right) -->
+    <div class="expend-box flex flex-col">
+      <!-- Shared header -->
+      <div class="flex items-baseline gap-3 p-5 pb-3 border-b border-[#1e1e23]">
         <span class="text-5xl font-mono font-black leading-none" style="color:var(--c-flow-spending,#f97316)">C+I</span>
         <span class="text-xl font-mono font-black leading-none" style="color:var(--c-flow-spending,#f97316)">EXPEND.</span>
       </div>
 
-      <!-- C — Consumption (orange) -->
-      <div class="flex flex-col gap-3">
-        <span class="text-[11px] font-mono font-bold uppercase tracking-widest" style="color:var(--c-flow-spending,#f97316)">C &#8212; Consumption</span>
-        <div class="flex items-center gap-4">
-          <div class="flex flex-col items-center gap-1.5">
-            <div class="blip-lg" style="--blip-col:var(--c-flow-spending,#f97316)">
-              <HudIcon name="clothing" size={28} style="color:#fff" />
+      <!-- Two-column split: C | I -->
+      <div class="flex flex-1">
+
+        <!-- C — Consumption (left column, orange) -->
+        <div class="flex flex-col gap-3 p-4 flex-1 ci-col-c">
+          <span class="text-[11px] font-mono font-bold uppercase tracking-widest" style="color:var(--c-flow-spending,#f97316)">C</span>
+          <span class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending);opacity:0.7">Consumption</span>
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-col items-center gap-1.5">
+              <div class="blip-lg" style="--blip-col:var(--c-flow-spending,#f97316)">
+                <HudIcon name="clothing" size={28} style="color:#fff" />
+              </div>
+              <span class="text-[8px] font-mono" style="color:var(--c-flow-spending);opacity:0.8">Clothing</span>
             </div>
-            <span class="text-[9px] font-mono" style="color:var(--c-flow-spending);opacity:0.8">Clothing</span>
+            <div class="flex flex-col items-center gap-1.5">
+              <div class="blip-lg" style="--blip-col:var(--c-flow-spending,#f97316)">
+                <HudIcon name="ammo" size={28} style="color:#fff" />
+              </div>
+              <span class="text-[8px] font-mono" style="color:var(--c-flow-spending);opacity:0.8">Ammo</span>
+            </div>
           </div>
-          <div class="flex flex-col items-center gap-1.5">
-            <div class="blip-lg" style="--blip-col:var(--c-flow-spending,#f97316)">
-              <HudIcon name="ammo" size={28} style="color:#fff" />
-            </div>
-            <span class="text-[9px] font-mono" style="color:var(--c-flow-spending);opacity:0.8">Ammo</span>
+          <div class="mt-auto text-[8px] font-mono leading-snug" style="color:var(--c-flow-spending);opacity:0.5">
+            Services<br/>Clothes
           </div>
         </div>
-        <span class="text-[9px] font-mono" style="color:var(--c-flow-spending);opacity:0.55">Ammo &#183; clothes &#183; services</span>
-      </div>
 
-      <!-- Divider -->
-      <div class="h-px" style="background:rgba(129,140,248,0.2)"></div>
+        <!-- Vertical divider -->
+        <div class="w-px self-stretch" style="background:rgba(129,140,248,0.2)"></div>
 
-      <!-- I — Investment (purple) -->
-      <div class="flex flex-col gap-3">
-        <span class="text-[11px] font-mono font-bold uppercase tracking-widest" style="color:var(--c-economy,#818cf8)">I &#8212; Investment</span>
-        <div class="flex items-center gap-4">
-          <div class="flex flex-col items-center gap-1.5">
-            <div class="blip-lg" style="--blip-col:var(--c-economy,#818cf8)">
-              <HudIcon name="property" size={28} style="color:#fff" />
+        <!-- I — Investment (right column, purple) -->
+        <div class="flex flex-col gap-3 p-4 flex-1 ci-col-i">
+          <span class="text-[11px] font-mono font-bold uppercase tracking-widest" style="color:var(--c-economy,#818cf8)">I</span>
+          <span class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-economy);opacity:0.7">Investment</span>
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-col items-center gap-1.5">
+              <div class="blip-lg" style="--blip-col:var(--c-economy,#818cf8)">
+                <HudIcon name="property" size={28} style="color:#fff" />
+              </div>
+              <span class="text-[8px] font-mono" style="color:var(--c-economy);opacity:0.8">Property</span>
             </div>
-            <span class="text-[9px] font-mono" style="color:var(--c-economy);opacity:0.8">Property</span>
+            <div class="flex flex-col items-center gap-1.5">
+              <div class="blip-lg" style="--blip-col:var(--c-economy,#818cf8)">
+                <HudIcon name="briefcase" size={28} style="color:#fff" />
+              </div>
+              <span class="text-[8px] font-mono" style="color:var(--c-economy);opacity:0.8">Business</span>
+            </div>
           </div>
-          <div class="flex flex-col items-center gap-1.5">
-            <div class="blip-lg" style="--blip-col:var(--c-economy,#818cf8)">
-              <HudIcon name="briefcase" size={28} style="color:#fff" />
-            </div>
-            <span class="text-[9px] font-mono" style="color:var(--c-economy);opacity:0.8">Business</span>
+          <div class="mt-auto text-[8px] font-mono leading-snug" style="color:var(--c-economy);opacity:0.5">
+            I returns<br/>to Y &#8594;
           </div>
         </div>
-        <span class="text-[9px] font-mono" style="color:var(--c-economy);opacity:0.55">Property &#183; businesses &#183; assets</span>
-      </div>
 
-      <!-- Caption -->
-      <div class="mt-auto text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-economy,#818cf8)">
-        I returns to Y
       </div>
     </div>
 
@@ -270,6 +276,8 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
     justify-content: center;
     gap: 1px;
   }
+  .ci-col-c { background: rgba(249,115,22,0.04); }
+  .ci-col-i { background: rgba(129,140,248,0.04); }
   .circle-return {
     position: absolute;
     bottom: -22px;
