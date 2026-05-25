@@ -26,9 +26,9 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
   <!-- ── ROW 1: INJECTION (full width) ──────────────────────────────── -->
   <div class="inject-row">
     <div class="inject-inner">
-      <div class="inject-item" style="opacity:0.45">
-        <div class="blip" style="--bc:#00d4e8"><HudIcon name="shark-card" size={28} style="color:#fff"/></div>
-        <span class="item-label" style="color:#00d4e8">Shark Card</span>
+      <div class="inject-item" style="opacity:var(--o-tertiary)">
+        <div class="blip" style="--bc:var(--c-title-online)"><HudIcon name="shark-card" size={28} style="color:#fff"/></div>
+        <span class="item-label" style="color:var(--c-title-online)">Shark Card</span>
       </div>
 
       <div class="inject-centre">
@@ -37,9 +37,9 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
         <span class="j-arrow">J &#8595;</span>
       </div>
 
-      <div class="inject-item" style="opacity:0.45">
-        <div class="blip" style="--bc:#00d4e8"><HudIcon name="subscription" size={28} style="color:#fff"/></div>
-        <span class="item-label" style="color:#00d4e8">GTA+</span>
+      <div class="inject-item" style="opacity:var(--o-tertiary)">
+        <div class="blip" style="--bc:var(--c-title-online)"><HudIcon name="subscription" size={28} style="color:#fff"/></div>
+        <span class="item-label" style="color:var(--c-title-online)">GTA+</span>
       </div>
     </div>
     <span class="online-note">&#42; GTA Online only</span>
@@ -188,17 +188,17 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 .eco-wrap {
   width: 100%;
   border-radius: 12px;
-  border: 1px solid #1e1e23;
+  border: 1px solid var(--c-border-1);
   overflow: hidden;
-  background: var(--c-card,#131316);
+  background: var(--c-card);
   font-family: var(--font-mono,monospace);
 }
 
 /* ── Row 1: Injection ──────────────────────────────────────────────── */
 .inject-row {
   position: relative;
-  border-bottom: 1px solid #1e1e23;
-  background: rgba(0,212,232,0.05);
+  border-bottom: 1px solid var(--c-border-1);
+  background: color-mix(in srgb, var(--c-title-online) 5%, transparent);
   padding: 12px 16px;
 }
 .inject-inner {
@@ -210,9 +210,9 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 .inject-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .item-label  { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
 .inject-centre { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.rockstar-label { font-size: 9px; color: #00d4e8; opacity: .6; letter-spacing: .25em; text-transform: uppercase; }
-.inject-title { font-size: 2rem; font-weight: 900; line-height: 1; color: #00d4e8; }
-.j-arrow { font-size: 1.1rem; font-weight: 700; color: #00d4e8; }
+.rockstar-label { font-size: 9px; color: var(--c-title-online); opacity: var(--o-tertiary); letter-spacing: .25em; text-transform: uppercase; }
+.inject-title { font-size: 2rem; font-weight: 900; line-height: 1; color: var(--c-title-online); }
+.j-arrow { font-size: 1.1rem; font-weight: 700; color: var(--c-title-online); }
 .online-note { position: absolute; top: 8px; right: 12px; font-size: 8px; color: var(--c-text-6,#52525b); }
 
 /* ── Row 2: Circle + EXPENDITURE super-header ──────────────────────── */
@@ -221,7 +221,7 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
   grid-template-columns: 40% auto 1fr;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #1e1e23;
+  border-bottom: 1px solid var(--c-border-1);
   background: rgba(0,0,0,0.2);
 }
 .mid-left-space { } /* empty spacer matching income column width */
@@ -244,11 +244,11 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
   border-radius: 50%;
   background: conic-gradient(
     from 0deg,
-    #818cf8  0deg  75deg,
-    #22c55e 75deg 200deg,
-    #00d4e8 200deg 245deg,
-    #f97316 245deg 325deg,
-    #818cf8 325deg 360deg
+    var(--c-economy)        0deg  75deg,
+    var(--c-growth)        75deg 200deg,
+    var(--c-title-online) 200deg 245deg,
+    var(--c-flow-spending) 245deg 325deg,
+    var(--c-economy)      325deg 360deg
   );
   -webkit-mask: radial-gradient(circle, transparent 42px, black 44px);
   mask:         radial-gradient(circle, transparent 42px, black 44px);
@@ -257,12 +257,12 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 .ring-centre {
   position: absolute; inset: 14px;
   border-radius: 50%;
-  background: rgba(10,10,14,.9);
-  border: 1.5px solid rgba(0,212,232,.3);
+  background: color-mix(in srgb, var(--c-bg-deep) 90%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--c-title-online) 30%, transparent);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 2px;
 }
-.gta-label { font-size: 11px; font-weight: 900; color: #00d4e8; }
+.gta-label { font-size: 11px; font-weight: 900; color: var(--c-title-online); }
 
 /* Hub letter labels on circle edges */
 .hub-letter {
@@ -270,26 +270,26 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
   font-size: 13px; font-weight: 900;
   z-index: 6;
 }
-.hub-y { left: -4px; top: 50%; transform: translateY(-50%); color: #22c55e; }
-.hub-c { bottom: 2px; left: 18px; color: #f97316; }
-.hub-i { bottom: 2px; right: 18px; color: #818cf8; }
+.hub-y { left: -4px; top: 50%; transform: translateY(-50%); color: var(--c-growth); }
+.hub-c { bottom: 2px; left: 18px; color: var(--c-flow-spending); }
+.hub-i { bottom: 2px; right: 18px; color: var(--c-economy); }
 
 /* CSS triangle arrows */
 .tri-in {
   width: 0; height: 0;
   border-top: 22px solid transparent;
   border-bottom: 22px solid transparent;
-  border-left: 28px solid rgba(34,197,94,.8);
+  border-left: 28px solid color-mix(in srgb, var(--c-growth) 80%, transparent);
   flex-shrink: 0;
-  filter: drop-shadow(0 0 4px rgba(34,197,94,.4));
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--c-growth) 40%, transparent));
 }
 .tri-out {
   width: 0; height: 0;
   border-top: 22px solid transparent;
   border-bottom: 22px solid transparent;
-  border-left: 28px solid rgba(249,115,22,.8);
+  border-left: 28px solid color-mix(in srgb, var(--c-flow-spending) 80%, transparent);
   flex-shrink: 0;
-  filter: drop-shadow(0 0 4px rgba(249,115,22,.4));
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--c-flow-spending) 40%, transparent));
 }
 
 /* EXPENDITURE super-header */
@@ -301,9 +301,9 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 .expend-super-inner {
   display: flex; align-items: center; gap: 10px;
   padding: 8px 16px;
-  border: 1.5px solid rgba(249,115,22,.35);
+  border: 1.5px solid color-mix(in srgb, var(--c-flow-spending) 35%, transparent);
   border-radius: 8px;
-  background: rgba(249,115,22,.07);
+  background: color-mix(in srgb, var(--c-flow-spending) 7%, transparent);
 }
 .expend-title {
   font-size: clamp(1rem,2.5vw,1.6rem);
@@ -334,7 +334,7 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
   transform: translateX(-50%);
   font-size: 13px;
   font-weight: 900;
-  background: var(--c-card,#131316);
+  background: var(--c-card);
   padding: 0 4px;
   z-index: 10;
   line-height: 1;
@@ -356,8 +356,8 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
   width: 28px;
   flex-shrink: 0;
   background: rgba(0,0,0,.3);
-  border-left: 1px solid #1e1e23;
-  border-right: 1px solid #1e1e23;
+  border-left: 1px solid var(--c-border-1);
+  border-right: 1px solid var(--c-border-1);
 }
 .eq-sign   { font-size: 1.4rem; font-weight: 900; color: var(--c-flow-spending,#f97316); }
 .plus-sign { font-size: 1.4rem; font-weight: 900; color: var(--c-economy,#818cf8); }
@@ -377,8 +377,8 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 .eco-footer {
   display: flex; align-items: center; justify-content: space-between;
   padding: 8px 16px;
-  border-top: 1px solid #1e1e23;
-  background: var(--c-card,#131316);
+  border-top: 1px solid var(--c-border-1);
+  background: var(--c-card);
 }
 .footer-left { display: flex; align-items: center; gap: 10px; }
 .formula { font-size: 8px; color: var(--c-text-4,#9898b8); opacity: .4; }

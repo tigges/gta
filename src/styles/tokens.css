@@ -75,6 +75,7 @@
      Use instead of --c-live / --c-brand when the intent is economy flow.  */
   --c-income:          var(--c-live);       /* Y-axis — teal = active, live income */
   --c-expenditure:     var(--c-brand);      /* C+I-axis — gold = GTA$ outflow */
+  --c-flow-spending:   #f97316;             /* orange-500 — consumption flow (C box) */
 
   /* ── Confidence tier tokens ──────────────────────────────────────────────
      Single source for confirmed / reported / predicted across all cards.  */
@@ -119,6 +120,14 @@
   --fs-ui:       12px;   /* nav items, table headers, compact UI (text-xs) */
   --fs-card:     16px;   /* card headings (text-base) */
   --fs-heading:  24px;   /* section headings (text-2xl) */
+
+  /* ── Element opacity scale ──────────────────────────────────────────────
+     For interactive state on whole elements (pills, images, controls).
+     NEVER use on text — use --c-text-* tokens for text dimming instead.   */
+  --o-primary:   1.00;  /* fully visible — default for all intentional content */
+  --o-secondary: 0.75;  /* present but not dominant — secondary labels, swatches */
+  --o-tertiary:  0.55;  /* clearly subordinate — inactive tabs, placeholder states */
+  --o-muted:     0.35;  /* intentionally backgrounded — watermarks, ghost elements */
 }
 
 /* ── Scroll anchor offset — clears sticky nav + breathing room ──────────── */
