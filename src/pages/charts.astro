@@ -198,6 +198,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
           meta={DYNAMIC_METAS[chart.id]}
           metaHref={link?.href}
           metaLabel={link?.label}
+          secondaryGame={chart.id === "prelaunch-comparison-chart" ? "gta-v" : undefined}
         >
           <Comp />
         </ChartSection>
