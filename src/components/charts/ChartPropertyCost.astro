@@ -15,7 +15,7 @@ import CardFooter from "../CardFooter.astro";
         <div id="property-cost-chart" class="w-full" style="height:400px"
           data-properties={JSON.stringify((propertiesData as any).properties)}
         ></div>
-        <CardFooter chartId="property-cost-chart" sources="Source: GTA Fandom Wiki + community records · {(propertiesData as any).last_updated?.slice(0,10)}" shareText="GTA Online complete property cost guide — apartments to Kosatka submarine. Every purchasable property and what it actually costs." />
+        <CardFooter chartId="property-cost-chart" sources={`Source: GTA Fandom Wiki + community records · ${(propertiesData as any).last_updated?.slice(0,10) ?? "community data"}`} shareText="GTA Online complete property cost guide — apartments to Kosatka submarine. Every purchasable property and what it actually costs." />
       </div>
 
 <script>

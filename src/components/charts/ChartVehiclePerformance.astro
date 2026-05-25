@@ -38,7 +38,7 @@ import CardFooter from "../CardFooter.astro";
         </div>
         <div id="perf-chart" class="w-full overflow-hidden px-5 py-3"
           data-vehicles={JSON.stringify(vehicleData.vehicles)}></div>
-        <CardFooter chartId="perf-chart" sources="Source: Broughy1322 GTA Vehicle Performance Spreadsheet · updated {new Date(vehicleData.last_updated).toLocaleDateString(&quot;en-GB&quot;,{month:&quot;short&quot;,year:&quot;numeric&quot;})}" shareText="665 Broughy-tested GTA V vehicles ranked. Top speed vs lap time — the actual performance data, not guesswork." />
+        <CardFooter chartId="perf-chart" sources={`Source: Broughy1322 GTA Vehicle Performance Spreadsheet · updated ${new Date(vehicleData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}`} shareText="665 Broughy-tested GTA V vehicles ranked. Top speed vs lap time — the actual performance data, not guesswork." />
       </div>
 
 <script>
