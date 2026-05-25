@@ -98,12 +98,26 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
       <span class="arrow-green">&#8594;</span>
 
       <div class="relative circle-wrapper">
+        <!-- Conic ring with aligned colours + directional arrows -->
         <div class="circle-ring"></div>
+
+        <!-- Flow arrows at transition points on the ring -->
+        <!-- Top-left: income → balance (green ▶) -->
+        <span class="ring-arrow" style="top:14px;left:18px;color:#22c55e;transform:rotate(-35deg)">&#9658;</span>
+        <!-- Top-right: injection → expenditure (blue ▶) -->
+        <span class="ring-arrow" style="top:14px;right:18px;color:#00d4e8;transform:rotate(35deg)">&#9658;</span>
+        <!-- Bottom-right: investment circling (purple ▶) -->
+        <span class="ring-arrow" style="bottom:14px;right:18px;color:#818cf8;transform:rotate(145deg)">&#9658;</span>
+        <!-- Bottom-left: return to income (purple→green ▶) -->
+        <span class="ring-arrow" style="bottom:14px;left:18px;color:#818cf8;transform:rotate(-145deg)">&#9658;</span>
+
+        <!-- Centre disc: Balance / Maze Bank -->
         <div class="circle-centre">
-          <HudIcon name="bank" size={28} style="color:var(--c-title-online,#00d4e8)" />
-          <span class="text-[11px] font-mono font-black" style="color:var(--c-title-online,#00d4e8)">GTA$</span>
+          <HudIcon name="bank" size={30} style="color:var(--c-title-online,#00d4e8)" />
+          <span class="text-[11px] font-mono font-black leading-tight" style="color:var(--c-title-online,#00d4e8)">GTA$</span>
           <HudIcon name="dollar" size={14} style="color:var(--c-title-online,#00d4e8);opacity:0.45" />
         </div>
+
         <div class="circle-return">
           <span class="text-[8px] font-mono uppercase tracking-widest" style="color:var(--c-economy,#818cf8);opacity:0.7">I &#8594; Y</span>
         </div>
@@ -205,11 +219,11 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 
   /* ── Surfaces ──────────────────────────────────────────────────────── */
   .income-box {
-    background: rgba(34, 197, 94, 0.08);
+    background: rgba(34, 197, 94, 0.18);
     /* No left border — cards below already carry the green identity */
   }
   .expend-box {
-    background: rgba(249, 115, 22, 0.07);
+    background: rgba(249, 115, 22, 0.16);
     /* No right border here either — cards below carry orange/purple */
   }
 
@@ -276,8 +290,8 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
     justify-content: center;
     gap: 1px;
   }
-  .ci-col-c { background: rgba(249,115,22,0.04); }
-  .ci-col-i { background: rgba(129,140,248,0.04); }
+  .ci-col-c { background: rgba(249,115,22,0.10); }
+  .ci-col-i { background: rgba(129,140,248,0.10); }
   .circle-return {
     position: absolute;
     bottom: -22px;
