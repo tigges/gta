@@ -151,8 +151,8 @@ const featuredIncome = incomeList
           <div class="flex-1 h-px bg-[#1e1e23]"></div>
         </div>
         <a href="/gta-vi/intel"
-           class="shrink-0 text-[11px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
-          All {predictions.length} →
+           class="shrink-0 text-[11px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest" aria-label="All predictions">
+          All {predictions.length} predictions →
         </a>
       </div>
 
@@ -181,6 +181,7 @@ const featuredIncome = incomeList
                   thumbnail={(p as any).thumbnail}
                   compact={true}
                   game="gta-vi"
+                  short_value={(p as any).short_value ?? null}
                   detailHref={`/gta-vi/intel#${p.id}`}
                 />
               ))}
@@ -302,7 +303,7 @@ const featuredIncome = incomeList
           <div class="flex items-center gap-2 mb-3">
             <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-live)">Y — Income</span>
             <div class="flex-1 h-px" style="background:rgba(13,148,136,0.2)"></div>
-            <a href="/gta-vi/intel#income-predictions"
+            <a href="/gta-vi/intel#section-income-predictions"
                class="text-[10px] font-mono uppercase tracking-widest transition-colors"
                style="color:var(--c-live);opacity:var(--o-tertiary)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
               All {incomeList.length} →
@@ -335,6 +336,11 @@ const featuredIncome = incomeList
           <div class="flex items-center gap-2 mb-3">
             <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-brand)">C+I — Expenditure</span>
             <div class="flex-1 h-px" style="background:rgba(245,158,11,0.2)"></div>
+            <a href="/gta-vi/economy"
+               class="text-[10px] font-mono uppercase tracking-widest transition-colors shrink-0"
+               style="color:var(--c-brand);opacity:var(--o-secondary)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='var(--o-secondary)'">
+              Full economy →
+            </a>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <ExpenditureCard id="nightclub" />

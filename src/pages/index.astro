@@ -274,6 +274,7 @@ const TIER_COLOR: Record<string,string> = {
             outcome_actual={p.outcome_actual}
               thumbnail={(p as any).thumbnail ?? predThumbnails[(p as Prediction).id]}
             compact={true}
+            short_value={(p as any).short_value ?? null}
             detailHref={`/gta-vi/intel#${(p as Prediction).id}`}
           />
         ))}
@@ -458,7 +459,7 @@ const TIER_COLOR: Record<string,string> = {
           <!-- Key entity labels below (most interesting ones) -->
           <div class="relative h-10 mt-1">
             {t2Events.filter((_: any, i: number) => i % 3 === 0).map((e: any) => (
-              <div class="absolute text-[10px] font-mono whitespace-nowrap" style={`left:${e.pct}%;color:${e.color};opacity:var(--o-secondary);transform:translateX(-50%)`}>
+              <div class="absolute text-[10px] font-mono whitespace-nowrap" style={`left:${e.pct}%;color:${e.color};opacity:0.7;transform:translateX(-50%)`}>
                 {e.entity.split(" ")[0]}
               </div>
             ))}
