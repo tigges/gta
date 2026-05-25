@@ -9,6 +9,7 @@ import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import CardFooter from "../../components/CardFooter.astro";
+import GamePill from "../../components/GamePill.astro";
 
 import economyData  from "../../../data/franchise/economy-models.json";
 import stocksData   from "../../../data/gta-5/economy/assassination-stocks.json";
@@ -34,7 +35,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
     <div class="absolute inset-0" style="background:radial-gradient(ellipse at 60% 50%, rgba(245,158,11,0.05) 0%, transparent 60%), #0a0a0d"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-center gap-2 mb-4">
-        <span class="text-[11px] font-mono bg-gta-gold/30 border border-gta-gold/40 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">ERA 3 · HD Universe 2013</span>
+        <GamePill game="gta-v" size="xs" />
       </div>
       <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">GTA V Story — Economy</h1>
       <p class="text-zinc-300 text-sm leading-relaxed mb-6 max-w-xl">
