@@ -1,12 +1,15 @@
 ---
 /**
- * EconomyCircle.astro — simplified fixed circular economy diagram.
+ * EconomyCircle.astro — redesigned GTA circular economy diagram.
  *
- * Three-column visual: Income (Y) · Player (Balance) · Expenditure (C+I)
- * Color-coded: teal left, gold centre, amber right.
- * Pure HTML/CSS — no JavaScript, no D3.
- * Works for any GTA title. Pass fullEconomyHref for the "Full model →" link.
+ * Horizontal flow: Y Income (LEFT) → Player Balance (CENTRE) → C+I Expenditure (RIGHT)
+ * J Injection descends from ABOVE into Balance (Shark Cards/GTA+ — GTA Online only).
+ * I → Y return arc curves BELOW the diagram, closing the loop.
+ *
+ * Pure HTML/CSS. No JS. No D3. No legend — HudIcons are self-explanatory to GTA players.
+ * GTA-native color logic: green/teal = income, blue = balance/injection, orange = consumption, purple = investment.
  */
+import HudIcon from "./HudIcon.astro";
 import GamePill from "./GamePill.astro";
 
 interface Props {
@@ -17,89 +20,150 @@ interface Props {
 const { game = "gta-online", fullEconomyHref } = Astro.props;
 ---
 
-<div class="w-full rounded-xl border border-[#1e1e23] overflow-hidden" style="background:var(--c-card)">
+<div class="w-full rounded-xl border border-[#1e1e23] overflow-hidden economy-diagram" style="background:var(--c-card)">
 
-  <!-- Column grid -->
-  <div class="grid grid-cols-3 min-h-[160px]">
-
-    <!-- LEFT: Income (Y) — teal -->
-    <div class="flex flex-col justify-between p-4 border-r border-[#1e1e23]"
-         style="border-left:3px solid var(--c-live);background:rgba(13,148,136,0.04)">
-      <div>
-        <div class="text-4xl font-mono font-black leading-none mb-1" style="color:var(--c-live)">Y</div>
-        <div class="text-[10px] font-mono uppercase tracking-[0.2em] mb-3" style="color:var(--c-live)">Income</div>
-        <div class="flex flex-col gap-1">
-          <span class="text-[10px] font-mono text-zinc-500">● Active earn</span>
-          <span class="text-[10px] font-mono text-zinc-500">● Business cycles</span>
-          <span class="text-[10px] font-mono text-zinc-500">● Passive returns</span>
-        </div>
+  <!-- ── J Injection row — descends from Rockstar above the balance ─────── -->
+  <div class="flex justify-center border-b border-[#1e1e23] px-4 py-2.5" style="background:rgba(0,212,232,0.03)">
+    <div class="flex items-center gap-6">
+      <!-- Shark Card — GTA Online only, muted -->
+      <div class="flex flex-col items-center gap-1 opacity-50" title="GTA Online only">
+        <HudIcon name="shark-card" size={16} style="color:var(--c-title-online)" />
+        <div class="w-px h-4" style="background:var(--c-title-online);opacity:0.4"></div>
       </div>
-      <div class="text-[10px] font-mono uppercase tracking-widest mt-3" style="color:var(--c-live)">
-        Y grows → next cycle
+      <!-- J label -->
+      <div class="flex flex-col items-center gap-0.5">
+        <div class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-title-online);opacity:0.6">Rockstar</div>
+        <div class="text-[10px] font-mono font-bold" style="color:var(--c-title-online)">J</div>
+        <div class="text-[9px] font-mono" style="color:var(--c-title-online);opacity:0.6">injection</div>
+        <div class="w-px h-3" style="background:var(--c-title-online)"></div>
+        <span style="color:var(--c-title-online);font-size:10px">↓</span>
+      </div>
+      <!-- GTA+ — GTA Online only, muted -->
+      <div class="flex flex-col items-center gap-1 opacity-50" title="GTA Online only">
+        <HudIcon name="subscription" size={16} style="color:var(--c-title-online)" />
+        <div class="w-px h-4" style="background:var(--c-title-online);opacity:0.4"></div>
+      </div>
+    </div>
+    <div class="absolute right-4 top-2 text-[8px] font-mono" style="color:var(--c-text-6)">* GTA Online only</div>
+  </div>
+
+  <!-- ── Main horizontal flow ───────────────────────────────────────────── -->
+  <div class="grid min-h-[140px]" style="grid-template-columns:1fr 40px 1fr 40px 1fr">
+
+    <!-- LEFT: Y — Income (green/teal) -->
+    <div class="flex flex-col justify-center p-4 gap-3"
+         style="border-left:3px solid var(--c-income);background:rgba(13,148,136,0.04)">
+      <div class="flex items-center gap-1.5">
+        <span class="text-2xl font-mono font-black leading-none" style="color:var(--c-income)">Y</span>
+        <span class="text-[9px] font-mono uppercase tracking-widest mt-1" style="color:var(--c-income);opacity:0.7">Income</span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-2">
+          <HudIcon name="mission" size={13} style="color:var(--c-live)" />
+          <HudIcon name="passive" size={13} style="color:var(--c-growth)" />
+          <HudIcon name="cycle" size={13} style="color:var(--c-growth);opacity:0.8" />
+        </div>
+        <div class="text-[9px] font-mono leading-relaxed" style="color:var(--c-income);opacity:0.65">
+          Active earn<br/>Business cycles<br/>Passive returns
+        </div>
       </div>
     </div>
 
-    <!-- CENTRE: Player (Balance) — gold -->
-    <div class="flex flex-col items-center justify-center p-4 border-r border-[#1e1e23] gap-3"
-         style="background:rgba(245,158,11,0.03)">
-      <div class="flex items-center gap-2 w-full justify-center">
-        <span class="text-lg font-mono" style="color:var(--c-live)">←</span>
-        <div class="text-center">
-          <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600 mb-0.5">Player</div>
-          <div class="text-sm font-mono font-black" style="color:var(--c-brand)">Balance</div>
-          <div class="text-[10px] font-mono text-zinc-500">GTA$</div>
-        </div>
-        <span class="text-lg font-mono" style="color:var(--c-brand)">→</span>
-      </div>
-      <div class="w-full border-t border-[#1e1e23] pt-2.5 text-center">
-        <div class="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-0.5">+ J Injection</div>
-        <div class="text-[10px] font-mono text-zinc-500">Shark Cards · GTA+</div>
+    <!-- Arrow: Y → Balance -->
+    <div class="flex items-center justify-center">
+      <div class="flex flex-col items-center gap-0.5">
+        <span class="text-[11px]" style="color:var(--c-income)">→</span>
       </div>
     </div>
 
-    <!-- RIGHT: Expenditure (C+I) — amber -->
-    <div class="flex flex-col justify-between p-4"
-         style="border-right:3px solid var(--c-brand);background:rgba(245,158,11,0.04)">
-      <div>
-        <div class="text-4xl font-mono font-black leading-none mb-1" style="color:var(--c-brand)">C+I</div>
-        <div class="text-[10px] font-mono uppercase tracking-[0.2em] mb-3" style="color:var(--c-brand)">Expenditure</div>
-        <div class="flex flex-col gap-2">
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-[11px] font-mono font-bold" style="color:var(--c-alert)">C</span>
-              <span class="text-[10px] font-mono text-zinc-500">Consumption</span>
-            </div>
-            <div class="text-[10px] font-mono text-zinc-500 pl-4">Ammo · clothes · services</div>
-          </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-[11px] font-mono font-bold" style="color:var(--c-brand)">I</span>
-              <span class="text-[10px] font-mono text-zinc-500">Investment</span>
-            </div>
-            <div class="text-[10px] font-mono text-zinc-500 pl-4">Property · businesses · assets</div>
-          </div>
+    <!-- CENTRE: Player Balance / Maze Bank (blue) -->
+    <div class="flex flex-col items-center justify-center gap-3 p-4"
+         style="background:rgba(0,212,232,0.05);border-top:2px solid var(--c-title-online)">
+      <!-- J injection arrives here from above -->
+      <div class="flex items-center gap-2">
+        <HudIcon name="bank" size={18} style="color:var(--c-title-online)" />
+        <div>
+          <div class="text-[10px] font-mono font-bold" style="color:var(--c-title-online)">Balance</div>
+          <div class="text-[9px] font-mono" style="color:var(--c-title-online);opacity:0.6">GTA$</div>
         </div>
       </div>
-      <div class="text-[10px] font-mono uppercase tracking-widest mt-3" style="color:var(--c-brand)">
-        I returns to Y
+      <HudIcon name="dollar" size={14} style="color:var(--c-title-online);opacity:0.5" />
+    </div>
+
+    <!-- Arrow: Balance → C+I -->
+    <div class="flex items-center justify-center">
+      <span class="text-[11px]" style="color:var(--c-expenditure)">→</span>
+    </div>
+
+    <!-- RIGHT: C+I — Expenditure (orange + purple) -->
+    <div class="flex flex-col justify-center p-4 gap-3"
+         style="border-right:3px solid var(--c-expenditure);background:rgba(249,115,22,0.04)">
+      <div class="flex items-center gap-1.5 justify-end">
+        <span class="text-[9px] font-mono uppercase tracking-widest mt-1" style="color:var(--c-expenditure);opacity:0.7">Expenditure</span>
+        <span class="text-2xl font-mono font-black leading-none" style="color:var(--c-expenditure)">C+I</span>
+      </div>
+      <!-- C — Consumption (orange) -->
+      <div class="flex flex-col gap-1.5">
+        <div class="flex items-center gap-1.5 justify-end">
+          <span class="text-[9px] font-mono" style="color:var(--c-flow-spending);opacity:0.7">C</span>
+          <HudIcon name="ammo" size={12} style="color:var(--c-flow-spending)" />
+          <HudIcon name="clothing" size={12} style="color:var(--c-flow-spending)" />
+        </div>
+        <!-- I — Investment (purple) -->
+        <div class="flex items-center gap-1.5 justify-end">
+          <span class="text-[9px] font-mono" style="color:var(--c-economy);opacity:0.7">I</span>
+          <HudIcon name="property" size={12} style="color:var(--c-economy)" />
+          <HudIcon name="briefcase" size={12} style="color:var(--c-economy)" />
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Footer: formula + game pill + full economy link -->
-  <div class="px-4 py-2.5 border-t border-[#1e1e23] flex items-center justify-between gap-3 flex-wrap"
-       style="background:rgba(0,0,0,0.2)">
+  <!-- ── I → Y return arc (curves under, closes the loop) ──────────────── -->
+  <div class="relative px-4 pt-1 pb-3">
+    <!-- The arc: spans from investment (right) back to income (left) -->
+    <div class="return-arc mx-auto relative" style="height:28px">
+      <!-- Curved border using CSS -->
+      <div class="absolute inset-x-0 bottom-0 h-full"
+           style="border:1.5px solid var(--c-economy);border-top:none;border-radius:0 0 50% 50%;opacity:0.6"></div>
+      <!-- Left upward arrow into Y -->
+      <div class="absolute left-0 -top-2 flex flex-col items-center">
+        <span style="color:var(--c-economy);font-size:10px;opacity:0.7">↑</span>
+      </div>
+      <!-- Return label -->
+      <div class="absolute inset-0 flex items-end justify-center pb-1">
+        <span class="text-[8px] font-mono uppercase tracking-widest" style="color:var(--c-economy);opacity:0.5">I returns to Y</span>
+      </div>
+      <!-- Right downward arrow from investment -->
+      <div class="absolute right-0 -top-2">
+        <span style="color:var(--c-economy);font-size:10px;opacity:0.7">↓</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer: formula + pill + link ─────────────────────────────────── -->
+  <div class="flex items-center justify-between px-4 py-2.5 border-t border-[#1e1e23]">
     <div class="flex items-center gap-2.5">
       <GamePill {game} size="xs" />
-      <span class="text-[10px] font-mono text-zinc-500 tracking-widest">(Y + J) = C + I</span>
+      <span class="text-[10px] font-mono" style="color:var(--c-text-4)">(Y + J) = C + I</span>
     </div>
     {fullEconomyHref && (
       <a href={fullEconomyHref}
-         class="text-[11px] font-mono uppercase tracking-widest transition-colors"
+         class="text-[10px] font-mono uppercase tracking-widest transition-colors"
          style="color:var(--c-brand);opacity:var(--o-secondary)"
-         onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='var(--o-secondary)'">
+         onmouseover="this.style.opacity='1'" onmouseout={`this.style.opacity='var(--o-secondary)'`}>
         Full model →
       </a>
     )}
   </div>
+
 </div>
+
+<style>
+  .economy-diagram {
+    position: relative;
+  }
+  .return-arc {
+    width: 70%;
+  }
+</style>
