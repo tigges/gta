@@ -26,7 +26,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -62,12 +62,12 @@ import CardFooter from "../CardFooter.astro";
       const r = rScale(h.avg_run_time_min || 30);
       const col = h.solo ? cc.bar : cc.teal;
       svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", r)
-        .attr("fill", col).attr("opacity", 0.65).attr("stroke", col).attr("stroke-width", 1.5).attr("stroke-opacity", 0.9);
+        .attr("fill", col).attr("opacity",op.secondary).attr("stroke", col).attr("stroke-width", 1.5).attr("stroke-opacity", 0.9);
       const title = (h.title as string).replace("The ", "").replace(" Heist", "").slice(0, 16);
       const titleY = cy - r - 6;
       const titleW = title.length * 4.8;
       svg.append("rect").attr("x", cx - titleW/2 - 3).attr("y", titleY - 9).attr("width", titleW + 6).attr("height", 12)
-        .attr("rx", 2).attr("fill", cc.card).attr("opacity", 0.85);
+        .attr("rx", 2).attr("fill", cc.card).attr("opacity",op.secondary);
       svg.append("text").attr("x", cx).attr("y", titleY).attr("text-anchor", "middle")
         .attr("fill", cc.text2).attr("font-size", "8.5").attr("font-family", "monospace").text(title);
       // $/hr label inside bubble

@@ -98,8 +98,8 @@ export const playColor = (type: string): string => {
  * Mirrors --o-* tokens in tokens.css.
  */
 export const op = {
-  full:     1.00,  // fully active / selected
-  muted:    0.65,  // present but visually secondary
-  inactive: 0.45,  // unselected pill, inactive tab, non-highlighted cover
-  ghost:    0.25,  // suppressed / unavailable element
+  primary:   1.00,  // fully visible — default for all intentional content
+  secondary: 0.75,  // present but not dominant — secondary labels, legend swatches
+  tertiary:  0.55,  // clearly subordinate — inactive tabs, placeholder states
+  muted:     0.35,  // intentionally backgrounded — watermarks, ghost elements
 } as const;

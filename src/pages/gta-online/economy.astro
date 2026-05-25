@@ -684,7 +684,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
                   <td class="px-4 py-2.5 text-zinc-200 font-semibold">{item.name}</td>
                   <td class="px-4 py-2.5">
                     <span class="border px-1.5 py-0.5 rounded text-[11px] uppercase tracking-widest"
-                      style={`color:${item.category==="vehicle"?"var(--c-chart-bar)":item.category==="property"?"var(--c-cat-economy)":"var(--c-chart-teal)"};border-color:currentColor;opacity:0.8`}>
+                      style={`color:${item.category==="vehicle"?"var(--c-chart-bar)":item.category==="property"?"var(--c-cat-economy)":"var(--c-chart-teal)"};border-color:currentColor;opacity:var(--o-secondary)`}>
                       {item.category}
                     </span>
                   </td>

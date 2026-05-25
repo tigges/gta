@@ -23,7 +23,7 @@ const spendEras = (spendingData as any).eras as any[];
 
 <script>
   import * as d3 from "d3";
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
   import { registerChart, triggerChart } from "../../assets/chartInit";
 
   const CHART_H: Record<string, number> = {
@@ -55,7 +55,7 @@ const spendEras = (spendingData as any).eras as any[];
       cats.forEach(cat=>{
         const val=era[cat.key] as number;
         svg.append("rect").attr("x",x(era.label)??0).attr("y",y(yOff+val)).attr("rx",2)
-          .attr("width",x.bandwidth()).attr("height",Math.max(0,y(yOff)-y(yOff+val))).attr("fill",cat.color).attr("opacity",0.85);
+          .attr("width",x.bandwidth()).attr("height",Math.max(0,y(yOff)-y(yOff+val))).attr("fill",cat.color).attr("opacity",op.secondary);
         yOff+=val;
       });
     });

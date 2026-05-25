@@ -19,7 +19,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -77,7 +77,7 @@ import CardFooter from "../CardFooter.astro";
       svg.append("rect").attr("x",barMin).attr("y",y).attr("width",Math.max(2, barW - barMin)).attr("height",bh)
         .attr("rx",2).attr("fill",color).attr("opacity",v.income ? 0.6 : 0.3);
       // Min marker
-      svg.append("rect").attr("x",barMin).attr("y",y).attr("width",3).attr("height",bh).attr("fill",color).attr("opacity",0.9);
+      svg.append("rect").attr("x",barMin).attr("y",y).attr("width",3).attr("height",bh).attr("fill",color).attr("opacity",op.primary);
 
       // Label
       svg.append("text").attr("x",-8).attr("y",y+bh/2+4).attr("text-anchor","end")

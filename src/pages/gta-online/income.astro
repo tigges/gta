@@ -143,7 +143,7 @@ const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
                       </div>
                       <div class="flex-1 flex items-center gap-2">
                         <div class="flex-1 h-2 rounded-full bg-[#1e1e23] overflow-hidden">
-                          <div class="h-full rounded-full" style={`width:${barPct}%;background:${typeColor};opacity:0.85`}></div>
+                          <div class="h-full rounded-full" style={`width:${barPct}%;background:${typeColor};opacity:var(--o-secondary)`}></div>
                         </div>
                         <span class="text-[11px] font-mono font-bold shrink-0 w-20 text-right" style={`color:${typeColor}`}>${(s.gta_per_hr/1000).toFixed(0)}k/hr</span>
                       </div>
@@ -157,9 +157,9 @@ const validPageIds = new Set([...bizIds, ...heistIds, 'full-meta-stack']);
                       </div>
                       <div class="flex-1 flex items-center gap-2">
                         <div class="flex-1 h-2 rounded-full bg-[#1e1e23] overflow-hidden">
-                          <div class="h-full rounded-full" style={`width:${barPct}%;background:${typeColor};opacity:0.5`}></div>
+                          <div class="h-full rounded-full" style={`width:${barPct}%;background:${typeColor};opacity:var(--o-tertiary)`}></div>
                         </div>
-                        <span class="text-[11px] font-mono font-bold shrink-0 w-20 text-right" style={`color:${typeColor};opacity:0.5`}>${(s.gta_per_hr/1000).toFixed(0)}k/hr</span>
+                        <span class="text-[11px] font-mono font-bold shrink-0 w-20 text-right" style={`color:${typeColor};opacity:var(--o-tertiary)`}>${(s.gta_per_hr/1000).toFixed(0)}k/hr</span>
                       </div>
                     </div>
                   );

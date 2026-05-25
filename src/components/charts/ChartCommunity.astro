@@ -32,7 +32,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -80,7 +80,7 @@ import CardFooter from "../CardFooter.astro";
     if (trendsKw && trendsKw.data.length > 0) {
       const tData = trendsKw.data.map(d => ({ date: new Date(d.date), value: d.value }));
       svg.append("path").datum(tData).attr("fill","none").attr("stroke",cc.bar)
-        .attr("stroke-width",1).attr("opacity",0.4)
+        .attr("stroke-width",1).attr("opacity",op.muted)
         .attr("d",d3.line<any>().x(d=>x(d.date)).y(d=>y2(d.value)).curve(d3.curveMonotoneX));
     }
 

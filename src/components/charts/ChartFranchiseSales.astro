@@ -19,7 +19,7 @@ import CardFooter from "../CardFooter.astro";
           <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
             <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:var(--c-brand)"></span>Total</span>
             <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:var(--c-live)"></span>Year 1</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="border:1px dashed var(--c-brand);opacity:0.6"></span>Est. Total (3–5yr)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="border:1px dashed var(--c-brand);opacity:var(--o-tertiary)"></span>Est. Total (3–5yr)</span>
           </div>
         </div>
         <!-- Game cover + stat row -->
@@ -41,7 +41,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -122,7 +122,7 @@ import CardFooter from "../CardFooter.astro";
           .attr("text-anchor", "middle")
           .attr("fill", cc.teal)
           .attr("font-size", "10").attr("font-family", "monospace")
-          .attr("opacity", 0.85)
+          .attr("opacity",op.secondary)
           .text(`~${t.year1_units_m}M Y1`);
       } else if (t.year1_units_m && !t.total_units_m) {
         svg.append("text")

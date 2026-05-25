@@ -22,7 +22,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -69,7 +69,7 @@ import CardFooter from "../CardFooter.astro";
       // $/hr bar (left panel)
       const bw = xHr(d.best_gta_per_hr);
       svg.append("rect").attr("x",0).attr("y",barY).attr("width",bw).attr("height",bh)
-        .attr("rx",2).attr("fill",color).attr("opacity",0.75);
+        .attr("rx",2).attr("fill",color).attr("opacity",op.secondary);
       svg.append("text").attr("x",bw+4).attr("y",barY+bh/2+4)
         .attr("fill",color).attr("font-size","9").attr("font-family","monospace")
         .text(`$${(d.best_gta_per_hr/1000).toFixed(0)}k/hr`);
@@ -78,7 +78,7 @@ import CardFooter from "../CardFooter.astro";
       const dotX = W * 0.7 + xHrs(d.hours_to_aspirational);
       const dotColor = d.hours_to_aspirational > 15 ? cc.red : d.hours_to_aspirational > 5 ? cc.bar : cc.green;
       svg.append("circle").attr("cx",dotX).attr("cy",barY+bh/2).attr("r",6)
-        .attr("fill",dotColor).attr("opacity",0.85);
+        .attr("fill",dotColor).attr("opacity",op.secondary);
       svg.append("text").attr("x",dotX+9).attr("y",barY+bh/2+4)
         .attr("fill",dotColor).attr("font-size","9").attr("font-family","monospace")
         .text(`${d.hours_to_aspirational}h`);

@@ -30,7 +30,7 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -82,7 +82,7 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
         svg.append("polygon")
           .attr("points", `0,-6 6,0 0,6 -6,0`)
           .attr("transform", `translate(${x(i)},${y(Math.max(m.payout,100))})`)
-          .attr("fill",cc.bar).attr("opacity",0.9);
+          .attr("fill",cc.bar).attr("opacity",op.primary);
       }
     });
 
@@ -92,7 +92,7 @@ const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
       const bi = paying.indexOf(bigScore);
       const bx = x(bi), by = y(bigScore.payout);
       svg.append("line").attr("x1",bx).attr("x2",bx).attr("y1",by+8).attr("y2",H)
-        .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",0.4);
+        .attr("stroke",cc.bar).attr("stroke-width",1).attr("stroke-dasharray","4,3").attr("opacity",op.muted);
       svg.append("text").attr("x",bx+4).attr("y",by-4).attr("fill",cc.bar)
         .attr("font-size","9").attr("font-family","monospace").text("The Big Score");
     }

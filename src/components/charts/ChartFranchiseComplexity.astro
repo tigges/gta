@@ -24,7 +24,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -74,7 +74,7 @@ import CardFooter from "../CardFooter.astro";
       if (isPred) {
         // Semi-transparent fill for prediction
         svg.append("rect").attr("x",0).attr("y",y).attr("width",barW).attr("height",rowH-22)
-          .attr("rx",3).attr("fill",color).attr("opacity",0.15);
+          .attr("rx",3).attr("fill",color).attr("opacity",op.muted);
       }
 
       // Score label
@@ -93,7 +93,7 @@ import CardFooter from "../CardFooter.astro";
         features.forEach(([key], fi) => {
           const dotX = fi * 84;
           svg.append("rect").attr("x",dotX).attr("y",y+rowH-18).attr("width",80).attr("height",14).attr("rx",2)
-            .attr("fill",color).attr("opacity",0.35);
+            .attr("fill",color).attr("opacity",op.muted);
           svg.append("text").attr("x",dotX+40).attr("y",y+rowH-7).attr("text-anchor","middle")
             .attr("fill",color).attr("font-size","9").attr("font-family","monospace")
             .text(FEATURE_ICONS[key] || key);

@@ -33,7 +33,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -67,7 +67,7 @@ import CardFooter from "../CardFooter.astro";
     annotations.forEach(a => {
       const ax = x(new Date(a.date));
       svg.append("line").attr("x1",ax).attr("x2",ax).attr("y1",0).attr("y2",H)
-        .attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.5);
+        .attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",op.tertiary);
     });
 
     // Gradient fill

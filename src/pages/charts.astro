@@ -261,7 +261,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
     document.querySelectorAll<HTMLButtonElement>(".chart-title-filter").forEach(b => {
       const t = b.dataset.title ?? "All";
       const isActive = t === activeTitle;
-      b.style.opacity     = isActive ? String(1) : String(0.45); // --o-inactive
+      b.style.opacity     = isActive ? String(op.primary) : String(op.tertiary); // --o-tertiary
       b.style.outline     = isActive ? `2px solid ${TITLE_ACCENT[t] ?? TITLE_ACCENT["All"]}` : "none";
       b.style.outlineOffset = "2px";
     });
@@ -272,7 +272,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
       const isActive = t === activeTitle;
       const img = b.querySelector<HTMLImageElement>("img");
       if (img) {
-        img.style.opacity     = isActive ? "1" : (activeTitle === "All" ? "0.65" : "0.25"); // --o-muted / --o-ghost
+        img.style.opacity     = isActive ? String(op.primary) : (activeTitle === "All" ? String(op.secondary) : String(op.muted)); // --o-secondary / --o-muted
         img.style.borderColor = isActive ? "rgba(245,158,11,0.7)" : "";
       }
       const lbl = b.querySelector<HTMLElement>("span");

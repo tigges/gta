@@ -31,7 +31,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -86,7 +86,7 @@ import CardFooter from "../CardFooter.astro";
 
     svg.append("path").datum(data)
       .attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",1)
-      .attr("stroke-dasharray","4,3").attr("opacity",0.35)
+      .attr("stroke-dasharray","4,3").attr("opacity",op.muted)
       .attr("d", d3.line<any>().x(d=>x(d.date)).y(d=>y(d.peak)).curve(d3.curveMonotoneX));
 
     svg.append("path").datum(data)

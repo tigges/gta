@@ -453,7 +453,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
                   <span class="font-semibold text-zinc-200 text-sm">{group.label}</span>
                   <span class="text-zinc-600 text-xs">→</span>
                 </div>
-                <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.6`}></span>
+                <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:var(--o-tertiary)`}></span>
                 {hasHub && group.dropdown && (
                   <span class="text-[10px] font-mono text-zinc-600 leading-snug">
                     {group.dropdown.slice(1).map(d => d.label).join(" · ")}
@@ -470,7 +470,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
                   <span class="font-semibold text-zinc-200 text-sm">{group.label}</span>
                   <span class="text-zinc-600 text-xs">›</span>
                 </div>
-                <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.6`}></span>
+                <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:var(--o-tertiary)`}></span>
                 <span class="text-[10px] font-mono text-zinc-600 leading-snug">
                   {group.dropdown.map(d => d.label).join(" · ")}
                 </span>
@@ -504,7 +504,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
               All
             </button>
             <span class="text-sm font-semibold text-zinc-200">{group.label}</span>
-            <span class="ml-auto w-6 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.7`}></span>
+            <span class="ml-auto w-6 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:var(--o-secondary)`}></span>
           </div>
           <!-- Sub-destination list — flat, one tap each -->
           <div class="flex-1 p-4 flex flex-col gap-3">

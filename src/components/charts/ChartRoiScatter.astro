@@ -23,7 +23,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -55,7 +55,7 @@ import CardFooter from "../CardFooter.astro";
       const r=rScale(b.break_even_hrs??20);
       const col=PLAY_COLOR[b.play_type??b.category]??cc.text4;
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",r)
-        .attr("fill",col).attr("opacity",0.7).attr("stroke",col).attr("stroke-width",1).attr("stroke-opacity",0.9);
+        .attr("fill",col).attr("opacity",op.secondary).attr("stroke",col).attr("stroke-width",1).attr("stroke-opacity",0.9);
       svg.append("text").attr("x",cx).attr("y",cy-r-3).attr("text-anchor","middle")
         .attr("fill",cc.text3).attr("font-size","8").attr("font-family","monospace")
         .text(b.name.split(" ")[0].slice(0,10));

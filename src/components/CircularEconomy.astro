@@ -354,8 +354,8 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
         const label = (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim();
         return (
           <div class="flex items-center gap-1.5">
-            <div class="w-5 h-px" style={`background:${hex};opacity:0.7`}></div>
-            <div class="w-0 h-0 border-t-[3px] border-b-[3px] border-l-[5px] border-transparent" style={`border-left-color:${hex};opacity:0.7`}></div>
+            <div class="w-5 h-px" style={`background:${hex};opacity:var(--o-secondary)`}></div>
+            <div class="w-0 h-0 border-t-[3px] border-b-[3px] border-l-[5px] border-transparent" style={`border-left-color:${hex};opacity:var(--o-secondary)`}></div>
             <span class="text-[10px] font-mono text-zinc-400">{label}</span>
           </div>
         );

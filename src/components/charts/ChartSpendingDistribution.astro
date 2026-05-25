@@ -21,7 +21,7 @@ import CardFooter from "../CardFooter.astro";
               {label:"Shark equiv.",color:"#818cf8"},
             ].map(l => (
               <span class="flex items-center gap-1.5">
-                <span class="w-3 h-3 rounded-sm inline-block" style={`background:${l.color};opacity:0.75`}></span>
+                <span class="w-3 h-3 rounded-sm inline-block" style={`background:${l.color};opacity:var(--o-secondary)`}></span>
                 {l.label}
               </span>
             ))}
@@ -34,7 +34,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -78,12 +78,12 @@ import CardFooter from "../CardFooter.astro";
         const xv = x(era.label) ?? 0;
         svg.append("rect").attr("x", xv).attr("y", y(bottom + pct))
           .attr("width", x.bandwidth()).attr("height", Math.max(0, y(bottom) - y(bottom + pct)))
-          .attr("fill", cat.color).attr("opacity", 0.78);
+          .attr("fill", cat.color).attr("opacity",op.secondary);
         // Label inside bar if big enough
         if (pct >= 8) {
           svg.append("text").attr("x", xv + x.bandwidth() / 2).attr("y", y(bottom + pct / 2) + 4)
             .attr("text-anchor", "middle").attr("fill", cc.text0).attr("font-size", "8.5").attr("font-family", "monospace")
-            .attr("opacity", 0.9).text(`${pct}%`);
+            .attr("opacity",op.primary).text(`${pct}%`);
         }
         bottom += pct;
       });

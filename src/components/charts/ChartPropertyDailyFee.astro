@@ -20,7 +20,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -71,7 +71,7 @@ import CardFooter from "../CardFooter.astro";
       const col = isMeta ? cc.bar : cc.text5;
 
       svg.append("rect").attr("x", 0).attr("y", y).attr("width", x(item.maxFee)).attr("height", bh)
-        .attr("rx", 2).attr("fill", col).attr("opacity", 0.65);
+        .attr("rx", 2).attr("fill", col).attr("opacity",op.secondary);
 
       svg.append("text").attr("x", -8).attr("y", y + bh / 2 + 4).attr("text-anchor", "end")
         .attr("fill", cc.text2).attr("font-size", "10").attr("font-family", "monospace").text(item.label);

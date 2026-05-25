@@ -52,7 +52,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -122,7 +122,7 @@ import CardFooter from "../CardFooter.astro";
 
       // Launch line
       g.append("line").attr("x1",x(0)).attr("x2",x(0)).attr("y1",0).attr("y2",panelH)
-        .attr("stroke",cc.red).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",0.4);
+        .attr("stroke",cc.red).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",op.muted);
 
       // Panel label
       g.append("text").attr("x",6).attr("y",12).attr("fill",cc.text6)
