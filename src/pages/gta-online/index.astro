@@ -1,0 +1,103 @@
+---
+/**
+ * /gta-online — GTA Online hub (placeholder).
+ * Full hub build pending. Links to all four sub-sections.
+ */
+import Base from "../../layouts/Base.astro";
+import GamePill from "../../components/GamePill.astro";
+import EconomyCircle from "../../components/EconomyCircle.astro";
+
+const sections = [
+  {
+    href:  "/database?game=gta-online",
+    label: "Income Database",
+    sub:   "Every income source ranked S→D · profit profiles · ROI analysis",
+    color: "var(--c-live)",
+  },
+  {
+    href:  "/gta-online/economy",
+    label: "Economy Model",
+    sub:   "GTA-PPI · Shark Card inflation · passive income stack · circular flow",
+    color: "var(--c-economy)",
+  },
+  {
+    href:  "/gta-online/bonuses",
+    label: "Bonuses & Events",
+    sub:   "This week's 2× events · sale calendar · bonus history",
+    color: "var(--c-brand)",
+  },
+  {
+    href:  "/charts?title=gta-online",
+    label: "Charts",
+    sub:   "Income leaderboard · meta evolution · GTA-PPI · passive stack",
+    color: "var(--c-text-4)",
+  },
+];
+---
+
+<Base
+  title="GTA Online"
+  titleContext="gta-online"
+  description="GTA Online economy intelligence — income sources ranked, Shark Card inflation tracked, weekly bonuses, and 10 years of economic data. Follow the GTA$."
+>
+
+  <!-- Hero -->
+  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:260px;display:flex;align-items:flex-end">
+    <div class="absolute inset-0">
+      <img src="/assets/gta6/locations/Vice_City_03.jpg" alt=""
+           class="w-full h-full object-cover" style="object-position:center 30%" aria-hidden="true" loading="eager" />
+      <div class="absolute inset-0" style="background:linear-gradient(to right,#0e0e11 0%,rgba(14,14,17,0.75) 50%,rgba(14,14,17,0.4) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 40%,#0e0e11 100%)"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-20 w-full">
+      <div class="flex items-center gap-2 mb-3">
+        <GamePill game="gta-online" size="sm" />
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">GTA Online</h1>
+      <p class="text-zinc-400 text-sm leading-relaxed max-w-md">
+        10 years of the live-service economy — ranked, tracked, and explained.
+        Income sources, Shark Card mechanics, weekly bonuses, and the numbers behind the GTA$.
+      </p>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+
+    <!-- Economy Diagram -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// The GTA Online Economy</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/gta-online/economy" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest shrink-0">
+          Full model →
+        </a>
+      </div>
+      <EconomyCircle fullEconomyHref="/gta-online/economy" />
+    </section>
+
+    <!-- Section links -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Explore GTA Online</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {sections.map(s => (
+          <a
+            href={s.href}
+            class="group flex items-start gap-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] px-5 py-4 transition-colors"
+            style="background:var(--c-card)"
+          >
+            <div class="w-1 self-stretch rounded-full shrink-0 mt-0.5" style={`background:${s.color}`}></div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors mb-0.5">{s.label}</div>
+              <div class="text-[11px] font-mono text-zinc-500 leading-snug">{s.sub}</div>
+            </div>
+            <span class="text-zinc-600 group-hover:text-zinc-400 transition-colors shrink-0 self-center">→</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</Base>
