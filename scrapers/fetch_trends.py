@@ -14,18 +14,18 @@ from pytrends.exceptions import TooManyRequestsError
 
 from utils import has_changed, now_iso, write_json
 
-KEYWORDS = ["GTA Online", "GTA money glitch", "GTA weekly update", "GTA V", "GTA 6"]
+# Removed "GTA money glitch" (all-time max: 1) and "GTA weekly update" (all-time max: 0)
+# — both produced near-zero data and wasted pytrends' 5-keyword-per-request cap.
+KEYWORDS = ["GTA Online", "GTA V", "GTA 6"]
 TIMEFRAME = "2013-01-01 2026-12-31"
 GEO = ""  # worldwide
 OUT_PATH = "gta-5/trends/search-interest.json"
 
 # Colour palette — matches the chart component
 COLORS = {
-    "GTA V": "#f59e0b",
+    "GTA V":      "#f59e0b",
     "GTA Online": "#22c55e",
-    "GTA 6": "#ef4444",
-    "GTA money glitch": "#a78bfa",
-    "GTA weekly update": "#38bdf8",
+    "GTA 6":      "#ef4444",
 }
 
 # pytrends caps at 5 keywords per request
