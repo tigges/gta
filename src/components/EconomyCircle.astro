@@ -1,13 +1,11 @@
 ---
 /**
- * EconomyCircle.astro — redesigned GTA circular economy diagram.
+ * EconomyCircle.astro — GTA circular economy diagram.
  *
- * Horizontal flow: Y Income (LEFT) → Player Balance (CENTRE) → C+I Expenditure (RIGHT)
- * J Injection descends from ABOVE into Balance (Shark Cards/GTA+ — GTA Online only).
- * I → Y return arc curves BELOW the diagram, closing the loop.
- *
- * Pure HTML/CSS. No JS. No D3. No legend — HudIcons are self-explanatory to GTA players.
- * GTA-native color logic: green/teal = income, blue = balance/injection, orange = consumption, purple = investment.
+ * A true circle: the border itself changes colour per section (conic-gradient).
+ * Income left (green), Injection top (blue), Expenditure right (orange/purple),
+ * Investment return bottom (purple). Icons at each cardinal point.
+ * Pure HTML/CSS — no JS, no D3.
  */
 import HudIcon from "./HudIcon.astro";
 import GamePill from "./GamePill.astro";
@@ -20,130 +18,102 @@ interface Props {
 const { game = "gta-online", fullEconomyHref } = Astro.props;
 ---
 
-<div class="w-full rounded-xl border border-[#1e1e23] overflow-hidden economy-diagram" style="background:var(--c-card)">
+<div class="w-full rounded-xl border border-[#1e1e23] overflow-hidden" style="background:var(--c-card)">
 
-  <!-- ── J Injection row — descends from Rockstar above the balance ─────── -->
-  <div class="flex justify-center border-b border-[#1e1e23] px-4 py-2.5" style="background:rgba(0,212,232,0.03)">
-    <div class="flex items-center gap-6">
-      <!-- Shark Card — GTA Online only, muted -->
-      <div class="flex flex-col items-center gap-1 opacity-50" title="GTA Online only">
-        <HudIcon name="shark-card" size={16} style="color:var(--c-title-online)" />
-        <div class="w-px h-4" style="background:var(--c-title-online);opacity:0.4"></div>
-      </div>
-      <!-- J label -->
-      <div class="flex flex-col items-center gap-0.5">
-        <div class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-title-online);opacity:0.6">Rockstar</div>
-        <div class="text-[10px] font-mono font-bold" style="color:var(--c-title-online)">J</div>
-        <div class="text-[9px] font-mono" style="color:var(--c-title-online);opacity:0.6">injection</div>
-        <div class="w-px h-3" style="background:var(--c-title-online)"></div>
-        <span style="color:var(--c-title-online);font-size:10px">↓</span>
-      </div>
-      <!-- GTA+ — GTA Online only, muted -->
-      <div class="flex flex-col items-center gap-1 opacity-50" title="GTA Online only">
-        <HudIcon name="subscription" size={16} style="color:var(--c-title-online)" />
-        <div class="w-px h-4" style="background:var(--c-title-online);opacity:0.4"></div>
-      </div>
+  <!-- ── J Injection header — Rockstar above the circle ────────────────── -->
+  <div class="flex items-center justify-center gap-8 px-6 py-3 border-b border-[#1e1e23]"
+       style="background:rgba(0,212,232,0.06)">
+    <div class="flex flex-col items-center gap-1 opacity-50">
+      <HudIcon name="shark-card" size={20} style="color:var(--c-title-online)" />
+      <span class="text-[8px] font-mono" style="color:var(--c-title-online)">Shark Card</span>
     </div>
-    <div class="absolute right-4 top-2 text-[8px] font-mono" style="color:var(--c-text-6)">* GTA Online only</div>
+    <div class="flex flex-col items-center gap-0.5">
+      <span class="text-[9px] font-mono uppercase tracking-[0.2em]" style="color:var(--c-title-online);opacity:0.7">Rockstar</span>
+      <span class="text-xl font-mono font-black" style="color:var(--c-title-online)">J</span>
+      <span class="text-[9px] font-mono" style="color:var(--c-title-online);opacity:0.7">injection</span>
+      <span class="text-xs" style="color:var(--c-title-online)">↓</span>
+    </div>
+    <div class="flex flex-col items-center gap-1 opacity-50">
+      <HudIcon name="subscription" size={20} style="color:var(--c-title-online)" />
+      <span class="text-[8px] font-mono" style="color:var(--c-title-online)">GTA+</span>
+    </div>
+    <span class="absolute right-4 text-[8px] font-mono" style="color:var(--c-text-6)">* GTA Online only</span>
   </div>
 
-  <!-- ── Main horizontal flow ───────────────────────────────────────────── -->
-  <div class="grid min-h-[140px]" style="grid-template-columns:1fr 40px 1fr 40px 1fr">
+  <!-- ── Main diagram ──────────────────────────────────────────────────── -->
+  <div class="flex items-center justify-center px-4 py-6 relative">
 
-    <!-- LEFT: Y — Income (green/teal) -->
-    <div class="flex flex-col justify-center p-4 gap-3"
-         style="border-left:3px solid var(--c-income);background:rgba(13,148,136,0.04)">
-      <div class="flex items-center gap-1.5">
-        <span class="text-2xl font-mono font-black leading-none" style="color:var(--c-income)">Y</span>
-        <span class="text-[9px] font-mono uppercase tracking-widest mt-1" style="color:var(--c-income);opacity:0.7">Income</span>
-      </div>
-      <div class="flex flex-col gap-2">
-        <div class="flex items-center gap-2">
-          <HudIcon name="mission" size={13} style="color:var(--c-live)" />
-          <HudIcon name="passive" size={13} style="color:var(--c-growth)" />
-          <HudIcon name="cycle" size={13} style="color:var(--c-growth);opacity:0.8" />
-        </div>
-        <div class="text-[9px] font-mono leading-relaxed" style="color:var(--c-income);opacity:0.65">
-          Active earn<br/>Business cycles<br/>Passive returns
-        </div>
-      </div>
-    </div>
-
-    <!-- Arrow: Y → Balance -->
-    <div class="flex items-center justify-center">
-      <div class="flex flex-col items-center gap-0.5">
-        <span class="text-[11px]" style="color:var(--c-income)">→</span>
-      </div>
-    </div>
-
-    <!-- CENTRE: Player Balance / Maze Bank (blue) -->
-    <div class="flex flex-col items-center justify-center gap-3 p-4"
-         style="background:rgba(0,212,232,0.05);border-top:2px solid var(--c-title-online)">
-      <!-- J injection arrives here from above -->
+    <!-- Left: Y Income label block -->
+    <div class="flex flex-col items-center gap-3 w-32 shrink-0">
+      <div class="text-5xl font-mono font-black leading-none" style="color:var(--c-growth)">Y</div>
+      <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-center" style="color:var(--c-growth)">Income</div>
       <div class="flex items-center gap-2">
-        <HudIcon name="bank" size={18} style="color:var(--c-title-online)" />
-        <div>
-          <div class="text-[10px] font-mono font-bold" style="color:var(--c-title-online)">Balance</div>
-          <div class="text-[9px] font-mono" style="color:var(--c-title-online);opacity:0.6">GTA$</div>
-        </div>
+        <HudIcon name="mission" size={22} style="color:var(--c-live)" />
+        <HudIcon name="passive" size={22} style="color:var(--c-growth)" />
+        <HudIcon name="cycle"   size={22} style="color:var(--c-growth);opacity:0.75" />
       </div>
-      <HudIcon name="dollar" size={14} style="color:var(--c-title-online);opacity:0.5" />
+      <div class="text-[9px] font-mono text-center leading-relaxed" style="color:var(--c-growth);opacity:0.65">
+        Active · Passive<br/>Businesses
+      </div>
     </div>
 
-    <!-- Arrow: Balance → C+I -->
-    <div class="flex items-center justify-center">
-      <span class="text-[11px]" style="color:var(--c-expenditure)">→</span>
+    <!-- ── The Circle ─────────────────────────────────────────────────── -->
+    <!-- Flow arrow: Y → circle -->
+    <div class="flex items-center shrink-0 px-1">
+      <span class="text-lg font-bold" style="color:var(--c-growth)">→</span>
     </div>
 
-    <!-- RIGHT: C+I — Expenditure (orange + purple) -->
-    <div class="flex flex-col justify-center p-4 gap-3"
-         style="border-right:3px solid var(--c-expenditure);background:rgba(249,115,22,0.04)">
-      <div class="flex items-center gap-1.5 justify-end">
-        <span class="text-[9px] font-mono uppercase tracking-widest mt-1" style="color:var(--c-expenditure);opacity:0.7">Expenditure</span>
-        <span class="text-2xl font-mono font-black leading-none" style="color:var(--c-expenditure)">C+I</span>
-      </div>
-      <!-- C — Consumption (orange) -->
-      <div class="flex flex-col gap-1.5">
-        <div class="flex items-center gap-1.5 justify-end">
-          <span class="text-[9px] font-mono" style="color:var(--c-flow-spending);opacity:0.7">C</span>
-          <HudIcon name="ammo" size={12} style="color:var(--c-flow-spending)" />
-          <HudIcon name="clothing" size={12} style="color:var(--c-flow-spending)" />
-        </div>
-        <!-- I — Investment (purple) -->
-        <div class="flex items-center gap-1.5 justify-end">
-          <span class="text-[9px] font-mono" style="color:var(--c-economy);opacity:0.7">I</span>
-          <HudIcon name="property" size={12} style="color:var(--c-economy)" />
-          <HudIcon name="briefcase" size={12} style="color:var(--c-economy)" />
-        </div>
-      </div>
-    </div>
-  </div>
+    <!-- The circle itself — conic-gradient border shows flow color -->
+    <div class="relative shrink-0 circle-wrapper">
+      <!-- Conic-gradient ring -->
+      <div class="circle-ring"></div>
 
-  <!-- ── I → Y return arc (curves under, closes the loop) ──────────────── -->
-  <div class="relative px-4 pt-1 pb-3">
-    <!-- The arc: spans from investment (right) back to income (left) -->
-    <div class="return-arc mx-auto relative" style="height:28px">
-      <!-- Curved border using CSS -->
-      <div class="absolute inset-x-0 bottom-0 h-full"
-           style="border:1.5px solid var(--c-economy);border-top:none;border-radius:0 0 50% 50%;opacity:0.6"></div>
-      <!-- Left upward arrow into Y -->
-      <div class="absolute left-0 -top-2 flex flex-col items-center">
-        <span style="color:var(--c-economy);font-size:10px;opacity:0.7">↑</span>
+      <!-- Centre: Balance -->
+      <div class="circle-centre">
+        <HudIcon name="bank" size={28} style="color:var(--c-title-online)" />
+        <div class="text-[11px] font-mono font-bold mt-1" style="color:var(--c-title-online)">GTA$</div>
+        <HudIcon name="dollar" size={16} style="color:var(--c-title-online);opacity:0.5" />
       </div>
-      <!-- Return label -->
-      <div class="absolute inset-0 flex items-end justify-center pb-1">
-        <span class="text-[8px] font-mono uppercase tracking-widest" style="color:var(--c-economy);opacity:0.5">I returns to Y</span>
-      </div>
-      <!-- Right downward arrow from investment -->
-      <div class="absolute right-0 -top-2">
-        <span style="color:var(--c-economy);font-size:10px;opacity:0.7">↓</span>
+
+      <!-- Return arc label at bottom of circle -->
+      <div class="circle-return-label">
+        <span class="text-[8px] font-mono uppercase tracking-widest" style="color:var(--c-economy);opacity:0.75">I → Y</span>
       </div>
     </div>
+
+    <!-- Flow arrow: circle → C+I -->
+    <div class="flex items-center shrink-0 px-1">
+      <span class="text-lg font-bold" style="color:var(--c-flow-spending)">→</span>
+    </div>
+
+    <!-- Right: C+I Expenditure label block -->
+    <div class="flex flex-col items-center gap-3 w-32 shrink-0">
+      <div class="text-5xl font-mono font-black leading-none" style="color:var(--c-flow-spending)">C+I</div>
+      <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-center" style="color:var(--c-flow-spending)">Expenditure</div>
+      <!-- C Consumption -->
+      <div class="flex flex-col gap-2 w-full">
+        <div class="flex items-center justify-center gap-2">
+          <span class="text-[9px] font-mono font-bold" style="color:var(--c-flow-spending)">C</span>
+          <HudIcon name="clothing" size={20} style="color:var(--c-flow-spending)" />
+          <HudIcon name="ammo"     size={20} style="color:var(--c-flow-spending);opacity:0.8" />
+        </div>
+        <!-- I Investment -->
+        <div class="flex items-center justify-center gap-2">
+          <span class="text-[9px] font-mono font-bold" style="color:var(--c-economy)">I</span>
+          <HudIcon name="property"  size={20} style="color:var(--c-economy)" />
+          <HudIcon name="briefcase" size={20} style="color:var(--c-economy);opacity:0.8" />
+        </div>
+      </div>
+      <div class="text-[9px] font-mono text-center leading-relaxed" style="color:var(--c-flow-spending);opacity:0.65">
+        Consume · Invest<br/>in businesses
+      </div>
+    </div>
+
   </div>
 
   <!-- ── Footer: formula + pill + link ─────────────────────────────────── -->
-  <div class="flex items-center justify-between px-4 py-2.5 border-t border-[#1e1e23]">
-    <div class="flex items-center gap-2.5">
+  <div class="flex items-center justify-between px-5 py-3 border-t border-[#1e1e23]">
+    <div class="flex items-center gap-3">
       <GamePill {game} size="xs" />
       <span class="text-[10px] font-mono" style="color:var(--c-text-4)">(Y + J) = C + I</span>
     </div>
@@ -160,10 +130,62 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 </div>
 
 <style>
-  .economy-diagram {
+  /* ── Circle wrapper ──────────────────────────────────────────────────── */
+  .circle-wrapper {
+    width:  160px;
+    height: 160px;
     position: relative;
   }
-  .return-arc {
-    width: 70%;
+
+  /* The conic-gradient ring — 16px thick, colors per section:
+     Left (Y income)  = green  → top-left corner
+     Top  (J inject)  = blue   → already shown above circle, just a hint
+     Right (C+I)      = orange → right side
+     Bottom (I→Y)     = purple → return arc */
+  .circle-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 135deg,
+      #22c55e  0deg   90deg,   /* Y income — green, left side  */
+      #00d4e8  90deg  120deg,  /* J inject — blue, top         */
+      #f97316  120deg 200deg,  /* C consume — orange, right    */
+      #818cf8  200deg 300deg,  /* I invest — purple, bottom    */
+      #22c55e  300deg 360deg   /* back to green, close loop    */
+    );
+    /* Mask to ring only */
+    -webkit-mask: radial-gradient(circle, transparent 60px, black 62px);
+    mask: radial-gradient(circle, transparent 60px, black 62px);
+    opacity: 0.85;
+  }
+
+  /* Directional arrows overlaid on the ring at compass points */
+  .circle-ring::before,
+  .circle-ring::after {
+    content: "";
+  }
+
+  /* Centre disc for Balance */
+  .circle-centre {
+    position: absolute;
+    inset: 20px;
+    border-radius: 50%;
+    background: rgba(0,212,232,0.08);
+    border: 1.5px solid rgba(0,212,232,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  /* I → Y return label at bottom of circle */
+  .circle-return-label {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
   }
 </style>
