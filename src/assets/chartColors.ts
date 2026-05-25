@@ -90,3 +90,16 @@ export const playColor = (type: string): string => {
   };
   return map[type] ?? cc.text6;
 };
+
+/**
+ * Element opacity scale — for interactive STATE on whole elements.
+ * Use for inactive pills, faded images, disabled controls, unselected covers.
+ * NEVER apply to text — use cc.text* colour tokens for text dimming instead.
+ * Mirrors --o-* tokens in tokens.css.
+ */
+export const op = {
+  full:     1.00,  // fully active / selected
+  muted:    0.65,  // present but visually secondary
+  inactive: 0.45,  // unselected pill, inactive tab, non-highlighted cover
+  ghost:    0.25,  // suppressed / unavailable element
+} as const;

@@ -34,7 +34,7 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
           <span class="text-[10px] font-mono text-zinc-500">● Passive returns</span>
         </div>
       </div>
-      <div class="text-[9px] font-mono uppercase tracking-widest mt-3" style="color:var(--c-live);opacity:0.5">
+      <div class="text-[10px] font-mono uppercase tracking-widest mt-3 text-zinc-500">
         Y grows → next cycle
       </div>
     </div>
@@ -45,15 +45,15 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
       <div class="flex items-center gap-2 w-full justify-center">
         <span class="text-lg font-mono" style="color:var(--c-live)">←</span>
         <div class="text-center">
-          <div class="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-600 mb-0.5">Player</div>
+          <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600 mb-0.5">Player</div>
           <div class="text-sm font-mono font-black" style="color:var(--c-brand)">Balance</div>
           <div class="text-[10px] font-mono text-zinc-500">GTA$</div>
         </div>
         <span class="text-lg font-mono" style="color:var(--c-brand)">→</span>
       </div>
       <div class="w-full border-t border-[#1e1e23] pt-2.5 text-center">
-        <div class="text-[9px] font-mono uppercase tracking-widest text-zinc-700 mb-0.5">+ J Injection</div>
-        <div class="text-[10px] font-mono text-zinc-600">Shark Cards · GTA+</div>
+        <div class="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-0.5">+ J Injection</div>
+        <div class="text-[10px] font-mono text-zinc-500">Shark Cards · GTA+</div>
       </div>
     </div>
 
@@ -69,18 +69,18 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
               <span class="text-[11px] font-mono font-bold" style="color:var(--c-alert)">C</span>
               <span class="text-[10px] font-mono text-zinc-500">Consumption</span>
             </div>
-            <div class="text-[9px] font-mono text-zinc-700 pl-4">Ammo · clothes · services</div>
+            <div class="text-[10px] font-mono text-zinc-500 pl-4">Ammo · clothes · services</div>
           </div>
           <div>
             <div class="flex items-center gap-1.5">
               <span class="text-[11px] font-mono font-bold" style="color:var(--c-brand)">I</span>
               <span class="text-[10px] font-mono text-zinc-500">Investment</span>
             </div>
-            <div class="text-[9px] font-mono text-zinc-700 pl-4">Property · businesses · assets</div>
+            <div class="text-[10px] font-mono text-zinc-500 pl-4">Property · businesses · assets</div>
           </div>
         </div>
       </div>
-      <div class="text-[9px] font-mono uppercase tracking-widest mt-3" style="color:var(--c-brand);opacity:0.5">
+      <div class="text-[10px] font-mono uppercase tracking-widest mt-3 text-zinc-500">
         I returns to Y
       </div>
     </div>
@@ -91,7 +91,7 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
        style="background:rgba(0,0,0,0.2)">
     <div class="flex items-center gap-2.5">
       <GamePill {game} size="xs" />
-      <span class="text-[10px] font-mono text-zinc-700 tracking-widest">(Y + J) = C + I</span>
+      <span class="text-[10px] font-mono text-zinc-500 tracking-widest">(Y + J) = C + I</span>
     </div>
     {fullEconomyHref && (
       <a href={fullEconomyHref}

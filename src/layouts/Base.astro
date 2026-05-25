@@ -329,7 +329,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
             <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
             <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Live this week</span>
             <span class="text-[11px] font-mono text-gta-teal capitalize">{liveStripText}</span>
-            <span class="ml-auto text-[10px] font-mono text-zinc-700 group-hover/ls:text-zinc-500 transition-colors">See all →</span>
+            <span class="ml-auto text-[10px] font-mono text-zinc-500 group-hover/ls:text-zinc-500 transition-colors">See all →</span>
           </a>
         </div>
       </div>
@@ -355,7 +355,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
           </div>
           <!-- Cover strip — all 8 titles, one tap each -->
           <div class="flex items-center gap-3">
-            <span class="text-[10px] font-mono text-zinc-700 uppercase tracking-widest shrink-0">All titles</span>
+            <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest shrink-0">All titles</span>
             {([
               { id: "gta-1",  year: "1997", href: "/franchise" },
               { id: "gta-2",  year: "1999", href: "/franchise" },
@@ -369,7 +369,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
               <a href={t.href} class="group/cv flex flex-col items-center gap-1">
                 <img src={`/assets/covers/${t.id}.jpg`} alt={t.id.toUpperCase()}
                      class="w-9 h-12 object-cover rounded border border-[#2a2a31] group-hover/cv:border-gta-gold/40 transition-colors" loading="lazy" />
-                <span class="text-[9px] font-mono text-zinc-700 group-hover/cv:text-zinc-500 transition-colors">{t.year}</span>
+                <span class="text-[10px] font-mono text-zinc-500 group-hover/cv:text-zinc-500 transition-colors">{t.year}</span>
               </a>
             ))}
           </div>
@@ -397,7 +397,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
               <span class="text-white mr-1">GTA</span><span class="text-gta-gold">VI</span>
               <span class="text-sm font-mono font-bold text-white border-2 border-zinc-200/70 rounded pl-0.5 pr-1.5 py-0.5 tracking-widest leading-none">.AI</span>
             </div>
-            <p class="text-xs text-zinc-700 font-mono max-w-sm mt-2">
+            <p class="text-xs text-zinc-500 font-mono max-w-sm mt-2">
               Community data project. Not affiliated with Rockstar Games or Take-Two Interactive.<br />
               All game assets © Rockstar Games / Take-Two Interactive.
             </p>
@@ -408,7 +408,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
               <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">Data refreshed nightly</span>
             </div>
             <span class="text-[10px] font-mono text-zinc-500">GTA VI launches Nov 19, 2026</span>
-            <span class="text-[10px] font-mono text-zinc-700">{SITE_VERSION_LABEL} · {SITE_VERSION_DATE}</span>
+            <span class="text-[10px] font-mono text-zinc-500">{SITE_VERSION_LABEL} · {SITE_VERSION_DATE}</span>
           </div>
         </div>
       </div>
