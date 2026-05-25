@@ -15,7 +15,7 @@
       "trailer_timestamp": null,
       "prediction_method": "Official announcement cross-referenced with SEC EDGAR 8-K filing",
       "prediction_inputs": [
-        "delay-timeline.json → date_confirmed events",
+        "delay-timeline.json \u2192 date_confirmed events",
         "Take-Two Q3 FY2026 earnings"
       ],
       "prediction_range": {
@@ -27,8 +27,10 @@
       "outcome_date": "2026-11-19",
       "source": "Rockstar Games official announcement",
       "source_type": "official",
-      "display_order": 14,
-      "pages": [],
+      "display_order": 12,
+      "pages": [
+        "home"
+      ],
       "editorial_note": "approved"
     },
     {
@@ -43,7 +45,7 @@
       "trailer_timestamp": null,
       "prediction_method": "Retailer pre-order price consensus + CPI-adjusted franchise pricing trend",
       "prediction_inputs": [
-        "franchise/cpi.json → real price trend",
+        "franchise/cpi.json \u2192 real price trend",
         "Retailer listings May 2026"
       ],
       "prediction_range": {
@@ -71,20 +73,20 @@
       "confidence_tier": "confirmed",
       "basis": "GTA VI's confirmed $79.99 launch price is 11.9% cheaper in real 2026 terms than GTA III ($90.75) in 2026 dollars. CPI-U adjusted comparison: GTA III ($49.99 in 2001 = $90.75 in 2026), GTA VC ($89.34), GTA SA ($85.08), GTA IV ($89.58) all cost more in real terms than GTA VI's $79.99.",
       "trailer_timestamp": null,
-      "prediction_method": "CPI-U adjusted price comparison — US Bureau of Labor Statistics + official Rockstar/Take-Two pricing",
+      "prediction_method": "CPI-U adjusted price comparison \u2014 US Bureau of Labor Statistics + official Rockstar/Take-Two pricing",
       "prediction_inputs": [
-        "franchise/cpi.json → base_cpi + title CPI year values",
-        "Retailer pre-order listings May 2026 → $79.99 confirmed",
-        "US BLS CPI-U 2001–2026 series"
+        "franchise/cpi.json \u2192 base_cpi + title CPI year values",
+        "Retailer pre-order listings May 2026 \u2192 $79.99 confirmed",
+        "US BLS CPI-U 2001\u20132026 series"
       ],
       "prediction_range": {
-        "low": "Confirmed — math is not a prediction",
-        "high": "Confirmed — math is not a prediction"
+        "low": "Confirmed \u2014 math is not a prediction",
+        "high": "Confirmed \u2014 math is not a prediction"
       },
       "outcome_verified": false,
       "outcome_actual": null,
       "outcome_date": "2026-11-19",
-      "source": "US Bureau of Labor Statistics CPI-U · Rockstar/Take-Two official pricing",
+      "source": "US Bureau of Labor Statistics CPI-U \u00b7 Rockstar/Take-Two official pricing",
       "source_type": "official",
       "display_order": 1,
       "pages": [
@@ -96,22 +98,22 @@
     {
       "id": "pred-map-size",
       "title": "Map Size",
-      "value": "~150 km²",
-      "unit": "km²",
+      "value": "~150 km\u00b2",
+      "unit": "km\u00b2",
       "thumbnail": "/assets/gta6/locations/Leonida_Keys_01.jpg",
       "confidence": 38,
       "confidence_tier": "predicted",
-      "basis": "Extrapolated from trailer landscape analysis and community mapping of confirmed regions. GTA V was 75km². 17 confirmed regions imply significant expansion.",
-      "trailer_timestamp": "T2 — 0:35, 1:22",
-      "prediction_method": "Region count extrapolation × GTA V region density ratio + trailer frame analysis",
+      "basis": "Extrapolated from trailer landscape analysis and community mapping of confirmed regions. GTA V was 75km\u00b2. 17 confirmed regions imply significant expansion.",
+      "trailer_timestamp": "T2 \u2014 0:35, 1:22",
+      "prediction_method": "Region count extrapolation \u00d7 GTA V region density ratio + trailer frame analysis",
       "prediction_inputs": [
-        "franchise/regions-evidence.json → 7 confirmed regions",
-        "shared/releases.json → map size trend",
+        "franchise/regions-evidence.json \u2192 7 confirmed regions",
+        "shared/releases.json \u2192 map size trend",
         "gta-6/trailer-analysis.json"
       ],
       "prediction_range": {
-        "low": "100 km²",
-        "high": "225 km²"
+        "low": "100 km\u00b2",
+        "high": "225 km\u00b2"
       },
       "outcome_verified": false,
       "outcome_actual": null,
@@ -131,12 +133,12 @@
       "confidence": 62,
       "confidence_tier": "predicted",
       "basis": "268 vehicles already indexed from trailers and community. GTA V had 737 at launch. Franchise trend and confirmed vehicle diversity suggest comparable count.",
-      "trailer_timestamp": "T1 — 0:28, T2 — 0:22",
-      "prediction_method": "Indexed vehicle count extrapolation × franchise launch-to-total ratio",
+      "trailer_timestamp": "T1 \u2014 0:28, T2 \u2014 0:22",
+      "prediction_method": "Indexed vehicle count extrapolation \u00d7 franchise launch-to-total ratio",
       "prediction_inputs": [
-        "gta-6/entities/vehicles.json → 268 indexed",
-        "shared/releases.json → GTA V vehicle_count: 737",
-        "gta-5/vehicles/performance.json → 665 tested"
+        "gta-6/entities/vehicles.json \u2192 268 indexed",
+        "shared/releases.json \u2192 GTA V vehicle_count: 737",
+        "gta-5/vehicles/performance.json \u2192 665 tested"
       ],
       "prediction_range": {
         "low": "500",
@@ -163,7 +165,7 @@
       "confidence": 80,
       "confidence_tier": "reported",
       "basis": "Trailer evidence confirms clubs and heists in Vice City; farms and smuggling operations in Leonida. The dual-territory diagram explicitly labels these. Region-specific business types would produce natural wage and passive income divergence.",
-      "trailer_timestamp": "Trailer 2 — multiple shots",
+      "trailer_timestamp": "Trailer 2 \u2014 multiple shots",
       "prediction_method": "economic-model",
       "prediction_inputs": [
         "GTA VI Trailer 2 entity analysis",
@@ -172,7 +174,7 @@
       ],
       "prediction_range": {
         "low": "Cross-region businesses accessible but with efficiency penalties",
-        "high": "Hard region locks — certain business types only viable in their native territory"
+        "high": "Hard region locks \u2014 certain business types only viable in their native territory"
       },
       "outcome_verified": false,
       "outcome_actual": null,
@@ -189,7 +191,7 @@
     },
     {
       "id": "pred-vi-weekly-event-cadence",
-      "title": "Weekly Bonus Events from Day 1 — Like GTA Online",
+      "title": "Weekly Bonus Events from Day 1 \u2014 Like GTA Online",
       "value": "Weekly bonus rotation from launch",
       "unit": null,
       "thumbnail": "/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg",
@@ -199,9 +201,9 @@
       "trailer_timestamp": null,
       "prediction_method": "economic-model",
       "prediction_inputs": [
-        "weekly-bonuses.json → current event format",
-        "bonus-history.json → 42+ weeks of cadence data",
-        "sale-frequency.json → activity bonus frequency analysis"
+        "weekly-bonuses.json \u2192 current event format",
+        "bonus-history.json \u2192 42+ weeks of cadence data",
+        "sale-frequency.json \u2192 activity bonus frequency analysis"
       ],
       "prediction_range": {
         "low": "Bi-weekly events (reduced cadence at launch)",
@@ -210,7 +212,7 @@
       "outcome_verified": false,
       "outcome_actual": null,
       "outcome_date": null,
-      "source": "GTAVI.AI Economic Model Analysis — bonus-history.json cadence analysis",
+      "source": "GTAVI.AI Economic Model Analysis \u2014 bonus-history.json cadence analysis",
       "source_type": "reported",
       "display_order": 4,
       "pages": [
@@ -255,13 +257,13 @@
     },
     {
       "id": "pred-vi-maze-bank-decorative",
-      "title": "No Loans at Maze Bank — Savings Only",
+      "title": "No Loans at Maze Bank \u2014 Savings Only",
       "value": "Savings hold GTA$ but credit/loans remain absent",
       "unit": null,
       "thumbnail": "/assets/gta6/locations/Vice_City_05.jpg",
       "confidence": 85,
       "confidence_tier": "predicted",
-      "basis": "Franchise-wide pattern: savings never compound in any GTA title. Maze Bank in GTA Online is explicitly decorative (no credit). No title has ever introduced a loan or credit mechanic — introducing one would fundamentally alter the Shark Card revenue model by reducing SC purchase urgency.",
+      "basis": "Franchise-wide pattern: savings never compound in any GTA title. Maze Bank in GTA Online is explicitly decorative (no credit). No title has ever introduced a loan or credit mechanic \u2014 introducing one would fundamentally alter the Shark Card revenue model by reducing SC purchase urgency.",
       "trailer_timestamp": null,
       "prediction_method": "economic-model",
       "prediction_inputs": [
@@ -294,7 +296,7 @@
       "thumbnail": "/assets/gta6/characters/Lucia_Caminos_01.jpg",
       "confidence": 72,
       "confidence_tier": "predicted",
-      "basis": "GTA V established per-character financial independence (Michael, Trevor, Franklin each hold separate balances). Two protagonists in GTA VI naturally extends this — particularly relevant for a dual-territory model where each character may operate primarily in one region.",
+      "basis": "GTA V established per-character financial independence (Michael, Trevor, Franklin each hold separate balances). Two protagonists in GTA VI naturally extends this \u2014 particularly relevant for a dual-territory model where each character may operate primarily in one region.",
       "trailer_timestamp": null,
       "prediction_method": "economic-model",
       "prediction_inputs": [
@@ -358,13 +360,13 @@
       "thumbnail": "/assets/gta6/characters/Jason_Duval_01.jpg",
       "confidence": 78,
       "confidence_tier": "predicted",
-      "basis": "GTA Online has delivered a major payout nerf within 6–18 months of every high-yield activity launch since 2015. Structural incentive: high yields suppress Shark Card sales. The question is not if GTA VI nerfs occur, but when.",
+      "basis": "GTA Online has delivered a major payout nerf within 6\u201318 months of every high-yield activity launch since 2015. Structural incentive: high yields suppress Shark Card sales. The question is not if GTA VI nerfs occur, but when.",
       "trailer_timestamp": null,
       "prediction_method": "economic-model",
       "prediction_inputs": [
-        "meta-history.json → nerf cadence 2013–2026",
-        "shark-cards.json → Shark Card revenue correlation with yield",
-        "bonus-history.json → patch event frequency"
+        "meta-history.json \u2192 nerf cadence 2013\u20132026",
+        "shark-cards.json \u2192 Shark Card revenue correlation with yield",
+        "bonus-history.json \u2192 patch event frequency"
       ],
       "prediction_range": {
         "low": "3 months (if yield is high enough to threaten Shark Card revenue immediately)",
@@ -373,7 +375,7 @@
       "outcome_verified": false,
       "outcome_actual": null,
       "outcome_date": null,
-      "source": "GTAVI.AI Economic Model Analysis — meta-history.json nerf cadence",
+      "source": "GTAVI.AI Economic Model Analysis \u2014 meta-history.json nerf cadence",
       "source_type": "predicted",
       "display_order": 10,
       "pages": [
@@ -394,9 +396,9 @@
       "trailer_timestamp": null,
       "prediction_method": "economic-model",
       "prediction_inputs": [
-        "franchise/cpi.json → CPI-adjusted price trend 2013–2026",
-        "shark-cards.json → endgame_cost_history",
-        "shark-cards.json → analysis.purchasing_power_ratio"
+        "franchise/cpi.json \u2192 CPI-adjusted price trend 2013\u20132026",
+        "shark-cards.json \u2192 endgame_cost_history",
+        "shark-cards.json \u2192 analysis.purchasing_power_ratio"
       ],
       "prediction_range": {
         "low": "$99.99 (nominal flat continuation)",
@@ -405,29 +407,27 @@
       "outcome_verified": false,
       "outcome_actual": null,
       "outcome_date": null,
-      "source": "GTAVI.AI Economic Model Analysis — franchise/cpi.json + shark-cards.json",
+      "source": "GTAVI.AI Economic Model Analysis \u2014 franchise/cpi.json + shark-cards.json",
       "source_type": "predicted",
-      "display_order": 13,
-      "pages": [
-        "gta-vi"
-      ],
+      "display_order": 14,
+      "pages": [],
       "editorial_note": "approved"
     },
     {
       "id": "pred-vi-launch-top-yield",
       "title": "Top Hourly Yield at GTA VI Online Launch",
-      "value": "~$3M–5M GTA$/hr",
+      "value": "~$3M\u20135M GTA$/hr",
       "unit": "GTA$/hr",
       "thumbnail": "/assets/gta6/locations/Port_Gellhorn_02.jpg",
       "confidence": 40,
       "confidence_tier": "predicted",
-      "basis": "GTA Online launched at ~$250K/hr in 2013 and reached $2M/hr (Cayo Perico, 2020) before nerfs. The 8× yield growth over 7 years reflects both inflation and content scaling. GTA VI Online inherits the MMT sovereign model at a structurally higher yield floor. Historical nerf cadence suggests yields above $5M/hr are politically unsustainable for Rockstar's Shark Card model.",
+      "basis": "GTA Online launched at ~$250K/hr in 2013 and reached $2M/hr (Cayo Perico, 2020) before nerfs. The 8\u00d7 yield growth over 7 years reflects both inflation and content scaling. GTA VI Online inherits the MMT sovereign model at a structurally higher yield floor. Historical nerf cadence suggests yields above $5M/hr are politically unsustainable for Rockstar's Shark Card model.",
       "trailer_timestamp": null,
       "prediction_method": "economic-model",
       "prediction_inputs": [
-        "meta-history.json → yield progression 2013–2026",
-        "revenue-tiers.json → current S-tier yield floor",
-        "shark-cards.json → Shark Card / real-income equilibrium"
+        "meta-history.json \u2192 yield progression 2013\u20132026",
+        "revenue-tiers.json \u2192 current S-tier yield floor",
+        "shark-cards.json \u2192 Shark Card / real-income equilibrium"
       ],
       "prediction_range": {
         "low": "$2M/hr (continuation of current GTA Online S-tier floor)",
@@ -436,21 +436,23 @@
       "outcome_verified": false,
       "outcome_actual": null,
       "outcome_date": null,
-      "source": "GTAVI.AI Economic Model Analysis — meta-history.json + revenue-tiers.json",
+      "source": "GTAVI.AI Economic Model Analysis \u2014 meta-history.json + revenue-tiers.json",
       "source_type": "predicted",
-      "display_order": 12,
-      "pages": [],
+      "display_order": 13,
+      "pages": [
+        "gta-vi"
+      ],
       "editorial_note": "approved"
     },
     {
       "id": "pred-vi-regional-prices",
-      "title": "Regional Price Gap — Vice City vs Leonida",
+      "title": "Regional Price Gap \u2014 Vice City vs Leonida",
       "value": "Vice City prices higher than Leonida",
       "unit": null,
       "thumbnail": "/assets/gta6/locations/Vice_City_03.jpg",
       "confidence": 65,
       "confidence_tier": "predicted",
-      "basis": "Dual-territory Eurozone analogy — two structurally different regions sharing one currency (GTA$) historically produce purchasing power divergence. Urban density correlates with higher prices across GTA franchise history.",
+      "basis": "Dual-territory Eurozone analogy \u2014 two structurally different regions sharing one currency (GTA$) historically produce purchasing power divergence. Urban density correlates with higher prices across GTA franchise history.",
       "trailer_timestamp": null,
       "prediction_method": "economic-model",
       "prediction_inputs": [
@@ -459,8 +461,8 @@
         "franchise pricing history"
       ],
       "prediction_range": {
-        "low": "5–10% price premium in VC",
-        "high": "25–40% price premium in VC"
+        "low": "5\u201310% price premium in VC",
+        "high": "25\u201340% price premium in VC"
       },
       "outcome_verified": false,
       "outcome_actual": null,
@@ -468,9 +470,7 @@
       "source": "GTAVI.AI Economic Model Analysis",
       "source_type": "predicted",
       "display_order": 16,
-      "pages": [
-        "home"
-      ],
+      "pages": [],
       "editorial_note": "approved"
     },
     {
@@ -481,7 +481,7 @@
       "thumbnail": "/assets/gta6/locations/Vice_City_04.jpg",
       "confidence": 60,
       "confidence_tier": "predicted",
-      "basis": "Take-Two's recurring revenue dependency makes Shark Cards non-negotiable. Regional denominations or tiered access are the natural extension of the dual-territory model — mirroring real-world mobile game regional pricing strategies.",
+      "basis": "Take-Two's recurring revenue dependency makes Shark Cards non-negotiable. Regional denominations or tiered access are the natural extension of the dual-territory model \u2014 mirroring real-world mobile game regional pricing strategies.",
       "trailer_timestamp": null,
       "prediction_method": "economic-model",
       "prediction_inputs": [
@@ -504,19 +504,19 @@
     },
     {
       "id": "pred-vi-endgame-shark-cost",
-      "title": "GTA VI Endgame Cost via Shark Cards — 12 Months",
-      "value": "~$600–$900 USD",
+      "title": "GTA VI Endgame Cost via Shark Cards \u2014 12 Months",
+      "value": "~$600\u2013$900 USD",
       "unit": "USD",
       "thumbnail": "/assets/gta6/locations/Vice_City_02.jpg",
       "confidence": 35,
       "confidence_tier": "predicted",
-      "basis": "GTA Online's endgame cost via Shark Cards grew from ~$18.75 (2013) to ~$437.50 (2026) — a 23× increase over 13 years. GTA VI Online starts with a reset baseline but inherits the same structural incentive to expand the aspirational item stack. The $600–$900 range assumes a 30–100% premium over GTA Online's current endgame.",
+      "basis": "GTA Online's endgame cost via Shark Cards grew from ~$18.75 (2013) to ~$437.50 (2026) \u2014 a 23\u00d7 increase over 13 years. GTA VI Online starts with a reset baseline but inherits the same structural incentive to expand the aspirational item stack. The $600\u2013$900 range assumes a 30\u2013100% premium over GTA Online's current endgame.",
       "trailer_timestamp": null,
       "prediction_method": "economic-model",
       "prediction_inputs": [
-        "shark-cards.json → endgame_cost_history + analysis",
-        "item-catalogue.json → price inflation rate per patch era",
-        "meta-history.json → nerf cadence"
+        "shark-cards.json \u2192 endgame_cost_history + analysis",
+        "item-catalogue.json \u2192 price inflation rate per patch era",
+        "meta-history.json \u2192 nerf cadence"
       ],
       "prediction_range": {
         "low": "$437.50 (flat continuation of GTA Online ceiling)",
@@ -525,7 +525,7 @@
       "outcome_verified": false,
       "outcome_actual": null,
       "outcome_date": null,
-      "source": "GTAVI.AI Economic Model Analysis — shark-cards.json endgame projection",
+      "source": "GTAVI.AI Economic Model Analysis \u2014 shark-cards.json endgame projection",
       "source_type": "predicted",
       "display_order": 2,
       "pages": [
@@ -542,7 +542,7 @@
       "thumbnail": "/assets/gta6/locations/Port_Gellhorn_01.jpg",
       "confidence": 70,
       "confidence_tier": "predicted",
-      "basis": "If regional price differentials exist, a single GTA-PPI index will understate inflation for one region. The GTA-RPP — basket cost ÷ top hourly yield, computed per territory — is the essential post-launch metric for this site.",
+      "basis": "If regional price differentials exist, a single GTA-PPI index will understate inflation for one region. The GTA-RPP \u2014 basket cost \u00f7 top hourly yield, computed per territory \u2014 is the essential post-launch metric for this site.",
       "trailer_timestamp": null,
       "prediction_method": "economic-model",
       "prediction_inputs": [
@@ -552,7 +552,7 @@
       ],
       "prediction_range": {
         "low": "GTA-RPP diverges <10% between regions",
-        "high": "GTA-RPP diverges >30% — significant real wage gap between territories"
+        "high": "GTA-RPP diverges >30% \u2014 significant real wage gap between territories"
       },
       "outcome_verified": false,
       "outcome_actual": null,
