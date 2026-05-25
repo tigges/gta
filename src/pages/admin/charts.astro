@@ -1,0 +1,209 @@
+---
+/**
+ * /admin/charts — Chart rank and visibility dashboard.
+ * Same pattern as /admin/predictions. Changes are in-memory only.
+ * Use "Copy JSON patch" → paste into allCharts.ts via GitHub editor.
+ */
+import Base from "../../layouts/Base.astro";
+import { CHARTS_PAGE_ORDER, getAllCharts } from "../../config/allCharts";
+
+const allCharts = getAllCharts ? getAllCharts() : [];
+
+// Build display list from CHARTS_PAGE_ORDER
+const GAME_COLOR: Record<string, string> = {
+  "gta-vi":     "var(--c-title-vi,#ff6b9d)",
+  "gta-online": "var(--c-title-online,#00d4e8)",
+  "gta-v":      "var(--c-title-v,#f59e0b)",
+  "franchise":  "var(--c-brand,#f59e0b)",
+};
+const GAME_LABEL: Record<string, string> = {
+  "gta-vi": "GTA VI", "gta-online": "GTA Online",
+  "gta-v": "GTA V", "franchise": "Franchise",
+};
+---
+
+<Base title="Chart Ranks" titleContext="gta-vi">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+
+    <div class="mb-6 flex items-start justify-between flex-wrap gap-4">
+      <div>
+        <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-1">// Admin · Charts</div>
+        <h1 class="text-2xl font-bold text-white">Chart Rank Board</h1>
+        <p class="text-[11px] font-mono text-zinc-500 mt-1">
+          {CHARTS_PAGE_ORDER.length} charts in /charts page order · Edit visibility per game hub
+        </p>
+      </div>
+    </div>
+
+    <!-- Changes bar -->
+    <div id="changes-bar" class="hidden mb-4 rounded-lg border border-gta-gold/30 px-4 py-3 flex items-center justify-between gap-4" style="background:rgba(245,158,11,0.06)">
+      <span class="text-[11px] font-mono text-gta-gold"><span id="change-count">0</span> unsaved change(s)</span>
+      <div class="flex gap-2">
+        <button id="copy-patch" class="text-[11px] font-mono border border-gta-gold/40 text-gta-gold px-3 py-1 rounded hover:bg-gta-gold/10 transition-all">Copy JSON patch</button>
+        <button id="reset-changes" class="text-[11px] font-mono border border-zinc-700 text-zinc-500 px-3 py-1 rounded hover:border-zinc-600 hover:text-zinc-300 transition-all">Reset</button>
+      </div>
+    </div>
+
+    <!-- View filter -->
+    <div class="flex items-center gap-2 mb-4 text-[10px] font-mono">
+      <span class="text-zinc-600 mr-1">Filter:</span>
+      {[
+        { id: "all",       label: "All" },
+        { id: "gta-vi",    label: "GTA VI" },
+        { id: "gta-online",label: "GTA Online" },
+        { id: "gta-v",     label: "GTA V" },
+        { id: "franchise", label: "Franchise" },
+      ].map(f => (
+        <button class="chart-view-filter px-2.5 py-1 rounded border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+                data-filter={f.id}>{f.label}</button>
+      ))}
+    </div>
+
+    <!-- Chart list -->
+    <div id="chart-list" class="flex flex-col gap-1"
+         data-charts={JSON.stringify(CHARTS_PAGE_ORDER.map((id, i) => ({
+           id,
+           order: i + 1,
+           label: id.replace(/-chart$/, "").replace(/-/g, " "),
+         })))}>
+    </div>
+
+    <!-- How to apply -->
+    <div class="mt-6 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:#131316">
+      <p class="text-[10px] font-mono text-zinc-600">
+        Changes are in-memory only. ▲/▼ reorders the <span class="text-zinc-400">CHARTS_PAGE_ORDER</span> array.
+        When done, click <span class="text-zinc-400">Copy JSON patch</span> — the patch is a reordered array
+        you paste into <span class="text-zinc-400">src/config/allCharts.ts</span> via the GitHub editor.
+      </p>
+    </div>
+
+  </div>
+</Base>
+
+<script>
+  // ── State ─────────────────────────────────────────────────────────────────
+  const listEl = document.getElementById("chart-list")!;
+  const raw: { id: string; order: number; label: string }[] =
+    JSON.parse(listEl.dataset.charts || "[]");
+
+  const GAME_COLOR: Record<string, string> = {
+    "gta-vi":     "var(--c-title-vi,#ff6b9d)",
+    "gta-online": "var(--c-title-online,#00d4e8)",
+    "gta-v":      "var(--c-title-v,#f59e0b)",
+    "franchise":  "var(--c-brand,#f59e0b)",
+  };
+
+  // We only have IDs here — derive game from the ID prefix patterns
+  function gameFromId(id: string): string {
+    if (id.includes("gta6") || id.includes("trailer") || id.includes("delay") ||
+        id.includes("region") || id.includes("competitor") || id.includes("prelaunch") ||
+        id.includes("cpi") || id.includes("revenue-split") || id.includes("dlc-cadence") ||
+        id.includes("franchise-complexity") || id.includes("franchise-earnings") ||
+        id.includes("ttwo") || id.includes("sales") || id.includes("price-history") ||
+        id.includes("franchise")) return "franchise";
+    if (id.includes("gta-online") || id.includes("eco-") || id.includes("shark") ||
+        id.includes("passive") || id.includes("meta-") || id.includes("heist") ||
+        id.includes("income") || id.includes("property") || id.includes("spending") ||
+        id.includes("roi") || id.includes("tco") || id.includes("bonus") ||
+        id.includes("ie-tiers") || id.includes("gta-ppi")) return "gta-online";
+    if (id.includes("perf-chart") || id.includes("assassination") ||
+        id.includes("dlc-player") || id.includes("steam") || id.includes("gta-v") ||
+        id.includes("community")) return "gta-v";
+    if (id.startsWith("trailer-") || id.startsWith("gta6") || id.includes("vi-")) return "gta-vi";
+    return "franchise";
+  }
+
+  let state = raw.map(r => ({ ...r, game: gameFromId(r.id) }));
+  const original = JSON.parse(JSON.stringify(state));
+  let activeFilter = "all";
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+  function render() {
+    const sorted = [...state].sort((a, b) => a.order - b.order);
+    const filtered = sorted.filter(c =>
+      activeFilter === "all" || c.game === activeFilter
+    );
+
+    listEl.innerHTML = sorted.map((c, si) => {
+      const visible = activeFilter === "all" || c.game === activeFilter;
+      const gameColor = GAME_COLOR[c.game] ?? "#9898b8";
+      const changed = c.order !== original.find((o: any) => o.id === c.id)?.order;
+      return `<div class="chart-row rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-colors group"
+                   data-id="${c.id}" data-order="${c.order}" data-game="${c.game}"
+                   style="background:#131316;display:${visible ? "" : "none"}">
+        <div class="flex items-center gap-3 px-3 py-2.5">
+          <span class="text-[11px] font-mono text-zinc-600 w-6 text-right shrink-0" style="font-variant-numeric:tabular-nums">${c.order}</span>
+          <div class="flex flex-col gap-px shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button class="move-up text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]">▲</button>
+            <button class="move-dn text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]">▼</button>
+          </div>
+          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border shrink-0" style="color:${gameColor};border-color:${gameColor}30">
+            ${c.game.replace("gta-", "").toUpperCase()}
+          </span>
+          <span class="flex-1 text-[11px] font-mono text-zinc-300 truncate capitalize">${c.label}</span>
+          <span class="text-[9px] font-mono text-zinc-700 shrink-0 truncate max-w-[160px]">${c.id}</span>
+          ${changed ? '<span class="text-[9px] font-mono text-gta-gold shrink-0">●</span>' : ""}
+        </div>
+      </div>`;
+    }).join("");
+
+    // Re-attach listeners
+    listEl.querySelectorAll<HTMLElement>(".chart-row").forEach(row => {
+      const id = row.dataset.id!;
+      row.querySelector(".move-up")?.addEventListener("click", () => move(id, -1));
+      row.querySelector(".move-dn")?.addEventListener("click", () => move(id,  1));
+    });
+  }
+
+  function move(id: string, dir: -1 | 1) {
+    const sorted = [...state].sort((a, b) => a.order - b.order);
+    const idx = sorted.findIndex(c => c.id === id);
+    const swapIdx = idx + dir;
+    if (swapIdx < 0 || swapIdx >= sorted.length) return;
+    [sorted[idx].order, sorted[swapIdx].order] = [sorted[swapIdx].order, sorted[idx].order];
+    state = state.map(c => sorted.find(s => s.id === c.id) ?? c);
+    render();
+    updateChanges();
+  }
+
+  function updateChanges() {
+    const n = state.filter((c, i) => c.order !== original[i]?.order).length;
+    const bar = document.getElementById("changes-bar")!;
+    bar.classList.toggle("hidden", n === 0);
+    document.getElementById("change-count")!.textContent = String(n);
+  }
+
+  // ── View filter ─────────────────────────────────────────────────────────────
+  document.querySelectorAll<HTMLButtonElement>(".chart-view-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeFilter = btn.dataset.filter!;
+      document.querySelectorAll<HTMLButtonElement>(".chart-view-filter").forEach(b => {
+        const active = b.dataset.filter === activeFilter;
+        b.style.borderColor = active ? "rgba(245,158,11,0.4)" : "";
+        b.style.color = active ? "#f59e0b" : "";
+      });
+      render();
+    });
+  });
+
+  // ── Copy patch ───────────────────────────────────────────────────────────────
+  document.getElementById("copy-patch")?.addEventListener("click", () => {
+    const newOrder = [...state].sort((a, b) => a.order - b.order).map(c => `  "${c.id}"`);
+    const patch = `// Paste this as the CHARTS_PAGE_ORDER array in src/config/allCharts.ts:\nexport const CHARTS_PAGE_ORDER = [\n${newOrder.join(",\n")},\n];`;
+    navigator.clipboard.writeText(patch).then(() => {
+      const btn = document.getElementById("copy-patch")!;
+      const orig = btn.textContent;
+      btn.textContent = "Copied ✓";
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    });
+  });
+
+  // ── Reset ────────────────────────────────────────────────────────────────────
+  document.getElementById("reset-changes")?.addEventListener("click", () => {
+    state = JSON.parse(JSON.stringify(original));
+    render();
+    updateChanges();
+  });
+
+  render();
+</script>

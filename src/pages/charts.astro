@@ -115,14 +115,15 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
         <!-- Cover strip — clickable title filters -->
         <div id="cover-strip" class="flex items-end gap-2 flex-wrap">
           {([
-            { id: "gta-1",  short: "GTA 1",   title: "franchise" },
-            { id: "gta-2",  short: "GTA 2",   title: "franchise" },
-            { id: "gta-3",  short: "GTA III",  title: "franchise" },
-            { id: "gta-vc", short: "GTA VC",   title: "franchise" },
-            { id: "gta-sa", short: "GTA SA",   title: "franchise" },
-            { id: "gta-4",  short: "GTA IV",   title: "franchise" },
-            { id: "gta-5",  short: "GTA V",    title: "gta-v"     },
-            { id: "gta-6",  short: "GTA VI",   title: "gta-vi"    },
+            { id: "gta-6",      short: "GTA VI",     title: "gta-vi"    },
+            { id: "gta-online", short: "GTA Online", title: "gta-online" },
+            { id: "gta-5",      short: "GTA V",      title: "gta-v"     },
+            { id: "gta-4",      short: "GTA IV",     title: "franchise" },
+            { id: "gta-sa",     short: "GTA SA",     title: "franchise" },
+            { id: "gta-vc",     short: "GTA VC",     title: "franchise" },
+            { id: "gta-3",      short: "GTA III",    title: "franchise" },
+            { id: "gta-2",      short: "GTA 2",      title: "franchise" },
+            { id: "gta-1",      short: "GTA 1",      title: "franchise" },
           ] as const).map(g => (
             <button
               class="cover-title-filter flex flex-col items-center gap-1 group transition-all"
@@ -133,7 +134,10 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
               <img
                 src={`/assets/covers/${g.id}.jpg`}
                 alt={g.short}
-                class={`rounded border object-cover transition-all duration-200 group-hover:scale-105 group-hover:border-gta-gold/40 ${g.id === "gta-6" ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10" : "w-9 h-12 border-[#2a2a31]"}`}
+                class={`rounded border object-cover transition-all duration-200 group-hover:scale-105 ${
+              g.id === "gta-6" ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10 group-hover:border-gta-gold/60" :
+              g.id === "gta-online" ? "w-9 h-12 border-gta-teal/30 group-hover:border-gta-teal/50" :
+              "w-9 h-12 border-[#2a2a31] group-hover:border-gta-gold/40"}`}
                 loading="eager"
               />
               <span class={`text-[10px] font-mono tracking-widest ${g.id === "gta-6" ? "text-gta-gold" : "text-zinc-500"}`}>{g.short}</span>
