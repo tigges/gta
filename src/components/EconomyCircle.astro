@@ -40,6 +40,7 @@ const { fullEconomyHref } = Astro.props;
         <span class="item-label" style="color:var(--c-title-online)">GTA+</span>
       </div>
     </div>
+    <span class="online-note">&#42; Only in GTA Online for now</span>
   </div>
 
   <!-- ── ROW 2: INCOME super-header · Circle · EXPENDITURE super-header ── -->
@@ -90,9 +91,6 @@ const { fullEconomyHref } = Astro.props;
       <div class="box-inner">
         <div class="box-header">
           <span class="box-title" style="color:var(--c-growth)">INCOME</span>
-          <div class="blip-sm" style="--bc:var(--c-growth)">
-            <HudIcon name="dollar" size={16} style="color:#fff"/>
-          </div>
           <span class="cycle-note" style="color:var(--c-growth)">Y grows &#8594; next cycle</span>
         </div>
         <div class="icon-row">
@@ -202,6 +200,10 @@ const { fullEconomyHref } = Astro.props;
 .rockstar-label { font-size: 9px; color: var(--c-title-online); opacity: var(--o-tertiary); letter-spacing: .25em; text-transform: uppercase; }
 .inject-title { font-size: 2rem; font-weight: 900; line-height: 1; color: var(--c-title-online); }
 .j-arrow { font-size: 1.1rem; font-weight: 700; color: var(--c-title-online); }
+.online-note {
+  position: absolute; top: 8px; right: 12px;
+  font-size: 8px; color: var(--c-text-6); opacity: var(--o-tertiary);
+}
 
 /* ── Row 2: INCOME super-header · Circle · EXPENDITURE super-header ── */
 .mid-row {
@@ -331,7 +333,7 @@ const { fullEconomyHref } = Astro.props;
   top: -11px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 13px;
+  font-size: 1.1rem;
   font-weight: 900;
   background: var(--c-card);
   padding: 0 4px;
@@ -380,7 +382,7 @@ const { fullEconomyHref } = Astro.props;
 }
 .blip    { width: 52px; height: 52px; }
 .blip-sm { width: 36px; height: 36px; border-width: 1.5px; }
-.blip-lg { width: 68px; height: 68px; border-width: 2.5px; }
+.blip-lg { width: 52px; height: 52px; border-width: 2px; }
 
 /* ── Optional full-model footer ─────────────────────────────────────── */
 .eco-footer {
@@ -429,7 +431,7 @@ const { fullEconomyHref } = Astro.props;
   /* Icons: stack vertically, each item becomes a horizontal blip+label row */
   .icon-row      { flex-direction: column; gap: 4px; }
   .icon-item     { flex-direction: row; gap: 8px; align-items: center; }
-  .blip-lg       { width: 40px; height: 40px; border-width: 2px; }
+  .blip-lg       { width: 42px; height: 42px; border-width: 2px; }
   .icon-label    { font-size: 8px; text-align: left; }
 
   /* Cycle note: drop margin-left:auto so it spans full width below title */
