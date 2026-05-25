@@ -109,31 +109,40 @@ const chartItems = CHARTS_PAGE_ORDER.map((id, i) => ({
   const originalOrder: Record<string, number> = {};
   rows().forEach(r => { originalOrder[r.dataset.id!] = Number(r.dataset.order); });
 
-  // ── Attach move listeners ─────────────────────────────────────────────────
-  function attachListeners() {
-    listEl.querySelectorAll<HTMLElement>(".chart-row").forEach(row => {
-      row.querySelector(".move-up")?.addEventListener("click", () => move(row, -1));
-      row.querySelector(".move-dn")?.addEventListener("click", () => move(row,  1));
-    });
-  }
-
-  function move(row: HTMLElement, dir: -1 | 1) {
+  // ── Move a row up or down ─────────────────────────────────────────────────
+  function move(row: HTMLElement, dir: number) {
     const allRows = rows().filter(r => r.style.display !== "none");
-    const idx = allRows.indexOf(row);
+    const idx     = allRows.indexOf(row);
     const swapIdx = idx + dir;
     if (swapIdx < 0 || swapIdx >= allRows.length) return;
-    const target = allRows[swapIdx];
-    // Swap data-order and displayed rank number
-    const a = Number(row.dataset.order), b = Number(target.dataset.order);
-    row.dataset.order    = String(b);
-    target.dataset.order = String(a);
-    row.querySelector(".chart-rank")!.textContent    = String(b).padStart(2, " ");
-    target.querySelector(".chart-rank")!.textContent = String(a).padStart(2, " ");
-    // Swap DOM position
-    if (dir === -1) listEl.insertBefore(row, target);
-    else            listEl.insertBefore(target, row);
+
+    const sibling = allRows[swapIdx];
+
+    // Swap data-order values
+    const a = Number(row.dataset.order);
+    const b = Number(sibling.dataset.order);
+    row.dataset.order     = String(b);
+    sibling.dataset.order = String(a);
+    (row.querySelector(".chart-rank") as HTMLElement).textContent     = String(b);
+    (sibling.querySelector(".chart-rank") as HTMLElement).textContent = String(a);
+
+    // Move DOM nodes: for "down", insert row after sibling; for "up", insert row before sibling
+    if (dir > 0) {
+      sibling.after(row);   // row goes after sibling  → row moved down
+    } else {
+      sibling.before(row);  // row goes before sibling → row moved up
+    }
     updateChanges();
   }
+
+  // ── Delegated click on container (survives DOM reordering) ────────────────
+  listEl.addEventListener("click", (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>(".move-up, .move-dn");
+    if (!btn) return;
+    const row = btn.closest<HTMLElement>(".chart-row");
+    if (!row) return;
+    move(row, btn.classList.contains("move-up") ? -1 : 1);
+  });
 
   function updateChanges() {
     const changed = rows().filter(r =>
@@ -195,11 +204,10 @@ const chartItems = CHARTS_PAGE_ORDER.map((id, i) => ({
     sorted.forEach(r => {
       const orig = originalOrder[r.dataset.id!];
       r.dataset.order = String(orig);
-      r.querySelector(".chart-rank")!.textContent = String(orig).padStart(2, " ");
+      (r.querySelector(".chart-rank") as HTMLElement).textContent = String(orig);
       listEl.appendChild(r);
     });
     updateChanges();
   });
 
-  attachListeners();
 </script>
