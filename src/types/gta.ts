@@ -39,6 +39,8 @@ export interface Prediction {
   display_order?: number;
   /** Pages this prediction appears on as a compact teaser card. intel always shows all predictions. */
   pages?: string[];
+  /** Short punchline value for compact card display (≤20 chars). Falls back to value if absent. */
+  short_value?: string | null;
 }
 
 export interface PredictionsData {
