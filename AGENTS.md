@@ -241,7 +241,6 @@ Edit `data/gta-6/predictions.json`. Schema version is `2.0`. Required fields per
   "title": "",
   "value": "",
   "unit": null,
-  "short_value": null,       // ≤20 chars punchline for compact card display
   "confidence": 0,           // 0–100
   "confidence_tier": "",     // "confirmed" | "reported" | "predicted"
   "basis": "",
@@ -253,21 +252,9 @@ Edit `data/gta-6/predictions.json`. Schema version is `2.0`. Required fields per
   "outcome_actual": null,
   "outcome_date": null,
   "source": "",
-  "source_type": "",         // "official" | "reported" | "predicted"
-  "editorial_note": "approved"  // set to "needs-review" when title needs work
+  "source_type": ""          // "official" | "reported" | "predicted"
 }
 ```
-
-**Prediction title rules — check before writing any title:**
-
-1. **Max 52 chars** — titles exceeding this will wrap badly in compact cards.
-2. **State the fact, skip the filler** — never use "will be", "is expected to", "matches", "has been confirmed to". Write the conclusion directly: "No Loans at Maze Bank" not "Maze Bank Returns as Decorative Savings Only".
-3. **Subject must appear** — the title should name what the prediction is about (GTA VI, Maze Bank, Lucia/Jason, etc.).
-4. **No unexplained acronyms or jargon** — "MMT", "GTA-RPP", "SC rate" need context or plain language.
-5. **short_value required for qualitative predictions** — any prediction where `value` is a sentence (>22 chars) must have a `short_value` ≤20 chars that captures the punchline.
-6. **unit is a context note, not a symbol** — if `unit` is a sentence (e.g. "cheaper than GTA III in 2026 dollars"), it renders on its own line in the card. Keep it ≤60 chars.
-7. **Set `editorial_note: "approved"`** when a title passes all rules. Set `"needs-review"` when flagging for later attention.
-
 
 ---
 
@@ -319,9 +306,9 @@ Bump `src/config/version.ts` when shipping a meaningful release.
 
 - **Version bump — mandatory on every session, no exceptions.** Every session that touches code, data, UI, or scrapers must bump `src/config/version.ts` before merging to `main`. Patch bump (`x.y.Z+1`) for fixes and minor tweaks; minor bump (`x.Y+1.0`) for new features; major bump (`X+1.0.0`) for full redesigns. Also update `SITE_VERSION_DATE` to today (`YYYY-MM-DD`). The version is displayed in the ops bar on every page — it must always reflect the latest release.
 
-- **Tag the previous release before starting work.** At the start of every session, before creating a feature branch, tag the current `main` with `release/v{current_version}` and push the tag. This bookmarks the last known-good state and makes rollback trivial.
+- **Tag the previous release before starting work.** At the start of every session, before creating a feature branch, tag the current `staging` branch with `release/v{current_version}` and push the tag. This bookmarks the last known-good state and makes rollback trivial.
   ```bash
-  git tag release/vX.Y.Z origin/main && git push origin release/vX.Y.Z
+  git tag release/vX.Y.Z origin/staging && git push origin release/vX.Y.Z
   ```
 
 - **Handover note version format.** In chat handover scripts only, the current version must be written in the format `GTAVI_AI_v1_75_0` (project prefix + underscores instead of dots). Example: `GTAVI_AI_v1_76_0`. This applies to the version token in the handover note header and any inline version references within the handover text. It does NOT affect `src/config/version.ts`, git tags, commit messages, or any other file — those continue to use the standard `1.76.0` format.
