@@ -162,7 +162,7 @@ const { fullEconomyHref } = Astro.props;
   {fullEconomyHref && (
     <div class="eco-footer">
       <a href={fullEconomyHref} class="full-link"
-         onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+         onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'">
         Full model &#8594;
       </a>
     </div>
@@ -323,9 +323,9 @@ const { fullEconomyHref } = Astro.props;
   min-width: 0;
   position: relative;
 }
-.income-box  { background: rgba(15,55,20,.9);  }
-.consump-box { background: rgba(50,18,4,.85);  }
-.invest-box  { background: rgba(22,18,50,.85); }
+.income-box  { background: color-mix(in srgb, var(--c-growth)        15%, var(--c-bg-deep)); }
+.consump-box { background: color-mix(in srgb, var(--c-flow-spending) 12%, var(--c-bg-deep)); }
+.invest-box  { background: color-mix(in srgb, var(--c-economy)       10%, var(--c-bg-deep)); }
 
 /* Y / C / I on the top border */
 .box-top-label {
@@ -347,14 +347,14 @@ const { fullEconomyHref } = Astro.props;
 .box-title { font-size: clamp(.8rem,2vw,1.1rem); font-weight: 900; line-height: 1; }
 .icon-row { display: flex; gap: 12px; }
 .icon-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.icon-label { font-size: 8px; color: rgba(255,255,255,.65); text-align: center; }
+.icon-label { font-size: 8px; color: var(--c-text-3); text-align: center; }
 
 /* Cycle note — lives in box-header, pushed to the right */
 .cycle-note {
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: .1em;
-  opacity: .65;
+  opacity: var(--o-tertiary);
   margin-left: auto;
   text-align: right;
 }
