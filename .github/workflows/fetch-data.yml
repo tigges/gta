@@ -199,6 +199,11 @@ jobs:
       - name: Fetch Box Office entertainment comparisons
         run: python scrapers/fetch_boxoffice.py
 
+      # ── Prediction auto-update ─────────────────────────────────────────────
+
+      - name: Auto-update confirmed predictions from source data
+        run: python scrapers/fetch_predictions_auto.py
+
       # ── Commit ─────────────────────────────────────────────────────────────
 
       - name: Commit updated data files
