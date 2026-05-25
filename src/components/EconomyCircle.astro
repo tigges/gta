@@ -1,14 +1,15 @@
 ---
 /**
- * EconomyCircle.astro — GTA circular economy diagram v7.
+ * EconomyCircle.astro — GTA circular economy diagram v8 (Option A).
  *
- * Bold hero-scale redesign:
- * - "INCOME" / "EXPENDITURE" text fills the box like a poster header
- * - 80px blip icons — immediately legible, GTA map-blip style
- * - Large CSS triangle arrows flanking the circle
- * - Rich vivid backgrounds: forest green / dark burnt orange
- * - CONSUMPTION / INVESTMENT as clear sub-sections in the right box
- * - INJECTION centered above with Shark Card + GTA+ blips (real images when available)
+ * Layout:
+ *   Row 1 (full): INJECTION — Shark Card | ROCKSTAR INJECTION J↓ | GTA+
+ *   Row 2 (mid):  Circle centred, EXPENDITURE spanning right half
+ *   Row 3 (bot):  INCOME (left, 40%) | CONSUMPTION (centre, 30%) | INVESTMENT (right, 30%)
+ *
+ * Equation reads left-to-right: INCOME $ [=] CONSUMPTION [+] INVESTMENT
+ * Y, C, I letters appear on TOP BORDERS of each box (connecting from circle).
+ * EXPENDITURE spans both C and I as a super-header.
  */
 import HudIcon from "./HudIcon.astro";
 import GamePill from "./GamePill.astro";
@@ -17,187 +18,164 @@ interface Props {
   game?: "gta-vi" | "gta-online" | "gta-v" | "gta-sa" | "gta-vc" | "gta-iv" | "gta-iii" | "franchise";
   fullEconomyHref?: string;
 }
-
 const { game = "gta-online", fullEconomyHref } = Astro.props;
 ---
 
-<div class="w-full rounded-xl border border-[#1e1e23] overflow-hidden eco-root">
+<div class="eco-wrap">
 
-  <!-- ── INJECTION — centred above ─────────────────────────────────────── -->
-  <div class="relative border-b border-[#1e1e23] inject-bar">
-    <div class="flex flex-col items-center gap-2 py-4 px-4">
-      <span class="text-[10px] font-mono uppercase tracking-[0.35em]" style="color:var(--c-title-online);opacity:0.6">Rockstar</span>
-      <span class="text-4xl font-mono font-black leading-none" style="color:var(--c-title-online)">INJECTION</span>
-      <div class="flex items-center gap-12 mt-2">
-        <!-- Shark Card blip (muted — GTA Online only) -->
-        <div class="flex flex-col items-center gap-2" style="opacity:0.5">
-          <div class="blip-xl" style="--bc:var(--c-title-online,#00d4e8)">
-            <HudIcon name="shark-card" size={36} style="color:#fff" />
-          </div>
-          <span class="text-[9px] font-mono" style="color:var(--c-title-online)">Shark Card</span>
-        </div>
-        <!-- J arrow down -->
-        <div class="flex flex-col items-center gap-0">
-          <span class="text-3xl font-mono font-black" style="color:var(--c-title-online)">J</span>
-          <span class="text-xl font-bold" style="color:var(--c-title-online)">&#8595;</span>
-        </div>
-        <!-- GTA+ blip (muted — GTA Online only) -->
-        <div class="flex flex-col items-center gap-2" style="opacity:0.5">
-          <div class="blip-xl" style="--bc:var(--c-title-online,#00d4e8)">
-            <HudIcon name="subscription" size={36} style="color:#fff" />
-          </div>
-          <span class="text-[9px] font-mono" style="color:var(--c-title-online)">GTA+</span>
-        </div>
+  <!-- ── ROW 1: INJECTION (full width) ──────────────────────────────── -->
+  <div class="inject-row">
+    <div class="inject-inner">
+      <div class="inject-item" style="opacity:0.45">
+        <div class="blip" style="--bc:#00d4e8"><HudIcon name="shark-card" size={28} style="color:#fff"/></div>
+        <span class="item-label" style="color:#00d4e8">Shark Card</span>
+      </div>
+
+      <div class="inject-centre">
+        <span class="rockstar-label">Rockstar</span>
+        <span class="inject-title">INJECTION</span>
+        <span class="j-arrow">J &#8595;</span>
+      </div>
+
+      <div class="inject-item" style="opacity:0.45">
+        <div class="blip" style="--bc:#00d4e8"><HudIcon name="subscription" size={28} style="color:#fff"/></div>
+        <span class="item-label" style="color:#00d4e8">GTA+</span>
       </div>
     </div>
-    <span class="absolute right-3 top-3 text-[8px] font-mono" style="color:var(--c-text-6)">&#42; GTA Online only</span>
+    <span class="online-note">&#42; GTA Online only</span>
   </div>
 
-  <!-- ── Main three columns ──────────────────────────────────────────────── -->
-  <div class="eco-grid">
+  <!-- ── ROW 2: Circle (centred) + EXPENDITURE super-header (right) ── -->
+  <div class="mid-row">
 
-    <!-- LEFT: INCOME ─────────────────────────────────────────────────── -->
-    <div class="income-box flex flex-col gap-4 p-6">
+    <!-- Left spacer (aligns with INCOME column) -->
+    <div class="mid-left-space"></div>
 
-      <!-- Hero label -->
-      <div class="flex items-center gap-3">
-        <span class="eco-hero" style="color:#fff">INCOME</span>
-        <div class="blip-md" style="--bc:var(--c-growth,#22c55e)">
-          <HudIcon name="dollar" size={22} style="color:#fff" />
+    <!-- Circle hub -->
+    <div class="circle-hub">
+      <!-- Y label on left edge of circle -->
+      <span class="hub-letter hub-y">Y</span>
+      <!-- C label on bottom-left -->
+      <span class="hub-letter hub-c">C</span>
+      <!-- I label on bottom-right -->
+      <span class="hub-letter hub-i">I</span>
+
+      <!-- Income arrow in (green, pointing right into circle) -->
+      <div class="tri-in"></div>
+
+      <!-- Circle ring -->
+      <div class="ring-wrap">
+        <div class="ring"></div>
+        <div class="ring-centre">
+          <HudIcon name="bank" size={28} style="color:#00d4e8"/>
+          <span class="gta-label">GTA$</span>
         </div>
       </div>
 
-      <!-- Icon blips row -->
-      <div class="flex items-start gap-3 mt-1">
-        <div class="flex flex-col items-center gap-1.5">
-          <div class="blip-xl" style="--bc:var(--c-live,#0d9488)">
-            <HudIcon name="mission" size={36} style="color:#fff" />
-          </div>
-          <span class="blip-label">Missions</span>
-        </div>
-        <div class="flex flex-col items-center gap-1.5">
-          <div class="blip-xl" style="--bc:var(--c-growth,#22c55e)">
-            <HudIcon name="passive" size={36} style="color:#fff" />
-          </div>
-          <span class="blip-label">Passive</span>
-        </div>
-        <div class="flex flex-col items-center gap-1.5">
-          <div class="blip-xl" style="--bc:var(--c-growth,#22c55e)">
-            <HudIcon name="cycle" size={36} style="color:#fff" />
-          </div>
-          <span class="blip-label">Cycles</span>
-        </div>
-      </div>
-
-      <!-- Caption -->
-      <div class="mt-auto text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-growth);opacity:0.65">
-        Y grows &#8594; next cycle
-      </div>
+      <!-- Expenditure arrow out (orange, pointing right out of circle) -->
+      <div class="tri-out"></div>
     </div>
 
-    <!-- CENTRE: circle + triangle arrows ─────────────────────────────── -->
-    <div class="centre-col">
-      <!-- Left arrow: Balance → Income (green) -->
-      <div class="tri-left"></div>
-
-      <!-- The circle -->
-      <div class="relative circle-wrapper">
-        <div class="circle-ring"></div>
-        <!-- Flow arrows on ring -->
-        <span class="ring-arrow" style="top:10px;left:14px;color:#22c55e;transform:rotate(-35deg)">&#9658;</span>
-        <span class="ring-arrow" style="top:10px;right:14px;color:#00d4e8;transform:rotate(35deg)">&#9658;</span>
-        <span class="ring-arrow" style="bottom:10px;right:14px;color:#818cf8;transform:rotate(145deg)">&#9658;</span>
-        <span class="ring-arrow" style="bottom:10px;left:14px;color:#818cf8;transform:rotate(-145deg)">&#9658;</span>
-        <!-- Centre -->
-        <div class="circle-centre">
-          <HudIcon name="bank" size={32} style="color:var(--c-title-online,#00d4e8)" />
-          <span style="font-size:13px;font-family:monospace;font-weight:900;color:var(--c-title-online,#00d4e8);margin-top:2px">GTA$</span>
-        </div>
-        <div class="circle-return">
-          <span class="text-[8px] font-mono uppercase tracking-widest" style="color:#818cf8;opacity:0.7">I &#8594; Y</span>
-        </div>
-      </div>
-
-      <!-- Right arrow: Balance → Expenditure (orange) -->
-      <div class="tri-right"></div>
-    </div>
-
-    <!-- RIGHT: EXPENDITURE ───────────────────────────────────────────── -->
-    <div class="expend-box flex flex-col">
-
-      <!-- Hero label -->
-      <div class="flex items-center gap-3 p-6 pb-3">
-        <span class="eco-hero" style="color:var(--c-flow-spending,#f97316)">EXPENDITURE</span>
-        <div class="blip-md" style="--bc:var(--c-flow-spending,#f97316)">
-          <HudIcon name="buy" size={22} style="color:#fff" />
-        </div>
-      </div>
-
-      <!-- C | I split -->
-      <div class="flex flex-1 border-t border-[#1e1e23]">
-
-        <!-- C — Consumption -->
-        <div class="flex flex-col gap-3 p-4 flex-1 c-col">
-          <span class="text-xl font-mono font-black" style="color:var(--c-flow-spending,#f97316)">CONSUMPTION</span>
-          <div class="flex items-start gap-3">
-            <div class="flex flex-col items-center gap-1.5">
-              <div class="blip-xl" style="--bc:var(--c-flow-spending,#f97316)">
-                <HudIcon name="clothing" size={36} style="color:#fff" />
-              </div>
-              <span class="blip-label">Clothing</span>
-            </div>
-            <div class="flex flex-col items-center gap-1.5">
-              <div class="blip-xl" style="--bc:var(--c-flow-spending,#f97316)">
-                <HudIcon name="ammo" size={36} style="color:#fff" />
-              </div>
-              <span class="blip-label">Ammo</span>
-            </div>
-          </div>
-          <div class="mt-auto text-[8px] font-mono leading-snug" style="color:var(--c-flow-spending);opacity:0.55">
-            Ammo &#183; clothes &#183; services
-          </div>
-        </div>
-
-        <div class="w-px" style="background:rgba(129,140,248,0.25)"></div>
-
-        <!-- I — Investment -->
-        <div class="flex flex-col gap-3 p-4 flex-1 i-col">
-          <span class="text-xl font-mono font-black" style="color:var(--c-economy,#818cf8)">INVESTMENT</span>
-          <div class="flex items-start gap-3">
-            <div class="flex flex-col items-center gap-1.5">
-              <div class="blip-xl" style="--bc:var(--c-economy,#818cf8)">
-                <HudIcon name="property" size={36} style="color:#fff" />
-              </div>
-              <span class="blip-label" style="color:var(--c-economy)">Property</span>
-            </div>
-            <div class="flex flex-col items-center gap-1.5">
-              <div class="blip-xl" style="--bc:var(--c-economy,#818cf8)">
-                <HudIcon name="briefcase" size={36} style="color:#fff" />
-              </div>
-              <span class="blip-label" style="color:var(--c-economy)">Business</span>
-            </div>
-          </div>
-          <div class="mt-auto text-[8px] font-mono leading-snug" style="color:var(--c-economy);opacity:0.55">
-            I returns to Y &#8594;
-          </div>
-        </div>
-
+    <!-- EXPENDITURE super-header — spans right half -->
+    <div class="expend-super">
+      <div class="expend-super-inner">
+        <HudIcon name="buy" size={26} style="color:var(--c-flow-spending,#f97316)"/>
+        <span class="expend-title">EXPENDITURE</span>
       </div>
     </div>
 
   </div>
 
-  <!-- ── Footer ────────────────────────────────────────────────────────── -->
-  <div class="flex items-center justify-between px-5 py-2.5 border-t border-[#1e1e23]" style="background:var(--c-card)">
-    <div class="flex items-center gap-3">
-      <GamePill {game} size="xs" />
-      <span class="text-[8px] font-mono" style="color:var(--c-text-4);opacity:0.4">(Y + J) = C + I</span>
+  <!-- ── ROW 3: Three boxes with Y/C/I top border labels ───────────── -->
+  <div class="box-row">
+
+    <!-- INCOME box -->
+    <div class="box income-box">
+      <div class="box-top-label" style="color:var(--c-growth,#22c55e)">Y</div>
+      <div class="box-inner">
+        <div class="box-header">
+          <span class="box-title" style="color:var(--c-growth,#22c55e)">INCOME</span>
+          <div class="blip-sm" style="--bc:var(--c-growth,#22c55e)">
+            <HudIcon name="dollar" size={16} style="color:#fff"/>
+          </div>
+        </div>
+        <div class="icon-row">
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-live,#0d9488)"><HudIcon name="mission" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Missions</span>
+          </div>
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-growth,#22c55e)"><HudIcon name="passive" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Passive</span>
+          </div>
+        </div>
+        <div class="box-footer" style="color:var(--c-growth)">Y grows &#8594; next cycle</div>
+      </div>
+    </div>
+
+    <!-- = divider -->
+    <div class="divider-eq">
+      <span class="eq-sign">=</span>
+    </div>
+
+    <!-- CONSUMPTION box -->
+    <div class="box consump-box">
+      <div class="box-top-label" style="color:var(--c-flow-spending,#f97316)">C</div>
+      <div class="box-inner">
+        <div class="box-header">
+          <span class="box-title" style="color:var(--c-flow-spending,#f97316)">CONSUMPTION</span>
+        </div>
+        <div class="icon-row">
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-flow-spending,#f97316)"><HudIcon name="clothing" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Clothing</span>
+          </div>
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-flow-spending,#f97316)"><HudIcon name="ammo" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Ammo</span>
+          </div>
+        </div>
+        <div class="box-footer" style="color:var(--c-flow-spending);opacity:0.5">Ammo &#183; clothes &#183; services</div>
+      </div>
+    </div>
+
+    <!-- + divider -->
+    <div class="divider-plus">
+      <span class="plus-sign">+</span>
+    </div>
+
+    <!-- INVESTMENT box -->
+    <div class="box invest-box">
+      <div class="box-top-label" style="color:var(--c-economy,#818cf8)">I</div>
+      <div class="box-inner">
+        <div class="box-header">
+          <span class="box-title" style="color:var(--c-economy,#818cf8)">INVESTMENT</span>
+        </div>
+        <div class="icon-row">
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-economy,#818cf8)"><HudIcon name="property" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Property</span>
+          </div>
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-economy,#818cf8)"><HudIcon name="briefcase" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Business</span>
+          </div>
+        </div>
+        <div class="box-footer" style="color:var(--c-economy)">I returns to Y &#8594;</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────── -->
+  <div class="eco-footer">
+    <div class="footer-left">
+      <GamePill {game} size="xs"/>
+      <span class="formula">(Y + J) = C + I</span>
     </div>
     {fullEconomyHref && (
-      <a href={fullEconomyHref}
-         class="text-[10px] font-mono uppercase tracking-widest transition-colors"
-         style="color:var(--c-brand);opacity:var(--o-secondary)"
-         onmouseover="this.style.opacity='1'" onmouseout={`this.style.opacity='var(--o-secondary)'`}>
+      <a href={fullEconomyHref} class="full-link"
+         onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
         Full model &#8594;
       </a>
     )}
@@ -206,125 +184,206 @@ const { game = "gta-online", fullEconomyHref } = Astro.props;
 </div>
 
 <style>
-  .eco-root { }
+/* ── Root ─────────────────────────────────────────────────────────── */
+.eco-wrap {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #1e1e23;
+  overflow: hidden;
+  background: var(--c-card,#131316);
+  font-family: var(--font-mono,monospace);
+}
 
-  /* ── Injection bar ─────────────────────────────────────────────────── */
-  .inject-bar { background: rgba(0,212,232,0.06); }
+/* ── Row 1: Injection ──────────────────────────────────────────────── */
+.inject-row {
+  position: relative;
+  border-bottom: 1px solid #1e1e23;
+  background: rgba(0,212,232,0.05);
+  padding: 12px 16px;
+}
+.inject-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+}
+.inject-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.item-label  { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
+.inject-centre { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.rockstar-label { font-size: 9px; color: #00d4e8; opacity: .6; letter-spacing: .25em; text-transform: uppercase; }
+.inject-title { font-size: 2rem; font-weight: 900; line-height: 1; color: #00d4e8; }
+.j-arrow { font-size: 1.1rem; font-weight: 700; color: #00d4e8; }
+.online-note { position: absolute; top: 8px; right: 12px; font-size: 8px; color: var(--c-text-6,#52525b); }
 
-  /* ── Main grid ─────────────────────────────────────────────────────── */
-  .eco-grid {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    min-height: 280px;
-  }
+/* ── Row 2: Circle + EXPENDITURE super-header ──────────────────────── */
+.mid-row {
+  display: grid;
+  grid-template-columns: 40% auto 1fr;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #1e1e23;
+  background: rgba(0,0,0,0.2);
+}
+.mid-left-space { } /* empty spacer matching income column width */
 
-  /* ── Coloured surfaces — vivid & punchy ────────────────────────────── */
-  .income-box  { background: rgba(15, 60, 20, 0.95);  }
-  .expend-box  { background: rgba(55, 20, 5, 0.90);   }
-  .c-col       { background: rgba(249, 115, 22, 0.10); }
-  .i-col       { background: rgba(129, 140, 248, 0.10); }
+.circle-hub {
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 0;
+  justify-content: center;
+}
+.ring-wrap {
+  position: relative;
+  width: 120px; height: 120px;
+  flex-shrink: 0;
+  z-index: 5;
+}
+.ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #818cf8  0deg  75deg,
+    #22c55e 75deg 200deg,
+    #00d4e8 200deg 245deg,
+    #f97316 245deg 325deg,
+    #818cf8 325deg 360deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 42px, black 44px);
+  mask:         radial-gradient(circle, transparent 42px, black 44px);
+  opacity: .95;
+}
+.ring-centre {
+  position: absolute; inset: 14px;
+  border-radius: 50%;
+  background: rgba(10,10,14,.9);
+  border: 1.5px solid rgba(0,212,232,.3);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 2px;
+}
+.gta-label { font-size: 11px; font-weight: 900; color: #00d4e8; }
 
-  /* ── Hero text ─────────────────────────────────────────────────────── */
-  .eco-hero {
-    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
-    font-family: var(--font-mono, monospace);
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: -0.02em;
-  }
+/* Hub letter labels on circle edges */
+.hub-letter {
+  position: absolute;
+  font-size: 13px; font-weight: 900;
+  z-index: 6;
+}
+.hub-y { left: -4px; top: 50%; transform: translateY(-50%); color: #22c55e; }
+.hub-c { bottom: 2px; left: 18px; color: #f97316; }
+.hub-i { bottom: 2px; right: 18px; color: #818cf8; }
 
-  /* ── Blip sizes ────────────────────────────────────────────────────── */
-  /* Large 80px — main icons */
-  .blip-xl {
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--bc) 28%, transparent);
-    border: 3px solid color-mix(in srgb, var(--bc) 60%, transparent);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  /* Medium 48px — header icon */
-  .blip-md {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--bc) 28%, transparent);
-    border: 2.5px solid color-mix(in srgb, var(--bc) 60%, transparent);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .blip-label {
-    font-size: 9px;
-    font-family: var(--font-mono, monospace);
-    color: rgba(255,255,255,0.7);
-    text-align: center;
-  }
+/* CSS triangle arrows */
+.tri-in {
+  width: 0; height: 0;
+  border-top: 22px solid transparent;
+  border-bottom: 22px solid transparent;
+  border-left: 28px solid rgba(34,197,94,.8);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px rgba(34,197,94,.4));
+}
+.tri-out {
+  width: 0; height: 0;
+  border-top: 22px solid transparent;
+  border-bottom: 22px solid transparent;
+  border-left: 28px solid rgba(249,115,22,.8);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px rgba(249,115,22,.4));
+}
 
-  /* ── Centre column with triangle arrows ────────────────────────────── */
-  .centre-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 16px 0;
-    padding-bottom: 32px;
-    position: relative;
-  }
-  /* CSS triangle arrows — large, solid, pointing right/left */
-  .tri-right {
-    width: 0; height: 0;
-    border-top: 28px solid transparent;
-    border-bottom: 28px solid transparent;
-    border-left: 36px solid rgba(249,115,22,0.8);
-    filter: drop-shadow(0 0 6px rgba(249,115,22,0.4));
-  }
-  .tri-left {
-    width: 0; height: 0;
-    border-top: 28px solid transparent;
-    border-bottom: 28px solid transparent;
-    border-right: 36px solid rgba(34,197,94,0.8);
-    filter: drop-shadow(0 0 6px rgba(34,197,94,0.4));
-  }
+/* EXPENDITURE super-header */
+.expend-super {
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+}
+.expend-super-inner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
+  border: 1.5px solid rgba(249,115,22,.35);
+  border-radius: 8px;
+  background: rgba(249,115,22,.07);
+}
+.expend-title {
+  font-size: clamp(1rem,2.5vw,1.6rem);
+  font-weight: 900;
+  color: var(--c-flow-spending,#f97316);
+  letter-spacing: -.01em;
+}
 
-  /* ── Circle ────────────────────────────────────────────────────────── */
-  .circle-wrapper {
-    width: 160px; height: 160px;
-    position: relative; flex-shrink: 0;
-    margin: 0 -28px;
-    z-index: 10;
-  }
-  .circle-ring {
-    position: absolute; inset: 0;
-    border-radius: 50%;
-    background: conic-gradient(
-      from 0deg,
-      #818cf8   0deg   75deg,
-      #22c55e  75deg  200deg,
-      #00d4e8 200deg  245deg,
-      #f97316 245deg  325deg,
-      #818cf8 325deg  360deg
-    );
-    -webkit-mask: radial-gradient(circle, transparent 58px, black 61px);
-    mask:         radial-gradient(circle, transparent 58px, black 61px);
-    opacity: 0.95;
-  }
-  .ring-arrow {
-    position: absolute;
-    font-size: 10px;
-    opacity: 0.9;
-  }
-  .circle-centre {
-    position: absolute; inset: 22px;
-    border-radius: 50%;
-    background: rgba(10,10,14,0.85);
-    border: 2px solid rgba(0,212,232,0.35);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 2px;
-  }
-  .circle-return {
-    position: absolute; bottom: -22px;
-    left: 50%; transform: translateX(-50%);
-    white-space: nowrap;
-  }
+/* ── Row 3: Three boxes ────────────────────────────────────────────── */
+.box-row {
+  display: flex;
+  align-items: stretch;
+}
+.box {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+.income-box  { background: rgba(15,55,20,.9);  }
+.consump-box { background: rgba(50,18,4,.85);  }
+.invest-box  { background: rgba(22,18,50,.85); }
+
+/* Y / C / I on the top border */
+.box-top-label {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  font-weight: 900;
+  background: var(--c-card,#131316);
+  padding: 0 4px;
+  z-index: 10;
+  line-height: 1;
+}
+
+.box-inner { padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; min-height: 160px; }
+.box-header { display: flex; align-items: center; gap: 8px; }
+.box-title { font-size: clamp(.8rem,2vw,1.1rem); font-weight: 900; line-height: 1; }
+.icon-row { display: flex; gap: 12px; }
+.icon-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.icon-label { font-size: 8px; color: rgba(255,255,255,.65); text-align: center; }
+.box-footer { margin-top: auto; font-size: 8px; text-transform: uppercase; letter-spacing: .1em; opacity: .65; }
+
+/* = and + dividers */
+.divider-eq, .divider-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  flex-shrink: 0;
+  background: rgba(0,0,0,.3);
+  border-left: 1px solid #1e1e23;
+  border-right: 1px solid #1e1e23;
+}
+.eq-sign   { font-size: 1.4rem; font-weight: 900; color: var(--c-flow-spending,#f97316); }
+.plus-sign { font-size: 1.4rem; font-weight: 900; color: var(--c-economy,#818cf8); }
+
+/* ── Blip sizes ────────────────────────────────────────────────────── */
+.blip, .blip-sm, .blip-lg {
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--bc) 25%, transparent);
+  border: 2px solid color-mix(in srgb, var(--bc) 55%, transparent);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.blip    { width: 52px; height: 52px; }
+.blip-sm { width: 36px; height: 36px; border-width: 1.5px; }
+.blip-lg { width: 68px; height: 68px; border-width: 2.5px; }
+
+/* ── Footer ────────────────────────────────────────────────────────── */
+.eco-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 16px;
+  border-top: 1px solid #1e1e23;
+  background: var(--c-card,#131316);
+}
+.footer-left { display: flex; align-items: center; gap: 10px; }
+.formula { font-size: 8px; color: var(--c-text-4,#9898b8); opacity: .4; }
+.full-link {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--c-brand,#f59e0b); opacity: .6; text-decoration: none; transition: opacity .2s;
+}
 </style>
