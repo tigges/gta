@@ -81,7 +81,7 @@ const HUB_LIMIT  = predictions.filter((p: any) => (p.pages ?? []).includes("gta-
               data-title={p.title}
               data-short={p.short_value ?? ""}
               data-tier={p.confidence_tier}
-              style="background:#131316"
+              style="background:var(--c-card)"
             >
               <div class="flex items-center gap-3 px-3 py-2.5">
 
@@ -117,12 +117,12 @@ const HUB_LIMIT  = predictions.filter((p: any) => (p.pages ?? []).includes("gta-
                 <div class="flex items-center gap-1 shrink-0">
                   <button class="page-toggle text-[9px] font-mono px-1.5 py-0.5 rounded border transition-all"
                           data-page="home"
-                          style={onHome ? "color:#f59e0b;border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.08)" : "color:#52525b;border-color:#2a2a31"}>
+                          style={onHome ? "color:var(--c-brand);border-color:color-mix(in srgb,var(--c-brand) 40%,transparent);background:color-mix(in srgb,var(--c-brand) 8%,transparent)" : "color:var(--c-text-6);border-color:var(--c-border-2)"}>
                     Home
                   </button>
                   <button class="page-toggle text-[9px] font-mono px-1.5 py-0.5 rounded border transition-all"
                           data-page="gta-vi"
-                          style={onHub ? "color:#ff6b9d;border-color:rgba(255,107,157,0.4);background:rgba(255,107,157,0.08)" : "color:#52525b;border-color:#2a2a31"}>
+                          style={onHub ? "color:var(--c-title-vi);border-color:color-mix(in srgb,var(--c-title-vi) 40%,transparent);background:color-mix(in srgb,var(--c-title-vi) 8%,transparent)" : "color:var(--c-text-6);border-color:var(--c-border-2)"}>
                     Hub
                   </button>
                 </div>
@@ -153,7 +153,7 @@ const HUB_LIMIT  = predictions.filter((p: any) => (p.pages ?? []).includes("gta-
     </div>
 
     <!-- How to apply footer -->
-    <div class="mt-6 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:#131316">
+    <div class="mt-6 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:var(--c-card)">
       <p class="text-[10px] font-mono text-zinc-600">
         Changes are in-memory only. Click titles to edit. Use ▲/▼ to rerank. Toggle Home/Hub pills for page visibility.
         When done, click <span class="text-zinc-400">Copy JSON patch</span> and paste into
@@ -232,13 +232,13 @@ const HUB_LIMIT  = predictions.filter((p: any) => (p.pages ?? []).includes("gta-
         const page = btn.dataset.page!;
         const active = s.pages.includes(page);
         if (page === "home") {
-          btn.style.color = active ? "#f59e0b" : "#52525b";
-          btn.style.borderColor = active ? "rgba(245,158,11,0.4)" : "#2a2a31";
-          btn.style.background = active ? "rgba(245,158,11,0.08)" : "";
+          btn.style.color = active ? "var(--c-brand)" : "var(--c-text-6)";
+          btn.style.borderColor = active ? "color-mix(in srgb,var(--c-brand) 40%,transparent)" : "var(--c-border-2)";
+          btn.style.background = active ? "color-mix(in srgb,var(--c-brand) 8%,transparent)" : "";
         } else {
-          btn.style.color = active ? "#ff6b9d" : "#52525b";
-          btn.style.borderColor = active ? "rgba(255,107,157,0.4)" : "#2a2a31";
-          btn.style.background = active ? "rgba(255,107,157,0.08)" : "";
+          btn.style.color = active ? "var(--c-title-vi)" : "var(--c-text-6)";
+          btn.style.borderColor = active ? "color-mix(in srgb,var(--c-title-vi) 40%,transparent)" : "var(--c-border-2)";
+          btn.style.background = active ? "color-mix(in srgb,var(--c-title-vi) 8%,transparent)" : "";
         }
       });
     });

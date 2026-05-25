@@ -69,7 +69,7 @@ const GAME_LABEL: Record<string, string> = {
     </div>
 
     <!-- How to apply -->
-    <div class="mt-6 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:#131316">
+    <div class="mt-6 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:var(--c-card)">
       <p class="text-[10px] font-mono text-zinc-600">
         Changes are in-memory only. ▲/▼ reorders the <span class="text-zinc-400">CHARTS_PAGE_ORDER</span> array.
         When done, click <span class="text-zinc-400">Copy JSON patch</span> — the patch is a reordered array
@@ -130,7 +130,7 @@ const GAME_LABEL: Record<string, string> = {
       const changed = c.order !== original.find((o: any) => o.id === c.id)?.order;
       return `<div class="chart-row rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-colors group"
                    data-id="${c.id}" data-order="${c.order}" data-game="${c.game}"
-                   style="background:#131316;display:${visible ? "" : "none"}">
+                   style="background:var(--c-card);display:${visible ? "" : "none"}">
         <div class="flex items-center gap-3 px-3 py-2.5">
           <span class="text-[11px] font-mono text-zinc-600 w-6 text-right shrink-0" style="font-variant-numeric:tabular-nums">${c.order}</span>
           <div class="flex flex-col gap-px shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -179,8 +179,8 @@ const GAME_LABEL: Record<string, string> = {
       activeFilter = btn.dataset.filter!;
       document.querySelectorAll<HTMLButtonElement>(".chart-view-filter").forEach(b => {
         const active = b.dataset.filter === activeFilter;
-        b.style.borderColor = active ? "rgba(245,158,11,0.4)" : "";
-        b.style.color = active ? "#f59e0b" : "";
+        b.style.borderColor = active ? "color-mix(in srgb,var(--c-brand) 40%,transparent)" : "";
+        b.style.color = active ? "var(--c-brand)" : "";
       });
       render();
     });

@@ -77,15 +77,15 @@ const featuredIncome = incomeList
       <div class="flex-1 relative overflow-hidden">
         <img src="/assets/gta6/characters/Lucia_Caminos_03.jpg" alt="Lucia Caminos"
           class="w-full h-full object-cover object-top" loading="eager" />
-        <div class="absolute inset-0" style="background:linear-gradient(to right,#0e0e11 0%,transparent 40%,transparent 50%,#0e0e11 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg) 0%,transparent 40%,transparent 50%,var(--c-bg) 100%)"></div>
       </div>
       <div class="flex-1 relative overflow-hidden">
         <img src="/assets/gta6/characters/Jason_Duval_02.jpg" alt="Jason Duval"
           class="w-full h-full object-cover object-top" loading="eager" />
-        <div class="absolute inset-0" style="background:linear-gradient(to left,#0e0e11 0%,transparent 40%,transparent 50%,#0e0e11 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to left,var(--c-bg) 0%,transparent 40%,transparent 50%,var(--c-bg) 100%)"></div>
       </div>
     </div>
-    <div class="absolute inset-0" style="background:linear-gradient(to bottom,#0e0e11 0%,transparent 20%,transparent 55%,#0e0e11 100%)"></div>
+    <div class="absolute inset-0" style="background:linear-gradient(to bottom,var(--c-bg) 0%,transparent 20%,transparent 55%,var(--c-bg) 100%)"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-16 w-full">
       <div class="flex items-end justify-between flex-wrap gap-6">
         <div class="max-w-xl">
@@ -108,7 +108,7 @@ const featuredIncome = incomeList
              style="width:240px">
             <img src={`https://img.youtube.com/vi/${heroTrailer.youtube_id}/mqdefault.jpg`} alt={heroTrailer.title}
               class="w-full object-cover transition-transform duration-500 group-hover:scale-105" style="height:135px" loading="eager" />
-            <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 55%)"></div>
+            <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%,transparent 55%)"></div>
             <div class="absolute top-2 left-2">
               <span class="text-[10px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Official</span>
             </div>
@@ -200,7 +200,7 @@ const featuredIncome = incomeList
         <div class="flex items-center gap-1.5">
           {[0, 1, 2].map((i) => (
             <button class="pred-dot rounded-full transition-all duration-200" data-page={i}
-              style="width:6px;height:6px;background:#2a2a31" aria-label={`Page ${i + 1}`} />
+              style="width:6px;height:6px;background:var(--c-border-2)" aria-label={`Page ${i + 1}`} />
           ))}
         </div>
         <button id="pred-next"
@@ -248,7 +248,7 @@ const featuredIncome = incomeList
 
       <!-- Circular economy diagram -->
       <div class="mb-6">
-        <EconomyCircle game="gta-online" fullEconomyHref="/gta-vi/economy" />
+        <EconomyCircle fullEconomyHref="/gta-vi/economy" />
       </div>
 
       <!-- Income + Expenditure cards: 2-col split with teal/orange column borders -->
@@ -366,7 +366,7 @@ const featuredIncome = incomeList
     dots.forEach((d, i) => {
       const active = i === page;
       d.style.width      = active ? "16px" : "6px";
-      d.style.background = active ? "var(--c-brand, #f59e0b)" : "#2a2a31";
+      d.style.background = active ? "var(--c-brand)" : "var(--c-border-2)";
     });
     if (pageLabel) pageLabel.textContent = `${page + 1} / ${TOTAL}`;
     if (prevBtn) prevBtn.disabled = page === 0;
@@ -379,7 +379,7 @@ const featuredIncome = incomeList
   window.addEventListener("resize", () => {
     track.style.transition = "none";
     goTo(page);
-    requestAnimationFrame(() => { track.style.transition = ""; });
+    requestAnimationFrame(() => { track.style.transition = "transform 0.35s cubic-bezier(0.4,0,0.2,1)"; });
   });
   goTo(0);
 
