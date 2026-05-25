@@ -631,7 +631,7 @@ export const ALL_CHARTS: ChartMeta[] = [
   {
     id:        "cpi-chart",
     component: ChartCpiPricing,
-    game:      "franchise",
+    game:      "gta-vi",
     category:  "Economy-RL",
     badge:     "RL Economy",
     label:     "GTA Launch Price — Nominal vs Inflation-Adjusted",

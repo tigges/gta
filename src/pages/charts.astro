@@ -205,6 +205,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
             "revenue-split-chart":         ["gta-online", "gta-v"],
             "ttwo-stock-chart":            ["franchise"],
             "franchise-complexity-chart":  ["franchise"],
+            "cpi-chart":                   ["franchise"],
           } as Record<string, Array<"gta-vi"|"gta-online"|"gta-v"|"franchise">>)[chart.id]}
         >
           <Comp />
