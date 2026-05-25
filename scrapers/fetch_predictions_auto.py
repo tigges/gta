@@ -241,7 +241,7 @@ def run_updates(updater: PredictionUpdater) -> None:
 
             # Update basis with current savings %
             pct_cheaper = round((most_exp_real - price) / most_exp_real * 100, 1)
-            new_basis_snippet = f"GTA VI's confirmed ${price:.2f} launch price is {pct_cheaper}% cheaper in real 2026 terms than {title_name} (${most_exp_real:.2f})."
+            new_basis_snippet = f"GTA VI's confirmed ${price:.2f} launch price is {pct_cheaper}% cheaper in real 2026 terms than {title_name} (${most_exp_real:.2f}) in 2026 dollars.".strip()
             # Only update basis if the numbers have changed noticeably
             if str(pct_cheaper) not in p.get("basis", ""):
                 updater.propose("pred-real-price-advantage", "basis",
