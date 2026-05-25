@@ -241,6 +241,7 @@ Edit `data/gta-6/predictions.json`. Schema version is `2.0`. Required fields per
   "title": "",
   "value": "",
   "unit": null,
+  "short_value": null,       // ≤20 chars punchline for compact card display
   "confidence": 0,           // 0–100
   "confidence_tier": "",     // "confirmed" | "reported" | "predicted"
   "basis": "",
@@ -252,9 +253,21 @@ Edit `data/gta-6/predictions.json`. Schema version is `2.0`. Required fields per
   "outcome_actual": null,
   "outcome_date": null,
   "source": "",
-  "source_type": ""          // "official" | "reported" | "predicted"
+  "source_type": "",         // "official" | "reported" | "predicted"
+  "editorial_note": "approved"  // set to "needs-review" when title needs work
 }
 ```
+
+**Prediction title rules — check before writing any title:**
+
+1. **Max 52 chars** — titles exceeding this will wrap badly in compact cards.
+2. **State the fact, skip the filler** — never use "will be", "is expected to", "matches", "has been confirmed to". Write the conclusion directly: "No Loans at Maze Bank" not "Maze Bank Returns as Decorative Savings Only".
+3. **Subject must appear** — the title should name what the prediction is about (GTA VI, Maze Bank, Lucia/Jason, etc.).
+4. **No unexplained acronyms or jargon** — "MMT", "GTA-RPP", "SC rate" need context or plain language.
+5. **short_value required for qualitative predictions** — any prediction where `value` is a sentence (>22 chars) must have a `short_value` ≤20 chars that captures the punchline.
+6. **unit is a context note, not a symbol** — if `unit` is a sentence (e.g. "cheaper than GTA III in 2026 dollars"), it renders on its own line in the card. Keep it ≤60 chars.
+7. **Set `editorial_note: "approved"`** when a title passes all rules. Set `"needs-review"` when flagging for later attention.
+
 
 ---
 
@@ -288,34 +301,21 @@ Bump `src/config/version.ts` when shipping a meaningful release.
 - **No autonomous screenshots or screen recordings.** Never use the `computerUse` subagent, `RecordScreen`, or any screenshot tool on your own initiative. If visual confirmation of a UI change is needed, ask the user to share a screenshot instead — this is faster and cheaper.
 - Communicate this rule explicitly in every chat handover note under a "Agent rules" section so the next agent does not repeat the behaviour.
 
-- **Visual token rule — mandatory on every project, no exceptions.**
+- **Always use the central design token system — no hardcoded values in components.** This rule applies to this project and all other projects. Every visual property — colour, font family, font size, font weight, spacing, and surface — must reference the central token system. Never reach for a raw literal value in a component.
 
-  Before writing any colour, opacity, font-size, or font-family value in any component, stylesheet, script, or visualisation code (Astro, CSS, TypeScript, JavaScript, D3, or any other format):
+  **Colours:**
+  - In `.astro` / CSS: `var(--c-*)` from `src/styles/tokens.css`
+  - In Tailwind class strings: mapped utility classes (`text-zinc-*`, `bg-*`) per `tokens.css`
+  - In TypeScript / D3 / JS: named exports from `src/config/colors.ts`
+  - Never write a raw hex literal (e.g. `#1a1a1e`, `color:#b8b8c4`). If a colour has no token yet, add it to `tokens.css` and `colors.ts` first.
 
-  1. **Check for an existing token.** Common locations: `tokens.css`, `theme.ts`, `design-tokens.json`, `tailwind.config`, `_variables.scss`, or equivalent for the stack in use.
+  **Typography (font family, size, weight):**
+  - Always use the Tailwind font utilities: `font-sans`, `font-mono`, `font-bold`, `text-sm`, `text-[11px]` etc.
+  - Font families are defined in `tokens.css` as `--font-sans` and `--font-mono`. Never write `style="font-family:..."` inline.
+  - Font sizes follow the scale defined in `tokens.css` (`--fs-micro` 10px, `--fs-label` 11px, `--fs-body` 14px etc.). Use the corresponding Tailwind class; never write a raw `px` size that isn't in the scale.
+  - Never write `style="font-size:..."` or `style="font-weight:..."` inline.
 
-  2. **If a matching token exists → use it.** Never use a raw value (no hex codes, no `rgba()`, no float opacities, no `px` font sizes, no inline `font-family`) when a token already covers that intent.
-
-  3. **If no matching token exists → do NOT invent a raw value.** Propose the new token to the user (name, value, rationale) and wait for explicit approval before adding it to the token file and using it in code.
-
-  4. **If the project has no token system yet → flag this before writing any visual code** and offer to establish one first.
-
-  5. **Opacity on text is always wrong.** If text needs to look secondary or dim, use a colour token at the correct lightness level. Opacity tokens are for whole elements only — inactive controls, faded images, disabled states — never text.
-
-  **Violations:** any raw hex, `rgba()`, float opacity, raw `px` font size, or inline `font-family` in component or script code is a rule violation, regardless of how minor it appears.
-
-  **For this project specifically:**
-
-  - Colours in `.astro` / CSS → `var(--c-*)` from `src/styles/tokens.css`
-  - Colours in Tailwind → mapped utility classes (`text-zinc-*`, `bg-*`) per `tokens.css`
-  - Colours in TypeScript / D3 / JS → named exports from `src/config/colors.ts` (`cc.*`)
-  - Opacity in CSS → `var(--o-*)` from `src/styles/tokens.css`
-  - Opacity in TypeScript / D3 / JS → `op.*` from `src/config/colors.ts`
-  - Font families → `font-sans` / `font-mono` Tailwind classes only. Never `style="font-family:..."`.
-  - Font sizes → `--fs-*` scale in `tokens.css` (minimum 10px). Use the corresponding Tailwind class. Never `style="font-size:..."` or `text-[9px]` or smaller.
-  - Minimum readable text: `--c-text-4` (#9898b8, 6.4:1 contrast). Never use `--c-text-6` or `--c-text-7` for any text a user must read.
-
-  **General rule:** When touching an existing component that contains any hardcoded visual value (hex colour, raw font size, inline font-family, orphan float opacity), replace it with the correct token reference in the same commit. Do not leave orphaned raw values behind.
+  **General rule:** When touching an existing component that contains any hardcoded visual value (hex colour, raw font size, inline font-family, orphan pixel value), replace it with the correct token reference in the same commit. Do not leave orphaned raw values behind.
 
 - **Version bump — mandatory on every session, no exceptions.** Every session that touches code, data, UI, or scrapers must bump `src/config/version.ts` before merging to `main`. Patch bump (`x.y.Z+1`) for fixes and minor tweaks; minor bump (`x.Y+1.0`) for new features; major bump (`X+1.0.0`) for full redesigns. Also update `SITE_VERSION_DATE` to today (`YYYY-MM-DD`). The version is displayed in the ops bar on every page — it must always reflect the latest release.
 

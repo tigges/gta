@@ -1,5 +1,5 @@
 ---
-import { C_LIVE, C_BRAND, C_CARD } from "../config/colors";
+import { C_CARD } from "../config/colors";
 import GamePill from "./GamePill.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 
@@ -23,198 +23,216 @@ interface Props {
   outcome_verified?: boolean;
   outcome_actual?: string | null;
   thumbnail?: string | null;
-  compact?: boolean; // homepage teaser mode: hides method/basis/source
-  game?: "gta-vi" | "gta-online" | "gta-v" | "franchise"; // for GamePill
-  id?: string;       // canonical id from predictions.json (e.g. "pred-launch-price")
-  /** When provided (compact mode only): renders "Full analysis →" link in footer */
+  /** true = compact teaser: thumbnail + title + value + bar only (hub/home) */
+  compact?: boolean;
+  game?: "gta-vi" | "gta-online" | "gta-v" | "franchise";
+  id?: string;
+  /** Short punchline value ≤20 chars for compact display. Falls back to value if short. */
+  short_value?: string | null;
+  /** When provided in compact mode: renders "Full analysis →" link in footer */
   detailHref?: string;
 }
 
 const {
-  title,
-  value,
-  confidence,
-  confidence_tier,
-  basis,
-  unit,
-  trailer_timestamp,
-  prediction_method,
-  prediction_range,
-  source,
-  source_type,
-  outcome_verified,
-  outcome_actual,
-  thumbnail,
-  compact = false,
-  game = "gta-vi",
-  id: cardId,
-  detailHref,
+  title, value, confidence, confidence_tier, basis, unit,
+  trailer_timestamp, prediction_method, prediction_range,
+  source, source_type, outcome_verified, outcome_actual,
+  thumbnail, compact = false, game = "gta-vi",
+  id: cardId, short_value, detailHref,
 } = Astro.props;
 
-// Use canonical id from JSON if provided, otherwise derive from title
 const predAnchorId = cardId ?? `pred-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0,40)}`;
 
-// Tier styling driven by schema field, not computed from confidence number
 const TIER_STYLES = {
   confirmed: {
-    label: "CONFIRMED",
-    color: "text-emerald-300",
-    bar: "bg-emerald-400",
-    border: "border-l-gta-teal",
-    bg: "bg-emerald-500/5",
-    badgeBg: "bg-emerald-900/20 border-emerald-500/60 text-emerald-200",
+    label: "CONFIRMED", color: "text-emerald-300", bar: "bg-emerald-400",
+    border: "border-l-gta-teal", badgeBg: "bg-emerald-900/20 border-emerald-500/60 text-emerald-200",
   },
   reported: {
-    label: "REPORTED",
-    color: "text-amber-300",
-    bar: "bg-amber-400",
-    border: "border-l-gta-gold",
-    bg: "bg-gta-gold/5",
-    badgeBg: "bg-amber-900/20 border-amber-500/60 text-amber-200",
+    label: "REPORTED", color: "text-amber-300", bar: "bg-amber-400",
+    border: "border-l-gta-gold", badgeBg: "bg-amber-900/20 border-amber-500/60 text-amber-200",
   },
   predicted: {
-    label: "PREDICTED",
-    color: "text-zinc-200",
-    bar: "bg-zinc-400",
-    border: "border-l-zinc-500",
-    bg: "bg-zinc-600/5",
-    badgeBg: "bg-zinc-700/30 border-zinc-400/50 text-zinc-100",
+    label: "PREDICTED", color: "text-zinc-200", bar: "bg-zinc-400",
+    border: "border-l-zinc-500", badgeBg: "bg-zinc-700/30 border-zinc-400/50 text-zinc-100",
   },
 };
 
 const tier = TIER_STYLES[confidence_tier] ?? TIER_STYLES.predicted;
-
 const showRange = prediction_range && prediction_range.low !== prediction_range.high;
 
-// Scale value font size for full-card display based on value length
+// Compact: prefer short_value, then value if ≤22 chars, else "—"
+const compactVal = compact
+  ? (short_value ?? (value.length <= 22 ? value : "—"))
+  : null;
+
+// Full card: scale value font by length
 const valueFontClass =
   value.length > 36 ? "text-base"
   : value.length > 22 ? "text-xl"
   : "text-3xl";
 ---
 
-<div
-  id={predAnchorId}
-  class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current group`}
-  style="background:#131316;scroll-margin-top:72px"
->
-  <!-- Image strip (optional) — pills float over it -->
-  {thumbnail && (
-    <div class="relative h-28 overflow-hidden">
-      <img src={thumbnail} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
-      <!-- Bottom fade into card background -->
-      <div class="absolute inset-0" style={`background:linear-gradient(to bottom,rgba(0,0,0,0.35) 0%,transparent 35%,${C_CARD} 100%)`}></div>
+{compact ? (
+  <!-- ── COMPACT card ──────────────────────────────────────────────────────────
+       thumbnail (fixed h-32) · title (2-line slot) · short value · bar · footer
+       Every element fixed-height → every card identical height.              -->
+  <div
+    id={predAnchorId}
+    class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current group h-full`}
+    style="background:#131316;scroll-margin-top:72px"
+  >
+    <!-- Thumbnail: always h-32, dark fallback if absent -->
+    <div class="relative h-32 overflow-hidden shrink-0">
+      {thumbnail
+        ? <img src={thumbnail} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
+        : <div class="w-full h-full" style="background:#0e0e11" />
+      }
+      <div class="absolute inset-0" style={`background:linear-gradient(to bottom,rgba(0,0,0,0.45) 0%,transparent 40%,${C_CARD} 100%)`}></div>
+      <!-- Pills float over thumbnail -->
+      <div class="absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-2.5 z-10">
+        <GamePill game={game} size="xs" />
+        <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ${tier.badgeBg}`}>{tier.label}</span>
+      </div>
     </div>
-  )}
 
-  <!-- Pills bar — absolute over image when thumbnail present, normal flow otherwise.
-       Both GamePill and tier badge always on the same baseline. -->
-  <div class={thumbnail
-    ? "absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-2.5 z-10"
-    : "flex items-center justify-between px-4 pt-3 pb-2"
-  }>
-    <GamePill game={game} size="xs" />
-    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ${tier.badgeBg}`}>
-      {tier.label}
-    </span>
-  </div>
+    <!-- Body: flex-col, footer pushed to bottom -->
+    <div class="flex flex-col flex-1 px-3 pt-2.5 pb-3">
+      <!-- Title: min-height reserves 2-line space even for short titles -->
+      <div style="min-height:2.6rem" class="mb-2">
+        <span class="text-[10px] font-mono text-zinc-200 uppercase tracking-[0.18em] leading-snug line-clamp-2">{title}</span>
+      </div>
 
-  <!-- Title text — sits just below the image (or below the pills row when no image) -->
-  <div class={`px-4 pb-2 ${thumbnail ? "pt-2" : ""}`}>
-    <span class="text-[10px] font-mono text-zinc-200 uppercase tracking-[0.18em] leading-snug">{title}</span>
-  </div>
+      <!-- Short value: always text-2xl, always present -->
+      <div class="mb-1">
+        <span class="text-2xl font-bold font-mono text-white leading-none">{compactVal}</span>
+      </div>
 
-  <!-- Value + unit -->
-  <div class="px-4 pb-3 flex items-baseline gap-1.5">
-    <span class="text-3xl font-bold font-mono text-white leading-none">{value}</span>
-    {unit && <span class="text-sm font-mono text-zinc-500">{unit}</span>}
-  </div>
+      <!-- Unit as context note on its own line (not inline with value) -->
+      {unit && (
+        <div class="mb-2">
+          <span class="text-[10px] font-mono text-zinc-500 leading-snug">{unit}</span>
+        </div>
+      )}
 
-  <!-- Confidence bar -->
-  <div class="px-4 pb-3">
-    <div class="flex items-center justify-between mb-1.5">
-      <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Confidence</span>
-      <span class={`text-[11px] font-mono font-semibold ${tier.color}`}>{confidence}%</span>
+      <!-- Confidence bar pushed to bottom -->
+      <div class="mt-auto">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Confidence</span>
+          <span class={`text-[10px] font-mono font-semibold ${tier.color}`}>{confidence}%</span>
+        </div>
+        <div class="h-0.5 rounded-full" style="background:#1e1e23">
+          <div class={`h-full rounded-full ${tier.bar} transition-all duration-700`} style={`width:${confidence}%`}></div>
+        </div>
+      </div>
     </div>
-    <div class="h-0.5 rounded-full" style="background:#1e1e23">
-      <div class={`h-full rounded-full ${tier.bar} transition-all duration-700`} style={`width:${confidence}%`}></div>
+
+    <!-- Footer -->
+    <div class="px-3 pb-2.5 flex items-center justify-between border-t border-[#1e1e23] pt-2 shrink-0">
+      {detailHref
+        ? <a href={detailHref} class="text-[10px] font-mono text-zinc-400 hover:text-gta-gold transition-colors uppercase tracking-widest whitespace-nowrap">GTAVI.AI Full analysis →</a>
+        : <span class="text-[10px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      }
+      <ShareDropdown anchorId={predAnchorId} shareText={`GTA VI ${title}: ${compactVal} — ${confidence}% confidence.`} size="sm" />
     </div>
   </div>
+) : (
+  <!-- ── FULL card ──────────────────────────────────────────────────────────────
+       All fields shown. Used on /gta-vi/intel and similar deep-read pages.   -->
+  <div
+    id={predAnchorId}
+    class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] hover:border-l-current group`}
+    style="background:#131316;scroll-margin-top:72px"
+  >
+    {thumbnail && (
+      <div class="relative h-28 overflow-hidden">
+        <img src={thumbnail} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
+        <div class="absolute inset-0" style={`background:linear-gradient(to bottom,rgba(0,0,0,0.35) 0%,transparent 35%,${C_CARD} 100%)`}></div>
+      </div>
+    )}
 
-  <!-- Range (if low ≠ high) -->
-  {showRange && (
-    <div class="px-4 pb-2">
-      <span class="text-[10px] font-mono text-zinc-600">
-        Range: <span class="text-zinc-500">{prediction_range!.low}</span>
-        <span class="text-zinc-500"> – </span>
-        <span class="text-zinc-500">{prediction_range!.high}</span>
-      </span>
+    <div class={thumbnail
+      ? "absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-2.5 z-10"
+      : "flex items-center justify-between px-4 pt-3 pb-2"
+    }>
+      <GamePill game={game} size="xs" />
+      <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ${tier.badgeBg}`}>{tier.label}</span>
     </div>
-  )}
 
-  <!-- Basis text -->
-  {!compact && (
-  <div class="px-4 pb-3 flex-1">
-    <p class="text-[11px] text-zinc-400 leading-relaxed">{basis}</p>
-  </div>
-  )}
-
-  <!-- Method (if present) -->
-  {!compact && prediction_method && (
-    <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5">
-      <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-0.5">Method</div>
-      <p class="text-[10px] font-mono text-zinc-600 leading-snug">{prediction_method}</p>
+    <div class={`px-4 pb-2 ${thumbnail ? "pt-2" : ""}`}>
+      <span class="text-[10px] font-mono text-zinc-200 uppercase tracking-[0.18em] leading-snug break-words">{title}</span>
     </div>
-  )}
 
-  <!-- Footer row: source + trailer timestamp -->
-  {!compact && (source || trailer_timestamp) && (
-    <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5 flex items-start justify-between gap-2">
-      {source && (
-        <span class="text-[10px] font-mono text-zinc-500 truncate">
-          {source_type === "official" && <span class="text-gta-teal">● </span>}
-          {source_type === "reported" && <span class="text-gta-gold">● </span>}
-          {source_type === "predicted" && <span class="text-zinc-600">● </span>}
-          {source}
+    <div class="px-4 pb-1 flex items-baseline gap-1.5 flex-wrap">
+      <span class={`${valueFontClass} font-bold font-mono text-white leading-tight`}>{value}</span>
+    </div>
+
+    {unit && (
+      <div class="px-4 pb-3">
+        <span class="text-[11px] font-mono text-zinc-500 leading-snug">{unit}</span>
+      </div>
+    )}
+
+    <div class="px-4 pb-3">
+      <div class="flex items-center justify-between mb-1.5">
+        <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Confidence</span>
+        <span class={`text-[11px] font-mono font-semibold ${tier.color}`}>{confidence}%</span>
+      </div>
+      <div class="h-0.5 rounded-full" style="background:#1e1e23">
+        <div class={`h-full rounded-full ${tier.bar} transition-all duration-700`} style={`width:${confidence}%`}></div>
+      </div>
+    </div>
+
+    {showRange && (
+      <div class="px-4 pb-2">
+        <span class="text-[10px] font-mono text-zinc-600">
+          Range: <span class="text-zinc-500">{prediction_range!.low}</span>
+          <span class="text-zinc-500"> – </span>
+          <span class="text-zinc-500">{prediction_range!.high}</span>
         </span>
-      )}
-      {trailer_timestamp && (
-        <span class="text-[10px] font-mono text-zinc-500 shrink-0">▶ {trailer_timestamp}</span>
-      )}
-    </div>
-  )}
+      </div>
+    )}
 
-  <!-- Share strip -->
-  <div class="px-4 pb-3 mt-auto flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
-    <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-    <div class="flex items-center gap-2.5">
-      {compact && detailHref && (
-        <a href={detailHref}
-           class="text-[10px] font-mono text-zinc-400 hover:text-gta-gold transition-colors uppercase tracking-widest whitespace-nowrap">
-          Full analysis →
-        </a>
-      )}
-      <ShareDropdown
-        anchorId={predAnchorId}
-        shareText={`GTA VI ${title}: ${value}${unit ? " " + unit : ""} — ${confidence}% confidence. Data-driven, not speculation.`}
-        size="sm"
-      />
+    <div class="px-4 pb-3 flex-1">
+      <p class="text-[11px] text-zinc-400 leading-relaxed">{basis}</p>
     </div>
+
+    {prediction_method && (
+      <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5">
+        <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-0.5">Method</div>
+        <p class="text-[10px] font-mono text-zinc-600 leading-snug">{prediction_method}</p>
+      </div>
+    )}
+
+    {(source || trailer_timestamp) && (
+      <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5 flex items-start justify-between gap-2">
+        {source && (
+          <span class="text-[10px] font-mono text-zinc-500 truncate">
+            {source_type === "official" && <span class="text-gta-teal">● </span>}
+            {source_type === "reported" && <span class="text-gta-gold">● </span>}
+            {source_type === "predicted" && <span class="text-zinc-600">● </span>}
+            {source}
+          </span>
+        )}
+        {trailer_timestamp && <span class="text-[10px] font-mono text-zinc-500 shrink-0">▶ {trailer_timestamp}</span>}
+      </div>
+    )}
+
+    <div class="px-4 pb-3 mt-auto flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
+      <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <ShareDropdown anchorId={predAnchorId} shareText={`GTA VI ${title}: ${value}${unit ? " — " + unit : ""} — ${confidence}% confidence. Data-driven, not speculation.`} size="sm" />
+    </div>
+
+    {outcome_verified && outcome_actual && (
+      <div class="px-4 py-2 border-t border-gta-teal/30" style="background:#0a1a0e">
+        <div class="text-[11px] font-mono text-gta-teal uppercase tracking-widest mb-0.5">Actual</div>
+        <p class="text-[11px] font-mono text-gta-teal font-semibold">{outcome_actual}</p>
+      </div>
+    )}
   </div>
-
-  <!-- Outcome banner (post-launch) -->
-  {outcome_verified && outcome_actual && (
-    <div class="px-4 py-2 border-t border-gta-teal/30" style="background:#0a1a0e">
-      <div class="text-[11px] font-mono text-gta-teal uppercase tracking-widest mb-0.5">Actual</div>
-      <p class="text-[11px] font-mono text-gta-teal font-semibold">{outcome_actual}</p>
-    </div>
-  )}
-</div>
+)}
 
 <script define:vars={{ predAnchorId }}>
-  // Fire a Plausible custom event when this prediction card enters the viewport.
-  // Same demand-signal pattern as ChartView — powers future display_order recalculation.
-  // Event: "PredictionView" with prop predictionId — tracked in Plausible dashboard.
   if ("IntersectionObserver" in window && typeof window.plausible === "function") {
     const el = document.getElementById(predAnchorId);
     if (el) {
