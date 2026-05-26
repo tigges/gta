@@ -7,13 +7,14 @@
  * Entirely client-side, no backend needed.
  */
 import ShareDropdown from "./ShareDropdown.astro";
-import { C_LIVE, C_GROWTH, C_BRAND, C_ALERT, C_ECONOMY } from "../config/colors";
+import { C_LIVE, C_GROWTH, C_BRAND, C_ALERT, C_ECONOMY, C_TEXT_7, C_CARD, C_BG, C_BORDER_2, C_CARD_RAISED } from "../config/colors";
 
 interface Props {
   businesses: any[];
   weeklyBonuses?: { activity_id: string; multiplier: number; keyword_found: string }[];
+  weeklySales?: { item_id?: string; item_name?: string; item_description?: string; discount_pct: number }[];
 }
-const { businesses, weeklyBonuses = [] } = Astro.props;
+const { businesses, weeklyBonuses = [], weeklySales = [] } = Astro.props;
 
 // Only show ownable businesses (not stacks or story mode)
 const ownableBusinesses = businesses.filter(b =>
@@ -21,9 +22,9 @@ const ownableBusinesses = businesses.filter(b =>
 );
 ---
 
-<div class="rounded-xl border border-gta-gold/20 overflow-hidden" style="background:#131316">
+<div class="rounded-xl border border-gta-gold/20 overflow-hidden" style={`background:${C_CARD}`}>
   <!-- Header -->
-  <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+  <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
     <div>
       <div class="flex items-center gap-2 mb-1">
         <span class="text-[11px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-1.5 py-0.5 rounded uppercase tracking-widest">Adviser</span>
@@ -35,7 +36,7 @@ const ownableBusinesses = businesses.filter(b =>
 
   <!-- Weekly bonuses banner -->
   {weeklyBonuses.length > 0 && (
-    <div class="px-5 py-3 border-b border-gta-gold/20 flex items-center gap-3 flex-wrap" style="background:rgba(245,158,11,0.06)">
+    <div class="px-5 py-3 border-b border-gta-gold/20 flex items-center gap-3 flex-wrap" style="background:color-mix(in srgb,var(--c-brand) 6%,transparent)">
       <span class="text-[11px] font-mono text-gta-gold border border-gta-gold/25 bg-gta-gold/10 px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0">This Week</span>
       <div class="flex flex-wrap gap-2">
         {weeklyBonuses.map((b: any) => (
@@ -80,7 +81,7 @@ const ownableBusinesses = businesses.filter(b =>
       </div>
 
       <!-- Budget input -->
-      <div class="mt-4 pt-4 border-t border-[#1e1e23]">
+      <div class="mt-4 pt-4 border-t border-border-dim">
         <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Your current budget (GTA$)</label>
         <div class="flex items-center gap-2">
           <span class="text-zinc-500 font-mono text-sm">$</span>
@@ -90,7 +91,7 @@ const ownableBusinesses = businesses.filter(b =>
             value="5000000"
             min="0"
             step="500000"
-            class="w-40 px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-gold/40"
+            class="w-40 px-3 py-1.5 rounded border border-border-mid bg-surface-2 text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-gold/40"
           />
         </div>
       </div>
@@ -99,7 +100,7 @@ const ownableBusinesses = businesses.filter(b =>
     <!-- Right: results panel -->
     <div>
       <!-- Current stack -->
-      <div class="rounded-lg border border-[#2a2a31] p-4 mb-4" style="background:#0e0e11">
+      <div class="rounded-lg border border-border-mid p-4 mb-4" style="background:var(--c-bg)">
         <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Your current $/hr stack</div>
         <div id="adviser-current-total" class="text-3xl font-mono font-bold text-gta-gold mb-1">$0/hr</div>
         <div id="adviser-stack-breakdown" class="flex flex-col gap-1 mt-2 text-[10px] font-mono text-zinc-500">
@@ -124,13 +125,13 @@ const ownableBusinesses = businesses.filter(b =>
   </div>
 
   <!-- Leaderboard opt-in -->
-  <div id="adviser-leaderboard-bar" class="hidden px-5 py-3 border-t border-[#1e1e23]" style="background:#0a0a0d">
+  <div id="adviser-leaderboard-bar" class="hidden px-5 py-3 border-t border-border-dim" style="background:var(--c-bg-deep)">
     <div class="flex items-center gap-3 flex-wrap">
       <div class="flex-1 min-w-0">
         <div class="text-[10px] font-mono text-zinc-500 mb-1">Share your stack to the community leaderboard</div>
         <div class="flex items-center gap-2">
           <input id="adviser-display-name" type="text" placeholder="Display name (e.g. GTA_Player_69)" maxlength="40"
-            class="flex-1 px-2.5 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-[11px] font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-teal/40 min-w-0 max-w-xs" />
+            class="flex-1 px-2.5 py-1.5 rounded border border-border-mid bg-surface-2 text-zinc-200 text-[11px] font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-teal/40 min-w-0 max-w-xs" />
           <button id="adviser-submit-lb"
             class="shrink-0 px-3 py-1.5 rounded border border-gta-teal/30 text-gta-teal text-[10px] font-mono hover:bg-gta-teal/8 transition-colors uppercase tracking-widest">
             Submit →
@@ -142,7 +143,7 @@ const ownableBusinesses = businesses.filter(b =>
   </div>
 
   <!-- Footer -->
-  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3" style="background:#0e0e11">
+  <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3" style="background:var(--c-bg)">
     <div class="flex items-center gap-3">
       <span class="text-[10px] text-zinc-500 font-mono">Personalised recommendations · based on what you own and your budget</span>
       <a href="/gta-online/bonuses" class="text-[10px] font-mono text-gta-teal/60 hover:text-gta-teal transition-colors tracking-widest uppercase shrink-0">Community →</a>
@@ -154,9 +155,13 @@ const ownableBusinesses = businesses.filter(b =>
   </div>
 </div>
 
-<script define:vars={{ ownableBusinesses, weeklyBonuses }}>
+<script define:vars={{ ownableBusinesses, weeklyBonuses, weeklySales, C_GROWTH, C_BRAND, C_ALERT, C_ECONOMY, C_TEXT_7, C_BG, C_CARD_RAISED, C_LIVE }}>
   // Build weekly multiplier map
   const WEEKLY_MULT = {};
+
+  // Build weekly sale discount map: keyed by item_id (matches business id where applicable)
+  const WEEKLY_SALE = {};
+  (weeklySales || []).forEach(s => { if (s.item_id) WEEKLY_SALE[s.item_id] = s; });
   (weeklyBonuses || []).forEach(b => { WEEKLY_MULT[b.activity_id] = b.multiplier; });
 
   function boosted(biz) { return (WEEKLY_MULT[biz.id] ?? 1) > 1; }
@@ -229,8 +234,8 @@ const ownableBusinesses = businesses.filter(b =>
       } else {
         const sorted = [...stackItems].sort((a, b) => b.profit - a.profit);
         breakdownEl.innerHTML = sorted.map(item => {
-          const typeColor = item.type === 'passive' ? '#22c55e' : item.type === 'semi-passive' ? '#f59e0b' : '#ef4444';
-          const boostBadge = item.boosted ? ` <span style="color:#f59e0b;font-size:8px">★ 2×</span>` : '';
+          const typeColor = item.type === 'passive' ? C_GROWTH : item.type === 'semi-passive' ? C_BRAND : C_ALERT;
+          const boostBadge = item.boosted ? ` <span style="color:${C_BRAND};font-size:8px">★ 2×</span>` : '';
           return `<div class="flex items-center justify-between"><span class="text-zinc-400">${item.name}${boostBadge}</span><span style="color:${typeColor};font-weight:bold">${formatK(item.profit)}/hr</span></div>`;
         }).join('') + (synergyTotal > 0 ? `<div class="flex items-center justify-between text-gta-teal"><span>Synergy bonuses</span><span>+${formatK(synergyTotal)}/hr</span></div>` : '');
       }
@@ -259,12 +264,12 @@ const ownableBusinesses = businesses.filter(b =>
           const setupEffective = sale ? Math.round(setupFull * (1 - sale.discount_pct / 100)) : setupFull;
           const roi = setupEffective > 0 ? Math.round(setupEffective / effectiveHr(b)) : 0;
           const highlight = i === 0 ? 'border-gta-gold/30' : 'border-[#2a2a31]';
-          const boostBadge = boosted(b) ? ` <span style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);padding:0 4px;border-radius:3px;font-size:8px">★ ${WEEKLY_MULT[b.id]}× this week</span>` : '';
-          const saleBadge = sale ? ` <span style="background:rgba(34,197,94,0.12);color:#22c55e;border:1px solid rgba(34,197,94,0.3);padding:0 4px;border-radius:3px;font-size:8px">🏷 -${sale.discount_pct}% this week</span>` : '';
+          const boostBadge = boosted(b) ? ` <span style="background:color-mix(in srgb,${C_BRAND} 15%,transparent);color:${C_BRAND};border:1px solid color-mix(in srgb,${C_BRAND} 30%,transparent);padding:0 4px;border-radius:3px;font-size:8px">★ ${WEEKLY_MULT[b.id]}× this week</span>` : '';
+          const saleBadge = sale ? ` <span style="background:color-mix(in srgb,${C_GROWTH} 12%,transparent);color:${C_GROWTH};border:1px solid color-mix(in srgb,${C_GROWTH} 30%,transparent);padding:0 4px;border-radius:3px;font-size:8px">🏷 -${sale.discount_pct}% this week</span>` : '';
           const setupDisplay = sale
-            ? `<span style="color:#22c55e">$${(setupEffective/1e6).toFixed(1)}M</span> <span style="color:#3f3f46;text-decoration:line-through;font-size:9px">$${(setupFull/1e6).toFixed(1)}M</span>`
+            ? `<span style="color:${C_GROWTH}">$${(setupEffective/1e6).toFixed(1)}M</span> <span style="color:${C_TEXT_7};text-decoration:line-through;font-size:9px">$${(setupFull/1e6).toFixed(1)}M</span>`
             : `$${(setupFull/1e6).toFixed(1)}M`;
-          return `<div class="rounded-lg border ${highlight} p-3" style="background:#0e0e11">
+          return `<div class="rounded-lg border ${highlight} p-3" style="background:${C_BG}">
             <div class="flex items-center justify-between mb-1">
               <span class="text-[11px] font-mono text-zinc-200 font-semibold">${b.name}${boostBadge}${saleBadge}</span>
               <span class="text-[11px] font-mono text-gta-gold font-bold">${formatK(effectiveHr(b))}/hr</span>
@@ -350,22 +355,22 @@ const ownableBusinesses = businesses.filter(b =>
         const tweetUrl  = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
 
         result.innerHTML = `
-          <span style="color:#22c55e;font-weight:700">${tierEmoji} Rank #${rank} — ${scoreStr}/hr</span>
+          <span style="color:${C_GROWTH};font-weight:700">${tierEmoji} Rank #${rank} — ${scoreStr}/hr</span>
           <a href="${tweetUrl}" target="_blank" rel="noopener noreferrer"
-            style="display:inline-flex;align-items:center;gap:4px;margin-left:8px;padding:2px 8px;border-radius:4px;border:1px solid rgba(245,158,11,0.3);color:#f59e0b;font-size:10px;text-decoration:none;letter-spacing:0.1em;text-transform:uppercase">
+            style="display:inline-flex;align-items:center;gap:4px;margin-left:8px;padding:2px 8px;border-radius:4px;border:1px solid color-mix(in srgb,${C_BRAND} 30%,transparent);color:${C_BRAND};font-size:10px;text-decoration:none;letter-spacing:0.1em;text-transform:uppercase">
             Tweet rank
           </a>
-          <a href="/gta-online/bonuses" style="margin-left:6px;color:#0d9488;text-decoration:underline;font-size:10px">
+          <a href="/gta-online/bonuses" style="margin-left:6px;color:${C_LIVE};text-decoration:underline;font-size:10px">
             View leaderboard →
           </a>`;
         btn.textContent = 'Submitted ✓';
       } else {
-        result.innerHTML = `<span style="color:#ef4444">Error: ${data.error}</span>`;
+        result.innerHTML = `<span style="color:${C_ALERT}">Error: ${data.error}</span>`;
         btn.textContent = 'Submit →';
         btn.disabled = false;
       }
     } catch (e) {
-      result.innerHTML = `<span style="color:#ef4444">Could not reach leaderboard. Try again.</span>`;
+      result.innerHTML = `<span style="color:${C_ALERT}">Could not reach leaderboard. Try again.</span>`;
       btn.textContent = 'Submit →';
       btn.disabled = false;
     }

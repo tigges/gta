@@ -195,33 +195,34 @@ if (!entry) throw new Error(`ExpenditureCard: unknown id "${id}"`);
 
 const anchorId = `exp-${id}`;
 
+// Token-mapped variant styles — no raw hex or Tailwind palette classes
 const VARIANT_STYLES = {
   investment: {
-    label:    "INVESTMENT",
-    badgeBg:  "bg-amber-900/20 border-amber-500/60 text-amber-200",
-    border:   "border-l-amber-500",
-    valueCls: "text-gta-gold",
+    label:      "INVESTMENT",
+    accentVar:  "var(--c-brand)",
+    valueCls:   "text-gta-gold",
   },
   injection: {
-    label:    "INJECTION",
-    badgeBg:  "bg-indigo-900/20 border-indigo-500/60 text-indigo-200",
-    border:   "border-l-indigo-400",
-    valueCls: "text-indigo-300",
+    label:      "INJECTION",
+    accentVar:  "var(--c-economy)",
+    valueCls:   "text-gta-indigo",
   },
   consumption: {
-    label:    "CONSUMPTION",
-    badgeBg:  "bg-orange-900/20 border-orange-500/60 text-orange-200",
-    border:   "border-l-orange-500",
-    valueCls: "text-orange-300",
+    label:      "CONSUMPTION",
+    accentVar:  "var(--c-flow-spending)",
+    valueCls:   "text-content-3",
   },
-};
+} as const;
 const style = VARIANT_STYLES[entry.variant];
+// Derived inline styles from token variable (Tailwind can't express color-mix against arbitrary vars)
+const badgeStyle = `background:color-mix(in srgb,${style.accentVar} 12%,transparent);border:1px solid color-mix(in srgb,${style.accentVar} 35%,transparent);color:${style.accentVar}`;
+const borderStyle = `border-left:2px solid ${style.accentVar}`;
 ---
 
 <div
   id={anchorId}
-  class={`relative flex flex-col rounded-xl border border-[#1e1e23] border-l-2 ${style.border} overflow-hidden transition-all duration-200 hover:border-[#2a2a31] group`}
-  style="background:var(--c-card);scroll-margin-top:72px"
+  class="relative flex flex-col rounded-xl border border-border-dim overflow-hidden transition-all duration-200 hover:border-border-mid group"
+  style={`background:var(--c-card);scroll-margin-top:72px;${borderStyle}`}
 >
   <!-- Thumbnail -->
   <div class="relative h-24 overflow-hidden shrink-0">
@@ -232,7 +233,8 @@ const style = VARIANT_STYLES[entry.variant];
   <!-- Pills bar -->
   <div class="absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-2.5 z-10">
     <GamePill game={entry.game} size="xs" />
-    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ${style.badgeBg}`}>
+    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0"
+          style={badgeStyle}>
       {style.label}
     </span>
   </div>
@@ -254,12 +256,12 @@ const style = VARIANT_STYLES[entry.variant];
   </div>
 
   <!-- Note -->
-  <div class="px-4 pb-3 border-t border-[#1e1e23] pt-2.5">
+  <div class="px-4 pb-3 border-t border-border-dim pt-2.5">
     <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{entry.note}</p>
   </div>
 
   <!-- Footer -->
-  <div class="px-4 pb-3 mt-auto flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
+  <div class="px-4 pb-3 mt-auto flex items-center justify-between border-t border-border-dim pt-2.5">
     <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
     <ShareDropdown anchorId={anchorId} shareText={entry.shareText} size="sm" />
   </div>
