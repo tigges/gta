@@ -156,6 +156,38 @@ const EXPENDITURE_DATA: Record<string, {
     note: "Weapons confirmed across all trailers. Ammo costs likely scaled to mission payouts. Core C-flow expenditure — enables Y earnings without direct return.",
     shareText: "GTA VI weapons & ammo: TBC pricing. Enables income but is itself pure consumption. Part of the GTA$ circular flow.",
   },
+
+  // ── GTA Online consumption cards ─────────────────────────────────────────
+  "online-ammo": {
+    variant: "consumption",
+    game: "gta-online",
+    name: "Weapons & Ammo",
+    subtitle: "GTA Online · Per-session consumable",
+    thumbnail: "/assets/gta5/dlc/daily-objectives.jpg",
+    fields: [
+      { label: "Full Body Armour",  value: "$4,500" },
+      { label: "Sniper Ammo ×50",   value: "$750 (~$15/round)" },
+      { label: "Typical session",   value: "$5K–$75K" },
+      { label: "Economic role",     value: "Pure consumption — no yield" },
+    ],
+    note: "Ammo and armour prices unchanged since 2013 launch. Recurring session cost — GTA$ exits the economy on every use. Scaled to mission payouts over time.",
+    shareText: "GTA Online weapons & ammo: $4,500 armour + $750 per 50 sniper rounds. Session cost $5K–$75K. Unchanged since 2013. Follow the GTA$.",
+  },
+  "online-clothing": {
+    variant: "consumption",
+    game: "gta-online",
+    name: "Clothing & Cosmetics",
+    subtitle: "GTA Online · Cosmetic consumable",
+    thumbnail: "/assets/gta5/dlc/casino-work.jpg",
+    fields: [
+      { label: "Basic items",       value: "~$1K–$50K" },
+      { label: "Rare/event items",  value: "~$100K–$500K" },
+      { label: "Economic role",     value: "Pure consumption — no yield" },
+      { label: "Resale value",      value: "None" },
+    ],
+    note: "Cosmetics are one-way expenditure — GTA$ leaves the economy permanently. Premium event items drive recurring real-money spend via Shark Cards.",
+    shareText: "GTA Online clothing: $1K–$500K. Pure consumption — GTA$ exits the circular flow. The vanity economy is Rockstar's secondary revenue driver.",
+  },
 };
 
 const entry = EXPENDITURE_DATA[id];

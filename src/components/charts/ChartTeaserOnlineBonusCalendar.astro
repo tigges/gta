@@ -1,0 +1,84 @@
+---
+/**
+ * ChartTeaserOnlineBonusCalendar — static frequency teaser (full-width).
+ * Shows top 8 activities ranked by bonus frequency + days since last bonus.
+ * Data from sale-frequency.json. No D3, no JS — always renders.
+ */
+import saleFreqData from "../../../data/gta-5/economy/sale-frequency.json";
+
+const activities = ((saleFreqData as any).activity_bonuses as any[])
+  .slice(0, 8)
+  .map((a: any) => ({
+    id:       a.activity_id,
+    label:    a.activity_id.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()),
+    count:    a.bonus_count as number,
+    daysAgo:  a.days_since_last_bonus as number,
+    avgGap:   Math.round(a.avg_bonus_gap_weeks as number),
+    nextEst:  a.estimated_next_bonus ? (a.estimated_next_bonus as string).slice(0, 7) : null,
+  }));
+
+const maxCount = Math.max(...activities.map(a => a.count));
+const totalWeeks = 42;
+---
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:var(--c-card)">
+  <!-- Header -->
+  <div class="flex items-start justify-between gap-3 px-5 pt-4 pb-3 border-b border-[#1e1e23]">
+    <div>
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+              style="color:var(--c-title-online);border-color:color-mix(in srgb,var(--c-title-online) 40%,transparent);background:color-mix(in srgb,var(--c-title-online) 10%,transparent)">GTA Online</span>
+        <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+              style="color:var(--c-text-4);border-color:var(--c-border-2)">Promotions</span>
+      </div>
+      <div class="text-sm font-semibold text-zinc-200">Which Activities Get Bonus Events — and How Often</div>
+      <div class="text-[10px] font-mono text-zinc-500 mt-0.5">Each cell = one Thursday update · gold = 2× bonus · bright = 3× · {totalWeeks} weeks tracked</div>
+    </div>
+    <a href="/charts#section-bonus-heatmap"
+       class="shrink-0 text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors uppercase tracking-widest whitespace-nowrap">
+      Full heatmap →
+    </a>
+  </div>
+
+  <!-- Frequency rows -->
+  <div class="px-5 py-4">
+    <div class="grid gap-2">
+      {activities.map(a => {
+        const freqPct = Math.round((a.count / maxCount) * 100);
+        const isRecent = a.daysAgo < 30;
+        const isMidRecent = a.daysAgo < 60;
+        const barColor = isRecent
+          ? "var(--c-brand)"
+          : isMidRecent ? "var(--c-growth)" : "var(--c-text-6)";
+        return (
+          <div class="flex items-center gap-3">
+            <!-- Activity name -->
+            <span class="text-[10px] font-mono text-zinc-400 w-36 shrink-0 truncate">{a.label}</span>
+            <!-- Frequency bar -->
+            <div class="flex-1 h-4 rounded overflow-hidden" style="background:var(--c-bg)">
+              <div class="h-full rounded flex items-center"
+                   style={`width:${freqPct}%;background:${barColor};opacity:0.75`}>
+              </div>
+            </div>
+            <!-- Count + recency -->
+            <div class="flex items-center gap-2 shrink-0 text-[9px] font-mono">
+              <span class="text-zinc-500 w-6 text-right">{a.count}×</span>
+              <span style={`color:${isRecent ? "var(--c-brand)" : "var(--c-text-6)"}`}>
+                {a.daysAgo}d ago
+              </span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <div class="px-5 pb-3 border-t border-[#1e1e23] pt-2.5 flex items-center justify-between gap-2">
+    <div class="flex items-center gap-4 text-[9px] font-mono">
+      <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-sm" style="background:var(--c-brand)"></span><span class="text-zinc-600">2× event</span></span>
+      <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-sm" style="background:var(--c-growth)"></span><span class="text-zinc-600">recent</span></span>
+      <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-sm" style="background:var(--c-text-6)"></span><span class="text-zinc-600">older</span></span>
+    </div>
+    <span class="text-[9px] font-mono text-zinc-700">{totalWeeks} weeks tracked · Rockstar Newswire</span>
+  </div>
+</div>
