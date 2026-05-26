@@ -4,6 +4,7 @@
  * Shows top 8 activities ranked by bonus frequency + days since last bonus.
  * Data from sale-frequency.json. No D3, no JS — always renders.
  */
+import ShareDropdown from "../ShareDropdown.astro";
 import saleFreqData from "../../../data/gta-5/economy/sale-frequency.json";
 
 const activities = ((saleFreqData as any).activity_bonuses as any[])
@@ -73,12 +74,16 @@ const totalWeeks = 42;
     </div>
   </div>
 
-  <div class="px-5 pb-3 border-t border-[#1e1e23] pt-2.5 flex items-center justify-between gap-2">
+  <div class="px-5 pb-3 border-t border-[#1e1e23] pt-2.5 flex items-center justify-between gap-2 flex-wrap">
     <div class="flex items-center gap-4 text-[9px] font-mono">
       <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-sm" style="background:var(--c-brand)"></span><span class="text-zinc-600">2× event</span></span>
       <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-sm" style="background:var(--c-growth)"></span><span class="text-zinc-600">recent</span></span>
       <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-sm" style="background:var(--c-text-6)"></span><span class="text-zinc-600">older</span></span>
+      <span class="text-zinc-600">{totalWeeks} weeks · Rockstar Newswire</span>
     </div>
-    <span class="text-[9px] font-mono text-zinc-700">{totalWeeks} weeks tracked · Rockstar Newswire</span>
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+      <ShareDropdown anchorId="section-bonus-heatmap" shareText="Which GTA Online activities get the most bonus events? {totalWeeks} weeks tracked — Contact Missions and Casino Work dominate. GTAVI.AI" size="sm" />
+    </div>
   </div>
 </div>

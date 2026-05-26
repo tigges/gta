@@ -3,6 +3,7 @@
  * ChartTeaserRevenueSplit — static CSS teaser for GTA V/VI revenue model.
  * Shows the box-sales-to-Shark-Cards shift. No D3, always renders.
  */
+import ShareDropdown from "../ShareDropdown.astro";
 import revenueSplit from "../../../data/franchise/revenue-split.json";
 
 const KEY_YEARS = ["FY2014", "FY2018", "FY2020", "FY2022"];
@@ -77,6 +78,9 @@ const years = (revenueSplit as any).years
 
   <div class="px-5 pb-3 flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
     <span class="text-[10px] text-zinc-600 font-mono">Sources: Take-Two IR quarterly earnings · Wedbush Securities · DFC Intelligence</span>
-    <span class="text-[10px] font-mono text-zinc-700 tracking-widest">GTAVI.AI</span>
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+      <ShareDropdown anchorId="section-revenue-split-chart" shareText="GTA Online revenue grew from 16% to 90% of Take-Two income in 9 years. GTA VI starts from that baseline. GTAVI.AI" size="sm" />
+    </div>
   </div>
 </div>
