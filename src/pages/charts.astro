@@ -241,14 +241,23 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
   const titleParam = new URLSearchParams(window.location.search).get("title");
   if (titleParam) activeTitle = titleParam;
 
-  // ── Identity accent colours for title pill active-state ring ────────────
-  const TITLE_ACCENT: Record<string, string> = {
-    "All":        "rgba(42,42,49,1)",
-    "gta-vi":     "var(--c-title-vi,#ff6b9d)",
-    "gta-online": "var(--c-title-online,#00d4e8)",
-    "gta-v":      "var(--c-title-v,#9898b8)",
-    "franchise":  "var(--c-brand,#f59e0b)",
-  };
+  // ── Filter active/inactive styling from semanticTypes registry ──────────
+  // Active = pillStyle(colorToken); Inactive = muted border + dim text
+  function getFilterColor(id: string): string {
+    const COLORS: Record<string,string> = {
+      "All":        "var(--c-text-4)",
+      "gta-vi":     "var(--c-title-vi)",
+      "gta-online": "var(--c-title-online)",
+      "gta-v":      "var(--c-title-v)",
+      "franchise":  "var(--c-brand)",
+    };
+    return COLORS[id] ?? "var(--c-text-4)";
+  }
+  function filterActiveInline(id: string): string {
+    const c = getFilterColor(id);
+    return `color:${c};border-color:color-mix(in srgb,${c} 40%,transparent);background:color-mix(in srgb,${c} 12%,transparent)`;
+  }
+  const filterInactive = "color:var(--c-text-5);border-color:var(--c-border-2);background:transparent";
 
   // ── Unified filter: both axes applied together ───────────────────────────
   function applyFilters() {
@@ -266,9 +275,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
     document.querySelectorAll<HTMLButtonElement>(".chart-title-filter").forEach(b => {
       const t = b.dataset.title ?? "All";
       const isActive = t === activeTitle;
-      b.style.opacity     = isActive ? String(op.primary) : String(op.tertiary); // --o-tertiary
-      b.style.outline     = isActive ? `2px solid ${TITLE_ACCENT[t] ?? TITLE_ACCENT["All"]}` : "none";
-      b.style.outlineOffset = "2px";
+      b.style.cssText = isActive ? filterActiveInline(t) : filterInactive;
     });
 
     // Cover strip visual state

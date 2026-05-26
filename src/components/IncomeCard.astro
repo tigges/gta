@@ -1,0 +1,492 @@
+---
+/**
+ * IncomeCard.astro — Unified income source card for all titles.
+ *
+ * Replaces: ProfitCard.astro · IncomePredictionCard.astro · IncomeCard.astro (teaser)
+ *
+ * Game variants (controlled by `game` prop):
+ *   game="gta-online" | "gta-5"  →  Live-data mode: tier S+→D, earnings bar,
+ *                                    setup cost, break-even, bonus/nerf enrichment
+ *   game="gta-vi"                →  Prediction mode: confidence tier, confidence bar
+ *                                    in the enrichment slot, GTA Online analogue,
+ *                                    basis text. Post-launch outcome strip when verified.
+ *
+ * Display density (controlled by `compact` prop):
+ *   compact=false (default)  →  Full profile card — all enrichment rows visible
+ *   compact=true             →  Teaser — thumbnail + name + rate + bar only,
+ *                               always links to the full profile via `href`
+ *
+ * Card contract:
+ *   TOP-LEFT   GamePill (always)
+ *   TOP-RIGHT  Tier badge (S+/A/B for GTA Online · CONFIRMED/REPORTED/PREDICTED for GTA VI)
+ *   Body       Type · solo · difficulty / region · trailer evidence
+ *              Name (text-sm font-semibold)
+ *              Rate display (GTA$/hr + per-run · or TBD)
+ *              Earnings bar / Confidence bar
+ *              Enrichment: setup+break-even / confidence+analogue
+ *              Tips / Basis
+ *              Outcome strip (GTA VI verified only)
+ *   Footer     DLC label · Full profile → · GTAVI.AI · Share
+ */
+import GamePill from "./GamePill.astro";
+import ShareDropdown from "./ShareDropdown.astro";
+import { playTypeColor, getRegionType, getConfidenceType, pillStyle } from "../config/semanticTypes";
+import { TIER_STYLES } from "../config/tierStyles";
+
+interface LootTier { loot: string; value: number; frequency?: string; }
+
+type GameProp = "gta-vi" | "gta-online" | "gta-v" | "gta-6" | "gta-5";
+
+interface Props {
+  // ── Identity ──────────────────────────────────────────────────────────────
+  id:       string;
+  name:     string;
+  game:     GameProp;
+  category: string;
+
+  // ── GTA Online / GTA V: live data ────────────────────────────────────────
+  tier?:                "S+" | "S" | "A" | "B" | "C" | "D";
+  net_profit_per_hr?:   number;
+  max_profit_per_hr?:   number;
+  setup_cost_full?:     number;
+  setup_cost_min?:      number;
+  break_even_hrs?:      number;
+  play_type?:           string;
+  difficulty?:          number;
+  min_players?:         number;
+  max_players?:         number;
+  solo?:                boolean;
+  dlc?:                 string;
+  prerequisite?:        string;
+  payout_per_run_min?:  number;
+  payout_per_run_max?:  number;
+  avg_run_time_min?:    number;
+  loot_tiers?:          LootTier[];
+  tips?:                string[];
+  notes?:               string;   // kept for compat, not rendered
+  last_nerfed?:         string | null;
+  last_nerfed_notes?:   string | null;
+  sale_discount_pct?:   number;
+  daily_fee?:           number;
+  bonus_count?:         number;
+  bonus_last_date?:     string;
+  bonus_avg_gap_weeks?: number;
+  peak_gta_per_hr?:     number;
+
+  // ── GTA VI: prediction data ──────────────────────────────────────────────
+  region?:                    "vice-city" | "leonida" | "both";
+  confidence_tier?:           "confirmed" | "reported" | "predicted";
+  confidence_score?:          number;   // 0–100
+  predicted_payout_per_run?:  string;
+  predicted_gta_per_hr?:      string;
+  prediction_range?:          { low: string; high: string } | null;
+  trailer_evidence?:          string;
+  analogous_gta_online?:      string;
+  basis?:                     string;
+  outcome_verified?:          boolean;
+  outcome_actual?:            string;
+  outcome_date?:              string;
+  source?:                    string;
+  source_type?:               string;
+
+  // ── Shared ───────────────────────────────────────────────────────────────
+  thumbnail?:   string;
+  share_url?:   string;
+  compact?:     boolean;   // true = teaser, always links to full via href
+  href?:        string;    // explicit link (auto-derived if omitted)
+}
+
+const {
+  id, name, game: gameProp, category,
+  tier = "B", net_profit_per_hr = 0, max_profit_per_hr = 1200000,
+  setup_cost_full, setup_cost_min, break_even_hrs,
+  play_type, difficulty = 3, min_players = 1, max_players = 4, solo = true, dlc,
+  prerequisite, payout_per_run_min, payout_per_run_max, avg_run_time_min,
+  loot_tiers, tips, sale_discount_pct,
+  last_nerfed, last_nerfed_notes, daily_fee,
+  bonus_count, bonus_last_date, bonus_avg_gap_weeks, peak_gta_per_hr,
+  region, confidence_tier = "predicted", confidence_score = 0,
+  predicted_payout_per_run, predicted_gta_per_hr,
+  prediction_range, trailer_evidence, analogous_gta_online, basis,
+  outcome_verified, outcome_actual, outcome_date, source,
+  thumbnail, share_url, compact = false, href: hrefProp,
+} = Astro.props;
+
+// Normalise game aliases
+const game = (gameProp === "gta-6") ? "gta-vi" : (gameProp === "gta-5") ? "gta-v" : gameProp;
+const isGtaVI   = game === "gta-vi";
+const isOnline  = game === "gta-online";
+const isGtaV    = game === "gta-v";
+
+const GAME_PILL_MAP: Record<string, string> = {
+  "gta-vi": "gta-vi", "gta-online": "gta-online", "gta-v": "gta-v",
+};
+
+// ── GTA Online tier styling (using token vars) ────────────────────────────
+const TIER_COLOR: Record<string, string> = {
+  "S+": "var(--c-growth)",   S: "var(--c-brand)",
+  A:    "var(--c-live)",     B: "var(--c-economy)",
+  C:    "var(--c-text-4)",   D: "var(--c-text-6)",
+};
+const tierColor  = TIER_COLOR[tier] ?? "var(--c-text-4)";
+const tierBorder = `color-mix(in srgb,${tierColor} 30%,transparent)`;
+const tierBg     = `color-mix(in srgb,${tierColor} 12%,transparent)`;
+
+// ── GTA VI confidence styling ─────────────────────────────────────────────
+const confType  = isGtaVI ? getConfidenceType(confidence_tier) : null;
+const confColor = confType?.colorToken ?? "var(--c-text-4)";
+
+// ── Card border colour ────────────────────────────────────────────────────
+const cardBorderColor = isGtaVI ? confColor : tierColor;
+
+// ── Play type + region ────────────────────────────────────────────────────
+const playColor   = playTypeColor(play_type ?? category ?? "");
+const regionType  = (isGtaVI && region) ? getRegionType(region) : null;
+const regionLabel = regionType?.label ?? null;
+const regionColor = regionType?.colorToken ?? null;
+
+// ── GTA Online bar + enrichment ───────────────────────────────────────────
+const barPct = isOnline || isGtaV
+  ? Math.min(100, Math.round((net_profit_per_hr / max_profit_per_hr) * 100))
+  : confidence_score;
+
+const DIFF_LABEL: Record<number, string> = {
+  1:"very easy", 2:"easy", 3:"medium", 4:"hard", 5:"very hard",
+};
+const diffLabel    = DIFF_LABEL[difficulty] ?? "medium";
+const prereqShort  = prerequisite?.replace(/\(.*\)/, "").replace(/\$[\d,.]+M?/g, "").trim().split(" ").slice(0, 3).join(" ") ?? null;
+const bonusDaysAgo = bonus_last_date ? Math.round((Date.now() - new Date(bonus_last_date).getTime()) / (1000*60*60*24)) : null;
+const bonusActive  = bonusDaysAgo !== null && bonusDaysAgo < 8;
+const pctDelta     = (peak_gta_per_hr && peak_gta_per_hr > net_profit_per_hr * 1.1)
+  ? Math.round(((net_profit_per_hr - peak_gta_per_hr) / peak_gta_per_hr) * 100) : null;
+
+// ── Deep-link / share ─────────────────────────────────────────────────────
+const fullHref = hrefProp ?? (
+  isOnline ? `/gta-online/income/${id}` :
+  isGtaVI  ? `/gta-vi/intel#income-pred-${id}` :
+  undefined
+);
+const khr = net_profit_per_hr ? Math.round(net_profit_per_hr / 1000) : 0;
+const shareText = isGtaVI
+  ? `${name} — ${confidence_score}% confidence · ${predicted_gta_per_hr ?? predicted_payout_per_run ?? "TBC"} · GTAVI.AI`
+  : `${name} — ${tier}-tier · $${khr}k/hr${solo ? " · solo" : ""}. Full profile on GTAVI.AI`;
+const anchorId = isGtaVI ? `income-pred-${id}` : `profit-${id}`;
+
+// ── Compact: no enrichment rows, must link to full ────────────────────────
+const showEnrichment = !compact;
+---
+
+<div
+  id={anchorId}
+  class="income-card group relative flex flex-col rounded-xl border overflow-hidden transition-all duration-200 hover:brightness-110"
+  style={`background:var(--c-card);border-color:${tierBorder};scroll-margin-top:72px`}
+  data-income-id={id}
+  data-game={game}
+  data-category={category}
+>
+  <!-- Compact overlay link — entire card is clickable in teaser mode -->
+  {compact && fullHref && (
+    <a href={fullHref} class="absolute inset-0 z-10" aria-label={name} tabindex="-1"></a>
+  )}
+
+  <!-- ── Thumbnail ──────────────────────────────────────────────────────── -->
+  {thumbnail ? (
+    <div class="relative overflow-hidden" style={compact ? "height:96px" : "height:140px"}>
+      <img src={thumbnail} alt={name}
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        loading="lazy" />
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 30%,var(--c-card) 100%)"></div>
+      <!-- GamePill always top-left -->
+      <div class="absolute top-2 left-2 z-20">
+        <GamePill game={GAME_PILL_MAP[game] as any} size="xs" />
+      </div>
+      <!-- Tier / confidence badge top-right -->
+      <div class="absolute top-2 right-2 z-20">
+        {isGtaVI && confType ? (
+          <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+                style={pillStyle(confColor)}>
+            {confType.label}
+          </span>
+        ) : (
+          <span class="font-mono font-black text-lg leading-none px-1.5 py-0.5 rounded"
+                style={`color:${tierColor};background:${tierBg};border:1px solid ${tierBorder}`}>
+            {tier}
+          </span>
+        )}
+      </div>
+    </div>
+  ) : (
+    <div class="px-4 pt-3 pb-2 flex items-center justify-between relative z-20">
+      <GamePill game={GAME_PILL_MAP[game] as any} size="xs" />
+      {isGtaVI && confType ? (
+        <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+              style={pillStyle(confColor)}>
+          {confType.label}
+        </span>
+      ) : (
+        <span class="font-mono font-black text-2xl leading-none" style={`color:${tierColor}`}>{tier}</span>
+      )}
+    </div>
+  )}
+
+  <!-- ── Body ───────────────────────────────────────────────────────────── -->
+  <div class="px-4 pt-3 pb-2 flex-1 flex flex-col gap-2 relative z-20">
+
+    <!-- Context row: type · region/solo/difficulty · trailer evidence -->
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <span class="text-[10px] font-mono uppercase tracking-widest" style={`color:${playColor}`}>
+        {play_type ?? category}
+      </span>
+      {isGtaVI ? (
+        <>
+          {regionLabel && regionColor && (
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border uppercase tracking-widest"
+                  style={`color:${regionColor};border-color:color-mix(in srgb,${regionColor} 35%,transparent);background:color-mix(in srgb,${regionColor} 12%,transparent)`}>
+              {regionLabel}
+            </span>
+          )}
+          {trailer_evidence && (
+            <span class="text-[10px] font-mono text-zinc-600">▶ {trailer_evidence}</span>
+          )}
+        </>
+      ) : (
+        <>
+          {solo
+            ? <span class="text-[10px] font-mono border border-gta-teal/25 bg-gta-teal/8 px-1 py-0.5 rounded" style="color:var(--c-live)">solo ✓</span>
+            : min_players && <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{min_players}–{max_players}p</span>
+          }
+          <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{diffLabel}</span>
+        </>
+      )}
+    </div>
+
+    <!-- Name -->
+    {(!compact && isOnline) ? (
+      <a href={`/gta-online/income/${id}`}
+         class="font-semibold text-zinc-200 text-sm leading-snug hover:text-white transition-colors">
+        {name}
+      </a>
+    ) : (
+      <div class="font-semibold text-zinc-200 text-sm leading-snug">{name}</div>
+    )}
+
+    <!-- Rate display -->
+    <div>
+      <div class="flex items-baseline justify-between mb-1">
+        {isGtaVI ? (
+          <>
+            <div>
+              <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">GTA$/HR</div>
+              <div class="text-base font-mono font-bold" style={`color:${confColor}`}>
+                {predicted_gta_per_hr ?? "N/A — pre-launch"}
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Per Run</div>
+              <div class="text-[11px] font-mono" style={`color:${confColor}`}>
+                {predicted_payout_per_run ?? "TBC"}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <span class="text-xl font-mono font-bold" style={`color:${tierColor}`}>
+              ${Math.round(net_profit_per_hr / 1000)}k
+              <span class="text-[10px] font-normal text-zinc-600 ml-0.5">/hr</span>
+            </span>
+            <div class="text-right leading-tight">
+              {(payout_per_run_min || payout_per_run_max) && (
+                <div class="text-[11px] font-mono text-zinc-500">
+                  ${((payout_per_run_max ?? payout_per_run_min ?? 0) / 1_000_000).toFixed(1)}M/run
+                </div>
+              )}
+              {avg_run_time_min && (
+                <div class="text-[11px] font-mono text-zinc-600">{avg_run_time_min}min</div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+
+      <!-- Rate bar (earnings) or Confidence bar (GTA VI) -->
+      <div class="h-1.5 rounded-full overflow-hidden" style="background:var(--c-border-1)">
+        <div class="h-full rounded-full transition-all duration-700"
+             style={`width:${barPct}%;background:${isGtaVI ? confColor : tierColor};opacity:0.85`}></div>
+      </div>
+    </div>
+
+    {/* ── Compact stops here — no enrichment ─────────────────────────── */}
+    {showEnrichment && (
+      <>
+        <!-- Sale badge (GTA Online) -->
+        {sale_discount_pct && (
+          <div class="flex items-center gap-1.5 text-[11px] font-mono">
+            <span class="px-1.5 py-0.5 rounded font-bold tracking-wide"
+              style="background:rgba(34,197,94,0.15);color:var(--c-growth);border:1px solid rgba(34,197,94,0.3)">
+              🏷 {sale_discount_pct}% OFF THIS WEEK
+            </span>
+          </div>
+        )}
+
+        <!-- Enrichment slot: Setup + break-even (GTA Online) OR Confidence + analogue (GTA VI) -->
+        {isGtaVI ? (
+          <div class="grid grid-cols-2 gap-x-3 text-[10px] font-mono border-t border-[#1e1e23] pt-2">
+            <div>
+              <div class="text-zinc-600 uppercase tracking-widest mb-0.5">Confidence</div>
+              <div style={`color:${confColor}`}>{confidence_score}%</div>
+            </div>
+            {analogous_gta_online && (
+              <div>
+                <div class="text-zinc-600 uppercase tracking-widest mb-0.5">GTA Online analogue</div>
+                <a href={`/database?id=${analogous_gta_online}`}
+                   class="text-zinc-400 hover:text-gta-teal transition-colors capitalize leading-tight">
+                  {analogous_gta_online.replace(/-/g, " ")} →
+                </a>
+              </div>
+            )}
+          </div>
+        ) : setup_cost_full ? (
+          <div class="grid grid-cols-2 gap-x-3 text-[10px] font-mono">
+            <div>
+              <div class="text-zinc-600 uppercase tracking-widest mb-0.5">Setup</div>
+              <div class="text-zinc-300">
+                ${(setup_cost_full / 1_000_000).toFixed(1)}M
+                {prereqShort && <span class="text-zinc-600 ml-1">({prereqShort})</span>}
+              </div>
+            </div>
+            {break_even_hrs && (
+              <div>
+                <div class="text-zinc-600 uppercase tracking-widest mb-0.5">Break-even</div>
+                <div class="text-zinc-300">{break_even_hrs}h</div>
+              </div>
+            )}
+          </div>
+        ) : null}
+
+        <!-- Prediction range (GTA VI) -->
+        {isGtaVI && prediction_range && (
+          <div class="text-[10px] font-mono text-zinc-600">
+            Range: <span class="text-zinc-500">{prediction_range.low}</span>
+            <span> — </span>
+            <span class="text-zinc-500">{prediction_range.high}</span>
+          </div>
+        )}
+
+        <!-- Loot tiers (GTA Online heists) -->
+        {loot_tiers && loot_tiers.length > 0 && (
+          <div class="text-[11px] font-mono text-zinc-600">
+            <span class="text-[10px] text-zinc-500 uppercase tracking-widest mr-1">Loot:</span>
+            {loot_tiers.slice(0, 2).map((l: LootTier, i: number) => (
+              <span>
+                {i > 0 && <span class="text-zinc-500 mx-1">·</span>}
+                <span style={`color:${tierColor}`}>${(l.value / 1_000_000).toFixed(1)}M</span>
+                <span class="text-zinc-500 ml-0.5">{(l.loot as string).split(" ").slice(0, 2).join(" ")}</span>
+              </span>
+            ))}
+          </div>
+        )}
+
+        <!-- Basis text (GTA VI, replaces tips) -->
+        {isGtaVI && basis && (
+          <div class="rounded-lg px-2.5 py-2 text-[10px] font-mono text-zinc-400 border-t border-[#1e1e23] pt-2 flex gap-1.5 items-start">
+            <span class="text-zinc-600 shrink-0">▶</span>
+            <span class="leading-snug">{basis}</span>
+          </div>
+        )}
+
+        <!-- Daily fee (GTA Online) -->
+        {!isGtaVI && daily_fee && (
+          <div class="text-[11px] font-mono text-zinc-600 border-t border-[#1e1e23] pt-2 flex items-center gap-1.5">
+            <span style="color:var(--c-text-6)">⚙</span>
+            <span>${daily_fee.toLocaleString()}/day upkeep</span>
+            <span class="text-zinc-500 ml-0.5">(${Math.round(daily_fee * 365 / 1000)}k/yr)</span>
+          </div>
+        )}
+
+        <!-- Bonus cadence (GTA Online) -->
+        {!isGtaVI && bonus_count && (
+          <div class={`text-[11px] font-mono flex items-center gap-1.5 ${daily_fee ? "" : "border-t border-[#1e1e23] pt-2"}`}>
+            {bonusActive ? (
+              <span class="font-bold px-1.5 py-0.5 rounded"
+                    style="color:var(--c-growth);background:color-mix(in srgb,var(--c-growth) 12%,transparent);border:1px solid color-mix(in srgb,var(--c-growth) 25%,transparent)">
+                🔁 BONUS ACTIVE NOW
+              </span>
+            ) : (
+              <span style="color:var(--c-text-6)">
+                🔁 Bonus ×{bonus_count}
+                {bonusDaysAgo !== null && <span> · last {bonusDaysAgo}d ago</span>}
+                {bonus_avg_gap_weeks && <span class="text-zinc-500"> · ~{Math.round(bonus_avg_gap_weeks)}w avg</span>}
+              </span>
+            )}
+          </div>
+        )}
+
+        <!-- Nerf indicator (GTA Online) -->
+        {!isGtaVI && last_nerfed && (
+          <div class={`text-[11px] font-mono flex items-center gap-1.5 ${(daily_fee || bonus_count) ? "" : "border-t border-[#1e1e23] pt-2"}`}
+               style="color:var(--c-brand)">
+            <span>⚡</span>
+            <span>Nerfed {new Date(last_nerfed).toLocaleDateString("en-GB", { month:"short", year:"numeric" })}</span>
+            {pctDelta && peak_gta_per_hr && (
+              <span class="text-zinc-500">· was ${Math.round(peak_gta_per_hr / 1000)}k/hr ({pctDelta}%)</span>
+            )}
+            {last_nerfed_notes && !pctDelta && (
+              <span class="text-zinc-500">— {(last_nerfed_notes as string).split(".")[0]}</span>
+            )}
+          </div>
+        )}
+
+        <!-- Top tip (GTA Online) -->
+        {!isGtaVI && tips && tips[0] && (
+          <div class="rounded-lg px-2.5 py-2 text-[11px] font-mono text-zinc-400 border-t border-[#1e1e23] pt-2 flex gap-1.5 items-start">
+            <span style="color:var(--c-brand)" class="shrink-0">▶</span>
+            <span class="leading-snug">{tips[0]}</span>
+          </div>
+        )}
+
+        <!-- GTA VI: outcome verification strip -->
+        {isGtaVI && outcome_verified && outcome_actual && (
+          <div class="border-t pt-2.5 mt-1" style="border-color:color-mix(in srgb,var(--c-live) 30%,transparent)">
+            <div class="grid grid-cols-2 gap-x-3 text-[10px] font-mono">
+              <div>
+                <div class="text-zinc-600 uppercase tracking-widest mb-0.5">Predicted</div>
+                <div class="text-zinc-500">{predicted_gta_per_hr ?? predicted_payout_per_run ?? "—"}</div>
+              </div>
+              <div>
+                <div style="color:var(--c-live)" class="uppercase tracking-widest mb-0.5 text-[10px] font-mono">Actual</div>
+                <div class="font-semibold" style="color:var(--c-live)">{outcome_actual}</div>
+              </div>
+            </div>
+            {outcome_date && (
+              <div class="text-[9px] font-mono text-zinc-700 mt-1">Verified {outcome_date}</div>
+            )}
+          </div>
+        )}
+      </>
+    )}
+
+  </div>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+  <div class="px-4 py-2.5 border-t flex items-center justify-between gap-2 relative z-20"
+       style="border-color:var(--c-border-1);background:var(--c-bg)">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="text-[10px] font-mono text-zinc-500 truncate">
+        {dlc?.split("(")[0]?.trim() ?? (isGtaVI ? "GTA VI" : isOnline ? "GTA Online" : "GTA V")}
+      </span>
+      {!compact && fullHref && (
+        <a href={fullHref}
+           class="text-[10px] font-mono hover:transition-colors tracking-widest uppercase shrink-0"
+           style="color:color-mix(in srgb,var(--c-live) 60%,transparent)"
+           onmouseover="this.style.color='var(--c-live)'" onmouseout="this.style.color='color-mix(in srgb,var(--c-live) 60%,transparent)'">
+          {isGtaVI ? "Full analysis →" : "Full profile →"}
+        </a>
+      )}
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="text-[10px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
+    </div>
+  </div>
+
+</div>

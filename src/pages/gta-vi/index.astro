@@ -7,7 +7,7 @@
 import Base from "../../layouts/Base.astro";
 import GamePill from "../../components/GamePill.astro";
 import PredictionCard from "../../components/PredictionCard.astro";
-import IncomePredictionCard from "../../components/IncomePredictionCard.astro";
+import IncomeCard from "../../components/IncomeCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
 import EconomyCircle from "../../components/EconomyCircle.astro";
 import Countdown from "../../components/Countdown.astro";
@@ -242,7 +242,7 @@ const featuredIncome = incomeList
     <section>
       <div class="flex items-center gap-3 mb-6">
         <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The Dual Economy — where does the money go?</span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The Dual Economy · Simplified · where does the money go?</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
 
@@ -267,9 +267,10 @@ const featuredIncome = incomeList
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {featuredIncome.map((entry: any) => (
-              <IncomePredictionCard
+              <IncomeCard
                 id={entry.id}
                 name={entry.name}
+                game="gta-vi"
                 category={entry.category}
                 region={entry.region}
                 confidence_tier={entry.confidence_tier}
@@ -281,7 +282,6 @@ const featuredIncome = incomeList
                 analogous_gta_online={entry.analogous_gta_online}
                 basis={entry.basis}
                 prediction_range={entry.prediction_range}
-                detailHref={`/gta-vi/intel#income-pred-${entry.id}`}
               />
             ))}
           </div>
@@ -292,18 +292,28 @@ const featuredIncome = incomeList
           <div class="flex items-center gap-2 mb-3">
             <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending)">C+I — Expenditure</span>
             <div class="flex-1 h-px" style="background:rgba(245,158,11,0.2)"></div>
-            <!-- No dedicated GTA VI I&C database yet — links to economy model page.
-                 TODO: build /gta-vi/intel#section-expenditure-predictions once
-                 investment & consumption prediction cards are added. -->
+            <!-- No dedicated GTA VI I&C database yet — links to economy model page -->
             <a href="/gta-vi/economy"
                class="text-[10px] font-mono uppercase tracking-widest transition-colors shrink-0"
                style="color:var(--c-brand);opacity:var(--o-secondary)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='var(--o-secondary)'">
               All I &amp; C Cards →
             </a>
           </div>
+          <!-- Investment row -->
+          <div class="mb-2">
+            <span class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-economy);opacity:var(--o-secondary)">I — Investment</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <ExpenditureCard id="vi-property" />
+            <ExpenditureCard id="vi-business" />
+          </div>
+          <!-- Consumption row -->
+          <div class="mb-2">
+            <span class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending);opacity:var(--o-secondary)">C — Consumption</span>
+          </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <ExpenditureCard id="nightclub" />
-            <ExpenditureCard id="bunker" />
+            <ExpenditureCard id="vi-clothing" />
+            <ExpenditureCard id="vi-ammo" />
           </div>
         </div>
 

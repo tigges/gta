@@ -25,7 +25,8 @@ const { id } = Astro.props;
 
 // ── Draft data — hardcoded until expenditure.json schema is validated ────────
 const EXPENDITURE_DATA: Record<string, {
-  variant: "investment" | "injection";
+  variant: "investment" | "injection" | "consumption";
+  game: "gta-online" | "gta-vi";
   name: string;
   subtitle: string;
   thumbnail: string;
@@ -35,6 +36,7 @@ const EXPENDITURE_DATA: Record<string, {
 }> = {
   "nightclub": {
     variant: "investment",
+    game: "gta-online",
     name: "Maze Bank Arena Nightclub",
     subtitle: "GTA Online · Passive business",
     thumbnail: "/assets/gta6/locations/Vice_City_04.jpg",
@@ -49,6 +51,7 @@ const EXPENDITURE_DATA: Record<string, {
   },
   "bunker": {
     variant: "investment",
+    game: "gta-online",
     name: "Farmhouse Bunker",
     subtitle: "GTA Online · Supply business",
     thumbnail: "/assets/gta6/locations/Grassrivers_01.jpg",
@@ -63,6 +66,7 @@ const EXPENDITURE_DATA: Record<string, {
   },
   "megalodon": {
     variant: "injection",
+    game: "gta-online",
     name: "Megalodon Shark Card",
     subtitle: "GTA Online · Real-money injection",
     thumbnail: "/assets/gta6/locations/Vice_City_06.jpg",
@@ -77,6 +81,7 @@ const EXPENDITURE_DATA: Record<string, {
   },
   "gta-plus": {
     variant: "injection",
+    game: "gta-online",
     name: "GTA+ Subscription",
     subtitle: "GTA Online · Monthly subscription",
     thumbnail: "/assets/gta6/locations/Ambrosia_02.jpg",
@@ -89,26 +94,125 @@ const EXPENDITURE_DATA: Record<string, {
     note: "Recurring subscription model. GTA$ injection at month start plus rotating exclusive benefits. ~8.3% of the Megalodon value per month.",
     shareText: "GTA+ at $5.99/month gives 500K GTA$ + exclusive perks. The subscription model that will likely expand significantly in GTA VI.",
   },
+
+  // ── GTA VI predicted expenditure cards ───────────────────────────────────
+  "vi-property": {
+    variant: "investment",
+    game: "gta-vi",
+    name: "Vice City Property",
+    subtitle: "GTA VI · Predicted residential investment",
+    thumbnail: "/assets/gta6/locations/Vice_City_01.jpg",
+    fields: [
+      { label: "Purchase Cost",   value: "~$500K–$5M GTA$ (predicted)" },
+      { label: "Passive Yield",   value: "N/A — awaiting live data" },
+      { label: "Break-even",      value: "N/A — pre-launch" },
+      { label: "Income type",     value: "Passive / Semi-passive" },
+    ],
+    note: "Property ownership confirmed in Trailer 2. Purchase cost extrapolated from GTA Online trajectory with CPI adjustment. Yield TBC at launch.",
+    shareText: "GTA VI Vice City property: ~$500K–$5M predicted buy-in. Passive income yield TBC. Follow the GTA$.",
+  },
+  "vi-business": {
+    variant: "investment",
+    game: "gta-vi",
+    name: "Leonida Business Venture",
+    subtitle: "GTA VI · Predicted commercial investment",
+    thumbnail: "/assets/gta6/locations/Ambrosia_01.jpg",
+    fields: [
+      { label: "Purchase Cost",   value: "N/A — pre-launch" },
+      { label: "Estimated Yield", value: "N/A — awaiting live data" },
+      { label: "Break-even",      value: "N/A — pre-launch" },
+      { label: "Income type",     value: "Semi-passive (predicted)" },
+    ],
+    note: "Business ownership predicted from GTA Online playbook. Leonida region businesses visible in Trailer 2. Specific mechanics TBC at launch.",
+    shareText: "GTA VI Leonida business buy-in: cost and yield TBC. Predicted semi-passive income source. Follow the GTA$.",
+  },
+  "vi-clothing": {
+    variant: "consumption",
+    game: "gta-vi",
+    name: "Clothing & Cosmetics",
+    subtitle: "GTA VI · Predicted consumable",
+    thumbnail: "/assets/gta6/characters/Lucia_Caminos_01.jpg",
+    fields: [
+      { label: "Item Cost",         value: "N/A — awaiting live data" },
+      { label: "GTA Online analogue", value: "~$5K–$500K per outfit" },
+      { label: "Economic role",     value: "Pure consumption — no yield" },
+      { label: "Resale value",      value: "None" },
+    ],
+    note: "Vice City fashion confirmed in both trailers. Dual-protagonist wardrobe system likely. GTA$ exits the economy permanently on purchase.",
+    shareText: "GTA VI clothing: confirmed in trailers, cost TBC. Pure C-type expenditure — GTA$ leaves the economy. Follow the GTA$.",
+  },
+  "vi-ammo": {
+    variant: "consumption",
+    game: "gta-vi",
+    name: "Weapons & Ammo",
+    subtitle: "GTA VI · Predicted consumable",
+    thumbnail: "/assets/gta6/locations/Grassrivers_03.jpg",
+    fields: [
+      { label: "Item Cost",         value: "N/A — awaiting live data" },
+      { label: "GTA Online analogue", value: "~$500–$75K per session" },
+      { label: "Economic role",     value: "Pure consumption — no yield" },
+      { label: "Resale value",      value: "None" },
+    ],
+    note: "Weapons confirmed across all trailers. Ammo costs likely scaled to mission payouts. Core C-flow expenditure — enables Y earnings without direct return.",
+    shareText: "GTA VI weapons & ammo: TBC pricing. Enables income but is itself pure consumption. Part of the GTA$ circular flow.",
+  },
+
+  // ── GTA Online consumption cards ─────────────────────────────────────────
+  "online-ammo": {
+    variant: "consumption",
+    game: "gta-online",
+    name: "Weapons & Ammo",
+    subtitle: "GTA Online · Per-session consumable",
+    thumbnail: "/assets/gta5/dlc/daily-objectives.jpg",
+    fields: [
+      { label: "Full Body Armour",  value: "$4,500" },
+      { label: "Sniper Ammo ×50",   value: "$750 (~$15/round)" },
+      { label: "Typical session",   value: "$5K–$75K" },
+      { label: "Economic role",     value: "Pure consumption — no yield" },
+    ],
+    note: "Ammo and armour prices unchanged since 2013 launch. Recurring session cost — GTA$ exits the economy on every use. Scaled to mission payouts over time.",
+    shareText: "GTA Online weapons & ammo: $4,500 armour + $750 per 50 sniper rounds. Session cost $5K–$75K. Unchanged since 2013. Follow the GTA$.",
+  },
+  "online-clothing": {
+    variant: "consumption",
+    game: "gta-online",
+    name: "Clothing & Cosmetics",
+    subtitle: "GTA Online · Cosmetic consumable",
+    thumbnail: "/assets/gta5/dlc/casino-work.jpg",
+    fields: [
+      { label: "Basic items",       value: "~$1K–$50K" },
+      { label: "Rare/event items",  value: "~$100K–$500K" },
+      { label: "Economic role",     value: "Pure consumption — no yield" },
+      { label: "Resale value",      value: "None" },
+    ],
+    note: "Cosmetics are one-way expenditure — GTA$ leaves the economy permanently. Premium event items drive recurring real-money spend via Shark Cards.",
+    shareText: "GTA Online clothing: $1K–$500K. Pure consumption — GTA$ exits the circular flow. The vanity economy is Rockstar's secondary revenue driver.",
+  },
 };
 
 const entry = EXPENDITURE_DATA[id];
 if (!entry) throw new Error(`ExpenditureCard: unknown id "${id}"`);
 
 const anchorId = `exp-${id}`;
-const isInvestment = entry.variant === "investment";
 
 const VARIANT_STYLES = {
   investment: {
-    label:      "INVESTMENT",
-    badgeBg:    "bg-amber-900/20 border-amber-500/60 text-amber-200",
-    border:     "border-l-amber-500",
-    valueCls:   "text-gta-gold",
+    label:    "INVESTMENT",
+    badgeBg:  "bg-amber-900/20 border-amber-500/60 text-amber-200",
+    border:   "border-l-amber-500",
+    valueCls: "text-gta-gold",
   },
   injection: {
-    label:      "INJECTION",
-    badgeBg:    "bg-indigo-900/20 border-indigo-500/60 text-indigo-200",
-    border:     "border-l-indigo-400",
-    valueCls:   "text-indigo-300",
+    label:    "INJECTION",
+    badgeBg:  "bg-indigo-900/20 border-indigo-500/60 text-indigo-200",
+    border:   "border-l-indigo-400",
+    valueCls: "text-indigo-300",
+  },
+  consumption: {
+    label:    "CONSUMPTION",
+    badgeBg:  "bg-orange-900/20 border-orange-500/60 text-orange-200",
+    border:   "border-l-orange-500",
+    valueCls: "text-orange-300",
   },
 };
 const style = VARIANT_STYLES[entry.variant];
@@ -127,7 +231,7 @@ const style = VARIANT_STYLES[entry.variant];
 
   <!-- Pills bar -->
   <div class="absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-2.5 z-10">
-    <GamePill game="gta-online" size="xs" />
+    <GamePill game={entry.game} size="xs" />
     <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ${style.badgeBg}`}>
       {style.label}
     </span>

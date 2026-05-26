@@ -8,6 +8,7 @@
  */
 import type { EconomyModel, EconomyModelsData, EconomyNode, EconomyFlow, ColorToken, FlowAnimationToken } from "../types/gta";
 import economyData from "../../data/franchise/economy-models.json";
+import GamePill from "./GamePill.astro";
 
 interface Props {
   titleId: string;
@@ -40,17 +41,6 @@ const nodeMap: Record<string, EconomyNode> = Object.fromEntries(economy.nodes.ma
 const flows       = economy.flows;
 const isProjected  = economy.projected === true;
 const isRegression = economy.regression_era === true;
-
-// ── Era badge ────────────────────────────────────────────────────────────────
-const ERA_BADGE: Record<string, string> = {
-  zinc:  "bg-zinc-800/60 border-zinc-700/50 text-zinc-400",
-  amber: "bg-amber-900/30 border-amber-700/40 text-amber-400",
-  green: "bg-green-900/30 border-green-700/40 text-green-400",
-  red:   "bg-red-900/30 border-red-600/40 text-red-400",
-  teal:  "bg-teal-900/30 border-teal-700/40 text-teal-400",
-  gold:  "bg-gta-gold/10 border-gta-gold/30 text-gta-gold",
-};
-const eraBadge = ERA_BADGE[economy.era_badge_color] ?? ERA_BADGE["zinc"]!;
 
 // ── Node grid positions (% of container) ────────────────────────────────────
 // All layouts use absolute positioning so JS arrow-drawing works uniformly.
@@ -112,6 +102,18 @@ const containerH = isCompact
 // Unique ID for SVG marker namespacing per instance
 const uid = `ce-${titleId}-${Math.random().toString(36).slice(2, 6)}`;
 
+// Map titleId to GamePill game prop
+const TITLE_TO_GAME: Record<string, string> = {
+  "gta-3":      "gta-iii",
+  "gta-vc":     "gta-vc",
+  "gta-sa":     "gta-sa",
+  "gta-4":      "gta-iv",
+  "gta-5":      "gta-v",
+  "gta-online": "gta-online",
+  "gta-6":      "gta-vi",
+};
+const gamePillId = TITLE_TO_GAME[titleId] ?? "franchise";
+
 // Marker colours needed (collect from flows)
 const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))];
 ---
@@ -129,33 +131,25 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 
 <div class="ce-wrapper" data-ce-uid={uid}>
 
-  {/* ── Era badges ────────────────────────────────────────────────────────── */}
+  {/* ── Title row: GamePill + era context (plain text, no pill) ───── */}
   {!isCompact && (
     <div class="flex items-center gap-2 mb-3 flex-wrap">
-      <span class={`text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest ${eraBadge}`}>
-        {economy.era_label}
-      </span>
+      <GamePill game={gamePillId as any} size="xs" />
+      <span class="text-[11px] font-mono text-zinc-500">{economy.era_label}</span>
       {isRegression && (
-        <span class="text-[11px] font-mono bg-red-900/30 border border-red-600/40 text-red-400 px-2 py-0.5 rounded uppercase tracking-widest">
-          Deliberate Regression
-        </span>
+        <span class="text-[11px] font-mono text-zinc-600">· Deliberate Regression</span>
       )}
       {isProjected && (
-        <span class="text-[11px] font-mono bg-gta-gold/20 border border-gta-gold/30 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">
-          Projected
-        </span>
+        <span class="text-[11px] font-mono text-zinc-600">· Projected</span>
       )}
     </div>
   )}
   {isCompact && (
     <div class="flex items-center gap-2 mb-2 flex-wrap">
-      <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${eraBadge}`}>
-        {economy.era_label}
-      </span>
+      <GamePill game={gamePillId as any} size="xs" />
+      <span class="text-[10px] font-mono text-zinc-600">{economy.era_label}</span>
       {isProjected && (
-        <span class="text-[10px] font-mono bg-gta-gold/20 border border-gta-gold/30 text-gta-gold px-1.5 py-0.5 rounded uppercase tracking-widest">
-          Projected
-        </span>
+        <span class="text-[10px] font-mono text-zinc-600">· Projected</span>
       )}
     </div>
   )}

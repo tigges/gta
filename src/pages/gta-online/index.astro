@@ -1,0 +1,312 @@
+---
+/**
+ * /gta-online — GTA Online intelligence hub.
+ * Mirrors the GTA VI Hub structure.
+ * Hero · Weekly Bonuses · Static Chart Teasers (2+1) · Economy · Income/Expenditure · Nav tiles
+ */
+import Base from "../../layouts/Base.astro";
+import GamePill from "../../components/GamePill.astro";
+import EconomyCircle from "../../components/EconomyCircle.astro";
+import IncomeCard from "../../components/IncomeCard.astro";
+import ExpenditureCard from "../../components/ExpenditureCard.astro";
+import ChartTeaserOnlineMetaCeiling  from "../../components/charts/ChartTeaserOnlineMetaCeiling.astro";
+import ChartTeaserOnlineSharkCard    from "../../components/charts/ChartTeaserOnlineSharkCard.astro";
+import ChartTeaserOnlineBonusCalendar from "../../components/charts/ChartTeaserOnlineBonusCalendar.astro";
+
+import steamRaw      from "../../../data/gta-5/meta/steam-players.json";
+import weeklyBonuses from "../../../data/gta-5/economy/weekly-bonuses.json";
+import businessProfs from "../../../data/gta-5/economy/business-profiles.json";
+import bonusHistRaw  from "../../../data/gta-5/economy/bonus-history.json";
+
+// ── Live stats ─────────────────────────────────────────────────────────────
+const steamData   = (steamRaw as any).data as { year: number; month: string; avg_players: number }[];
+const latestSteam = steamData.at(-1);
+const bonuses     = (weeklyBonuses as any).bonuses ?? [];
+const weekStart   = (weeklyBonuses as any).week_start ?? "";
+const histCount   = (bonusHistRaw as any).entry_count ?? 0;
+
+// ── Top income (for compact cards) ────────────────────────────────────────
+const allBiz = ((businessProfs as any).businesses ?? []) as any[];
+const topIncome = allBiz
+  .filter((b: any) => b.net_profit_per_hr && b.setup_cost_full)
+  .sort((a: any, b: any) => b.net_profit_per_hr - a.net_profit_per_hr)
+  .slice(0, 2);
+
+const BIZ_THUMB: Record<string, string> = {
+  "cayo-perico":          "/assets/gta5/dlc/cayo-perico.jpg",
+  "diamond-casino-heist": "/assets/gta5/dlc/diamond-casino-heist.jpg",
+  "agency-vip-contract":  "/assets/gta5/dlc/agency.jpg",
+};
+
+const BONUS_LABEL: Record<string, string> = {
+  "contact-missions": "Contact Missions",
+  "casino-missions":  "Casino Work",
+  "vip-work":         "VIP Work",
+  "heists":           "Heists",
+  "races":            "Races",
+  "stunt-races":      "Stunt Races",
+  "adversary":        "Adversary Modes",
+  "survival":         "Survival",
+};
+---
+
+<Base
+  title="GTA Online"
+  titleContext="gta-online"
+  description="GTA Online economy intelligence — income sources ranked, Shark Card inflation tracked, weekly bonuses live, and 12 years of economic data. Follow the GTA$. v2"
+>
+
+  <!-- ══════════════════════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════════════════════ -->
+  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:320px;display:flex;align-items:flex-end">
+    <div class="absolute inset-0">
+      <img src="/assets/gta6/locations/Vice_City_03.jpg" alt=""
+           class="w-full h-full object-cover" style="object-position:center 30%" aria-hidden="true" loading="eager" />
+      <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg) 0%,rgba(14,14,17,0.8) 55%,rgba(14,14,17,0.35) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 30%,var(--c-bg) 100%)"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-20 w-full">
+      <div class="flex items-end justify-between flex-wrap gap-6">
+        <div class="max-w-xl">
+          <div class="flex items-center gap-2 mb-3">
+            <GamePill game="gta-online" size="sm" />
+            <span class="text-[11px] font-mono text-zinc-500 border border-[#2a2a31] px-2 py-0.5 rounded uppercase tracking-widest">Live since 2013</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">GTA Online</h1>
+          <p class="text-zinc-400 text-sm leading-relaxed mb-5 max-w-sm">
+            12 years of the live-service economy — income sources ranked, Shark Card inflation tracked, weekly bonuses monitored. Follow the GTA$.
+          </p>
+          <!-- Live player count as the "countdown" equivalent -->
+          {latestSteam && (
+            <div class="inline-flex items-center gap-2 border border-[#2a2a31] rounded-lg px-4 py-2.5" style="background:rgba(0,212,232,0.04)">
+              <span class="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style="background:var(--c-title-online)"></span>
+              <div>
+                <div class="text-xl font-mono font-bold leading-none" style="color:var(--c-title-online)">
+                  {latestSteam.avg_players.toLocaleString()}
+                </div>
+                <div class="text-[10px] font-mono text-zinc-600 mt-0.5">avg players · {latestSteam.month} {latestSteam.year} · SteamCharts</div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <!-- This week's top bonus — hero teaser card (mirrors GTA VI Hub trailer card) -->
+        {bonuses.length > 0 && (
+          <a href="/gta-online/bonuses"
+             class="group hidden sm:flex flex-col gap-2 rounded-xl border border-[#2a2a31] hover:border-gta-online-vivid/30 transition-all p-4 shrink-0 w-52"
+             style="background:color-mix(in srgb,var(--c-title-online) 5%,var(--c-card))">
+            <div class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-title-online)">This week · active now</div>
+            {bonuses.slice(0, 3).map((b: any) => (
+              <div class="flex items-center gap-2">
+                <span class="text-base font-mono font-black leading-none" style="color:var(--c-brand)">{b.multiplier}×</span>
+                <span class="text-[10px] font-mono text-zinc-300 capitalize">
+                  {BONUS_LABEL[b.activity_id] ?? b.activity_id.replace(/-/g, " ")}
+                </span>
+              </div>
+            ))}
+            <div class="text-[9px] font-mono text-zinc-600 mt-1 group-hover:text-zinc-400 transition-colors">Full calendar →</div>
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+
+    <!-- ══════════════════════════════════════════════════════════
+         WEEKLY BONUSES (mirrors Predictions carousel on GTA VI Hub)
+    ══════════════════════════════════════════════════════════ -->
+    {bonuses.length > 0 && (
+      <section>
+        <div class="flex items-center gap-3 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-title-online)"></span>
+          <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// This week's bonuses · W/C {weekStart}</span>
+          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <a href="/gta-online/bonuses"
+             class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
+            Full calendar →
+          </a>
+        </div>
+        <div class={`grid gap-3 ${bonuses.length === 1 ? "grid-cols-1 max-w-sm" : bonuses.length === 2 ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-3"}`}>
+          {bonuses.map((b: any) => (
+            <div class="rounded-xl border border-[#1e1e23] px-4 py-3.5 flex items-center gap-4"
+                 style="background:color-mix(in srgb,var(--c-brand) 5%,var(--c-card))">
+              <span class="text-3xl font-mono font-black leading-none shrink-0" style="color:var(--c-brand)">{b.multiplier}×</span>
+              <div>
+                <div class="text-sm font-semibold text-zinc-200 capitalize">
+                  {BONUS_LABEL[b.activity_id] ?? b.activity_id.replace(/-/g, " ")}
+                </div>
+                <div class="text-[10px] font-mono text-zinc-600 mt-0.5">GTA$ bonus multiplier active</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- ══════════════════════════════════════════════════════════
+         CHART TEASERS — 2 top + 1 full-width below
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Key Charts</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/charts?title=gta-online"
+           class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
+          All GTA Online charts →
+        </a>
+      </div>
+      <!-- Top row: 2 charts side by side -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <ChartTeaserOnlineMetaCeiling />
+        <ChartTeaserOnlineSharkCard />
+      </div>
+      <!-- Full-width: bonus calendar -->
+      <ChartTeaserOnlineBonusCalendar />
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ECONOMY — Circular Flow Model
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-title-online)"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The GTA Online Economy · Simplified</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <a href="/gta-online/economy"
+           class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
+          Full model →
+        </a>
+      </div>
+      <EconomyCircle fullEconomyHref="/gta-online/economy" />
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         INCOME + EXPENDITURE (mirrors GTA VI Hub layout)
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- LEFT: J (injection) + Y (income) — inputs to GTA$ balance -->
+        <div class="rounded-xl border border-[#1e1e23] px-4 pt-3 pb-4"
+             style="border-left:3px solid var(--c-title-online);background:color-mix(in srgb,var(--c-title-online) 3%,transparent)">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-title-online)">J + Y — Injection & Income</span>
+            <div class="flex-1 h-px" style="background:color-mix(in srgb,var(--c-title-online) 20%,transparent)"></div>
+            <a href="/database?game=gta-online"
+               class="text-[10px] font-mono uppercase tracking-widest transition-colors shrink-0"
+               style="color:var(--c-live);opacity:var(--o-secondary)"
+               onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='var(--o-secondary)'">
+              All income →
+            </a>
+          </div>
+
+          <!-- J — Injection (Shark Card) -->
+          <div class="mb-2">
+            <span class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-title-online);opacity:var(--o-secondary)">J — Injection</span>
+          </div>
+          <div class="mb-4">
+            <ExpenditureCard id="megalodon" />
+          </div>
+
+          <!-- Y — Income sources -->
+          <div class="mb-2">
+            <span class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-growth);opacity:var(--o-secondary)">Y — Income</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {topIncome.map((biz: any) => (
+              <IncomeCard
+                id={biz.id}
+                name={biz.name}
+                game="gta-online"
+                category={biz.category ?? biz.play_type ?? "active"}
+                tier={biz.id === "cayo-perico" ? "S+" : "S"}
+                net_profit_per_hr={biz.net_profit_per_hr}
+                max_profit_per_hr={1200000}
+                play_type={biz.play_type}
+                solo={biz.solo ?? true}
+                setup_cost_full={biz.setup_cost_full}
+                break_even_hrs={biz.break_even_hrs}
+                payout_per_run_max={biz.payout_per_run_max}
+                thumbnail={BIZ_THUMB[biz.id] ?? null}
+                compact={true}
+              />
+            ))}
+          </div>
+        </div>
+
+        <!-- RIGHT: C+I (investment + consumption) — outflows from GTA$ balance -->
+        <div class="rounded-xl border border-[#1e1e23] px-4 pt-3 pb-4"
+             style="border-right:3px solid var(--c-flow-spending);background:color-mix(in srgb,var(--c-flow-spending) 3%,transparent)">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending)">C+I — Expenditure</span>
+            <div class="flex-1 h-px" style="background:color-mix(in srgb,var(--c-flow-spending) 20%,transparent)"></div>
+            <a href="/gta-online/economy"
+               class="text-[10px] font-mono uppercase tracking-widest transition-colors shrink-0"
+               style="color:var(--c-brand);opacity:var(--o-secondary)"
+               onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='var(--o-secondary)'">
+              Economy model →
+            </a>
+          </div>
+
+          <!-- I — Investment -->
+          <div class="mb-2">
+            <span class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-economy);opacity:var(--o-secondary)">I — Investment</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <ExpenditureCard id="nightclub" />
+            <ExpenditureCard id="bunker" />
+          </div>
+
+          <!-- C — Consumption -->
+          <div class="mb-2">
+            <span class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending);opacity:var(--o-secondary)">C — Consumption</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <ExpenditureCard id="online-ammo" />
+            <ExpenditureCard id="online-clothing" />
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         NAV TILES (mirrors GTA VI Hub explore section)
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-zinc-700 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-500 tracking-[0.2em] uppercase">// Explore GTA Online</span>
+        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {[
+          { href: "/database?game=gta-online", label: "Income Database",    sub: "Every income source S→D · profit profiles · ROI analysis",         badge: "Database",  thumb: "/assets/gta5/dlc/cayo-perico.jpg"         },
+          { href: "/gta-online/economy",        label: "Economy Model",      sub: "GTA-PPI · Shark Card inflation · circular flow · passive stack",     badge: "Economy",   thumb: "/assets/gta5/dlc/diamond-casino-heist.jpg" },
+          { href: "/gta-online/bonuses",        label: "Bonuses & Events",   sub: "This week's 2× events · sale calendar · 42 weeks tracked",          badge: "Bonuses",   thumb: "/assets/gta5/dlc/casino-work.jpg"         },
+          { href: "/charts?title=gta-online",   label: "Charts",             sub: "Income leaderboard · meta evolution · GTA-PPI · passive stack",      badge: "Charts",    thumb: "/assets/gta5/dlc/acid-lab.jpg"            },
+        ].map(tile => (
+          <a href={tile.href}
+             class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] transition-all"
+             style="background:var(--c-card)">
+            <div class="h-px w-full" style="background:linear-gradient(90deg,var(--c-title-online),transparent 60%)"></div>
+            <div class="flex items-center gap-4 p-4">
+              <div class="shrink-0 w-20 h-12 rounded-lg overflow-hidden border border-[#2a2a31]">
+                <img src={tile.thumb} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[10px] font-mono text-zinc-500 mb-0.5 uppercase tracking-widest">{tile.badge}</div>
+                <div class="text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors truncate">{tile.label}</div>
+                <div class="text-[11px] font-mono text-zinc-500 leading-snug mt-0.5 line-clamp-1">{tile.sub}</div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</Base>
