@@ -768,7 +768,6 @@ export const CHARTS_PAGE_ORDER: string[] = [
   "competitors-chart",
   "trailer-velocity",           // view velocity moved to end of GTA VI block
   // GTA Online
-  "income-leaderboard-chart",
   "meta-evolution-chart",
   "gta-ppi-chart",
   "passive-stack-chart",
@@ -789,6 +788,7 @@ export const CHARTS_PAGE_ORDER: string[] = [
   "eco-health",
   "eco-spending",
   "eco-sharkcards",
+  "income-leaderboard-chart",   // moved to end of GTA Online block
   // GTA V
   "assassination-returns-chart",
   "dlc-player-chart",
