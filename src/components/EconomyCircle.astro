@@ -12,11 +12,14 @@
  * Injection ring arc centred at 12 o'clock (injection blue at top).
  */
 import HudIcon from "./HudIcon.astro";
+import ShareDropdown from "./ShareDropdown.astro";
 
 interface Props {
   fullEconomyHref?: string;
+  id?: string;  // for share anchor, defaults to "eco-model"
 }
-const { fullEconomyHref } = Astro.props;
+const { fullEconomyHref, id: anchorId = "eco-model" } = Astro.props;
+const shareText = "The GTA circular economy — how GTA$ flows through income, consumption and investment. Intelligence on GTAVI.AI";
 ---
 
 <div class="eco-wrap">
@@ -102,6 +105,10 @@ const { fullEconomyHref } = Astro.props;
             <div class="blip-lg" style="--bc:var(--c-growth)"><HudIcon name="passive" size={30} style="color:#fff"/></div>
             <span class="icon-label">Passive</span>
           </div>
+          <div class="icon-item">
+            <div class="blip-lg" style="--bc:var(--c-growth)"><HudIcon name="cycle" size={30} style="color:#fff"/></div>
+            <span class="icon-label">Cycles</span>
+          </div>
         </div>
       </div>
     </div>
@@ -159,14 +166,17 @@ const { fullEconomyHref } = Astro.props;
 
   </div>
 
-  {fullEconomyHref && (
-    <div class="eco-footer">
+  {/* ── Footer: GTAVI.AI attribution + Share ─────────────────────── */}
+  <div id={anchorId} class="eco-footer" style="scroll-margin-top:72px">
+    <span class="footer-brand">GTAVI.AI</span>
+    {fullEconomyHref && (
       <a href={fullEconomyHref} class="full-link"
          onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'">
         Full model &#8594;
       </a>
-    </div>
-  )}
+    )}
+    <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
+  </div>
 
 </div>
 
@@ -323,9 +333,18 @@ const { fullEconomyHref } = Astro.props;
   min-width: 0;
   position: relative;
 }
-.income-box  { background: color-mix(in srgb, var(--c-growth)        15%, var(--c-bg-deep)); }
-.consump-box { background: color-mix(in srgb, var(--c-flow-spending) 12%, var(--c-bg-deep)); }
-.invest-box  { background: color-mix(in srgb, var(--c-economy)       10%, var(--c-bg-deep)); }
+.income-box  {
+  background: color-mix(in srgb, var(--c-growth)        22%, var(--c-bg-deep));
+  border-left: 3px solid color-mix(in srgb, var(--c-growth) 55%, transparent);
+}
+.consump-box {
+  background: color-mix(in srgb, var(--c-flow-spending) 20%, var(--c-bg-deep));
+  border-left: 3px solid color-mix(in srgb, var(--c-flow-spending) 55%, transparent);
+}
+.invest-box  {
+  background: color-mix(in srgb, var(--c-economy)       18%, var(--c-bg-deep));
+  border-left: 3px solid color-mix(in srgb, var(--c-economy) 55%, transparent);
+}
 
 /* Y / C / I on the top border */
 .box-top-label {
@@ -344,7 +363,7 @@ const { fullEconomyHref } = Astro.props;
 .box-inner { padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; }
 /* flex-wrap lets cycle-note push right on desktop and reflow on mobile */
 .box-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.box-title { font-size: clamp(.8rem,2vw,1.1rem); font-weight: 900; line-height: 1; }
+.box-title { font-size: clamp(1rem,2.5vw,1.3rem); font-weight: 900; line-height: 1; }
 .icon-row { display: flex; gap: 12px; }
 .icon-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .icon-label { font-size: 8px; color: var(--c-text-3); text-align: center; }
@@ -384,16 +403,21 @@ const { fullEconomyHref } = Astro.props;
 .blip-sm { width: 36px; height: 36px; border-width: 1.5px; }
 .blip-lg { width: 52px; height: 52px; border-width: 2px; }
 
-/* ── Optional full-model footer ─────────────────────────────────────── */
+/* ── Footer: GTAVI.AI + optional full model link + Share ─────────────── */
 .eco-footer {
-  display: flex; align-items: center; justify-content: flex-end;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
   padding: 8px 16px;
   border-top: 1px solid var(--c-border-1);
   background: var(--c-card);
 }
+.footer-brand {
+  font-size: 10px; font-family: var(--font-mono,monospace);
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--c-text-6);
+}
 .full-link {
   font-size: 10px; text-transform: uppercase; letter-spacing: .12em;
-  color: var(--c-brand); opacity: .6; text-decoration: none; transition: opacity .2s;
+  color: var(--c-brand); opacity: .75; text-decoration: none; transition: opacity .2s;
 }
 
 /* ── Mobile (≤599px) ─────────────────────────────────────────────────── */
@@ -433,6 +457,8 @@ const { fullEconomyHref } = Astro.props;
   .icon-item     { flex-direction: row; gap: 8px; align-items: center; }
   .blip-lg       { width: 42px; height: 42px; border-width: 2px; }
   .icon-label    { font-size: 8px; text-align: left; }
+  /* Left borders stay but thinner on mobile */
+  .income-box, .consump-box, .invest-box { border-left-width: 2px; }
 
   /* Cycle note: drop margin-left:auto so it spans full width below title */
   .cycle-note    { margin-left: 0; width: 100%; letter-spacing: 0; }
