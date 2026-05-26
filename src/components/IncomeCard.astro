@@ -1,0 +1,170 @@
+---
+/**
+ * IncomeCard.astro — Central income source card.
+ *
+ * Single component for every income source across GTA VI and GTA Online.
+ * Two display modes via `compact` prop:
+ *
+ *   compact=false (default) — Full card: thumbnail + GamePill + badges +
+ *     name + rate + meta + footer with ShareDropdown.
+ *     Used in database views, intel pages, full income listings.
+ *
+ *   compact=true — Teaser card: thumbnail + GamePill + badge + name + rate.
+ *     Used on hub pages, carousels, featured slices.
+ *
+ * Contract:
+ *   TOP-LEFT   GamePill (always, regardless of thumbnail)
+ *   TOP-RIGHT  Tier / type badge
+ *   Body       Region badge (if provided) · name (text-sm) · rate · meta
+ *   Footer     Source attribution + ShareDropdown (full mode only)
+ */
+import GamePill from "./GamePill.astro";
+import ShareDropdown from "./ShareDropdown.astro";
+
+type GameId   = "gta-vi" | "gta-online" | "gta-v";
+type Region   = "vice-city" | "leonida" | "both";
+type PlayType = "active" | "passive" | "semi-passive" | "hybrid" | "heist" | "mission";
+
+interface Props {
+  id:          string;
+  name:        string;
+  game:        GameId;
+  thumbnail?:  string | null;
+  rate?:       string | null;
+  rateLabel?:  string;
+  rateTbd?:    boolean;
+  badge?:      string | null;
+  badgeStyle?: string;
+  playType?:   PlayType | null;
+  region?:     Region | null;
+  source?:     string | null;
+  shareText?:  string;
+  anchorId?:   string;
+  href?:       string | null;
+  compact?:    boolean;
+}
+
+const {
+  id, name, game, thumbnail,
+  rate, rateLabel = "GTA$/hr", rateTbd = false,
+  badge, badgeStyle, playType, region,
+  source, shareText, anchorId: anchorIdProp,
+  href, compact = false,
+} = Astro.props;
+
+const anchorId = anchorIdProp ?? `income-${id}`;
+
+const PLAY_COLOR: Record<string, string> = {
+  active:         "var(--c-play-active)",
+  passive:        "var(--c-play-passive)",
+  "semi-passive": "var(--c-play-semi)",
+  hybrid:         "var(--c-play-semi)",
+  heist:          "var(--c-play-heist)",
+  mission:        "var(--c-play-mission)",
+};
+const REGION_COLOR: Record<string, string> = {
+  "vice-city": "var(--c-title-vi,#ff6b9d)",
+  "leonida":   "var(--c-growth,#22c55e)",
+  "both":      "var(--c-text-4,#9898b8)",
+};
+const REGION_LABEL: Record<string, string> = {
+  "vice-city": "Vice City",
+  "leonida":   "Leonida",
+  "both":      "VC + Leonida",
+};
+
+const playColor   = playType ? PLAY_COLOR[playType]  ?? "var(--c-text-4)" : null;
+const regionColor = region   ? REGION_COLOR[region]  ?? "var(--c-text-4)" : null;
+const regionLabel = region   ? REGION_LABEL[region]  ?? region            : null;
+const displayRate = rate ?? (rateTbd ? "GTA$ TBD" : null);
+---
+
+<div
+  id={anchorId}
+  class="group relative flex flex-col rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] overflow-hidden transition-all duration-200"
+  style="background:var(--c-card);scroll-margin-top:72px"
+>
+  <!-- If href: wrap entire content in <a> -->
+  {href ? (
+    <a href={href} class="absolute inset-0 z-10" aria-label={name} tabindex="-1"></a>
+  ) : null}
+
+  <!-- Thumbnail -->
+  <div class={`relative overflow-hidden shrink-0 ${compact ? "h-24" : "h-28"}`}>
+    {thumbnail
+      ? <img src={thumbnail} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
+      : <div class="w-full h-full" style="background:var(--c-bg)"></div>
+    }
+    <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-card) 0%,transparent 60%)"></div>
+
+    <!-- GamePill always top-left -->
+    <div class="absolute top-2 left-2 z-20">
+      <GamePill game={game} size="xs" />
+    </div>
+
+    <!-- Badge top-right -->
+    {badge && (
+      <div class="absolute top-2 right-2 z-20">
+        <span class={`text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${badgeStyle ?? "bg-zinc-900/80 border-zinc-700 text-zinc-400"}`}>
+          {badge}
+        </span>
+      </div>
+    )}
+  </div>
+
+  <!-- Body -->
+  <div class={`relative flex flex-col flex-1 z-20 ${compact ? "px-3 py-2.5" : "px-4 py-3"}`}>
+
+    <!-- Region + play type -->
+    {(regionLabel || playType) && (
+      <div class="flex items-center gap-1.5 mb-1.5 flex-wrap">
+        {regionLabel && regionColor && (
+          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border uppercase tracking-widest"
+                style={`color:${regionColor};border-color:color-mix(in srgb,${regionColor} 35%,transparent);background:color-mix(in srgb,${regionColor} 12%,transparent)`}>
+            {regionLabel}
+          </span>
+        )}
+        {playType && playColor && (
+          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border uppercase tracking-widest"
+                style={`color:${playColor};border-color:color-mix(in srgb,${playColor} 35%,transparent);background:color-mix(in srgb,${playColor} 12%,transparent)`}>
+            {playType}
+          </span>
+        )}
+      </div>
+    )}
+
+    <!-- Name -->
+    <div class="text-sm font-semibold text-zinc-200 leading-snug group-hover:text-white transition-colors mb-2">
+      {name}
+    </div>
+
+    <!-- Primary rate -->
+    {displayRate && (
+      <div class="mt-auto">
+        <div class={`font-mono font-black leading-none ${compact ? "text-base" : "text-lg"}`}
+             style={rateTbd ? "color:var(--c-text-5)" : "color:var(--c-growth)"}>
+          {displayRate}
+        </div>
+        {rateTbd
+          ? <div class="text-[9px] font-mono mt-0.5" style="color:var(--c-text-7)">Populates from launch</div>
+          : <div class="text-[9px] font-mono mt-0.5" style="color:var(--c-text-6)">{rateLabel}</div>
+        }
+      </div>
+    )}
+
+    <!-- Full-mode footer -->
+    {!compact && (
+      <div class="mt-3 pt-2.5 border-t border-[#1e1e23] flex items-center justify-between gap-2 shrink-0">
+        <span class="text-[10px] font-mono leading-snug flex-1 truncate" style="color:var(--c-text-6)">
+          {source ?? "GTAVI.AI"}
+        </span>
+        {shareText && (
+          <div class="relative z-30">
+            <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
+          </div>
+        )}
+      </div>
+    )}
+
+  </div>
+</div>

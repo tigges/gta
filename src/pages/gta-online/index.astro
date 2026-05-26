@@ -6,6 +6,7 @@
 import Base from "../../layouts/Base.astro";
 import GamePill from "../../components/GamePill.astro";
 import EconomyCircle from "../../components/EconomyCircle.astro";
+import IncomeCard from "../../components/IncomeCard.astro";
 
 import steamRaw       from "../../../data/gta-5/meta/steam-players.json";
 import weeklyBonuses  from "../../../data/gta-5/economy/weekly-bonuses.json";
@@ -159,41 +160,21 @@ const BONUS_LABEL: Record<string, string> = {
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {topIncome.map((biz: any, i: number) => (
-          <a href={`/database?game=gta-online#profit-${biz.id}`}
-             class="group rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] overflow-hidden flex flex-col transition-all"
-             style="background:var(--c-card)">
-            <div class="relative h-24 overflow-hidden shrink-0">
-              {THUMB[biz.id]
-                ? <img src={THUMB[biz.id]} alt={biz.name}
-                       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-                : <div class="w-full h-full" style="background:var(--c-bg)"></div>
-              }
-              <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-card) 0%,transparent 55%)"></div>
-              <div class="absolute top-2 left-2">
-                <span class="text-[9px] font-mono font-bold rounded px-1.5 py-0.5 uppercase tracking-widest"
-                      style={`color:${PLAY_COLOR[biz.play_type] ?? 'var(--c-text-4)'};background:color-mix(in srgb,${PLAY_COLOR[biz.play_type] ?? 'var(--c-text-4)'} 15%,transparent)`}>
-                  {biz.play_type}
-                </span>
-              </div>
-              <div class="absolute top-2 right-2">
-                <span class="text-[10px] font-mono font-black" style="color:var(--c-growth)">#{i + 1}</span>
-              </div>
-            </div>
-            <div class="px-3 py-2.5 flex flex-col flex-1">
-              <div class="text-[11px] font-semibold text-zinc-200 group-hover:text-white transition-colors leading-snug mb-2">{biz.name}</div>
-              <div class="mt-auto">
-                <div class="text-lg font-mono font-black" style="color:var(--c-growth)">{fmtRate(biz.net_profit_per_hr)}</div>
-                <div class="flex items-center gap-2 mt-1">
-                  {biz.solo && <span class="text-[9px] font-mono border border-[#2a2a31] text-zinc-500 px-1.5 py-0.5 rounded uppercase">Solo</span>}
-                  {biz.setup_cost_full && (
-                    <span class="text-[9px] font-mono text-zinc-600">
-                      Setup ${(biz.setup_cost_full / 1_000_000).toFixed(1)}M
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          </a>
+          <IncomeCard
+            id={biz.id}
+            name={biz.name}
+            game="gta-online"
+            thumbnail={THUMB[biz.id] ?? null}
+            rate={fmtRate(biz.net_profit_per_hr)}
+            rateLabel="GTA$/hr"
+            playType={biz.play_type as any}
+            badge={`#${i + 1}`}
+            badgeStyle="bg-black/60 border-zinc-700 text-zinc-300 font-black"
+            source={biz.solo ? "Solo · GTAVI.AI" : `${biz.min_players}+ players · GTAVI.AI`}
+            shareText={`${biz.name}: ${fmtRate(biz.net_profit_per_hr)} in GTA Online. Follow the GTA$.`}
+            href={`/database?game=gta-online#profit-${biz.id}`}
+            compact={false}
+          />
         ))}
       </div>
     </section>
