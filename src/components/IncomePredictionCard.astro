@@ -16,6 +16,7 @@ import GamePill from "./GamePill.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 import { TIER_STYLES } from "../config/tierStyles";
 import { C_CARD } from "../config/colors";
+import { getRegionType } from "../config/semanticTypes";
 
 interface Props {
   id: string;
@@ -50,11 +51,8 @@ const CATEGORY_ICONS: Record<string, string> = {
   passive:  "💤",
   mission:  "📋",
 };
-const REGION_LABELS: Record<string, string> = {
-  "vice-city": "Vice City",
-  "leonida":   "Leonida",
-  "both":      "VC + Leonida",
-};
+const regionType  = getRegionType(region);
+const regionLabel = regionType.label;
 const anchorId = `income-pred-${id}`;
 const shareText = `GTA VI predicted income: ${name} — ${predicted_gta_per_hr ? predicted_gta_per_hr + "/hr" : predicted_payout_per_run ?? "TBC"} · ${confidence_score}% confidence · GTAVI.AI`;
 ---
@@ -88,7 +86,7 @@ const shareText = `GTA VI predicted income: ${name} — ${predicted_gta_per_hr ?
     <span class="text-sm">{CATEGORY_ICONS[category]}</span>
     <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">{category}</span>
     <span class="text-zinc-700">·</span>
-    <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">{REGION_LABELS[region]}</span>
+    <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">{regionLabel}</span>
     {trailer_evidence && (
       <>
         <span class="text-zinc-700">·</span>

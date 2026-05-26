@@ -29,8 +29,7 @@ import CardFooter from "../CardFooter.astro";
       </div>
 
 <script>
-  import { cc, op } from "../../assets/chartColors";
-
+  import { cc, op, playColor } from "../../assets/chartColors";
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
 
@@ -43,10 +42,6 @@ import CardFooter from "../CardFooter.astro";
     const sources: any[] = [];
     tiers.forEach((t: any) => t.sources.forEach((s: any) => sources.push({ ...s, tierColor: t.color, tier: t.tier })));
     sources.sort((a: any, b: any) => b.gta_per_hr - a.gta_per_hr);
-    const PLAY_COLOR: Record<string,string> = {
-      heist:cc.indigo, passive:cc.green, semi:cc.bar, active:cc.red,
-      mc:cc.bar, ceo:cc.bar, business:cc.teal, smuggling:cc.teal,
-    };
     const margin = { top:8, right:120, bottom:8, left:190 };
     const rowH = 34;
     const totalH = sources.length * rowH + margin.top + margin.bottom;
@@ -63,7 +58,7 @@ import CardFooter from "../CardFooter.astro";
       const yt = sources.indexOf(s) * rowH;
       const bh = rowH * 0.7;
       const yOff = rowH * 0.15;
-      const barColor = PLAY_COLOR[s.type] ?? cc.text4;
+      const barColor = playColor(s.type) ?? cc.text4;
       if (s.tier !== lastTier) {
         svg.append("text").attr("x",-margin.left+4).attr("y",yt+bh/2+yOff+3)
           .attr("fill",s.tierColor).attr("font-size","11").attr("font-family","monospace").attr("font-weight","bold").text(s.tier);
