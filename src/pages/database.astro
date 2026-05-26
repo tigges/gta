@@ -820,28 +820,30 @@ const HEIST_THUMBS: Record<string, string> = {
     if (e.type === "mission") {
       const region  = getMissionRegion(e.name);
       const mThumb  = MISSION_THUMBS[e.name] ?? "/assets/gta6/locations/Vice_City_03.jpg";
+      const pillHtml = `<span class="inline-flex self-start items-center font-mono uppercase tracking-widest rounded border shrink-0 whitespace-nowrap text-[10px] px-1.5 py-0.5" style="color:var(--c-title-vi,#ff6b9d);border-color:rgba(255,107,157,0.33);background:rgba(10,10,13,0.88)">GTA VI</span>`;
       return `
         <div class="rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-all duration-300 group overflow-hidden flex flex-col" style="background:var(--c-card)">
-          <div class="relative overflow-hidden" style="height:80px">
+          <div class="relative overflow-hidden" style="height:112px">
             <img src="${mThumb}" alt="${e.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
             <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-card) 0%,transparent 60%)"></div>
-            <div class="absolute top-1.5 left-2">
+            <div class="absolute top-2 left-2">${pillHtml}</div>
+            <div class="absolute top-2 right-2">
               <span class="text-[7px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}">${meta.label}</span>
             </div>
-            <div class="absolute top-1.5 right-2">
-              <span class="text-[7px] font-mono px-1.5 py-0.5 rounded uppercase tracking-widest border" style="color:${region.color};border-color:${region.color}40;background:${region.color}15">${region.label}</span>
-            </div>
           </div>
-          <div class="px-3 py-2 flex flex-col flex-1">
-            <div class="text-[11px] font-semibold text-zinc-200 leading-snug group-hover:text-white transition-colors mb-1.5">${e.name}</div>
-            <div class="flex items-center justify-between gap-1 mt-auto">
+          <div class="px-3 py-2.5 flex flex-col flex-1">
+            <div class="flex items-center gap-1.5 mb-1.5">
+              <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border uppercase tracking-widest" style="color:${region.color};border-color:${region.color}40;background:${region.color}15">${region.label}</span>
+            </div>
+            <div class="text-sm font-semibold text-zinc-200 leading-snug group-hover:text-white transition-colors mb-auto">${e.name}</div>
+            <div class="flex items-center justify-between gap-1 mt-2">
               <div class="flex items-center gap-1.5">
                 <span class="text-[9px] font-mono text-zinc-600">🎯 mission</span>
                 <span class="text-[9px] font-mono border px-1 py-0.5 rounded ${srcStyle}">${e.source_label}</span>
               </div>
               ${extLink}
             </div>
-            <div class="mt-1.5 pt-1.5 border-t border-[#1e1e23] flex items-baseline justify-between gap-2">
+            <div class="mt-2 pt-2 border-t border-[#1e1e23] flex items-baseline justify-between gap-2">
               <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">Payout</span>
               <div class="text-right">
                 <span class="text-[10px] font-mono text-zinc-500">GTA$ TBD</span>
