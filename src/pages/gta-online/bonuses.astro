@@ -1,10 +1,8 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { C_LIVE, C_GROWTH, C_CARD, C_BG_DEEP } from "../../config/colors";
+import { C_LIVE, C_GROWTH, C_CARD, C_BG_DEEP, C_BRAND } from "../../config/colors";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
-import Ledger from "../../components/Ledger.astro";
-import type { LedgerEntry } from "../../components/Ledger.astro";
 import type { WeeklyBonusesData, SaleFrequencyData } from "../../types/gta";
 
 import weeklyBonusesRaw from "../../../data/gta-5/economy/weekly-bonuses.json";
@@ -14,34 +12,55 @@ import saleFreqRaw      from "../../../data/gta-5/economy/sale-frequency.json";
 const weeklyBonuses = weeklyBonusesRaw as unknown as WeeklyBonusesData;
 const saleFreqData  = saleFreqRaw      as unknown as SaleFrequencyData;
 
-const bonuses       = weeklyBonuses.bonuses  ?? [];
-const sales         = weeklyBonuses.sales    ?? [];
-const weekStart     = weeklyBonuses.week_start ?? "";
-const historyCount  = (bonusHistoryRaw as { entry_count?: number }).entry_count ?? 0;
-const topActivities = (saleFreqData.activity_bonuses ?? []).slice(0, 5);
+const bonuses     = weeklyBonuses.bonuses  ?? [];
+const sales       = weeklyBonuses.sales    ?? [];
+const weekStart   = weeklyBonuses.week_start ?? "";
+const historyCount = (bonusHistoryRaw as { entry_count?: number }).entry_count ?? 0;
+const totalWeeks   = (saleFreqData as any).date_range?.total_weeks_tracked ?? 42;
 
 // Worker URL — community leaderboard backed by Cloudflare KV
 const WORKER_URL = "https://api.gtavi.ai";
 
-// Ledger entries: this week's events as signed transaction rows
-const bonusLedgerEntries: LedgerEntry[] = [
-  ...bonuses.map(b => ({
-    date:  weekStart ? weekStart.slice(0, 10) : undefined,
-    label: b.activity_id.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()),
-    value: `+${b.multiplier}\u00d7 GTA$`,
-    type:  "positive" as const,
-    icon:  "money",
-    sub:   "bonus multiplier",
-  })),
-  ...sales.map(s => ({
-    date:  weekStart ? weekStart.slice(0, 10) : undefined,
-    label: s.item_description ?? s.activity_id,
-    value: `-${s.discount_pct}% sale`,
-    type:  "positive" as const,
-    icon:  "tag",
-    sub:   "discount",
-  })),
-];
+// Frequency lookup — keyed by activity_id
+const freqMap: Record<string, any> = Object.fromEntries(
+  ((saleFreqData.activity_bonuses ?? []) as any[]).map((a: any) => [a.activity_id, a])
+);
+
+// Activity metadata: proper labels, thumbnails, income card links
+interface ActivityMeta {
+  label: string;
+  thumb: string;
+  href?: string;
+  description: string;
+}
+const ACTIVITY_META: Record<string, ActivityMeta> = {
+  "contact-missions":   { label: "Contact Missions",    thumb: "/assets/gta5/dlc/freemode-events.jpg",      href: "/gta-online/income",                          description: "Work for contacts — Martin, Simeon, Lester, Gerald. 50+ missions, repeatable for cash." },
+  "casino-missions":    { label: "Casino Work",          thumb: "/assets/gta5/dlc/casino-work.jpg",          href: "/gta-online/income/diamond-casino-heist",     description: "Story missions and mini-jobs at the Diamond Casino & Resort." },
+  "casino-heist":       { label: "Diamond Casino Heist", thumb: "/assets/gta5/dlc/diamond-casino-heist.jpg", href: "/gta-online/income/diamond-casino-heist",     description: "Multi-stage heist with up to $3.62M payout depending on vault contents." },
+  "vip-work":           { label: "VIP / CEO Work",       thumb: "/assets/gta5/dlc/finance-felony.jpg",       href: "/database?game=gta-online",                   description: "Organisation missions as a VIP, CEO or MC President. Includes Sightseer, Headhunter, etc." },
+  "heists":             { label: "Heists",                thumb: "/assets/gta5/dlc/cayo-perico.jpg",          href: "/gta-online/income/cayo-perico",               description: "All heist series — includes Cayo Perico, Diamond Casino and the original five." },
+  "cayo-perico":        { label: "Cayo Perico Heist",    thumb: "/assets/gta5/dlc/cayo-perico.jpg",          href: "/gta-online/income/cayo-perico",               description: "Solo heist, best $/hr in the game. $1.1–1.9M per run depending on loot." },
+  "acid-lab":           { label: "Acid Lab",             thumb: "/assets/gta5/dlc/acid-lab.jpg",             href: "/gta-online/income/acid-lab",                  description: "First Dose story missions unlock a passive acid lab business. S-tier $/hr." },
+  "nightclub":          { label: "Nightclub",            thumb: "/assets/gta5/dlc/after-hours.jpg",          href: "/gta-online/income/nightclub",                 description: "Passive business: technicians generate stock from your other operations overnight." },
+  "bunker":             { label: "Bunker",               thumb: "/assets/gta5/dlc/gunrunning.jpg",           href: "/gta-online/income/bunker",                    description: "Gunrunning supply chain — buy supplies, staff research, sell for profit." },
+  "auto-shop":          { label: "Auto Shop",            thumb: "/assets/gta5/dlc/auto-shop.jpg",            href: "/gta-online/income/auto-shop",                 description: "Vehicle workshop with robbery contracts and mod shop passive income." },
+  "agency":             { label: "Agency / VIP Contract",thumb: "/assets/gta5/dlc/agency.jpg",               href: "/gta-online/income/agency-vip-contract",       description: "Dr Dre's security contract is the top agency mission at $1M per run." },
+  "robbery-contracts":  { label: "Robbery Contracts",   thumb: "/assets/gta5/dlc/robbery-contracts.jpg",    href: "/gta-online/income/agency-vip-contract",       description: "Short, high-payout contracts available from your auto shop." },
+  "races":              { label: "Races",                thumb: "/assets/gta5/dlc/premium-races.jpg",                                                             description: "Standard and premium street, sea and air races. Good with bonus RP/GTA$." },
+  "stunt-races":        { label: "Stunt Races",          thumb: "/assets/gta5/dlc/arena-war.jpg",                                                                 description: "Aerial and ground stunt race circuits with premium multiplier events." },
+  "adversary":          { label: "Adversary Modes",      thumb: "/assets/gta5/dlc/arena-war.jpg",                                                                 description: "Competitive team-vs-team modes including Motor Wars and Overtime Rumble." },
+  "survival":           { label: "Survival",             thumb: "/assets/gta5/dlc/freemode-events.jpg",                                                           description: "Wave-based enemy survival — up to 10 waves, playable solo or in a group." },
+  "security-contracts": { label: "Security Contracts",  thumb: "/assets/gta5/dlc/security-contracts.jpg",   href: "/gta-online/income/security-contract",         description: "Short missions for agency clients. Fast, repeatable, and solo-friendly." },
+  "mc-businesses":      { label: "MC Businesses",        thumb: "/assets/gta5/dlc/bikers.jpg",               href: "/database?game=gta-online",                    description: "Cocaine, meth, counterfeit cash, forgeries and document forgery operations." },
+};
+
+function getActivityMeta(id: string): ActivityMeta {
+  return ACTIVITY_META[id] ?? {
+    label:       id.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()),
+    thumb:       "/assets/gta5/dlc/freemode-events.jpg",
+    description: "GTA Online bonus activity.",
+  };
+}
 ---
 <Base
   title="GTA Online Bonuses, Promos & Leaderboard"
@@ -72,65 +91,93 @@ const bonusLedgerEntries: LedgerEntry[] = [
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
-    <!-- This week's bonuses + sales -->
-    {(bonuses.length > 0 || sales.length > 0) && (
-      <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
-        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between flex-wrap gap-2">
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
-            <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">
-              This week{weekStart ? ` · w/c ${weekStart}` : ""}
-            </span>
-          </div>
-          <a href="/charts#bonus-heatmap" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full calendar chart →</a>
+    <!-- ═══════════════════════════════════════════════════
+         ACTIVE BONUS EVENTS — visual card grid
+    ═══════════════════════════════════════════════════ -->
+    {bonuses.length > 0 && (
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
+          <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em]">
+            Active bonuses{weekStart ? ` · w/c ${weekStart}` : ""}
+          </span>
+          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <a href="/charts?title=gta-online#section-bonus-heatmap"
+             class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
+            Full history →
+          </a>
         </div>
-        <div class="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
-          <div class="divide-y divide-[#1e1e23]">
-            <div class="px-5 py-2 text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Bonus Events</div>
-            {bonuses.length === 0 && <div class="px-5 py-3 text-[10px] font-mono text-zinc-500">No bonuses this week</div>}
-            {bonuses.map((b: any) => (
-              <div class="px-5 py-3 flex items-center gap-3">
-                <span class="text-[11px] font-mono font-bold w-6 shrink-0" style={`color:${C_LIVE}`}>{b.multiplier}×</span>
-                <span class="text-xs font-mono text-zinc-300 capitalize flex-1">{(b.activity_id as string).replace(/-/g," ")}</span>
-              </div>
-            ))}
-          </div>
-          <div class="divide-y divide-[#1e1e23]">
-            <div class="px-5 py-2 text-[11px] font-mono text-zinc-500 uppercase tracking-widest">On Sale</div>
-            {sales.length === 0 && <div class="px-5 py-3 text-[10px] font-mono text-zinc-500">No sales this week</div>}
-            {sales.map((s: any) => (
-              <div class="px-5 py-3 flex items-center gap-3">
-                <span class="text-[11px] font-mono font-bold shrink-0" style={`color:${C_GROWTH}`}>{s.discount_pct}%</span>
-                <span class="text-xs font-mono text-zinc-300 flex-1">{s.item_description}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )}
 
-    <!-- Most-bonused activities -->
-    {topActivities.length > 0 && (
-      <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
-        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
-          <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Most Frequently Bonused Activities</span>
-          <a href="/charts#bonus-heatmap" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">Heatmap →</a>
-        </div>
-        <div class="divide-y divide-[#1e1e23]">
-          {topActivities.map((a: any) => {
-            const daysSince = a.days_since_last_bonus ?? null;
+        <div class={`grid gap-4 ${bonuses.length === 1 ? "grid-cols-1 max-w-lg" : bonuses.length === 2 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
+          {bonuses.map((b: any) => {
+            const meta  = getActivityMeta(b.activity_id);
+            const freq  = freqMap[b.activity_id];
+            const count = freq?.bonus_count ?? null;
+            const isBig = b.multiplier >= 3;
+            const multiplierColor = isBig ? C_BRAND : C_LIVE;
+
             return (
-              <div class="px-5 py-3 flex items-center gap-4 flex-wrap sm:flex-nowrap">
-                <div class="flex-1 min-w-0">
-                  <div class="text-xs font-semibold text-zinc-300 capitalize">{(a.activity_id as string).replace(/-/g," ")}</div>
-                  <div class="text-[10px] font-mono text-zinc-600">{a.bonus_count}× tracked · last {a.last_bonus_date?.slice(0,7)}</div>
+              <div class="group relative rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] overflow-hidden transition-all"
+                   style={`background:${C_CARD};border-left:3px solid color-mix(in srgb,${multiplierColor} 60%,transparent)`}>
+
+                {/* Thumbnail */}
+                <div class="relative h-32 overflow-hidden">
+                  <img src={meta.thumb} alt={meta.label}
+                       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                       loading="lazy" />
+                  <div class="absolute inset-0" style="background:linear-gradient(to bottom,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.6) 100%)"></div>
+
+                  {/* Multiplier badge — top-left */}
+                  <div class="absolute top-3 left-3 flex items-baseline gap-0.5 px-2.5 py-1 rounded-lg font-mono font-black"
+                       style={`background:color-mix(in srgb,${multiplierColor} 18%,rgba(0,0,0,0.7));border:1px solid color-mix(in srgb,${multiplierColor} 50%,transparent);color:${multiplierColor}`}>
+                    <span class="text-2xl leading-none">{b.multiplier}</span>
+                    <span class="text-sm">×</span>
+                    <span class="text-[10px] ml-1 font-normal uppercase tracking-widest opacity-80">GTA$</span>
+                  </div>
+
+                  {/* ACTIVE NOW badge — top-right */}
+                  <div class="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded font-mono text-[9px] uppercase tracking-widest"
+                       style={`background:color-mix(in srgb,${C_GROWTH} 18%,rgba(0,0,0,0.7));border:1px solid color-mix(in srgb,${C_GROWTH} 40%,transparent);color:${C_GROWTH}`}>
+                    <span class="w-1 h-1 rounded-full animate-pulse" style={`background:${C_GROWTH}`}></span>
+                    Active
+                  </div>
                 </div>
-                <div class="shrink-0">
-                  {daysSince !== null && daysSince < 8
-                    ? <span class="text-[11px] font-mono px-1.5 py-0.5 rounded" style={`color:${C_GROWTH};background:color-mix(in srgb,${C_GROWTH} 12%,transparent);border:1px solid color-mix(in srgb,${C_GROWTH} 30%,transparent)`}>ACTIVE NOW</span>
-                    : <span class="text-[10px] font-mono text-zinc-600">{daysSince}d ago</span>
-                  }
+
+                {/* Body */}
+                <div class="px-4 pt-3 pb-2">
+                  <div class="text-base font-semibold text-zinc-100 mb-1 leading-tight">{meta.label}</div>
+                  <p class="text-[11px] font-mono text-zinc-500 leading-snug line-clamp-2">{meta.description}</p>
                 </div>
+
+                {/* Frequency context */}
+                {count !== null && (
+                  <div class="px-4 py-2 border-t border-[#1e1e23] flex items-center justify-between gap-2">
+                    <span class="text-[10px] font-mono text-zinc-600">
+                      Bonused <span class="text-zinc-400">{count}×</span> in {totalWeeks} weeks
+                      {freq?.avg_gap_weeks ? <span> · ~{Math.round(freq.avg_gap_weeks)}w avg</span> : null}
+                    </span>
+                    {meta.href && (
+                      <a href={meta.href}
+                         class="shrink-0 text-[10px] font-mono uppercase tracking-widest transition-colors"
+                         style={`color:color-mix(in srgb,${multiplierColor} 70%,transparent)`}
+                         onmouseover={`this.style.color='${multiplierColor}'`}
+                         onmouseout={`this.style.color='color-mix(in srgb,${multiplierColor} 70%,transparent)'`}>
+                        Income profile →
+                      </a>
+                    )}
+                  </div>
+                )}
+                {count === null && meta.href && (
+                  <div class="px-4 py-2 border-t border-[#1e1e23]">
+                    <a href={meta.href}
+                       class="text-[10px] font-mono uppercase tracking-widest transition-colors"
+                       style={`color:color-mix(in srgb,${multiplierColor} 70%,transparent)`}
+                       onmouseover={`this.style.color='${multiplierColor}'`}
+                       onmouseout={`this.style.color='color-mix(in srgb,${multiplierColor} 70%,transparent)'`}>
+                      Income profile →
+                    </a>
+                  </div>
+                )}
               </div>
             );
           })}
@@ -138,13 +185,33 @@ const bonusLedgerEntries: LedgerEntry[] = [
       </div>
     )}
 
-    <!-- This week — ledger view -->
-    {bonusLedgerEntries.length > 0 && (
-      <Ledger
-        title={`This Week's Events${weekStart ? ` · w/c ${weekStart.slice(0,10)}` : ""}`}
-        entries={bonusLedgerEntries}
-        class="mb-8"
-      />
+    <!-- ═══════════════════════════════════════════════════
+         ON SALE THIS WEEK
+    ═══════════════════════════════════════════════════ -->
+    {sales.length > 0 && (
+      <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
+        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2">
+          <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">On Sale This Week</span>
+          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        </div>
+        <div class="divide-y divide-[#1e1e23]">
+          {sales.map((s: any) => (
+            <div class="px-5 py-3 flex items-center gap-3">
+              <span class="shrink-0 font-mono font-bold text-sm w-12"
+                    style={`color:${C_GROWTH};background:color-mix(in srgb,${C_GROWTH} 10%,transparent);border:1px solid color-mix(in srgb,${C_GROWTH} 25%,transparent);padding:2px 6px;border-radius:4px`}>
+                {s.discount_pct}%
+              </span>
+              <span class="text-sm text-zinc-300 flex-1">{s.item_description}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {bonuses.length === 0 && sales.length === 0 && (
+      <div class="mb-8 rounded-xl border border-[#1e1e23] px-6 py-10 text-center" style={`background:${C_CARD}`}>
+        <div class="text-zinc-500 font-mono text-sm">No bonus events found for this week. Check back Thursday.</div>
+      </div>
     )}
 
     <!-- Last week's winner banner (populated by JS) -->
