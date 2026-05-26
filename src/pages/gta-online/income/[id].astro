@@ -6,7 +6,7 @@
 import type { GetStaticPaths } from "astro";
 import Base from "../../../layouts/Base.astro";
 import { C_LIVE, C_GROWTH, C_BRAND, C_ALERT, C_CARD, C_TEXT_7 } from "../../../config/colors";
-import ProfitCard from "../../../components/ProfitCard.astro";
+import IncomeCard from "../../../components/IncomeCard.astro";
 import CrossLinks from "../../../components/CrossLinks.astro";
 import ShareDropdown from "../../../components/ShareDropdown.astro";
 import type {
@@ -106,7 +106,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
       <div class="lg:col-span-1 flex flex-col gap-6">
 
         <!-- ProfitCard -->
-        <ProfitCard
+        <IncomeCard
           id={id}
           name={bizName}
           game="gta-online"

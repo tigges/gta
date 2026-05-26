@@ -7,7 +7,7 @@
 import Base from "../../layouts/Base.astro";
 import GamePill from "../../components/GamePill.astro";
 import PredictionCard from "../../components/PredictionCard.astro";
-import IncomePredictionCard from "../../components/IncomePredictionCard.astro";
+import IncomeCard from "../../components/IncomeCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
 import EconomyCircle from "../../components/EconomyCircle.astro";
 import Countdown from "../../components/Countdown.astro";
@@ -267,9 +267,10 @@ const featuredIncome = incomeList
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {featuredIncome.map((entry: any) => (
-              <IncomePredictionCard
+              <IncomeCard
                 id={entry.id}
                 name={entry.name}
+                game="gta-vi"
                 category={entry.category}
                 region={entry.region}
                 confidence_tier={entry.confidence_tier}
@@ -281,7 +282,6 @@ const featuredIncome = incomeList
                 analogous_gta_online={entry.analogous_gta_online}
                 basis={entry.basis}
                 prediction_range={entry.prediction_range}
-                detailHref={`/gta-vi/intel#income-pred-${entry.id}`}
               />
             ))}
           </div>

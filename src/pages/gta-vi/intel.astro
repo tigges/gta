@@ -7,7 +7,7 @@ import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 
 import type { TrailersData, Prediction } from "../../types/gta";
-import IncomePredictionCard from "../../components/IncomePredictionCard.astro";
+import IncomeCard from "../../components/IncomeCard.astro";
 import GamePill from "../../components/GamePill.astro";
 import { CATEGORY_BADGE_CLASSES } from "../../config/categoryColors";
 
@@ -188,9 +188,10 @@ const DELAY_THUMBS: Record<string,string> = {
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {(incomeData as any).income_predictions.map((p: any) => (
-          <IncomePredictionCard
+          <IncomeCard
             id={p.id}
             name={p.name}
+            game="gta-vi"
             category={p.category}
             region={p.region}
             confidence_tier={p.confidence_tier}

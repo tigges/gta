@@ -34,19 +34,6 @@ const THUMB: Record<string, string> = {
   "agency-vip-contract":    "/assets/gta5/dlc/agency.jpg",
 };
 
-const PLAY_COLOR: Record<string, string> = {
-  active:  "var(--c-alert)",
-  passive: "var(--c-growth)",
-  hybrid:  "var(--c-brand)",
-  "semi-passive": "var(--c-brand)",
-};
-
-function fmtRate(n: number) {
-  return n >= 1_000_000
-    ? `$${(n / 1_000_000).toFixed(1)}M/hr`
-    : `$${Math.round(n / 1000)}K/hr`;
-}
-
 const BONUS_LABEL: Record<string, string> = {
   "contact-missions": "Contact Missions",
   "casino-missions":  "Casino Work",
@@ -159,23 +146,25 @@ const BONUS_LABEL: Record<string, string> = {
         </a>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {topIncome.map((biz: any, i: number) => (
-          <IncomeCard
-            id={biz.id}
-            name={biz.name}
-            game="gta-online"
-            thumbnail={THUMB[biz.id] ?? null}
-            rate={fmtRate(biz.net_profit_per_hr)}
-            rateLabel="GTA$/hr"
-            playType={biz.play_type as any}
-            badge={`#${i + 1}`}
-            badgeStyle="bg-black/60 border-zinc-700 text-zinc-300 font-black"
-            source={biz.solo ? "Solo · GTAVI.AI" : `${biz.min_players}+ players · GTAVI.AI`}
-            shareText={`${biz.name}: ${fmtRate(biz.net_profit_per_hr)} in GTA Online. Follow the GTA$.`}
-            href={`/database?game=gta-online#profit-${biz.id}`}
-            compact={false}
-          />
-        ))}
+        {topIncome.map((biz: any, i: number) => {
+          const rankTier = i === 0 ? "S+" : i === 1 ? "S+" : i === 2 ? "S" : "A";
+          return (
+            <IncomeCard
+              id={biz.id}
+              name={biz.name}
+              game="gta-online"
+              category={biz.category ?? biz.play_type ?? "active"}
+              tier={rankTier as any}
+              net_profit_per_hr={biz.net_profit_per_hr}
+              max_profit_per_hr={1200000}
+              play_type={biz.play_type}
+              solo={biz.solo ?? true}
+              payout_per_run_max={biz.payout_per_run_max}
+              thumbnail={THUMB[biz.id] ?? null}
+              compact={true}
+            />
+          );
+        })}
       </div>
     </section>
 
