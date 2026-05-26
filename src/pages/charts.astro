@@ -132,7 +132,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
               aria-label={`Filter by ${g.short}`}
             >
               <img
-                src={`/assets/covers/${g.id}.jpg`}
+                src={g.id === "gta-online" ? "/assets/covers/gta-online.png" : `/assets/covers/${g.id}.jpg`}
                 alt={g.short}
                 class={`rounded border object-cover transition-all duration-200 group-hover:scale-105 ${
               g.id === "gta-6" ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10 group-hover:border-gta-gold/60" :
