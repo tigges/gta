@@ -132,7 +132,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
               aria-label={`Filter by ${g.short}`}
             >
               <img
-                src={`/assets/covers/${g.id}.jpg`}
+                src={g.id === "gta-online" ? "/assets/covers/gta-online.png" : `/assets/covers/${g.id}.jpg`}
                 alt={g.short}
                 class={`rounded border object-cover transition-all duration-200 group-hover:scale-105 ${
               g.id === "gta-6" ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10 group-hover:border-gta-gold/60" :
@@ -229,7 +229,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
   .chart-block[data-title="franchise"]  { border-left: 2px solid rgba(113,113,122,0.15); padding-left: 12px; }
 
   /* Scroll offset — clears sticky nav (48px) + section header row (~24px) */
-  .chart-block { scroll-margin-top: 72px; }
+  .chart-block { scroll-margin-top: 80px; }
 </style>
 
 <script>
@@ -380,21 +380,25 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
 
   requestAnimationFrame(() => applyFilters());
 
-  // ── Hash navigation — filter activation only ─────────────────────────────
+  // ── Hash navigation — scroll to target after filter settles ─────────────
   (function handleChartHash() {
     const hash = window.location.hash;
     if (!hash || hash.length < 2) return;
     const targetId = hash.slice(1);
+    // Wait for filters (applied via rAF above) + layout to settle before scrolling.
+    // Using 200ms to cover: rAF filter application + multi-section hide/show reflow.
     setTimeout(() => {
       const el = document.getElementById(targetId);
       if (!el) return;
       const section = (el.closest<HTMLElement>("section.chart-block") ?? el) as HTMLElement;
+      // If section hidden by filter, reset filters first
       if (section.style.display === "none" || section.offsetParent === null) {
         activeCategory = "All"; activeTitle = "All"; applyFilters();
-        setTimeout(() => {
-          section.scrollIntoView({ behavior: "instant", block: "start" });
-        }, 50);
       }
-    }, 100);
+      // Always re-scroll after filter application — layout may have shifted
+      requestAnimationFrame(() => {
+        section.scrollIntoView({ behavior: "instant", block: "start" });
+      });
+    }, 200);
   })();
 </script>

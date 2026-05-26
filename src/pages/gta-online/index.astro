@@ -19,8 +19,9 @@ import businessProfs from "../../../data/gta-5/economy/business-profiles.json";
 import bonusHistRaw  from "../../../data/gta-5/economy/bonus-history.json";
 
 // ── Live stats ─────────────────────────────────────────────────────────────
-const steamData   = (steamRaw as any).data as { year: number; month: string; avg_players: number }[];
-const latestSteam = steamData.at(-1);
+const steamData      = (steamRaw as any).data as { year: number; month: string; avg_players: number }[];
+const latestSteam    = steamData.at(-1);
+const currentPlayers = (steamRaw as any).current_players as number | null;
 const bonuses     = (weeklyBonuses as any).bonuses ?? [];
 const weekStart   = (weeklyBonuses as any).week_start ?? "";
 const histCount   = (bonusHistRaw as any).entry_count ?? 0;
@@ -83,9 +84,13 @@ const BONUS_LABEL: Record<string, string> = {
               <span class="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style="background:var(--c-title-online)"></span>
               <div>
                 <div class="text-xl font-mono font-bold leading-none" style="color:var(--c-title-online)">
-                  {latestSteam.avg_players.toLocaleString()}
+                  {(currentPlayers ?? latestSteam?.avg_players ?? 0).toLocaleString()}
                 </div>
-                <div class="text-[10px] font-mono text-zinc-600 mt-0.5">avg players · {latestSteam.month} {latestSteam.year} · SteamCharts</div>
+                <div class="text-[10px] font-mono text-zinc-600 mt-0.5">
+                  {currentPlayers
+                    ? "GTA V players online · live · Steam API"
+                    : `GTA V avg players · ${latestSteam?.month} ${latestSteam?.year} · SteamCharts`}
+                </div>
               </div>
             </div>
           )}
