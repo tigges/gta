@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
+import { tagAmazonUrl } from "../../config/affiliates";
 
 const LAUNCH_DATE = "2026-11-19";
 const LAUNCH_DISPLAY = "November 19, 2026";
@@ -313,7 +314,7 @@ const COUNTRIES: Country[] = [
         <div class={`country-stores${i === 0 ? "" : " hidden"}`} data-locale={c.localePrefix}>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {c.stores.map((r: StoreEntry) => (
-              <a href={r.url} target="_blank" rel="noopener noreferrer"
+              <a href={tagAmazonUrl(r.url)} target="_blank" rel="noopener noreferrer"
                 class={`group rounded-xl border p-4 hover:bg-white/3 transition-all flex items-start gap-3 ${r.border}`}
                 style="background:#131316">
                 <!-- Logo mark -->
@@ -339,9 +340,15 @@ const COUNTRIES: Country[] = [
         </div>
       ))}
 
-      <p class="text-[10px] font-mono text-zinc-500 mt-4">
-        * Some retailer links may be affiliate links. GTA VI.AI may earn a commission on qualifying purchases at no extra cost to you. Currency conversions are estimates.
-      </p>
+      <!-- FTC / ASA affiliate disclosure — mandatory, must be near the links -->
+      <div class="mt-5 rounded-lg border border-[#2a2a31] px-4 py-3 flex items-start gap-3" style="background:var(--c-bg)">
+        <span class="text-zinc-600 font-mono text-[11px] shrink-0 mt-0.5">ⓘ</span>
+        <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">
+          <strong class="text-zinc-500 font-semibold">Affiliate disclosure:</strong> Some links on this page are affiliate links.
+          GTAVI.AI earns a small commission if you purchase through them — at no extra cost to you.
+          This does not affect which stores are listed or how they are ranked. Currency conversions are estimates only.
+        </p>
+      </div>
     </section>
 
     <!-- ══════════════════════════════════════════════════════
@@ -497,8 +504,7 @@ const COUNTRIES: Country[] = [
         ))}
       </div>
       <p class="text-[10px] text-zinc-500 font-mono mt-4">
-        GTA VI.AI is a community data project. Not affiliated with Rockstar Games, Take-Two Interactive, or any retailer listed.
-        Retailer links may be affiliate links — we may earn a commission at no extra cost to you.
+        GTAVI.AI is an independent community data project. Not affiliated with Rockstar Games, Take-Two Interactive, or any retailer listed.
       </p>
     </section>
 
