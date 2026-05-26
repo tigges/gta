@@ -3,7 +3,7 @@ import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
-import { tagAmazonUrl } from "../../config/affiliates";
+import { tagAmazonUrl, PRODUCT_LINKS } from "../../config/affiliates";
 
 const LAUNCH_DATE = "2026-11-19";
 const LAUNCH_DISPLAY = "November 19, 2026";
@@ -227,6 +227,41 @@ const COUNTRIES: Country[] = [
   </section>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-14">
+
+    <!-- ══════════════════════════════════════════════════════
+         PLAY NOW WHILE YOU WAIT
+         Affiliate placement: GTA V is available today — high
+         conversion for visitors who can't wait for GTA VI.
+    ══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="rounded-xl border border-gta-gold/20 overflow-hidden relative"
+           style="background:linear-gradient(135deg,color-mix(in srgb,var(--c-brand) 6%,var(--c-card)) 0%,var(--c-card) 60%)">
+        <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,var(--c-brand),transparent 50%)"></div>
+        <div class="px-6 py-5 flex items-center justify-between gap-6 flex-wrap sm:flex-nowrap">
+          <div class="flex items-center gap-4 min-w-0">
+            <div class="shrink-0 w-14 h-14 rounded-xl overflow-hidden border border-gta-gold/20">
+              <img src="/assets/gta5/dlc/cayo-perico.jpg" alt="GTA V" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div class="min-w-0">
+              <div class="text-[10px] font-mono text-gta-gold/70 uppercase tracking-widest mb-0.5">Available now · Don't wait</div>
+              <div class="text-base font-bold text-zinc-100 leading-tight">GTA V + GTA Online — PlayStation 5</div>
+              <div class="text-[11px] font-mono text-zinc-500 mt-0.5">
+                Access GTA Online today · all DLC content included · prepare for GTA VI launch
+              </div>
+            </div>
+          </div>
+          <a href={PRODUCT_LINKS.gta5_ps5_us}
+             target="_blank" rel="noopener noreferrer sponsored"
+             class="shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-lg font-mono font-bold text-sm transition-all hover:brightness-110"
+             style="background:var(--c-brand);color:var(--c-bg)">
+            Buy on Amazon ↗
+          </a>
+        </div>
+        <div class="px-6 pb-3 flex items-center gap-2">
+          <span class="text-[9px] font-mono text-zinc-700">ⓘ Affiliate link · we earn a small commission at no cost to you · PS5 edition</span>
+        </div>
+      </div>
+    </section>
 
     <!-- ══════════════════════════════════════════════════════
          PLATFORM STATUS
