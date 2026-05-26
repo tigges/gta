@@ -11,7 +11,6 @@ import IncomeCard from "../../components/IncomeCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
 import ChartTeaserOnlineMetaCeiling  from "../../components/charts/ChartTeaserOnlineMetaCeiling.astro";
 import ChartTeaserOnlineSharkCard    from "../../components/charts/ChartTeaserOnlineSharkCard.astro";
-import ChartTeaserOnlineBonusCalendar from "../../components/charts/ChartTeaserOnlineBonusCalendar.astro";
 
 import steamRaw      from "../../../data/gta-5/meta/steam-players.json";
 import weeklyBonuses from "../../../data/gta-5/economy/weekly-bonuses.json";
@@ -163,13 +162,10 @@ const BONUS_LABEL: Record<string, string> = {
           All GTA Online charts →
         </a>
       </div>
-      <!-- Top row: 2 charts side by side -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ChartTeaserOnlineMetaCeiling />
         <ChartTeaserOnlineSharkCard />
       </div>
-      <!-- Full-width: bonus calendar -->
-      <ChartTeaserOnlineBonusCalendar />
     </section>
 
     <!-- ══════════════════════════════════════════════════════════
@@ -278,12 +274,11 @@ const BONUS_LABEL: Record<string, string> = {
         <span class="text-[10px] font-mono text-zinc-500 tracking-[0.2em] uppercase">// Explore GTA Online</span>
         <div class="flex-1 h-px bg-[#1e1e23]"></div>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
-          { href: "/database?game=gta-online", label: "Income Database",    sub: "Every income source S→D · profit profiles · ROI analysis",         badge: "Database",  thumb: "/assets/gta5/dlc/cayo-perico.jpg"         },
-          { href: "/gta-online/economy",        label: "Economy Model",      sub: "GTA-PPI · Shark Card inflation · circular flow · passive stack",     badge: "Economy",   thumb: "/assets/gta5/dlc/diamond-casino-heist.jpg" },
-          { href: "/gta-online/bonuses",        label: "Bonuses & Events",   sub: "This week's 2× events · sale calendar · 42 weeks tracked",          badge: "Bonuses",   thumb: "/assets/gta5/dlc/casino-work.jpg"         },
-          { href: "/charts?title=gta-online",   label: "Charts",             sub: "Income leaderboard · meta evolution · GTA-PPI · passive stack",      badge: "Charts",    thumb: "/assets/gta5/dlc/acid-lab.jpg"            },
+          { href: "/charts?title=gta-online",   label: "Charts",             sub: "Meta evolution · Shark Card inflation · income data · economy",      badge: "Charts",    thumb: "/assets/gta5/dlc/acid-lab.jpg"            },
+          { href: "/database?game=gta-online",  label: "Income Database",    sub: "Every income source S→D · profit profiles · ROI analysis",           badge: "Income",    thumb: "/assets/gta5/dlc/cayo-perico.jpg"         },
+          { href: "/gta-online/economy",        label: "Economy",            sub: "GTA-PPI · Shark Card inflation · circular flow · passive stack",      badge: "Economy",   thumb: "/assets/gta5/dlc/diamond-casino-heist.jpg"},
         ].map(tile => (
           <a href={tile.href}
              class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] transition-all"
