@@ -133,7 +133,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // GTA V story mode page
   "gta-v": [
-    { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "GTA Online income sources",
+    { href: "/database?game=gta-online", icon: "💰", tier: "GTA Online", label: "GTA Online income sources",
       sub: "56 methods · S→D tier · full profiles", color: "text-gta-teal", border: "border-gta-teal/30" },
     { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
       sub: `${predCount} predictions · what GTA V data says about VI`, color: "text-gta-gold", border: "border-gta-gold/20" },
@@ -197,8 +197,8 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // GTA Online hub
   "gta-online": [
-    { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "Income source browser",
-      sub: `S→D tier · ${gta5Vehicles > 0 ? "56" : "50"}+ methods profiled · ProfitCards`, color: "text-gta-teal", border: "border-gta-teal/30" },
+    { href: "/database?game=gta-online", icon: "💰", tier: "GTA Online", label: "Income database",
+      sub: `S→D tier · ${gta5Vehicles > 0 ? "56" : "50"}+ methods profiled · full profiles`, color: "text-gta-teal", border: "border-gta-teal/30" },
     { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
       sub: "Weekly calendar · 42 weeks of history · sale intelligence", color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
@@ -209,7 +209,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // GTA Online economy page
   "gta-online-economy": [
-    { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "Income source browser",
+    { href: "/database?game=gta-online", icon: "💰", tier: "GTA Online", label: "Income database",
       sub: "All 56 methods · S→D tier · weekly bonus tracker", color: "text-gta-teal", border: "border-gta-teal/30" },
     { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
       sub: "Weekly calendar · sale intelligence · leaderboard", color: "text-gta-teal", border: "border-gta-teal/20" },
@@ -217,19 +217,19 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       sub: "Cross-title complexity · earnings · inflation", color: "text-gta-gold", border: "border-gta-gold/25" },
   ],
 
-  // GTA Online income hub
+  // GTA Online income (Adviser page)
   "gta-online-income": [
     { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
       sub: "GTA-PPI · inflation · passive stack", color: "text-gta-gold", border: "border-gta-gold/25" },
+    { href: "/database?game=gta-online", icon: "💰", tier: "Database", label: "Income database",
+      sub: `${gta5Vehicles} vehicles · S→D tier · full profiles`, color: "text-gta-teal", border: "border-gta-teal/20" },
     { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
-      sub: "Weekly calendar · sale intelligence · leaderboard", color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/database?game=gta-online", icon: "🗄", tier: "Database", label: "Full data browser",
-      sub: `${gta5Vehicles} vehicles · all income entities`, color: "text-zinc-400", border: "border-zinc-700" },
+      sub: "Weekly calendar · sale intelligence · leaderboard", color: "text-zinc-400", border: "border-zinc-700" },
   ],
 
   // GTA Online bonuses page
   "gta-online-bonuses": [
-    { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "Income source browser",
+    { href: "/database?game=gta-online", icon: "💰", tier: "GTA Online", label: "Income database",
       sub: "Find out which active bonus is worth your time", color: "text-gta-teal", border: "border-gta-teal/30" },
     { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
       sub: "GTA-PPI · inflation history · meta evolution", color: "text-gta-gold", border: "border-gta-gold/25" },
@@ -239,7 +239,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // SEO landings: cayo-perico, assassination-guide
   "gta-online-seo": [
-    { href: "/gta-online/income", icon: "💰", tier: "GTA Online", label: "All income sources",
+    { href: "/database?game=gta-online", icon: "💰", tier: "GTA Online", label: "All income sources",
       sub: "56 methods · S→D tier · full profit profiles", color: "text-gta-teal", border: "border-gta-teal/30" },
     { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Weekly bonuses",
       sub: "Is this method on bonus this week?", color: "text-gta-teal", border: "border-gta-teal/20" },
