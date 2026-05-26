@@ -1,55 +1,94 @@
 ---
 import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
-import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import GamePill from "../../components/GamePill.astro";
-import { CATEGORY_BADGE_CLASSES } from "../../config/categoryColors";
 import CardFooter from "../../components/CardFooter.astro";
 import { getEconomyModel } from "../../config/economyModels";
 import economyData from "../../../data/franchise/economy-models.json";
+
 const economy = (economyData as any).economies.find((e: any) => e.title_id === "gta-sa");
 const ecoModel = getEconomyModel("gta-sa")!;
+const dims = economy.dimension_scores as Record<string, number>;
+const activeDims = Object.entries(dims).filter(([, v]) => (v as number) > 0);
 ---
+
 <Base
   titleContext="gta-sa"
-  title={economy.title_name + " — Economy"} description={economy.economy_type + " · " + economy.real_world_analogue + " · GTAVI.AI franchise economic analysis."} ogPage="gta-v">
-  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:200px">
-    <div class="absolute inset-0" style="background:#0a0a0d"></div>
+  title={`${economy.title_name} — Economy`}
+  description={`${economy.economy_type} · ${economy.real_world_analogue} · GTAVI.AI franchise economic analysis.`}
+>
+  <!-- Hero -->
+  <section class="relative border-b border-border-dim overflow-hidden" style="min-height:200px">
+    <div class="absolute inset-0" style="background:var(--c-hero-bloom),var(--c-bg-deep)"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
-      <div class="flex items-center gap-2 mb-4 flex-wrap">
+      <div class="flex items-center gap-2 mb-3 flex-wrap">
         <GamePill game="gta-sa" size="xs" />
+        <span class="text-[10px] font-mono border border-border-mid text-zinc-500 px-2 py-0.5 rounded uppercase tracking-widest">{economy.era_label}</span>
+        <span class="text-[10px] font-mono text-zinc-600 border border-border-dim px-2 py-0.5 rounded uppercase tracking-widest">Complexity {economy.complexity_score}/17</span>
       </div>
       <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">{economy.title_name} — Economy</h1>
-      <p class="text-zinc-300 text-sm leading-relaxed max-w-xl">The most complex single-player economy before GTA V. Four simultaneous income streams — missions, property, gang territory, gambling — plus a proto-stock market. Every innovation later stripped by GTA IV, then rebuilt at scale in GTA Online.</p>
+      <p class="text-zinc-400 text-sm leading-relaxed max-w-xl">{economy.summary}</p>
     </div>
   </section>
+
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+
+    <!-- Economy diagram + radar -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <GamePill game="gta-sa" size="xs" />
-        <span class={CATEGORY_BADGE_CLASSES}>Economy</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Circular Economy Model</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Circular Economy Model</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+        <a href="/franchise/economics" class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-border-mid hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">← Ten Economies</a>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 rounded-xl border border-[#1e1e23] p-5" style="background:#0e0e11">
-          <CircularEconomy titleId="gta-sa" mode="full" />
-        <CardFooter anchorId={ecoModel.anchorId} sources="Source: curated · GTA Fandom Wiki · franchise economic analysis" shareText={ecoModel.shareText} />
+        <div class="lg:col-span-2 rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-bg)">
+          <div class="p-5">
+            <CircularEconomy titleId="gta-sa" mode="full" />
+          </div>
+          <CardFooter anchorId={ecoModel.anchorId} sources="Source: curated · GTA Fandom Wiki · franchise economic analysis" shareText={ecoModel.shareText} />
         </div>
         <ChartComplexityRadar titleId="gta-sa" size={260} />
       </div>
     </section>
 
-    <section class="rounded-xl border border-gta-gold/15 px-6 py-5" style="background:var(--c-hero-bloom)">
-      <div class="text-[11px] font-mono text-gta-gold/40 uppercase tracking-widest mb-2">GTA VI Lineage</div>
-      <p class="text-[11px] font-mono text-zinc-300 leading-relaxed">{economy.gta_vi_lineage}</p>
+    <!-- Key Innovation -->
+    <section>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Key Innovation</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card);border-left:3px solid var(--c-identity)">
+        <div class="px-6 py-5">
+          <div class="text-[10px] font-mono uppercase tracking-widest mb-2" style="color:var(--c-identity)">3D Universe Peak — {economy.title_name}</div>
+          <div class="text-base font-semibold text-zinc-200 mb-2">{economy.key_innovation}</div>
+          <div class="text-[11px] font-mono text-zinc-500 leading-relaxed mb-4">{economy.economy_type} · {economy.real_world_analogue}</div>
+          <div class="flex flex-wrap gap-2">
+            {activeDims.map(([key, val]) => (
+              <span class="text-[10px] font-mono border border-border-mid text-zinc-500 px-2 py-0.5 rounded capitalize">
+                {key.replace(/_/g, " ")} <span class="text-gta-gold">{val}/3</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
+
+    <!-- GTA VI Lineage -->
+    <section class="rounded-xl border border-gta-gold/15 px-6 py-5" style="background:var(--c-hero-bloom)">
+      <div class="text-[10px] font-mono text-gta-gold/50 uppercase tracking-widest mb-2">GTA VI Lineage</div>
+      <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{economy.gta_vi_lineage}</p>
+    </section>
+
+    <!-- Nav CTAs -->
     <div class="flex items-center gap-3 flex-wrap">
-      <a href="/franchise/economics" class="px-4 py-2 rounded border border-[#2a2a31] text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">← Ten Economies</a>
-      <a href="/gta-iv/economy" class="px-4 py-2 rounded border border-gta-gold/30 text-gta-gold text-[11px] font-mono hover:bg-gta-gold/20 transition-all">GTA IV: The Regression →</a>
+      <a href="/gta-vc/economy" class="px-4 py-2 rounded border border-border-mid text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">← Vice City: First Asset Loop</a>
+      <a href="/gta-iv/economy" class="px-4 py-2 rounded border border-gta-gold/30 text-gta-gold text-[11px] font-mono hover:bg-gta-gold/10 transition-all">GTA IV: Economic Regression →</a>
     </div>
+
     <CrossLinks context="franchise" />
   </div>
 </Base>
