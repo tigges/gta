@@ -9,7 +9,7 @@
  */
 import GamePill from "./GamePill.astro";
 import ShareDropdown from "./ShareDropdown.astro";
-import { playColor as getPlayColor } from "../assets/chartColors";
+import { playTypeColor } from "../config/semanticTypes";
 
 interface LootTier {
   loot: string;
@@ -103,12 +103,8 @@ const TIER_STYLES = {
 };
 const ts = TIER_STYLES[tier] ?? TIER_STYLES.B;
 
-// Play type badge colour
-const PLAY_COLORS: Record<string, string> = {
-  passive: "#22c55e", "semi-passive": "#f59e0b",
-  active: "#ef4444",  heist: "#818cf8", mission: "#0d9488",
-};
-const playColor = PLAY_COLORS[play_type ?? category] ?? "#71717a";
+// Play type badge colour — from central registry
+const playColor = playTypeColor(play_type ?? category ?? "");
 
 // $/hr bar width
 const barPct = Math.round((net_profit_per_hr / max_profit_per_hr) * 100);

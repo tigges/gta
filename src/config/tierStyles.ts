@@ -15,23 +15,23 @@ export interface TierStyle {
 export const TIER_STYLES: Record<"confirmed" | "reported" | "predicted", TierStyle> = {
   confirmed: {
     label:   "CONFIRMED",
-    color:   "text-emerald-300",
-    bar:     "bg-emerald-400",
+    color:   "text-gta-teal",
+    bar:     "bg-gta-teal",
     border:  "border-l-gta-teal",
-    badgeBg: "bg-emerald-900/20 border-emerald-500/60 text-emerald-200",
+    badgeBg: "bg-gta-teal/10 border-gta-teal/40 text-gta-teal",
   },
   reported: {
     label:   "REPORTED",
-    color:   "text-amber-300",
-    bar:     "bg-amber-400",
+    color:   "text-gta-gold",
+    bar:     "bg-gta-gold",
     border:  "border-l-gta-gold",
-    badgeBg: "bg-amber-900/20 border-amber-500/60 text-amber-200",
+    badgeBg: "bg-gta-gold/10 border-gta-gold/40 text-gta-gold",
   },
   predicted: {
     label:   "PREDICTED",
-    color:   "text-zinc-200",
-    bar:     "bg-zinc-400",
-    border:  "border-l-zinc-500",
-    badgeBg: "bg-zinc-700/30 border-zinc-400/50 text-zinc-100",
+    color:   "text-zinc-400",
+    bar:     "bg-zinc-500",
+    border:  "border-l-zinc-600",
+    badgeBg: "bg-zinc-800/50 border-zinc-700/40 text-zinc-400",
   },
 };

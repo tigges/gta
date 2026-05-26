@@ -20,6 +20,7 @@
  */
 import GamePill from "./GamePill.astro";
 import ShareDropdown from "./ShareDropdown.astro";
+import { playTypeColor, getRegionType } from "../config/semanticTypes";
 
 type GameId   = "gta-vi" | "gta-online" | "gta-v";
 type Region   = "vice-city" | "leonida" | "both";
@@ -54,28 +55,10 @@ const {
 
 const anchorId = anchorIdProp ?? `income-${id}`;
 
-const PLAY_COLOR: Record<string, string> = {
-  active:         "var(--c-play-active)",
-  passive:        "var(--c-play-passive)",
-  "semi-passive": "var(--c-play-semi)",
-  hybrid:         "var(--c-play-semi)",
-  heist:          "var(--c-play-heist)",
-  mission:        "var(--c-play-mission)",
-};
-const REGION_COLOR: Record<string, string> = {
-  "vice-city": "var(--c-title-vi,#ff6b9d)",
-  "leonida":   "var(--c-growth,#22c55e)",
-  "both":      "var(--c-text-4,#9898b8)",
-};
-const REGION_LABEL: Record<string, string> = {
-  "vice-city": "Vice City",
-  "leonida":   "Leonida",
-  "both":      "VC + Leonida",
-};
-
-const playColor   = playType ? PLAY_COLOR[playType]  ?? "var(--c-text-4)" : null;
-const regionColor = region   ? REGION_COLOR[region]  ?? "var(--c-text-4)" : null;
-const regionLabel = region   ? REGION_LABEL[region]  ?? region            : null;
+const playColor   = playType ? playTypeColor(playType) : null;
+const regionType  = region ? getRegionType(region) : null;
+const regionColor = regionType?.colorToken ?? null;
+const regionLabel = regionType?.label ?? null;
 const displayRate = rate ?? (rateTbd ? "GTA$ TBD" : null);
 ---
 

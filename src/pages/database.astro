@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 import ProfitCard from "../components/ProfitCard.astro";
+import { regionFromName } from "../config/semanticTypes";
 import type {
   EntityIndex, LeonidaData, VehiclesData, BusinessProfiles,
   OnlineHeistsData, RevenueTiersData, StoryMissionsData, OnlineMissionsData,
@@ -701,18 +702,17 @@ const HEIST_THUMBS: Record<string, string> = {
 
   // ── Constants ─────────────────────────────────────────────────────────────
   const TIER_META: Record<string,{badge:string;color:string;label:string}> = {
-    confirmed: { label:"Confirmed", color:"text-gta-gold",  badge:"bg-gta-gold/10 border-gta-gold/25"  },
-    reported:  { label:"Reported",  color:"text-zinc-300",  badge:"bg-zinc-800 border-zinc-700"        },
-    indexed:   { label:"Indexed",   color:"text-zinc-600",  badge:"bg-zinc-900 border-zinc-800"        },
+    confirmed: { label:"Confirmed", color:"text-gta-teal",  badge:"bg-gta-teal/10 border-gta-teal/40"  },
+    reported:  { label:"Reported",  color:"text-gta-gold",  badge:"bg-gta-gold/10 border-gta-gold/40"  },
+    predicted: { label:"Predicted", color:"text-zinc-500",  badge:"bg-zinc-800/50 border-zinc-700/40"  },
+    indexed:   { label:"Indexed",   color:"text-zinc-600",  badge:"bg-zinc-900/50 border-zinc-800/40"  },
   };
   const TYPE_ICON: Record<string,string> = {
     vehicle:"🚗", character:"👤", weapon:"🔫", business:"🏢",
     animal:"🐊", location:"📍", mission:"🎯", activity:"🎮", property:"🏠", radio:"📻",
   };
-  const SOURCE_STYLE: Record<string,string> = {
-    fandom:  "text-zinc-500 border-zinc-800 bg-zinc-900/50",
-    leonida: "text-zinc-500 border-zinc-800 bg-zinc-900/50",
-  };
+  // Source rendered as plain dim text — no pill/border treatment
+  const srcText = (e: Gta6Entity) => `<span class="text-[9px] font-mono text-zinc-600">${e.source_label}</span>`;
 
   const PAGE_SIZE = 100;
 
@@ -792,23 +792,9 @@ const HEIST_THUMBS: Record<string, string> = {
     "Making Moves":              "/assets/gta6/locations/Port_Gellhorn_01.jpg",
   };
 
-  function getMissionRegion(name: string): { label: string; color: string } {
-    const n = name.toLowerCase();
-    if (n.includes("vice city") || n.includes("ocean") || n.includes("casino")
-     || n.includes("liquor") || n.includes("roller") || n.includes("wheels")
-     || n.includes("connections") || n.includes("collection") || n.includes("race"))
-      return { label: "Vice City", color: "var(--c-title-vi,#ff6b9d)" };
-    if (n.includes("leonida") || n.includes("swamp") || n.includes("fishing")
-     || n.includes("tourist") || n.includes("grassriver") || n.includes("keys")
-     || n.includes("kalaga") || n.includes("gator") || n.includes("bayou"))
-      return { label: "Leonida", color: "var(--c-growth,#22c55e)" };
-    return { label: "Both", color: "var(--c-text-4,#9898b8)" };
-  }
-
   function buildGta6Card(e: Gta6Entity): string {
     const meta = TIER_META[e.confidence_tier] ?? TIER_META.indexed;
     const icon = TYPE_ICON[e.type] ?? "•";
-    const srcStyle = SOURCE_STYLE[e.source_id] ?? "text-zinc-600 border-zinc-800";
     const priceLabel = PRICE_LABEL[e.type];
 
     // Leonida: no full-card link — just a quiet external icon
@@ -818,7 +804,7 @@ const HEIST_THUMBS: Record<string, string> = {
 
     // ── Mission card: enriched layout with region badge ──────────────────
     if (e.type === "mission") {
-      const region  = getMissionRegion(e.name);
+      const region  = regionFromName(e.name);
       const mThumb  = MISSION_THUMBS[e.name] ?? "/assets/gta6/locations/Vice_City_03.jpg";
       const pillHtml = `<span class="inline-flex self-start items-center font-mono uppercase tracking-widest rounded border shrink-0 whitespace-nowrap text-[10px] px-1.5 py-0.5" style="color:var(--c-title-vi,#ff6b9d);border-color:rgba(255,107,157,0.33);background:rgba(10,10,13,0.88)">GTA VI</span>`;
       return `
@@ -833,13 +819,13 @@ const HEIST_THUMBS: Record<string, string> = {
           </div>
           <div class="px-3 py-2.5 flex flex-col flex-1">
             <div class="flex items-center gap-1.5 mb-1.5">
-              <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border uppercase tracking-widest" style="color:${region.color};border-color:${region.color}40;background:${region.color}15">${region.label}</span>
+              <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border uppercase tracking-widest" style="color:${region.colorToken};border-color:color-mix(in srgb,${region.colorToken} 35%,transparent);background:color-mix(in srgb,${region.colorToken} 12%,transparent)">${region.label}</span>
             </div>
             <div class="text-sm font-semibold text-zinc-200 leading-snug group-hover:text-white transition-colors mb-auto">${e.name}</div>
             <div class="flex items-center justify-between gap-1 mt-2">
               <div class="flex items-center gap-1.5">
                 <span class="text-[9px] font-mono text-zinc-600">🎯 mission</span>
-                <span class="text-[9px] font-mono border px-1 py-0.5 rounded ${srcStyle}">${e.source_label}</span>
+                ${srcText(e)}
               </div>
               ${extLink}
             </div>
@@ -889,7 +875,7 @@ const HEIST_THUMBS: Record<string, string> = {
             <div class="flex items-center justify-between gap-2">
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="text-[10px] font-mono text-zinc-600">${icon} ${e.type}</span>
-                <span class="text-[10px] font-mono border px-1 py-0.5 rounded ${srcStyle}">${e.source_label}</span>
+                ${srcText(e)}
               </div>
               ${extLink}
             </div>
@@ -907,7 +893,7 @@ const HEIST_THUMBS: Record<string, string> = {
         <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-[10px] font-mono text-zinc-600">${icon} ${e.type}</span>
-            <span class="text-[10px] font-mono border px-1 py-0.5 rounded ${srcStyle}">${e.source_label}</span>
+            ${srcText(e)}
           </div>
           ${extLink}
         </div>
@@ -1039,11 +1025,24 @@ const HEIST_THUMBS: Record<string, string> = {
       srcLabel.textContent = labels[activeGame] ?? "";
 
       // Tab button styles
+  // ── Shared filter style helpers (from semanticTypes registry) ──────────────
+  const DB_GAME_COLORS: Record<string,string> = {
+    "gta-6":      "var(--c-title-vi)",
+    "gta-online": "var(--c-title-online)",
+    "gta-5":      "var(--c-title-v)",
+  };
+  function dbFilterActive(colorToken: string): string {
+    return `color:${colorToken};border-color:color-mix(in srgb,${colorToken} 40%,transparent);background:color-mix(in srgb,${colorToken} 12%,transparent)`;
+  }
+  const dbFilterInactive = "color:var(--c-text-5);border-color:var(--c-border-2);background:transparent";
+  // Generic gold active (for type/tier filters without a specific game color)
+  const dbFilterGoldActive = dbFilterActive("var(--c-brand)");
+
       document.querySelectorAll<HTMLButtonElement>(".db-game-tab").forEach(b => {
         const active = b.dataset.game === activeGame;
-        b.className = active
-          ? "db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all"
-          : "db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all";
+        const c = DB_GAME_COLORS[b.dataset.game ?? ""] ?? "var(--c-brand)";
+        b.className = "db-game-tab px-4 py-2 rounded-lg text-sm font-mono border transition-all";
+        b.style.cssText = active ? dbFilterActive(c) : dbFilterInactive;
       });
 
       document.getElementById("db-pager")?.remove();
@@ -1058,12 +1057,8 @@ const HEIST_THUMBS: Record<string, string> = {
       currentPage = 0;
       document.querySelectorAll<HTMLButtonElement>(".db-type-filter").forEach(b => {
         const active = b.dataset.type === activeType;
-        b.className = b.className
-          .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
-          .replace(/border-\[#2a2a31\]|text-zinc-500/g, "").trim();
-        b.classList.add(...(active
-          ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"]
-          : ["border-[#2a2a31]","text-zinc-500"]));
+        b.className = "db-type-filter px-2.5 py-1 rounded text-[10px] font-mono border transition-all";
+        b.style.cssText = active ? dbFilterGoldActive : dbFilterInactive;
       });
       renderGta6();
     });
