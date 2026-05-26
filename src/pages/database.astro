@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
-import ProfitCard from "../components/ProfitCard.astro";
+import IncomeCard from "../components/IncomeCard.astro";
 import { regionFromName } from "../config/semanticTypes";
 import type {
   EntityIndex, LeonidaData, VehiclesData, BusinessProfiles,
@@ -493,7 +493,7 @@ const HEIST_THUMBS: Record<string, string> = {
               const isHeist = heistList.some((h: any) => h.id === src.id);
               return (
                 <div class="online-card" data-category={biz.category ?? (isHeist ? "heist" : "business")}>
-                  <ProfitCard
+                  <IncomeCard
                     id={biz.id ?? src.id}
                     name={biz.name ?? biz.title}
                     game="gta-online"
@@ -544,7 +544,7 @@ const HEIST_THUMBS: Record<string, string> = {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {onlineMissionList.slice(0, 8).map((m: any) => (
             <div class="online-card" data-category="active">
-              <ProfitCard
+              <IncomeCard
                 id={m.id}
                 name={m.title}
                 game="gta-online"
@@ -587,7 +587,7 @@ const HEIST_THUMBS: Record<string, string> = {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {storyHeistData.heists.filter(h => (h.approaches?.[0]?.player_max_cut ?? 0) > 0).map(h => (
             <div class="gta5eco-card" data-category="heist">
-              <ProfitCard
+              <IncomeCard
                 id={h.id}
                 name={h.title}
                 game="gta-5"
@@ -620,7 +620,7 @@ const HEIST_THUMBS: Record<string, string> = {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {assassinGuide.map((step: any) => (
             <div class="gta5eco-card" data-category="stocks">
-              <ProfitCard
+              <IncomeCard
                 id={step.mission_id}
                 name={step.title}
                 game="gta-5"

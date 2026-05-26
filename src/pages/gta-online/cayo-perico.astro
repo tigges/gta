@@ -3,7 +3,7 @@
 // Target queries: "cayo perico heist guide", "best solo money gta online", "cayo perico $/hr"
 import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
-import ProfitCard from "../../components/ProfitCard.astro";
+import IncomeCard from "../../components/IncomeCard.astro";
 import StockCalculator from "../../components/StockCalculator.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import businessProfiles from "../../../data/gta-5/economy/business-profiles.json";
@@ -56,7 +56,7 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
         </div>
       </div>
       <div class="shrink-0 w-full sm:w-64">
-        <ProfitCard
+        <IncomeCard
           id="cayo-perico"
           name="Cayo Perico Heist"
           game="gta-online"
