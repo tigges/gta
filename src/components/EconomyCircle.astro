@@ -166,15 +166,10 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
 
   </div>
 
-  {/* ── Footer: GTAVI.AI attribution + Share ─────────────────────── */}
+  {/* ── Footer: GTAVI.AI + Share (right-aligned, like all cards) ──── */}
   <div id={anchorId} class="eco-footer" style="scroll-margin-top:72px">
+    <div class="flex-1"></div>
     <span class="footer-brand">GTAVI.AI</span>
-    {fullEconomyHref && (
-      <a href={fullEconomyHref} class="full-link"
-         onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'">
-        Full model &#8594;
-      </a>
-    )}
     <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
   </div>
 
@@ -413,11 +408,7 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
 .footer-brand {
   font-size: 10px; font-family: var(--font-mono,monospace);
   text-transform: uppercase; letter-spacing: .12em;
-  color: var(--c-text-6);
-}
-.full-link {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .12em;
-  color: var(--c-brand); opacity: .75; text-decoration: none; transition: opacity .2s;
+  color: var(--c-text-5);
 }
 
 /* ── Mobile (≤599px) ─────────────────────────────────────────────────── */
