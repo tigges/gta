@@ -44,9 +44,48 @@ const VALUE_CLS: Record<string, string> = {
 };
 ---
 
-<div class={`rounded-xl border border-[#1e1e23] overflow-hidden ${extraClass}`} style="background:#131316">
+<style>
+  .ledger-shell {
+    background: var(--c-card);
+    border-color: var(--c-border-1);
+  }
+
+  .ledger-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1.25rem;
+    border-bottom: 1px solid var(--c-border-1);
+    font-size: 12px;
+  }
+  .ledger-row:last-child {
+    border-bottom: none;
+  }
+
+  .ledger-positive {
+    color: var(--c-growth);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .ledger-negative {
+    color: var(--c-alert);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .ledger-neutral {
+    color: var(--c-text-4);
+    font-size: 12px;
+  }
+  .ledger-meta {
+    color: var(--c-text-6);
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+</style>
+
+<div class={`rounded-xl border overflow-hidden ledger-shell ${extraClass}`}>
   {showHeader && (
-    <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2.5">
+    <div class="px-5 py-3 border-b border-border-dim flex items-center gap-2.5">
       <HudIcon name="money" size={14} class="text-gta-teal" />
       <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.18em]">{title}</span>
     </div>

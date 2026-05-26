@@ -4,6 +4,7 @@
  * Shows GTA$/hr earnings ceiling at each major DLC milestone, 2013–2026.
  * No D3, no JS — always renders. Links to full interactive chart on /charts.
  */
+import ShareDropdown from "../ShareDropdown.astro";
 
 const milestones = [
   { label: "Contact Missions",    year: "2013", hr: 100,  solo: true  },
@@ -59,7 +60,7 @@ const max = Math.max(...milestones.map(m => m.hr));
   </div>
 
   <!-- Legend + stat -->
-  <div class="px-5 pb-4 border-t border-[#1e1e23] pt-3">
+  <div class="px-5 pt-3 pb-1 border-t border-[#1e1e23]">
     <div class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-3 text-[9px] font-mono text-zinc-600">
         <span><span class="inline-block w-2 h-2 rounded-full mr-1" style="background:var(--c-title-online)"></span>Solo capable</span>
@@ -67,5 +68,9 @@ const max = Math.max(...milestones.map(m => m.hr));
       </div>
       <span class="text-[9px] font-mono text-zinc-600">12 patches tracked</span>
     </div>
+  </div>
+  <div class="px-5 pb-3 pt-2 flex items-center justify-end gap-2">
+    <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+    <ShareDropdown anchorId="section-meta-evolution-chart" shareText="GTA Online best $/hr ceiling: $100k/hr in 2013 → $1.24M/hr after Cayo Perico. 5× jump in one update. Follow the meta at GTAVI.AI" size="sm" />
   </div>
 </div>

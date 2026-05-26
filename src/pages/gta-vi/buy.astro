@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
+import { tagAmazonUrl, PRODUCT_LINKS } from "../../config/affiliates";
 
 const LAUNCH_DATE = "2026-11-19";
 const LAUNCH_DISPLAY = "November 19, 2026";
@@ -228,6 +229,41 @@ const COUNTRIES: Country[] = [
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-14">
 
     <!-- ══════════════════════════════════════════════════════
+         PLAY NOW WHILE YOU WAIT
+         Affiliate placement: GTA V is available today — high
+         conversion for visitors who can't wait for GTA VI.
+    ══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="rounded-xl border border-gta-gold/20 overflow-hidden relative"
+           style="background:linear-gradient(135deg,color-mix(in srgb,var(--c-brand) 6%,var(--c-card)) 0%,var(--c-card) 60%)">
+        <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,var(--c-brand),transparent 50%)"></div>
+        <div class="px-6 py-5 flex items-center justify-between gap-6 flex-wrap sm:flex-nowrap">
+          <div class="flex items-center gap-4 min-w-0">
+            <div class="shrink-0 w-14 h-14 rounded-xl overflow-hidden border border-gta-gold/20">
+              <img src="/assets/gta5/dlc/cayo-perico.jpg" alt="GTA V" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div class="min-w-0">
+              <div class="text-[10px] font-mono text-gta-gold/70 uppercase tracking-widest mb-0.5">Available now · Don't wait</div>
+              <div class="text-base font-bold text-zinc-100 leading-tight">GTA V + GTA Online — PlayStation 5</div>
+              <div class="text-[11px] font-mono text-zinc-500 mt-0.5">
+                Access GTA Online today · all DLC content included · prepare for GTA VI launch
+              </div>
+            </div>
+          </div>
+          <a href={PRODUCT_LINKS.gta5_ps5_us}
+             target="_blank" rel="noopener noreferrer sponsored"
+             class="shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-lg font-mono font-bold text-sm transition-all hover:brightness-110"
+             style="background:var(--c-brand);color:var(--c-bg)">
+            Buy on Amazon ↗
+          </a>
+        </div>
+        <div class="px-6 pb-3 flex items-center gap-2">
+          <span class="text-[9px] font-mono text-zinc-700">ⓘ Affiliate link · we earn a small commission at no cost to you · PS5 edition</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
          PLATFORM STATUS
     ══════════════════════════════════════════════════════ -->
     <section>
@@ -313,7 +349,7 @@ const COUNTRIES: Country[] = [
         <div class={`country-stores${i === 0 ? "" : " hidden"}`} data-locale={c.localePrefix}>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {c.stores.map((r: StoreEntry) => (
-              <a href={r.url} target="_blank" rel="noopener noreferrer"
+              <a href={tagAmazonUrl(r.url)} target="_blank" rel="noopener noreferrer"
                 class={`group rounded-xl border p-4 hover:bg-white/3 transition-all flex items-start gap-3 ${r.border}`}
                 style="background:#131316">
                 <!-- Logo mark -->
@@ -339,9 +375,15 @@ const COUNTRIES: Country[] = [
         </div>
       ))}
 
-      <p class="text-[10px] font-mono text-zinc-500 mt-4">
-        * Some retailer links may be affiliate links. GTA VI.AI may earn a commission on qualifying purchases at no extra cost to you. Currency conversions are estimates.
-      </p>
+      <!-- FTC / ASA affiliate disclosure — mandatory, must be near the links -->
+      <div class="mt-5 rounded-lg border border-[#2a2a31] px-4 py-3 flex items-start gap-3" style="background:var(--c-bg)">
+        <span class="text-zinc-600 font-mono text-[11px] shrink-0 mt-0.5">ⓘ</span>
+        <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">
+          <strong class="text-zinc-500 font-semibold">Affiliate disclosure:</strong> Some links on this page are affiliate links.
+          GTAVI.AI earns a small commission if you purchase through them — at no extra cost to you.
+          This does not affect which stores are listed or how they are ranked. Currency conversions are estimates only.
+        </p>
+      </div>
     </section>
 
     <!-- ══════════════════════════════════════════════════════
@@ -497,8 +539,7 @@ const COUNTRIES: Country[] = [
         ))}
       </div>
       <p class="text-[10px] text-zinc-500 font-mono mt-4">
-        GTA VI.AI is a community data project. Not affiliated with Rockstar Games, Take-Two Interactive, or any retailer listed.
-        Retailer links may be affiliate links — we may earn a commission at no extra cost to you.
+        GTAVI.AI is an independent community data project. Not affiliated with Rockstar Games, Take-Two Interactive, or any retailer listed.
       </p>
     </section>
 
