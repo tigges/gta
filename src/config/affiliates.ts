@@ -29,6 +29,21 @@ export const AFFILIATE_IDS = {
   // rakuten_game_uk:    "",  // GAME.co.uk via Rakuten Advertising
 } as const;
 
+/**
+ * Specific product affiliate links.
+ * Use pre-shortened amzn.to URLs — the affiliate tag is already embedded.
+ * Add UK/DE/etc. variants as separate keys when available.
+ */
+export const PRODUCT_LINKS = {
+  /** GTA V – PlayStation 5 (US, Amazon, gtaviai-20) */
+  gta5_ps5_us:   "https://amzn.to/4vanPHp",
+
+  // Add more as you generate them from Associates Central:
+  // gta5_xbox_us:  "",
+  // gta5_ps5_uk:   "",
+  // gta5_xbox_uk:  "",
+} as const;
+
 /** Append an Amazon affiliate tag to a URL if an ID is configured. */
 export function amazonLink(url: string, tag: string): string {
   if (!tag) return url;           // no tag → return clean URL (still functional)
