@@ -195,22 +195,22 @@ if (!entry) throw new Error(`ExpenditureCard: unknown id "${id}"`);
 
 const anchorId = `exp-${id}`;
 
-// Token-mapped variant styles — no raw hex or Tailwind palette classes
+// Token-mapped variant styles aligned with EconomyCircle semantics:
+//   investment  → --c-economy  (indigo "capital markets" — matches EconomyCircle I box)
+//   injection   → --c-title-online (cyan — matches EconomyCircle J row / J+Y column)
+//   consumption → --c-flow-spending (orange — matches EconomyCircle C box)
 const VARIANT_STYLES = {
   investment: {
-    label:      "INVESTMENT",
-    accentVar:  "var(--c-brand)",
-    valueCls:   "text-gta-gold",
+    label:     "INVESTMENT",
+    accentVar: "var(--c-economy)",
   },
   injection: {
-    label:      "INJECTION",
-    accentVar:  "var(--c-economy)",
-    valueCls:   "text-gta-indigo",
+    label:     "INJECTION",
+    accentVar: "var(--c-title-online)",
   },
   consumption: {
-    label:      "CONSUMPTION",
-    accentVar:  "var(--c-flow-spending)",
-    valueCls:   "text-content-3",
+    label:     "CONSUMPTION",
+    accentVar: "var(--c-flow-spending)",
   },
 } as const;
 const style = VARIANT_STYLES[entry.variant];
@@ -250,7 +250,7 @@ const borderStyle = `border-left:2px solid ${style.accentVar}`;
     {entry.fields.map(f => (
       <div class="flex items-center justify-between gap-2">
         <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest shrink-0">{f.label}</span>
-        <span class={`text-[11px] font-mono font-semibold text-right ${style.valueCls}`}>{f.value}</span>
+        <span class="text-[11px] font-mono font-semibold text-right" style={`color:${style.accentVar}`}>{f.value}</span>
       </div>
     ))}
   </div>
