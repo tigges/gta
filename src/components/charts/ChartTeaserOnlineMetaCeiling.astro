@@ -1,0 +1,71 @@
+---
+/**
+ * ChartTeaserOnlineMetaCeiling — static CSS step chart teaser.
+ * Shows GTA$/hr earnings ceiling at each major DLC milestone, 2013–2026.
+ * No D3, no JS — always renders. Links to full interactive chart on /charts.
+ */
+
+const milestones = [
+  { label: "Contact Missions",    year: "2013", hr: 100,  solo: true  },
+  { label: "Pacific Standard",    year: "2015", hr: 300,  solo: false },
+  { label: "Special Cargo",       year: "2016", hr: 400,  solo: false },
+  { label: "Casino Heist",        year: "2019", hr: 1000, solo: false },
+  { label: "Cayo Perico",         year: "2020", hr: 1200, solo: true  },
+  { label: "Cayo + Acid Lab",     year: "2022", hr: 1240, solo: true  },
+];
+
+const max = Math.max(...milestones.map(m => m.hr));
+---
+
+<div class="rounded-xl border border-[#1e1e23] overflow-hidden flex flex-col" style="background:var(--c-card)">
+  <!-- Header -->
+  <div class="flex items-start justify-between gap-3 px-5 pt-4 pb-3 border-b border-[#1e1e23]">
+    <div>
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+              style="color:var(--c-title-online);border-color:color-mix(in srgb,var(--c-title-online) 40%,transparent);background:color-mix(in srgb,var(--c-title-online) 10%,transparent)">GTA Online</span>
+        <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+              style="color:var(--c-text-4);border-color:var(--c-border-2)">IG Economy</span>
+      </div>
+      <div class="text-sm font-semibold text-zinc-200">Best $/hr Ceiling Over the Years</div>
+      <div class="text-[10px] font-mono text-zinc-500 mt-0.5">Top earning method at each major DLC · Cayo Perico raised it 5× in one update</div>
+    </div>
+    <a href="/charts#section-meta-evolution-chart"
+       class="shrink-0 text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors uppercase tracking-widest whitespace-nowrap">
+      Full →
+    </a>
+  </div>
+
+  <!-- Step bars -->
+  <div class="px-5 py-4 flex flex-col gap-2 flex-1">
+    {milestones.map(m => {
+      const pct = Math.round((m.hr / max) * 100);
+      const isCayo = m.label.startsWith("Cayo");
+      return (
+        <div class="flex items-center gap-2.5">
+          <span class="text-[9px] font-mono text-zinc-600 w-10 shrink-0">{m.year}</span>
+          <div class="flex-1 h-4 rounded overflow-hidden" style="background:var(--c-bg)">
+            <div class="h-full rounded"
+                 style={`width:${pct}%;background:${m.solo ? "var(--c-title-online)" : "var(--c-growth)"};opacity:${isCayo ? "1" : "0.6"}`}>
+            </div>
+          </div>
+          <span class={`text-[9px] font-mono w-16 shrink-0 ${isCayo ? "" : "text-zinc-600"}`}
+                style={isCayo ? "color:var(--c-title-online)" : ""}>
+            ${m.hr}k/hr
+          </span>
+        </div>
+      );
+    })}
+  </div>
+
+  <!-- Legend + stat -->
+  <div class="px-5 pb-4 border-t border-[#1e1e23] pt-3">
+    <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center gap-3 text-[9px] font-mono text-zinc-600">
+        <span><span class="inline-block w-2 h-2 rounded-full mr-1" style="background:var(--c-title-online)"></span>Solo capable</span>
+        <span><span class="inline-block w-2 h-2 rounded-full mr-1" style="background:var(--c-growth)"></span>Group only</span>
+      </div>
+      <span class="text-[9px] font-mono text-zinc-600">12 patches tracked</span>
+    </div>
+  </div>
+</div>
