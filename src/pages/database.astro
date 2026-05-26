@@ -775,6 +775,36 @@ const HEIST_THUMBS: Record<string, string> = {
     mission:"Payout", activity:"Payout", property:"Setup cost",
   };
 
+  // ── Mission enrichment ────────────────────────────────────────────────────
+  const MISSION_THUMBS: Record<string, string> = {
+    "Welcome to Leonida":        "/assets/gta6/locations/Leonida_Keys_01.jpg",
+    "The Liquor Store Job":      "/assets/gta6/locations/Vice_City_02.jpg",
+    "First Wheels":              "/assets/gta6/locations/Vice_City_03.jpg",
+    "Making Connections":        "/assets/gta6/locations/Vice_City_04.jpg",
+    "The Vice City Heist":       "/assets/gta6/locations/Vice_City_01.jpg",
+    "Gone Fishing":              "/assets/gta6/locations/Grassrivers_02.jpg",
+    "Street Race: Ocean Drive":  "/assets/gta6/locations/Vice_City_05.jpg",
+    "The Collection":            "/assets/gta6/locations/Ambrosia_01.jpg",
+    "Swamp Thing":               "/assets/gta6/locations/Grassrivers_01.jpg",
+    "Tourist Trap":              "/assets/gta6/locations/Leonida_Keys_02.jpg",
+    "High Roller":               "/assets/gta6/locations/Vice_City_04.jpg",
+    "The Great Escape":          "/assets/gta6/locations/Ambrosia_02.jpg",
+    "Making Moves":              "/assets/gta6/locations/Port_Gellhorn_01.jpg",
+  };
+
+  function getMissionRegion(name: string): { label: string; color: string } {
+    const n = name.toLowerCase();
+    if (n.includes("vice city") || n.includes("ocean") || n.includes("casino")
+     || n.includes("liquor") || n.includes("roller") || n.includes("wheels")
+     || n.includes("connections") || n.includes("collection") || n.includes("race"))
+      return { label: "Vice City", color: "var(--c-title-vi,#ff6b9d)" };
+    if (n.includes("leonida") || n.includes("swamp") || n.includes("fishing")
+     || n.includes("tourist") || n.includes("grassriver") || n.includes("keys")
+     || n.includes("kalaga") || n.includes("gator") || n.includes("bayou"))
+      return { label: "Leonida", color: "var(--c-growth,#22c55e)" };
+    return { label: "Both", color: "var(--c-text-4,#9898b8)" };
+  }
+
   function buildGta6Card(e: Gta6Entity): string {
     const meta = TIER_META[e.confidence_tier] ?? TIER_META.indexed;
     const icon = TYPE_ICON[e.type] ?? "•";
@@ -785,6 +815,42 @@ const HEIST_THUMBS: Record<string, string> = {
     const extLink = e.url
       ? `<a href="${e.url}" target="_blank" rel="noopener noreferrer" class="shrink-0 text-zinc-700 hover:text-zinc-400 transition-colors" title="View on Leonida Intel" onclick="event.stopPropagation()">↗</a>`
       : "";
+
+    // ── Mission card: enriched layout with region badge ──────────────────
+    if (e.type === "mission") {
+      const region  = getMissionRegion(e.name);
+      const mThumb  = MISSION_THUMBS[e.name] ?? "/assets/gta6/locations/Vice_City_03.jpg";
+      return `
+        <div class="rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-all duration-300 group overflow-hidden flex flex-col" style="background:var(--c-card)">
+          <div class="relative overflow-hidden" style="height:80px">
+            <img src="${mThumb}" alt="${e.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+            <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-card) 0%,transparent 60%)"></div>
+            <div class="absolute top-1.5 left-2">
+              <span class="text-[7px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}">${meta.label}</span>
+            </div>
+            <div class="absolute top-1.5 right-2">
+              <span class="text-[7px] font-mono px-1.5 py-0.5 rounded uppercase tracking-widest border" style="color:${region.color};border-color:${region.color}40;background:${region.color}15">${region.label}</span>
+            </div>
+          </div>
+          <div class="px-3 py-2 flex flex-col flex-1">
+            <div class="text-[11px] font-semibold text-zinc-200 leading-snug group-hover:text-white transition-colors mb-1.5">${e.name}</div>
+            <div class="flex items-center justify-between gap-1 mt-auto">
+              <div class="flex items-center gap-1.5">
+                <span class="text-[9px] font-mono text-zinc-600">🎯 mission</span>
+                <span class="text-[9px] font-mono border px-1 py-0.5 rounded ${srcStyle}">${e.source_label}</span>
+              </div>
+              ${extLink}
+            </div>
+            <div class="mt-1.5 pt-1.5 border-t border-[#1e1e23] flex items-baseline justify-between gap-2">
+              <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">Payout</span>
+              <div class="text-right">
+                <span class="text-[10px] font-mono text-zinc-500">GTA$ TBD</span>
+                <div class="text-[9px] font-mono text-zinc-700">Populates from launch</div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
 
     // Press screenshots take priority; fall back to wiki thumbnails
     const pressImg = e.type === "character" ? PRESS_CHARS[e.name]
