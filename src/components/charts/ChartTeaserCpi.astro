@@ -74,7 +74,7 @@ const maxReal = Math.max(...rows.map((r: any) => r.real));
       <span class="text-[11px] font-mono text-zinc-400">
         GTA VI is <span class="text-gta-gold font-semibold">{Math.round((maxReal - rows.at(-1)!.real) / maxReal * 100)}% cheaper</span> than {rows[0].short} in real terms
       </span>
-      <a href="/charts#section-cpi-chart"
+      <a href="/charts?title=gta-vi#section-cpi-chart"
          class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-gta-gold transition-colors uppercase tracking-widest whitespace-nowrap">
         Full chart →
       </a>
