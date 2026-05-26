@@ -1,14 +1,17 @@
 """
 Scrape GTA V PC concurrent player history from SteamCharts.
+Also fetches live current player count from the Steam Web API (no key required).
 URL: https://steamcharts.com/app/271590
 """
 
+import requests
 import cloudscraper
 from bs4 import BeautifulSoup
 
 from utils import has_changed, now_iso, write_json
 
 URL = "https://steamcharts.com/app/271590"
+LIVE_URL = "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=271590"
 OUT_PATH = "gta-5/meta/steam-players.json"
 
 
@@ -28,6 +31,17 @@ def find_col_index(headers: list[str], *candidates: str) -> int | None:
         if c in normalised:
             return normalised.index(c)
     return None
+
+
+def fetch_current_players() -> int | None:
+    """Fetch live concurrent player count from the Steam Web API (no key needed)."""
+    try:
+        resp = requests.get(LIVE_URL, timeout=10)
+        resp.raise_for_status()
+        return resp.json().get("response", {}).get("player_count")
+    except Exception as e:
+        print(f"  Warning: could not fetch live player count: {e}")
+        return None
 
 
 def fetch() -> list[dict]:
@@ -108,9 +122,15 @@ def main() -> None:
     data = fetch()
     print(f"  Parsed {len(data)} monthly records")
 
+    current = fetch_current_players()
+    if current:
+        print(f"  Live current players: {current:,}")
+
     payload = {
         "last_updated": now_iso(),
-        "source": "SteamCharts — https://steamcharts.com/app/271590",
+        "source": "SteamCharts + Steam Web API (no key required)",
+        "current_players": current,
+        "current_players_updated": now_iso() if current else None,
         "data": data,
     }
 
