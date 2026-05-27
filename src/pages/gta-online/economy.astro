@@ -167,26 +167,6 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     </div>
   </section>
 
-  <!-- ── Main tab nav ─────────────────────────────────────── -->
-  <div class="sticky top-16 z-40 border-b border-border-dim" style="background:rgba(14,14,17,0.97);backdrop-filter:blur(12px)">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="flex items-center gap-0 overflow-x-auto">
-        {[
-          { id:"model",    label:"Model"          },
-          { id:"flows",    label:"Four Flows"     },
-          { id:"health",   label:"Health Monitor" },
-          { id:"basket",   label:"Price Basket"   },
-          { id:"gta6",     label:"GTA VI"         },
-        ].map((t,i) => (
-          <button
-            class={`eco-tab shrink-0 px-5 py-3.5 text-[11px] font-mono tracking-wider border-b-2 transition-colors ${i===0 ? "border-gta-gold text-gta-gold" : "border-transparent text-zinc-500 hover:text-zinc-300"}`}
-            data-tab={t.id}>{t.label}</button>
-        ))}
-        <div class="flex-1"></div>
-        <span class="text-[11px] font-mono text-zinc-500 shrink-0 hidden sm:block">GTA Online · 2013–2025</span>
-      </div>
-    </div>
-  </div>
 
 
   <!-- ═══════════════════════════════════════════════════════
@@ -217,9 +197,14 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
     <!-- ═══════════════════════════════════════════════════════
-         TAB: MODEL
+         SECTION: MODEL
     ══════════════════════════════════════════════════════════ -->
-    <div id="tab-model" class="eco-panel">
+    <section id="model" style="scroll-margin-top:80px">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-indigo/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Sovereign Model · 3-Actor Analysis</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
 
       <!-- Sovereign box -->
       <div class="rounded-xl border border-gta-indigo/60 bg-gta-indigo/20 p-5 mb-4">
@@ -362,13 +347,18 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
       </div>
 
-    </div><!-- /tab-model -->
+    </section><!-- /model -->
 
 
     <!-- ═══════════════════════════════════════════════════════
-         TAB: FOUR FLOWS
+         SECTION: FOUR FLOWS
     ══════════════════════════════════════════════════════════ -->
-    <div id="tab-flows" class="eco-panel hidden">
+    <section id="four-flows" style="scroll-margin-top:80px">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-online-vivid/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Four Flows — One chart per money flow between actors</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
@@ -563,13 +553,18 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
       </div>
 
-    </div><!-- /tab-flows -->
+    </section><!-- /four-flows -->
 
 
     <!-- ═══════════════════════════════════════════════════════
-         TAB: HEALTH MONITOR
+         SECTION: HEALTH MONITOR
     ══════════════════════════════════════════════════════════ -->
-    <div id="tab-health" class="eco-panel hidden">
+    <section id="health-monitor" style="scroll-margin-top:80px">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-teal/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Health Monitor · GTA-PPI</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
 
       <!-- Headline stats row -->
       <div class="grid grid-cols-3 gap-4 mb-6">
@@ -646,13 +641,18 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
       </div>
 
-    </div><!-- /tab-health -->
+    </section><!-- /health-monitor -->
 
 
     <!-- ═══════════════════════════════════════════════════════
-         TAB: PRICE BASKET
+         SECTION: PRICE BASKET
     ══════════════════════════════════════════════════════════ -->
-    <div id="tab-basket" class="eco-panel hidden">
+    <section id="price-basket" style="scroll-margin-top:80px">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// GTA Price Basket · Real purchasing power</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
 
       <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
         <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between gap-4">
@@ -749,13 +749,19 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
       </div>
 
-    </div><!-- /tab-basket -->
+    </section><!-- /price-basket -->
 
 
     <!-- ═══════════════════════════════════════════════════════
-         TAB: GTA VI — Day-1 Ready
+         SECTION: GTA VI READINESS
     ══════════════════════════════════════════════════════════ -->
-    <div id="tab-gta6" class="eco-panel hidden">
+    <section id="gta-vi-readiness" style="scroll-margin-top:80px">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-vi-coral/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// GTA VI Readiness · What GTA Online passes forward</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+        <a href="/gta-vi/economy" class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-border-mid hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">GTA VI Economy →</a>
+      </div>
 
       <!-- Hero -->
       <div class="rounded-xl border border-gta-gold/20 overflow-hidden mb-6" style="background:linear-gradient(135deg,var(--c-card) 0%,color-mix(in srgb,var(--c-growth) 5%,var(--c-card)) 100%)">
@@ -840,7 +846,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
       </div>
 
-    </div><!-- /tab-gta6 -->
+    </section><!-- /gta-vi-readiness -->
 
 
     <CrossLinks context="gta-online-economy" class="mt-8" />
@@ -864,36 +870,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     "chart-health":      280,
   };
 
-  // ── Lazy init registry ────────────────────────────────────────────────────
-  const pendingInits: Record<string, Array<()=>void>> = { flows: [], health: [] };
-  const doneInits = new Set<string>();
-  function defer(tab: string, fn: () => void) { pendingInits[tab]?.push(fn); }
-  function runPending(tab: string) {
-    (pendingInits[tab] ?? []).forEach(fn => { if (!doneInits.has(fn.name)) { fn(); doneInits.add(fn.name); } });
-  }
-
-  // ── Tab switching ─────────────────────────────────────────────────────────
-  document.querySelectorAll<HTMLButtonElement>(".eco-tab").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const id = btn.dataset.tab!;
-      document.querySelectorAll(".eco-panel").forEach(p => (p as HTMLElement).classList.add("hidden"));
-      document.getElementById(`tab-${id}`)?.classList.remove("hidden");
-      document.querySelectorAll<HTMLButtonElement>(".eco-tab").forEach(b => {
-        const active = b.dataset.tab === id;
-        b.style.borderBottomColor = active ? "var(--c-brand)" : "transparent";
-        b.style.color = active ? "var(--c-brand)" : "";
-        b.className = b.className.replace(/text-gta-gold|text-zinc-500/g,"").trim();
-        b.classList.add(active ? "text-gta-gold" : "text-zinc-500");
-      });
-      // Lazy-init charts for this tab on first show
-      if (!doneInits.has(`tab-${id}`)) {
-        doneInits.add(`tab-${id}`);
-        runPending(id);
-      }
-    });
-  });
-
-  // ── Actor filter buttons ──────────────────────────────────────────────────
+  // ── Actor filter buttons — highlight flow cards in-place ──────────────────
   document.querySelectorAll<HTMLButtonElement>(".actor-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const actor = btn.dataset.actor!;
@@ -903,17 +880,32 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         b.style.backgroundColor = active ? "color-mix(in srgb,var(--c-brand) 8%,transparent)" : "";
         b.style.color           = active ? "var(--c-brand)" : "var(--c-text-4)";
       });
-      // Highlight matching flow cards
       document.querySelectorAll<HTMLElement>(".flow-card").forEach(card => {
         const actors = card.dataset.actors?.split(",") ?? [];
         const match = actors.includes(actor);
         card.style.boxShadow = match ? "0 0 0 1px var(--c-brand)" : "";
         card.style.opacity   = match ? "1" : "0.45";
       });
-      // Switch to flows tab
-      document.querySelector<HTMLButtonElement>('[data-tab="flows"]')?.click();
+      // Scroll to the four-flows section
+      document.getElementById("four-flows")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
+
+  // ── IntersectionObserver chart init ───────────────────────────────────────
+  // All charts are now in the DOM and visible. Init each when it enters viewport.
+  const initOnce = new Set<string>();
+  function observeChart(id: string, initFn: () => void) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !initOnce.has(id)) {
+        initOnce.add(id);
+        io.disconnect();
+        initFn();
+      }
+    }, { threshold: 0.1 });
+    io.observe(el);
+  }
 
   // ── D3 chart helpers ──────────────────────────────────────────────────────
   function getDims(id: string, ml:number, mr:number, mt:number, mb:number) {
@@ -1182,17 +1174,12 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
   }
 
-  // ── Register deferred inits by tab ────────────────────────────────────────
-  defer("flows",  initWagesChart);
-  defer("flows",  initSpendingChart);
-  defer("flows",  initSavingsChart);
-  defer("flows",  initSharkChart);
-  defer("flows",  initPassiveChart);
-  defer("health", initPpiChart);
-  defer("health", initHealthChart);
-
-  // Do NOT pre-init the flows tab — all D3 charts use lazy init (pendingInits/runPending).
-  // Pre-initialising in a rAF caused charts to render at clientWidth=0 (panel still
-  // hidden during layout pass), leaving them permanently broken since doneInits blocks
-  // a second attempt. Charts initialise correctly on first manual tab click instead.
+  // ── Register each chart to init when it scrolls into view ────────────────
+  observeChart("chart-wages",      initWagesChart);
+  observeChart("chart-spending",   initSpendingChart);
+  observeChart("chart-savings",    initSavingsChart);
+  observeChart("chart-sharkcards", initSharkChart);
+  observeChart("chart-investment", initPassiveChart);
+  observeChart("chart-ppi",        initPpiChart);
+  observeChart("chart-health",     initHealthChart);
 </script>
