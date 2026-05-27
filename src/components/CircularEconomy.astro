@@ -578,8 +578,28 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   }
 
   // ── Init on page load ────────────────────────────────────────────────────
+  // Use ResizeObserver so drawArrows only runs once the grid has a real width.
+  // A single rAF is often too early on pages with complex layouts (e.g. the
+  // economy page where the diagram sits inside a multi-level flex/grid stack).
   document.querySelectorAll<HTMLElement>(".ce-node-grid").forEach(grid => {
-    requestAnimationFrame(() => drawArrows(grid));
+    function tryDraw() {
+      if (grid.clientWidth > 10) {
+        drawArrows(grid);
+        return true;
+      }
+      return false;
+    }
+
+    // Immediate attempt
+    if (!tryDraw()) {
+      // Fallback: ResizeObserver fires once the grid gets real dimensions
+      const ro = new ResizeObserver(() => {
+        if (tryDraw()) ro.disconnect();
+      });
+      ro.observe(grid);
+      // Safety net: give up after 4s (prevents zombie observer)
+      setTimeout(() => ro.disconnect(), 4000);
+    }
   });
 
   // ── Re-draw on resize ─────────────────────────────────────────────────────
