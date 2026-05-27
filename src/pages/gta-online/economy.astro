@@ -194,6 +194,42 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     </div>
   </div>
 
+  <!-- Key Departures + GTA VI Lineage — full-width band below diagram grid -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-6 flex flex-col gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {[
+        {
+          label: "Maze Bank ≠ real bank",
+          body: "Holds savings but creates no credit. It is NOT equivalent to a commercial bank. The real 'bank' function is Rockstar — they inject GTA$ via Shark Cards."
+        },
+        {
+          label: "Shark Cards = QE, not loans",
+          body: "Real GBP/USD enters the system as GTA$ with no repayment obligation. Closer to central bank QE or colonial currency board issuance than consumer credit."
+        },
+        {
+          label: "Inflation is hidden",
+          body: "Nominal DLC prices can stay flat while real purchasing power collapses via payout nerfs. The GTA-PPI captures this. Track wage/price ratio, not prices alone."
+        },
+        {
+          label: "Rockstar's incentive",
+          body: "Engineering real-terms inflation (via nerfs) increases Shark Card demand → Take-Two revenue. Track as the key political economy dynamic of the Online ecosystem."
+        },
+      ].map(d => (
+        <div class="rounded-lg border border-border-dim p-4" style="background:var(--c-card)">
+          <div class="text-[11px] font-bold text-zinc-200 mb-1.5">{d.label}</div>
+          <p class="text-[11px] text-zinc-500 leading-relaxed">{d.body}</p>
+        </div>
+      ))}
+    </div>
+    <!-- GTA VI Lineage (moved from CircularEconomy component) -->
+    <div class="rounded-lg border border-gta-gold/15 px-4 py-3" style="background:var(--c-hero-bloom)">
+      <div class="text-[10px] font-mono text-gta-gold/60 uppercase tracking-widest mb-1">GTA VI Lineage</div>
+      <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">
+        GTA Online is the apex of the franchise economic arc. Every mechanic GTA VI inherits — business ownership, passive income, Shark Cards, live events, regional pricing — was first proven here at scale. The dual-territory model is the next evolution of the MMT sovereign, applied across geography.
+      </p>
+    </div>
+  </div>
+
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
     <!-- ═══════════════════════════════════════════════════════
@@ -222,30 +258,6 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 
       <!-- Policy interface arrow -->
       <div class="flex justify-center my-2 text-zinc-400 font-mono text-xs">↕ policy interface</div>
-
-      <!-- Key departures -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-        {[
-          {
-            label: "Maze Bank ≠ real bank",
-            body: "Holds savings but creates no credit. It is NOT equivalent to a commercial bank. The real 'bank' function is Rockstar — they inject GTA$ via Shark Cards."
-          },
-          {
-            label: "Shark Cards = QE, not loans",
-            body: "Real GBP/USD enters the system as GTA$ with no repayment obligation. Closer to central bank QE or colonial currency board issuance than consumer credit."
-          },
-
-          {
-            label: "Rockstar's incentive",
-            body: "Engineering real-terms inflation (via nerfs) increases Shark Card demand → Take-Two revenue. Track as the key political economy dynamic of the Online ecosystem."
-          },
-        ].map(d => (
-          <div class="rounded-lg border border-border-dim p-4" style="background:var(--c-card)">
-            <div class="text-[11px] font-bold text-zinc-200 mb-1.5">{d.label}</div>
-            <p class="text-[11px] text-zinc-500 leading-relaxed">{d.body}</p>
-          </div>
-        ))}
-      </div>
 
 
     </section><!-- /model -->
