@@ -8,8 +8,8 @@ import trailerAnalysis   from "../../../data/gta-6/trailer-analysis.json";
 import CardFooter from "../CardFooter.astro";
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-center gap-5 flex-wrap">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-center gap-5 flex-wrap">
           <div class="flex-1">
             <div class="font-semibold text-zinc-200 text-sm mb-0.5">
               Frame-by-Frame: Information Density Across Both Official Trailers
@@ -20,7 +20,7 @@ import CardFooter from "../CardFooter.astro";
           <div class="flex items-center gap-3 shrink-0">
             {(trailerAnalysis.trailers as any[]).map((t: any, i: number) => (
               <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
-                class="group relative overflow-hidden rounded-lg border border-[#2a2a31] hover:border-gta-gold/30 transition-all">
+                class="group relative overflow-hidden rounded-lg border border-border-mid hover:border-gta-gold/30 transition-all">
                 <img src={`https://img.youtube.com/vi/${t.youtube_id}/mqdefault.jpg`}
                   alt={t.title} class="w-28 h-16 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
                 <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 50%)"></div>

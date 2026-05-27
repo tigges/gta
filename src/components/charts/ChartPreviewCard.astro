@@ -18,7 +18,7 @@ const { cardId, title, description, category, deepLink, thumbUrl } = Astro.props
 const thumb = thumbUrl ?? `https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg`;
 ---
 
-<div class="chart-preview-card rounded-xl border border-[#1e1e23] overflow-hidden transition-all duration-300" style="background:#131316" data-card-id={cardId}>
+<div class="chart-preview-card rounded-xl border border-border-dim overflow-hidden transition-all duration-300" style="background:var(--c-card)" data-card-id={cardId}>
   <!-- Identity accent: 1px top border in current page's title colour -->
   <div class="h-px w-full" style="background:linear-gradient(90deg,var(--c-identity),transparent 60%)"></div>
   <button
@@ -27,7 +27,7 @@ const thumb = thumbUrl ?? `https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg`
     aria-controls={`preview-body-${cardId}`}
   >
     <!-- Thumbnail — larger for mission briefing card feel -->
-    <div class="shrink-0 w-24 h-14 rounded overflow-hidden border border-[#2a2a31]">
+    <div class="shrink-0 w-24 h-14 rounded overflow-hidden border border-border-mid">
       <img src={thumb} alt="" class="w-full h-full object-cover" loading="lazy" aria-hidden="true" />
     </div>
     <div class="flex-1 min-w-0 text-left">
@@ -43,11 +43,11 @@ const thumb = thumbUrl ?? `https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg`
     </div>
   </button>
 
-  <div id={`preview-body-${cardId}`} class="preview-body border-t border-[#1e1e23]">
+  <div id={`preview-body-${cardId}`} class="preview-body border-t border-border-dim">
     <div class="preview-chart-slot">
       <slot />
     </div>
-    <div class="px-4 py-2 flex items-center justify-end" style="background:#0a0a0d">
+    <div class="px-4 py-2 flex items-center justify-end" style="background:var(--c-bg-deep)">
       <a href={deepLink} class="text-[10px] font-mono uppercase tracking-widest transition-colors"
          style="color:var(--c-identity);opacity:var(--o-secondary)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
         Full chart →

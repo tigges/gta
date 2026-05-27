@@ -1,4 +1,5 @@
 ---
+import ChartBadgeRow from "../ChartBadgeRow.astro";
 /**
  * ChartTeaserOnlineMetaCeiling — static CSS step chart teaser.
  * Shows GTA$/hr earnings ceiling at each major DLC milestone, 2013–2026.
@@ -18,16 +19,11 @@ const milestones = [
 const max = Math.max(...milestones.map(m => m.hr));
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden flex flex-col" style="background:var(--c-card)">
+<div class="rounded-xl border border-border-dim overflow-hidden flex flex-col" style="background:var(--c-card)">
   <!-- Header -->
-  <div class="flex items-start justify-between gap-3 px-5 pt-4 pb-3 border-b border-[#1e1e23]">
+  <div class="flex items-start justify-between gap-3 px-5 pt-4 pb-3 border-b border-border-dim">
     <div>
-      <div class="flex items-center gap-2 mb-1">
-        <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
-              style="color:var(--c-title-online);border-color:color-mix(in srgb,var(--c-title-online) 40%,transparent);background:color-mix(in srgb,var(--c-title-online) 10%,transparent)">GTA Online</span>
-        <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
-              style="color:var(--c-text-4);border-color:var(--c-border-2)">IG Economy</span>
-      </div>
+      <ChartBadgeRow game="gta-online" category="IG Economy" />
       <div class="text-sm font-semibold text-zinc-200">Best $/hr Ceiling Over the Years</div>
       <div class="text-[10px] font-mono text-zinc-500 mt-0.5">Top earning method at each major DLC · Cayo Perico raised it 5× in one update</div>
     </div>
@@ -60,7 +56,7 @@ const max = Math.max(...milestones.map(m => m.hr));
   </div>
 
   <!-- Legend + stat -->
-  <div class="px-5 pt-3 pb-1 border-t border-[#1e1e23]">
+  <div class="px-5 pt-3 pb-1 border-t border-border-dim">
     <div class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-3 text-[9px] font-mono text-zinc-600">
         <span><span class="inline-block w-2 h-2 rounded-full mr-1" style="background:var(--c-title-online)"></span>Solo capable</span>

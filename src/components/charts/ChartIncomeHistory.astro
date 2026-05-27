@@ -8,8 +8,8 @@ import revenueTiersData from "../../../data/gta-5/economy/revenue-tiers.json";
 import CardFooter from "../CardFooter.astro";
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm mb-0.5">
               Select Any Income Source — See Its $/hr History
@@ -23,7 +23,7 @@ import CardFooter from "../CardFooter.astro";
                 class="income-src-btn px-2.5 py-1 rounded text-[11px] font-mono border transition-all"
                 class:list={[i === 0
                   ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8"
-                  : "border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"]}
+                  : "border-border-mid text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"]}
                 data-source-id={src.id}
               >{src.name.split(" ")[0]}</button>
             ))}
@@ -32,7 +32,7 @@ import CardFooter from "../CardFooter.astro";
         <div id="income-history-chart" class="w-full" style="height:300px"
           data-sources={JSON.stringify((sourceHistoryData as any).sources)}
         ></div>
-        <div id="income-history-events" class="px-5 py-3 border-t border-[#1e1e23] divide-y divide-[#1e1e23]"></div>
+        <div id="income-history-events" class="px-5 py-3 border-t border-border-dim divide-y divide-border-dim"></div>
         <CardFooter chartId="income-history-chart" sources="Source: GTAForums patch notes archives + Rockstar Newswire · community benchmarks" shareText="GTA Online income source history — every major nerf, buff, and DLC launch charted. Cayo Perico was nerfed 40% in 2021 then partially restored." />
       </div>
 
@@ -149,7 +149,7 @@ import CardFooter from "../CardFooter.astro";
           b.className = b.className
             .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g,"")
             .replace(/border-\[#2a2a31\]|text-zinc-500/g,"").trim();
-          b.classList.add(...(active ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"] : ["border-[#2a2a31]","text-zinc-500"]));
+          b.classList.add(...(active ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"] : ["border-border-mid","text-zinc-500"]));
         });
         renderChart(activeSrc);
       });

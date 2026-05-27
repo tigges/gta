@@ -30,7 +30,7 @@ const bizProfiles = bizData.businesses;
   ogPage="charts"
 >
   <!-- Minimal hero -->
-  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:160px">
+  <section class="relative border-b border-border-dim overflow-hidden" style="min-height:160px">
     <div class="absolute inset-0"
          style="background:radial-gradient(ellipse at 20% 60%, color-mix(in srgb,var(--c-growth) 7%,transparent) 0%, transparent 55%), var(--c-bg-deep)"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
@@ -53,9 +53,9 @@ const bizProfiles = bizData.businesses;
       <div class="flex items-center gap-3 mb-6">
         <span class="text-[11px] font-mono bg-gta-teal/30 text-gta-teal border border-gta-teal/40 px-2 py-0.5 rounded uppercase tracking-widest">Adviser</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Personalised Income Stack Builder</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <a href="/database?game=gta-online"
-           class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
+           class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-border-mid hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
           Full database →
         </a>
       </div>
@@ -73,18 +73,18 @@ const bizProfiles = bizData.businesses;
       <div class="flex items-center gap-3 mb-6">
         <span class="text-[11px] font-mono bg-gta-indigo/30 text-gta-indigo border border-gta-indigo/40 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// $/hr Meta History — How the Top Earner Changed</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">{metaData.meta_history.length} DLC milestones · 2013→2026</span>
       </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:var(--c-card)">
-        <div class="px-5 py-4 border-b border-[#1e1e23]">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim">
           <div class="font-semibold text-zinc-200 text-sm">GTA Online Top Earner by DLC — The Economic History</div>
           <div class="text-[11px] text-zinc-500 font-mono mt-0.5">How $/hr for the #1 method changed with each major update. Cayo Perico was nerfed 40% in Jan 2022 — still stayed #1.</div>
         </div>
         <div id="meta-shift-chart" class="w-full" style="height:280px"
           data-history={JSON.stringify(metaData.meta_history)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Source: GTAForums · community archives · manual research · patch notes</span>
           <div class="flex items-center gap-2 shrink-0">
             <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>

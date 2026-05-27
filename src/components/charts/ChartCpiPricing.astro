@@ -7,15 +7,15 @@ import cpiData from "../../../data/franchise/cpi.json";
 import CardFooter from "../CardFooter.astro";
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23]">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5">
             GTA VI at $79.99 Is the Cheapest GTA at Launch — In Real Terms
           </div>
           <div class="text-[11px] text-zinc-500 font-mono">Adjusted for inflation: GTA III cost $90.38 in 2026 dollars. At $79.99, GTA VI is cheaper in real terms than every PS2-era title.</div>
         </div>
         <!-- Cover + price row -->
-        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-4 overflow-x-auto">
+        <div class="px-5 py-3 border-b border-border-dim flex items-center gap-4 overflow-x-auto">
           {cpiData.titles.map((t: any) => {
             const adjusted = t.price_nominal && t.cpi_year
               ? (t.price_nominal * (cpiData.base_cpi / t.cpi_year)).toFixed(2)
@@ -23,7 +23,7 @@ import CardFooter from "../CardFooter.astro";
             return (
               <div class="flex items-center gap-2 shrink-0">
                 <img src={`/assets/covers/${t.id}.jpg`} alt={t.short}
-                  class={`rounded object-cover border w-8 h-11 ${t.id === "gta-6" ? "border-gta-gold/40" : "border-[#2a2a31]"}`} loading="lazy" />
+                  class={`rounded object-cover border w-8 h-11 ${t.id === "gta-6" ? "border-gta-gold/40" : "border-border-mid"}`} loading="lazy" />
                 <div>
                   <div class={`text-[10px] font-mono font-bold ${t.id === "gta-6" ? "text-gta-gold" : "text-zinc-300"}`}>{t.short}</div>
                   <div class="text-[11px] font-mono text-zinc-600">${t.price_nominal} → <span class="text-zinc-400">${adjusted}</span></div>

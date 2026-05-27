@@ -78,7 +78,7 @@ const DELAY_THUMBS: Record<string,string> = {
   <!-- ═══════════════════════════════════════════════════════
        HERO — Split character backdrop + trailer anchor
   ═══════════════════════════════════════════════════════ -->
-  <section class="relative overflow-hidden border-b border-[#1e1e23]" style="min-height:420px;display:flex;align-items:flex-end">
+  <section class="relative overflow-hidden border-b border-border-dim" style="min-height:420px;display:flex;align-items:flex-end">
     <!-- Split character backgrounds -->
     <div class="absolute inset-0 flex">
       <div class="flex-1 relative overflow-hidden">
@@ -114,7 +114,7 @@ const DELAY_THUMBS: Record<string,string> = {
         {heroTrailer && (
           <a href={`https://www.youtube.com/watch?v=${heroTrailer.youtube_id}`}
             target="_blank" rel="noopener noreferrer"
-            class="group relative overflow-hidden rounded-xl border border-[#2a2a31] hover:border-gta-gold/40 transition-all shrink-0 hidden sm:block"
+            class="group relative overflow-hidden rounded-xl border border-border-mid hover:border-gta-gold/40 transition-all shrink-0 hidden sm:block"
             style="width:240px">
             <img src={`https://img.youtube.com/vi/${heroTrailer.youtube_id}/mqdefault.jpg`}
               alt={heroTrailer.title}
@@ -147,7 +147,7 @@ const DELAY_THUMBS: Record<string,string> = {
     <section>
       <div class="flex items-center gap-3 mb-7">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economic Predictions</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">confidence-scored · data-derived</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -183,7 +183,7 @@ const DELAY_THUMBS: Record<string,string> = {
         <GamePill game="gta-vi" size="xs" />
         <span class={CATEGORY_BADGE_CLASSES}>Economy-IG</span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Online — Predicted Income Sources</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">pre-launch estimates · trailer-confirmed activities</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -217,7 +217,7 @@ const DELAY_THUMBS: Record<string,string> = {
       <section id="section-trailers">
         <div class="flex items-center gap-3 mb-7">
           <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Official Trailers</span>
-          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <div class="flex-1 h-px bg-border-dim"></div>
           <span class="text-[10px] font-mono text-zinc-500">{trailers.length} released · Rockstar Games</span>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -225,7 +225,7 @@ const DELAY_THUMBS: Record<string,string> = {
             <a
               href={`https://www.youtube.com/watch?v=${t.youtube_id}`}
               target="_blank" rel="noopener noreferrer"
-              class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-gta-gold/30 transition-all duration-200"
+              class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-gold/30 transition-all duration-200"
             >
               <div class="relative aspect-video overflow-hidden">
                 <img
@@ -244,7 +244,7 @@ const DELAY_THUMBS: Record<string,string> = {
                   <span class="text-[11px] font-mono bg-black/60 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">Official</span>
                 </div>
               </div>
-              <div class="px-4 py-3 flex items-center justify-between" style="background:#131316">
+              <div class="px-4 py-3 flex items-center justify-between" style="background:var(--c-card)">
                 <div>
                   <div class="font-semibold text-zinc-200 text-sm">{t.title ?? `Grand Theft Auto VI — Trailer ${i + 1}`}</div>
                   {t.published_at && (
@@ -266,7 +266,7 @@ const DELAY_THUMBS: Record<string,string> = {
       <div class="flex items-center gap-3 mb-6">
         <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Cast</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">Official press kit · Rockstar Games</span>
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
@@ -280,7 +280,7 @@ const DELAY_THUMBS: Record<string,string> = {
           { name: "DreQuan Priest", role: "Supporting",  img: "DreQuan_Priest_01.jpg",  video: "DreQuan_Priest_Video_Clip.mp4"  },
           { name: "Real Dimez",     role: "Supporting",  img: "Real_Dimez_01.jpg",      video: "Real_Dimez_Video_Clip.mp4"      },
         ] as const).map(c => (
-          <div class="char-card group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-gta-gold/30 transition-all duration-300 cursor-default"
+          <div class="char-card group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-gold/30 transition-all duration-300 cursor-default"
             data-video={`/assets/gta6/videos/${c.video}`}>
             <!-- Still photo (shown by default) -->
             <div class="aspect-[3/4] overflow-hidden">
@@ -326,7 +326,7 @@ const DELAY_THUMBS: Record<string,string> = {
       <div class="flex items-center gap-3 mb-6">
         <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida — Confirmed Locations</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">Official press kit · Rockstar Games</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -338,7 +338,7 @@ const DELAY_THUMBS: Record<string,string> = {
           { name: "Port Gellhorn",  desc: "Industrial port district",                 img: "Port_Gellhorn_02.jpg",              shots: 5  },
           { name: "Mount Kalaga",   desc: "National park — mountainous interior",     img: "Mount_Kalaga_National_Park_03.jpg", shots: 6  },
         ] as const).map(loc => (
-          <div class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-gta-teal/30 transition-all duration-300 cursor-default">
+          <div class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-teal/30 transition-all duration-300 cursor-default">
             <div class="aspect-video overflow-hidden">
               <img
                 src={`/assets/gta6/locations/${loc.img}`}
@@ -371,7 +371,7 @@ const DELAY_THUMBS: Record<string,string> = {
         <div class="flex items-center gap-3 mb-7">
           <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
           <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer Entity Analysis</span>
-          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <div class="flex-1 h-px bg-border-dim"></div>
           <span class="text-[10px] font-mono text-zinc-500">Frame-by-frame · {analysisTrailers.reduce((s: number, t: any) => s + t.total_entities, 0)} reveals across {analysisTrailers.length} trailers</span>
         </div>
 
@@ -379,9 +379,9 @@ const DELAY_THUMBS: Record<string,string> = {
           {analysisTrailers.map((trailer: any) => {
             const { byType, confirmedCount } = trailer;
             return (
-              <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+              <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
                 <!-- Trailer header -->
-                <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between gap-3 flex-wrap">
+                <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between gap-3 flex-wrap">
                   <div>
                     <div class="text-sm font-semibold text-zinc-200 mb-0.5">{trailer.title}</div>
                     <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-600">
@@ -405,7 +405,7 @@ const DELAY_THUMBS: Record<string,string> = {
                 </div>
 
                 <!-- Type breakdown -->
-                <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-4 flex-wrap">
+                <div class="px-5 py-3 border-b border-border-dim flex items-center gap-4 flex-wrap">
                   {Object.entries(byType).map(([type, count]: [string, any]) => (
                     <div class="flex items-center gap-1.5">
                       <span class="text-[10px]">
@@ -417,7 +417,7 @@ const DELAY_THUMBS: Record<string,string> = {
                 </div>
 
                 <!-- Event timeline -->
-                <div class="divide-y divide-[#1e1e23]">
+                <div class="divide-y divide-border-dim">
                   {(trailer.events as any[]).map((event: any) => {
                     const confColor = event.confidence === "confirmed"
                       ? "text-gta-gold border-gta-gold/20 bg-gta-gold/10"
@@ -464,11 +464,11 @@ const DELAY_THUMBS: Record<string,string> = {
       <div class="flex items-center gap-3 mb-7">
         <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Confirmed Feature Tracker</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">Rockstar official + community tracking</span>
       </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm">
               What's confirmed, reported and indexed so far
@@ -482,7 +482,7 @@ const DELAY_THUMBS: Record<string,string> = {
           </div>
         </div>
         <!-- Visual category cards grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-[#1e1e23]">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-border-dim">
           {featuresData.categories.map((cat) => {
             const confirmedPct = Math.round((cat.confirmed / cat.target) * 100);
             const reportedPct  = Math.round((cat.reported  / cat.target) * 100);
@@ -529,7 +529,7 @@ const DELAY_THUMBS: Record<string,string> = {
             );
           })}
         </div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Sources: {featuresData.source}</span>
           <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="feature-tracker" shareText={`GTA VI Feature Tracker: ${featuresData.categories.reduce((s, c) => s + c.confirmed + c.reported, 0)} entries tracked — vehicles, characters, locations, weapons and more confirmed so far.`} size="sm" /></div>
         </div>
@@ -545,12 +545,12 @@ const DELAY_THUMBS: Record<string,string> = {
       <div class="flex items-center gap-3 mb-7">
         <span class="w-2 h-2 rounded-full bg-gta-red shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Development + Delay Timeline</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">{delayData.total_delays} delay · {delayData.timeline.length} events · SEC EDGAR sourced</span>
       </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <div class="relative p-5">
-          <div class="absolute left-[120px] top-5 bottom-5 w-px bg-[#1e1e23]"></div>
+          <div class="absolute left-[120px] top-5 bottom-5 w-px bg-border-dim"></div>
           <div class="flex flex-col gap-0">
             {(() => {
               const typeColors: {[k:string]:string} = {
@@ -564,7 +564,7 @@ const DELAY_THUMBS: Record<string,string> = {
                 delay: "bg-gta-red/20 border-gta-red",
                 date_confirmed: "bg-gta-teal/20 border-gta-teal",
                 date_set: "bg-gta-teal/10 border-gta-teal/50",
-                default: "bg-[#131316] border-[#2a2a31]",
+                default: "bg-[#131316] border-border-mid",
               };
               return (delayData.timeline as any[]).map((event) => {
               const dotClass  = dotColors[event.type] ?? dotColors["default"];
@@ -589,7 +589,7 @@ const DELAY_THUMBS: Record<string,string> = {
                     </div>
                     {ytId && (
                       <a href={`https://www.youtube.com/watch?v=${ytId}`} target="_blank" rel="noopener noreferrer"
-                        class="shrink-0 relative overflow-hidden rounded-lg border border-[#2a2a31] hover:border-gta-gold/30 transition-all group/yt">
+                        class="shrink-0 relative overflow-hidden rounded-lg border border-border-mid hover:border-gta-gold/30 transition-all group/yt">
                         <img src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
                           alt="Trailer" class="w-28 h-16 object-cover transition-transform duration-300 group-hover/yt:scale-105" loading="lazy" />
                         <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 60%)"></div>
@@ -604,7 +604,7 @@ const DELAY_THUMBS: Record<string,string> = {
                       </a>
                     )}
                     {sideThumb && isKey && (
-                      <div class="shrink-0 overflow-hidden rounded-lg border border-[#2a2a31] opacity-50 group-hover:opacity-80 transition-opacity">
+                      <div class="shrink-0 overflow-hidden rounded-lg border border-border-mid opacity-50 group-hover:opacity-80 transition-opacity">
                         <img src={sideThumb} alt="" class="w-20 h-12 object-cover" loading="lazy" aria-hidden="true" />
                       </div>
                     )}
@@ -615,7 +615,7 @@ const DELAY_THUMBS: Record<string,string> = {
             })()}
           </div>
         </div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Sources: SEC EDGAR Take-Two 8-K filings + official announcements</span>
           <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="intel" shareText="GTA VI has been delayed twice. The full timeline — and what it signals for the Nov 19, 2026 release date." size="sm" /></div>
         </div>
@@ -630,11 +630,11 @@ const DELAY_THUMBS: Record<string,string> = {
       <div class="flex items-center gap-3 mb-6">
         <span class="w-1.5 h-1.5 rounded-full bg-gta-green shrink-0"></span>
         <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Soundtrack — Trailer Songs</h2>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">{confirmedSongs.length} confirmed · Spotify verified</span>
       </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="divide-y divide-[#1e1e23]">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="divide-y divide-border-dim">
           {confirmedSongs.map((song, i) => (
             <div class="px-5 py-4 flex items-center gap-4">
               <div class="w-7 h-7 rounded bg-[#1DB954]/10 border border-[#1DB954]/20 flex items-center justify-center shrink-0">
@@ -650,7 +650,7 @@ const DELAY_THUMBS: Record<string,string> = {
             </div>
           ))}
         </div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between">
           <span class="text-[10px] text-zinc-500 font-mono">Source: Spotify Web API · confirmed from official GTA VI trailers</span>
           <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
         </div>
@@ -664,16 +664,16 @@ const DELAY_THUMBS: Record<string,string> = {
     <section>
       <div class="flex items-center gap-3 mb-7">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Search Signal</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">{totalTrendPts} pts · {trendsSince}–{trendsUntil} · worldwide</span>
       </div>
       <ChartGta6SearchTrends />
     </section>
 
     <!-- OLD INLINE CHART REMOVED — kept as comment for reference
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <!-- Visual header: Trailer thumbnails + keyword context -->
-        <div class="flex border-b border-[#1e1e23]">
+        <div class="flex border-b border-border-dim">
           {trailers.map((t: any, i: number) => (
             <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
               class="relative overflow-hidden group shrink-0" style="width:160px">
@@ -705,7 +705,7 @@ const DELAY_THUMBS: Record<string,string> = {
           </div>
         </div>
         <div id="gta6-trends-chart" class="w-full h-64 px-4 py-2" data-keywords={JSON.stringify(gta6Trends.keywords)}></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Source: Google Trends via pytrends · updated {new Date(gta6Trends.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
           <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="intel" shareText="GTA VI search interest is at an all-time high and still climbing. The pre-launch hype signal is unlike any prior GTA title." size="sm" /></div>
         </div>
@@ -718,18 +718,18 @@ const DELAY_THUMBS: Record<string,string> = {
     <section>
       <div class="flex items-center gap-3 mb-7">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Historical Context</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">gap trend extrapolated to VI</span>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         <ReleaseTimeline />
-        <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-          <div class="px-5 py-4 border-b border-[#1e1e23]">
+        <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+          <div class="px-5 py-4 border-b border-border-dim">
             <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Cross-Generation Growth</div>
           </div>
           <table class="w-full text-xs font-mono">
             <thead>
-              <tr class="border-b border-[#1e1e23]">
+              <tr class="border-b border-border-dim">
                 <th class="text-left px-5 py-2.5 text-zinc-600 font-normal">Title</th>
                 <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Price</th>
                 <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Map km²</th>
@@ -743,7 +743,7 @@ const DELAY_THUMBS: Record<string,string> = {
                 const map      = g.map_size_km2        ?? g.map_size_km2_estimate;
                 const vehicles = g.vehicle_count       ?? g.vehicle_count_estimate;
                 return (
-                  <tr class={`border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors ${isPred ? "text-gta-gold" : "text-zinc-300"}`}>
+                  <tr class={`border-b border-border-dim/50 hover:bg-white/2 transition-colors ${isPred ? "text-gta-gold" : "text-zinc-300"}`}>
                     <td class="px-5 py-2.5 font-semibold">
                       {g.short}
                       {isPred && <span class="ml-1.5 text-[11px] bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1 py-0.5 rounded uppercase tracking-widest align-middle">est</span>}
@@ -756,7 +756,7 @@ const DELAY_THUMBS: Record<string,string> = {
               })}
             </tbody>
           </table>
-          <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+          <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
             <span class="text-[10px] text-zinc-500 font-mono">est = estimated · Rockstar, Broughy1322, community records</span>
             <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="intel" shareText="GTA VI vs every prior GTA title: map size, vehicle count, launch price. 30 years of franchise growth in one table." size="sm" /></div>
           </div>
@@ -767,11 +767,11 @@ const DELAY_THUMBS: Record<string,string> = {
     <!-- ═══════════════════════════════════════════════════════
          METHODOLOGY
     ═══════════════════════════════════════════════════════ -->
-    <section class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-      <div class="px-5 py-4 border-b border-[#1e1e23]">
+    <section class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <div class="px-5 py-4 border-b border-border-dim">
         <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Methodology & Signal Standards</div>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
+      <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
         {[
           {
             label: "Confidence scoring",

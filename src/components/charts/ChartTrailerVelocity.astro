@@ -8,15 +8,15 @@ import velocityData from "../../../data/gta-6/trailer-velocity.json";
 import CardFooter from "../CardFooter.astro";
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23]">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5">
             GTA VI Trailer View Counts — Live
           </div>
           <div class="text-[11px] text-zinc-500 font-mono">Polled via YouTube Data API · snapshots accumulate over time to build velocity curve</div>
         </div>
         <!-- Trailer thumbnail + stat cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
+        <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
           {(velocityData.trailers as any[]).map((t, i) => {
             const latest = t.snapshots?.at(-1);
             const views = latest?.views ?? 0;

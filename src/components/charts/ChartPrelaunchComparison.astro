@@ -12,16 +12,16 @@ import redditData     from "../../../data/community/reddit.json";
 import CardFooter from "../CardFooter.astro";
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
 
-        <div class="px-5 py-4 border-b border-[#1e1e23]">
+        <div class="px-5 py-4 border-b border-border-dim">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5">
             Pre-launch Hype — GTA V (2013) vs GTA VI (2026) at the Same Moment
           </div>
           <div class="text-[11px] text-zinc-500 font-mono">Three signals, same axis. GTA VI running dramatically hotter at every equivalent pre-launch milestone.</div>
         </div>
         <!-- Key stat callouts -->
-        <div class="grid grid-cols-3 divide-x divide-[#1e1e23] border-b border-[#1e1e23]">
+        <div class="grid grid-cols-3 divide-x divide-border-dim border-b border-border-dim">
           {[
             { label: "Search interest at T-24m", gta5: "~12", gta6: "~58", unit: "/100 Trends", delta: "4.8×" },
             { label: "Search interest at T-12m", gta5: "~28", gta6: "~72", unit: "/100 Trends", delta: "2.6×" },

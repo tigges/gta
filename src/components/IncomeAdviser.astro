@@ -263,7 +263,7 @@ const ownableBusinesses = businesses.filter(b =>
           const setupFull = b.setup_cost_full ?? 0;
           const setupEffective = sale ? Math.round(setupFull * (1 - sale.discount_pct / 100)) : setupFull;
           const roi = setupEffective > 0 ? Math.round(setupEffective / effectiveHr(b)) : 0;
-          const highlight = i === 0 ? 'border-gta-gold/30' : 'border-[#2a2a31]';
+          const highlight = i === 0 ? 'border-gta-gold/30' : 'border-border-mid';
           const boostBadge = boosted(b) ? ` <span style="background:color-mix(in srgb,${C_BRAND} 15%,transparent);color:${C_BRAND};border:1px solid color-mix(in srgb,${C_BRAND} 30%,transparent);padding:0 4px;border-radius:3px;font-size:8px">★ ${WEEKLY_MULT[b.id]}× this week</span>` : '';
           const saleBadge = sale ? ` <span style="background:color-mix(in srgb,${C_GROWTH} 12%,transparent);color:${C_GROWTH};border:1px solid color-mix(in srgb,${C_GROWTH} 30%,transparent);padding:0 4px;border-radius:3px;font-size:8px">🏷 -${sale.discount_pct}% this week</span>` : '';
           const setupDisplay = sale

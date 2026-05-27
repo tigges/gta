@@ -258,6 +258,61 @@ Edit `data/gta-6/predictions.json`. Schema version is `2.0`. Required fields per
 
 ---
 
+## Central design system — UI components
+
+All pages must use these canonical components. Never rebuild these patterns inline.
+
+### Layout / structure
+
+| Component | Props | Purpose |
+|---|---|---|
+| `SectionHeader.astro` | `label`, `dotColor?`, `pillHref?`, `pillLabel?` | `// SECTION TITLE` header row used on every section. Automatically switches to `justify-between` split variant when pill is present. `label` must include `// ` prefix. |
+| `StatBox.astro` | `value`, `label`, `sub?`, `color?` | Single key-metric card. Used in hero stat strips, Health Monitor, database. |
+| `CardFooter.astro` | `chartId?` or `anchorId+sources+shareText` | Standard `source · GTAVI.AI · Share` footer on all cards and chart sections. |
+| `CrossLinks.astro` | `context` | Site-wide "Related Intelligence" bottom strip. |
+
+### Chart teasers / content cards
+
+| Component | Props | Purpose |
+|---|---|---|
+| `ChartBadgeRow.astro` | `game`, `category`, `fullHref?`, `fullLabel?` | `[GamePill] [Category]` header row for all chart teasers. Renders at `text-[9px]`. Full link goes top-right if supplied. |
+| `ReadItBlock.astro` | `accentColor?`, `showPrefix?` | Left-border annotation block. Slot = paragraph text. "Read it:" prefix rendered automatically. |
+| `GamePill.astro` | `game`, `size?` | Game identity pill. Always `size="xs"` inside cards, `size="sm"` in hero pill row. |
+| `ShareDropdown.astro` | `anchorId`, `shareText`, `size?` | Share button. Always `size="sm"`. Part of every card footer. |
+
+### Section header rules (P5)
+
+**Section headers** (`SectionHeader`) use a `w-1.5 h-1.5` round dot.
+**CrossLinks strip** uses a `w-1 h-4` rectangular bar — intentionally distinct as it's a cross-page navigation pattern, not a content section header.
+
+### "Full XYZ →" link placement rule (P2)
+
+- **If top-right of the card is free** (no tier pill, no game pill): `Full chart →` goes in `ChartBadgeRow` via `fullHref` prop (top-right of header).
+- **If top-right is occupied** (e.g. PredictionCard's tier pill): `Full analysis →` or `Full chart →` goes in the card **footer**, left side of the `GTAVI.AI + Share` bar.
+- **Section headers**: `pillLabel` in `SectionHeader` for section-level links (`All N charts →`, `Full model →`, etc.).
+
+### Token rules (P1 — no exceptions)
+
+**Never write a raw hex value anywhere in a component or page template.** If a colour is not yet in the token system, add it to `src/styles/tokens.css` AND `src/config/colors.ts` first.
+
+| Raw value (BANNED) | Token to use |
+|---|---|
+| `#1e1e23` | `var(--c-border-1)` · Tailwind: `border-border-dim` |
+| `#2a2a31` | `var(--c-border-2)` · Tailwind: `border-border-mid` |
+| `#131316` | `var(--c-card)` |
+| `#1a1a1e` | `var(--c-card-raised)` |
+| `#0e0e11` | `var(--c-bg)` |
+| `#0a0a0d` | `var(--c-bg-deep)` |
+| Any `rgba(...)` that approximates a token | Use `color-mix(in srgb, var(--c-*) N%, transparent)` |
+
+D3/JS runtime colours must come from `src/config/colors.ts` named exports (`C_BRAND`, `C_LIVE`, etc.). Never write hex in a `<script>` block.
+
+### Pill text size rule (P4)
+
+All pill links in section headers and card footers: **`text-[10px]`**. No exceptions.
+
+---
+
 ## TypeScript types
 
 Shared interfaces live in `src/types/gta.ts`:

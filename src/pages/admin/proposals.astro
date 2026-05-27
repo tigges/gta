@@ -77,7 +77,7 @@ function getPredCurrent(id: string, field: string): string {
 
     <!-- Pending proposals -->
     {pending.length === 0 ? (
-      <div class="rounded-xl border border-[#1e1e23] px-6 py-10 text-center" style="background:var(--c-card)">
+      <div class="rounded-xl border border-border-dim px-6 py-10 text-center" style="background:var(--c-card)">
         <div class="text-2xl mb-2">✓</div>
         <div class="text-zinc-400 text-sm">No pending proposals — predictions are up to date.</div>
         <div class="text-[11px] font-mono text-zinc-600 mt-1">
@@ -104,7 +104,7 @@ function getPredCurrent(id: string, field: string): string {
             <div class="rounded-xl border border-gta-gold/20 overflow-hidden" style="background:var(--c-card)">
 
               <!-- Card header -->
-              <div class="px-5 py-3 border-b border-[#1e1e23] flex items-start justify-between gap-4 flex-wrap">
+              <div class="px-5 py-3 border-b border-border-dim flex items-start justify-between gap-4 flex-wrap">
                 <div>
                   <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-1 flex items-center gap-2">
                     {getProposalType(proposal) === "modify" ? (
@@ -132,7 +132,7 @@ function getPredCurrent(id: string, field: string): string {
               </div>
 
               <!-- Diff -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
+              <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
                 <div class="px-5 py-4">
                   <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Current</div>
                   <p class="text-[11px] text-zinc-400 font-mono leading-relaxed whitespace-pre-wrap">{currentFull}</p>
@@ -146,15 +146,15 @@ function getPredCurrent(id: string, field: string): string {
               </div>
 
               <!-- Rationale -->
-              <div class="px-5 py-3 border-t border-[#1e1e23]">
+              <div class="px-5 py-3 border-t border-border-dim">
                 <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mr-2">Rationale</span>
                 <span class="text-[11px] text-zinc-400">{proposal.rationale}</span>
               </div>
 
               <!-- Actions -->
-              <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center gap-3 flex-wrap">
+              <div class="px-5 py-3 border-t border-border-dim flex items-center gap-3 flex-wrap">
                 <button
-                  class="copy-btn text-[11px] font-mono border border-[#2a2a31] hover:border-gta-gold/40 hover:text-gta-gold text-zinc-400 px-3 py-1.5 rounded transition-all"
+                  class="copy-btn text-[11px] font-mono border border-border-mid hover:border-gta-gold/40 hover:text-gta-gold text-zinc-400 px-3 py-1.5 rounded transition-all"
                   data-copy={proposedStr}
                 >
                   Copy proposed value
@@ -162,7 +162,7 @@ function getPredCurrent(id: string, field: string): string {
                 <a
                   href={GITHUB_BASE}
                   target="_blank" rel="noopener noreferrer"
-                  class="text-[11px] font-mono border border-[#2a2a31] hover:border-gta-teal/40 hover:text-gta-teal text-zinc-400 px-3 py-1.5 rounded transition-all"
+                  class="text-[11px] font-mono border border-border-mid hover:border-gta-teal/40 hover:text-gta-teal text-zinc-400 px-3 py-1.5 rounded transition-all"
                 >
                   Edit predictions.json ↗
                 </a>
@@ -197,7 +197,7 @@ function getPredCurrent(id: string, field: string): string {
     )}
 
     <!-- Footer note -->
-    <div class="mt-10 rounded-xl border border-[#1e1e23] px-5 py-4" style="background:var(--c-card)">
+    <div class="mt-10 rounded-xl border border-border-dim px-5 py-4" style="background:var(--c-card)">
       <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-2">// How this works</div>
       <ul class="text-[11px] text-zinc-500 font-mono space-y-1 leading-relaxed list-none">
         <li>1. Nightly at 03:00 UTC, <span class="text-zinc-300">fetch_predictions_auto.py</span> runs after all scrapers.</li>

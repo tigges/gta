@@ -12,8 +12,8 @@ const payingMissions = storyMissions.filter((m: any) => m.payout > 0);
 const stockMissions  = storyMissions.filter((m: any) => m.stock_mission);
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm">Earnings Curve — $250 Repossession to $41.6M Big Score</div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Each mission plotted by chapter. Gold diamonds = Lester stock missions. The Big Score is the only real money event.</div>

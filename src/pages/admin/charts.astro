@@ -59,7 +59,7 @@ const chartItems = CHARTS_PAGE_ORDER.map((id, i) => ({
         { id: "gta-v",      label: "GTA V" },
         { id: "franchise",  label: "Franchise" },
       ].map(f => (
-        <button class="chart-view-filter px-2.5 py-1 rounded border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+        <button class="chart-view-filter px-2.5 py-1 rounded border transition-all border-border-mid text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
                 data-filter={f.id}>{f.label}</button>
       ))}
     </div>
@@ -67,7 +67,7 @@ const chartItems = CHARTS_PAGE_ORDER.map((id, i) => ({
     <!-- Chart list — server-rendered for instant paint -->
     <div id="chart-list" class="flex flex-col gap-1">
       {chartItems.map(c => (
-        <div class="chart-row rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-colors group"
+        <div class="chart-row rounded-lg border border-border-dim hover:border-border-mid transition-colors group"
              data-id={c.id} data-order={c.order} data-game={c.game}
              style="background:var(--c-card)">
           <div class="flex items-center gap-3 px-3 py-2.5">
@@ -89,7 +89,7 @@ const chartItems = CHARTS_PAGE_ORDER.map((id, i) => ({
     </div>
 
     <!-- How to apply -->
-    <div class="mt-6 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:var(--c-card)">
+    <div class="mt-6 rounded-lg border border-border-dim px-4 py-3" style="background:var(--c-card)">
       <p class="text-[10px] font-mono text-zinc-600">
         Changes are in-memory only. ▲/▼ reorders the <span class="text-zinc-400">CHARTS_PAGE_ORDER</span> array.
         When done, click <span class="text-zinc-400">Copy JSON patch</span> — paste into

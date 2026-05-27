@@ -8,8 +8,8 @@ import CardFooter from "../CardFooter.astro";
 const metacriticScores = (metacriticData as any).titles as any[];
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm mb-0.5">
               The Moment Critics and Players Stopped Agreeing
@@ -23,11 +23,11 @@ const metacriticScores = (metacriticData as any).titles as any[];
           </div>
         </div>
         <!-- Metacritic cover + score row -->
-        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-4 overflow-x-auto">
+        <div class="px-5 py-3 border-b border-border-dim flex items-center gap-4 overflow-x-auto">
           {metacriticScores.map((t: any) => (
             <div class="flex items-center gap-2.5 shrink-0">
               <img src={`/assets/covers/${t.id}.jpg`} alt={t.short}
-                class={`rounded object-cover border w-8 h-11 ${t.id === "gta-6" ? "border-gta-gold/40" : "border-[#2a2a31]"}`} loading="lazy" />
+                class={`rounded object-cover border w-8 h-11 ${t.id === "gta-6" ? "border-gta-gold/40" : "border-border-mid"}`} loading="lazy" />
               <div>
                 <div class={`text-[10px] font-mono font-bold ${t.id === "gta-6" ? "text-gta-gold" : "text-zinc-300"}`}>{t.short}</div>
                 <div class="text-[11px] font-mono text-zinc-600">{t.critic_score} critic · {t.user_score}×10 user</div>

@@ -59,7 +59,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
 >
 
   <!-- Hero -->
-  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:280px">
+  <section class="relative border-b border-border-dim overflow-hidden" style="min-height:280px">
     <div class="absolute inset-0" style={`background:radial-gradient(ellipse at 20% 60%, rgba(245,158,11,0.04) 0%, transparent 55%), ${C_BG_DEEP}`}></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-4">
@@ -78,7 +78,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
           { value: "30",  label: "years of franchise",   sub: "GTA 1 → GTA VI" },
           { value: "4",   label: "real-world analogues", sub: "feudal → Eurozone" },
         ].map(s => (
-          <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style={`background:${C_CARD}`}>
+          <div class="rounded-xl border border-border-dim px-4 py-3" style={`background:${C_CARD}`}>
             <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
             <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug">{s.label}</div>
             <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{s.sub}</div>
@@ -97,10 +97,10 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
       <div class="flex items-center gap-3 mb-6">
         <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Complexity — Full Franchise Timeline 1997–2026</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
       </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
-        <div class="px-5 py-4 border-b border-[#1e1e23]">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
+        <div class="px-5 py-4 border-b border-border-dim">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5">Economic Complexity — Full Franchise Arc</div>
           <div class="text-[11px] font-mono text-zinc-400">Composite score: circular flow · capital market · passive income · inflation · sovereign complexity</div>
         </div>
@@ -110,7 +110,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
                short: e.short, score: e.complexity_score, projected: e.projected, regression: e.regression_era ?? false, color: e.projected ? C_BRAND : e.regression_era ? C_ALERT : C_LIVE
              })))}>
         </div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
           <span class="text-[11px] font-mono text-zinc-500 leading-relaxed max-w-2xl">{chartNote}</span>
           <ShareDropdown anchorId="economics" shareText="GTA franchise economic complexity: from score counter (1) to Full MMT sovereign (17). Every title's economy visualised. GTAVI.AI." size="sm" />
         </div>
@@ -123,13 +123,13 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
     <section>
       <div class="flex items-center gap-3 mb-6">
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// All Economies — Overview</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
       </div>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
+      <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
         <div class="overflow-x-auto">
           <table class="w-full text-xs font-mono" style="min-width:700px">
             <thead>
-              <tr class="border-b border-[#1e1e23]">
+              <tr class="border-b border-border-dim">
                 <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Title</th>
                 <th class="text-left px-3 py-2.5 text-zinc-400 font-normal">Economy Type</th>
                 <th class="text-center px-3 py-2.5 text-zinc-400 font-normal">Circular Flow</th>
@@ -145,7 +145,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
                 const color = e.projected ? C_BRAND : e.regression_era ? C_ALERT : C_LIVE;
                 const pageUrl = ECONOMY_PAGES[e.title_id];
                 const Row = (
-                  <tr class="border-b border-[#1e1e23]/50 hover:bg-white/[0.02] transition-colors">
+                  <tr class="border-b border-border-dim/50 hover:bg-white/[0.02] transition-colors">
                     <td class="px-4 py-2.5">
                       <div class="flex items-center gap-2">
                         {pageUrl ? (
@@ -181,7 +181,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
                     </td>
                     <td class="px-4 py-2.5 text-right">
                       <div class="flex items-center justify-end gap-2">
-                        <div class="w-16 h-1.5 rounded-full bg-[#1e1e23] overflow-hidden">
+                        <div class="w-16 h-1.5 rounded-full bg-border-dim overflow-hidden">
                           <div class="h-full rounded-full" style={`width:${pct}%;background:${color};opacity:${e.regression_era ? 0.5 : 0.75}`}></div>
                         </div>
                         <span class="font-bold w-4 text-right" style={`color:${color}`}>{e.complexity_score}</span>
@@ -194,7 +194,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
             </tbody>
           </table>
         </div>
-        <div class="px-4 py-2.5 border-t border-[#1e1e23] text-[11px] font-mono text-zinc-500">
+        <div class="px-4 py-2.5 border-t border-border-dim text-[11px] font-mono text-zinc-500">
           ● = dimension active (0–4 scale) · Proj = projected · Nerf = deliberate regression
         </div>
       </div>
@@ -228,7 +228,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
     <section>
       <div class="flex items-center gap-3 mb-6">
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economy Browser — Expand to View Circular Flow</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">Click to expand · Full page → for deep dive</span>
       </div>
       <div class="flex flex-col gap-2">

@@ -292,7 +292,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 
       {/* "IN-GAME CIRCULAR ECONOMY" dashed border for full-mmt */}
       {economy.layout_template === "full-mmt" && (
-        <div class="absolute rounded-xl border border-dashed border-[#2a2a31] pointer-events-none"
+        <div class="absolute rounded-xl border border-dashed border-border-mid pointer-events-none"
              style="top:46%;left:0;right:0;bottom:2%;z-index:0">
           <div class="absolute -top-2.5 left-4 text-[11px] font-mono text-zinc-500 uppercase tracking-[0.2em] px-1" style="background:var(--c-bg)">
             In-Game Circular Economy
@@ -345,7 +345,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 
   {/* ── Flow legend ───────────────────────────────────────────────────────── */}
   {!isCompact && flows.length > 0 && economy.layout_template !== "dual-territory" && (
-    <div class="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 pt-3 border-t border-[#1e1e23]">
+    <div class="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 pt-3 border-t border-border-dim">
       {flows.map((flow: any) => {
         const hex = flowHex(flow.color_token);
         const label = (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim();
@@ -366,7 +366,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       {/* Compact mode keeps Economy Type + Analogue as context labels; full mode
           omits them — the page hero already carries that context. */}
       {economy.key_innovation && (
-        <div class="rounded-lg border border-[#1e1e23] px-3 py-2.5" style="background:#131316">
+        <div class="rounded-lg border border-border-dim px-3 py-2.5" style="background:var(--c-card)">
           <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">
             Key {economy.short ?? economy.title_name} Economy Innovation {"★".repeat(economy.innovation_stars)}
           </div>
@@ -394,11 +394,11 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   {/* Compact mode: show Economy Type + Analogue as brief context labels */}
   {isCompact && (
     <div class="grid grid-cols-2 gap-2 mt-3">
-      <div class="rounded-lg border border-[#2a2a31] px-2.5 py-2" style="background:#131316">
+      <div class="rounded-lg border border-border-mid px-2.5 py-2" style="background:var(--c-card)">
         <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Economy Type</div>
         <div class="text-[10px] font-semibold text-zinc-200 leading-snug">{economy.economy_type}</div>
       </div>
-      <div class="rounded-lg border border-[#2a2a31] px-2.5 py-2" style="background:#131316">
+      <div class="rounded-lg border border-border-mid px-2.5 py-2" style="background:var(--c-card)">
         <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Real-World Analogue</div>
         <div class="text-[10px] font-semibold text-zinc-200 leading-snug">{economy.real_world_analogue}</div>
       </div>
