@@ -8,9 +8,9 @@ import vehicleData       from "../../../data/gta-5/vehicles/performance.json";
 import CardFooter from "../CardFooter.astro";
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
 
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm mb-0.5">
               GTA V Vehicle Performance — The Benchmark GTA VI Must Beat
@@ -25,7 +25,7 @@ import CardFooter from "../CardFooter.astro";
                 class:list={[
                   cls === "All"
                     ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8"
-                    : "border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+                    : "border-border-mid text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
                 ]}
                 data-class={cls}
               >{cls}</button>
@@ -129,7 +129,7 @@ import CardFooter from "../CardFooter.astro";
           b.classList.toggle("border-gta-gold/40", act);
           b.classList.toggle("text-gta-gold", act);
           b.classList.toggle("bg-gta-gold/8", act);
-          b.classList.toggle("border-[#2a2a31]", !act);
+          b.classList.toggle("border-border-mid", !act);
           b.classList.toggle("text-zinc-500", !act);
         });
         activeClass = btn.dataset.class!;

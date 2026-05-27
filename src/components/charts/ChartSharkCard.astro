@@ -11,9 +11,9 @@ import CardFooter from "../CardFooter.astro";
 const sharkCardData = sharkCardRaw as unknown as SharkCardsData;
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <!-- Key stat callouts -->
-        <div class="grid grid-cols-3 divide-x divide-[#1e1e23] border-b border-[#1e1e23]">
+        <div class="grid grid-cols-3 divide-x divide-border-dim border-b border-border-dim">
           {[
             { label: "Endgame cost 2013",    value: `$${(sharkCardData.analysis?.launch_endgame_usd ?? 0).toFixed(2)} USD`,  sub: "via Shark Cards",    color: "#71717a" },
             { label: "Endgame cost 2025",    value: `$${(sharkCardData.analysis?.current_endgame_usd ?? 0).toFixed(2)} USD`, sub: "via Shark Cards",    color: "#ef4444" },
@@ -26,7 +26,7 @@ const sharkCardData = sharkCardRaw as unknown as SharkCardsData;
             </div>
           ))}
         </div>
-        <div class="px-5 py-4 border-b border-[#1e1e23]">
+        <div class="px-5 py-4 border-b border-border-dim">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5">
             GTA Online Endgame Cost in Real USD — 2013 to 2026
           </div>

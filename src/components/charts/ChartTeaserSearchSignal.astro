@@ -28,9 +28,9 @@ const BAR_MAX_H = 56; // px
 const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" });
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
   <!-- Header -->
-  <div class="px-5 py-4 border-b border-[#1e1e23]">
+  <div class="px-5 py-4 border-b border-border-dim">
     <div class="font-semibold text-zinc-200 text-sm mb-0.5">
       GTA VI Search Interest — Two Trailer Spikes, Trend Still Rising
     </div>
@@ -111,7 +111,7 @@ const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString(
 
   <!-- Key stat -->
   <div class="px-5 pb-4">
-    <div class="rounded-lg border border-[#1e1e23] px-4 py-2.5 flex items-center justify-between gap-4" style="background:rgba(245,158,11,0.04)">
+    <div class="rounded-lg border border-border-dim px-4 py-2.5 flex items-center justify-between gap-4" style="background:rgba(245,158,11,0.04)">
       <span class="text-[11px] font-mono text-zinc-400">
         GTA VI is running <span class="text-gta-gold font-semibold">4.8× hotter</span> than GTA V was at the equivalent pre-launch moment
       </span>
@@ -122,7 +122,7 @@ const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString(
     </div>
   </div>
 
-  <div class="px-5 pb-3 flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
+  <div class="px-5 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5">
     <span class="text-[10px] text-zinc-600 font-mono">Source: Google Trends via pytrends · updated {updatedAt}</span>
     <div class="flex items-center gap-2 shrink-0">
       <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>

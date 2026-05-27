@@ -82,16 +82,16 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
     <!-- Loot tiers -->
     <section class="mb-8">
       <h2 class="text-xl font-bold text-zinc-200 mb-4">Loot Tiers — What to Target</h2>
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <table class="w-full text-xs font-mono">
-          <thead><tr class="border-b border-[#1e1e23]">
+          <thead><tr class="border-b border-border-dim">
             <th class="text-left px-5 py-2.5 text-zinc-600 font-normal">Primary Loot</th>
             <th class="text-right px-4 py-2.5 text-zinc-600 font-normal">Value</th>
             <th class="text-right px-5 py-2.5 text-zinc-600 font-normal">Frequency</th>
           </tr></thead>
           <tbody>
             {cayo.loot_tiers?.map((l: any) => (
-              <tr class="border-b border-[#1e1e23]/50">
+              <tr class="border-b border-border-dim/50">
                 <td class="px-5 py-2.5 font-semibold text-zinc-200">{l.loot}</td>
                 <td class="px-4 py-2.5 text-right text-gta-gold font-bold">${(l.value/1_000_000).toFixed(2)}M</td>
                 <td class="px-5 py-2.5 text-right text-zinc-500">{l.frequency}</td>
@@ -99,7 +99,7 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
             ))}
           </tbody>
         </table>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between">
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between">
           <span class="text-[10px] text-zinc-500 font-mono">Only run for Panther Statue, Pink Diamond, or Bearer Bonds. Abort if primary is Cash.</span>
           <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="cayo-perico" shareText="Cayo Perico loot tiers: Panther Statue $2.09M vs Cash $90K. Always check before running. Full guide." size="sm" /></div>
         </div>
@@ -111,7 +111,7 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
       <h2 class="text-xl font-bold text-zinc-200 mb-4">Strategy Tips</h2>
       <div class="flex flex-col gap-3">
         {cayo.tips?.map((tip: string, i: number) => (
-          <div class="flex items-start gap-3 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:#131316">
+          <div class="flex items-start gap-3 rounded-lg border border-border-dim px-4 py-3" style="background:var(--c-card)">
             <span class="text-gta-gold font-mono font-bold shrink-0">{i+1}</span>
             <p class="text-[11px] text-zinc-400 leading-relaxed">{tip}</p>
           </div>
@@ -126,7 +126,7 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
       <a href="/gta-online/income" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold border border-gta-gold/20 hover:border-gta-gold/40 px-4 py-2 rounded transition-colors uppercase tracking-widest">
         ← GTA Online Income Sources
       </a>
-      <a href="/database" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 border border-[#2a2a31] hover:border-zinc-600 px-4 py-2 rounded transition-colors uppercase tracking-widest">
+      <a href="/database" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 border border-border-mid hover:border-zinc-600 px-4 py-2 rounded transition-colors uppercase tracking-widest">
         Database: Full Profit Cards →
       </a>
     </div>

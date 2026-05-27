@@ -286,7 +286,7 @@ const HEIST_THUMBS: Record<string, string> = {
 >
 
   <!-- Header -->
-  <section class="relative border-b border-[#1e1e23] overflow-hidden">
+  <section class="relative border-b border-border-dim overflow-hidden">
     <div class="absolute inset-0">
       <img src="/assets/gta6/locations/Vice_City_05.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 60%" aria-hidden="true"
                 loading="lazy" />
@@ -302,10 +302,10 @@ const HEIST_THUMBS: Record<string, string> = {
         <button id="tab-gta6" class="db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all" data-game="gta-6">
           GTA VI
         </button>
-        <button id="tab-online" class="db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-game="gta-online">
+        <button id="tab-online" class="db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-border-mid text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-game="gta-online">
           GTA Online
         </button>
-        <button id="tab-gta5" class="db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-game="gta-5">
+        <button id="tab-gta5" class="db-game-tab px-4 py-2 rounded-lg text-sm font-mono border border-border-mid text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-game="gta-5">
           GTA V
         </button>
 
@@ -346,7 +346,7 @@ const HEIST_THUMBS: Record<string, string> = {
   </section>
 
   <!-- Filter bar -->
-  <div class="sticky top-16 z-40 border-b border-[#1e1e23]" style="background:rgba(14,14,17,0.97);backdrop-filter:blur(12px)">
+  <div class="sticky top-16 z-40 border-b border-border-dim" style="background:rgba(14,14,17,0.97);backdrop-filter:blur(12px)">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3 flex-wrap">
 
       <!-- GTA VI filters -->
@@ -355,7 +355,7 @@ const HEIST_THUMBS: Record<string, string> = {
           <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1">Type</span>
           <button class="db-type-filter px-2.5 py-1 rounded text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all" data-type="all">All</button>
           {GTA6_TYPES.map(t => (
-            <button class="db-type-filter px-2.5 py-1 rounded text-[10px] font-mono border border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-type={t}>
+            <button class="db-type-filter px-2.5 py-1 rounded text-[10px] font-mono border border-border-mid text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-type={t}>
               {TYPE_META[t].icon} {TYPE_META[t].label}
             </button>
           ))}
@@ -373,15 +373,15 @@ const HEIST_THUMBS: Record<string, string> = {
         </div>
         <div class="flex items-center gap-1.5 ml-auto">
           <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1">Source</span>
-          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-[#2a2a31] text-zinc-500 hover:border-zinc-500 transition-all" data-source="all" data-active="true">All</button>
-          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-[#2a2a31] text-zinc-500 hover:border-zinc-500 transition-all" data-source="fandom" data-active="true">Fandom Wiki</button>
-          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-[#2a2a31] text-zinc-500 hover:border-zinc-500 transition-all" data-source="leonida" data-active="true">Leonida Intel</button>
+          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-border-mid text-zinc-500 hover:border-zinc-500 transition-all" data-source="all" data-active="true">All</button>
+          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-border-mid text-zinc-500 hover:border-zinc-500 transition-all" data-source="fandom" data-active="true">Fandom Wiki</button>
+          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-border-mid text-zinc-500 hover:border-zinc-500 transition-all" data-source="leonida" data-active="true">Leonida Intel</button>
         </div>
         <input
           id="db-search-gta6"
           type="text"
           placeholder="Search GTA VI..."
-          class="px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-300 text-[11px] font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-gold/40 w-36"
+          class="px-3 py-1.5 rounded border border-border-mid bg-surface-2 text-zinc-300 text-[11px] font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-gold/40 w-36"
         />
       </div>
 
@@ -391,7 +391,7 @@ const HEIST_THUMBS: Record<string, string> = {
           <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1">Class</span>
           <button class="v5-class-filter px-2.5 py-1 rounded text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all" data-class="all">All</button>
           {gta5Classes.map(c => (
-            <button class="v5-class-filter px-2.5 py-1 rounded text-[10px] font-mono border border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-class={c}>
+            <button class="v5-class-filter px-2.5 py-1 rounded text-[10px] font-mono border border-border-mid text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-class={c}>
               {c}
             </button>
           ))}
@@ -399,13 +399,13 @@ const HEIST_THUMBS: Record<string, string> = {
         <div class="flex items-center gap-1.5 ml-auto">
           <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1">Sort</span>
           <button class="v5-sort-btn px-2.5 py-1 rounded text-[11px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all" data-sort="lap">Lap Time</button>
-          <button class="v5-sort-btn px-2.5 py-1 rounded text-[11px] font-mono border border-[#2a2a31] text-zinc-500 hover:border-zinc-500 transition-all" data-sort="speed">Top Speed</button>
+          <button class="v5-sort-btn px-2.5 py-1 rounded text-[11px] font-mono border border-border-mid text-zinc-500 hover:border-zinc-500 transition-all" data-sort="speed">Top Speed</button>
         </div>
         <input
           id="db-search-gta5"
           type="text"
           placeholder="Search GTA V vehicles..."
-          class="px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-300 text-[11px] font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-gold/40 w-44"
+          class="px-3 py-1.5 rounded border border-border-mid bg-surface-2 text-zinc-300 text-[11px] font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-gold/40 w-44"
         />
       </div>
 
@@ -421,7 +421,7 @@ const HEIST_THUMBS: Record<string, string> = {
           { id: "active",   label: "⚡ Active" },
         ] as const).map(f => (
           <button class="online-cat-filter px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
-            class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
+            class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-border-mid text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
             data-cat={f.id}>{f.label}</button>
         ))}
       </div>
@@ -436,7 +436,7 @@ const HEIST_THUMBS: Record<string, string> = {
           { id: "stocks",  label: "📈 Stock Guide" },
         ] as const).map(f => (
           <button class="gta5eco-cat-filter px-2.5 py-1 rounded text-[10px] font-mono border transition-all"
-            class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
+            class:list={[f.id === "all" ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-border-mid text-zinc-500 hover:text-zinc-300 hover:border-zinc-600"]}
             data-cat={f.id}>{f.label}</button>
         ))}
       </div>
@@ -449,7 +449,7 @@ const HEIST_THUMBS: Record<string, string> = {
     <!-- Stats row -->
     <div class="flex items-center gap-3 mb-5">
       <span id="db-count" class="text-[10px] font-mono text-zinc-600">{gta6Entities.length} entities</span>
-      <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      <div class="flex-1 h-px bg-border-dim"></div>
       <span id="db-source-label" class="text-[10px] font-mono text-zinc-500">GTA VI · Fandom Wiki + Leonida Intel</span>
     </div>
 
@@ -483,7 +483,7 @@ const HEIST_THUMBS: Record<string, string> = {
           <div class="flex items-center gap-3 mb-4">
             <span class="font-mono font-black text-xl leading-none" style={`color:${tier.color}`}>{tier.tier}</span>
             <span class="text-[10px] font-mono text-zinc-500">{tier.label}</span>
-            <div class="flex-1 h-px bg-[#1e1e23]"></div>
+            <div class="flex-1 h-px bg-border-dim"></div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {tier.sources.map((src: any) => {
@@ -538,7 +538,7 @@ const HEIST_THUMBS: Record<string, string> = {
         <div class="flex items-center gap-3 mb-4">
           <span class="font-mono font-black text-xl leading-none text-zinc-500">B</span>
           <span class="text-[10px] font-mono text-zinc-500">Contact Missions — Solo Farming</span>
-          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <div class="flex-1 h-px bg-border-dim"></div>
           <span class="text-[10px] font-mono text-zinc-500">{onlineMissionList.length} missions · net after costs</span>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -582,7 +582,7 @@ const HEIST_THUMBS: Record<string, string> = {
       <!-- Story Heists -->
       <div class="mb-6 gta5eco-section" data-category="heist">
         <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-4 flex items-center gap-3">
-          <span>// Story Heists</span><div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <span>// Story Heists</span><div class="flex-1 h-px bg-border-dim"></div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {storyHeistData.heists.filter(h => (h.approaches?.[0]?.player_max_cut ?? 0) > 0).map(h => (
@@ -614,7 +614,7 @@ const HEIST_THUMBS: Record<string, string> = {
       <!-- Assassination Stock Guide -->
       <div class="mb-6 gta5eco-section" data-category="stocks">
         <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-4 flex items-center gap-3">
-          <span>// Assassination Stock Guide — LCN / BAWSAQ</span><div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <span>// Assassination Stock Guide — LCN / BAWSAQ</span><div class="flex-1 h-px bg-border-dim"></div>
           <span class="text-zinc-500">$2B+ theoretical maximum</span>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -654,7 +654,7 @@ const HEIST_THUMBS: Record<string, string> = {
     </div>
 
     <!-- Source note -->
-    <div id="source-note-wrapper" class="mt-8 border border-[#1e1e23] rounded-xl p-4" style="background:#131316">
+    <div id="source-note-wrapper" class="mt-8 border border-border-dim rounded-xl p-4" style="background:var(--c-card)">
       <div id="source-note-gta6">
         <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Source Standard — GTA VI</div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-3">
@@ -808,7 +808,7 @@ const HEIST_THUMBS: Record<string, string> = {
       const mThumb  = MISSION_THUMBS[e.name] ?? "/assets/gta6/locations/Vice_City_03.jpg";
       const pillHtml = `<span class="inline-flex self-start items-center font-mono uppercase tracking-widest rounded border shrink-0 whitespace-nowrap text-[10px] px-1.5 py-0.5" style="color:var(--c-title-vi,#ff6b9d);border-color:rgba(255,107,157,0.33);background:rgba(10,10,13,0.88)">GTA VI</span>`;
       return `
-        <div class="rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-all duration-300 group overflow-hidden flex flex-col" style="background:var(--c-card)">
+        <div class="rounded-lg border border-border-dim hover:border-border-mid transition-all duration-300 group overflow-hidden flex flex-col" style="background:var(--c-card)">
           <div class="relative overflow-hidden" style="height:112px">
             <img src="${mThumb}" alt="${e.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
             <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-card) 0%,transparent 60%)"></div>
@@ -829,7 +829,7 @@ const HEIST_THUMBS: Record<string, string> = {
               </div>
               ${extLink}
             </div>
-            <div class="mt-2 pt-2 border-t border-[#1e1e23] flex items-baseline justify-between gap-2">
+            <div class="mt-2 pt-2 border-t border-border-dim flex items-baseline justify-between gap-2">
               <span class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">Payout</span>
               <div class="text-right">
                 <span class="text-[10px] font-mono text-zinc-500">GTA$ TBD</span>
@@ -849,7 +849,7 @@ const HEIST_THUMBS: Record<string, string> = {
 
     // Price / payout row — TBD placeholder until launch data populates
     const priceRow = priceLabel ? `
-      <div class="mt-2 pt-2 border-t border-[#1e1e23]">
+      <div class="mt-2 pt-2 border-t border-border-dim">
         <div class="flex items-baseline justify-between gap-2">
           <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">${priceLabel}</span>
           <span class="text-[10px] font-mono text-zinc-400">GTA$ TBD</span>
@@ -862,7 +862,7 @@ const HEIST_THUMBS: Record<string, string> = {
       const aspectClass = e.type === "character" && isPress ? "aspect-[3/4]" : "aspect-video";
       const imgPos = e.type === "character" && isPress ? "object-top" : "object-center";
       return `
-        <div class="rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-all duration-300 group overflow-hidden flex flex-col" style="background:#131316">
+        <div class="rounded-lg border border-border-dim hover:border-border-mid transition-all duration-300 group overflow-hidden flex flex-col" style="background:var(--c-card)">
           <div class="relative ${aspectClass} overflow-hidden bg-[#0a0a0d]">
             <img src="${thumbImg}" alt="${e.name}" class="w-full h-full object-cover ${imgPos} transition-transform duration-500 group-hover:scale-105" loading="lazy" />
             <div class="absolute inset-0" style="background:linear-gradient(to top,#131316 0%,#13131640 40%,transparent 65%)"></div>
@@ -885,7 +885,7 @@ const HEIST_THUMBS: Record<string, string> = {
     }
 
     return `
-      <div class="rounded-lg border border-[#1e1e23] p-3 hover:border-[#2a2a31] transition-colors group flex flex-col" style="background:#131316">
+      <div class="rounded-lg border border-border-dim p-3 hover:border-border-mid transition-colors group flex flex-col" style="background:var(--c-card)">
         <div class="flex items-start justify-between gap-2 mb-1.5">
           <span class="text-xs font-semibold text-zinc-200 leading-snug group-hover:text-white transition-colors flex-1">${e.name}</span>
           <span class="shrink-0 text-[7px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}">${meta.label}</span>
@@ -909,7 +909,7 @@ const HEIST_THUMBS: Record<string, string> = {
       ? `<span class="text-[11px] font-mono text-zinc-600 border border-zinc-800 px-1.5 py-0.5 rounded">${v.tier}</span>`
       : "";
     return `
-      <div class="rounded-lg border border-[#1e1e23] p-3 hover:border-[#2a2a31] transition-colors group" style="background:#131316">
+      <div class="rounded-lg border border-border-dim p-3 hover:border-border-mid transition-colors group" style="background:var(--c-card)">
         <div class="flex items-start justify-between gap-2 mb-1.5">
           <span class="text-xs font-semibold text-zinc-200 leading-snug group-hover:text-white transition-colors">${v.name}</span>
           ${tierBadge}
@@ -937,7 +937,7 @@ const HEIST_THUMBS: Record<string, string> = {
     for (let i = 0; i < totalPages; i++) {
       const btn = document.createElement("button");
       btn.textContent = String(i + 1);
-      btn.className = `px-3 py-1.5 rounded text-[10px] font-mono border transition-all ${i === currentPage ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-300"}`;
+      btn.className = `px-3 py-1.5 rounded text-[10px] font-mono border transition-all ${i === currentPage ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8" : "border-border-mid text-zinc-500 hover:text-zinc-300"}`;
       btn.onclick = () => { currentPage = i; renderActive(); window.scrollTo(0, 300); };
       pager.appendChild(btn);
     }
@@ -1108,7 +1108,7 @@ const HEIST_THUMBS: Record<string, string> = {
           .replace(/border-\[#2a2a31\]|text-zinc-500/g, "").trim();
         b.classList.add(...(active
           ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"]
-          : ["border-[#2a2a31]","text-zinc-500"]));
+          : ["border-border-mid","text-zinc-500"]));
       });
       renderGta6();
     });
@@ -1133,7 +1133,7 @@ const HEIST_THUMBS: Record<string, string> = {
           .replace(/border-\[#2a2a31\]|text-zinc-500/g, "").trim();
         b.classList.add(...(active
           ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"]
-          : ["border-[#2a2a31]","text-zinc-500"]));
+          : ["border-border-mid","text-zinc-500"]));
       });
       renderGta5();
     });
@@ -1151,7 +1151,7 @@ const HEIST_THUMBS: Record<string, string> = {
           .replace(/border-\[#2a2a31\]|text-zinc-500/g, "").trim();
         b.classList.add(...(active
           ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"]
-          : ["border-[#2a2a31]","text-zinc-500"]));
+          : ["border-border-mid","text-zinc-500"]));
       });
       renderGta5();
     });
@@ -1200,7 +1200,7 @@ const HEIST_THUMBS: Record<string, string> = {
           .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
           .replace(/border-\[#2a2a31\]|text-zinc-500/g, "")
           .trim();
-        b.classList.add(...(active ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"] : ["border-[#2a2a31]","text-zinc-500"]));
+        b.classList.add(...(active ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"] : ["border-border-mid","text-zinc-500"]));
       });
       applyOnlineCatFilter(cat);
     });
@@ -1216,7 +1216,7 @@ const HEIST_THUMBS: Record<string, string> = {
           .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8/g, "")
           .replace(/border-\[#2a2a31\]|text-zinc-500/g, "")
           .trim();
-        b.classList.add(...(active ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"] : ["border-[#2a2a31]","text-zinc-500"]));
+        b.classList.add(...(active ? ["border-gta-gold/40","text-gta-gold","bg-gta-gold/8"] : ["border-border-mid","text-zinc-500"]));
       });
       document.querySelectorAll<HTMLElement>(".gta5eco-section").forEach(s => {
         s.style.display = (cat === "all" || s.dataset.category === cat) ? "" : "none";

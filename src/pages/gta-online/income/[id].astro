@@ -89,7 +89,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
   ogImage={`https://gtavi.ai/og/online/${id}.png`}
 >
   <!-- Breadcrumb -->
-  <div class="border-b border-[#1e1e23]" style="background:#0a0a0d">
+  <div class="border-b border-border-dim" style="background:var(--c-bg-deep)">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-[10px] font-mono text-zinc-600">
       <a href="/gta-online" class="hover:text-zinc-400 transition-colors">GTA Online</a>
       <span class="text-zinc-800">›</span>
@@ -155,11 +155,11 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
 
         <!-- Full tips -->
         {biz.tips && biz.tips.length > 0 && (
-          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
-            <div class="px-5 py-3 border-b border-[#1e1e23]">
+          <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
+            <div class="px-5 py-3 border-b border-border-dim">
               <div class="font-semibold text-zinc-200 text-sm">Strategy & Tips</div>
             </div>
-            <div class="divide-y divide-[#1e1e23]">
+            <div class="divide-y divide-border-dim">
               {(biz.tips as string[]).map((tip: string, i: number) => (
                 <div class="px-5 py-3 flex gap-3">
                   <span class="text-gta-gold shrink-0 font-mono text-[10px] mt-0.5">{i + 1}.</span>
@@ -172,12 +172,12 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
 
         <!-- Income history timeline (if available) -->
         {srcHistory && srcHistory.timeline.length > 1 && (
-          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
-            <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
+          <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
+            <div class="px-5 py-3 border-b border-border-dim flex items-center justify-between">
               <div class="font-semibold text-zinc-200 text-sm">$/hr History</div>
               <span class="text-[10px] font-mono text-zinc-600">{srcHistory.timeline.length} snapshots</span>
             </div>
-            <div class="divide-y divide-[#1e1e23]">
+            <div class="divide-y divide-border-dim">
               {[...srcHistory.timeline].reverse().map((snap: any, ri: number) => {
                 const isPeak = snap.gta_per_hr === peakHr;
                 const isCurrent = ri === 0; // first in reversed = last in original
@@ -188,7 +188,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
                       <div class="text-[11px] font-mono text-zinc-500 truncate">{snap.patch}</div>
                     </div>
                     <div class="flex-1">
-                      <div class="h-1.5 rounded-full bg-[#1e1e23] overflow-hidden">
+                      <div class="h-1.5 rounded-full bg-border-dim overflow-hidden">
                         <div class="h-full rounded-full" style={`width:${Math.round((snap.gta_per_hr / (peakHr ?? 1)) * 100)}%;background:${isPeak ? C_GROWTH : isCurrent ? C_BRAND : C_TEXT_7}`}></div>
                       </div>
                     </div>
@@ -208,7 +208,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
 
         <!-- Notes -->
         {biz.notes && (
-          <div class="rounded-xl border border-[#1e1e23] px-5 py-4" style={`background:${C_CARD}`}>
+          <div class="rounded-xl border border-border-dim px-5 py-4" style={`background:${C_CARD}`}>
             <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Notes</div>
             <p class="text-[11px] text-zinc-400 leading-relaxed">{biz.notes}</p>
           </div>
@@ -216,12 +216,12 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
 
         <!-- Bonus cadence (full detail) -->
         {bonusFreq && (
-          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
-            <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
+          <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
+            <div class="px-5 py-3 border-b border-border-dim flex items-center justify-between">
               <div class="font-semibold text-zinc-200 text-sm">Bonus Calendar Intelligence</div>
               <span class="text-[10px] font-mono text-zinc-600">{bonusFreq.bonus_count} bonus events tracked</span>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
+            <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
               <div class="px-5 py-4">
                 <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Last bonus</div>
                 <div class="text-base font-mono font-bold text-zinc-200">
@@ -245,11 +245,11 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
               </div>
             </div>
             {bonusFreq.bonus_weeks && bonusFreq.bonus_weeks.length > 0 && (
-              <div class="px-5 py-3 border-t border-[#1e1e23]">
+              <div class="px-5 py-3 border-t border-border-dim">
                 <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Recent bonus weeks</div>
                 <div class="flex flex-wrap gap-1.5">
                   {[...bonusFreq.bonus_weeks].reverse().slice(0, 8).map((w: string) => (
-                    <span class="text-[11px] font-mono text-zinc-500 border border-[#2a2a31] px-2 py-0.5 rounded">{w.slice(0,7)}</span>
+                    <span class="text-[11px] font-mono text-zinc-500 border border-border-mid px-2 py-0.5 rounded">{w.slice(0,7)}</span>
                   ))}
                 </div>
               </div>
@@ -259,12 +259,12 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
 
         <!-- Patch history (richer than per-source-history) -->
         {biz.patch_history && biz.patch_history.length > 0 && (
-          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
-            <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
+          <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
+            <div class="px-5 py-3 border-b border-border-dim flex items-center justify-between">
               <div class="font-semibold text-zinc-200 text-sm">Patch History</div>
               <span class="text-[10px] font-mono text-zinc-600">{biz.patch_history.length} patches tracked</span>
             </div>
-            <div class="divide-y divide-[#1e1e23]">
+            <div class="divide-y divide-border-dim">
               {[...(biz as Business).patch_history].reverse().map((patch, ri: number) => {
                 const allVals = (biz as Business).patch_history.map(p => p.net_profit_per_hr);
                 const peak = Math.max(...allVals);
@@ -278,7 +278,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
                       <div class="text-[11px] font-mono text-zinc-500 truncate" title={patch.patch}>{patch.patch}</div>
                     </div>
                     <div class="flex-1">
-                      <div class="h-1.5 rounded-full bg-[#1e1e23] overflow-hidden">
+                      <div class="h-1.5 rounded-full bg-border-dim overflow-hidden">
                         <div class="h-full rounded-full transition-all"
                              style={`width:${pct}%;background:${isPeak ? C_GROWTH : isCurrent ? C_BRAND : C_TEXT_7}`}></div>
                       </div>
@@ -303,13 +303,13 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
 
         <!-- Loot tiers (heist-type sources) -->
         {biz.loot_tiers && biz.loot_tiers.length > 0 && (
-          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
-            <div class="px-5 py-3 border-b border-[#1e1e23]">
+          <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
+            <div class="px-5 py-3 border-b border-border-dim">
               <div class="font-semibold text-zinc-200 text-sm">Loot Tiers — What to Target</div>
             </div>
             <table class="w-full text-xs font-mono">
               <thead>
-                <tr class="border-b border-[#1e1e23]">
+                <tr class="border-b border-border-dim">
                   <th class="text-left px-5 py-2 text-zinc-600 font-normal">Primary Loot</th>
                   <th class="text-right px-4 py-2 text-zinc-600 font-normal">Value</th>
                   <th class="text-right px-5 py-2 text-zinc-600 font-normal">Frequency</th>
@@ -317,7 +317,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
               </thead>
               <tbody>
                 {((biz as OnlineHeist).loot_tiers ?? []).map((l, i: number) => (
-                  <tr class="border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors">
+                  <tr class="border-b border-border-dim/50 hover:bg-white/2 transition-colors">
                     <td class="px-5 py-2.5 font-semibold text-zinc-200">{l.loot}</td>
                     <td class="px-4 py-2.5 text-right font-bold" style={`color:${i === 0 ? C_GROWTH : i === 1 ? C_BRAND : '#71717a'}`}>
                       ${(l.value / 1_000_000).toFixed(2)}M
@@ -327,7 +327,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
                 ))}
               </tbody>
             </table>
-            <div class="px-5 py-2.5 border-t border-[#1e1e23]">
+            <div class="px-5 py-2.5 border-t border-border-dim">
               <span class="text-[11px] font-mono text-zinc-500">Only run for top 2 loot tiers. Abort and restart if primary loot is low-value.</span>
             </div>
           </div>
@@ -335,11 +335,11 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
 
         <!-- Related sources -->
         {related.length > 0 && (
-          <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
-            <div class="px-5 py-3 border-b border-[#1e1e23]">
+          <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
+            <div class="px-5 py-3 border-b border-border-dim">
               <div class="font-semibold text-zinc-200 text-sm">Same Tier — Also Worth Running</div>
             </div>
-            <div class="divide-y divide-[#1e1e23]">
+            <div class="divide-y divide-border-dim">
               {related.map((r: any) => (
                 <a href={`/gta-online/income/${r.id}`}
                    class="flex items-center justify-between px-5 py-3 hover:bg-white/[0.02] transition-colors group">
@@ -360,7 +360,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
         <!-- CTA to full database -->
         <div class="flex items-center gap-3 flex-wrap">
           <a href="/gta-online/income"
-             class="px-4 py-2 rounded border border-[#2a2a31] text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">
+             class="px-4 py-2 rounded border border-border-mid text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">
             ← All income sources
           </a>
           <a href={`/database?game=gta-online#profit-${id}`}

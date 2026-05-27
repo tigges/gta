@@ -1,0 +1,37 @@
+---
+/**
+ * ReadItBlock — left-border annotation block used in Money Flow cards,
+ * Health Monitor cards, and wherever an editorial "Read it:" insight appears.
+ *
+ * The slot should contain the full paragraph text. The "Read it:" prefix
+ * is rendered automatically as a semibold span.
+ *
+ * Usage:
+ *   <ReadItBlock accentColor="var(--c-brand)">
+ *     When the line dips after a major DLC, Rockstar has nerfed...
+ *   </ReadItBlock>
+ *
+ *   <ReadItBlock accentColor="var(--c-flow-spending)">
+ *     Vehicles are the dominant consumer good...
+ *   </ReadItBlock>
+ */
+
+interface Props {
+  /** CSS variable for the left border + optional tint. Defaults to var(--c-brand). */
+  accentColor?: string;
+  /** When false, the "Read it:" prefix label is omitted. Defaults to true. */
+  showPrefix?: boolean;
+}
+
+const { accentColor = "var(--c-brand)", showPrefix = true } = Astro.props;
+---
+
+<div
+  class="border-l-2 pl-3 py-1 rounded-r"
+  style={`border-color:color-mix(in srgb,${accentColor} 40%,transparent);background:var(--c-card-raised)`}
+>
+  <p class="text-[11px] text-zinc-400 leading-relaxed">
+    {showPrefix && <span class="font-semibold text-zinc-200">Read it: </span>}
+    <slot />
+  </p>
+</div>

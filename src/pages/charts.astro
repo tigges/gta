@@ -94,7 +94,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
 >
 
   <!-- Page header -->
-  <section class="relative border-b border-[#1e1e23] overflow-hidden">
+  <section class="relative border-b border-border-dim overflow-hidden">
     <div class="absolute inset-0">
       <img src="/assets/gta6/locations/Ambrosia_02.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 55%" aria-hidden="true" />
       <div class="absolute inset-0" style="background:linear-gradient(to right, #0a0a0d 0%, #0a0a0dcc 55%, #0a0a0d88 100%)"></div>
@@ -115,7 +115,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
       </div>
 
       <!-- Filter bar: title pills + category pills stacked -->
-      <div class="border-t border-[#1e1e23] pt-4 flex flex-col gap-3">
+      <div class="border-t border-border-dim pt-4 flex flex-col gap-3">
 
         <!-- Row 1: Title filter — GamePill-style buttons -->
         <div class="flex items-center gap-2 flex-wrap">
@@ -145,7 +145,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
               class:list={[
                 cat === "All"
                   ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8"
-                  : "border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+                  : "border-border-mid text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
               ]}
               data-filter={cat}
             >{CAT_LABELS[cat] ?? cat}</button>
@@ -264,7 +264,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
         .trim();
       b.classList.add(...(active
         ? ["border-gta-gold/40", "text-gta-gold", "bg-gta-gold/8"]
-        : ["border-[#2a2a31]", "text-zinc-500"]
+        : ["border-border-mid", "text-zinc-500"]
       ));
     });
   }

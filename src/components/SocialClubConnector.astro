@@ -23,9 +23,9 @@ const BENCHMARKS = {
 };
 ---
 
-<div class="rounded-xl border border-gta-teal/20 overflow-hidden" id="social-connector" style="background:#131316">
+<div class="rounded-xl border border-gta-teal/20 overflow-hidden" id="social-connector" style="background:var(--c-card)">
   <!-- Header -->
-  <div class="px-5 py-4 border-b border-[#1e1e23] flex items-center gap-3">
+  <div class="px-5 py-4 border-b border-border-dim flex items-center gap-3">
     <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style="background:#003087">
       <span class="font-mono font-black text-white text-xs">R★</span>
     </div>
@@ -49,7 +49,7 @@ const BENCHMARKS = {
             id="sc-username"
             type="text"
             placeholder="YourUsername"
-            class="flex-1 px-3 py-2 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-teal/40"
+            class="flex-1 px-3 py-2 rounded border border-border-mid bg-surface-2 text-zinc-200 text-sm font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-teal/40"
           />
           <a id="sc-profile-link" href="https://socialclub.rockstargames.com" target="_blank" rel="noopener noreferrer"
             class="shrink-0 px-3 py-2 rounded border border-gta-teal/30 text-gta-teal text-[10px] font-mono hover:bg-gta-teal/8 transition-colors uppercase tracking-widest">
@@ -64,22 +64,22 @@ const BENCHMARKS = {
         <div>
           <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Criminal Rank</label>
           <input id="sc-rank" type="number" placeholder="500" min="1" max="8000"
-            class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
+            class="w-full px-3 py-1.5 rounded border border-border-mid bg-surface-2 text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
         </div>
         <div>
           <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Cash in Bank (GTA$)</label>
           <input id="sc-cash" type="number" placeholder="5000000" min="0"
-            class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
+            class="w-full px-3 py-1.5 rounded border border-border-mid bg-surface-2 text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
         </div>
         <div>
           <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Missions Played</label>
           <input id="sc-missions" type="number" placeholder="1200" min="0"
-            class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
+            class="w-full px-3 py-1.5 rounded border border-border-mid bg-surface-2 text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
         </div>
         <div>
           <label class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest block mb-1">Hours Played</label>
           <input id="sc-hours" type="number" placeholder="300" min="0"
-            class="w-full px-3 py-1.5 rounded border border-[#2a2a31] bg-[#1a1a1e] text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
+            class="w-full px-3 py-1.5 rounded border border-border-mid bg-surface-2 text-zinc-200 text-sm font-mono focus:outline-none focus:border-gta-teal/40" />
         </div>
       </div>
 
@@ -97,7 +97,7 @@ const BENCHMARKS = {
         <!-- Populated by JS -->
       </div>
 
-      <div id="sc-recommendation" class="mt-4 rounded-lg border border-gta-gold/25 p-3" style="background:#0e0e11">
+      <div id="sc-recommendation" class="mt-4 rounded-lg border border-gta-gold/25 p-3" style="background:var(--c-bg)">
         <div class="text-[11px] font-mono text-gta-gold uppercase tracking-widest mb-1">Recommendation for your level</div>
         <div id="sc-rec-text" class="text-[11px] text-zinc-300"></div>
       </div>
@@ -111,7 +111,7 @@ const BENCHMARKS = {
   </div>
 
   <!-- Footer -->
-  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3" style="background:#0e0e11">
+  <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3" style="background:var(--c-bg)">
     <div class="text-[10px] text-zinc-500 font-mono">
       Phase 2 coming: auto-fetch from Social Club public profile · No login required
     </div>
@@ -151,7 +151,7 @@ const BENCHMARKS = {
       const label = pctOfTop >= 90 ? 'Top 10%' : pctOfTop >= 50 ? 'Above avg' : value >= avg ? 'Average' : 'Below avg';
       return `
         <div class="flex items-center gap-2 text-[10px] font-mono">
-          <div class="flex-1 h-1.5 rounded-full bg-[#1e1e23] overflow-hidden">
+          <div class="flex-1 h-1.5 rounded-full bg-border-dim overflow-hidden">
             <div style="width:${pctOfTop}%;background:${color}" class="h-full rounded-full"></div>
           </div>
           <span style="color:${color}" class="shrink-0 w-20 text-right">${label}</span>
@@ -173,7 +173,7 @@ const BENCHMARKS = {
     ].filter(s => s.value > 0);
 
     statsGrid.innerHTML = stats.map(s => `
-      <div class="rounded-lg border border-[#2a2a31] px-3 py-2.5" style="background:#0a0a0d">
+      <div class="rounded-lg border border-border-mid px-3 py-2.5" style="background:var(--c-bg-deep)">
         <div class="flex items-center justify-between mb-1">
           <span class="text-[10px] font-mono text-zinc-500">${s.label}</span>
           <span class="text-[11px] font-mono font-bold text-zinc-200">${s.fmt}</span>

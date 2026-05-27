@@ -193,7 +193,7 @@ const COUNTRIES: Country[] = [
   <!-- ══════════════════════════════════════════════════════
        HERO
   ══════════════════════════════════════════════════════ -->
-  <section class="relative overflow-hidden border-b border-[#1e1e23]" style="min-height:420px;display:flex;align-items:flex-end">
+  <section class="relative overflow-hidden border-b border-border-dim" style="min-height:420px;display:flex;align-items:flex-end">
 
     <!-- Character backdrop: Lucia left, Jason right -->
     <div class="absolute inset-0 flex">
@@ -270,12 +270,12 @@ const COUNTRIES: Country[] = [
       <div class="flex items-center gap-3 mb-6">
         <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Platforms</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">Source: Rockstar Games</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {PLATFORMS.map(p => (
-          <div class={`rounded-xl border p-5 ${p.border} ${p.bg} relative overflow-hidden`} style="background:#131316">
+          <div class={`rounded-xl border p-5 ${p.border} ${p.bg} relative overflow-hidden`} style="background:var(--c-card)">
             <!-- Platform logo mark -->
             <div class="flex items-center gap-3 mb-4">
               <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 font-mono font-black text-white text-sm" style={`background:${p.logoBg};border:1px solid ${p.logoBg}40`}>
@@ -312,7 +312,7 @@ const COUNTRIES: Country[] = [
       <div class="flex items-center gap-3 mb-5">
         <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Where to Buy</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">Digital + Physical · Pre-orders imminent</span>
       </div>
 
@@ -322,7 +322,7 @@ const COUNTRIES: Country[] = [
         {COUNTRIES.map((c, i) => (
           <button
             class="country-btn shrink-0 text-[11px] font-mono border rounded px-2.5 py-1.5 transition-all"
-            class:list={[i === 0 ? "border-gta-gold/40 bg-gta-gold/8 text-gta-gold" : "border-[#2a2a31] text-zinc-500 hover:text-zinc-200 hover:border-zinc-500"]}
+            class:list={[i === 0 ? "border-gta-gold/40 bg-gta-gold/8 text-gta-gold" : "border-border-mid text-zinc-500 hover:text-zinc-200 hover:border-zinc-500"]}
             data-locale={c.localePrefix}
           >{c.flag} {c.short}</button>
         ))}
@@ -351,7 +351,7 @@ const COUNTRIES: Country[] = [
             {c.stores.map((r: StoreEntry) => (
               <a href={tagAmazonUrl(r.url)} target="_blank" rel="noopener noreferrer"
                 class={`group rounded-xl border p-4 hover:bg-white/3 transition-all flex items-start gap-3 ${r.border}`}
-                style="background:#131316">
+                style="background:var(--c-card)">
                 <!-- Logo mark -->
                 <div class="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center font-mono font-black text-white text-[11px] border" style={`background:${r.logoBg};border-color:${r.logoBg}60`}>
                   {r.initials}
@@ -376,7 +376,7 @@ const COUNTRIES: Country[] = [
       ))}
 
       <!-- FTC / ASA affiliate disclosure — mandatory, must be near the links -->
-      <div class="mt-5 rounded-lg border border-[#2a2a31] px-4 py-3 flex items-start gap-3" style="background:var(--c-bg)">
+      <div class="mt-5 rounded-lg border border-border-mid px-4 py-3 flex items-start gap-3" style="background:var(--c-bg)">
         <span class="text-zinc-600 font-mono text-[11px] shrink-0 mt-0.5">ⓘ</span>
         <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">
           <strong class="text-zinc-500 font-semibold">Affiliate disclosure:</strong> Some links on this page are affiliate links.
@@ -393,7 +393,7 @@ const COUNTRIES: Country[] = [
       <div class="flex items-center gap-3 mb-3">
         <span class="w-2 h-2 rounded-full bg-zinc-600 shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Edition Breakdown</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">All prices USD · All editions speculative</span>
       </div>
       <!-- Speculative notice -->
@@ -407,8 +407,8 @@ const COUNTRIES: Country[] = [
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {EDITIONS.map((ed) => (
-          <div class={`rounded-xl border overflow-hidden flex flex-col transition-all ${ed.highlight ? "border-gta-gold/30 shadow-lg shadow-gta-gold/5" : "border-[#1e1e23]"}`}
-            style="background:#131316"
+          <div class={`rounded-xl border overflow-hidden flex flex-col transition-all ${ed.highlight ? "border-gta-gold/30 shadow-lg shadow-gta-gold/5" : "border-border-dim"}`}
+            style="background:var(--c-card)"
             data-price-usd={ed.price_usd}>
 
             <!-- Edition header -->
@@ -473,7 +473,7 @@ const COUNTRIES: Country[] = [
             </div>
 
             <!-- Basis -->
-            <div class="px-5 py-3 border-t border-[#1e1e23]">
+            <div class="px-5 py-3 border-t border-border-dim">
               <p class="text-[10px] text-zinc-500 font-mono leading-relaxed">{ed.basis}</p>
             </div>
           </div>
@@ -488,7 +488,7 @@ const COUNTRIES: Country[] = [
       <div class="flex items-center gap-3 mb-6">
         <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Protagonists</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full intel →</a>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -496,7 +496,7 @@ const COUNTRIES: Country[] = [
           { name: "Lucia Caminos", role: "Protagonist", img: "Lucia_Caminos_06.jpg", desc: "Confirmed via official Trailer 1. First female lead in the mainline GTA series." },
           { name: "Jason Duval",   role: "Protagonist", img: "Jason_Duval_06.jpg",   desc: "Confirmed via official Trailer 1 and Trailer 2. Co-protagonist alongside Lucia." },
         ] as const).map(c => (
-          <div class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-gta-gold/20 transition-all">
+          <div class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-gold/20 transition-all">
             <div class="aspect-[16/7] overflow-hidden">
               <img
                 src={`/assets/gta6/characters/${c.img}`}
@@ -524,7 +524,7 @@ const COUNTRIES: Country[] = [
     <!-- ══════════════════════════════════════════════════════
          INTELLIGENCE NOTE
     ══════════════════════════════════════════════════════ -->
-    <section class="rounded-xl border border-[#1e1e23] p-6" style="background:#131316">
+    <section class="rounded-xl border border-border-dim p-6" style="background:var(--c-card)">
       <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Intelligence Standard</div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {[
@@ -582,7 +582,7 @@ const COUNTRIES: Country[] = [
       btn.classList.toggle('border-gta-gold/40', active);
       btn.classList.toggle('bg-gta-gold/8', active);
       btn.classList.toggle('text-gta-gold', active);
-      btn.classList.toggle('border-[#2a2a31]', !active);
+      btn.classList.toggle('border-border-mid', !active);
       btn.classList.toggle('text-zinc-500', !active);
     });
     // Country label

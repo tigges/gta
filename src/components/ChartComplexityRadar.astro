@@ -41,8 +41,8 @@ const complexityScore = economy.complexity_score;
 const isProjected = (economy as any).projected;
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-  <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center justify-between">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+  <div class="px-5 py-3 border-b border-border-dim flex items-center justify-between">
     <div>
       <div class="font-semibold text-zinc-200 text-sm">
         Economic Complexity
@@ -66,7 +66,7 @@ const isProjected = (economy as any).projected;
        data-projected={String(isProjected)}>
   </div>
 
-  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+  <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
     <div class="flex items-center gap-4 text-[11px] font-mono text-zinc-400">
       <span class="flex items-center gap-1.5">
         <div class="w-4 h-px" style={`background:${isProjected ? C_BRAND : C_LIVE};opacity:var(--o-secondary)`}></div>

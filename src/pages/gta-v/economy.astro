@@ -66,7 +66,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
       <div class="flex items-center gap-3 mb-6">
         <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Circular Economy Model</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 rounded-xl border border-border-dim p-5" style="background:var(--c-bg)">
@@ -82,7 +82,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
       <div class="flex items-center gap-3 mb-6">
         <span class="text-[11px] font-mono bg-purple-900/30 border border-purple-700/40 text-purple-400 px-2 py-0.5 rounded uppercase tracking-widest">Capital Market</span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// BAWSAQ — Assassination Mission Returns</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <div class="flex-1 h-px bg-border-dim"></div>
         <a href="/gta-online/assassination-guide" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full guide →</a>
       </div>
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
@@ -92,7 +92,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
           </div>
           <div class="text-[10px] font-mono text-zinc-400">{stocksData.optimal_sequence_note}</div>
         </div>
-        <div class="divide-y divide-[#1e1e23]">
+        <div class="divide-y divide-border-dim">
           {guide.map((step: any, i: number) => {
             const pct = step.combined_return_pct;
             const color = pct >= 300 ? "#22c55e" : pct >= 100 ? "#f59e0b" : "#0d9488";

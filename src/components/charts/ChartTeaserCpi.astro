@@ -23,9 +23,9 @@ const rows = titles
 const maxReal = Math.max(...rows.map((r: any) => r.real));
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
   <!-- Header -->
-  <div class="px-5 py-4 border-b border-[#1e1e23]">
+  <div class="px-5 py-4 border-b border-border-dim">
     <div class="font-semibold text-zinc-200 text-sm mb-0.5">
       GTA VI at $79.99 Is the Cheapest GTA at Launch — In Real Terms
     </div>
@@ -46,7 +46,7 @@ const maxReal = Math.max(...rows.map((r: any) => r.real));
           </span>
 
           <!-- Bar track -->
-          <div class="flex-1 h-5 rounded overflow-hidden relative" style="background:#0e0e11">
+          <div class="flex-1 h-5 rounded overflow-hidden relative" style="background:var(--c-bg)">
             <!-- Real price bar -->
             <div
               class={`h-full rounded transition-all duration-700 ${r.is_vi ? "" : ""}`}
@@ -82,7 +82,7 @@ const maxReal = Math.max(...rows.map((r: any) => r.real));
     </div>
   </div>
 
-  <div class="px-5 pb-3 flex items-center justify-between border-t border-[#1e1e23] pt-2.5">
+  <div class="px-5 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5">
     <span class="text-[10px] text-zinc-600 font-mono">Source: US Bureau of Labor Statistics CPI-U · Rockstar/Take-Two pricing</span>
     <div class="flex items-center gap-2 shrink-0">
       <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>

@@ -253,9 +253,9 @@ const showEnrichment = !compact;
         <>
           {solo
             ? <span class="text-[10px] font-mono border border-gta-teal/25 bg-gta-teal/8 px-1 py-0.5 rounded" style="color:var(--c-live)">solo ✓</span>
-            : min_players && <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{min_players}–{max_players}p</span>
+            : min_players && <span class="text-[10px] font-mono text-zinc-600 border border-border-mid px-1 py-0.5 rounded">{min_players}–{max_players}p</span>
           }
-          <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{diffLabel}</span>
+          <span class="text-[10px] font-mono text-zinc-600 border border-border-mid px-1 py-0.5 rounded">{diffLabel}</span>
         </>
       )}
     </div>
@@ -330,7 +330,7 @@ const showEnrichment = !compact;
 
         <!-- Enrichment slot: Setup + break-even (GTA Online) OR Confidence + analogue (GTA VI) -->
         {isGtaVI ? (
-          <div class="grid grid-cols-2 gap-x-3 text-[10px] font-mono border-t border-[#1e1e23] pt-2">
+          <div class="grid grid-cols-2 gap-x-3 text-[10px] font-mono border-t border-border-dim pt-2">
             <div>
               <div class="text-zinc-600 uppercase tracking-widest mb-0.5">Confidence</div>
               <div style={`color:${confColor}`}>{confidence_score}%</div>
@@ -388,7 +388,7 @@ const showEnrichment = !compact;
 
         <!-- Basis text (GTA VI, replaces tips) -->
         {isGtaVI && basis && (
-          <div class="rounded-lg px-2.5 py-2 text-[10px] font-mono text-zinc-400 border-t border-[#1e1e23] pt-2 flex gap-1.5 items-start">
+          <div class="rounded-lg px-2.5 py-2 text-[10px] font-mono text-zinc-400 border-t border-border-dim pt-2 flex gap-1.5 items-start">
             <span class="text-zinc-600 shrink-0">▶</span>
             <span class="leading-snug">{basis}</span>
           </div>
@@ -396,7 +396,7 @@ const showEnrichment = !compact;
 
         <!-- Daily fee (GTA Online) -->
         {!isGtaVI && daily_fee && (
-          <div class="text-[11px] font-mono text-zinc-600 border-t border-[#1e1e23] pt-2 flex items-center gap-1.5">
+          <div class="text-[11px] font-mono text-zinc-600 border-t border-border-dim pt-2 flex items-center gap-1.5">
             <span style="color:var(--c-text-6)">⚙</span>
             <span>${daily_fee.toLocaleString()}/day upkeep</span>
             <span class="text-zinc-500 ml-0.5">(${Math.round(daily_fee * 365 / 1000)}k/yr)</span>
@@ -405,7 +405,7 @@ const showEnrichment = !compact;
 
         <!-- Bonus cadence (GTA Online) -->
         {!isGtaVI && bonus_count && (
-          <div class={`text-[11px] font-mono flex items-center gap-1.5 ${daily_fee ? "" : "border-t border-[#1e1e23] pt-2"}`}>
+          <div class={`text-[11px] font-mono flex items-center gap-1.5 ${daily_fee ? "" : "border-t border-border-dim pt-2"}`}>
             {bonusActive ? (
               <span class="font-bold px-1.5 py-0.5 rounded"
                     style="color:var(--c-growth);background:color-mix(in srgb,var(--c-growth) 12%,transparent);border:1px solid color-mix(in srgb,var(--c-growth) 25%,transparent)">
@@ -423,7 +423,7 @@ const showEnrichment = !compact;
 
         <!-- Nerf indicator (GTA Online) -->
         {!isGtaVI && last_nerfed && (
-          <div class={`text-[11px] font-mono flex items-center gap-1.5 ${(daily_fee || bonus_count) ? "" : "border-t border-[#1e1e23] pt-2"}`}
+          <div class={`text-[11px] font-mono flex items-center gap-1.5 ${(daily_fee || bonus_count) ? "" : "border-t border-border-dim pt-2"}`}
                style="color:var(--c-brand)">
             <span>⚡</span>
             <span>Nerfed {new Date(last_nerfed).toLocaleDateString("en-GB", { month:"short", year:"numeric" })}</span>
@@ -438,7 +438,7 @@ const showEnrichment = !compact;
 
         <!-- Top tip (GTA Online) -->
         {!isGtaVI && tips && tips[0] && (
-          <div class="rounded-lg px-2.5 py-2 text-[11px] font-mono text-zinc-400 border-t border-[#1e1e23] pt-2 flex gap-1.5 items-start">
+          <div class="rounded-lg px-2.5 py-2 text-[11px] font-mono text-zinc-400 border-t border-border-dim pt-2 flex gap-1.5 items-start">
             <span style="color:var(--c-brand)" class="shrink-0">▶</span>
             <span class="leading-snug">{tips[0]}</span>
           </div>
