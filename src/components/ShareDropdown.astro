@@ -54,7 +54,7 @@ const dropId  = `share-drop-${anchorId}`;
   <!-- Dropdown menu — positioned above button -->
   <div
     id={dropId}
-    class="share-dropdown-menu absolute bottom-full right-0 mb-1.5 rounded-lg border z-50 hidden"
+    class="share-dropdown-menu rounded-lg border hidden"
     style="background:var(--c-card-raised);border-color:var(--c-border-2);box-shadow:0 8px 32px rgba(0,0,0,0.6);min-width:220px"
     role="menu"
   >
@@ -155,7 +155,26 @@ const dropId  = `share-drop-${anchorId}`;
   }
   requestAnimationFrame(applyIdentityColour);
 
-  // Toggle dropdown
+  // Toggle dropdown — use position:fixed so the menu escapes any parent
+  // overflow:hidden (e.g. CircularEconomy's .eco-wrap, card wrappers, etc.)
+  function positionMenu(btn: HTMLButtonElement, menu: HTMLElement) {
+    const rect = btn.getBoundingClientRect();
+    menu.style.position = "fixed";
+    menu.style.zIndex   = "9999";
+    // Open upward unless too close to top of viewport
+    const spaceAbove = rect.top;
+    const menuH = 160; // approximate dropdown height
+    if (spaceAbove > menuH + 8) {
+      menu.style.bottom = `${window.innerHeight - rect.top + 4}px`;
+      menu.style.top    = "auto";
+    } else {
+      menu.style.top    = `${rect.bottom + 4}px`;
+      menu.style.bottom = "auto";
+    }
+    menu.style.right = `${window.innerWidth - rect.right}px`;
+    menu.style.left  = "auto";
+  }
+
   document.querySelectorAll<HTMLButtonElement>(".share-dropdown-trigger").forEach(btn => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -169,6 +188,7 @@ const dropId  = `share-drop-${anchorId}`;
         m.previousElementSibling?.setAttribute("aria-expanded","false");
       });
       if (!isOpen) {
+        positionMenu(btn, menu);
         menu.classList.remove("hidden");
         btn.setAttribute("aria-expanded","true");
       }
