@@ -328,7 +328,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
             const hex = flowHex(color);
             return (
               <marker id={`${uid}-arr-${color}`}
-                      markerWidth="7" markerHeight="7"
+                      markerWidth="9" markerHeight="9"
                       refX="5" refY="3"
                       orient="auto" markerUnits="strokeWidth">
                 <path d="M0,0 L0,6 L7,3 z" fill={hex} opacity="0.85" />
@@ -503,9 +503,10 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       // to visually separate arrows that share the same node pair
       const midX = (p1.x + p2.x) / 2, midY = (p1.y + p2.y) / 2;
       const dx   = p2.x - p1.x,       dy   = p2.y - p1.y;
-      // More curvature on multi-stream template and bidirectional flows
+      // More curvature separates parallel arrows (wages/spending/investment
+      // all run between the same businesses↔players nodes).
       const isMulti = grid.dataset.template === "multi-stream";
-      const curve = flow.bidirectional ? 0.28 : isMulti ? 0.22 : 0.14;
+      const curve = flow.bidirectional ? 0.35 : isMulti ? 0.28 : 0.22;
       const curveDir = pass % 2 === 0 ? 1 : -1; // alternate sides for parallel arrows
       const cx = midX - dy * curve * curveDir, cy = midY + dx * curve * curveDir;
 
@@ -518,8 +519,8 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       path.setAttribute("d", `M${p1.x},${p1.y} Q${cx},${cy} ${p2.x},${p2.y}`);
       path.setAttribute("fill", "none");
       path.setAttribute("stroke", hex);
-      path.setAttribute("stroke-width", "2.5");
-      path.setAttribute("stroke-opacity", "0.9");
+      path.setAttribute("stroke-width", "3");
+      path.setAttribute("stroke-opacity", "1");
       path.style.animationDuration = `${animCfg.duration_s}s`;
       if (isDashed && animClass === "") path.setAttribute("stroke-dasharray", "5,3");
       path.setAttribute("marker-end", `url(#${uid}-arr-${flow.color_token})`);
@@ -527,8 +528,10 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 
       // Flow label — positioned at t=0.25 (closer to source) to spread labels apart
       // A background rect behind the text prevents overlap illegibility
-      // Keep circle numbers (①②③④⑤) as part of the label — they reference the flow cards
-      const label = (flow.label as string).replace(/[←→★]/g, "").trim().slice(0, 20);
+      // Show only the circle number (①②③④⑤) on the arrow — clean, no overlap.
+      // Full label text lives on the money flow cards below the diagram.
+      const circleNum = (flow.label as string).match(/[①②③④⑤]/)?.[0] ?? "";
+      const label = circleNum || (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim().slice(0, 8);
       if (label) {
         // Bezier point at t=0.25 (closer to source node — spreads labels from center)
         const t  = 0.25;
@@ -539,14 +542,14 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
         // Slight perpendicular offset so label doesn't sit on the path
         const pathDx = p2.x - p1.x, pathDy = p2.y - p1.y;
         const pathLen = Math.sqrt(pathDx*pathDx + pathDy*pathDy) || 1;
-        const perpX = -pathDy / pathLen * 9;
-        const perpY =  pathDx / pathLen * 9;
+        const perpX = -pathDy / pathLen * 14;
+        const perpY =  pathDx / pathLen * 14;
         const lx = Math.round(bx + perpX);
         const ly = Math.round(by + perpY);
 
-        const FONT_SIZE = 10;
-        const estimatedW = label.length * 5.8 + 8;
-        const estimatedH = FONT_SIZE + 4;
+        const FONT_SIZE = 11;
+        const estimatedW = label.length * 6.4 + 10;
+        const estimatedH = FONT_SIZE + 6;
 
         // Background rect for readability
         const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -557,7 +560,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
         bg.setAttribute("height", String(estimatedH));
         bg.setAttribute("rx", "3");
         bg.setAttribute("fill", "#0a0a0d");
-        bg.setAttribute("fill-opacity", "0.82");
+        bg.setAttribute("fill-opacity", "0.95");
         svg.appendChild(bg);
 
         // Label text
@@ -578,9 +581,12 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   }
 
   // ── Init on page load ────────────────────────────────────────────────────
-  document.querySelectorAll<HTMLElement>(".ce-node-grid").forEach(grid => {
-    requestAnimationFrame(() => drawArrows(grid));
-  });
+  // 350ms matches the ChartPreviewCard expand delay that reliably works on
+  // the franchise/economics page — gives layout enough time to settle before
+  // getBoundingClientRect() is called on absolutely-positioned child nodes.
+  setTimeout(() => {
+    document.querySelectorAll<HTMLElement>(".ce-node-grid").forEach(drawArrows);
+  }, 350);
 
   // ── Re-draw on resize ─────────────────────────────────────────────────────
   let resizeTimer: ReturnType<typeof setTimeout>;

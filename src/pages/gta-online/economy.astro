@@ -175,7 +175,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
   ═══════════════════════════════════════════════════════ -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-2">
     <div class="flex items-center gap-3 mb-4">
-      <GamePill game="gta-online" size="xs" />
+      <span class="w-1.5 h-1.5 rounded-full bg-gta-online-vivid/60 shrink-0"></span>
       <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// GTA Online Circular Economy</span>
       <div class="flex-1 h-px bg-border-dim"></div>
     </div>
@@ -238,7 +238,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-gta-gold/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                <span class="font-black text-[14px] mr-1" style="color:var(--c-income)">①</span>BUSINESSES → PLAYERS</span>
+                <span class="font-mono font-black text-[18px] mr-1.5 leading-none" style="color:var(--c-income)">①</span>BUSINESSES → PLAYERS</span>
               </div>
               <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-income) 40%,transparent);background:color-mix(in srgb,var(--c-income) 12%,transparent);color:var(--c-income)">Y · INCOME</span>
             </div>
@@ -267,6 +267,13 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
                 <span class="font-semibold text-zinc-200">Read it:</span> When the line dips after a major DLC, Rockstar has nerfed the previous meta activity to push players toward new content. The 2021 Cayo nerf cut wages 40% in a single patch — prices unchanged.
               </p>
             </div>
+
+          <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5 mt-1">
+            <div class="min-w-0 shrink-0"><a href="/charts?title=gta-online#section-eco-wages" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full chart →</a></div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+              <ShareDropdown anchorId="eco-wages" shareText="GTA Online income ceiling: $250K/hr in 2013 → $1.7M/hr in 2026. Every major patch shifts the meta — full data on GTAVI.AI" size="sm" />
+            </div>
           </div>
         </div>
 
@@ -275,7 +282,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-zinc-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                <span class="font-black text-[14px] mr-1" style="color:var(--c-flow-spending)">②</span>PLAYERS → BUSINESSES</span>
+                <span class="font-mono font-black text-[18px] mr-1.5 leading-none" style="color:var(--c-flow-spending)">②</span>PLAYERS → BUSINESSES</span>
               </div>
               <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-flow-spending) 40%,transparent);background:color-mix(in srgb,var(--c-flow-spending) 12%,transparent);color:var(--c-flow-spending)">C · CONSUMPTION</span>
             </div>
@@ -305,6 +312,13 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
                 <span class="font-semibold text-zinc-200">Read it:</span> Vehicles are the dominant consumer good — equivalent to housing in the real economy. Every DLC that adds desirable cars drives a consumer spending spike. The Oppressor Mk II alone moved the needle in 2018.
               </p>
             </div>
+
+          <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5 mt-1">
+            <div class="min-w-0 shrink-0"><a href="/charts?title=gta-online#section-eco-spending" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full chart →</a></div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+              <ShareDropdown anchorId="eco-spending" shareText="Where GTA$ actually goes: 44% vehicles · 33% properties · 18% weapons. Community-estimated by DLC era. GTAVI.AI" size="sm" />
+            </div>
           </div>
         </div>
 
@@ -313,7 +327,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-gta-green/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                <span class="font-black text-[14px] mr-1" style="color:var(--c-growth)">③</span>PLAYERS → MAZE BANK</span>
+                <span class="font-mono font-black text-[18px] mr-1.5 leading-none" style="color:var(--c-growth)">③</span>PLAYERS → MAZE BANK</span>
               </div>
               <span class="text-[11px] font-mono border border-gta-green/40 bg-gta-green/20 text-gta-green px-2 py-0.5 rounded uppercase tracking-widest">SAVINGS</span>
             </div>
@@ -341,6 +355,13 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
                 <span class="font-semibold text-zinc-200">Read it:</span> High savings = money not flowing back to businesses. The $2.1B cap on the transaction screen is GTA's version of a savings ceiling. The 2020 Covid spike (29%) was forced saving — Cayo Perico compounded balances with nowhere to spend.
               </p>
             </div>
+
+          <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5 mt-1">
+            <div class="min-w-0 shrink-0"><span class="text-[10px] font-mono text-zinc-600">Community-modelled estimate</span></div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+              <ShareDropdown anchorId="eco-savings" shareText="GTA Online players hold ~8.9% of earnings idle. The $2.1B transaction ceiling is the in-game savings cap. GTAVI.AI" size="sm" />
+            </div>
           </div>
         </div>
 
@@ -349,7 +370,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-blue-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                <span class="font-black text-[14px] mr-1" style="color:var(--c-title-online)">④</span>ROCKSTAR → PLAYERS</span>
+                <span class="font-mono font-black text-[18px] mr-1.5 leading-none" style="color:var(--c-title-online)">④</span>ROCKSTAR → PLAYERS</span>
               </div>
               <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-title-online) 40%,transparent);background:color-mix(in srgb,var(--c-title-online) 12%,transparent);color:var(--c-title-online)">J · INJECTION</span>
             </div>
@@ -378,6 +399,13 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
                 <span class="font-semibold text-zinc-200">Read it:</span> Shark Cards are exogenous money — real GBP/USD enters as GTA$. Spikes correlate with payout nerfs (players cash-bridging the gap) and major DLC releases. This is the real credit channel, not Maze Bank.
               </p>
             </div>
+
+          <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5 mt-1">
+            <div class="min-w-0 shrink-0"><a href="/charts?title=gta-online#section-eco-sharkcards" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full chart →</a></div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+              <ShareDropdown anchorId="eco-sharkcards" shareText="Take-Two recurrent spending peaked at $1.62B (FY2022). Shark Cards are the real credit channel in GTA Online, not Maze Bank. GTAVI.AI" size="sm" />
+            </div>
           </div>
         </div>
 
@@ -389,7 +417,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div>
             <div class="flex items-center justify-between mb-2 gap-4">
               <div class="text-[11px] font-mono text-gta-indigo/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                <span class="font-black text-[14px] mr-1" style="color:var(--c-economy)">⑤</span>PLAYERS → BUSINESSES (Investment)</span>
+                <span class="font-mono font-black text-[18px] mr-1.5 leading-none" style="color:var(--c-economy)">⑤</span>PLAYERS → BUSINESSES (Investment)</span>
               </div>
               <span class="text-[11px] font-mono border border-gta-indigo/40 bg-gta-indigo/20 text-gta-indigo px-2 py-0.5 rounded uppercase tracking-widest">INVESTMENT</span>
             </div>
@@ -424,6 +452,13 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             <p class="text-[11px] text-zinc-400 leading-relaxed">
               <span class="font-semibold text-zinc-200">Read it:</span> The 2022 Criminal Enterprises patch tripled the value of the passive stack overnight. The Acid Lab addition in Dec 2022 pushed passive yield above $1M/hr — meaning veterans with the full stack now earn more passively than most active grind methods.
             </p>
+          </div>
+          <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5 mt-1">
+            <div class="min-w-0 shrink-0"><a href="/charts?title=gta-online#section-passive-stack-chart" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full chart →</a></div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+              <ShareDropdown anchorId="eco-investment" shareText="GTA Online full passive stack: $1.24M/hr (Bunker + Nightclub + MC + Acid Lab). $18.7M setup, ~15h break-even. GTAVI.AI" size="sm" />
+            </div>
           </div>
         </div>
       </div>
