@@ -16,13 +16,11 @@ import ChartPreviewCard from "../../components/charts/ChartPreviewCard.astro";
 import Ledger from "../../components/Ledger.astro";
 import type { LedgerEntry } from "../../components/Ledger.astro";
 
-import type { EconomyModelsData, FranchiseSalesData } from "../../types/gta";
+import type { EconomyModelsData } from "../../types/gta";
 
 import economyDataRaw from "../../../data/franchise/economy-models.json";
-import salesDataRaw   from "../../../data/franchise/sales.json";
 
 const economyData = economyDataRaw as unknown as EconomyModelsData;
-const salesData   = salesDataRaw   as unknown as FranchiseSalesData;
 
 const economies  = economyData.economies;
 const arcSummary = economyData.franchise_arc_summary;
@@ -30,6 +28,7 @@ const chartNote  = economyData.complexity_chart_note;
 
 // Economy page URLs (Decision B: GTA 1-2 has no standalone page — shown inline only)
 const ECONOMY_PAGES: Record<string, string> = {
+  "gta-1-2":    "/gta-1-2/economy",
   "gta-3":      "/gta-iii/economy",
   "gta-vc":     "/gta-vc/economy",
   "gta-sa":     "/gta-sa/economy",

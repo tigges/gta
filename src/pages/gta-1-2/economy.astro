@@ -8,23 +8,22 @@ import CardFooter from "../../components/CardFooter.astro";
 import { getEconomyModel } from "../../config/economyModels";
 import economyData from "../../../data/franchise/economy-models.json";
 
-const economy = (economyData as any).economies.find((e: any) => e.title_id === "gta-4");
-const ecoModel = getEconomyModel("gta-4")!;
+const economy = (economyData as any).economies.find((e: any) => e.title_id === "gta-1-2");
+const ecoModel = getEconomyModel("gta-1-2")!;
 const dims = economy.dimension_scores as Record<string, number>;
 const activeDims = Object.entries(dims).filter(([, v]) => (v as number) > 0);
 ---
 
 <Base
-  titleContext="gta-iv"
   title={`${economy.title_name} — Economy`}
   description={`${economy.economy_type} · ${economy.real_world_analogue} · GTAVI.AI franchise economic analysis.`}
 >
   <!-- Hero -->
   <section class="relative border-b border-border-dim overflow-hidden" style="min-height:200px">
-    <div class="absolute inset-0" style="background:var(--c-hero-bloom),var(--c-bg-deep)"></div>
+    <div class="absolute inset-0" style="background:var(--c-bg-deep)"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-center gap-2 mb-3 flex-wrap">
-        <GamePill game="gta-iv" size="xs" />
+        <span class="text-[10px] font-mono text-zinc-500 border border-border-mid rounded px-2 py-0.5 uppercase tracking-widest">GTA 1 &amp; 2</span>
         <span class="text-[10px] font-mono border border-border-mid text-zinc-500 px-2 py-0.5 rounded uppercase tracking-widest">{economy.era_label}</span>
         <span class="text-[10px] font-mono text-zinc-600 border border-border-dim px-2 py-0.5 rounded uppercase tracking-widest">Complexity {economy.complexity_score}/17</span>
       </div>
@@ -46,42 +45,36 @@ const activeDims = Object.entries(dims).filter(([, v]) => (v as number) > 0);
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-bg)">
           <div class="p-5">
-            <CircularEconomy titleId="gta-4" mode="full" />
+            <CircularEconomy titleId="gta-1-2" mode="full" />
           </div>
           <CardFooter anchorId={ecoModel.anchorId} sources="Source: curated · GTA Fandom Wiki · franchise economic analysis" shareText={ecoModel.shareText} />
         </div>
-        <ChartComplexityRadar titleId="gta-4" size={260} />
+        <ChartComplexityRadar titleId="gta-1-2" size={260} />
       </div>
     </section>
 
-    <!-- Regression Callout — the unique story of GTA IV -->
+    <!-- Key Innovation — GTA 2's faction system is the only proto-economic mechanic -->
     <section>
       <div class="flex items-center gap-3 mb-4">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-red/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// A Deliberate Step Backward</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Baseline</span>
         <div class="flex-1 h-px bg-border-dim"></div>
       </div>
-      <div class="rounded-xl border overflow-hidden" style="background:color-mix(in srgb,var(--c-alert) 5%,var(--c-card));border-color:color-mix(in srgb,var(--c-alert) 20%,transparent)">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card);border-left:3px solid var(--c-text-4)">
         <div class="px-6 py-5">
-          <div class="text-[10px] font-mono uppercase tracking-widest mb-2" style="color:var(--c-alert)">Economic Regression — By Design</div>
-          <div class="text-base font-semibold text-zinc-200 mb-3">{economy.key_innovation}</div>
-          <p class="text-[11px] font-mono text-zinc-500 leading-relaxed mb-5">
-            Rockstar explicitly stripped property, territory, gambling, and the stock market from San Andreas. GTA IV is economically simpler than Vice City (2002) — narrative realism took precedence over economic depth.
-          </p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div class="rounded-lg border border-border-dim px-4 py-3" style="background:var(--c-card)">
-              <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-1.5">Why Rockstar Regressed</div>
-              <p class="text-[10px] font-mono text-zinc-500 leading-snug">Niko Bellic earns to survive, not to accumulate. Money barely accrues meaningfully — narrative drives spending, not capital formation. Realism over system depth.</p>
+          <div class="text-[10px] font-mono uppercase tracking-widest mb-2 text-zinc-500">Franchise Zero Point — {economy.title_name}</div>
+          <div class="text-base font-semibold text-zinc-200 mb-2">{economy.key_innovation}</div>
+          <div class="text-[11px] font-mono text-zinc-500 leading-relaxed mb-4">{economy.economy_type} · {economy.real_world_analogue}</div>
+          {activeDims.length > 0 ? (
+            <div class="flex flex-wrap gap-2">
+              {activeDims.map(([key, val]) => (
+                <span class="text-[10px] font-mono border border-border-mid text-zinc-500 px-2 py-0.5 rounded capitalize">
+                  {key.replace(/_/g, " ")} <span class="text-gta-gold">{val}/3</span>
+                </span>
+              ))}
             </div>
-            <div class="rounded-lg border overflow-hidden px-4 py-3" style="background:color-mix(in srgb,var(--c-economy) 5%,var(--c-card));border-color:color-mix(in srgb,var(--c-economy) 20%,transparent)">
-              <div class="text-[10px] font-mono uppercase tracking-widest mb-1.5" style="color:var(--c-economy)">TBOGT Bridge Mechanic</div>
-              <p class="text-[10px] font-mono text-zinc-500 leading-snug">TBOGT's nightclub management is proto-passive income — the direct conceptual ancestor of GTA Online's entire business stack. Without it, there may have been no Acid Lab.</p>
-            </div>
-          </div>
-          {activeDims.length === 0 && (
-            <div class="mt-4 flex gap-2">
-              <span class="text-[10px] font-mono border border-border-mid text-zinc-600 px-2 py-0.5 rounded">All economic dimensions at zero — intentional regression</span>
-            </div>
+          ) : (
+            <span class="text-[10px] font-mono border border-border-mid text-zinc-600 px-2 py-0.5 rounded">All dimensions at zero — pre-monetary score counter</span>
           )}
         </div>
       </div>
@@ -95,8 +88,8 @@ const activeDims = Object.entries(dims).filter(([, v]) => (v as number) > 0);
 
     <!-- Nav CTAs -->
     <div class="flex items-center gap-3 flex-wrap">
-      <a href="/gta-sa/economy" class="px-4 py-2 rounded border border-border-mid text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">← GTA SA: Peak Complexity</a>
-      <a href="/gta-v/economy" class="px-4 py-2 rounded border border-gta-gold/30 text-gta-gold text-[11px] font-mono hover:bg-gta-gold/10 transition-all">GTA V: Capital Market Recovery →</a>
+      <a href="/franchise/economics" class="px-4 py-2 rounded border border-border-mid text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">← Ten Economies</a>
+      <a href="/gta-iii/economy" class="px-4 py-2 rounded border border-gta-gold/30 text-gta-gold text-[11px] font-mono hover:bg-gta-gold/10 transition-all">GTA III: 3D Baseline →</a>
     </div>
 
     <CrossLinks context="franchise" />
