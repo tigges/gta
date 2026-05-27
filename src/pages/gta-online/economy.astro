@@ -4,9 +4,6 @@ import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import CardFooter from "../../components/CardFooter.astro";
-import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
-import Ledger from "../../components/Ledger.astro";
-import type { LedgerEntry } from "../../components/Ledger.astro";
 
 import type {
   GtaPpiData, MetaHistoryData, RevenueTiersData, SpendingDistributionData,
@@ -173,24 +170,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
        CIRCULAR ECONOMY OVERVIEW (Full MMT Sovereign)
   ═══════════════════════════════════════════════════════ -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-6">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-2 rounded-xl border border-border-dim p-5" style="background:var(--c-bg)">
-        <CircularEconomy titleId="gta-online" mode="full" />
-        <CardFooter anchorId="eco-gta-online" sources="Source: GTAVI.AI Economic Model Analysis · GTA Online 2013–2026 · community benchmarks" shareText="GTA Online's economy is a Full MMT Sovereign: Rockstar controls the money supply, wages, and inflation. 10 years of data modelled across 5 circular flows." />
-      </div>
-      <div class="flex flex-col gap-4">
-        <ChartComplexityRadar titleId="gta-online" size={260} />
-        <div class="rounded-xl border border-border-dim px-4 py-3" style="background:var(--c-card)">
-          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Franchise Arc</div>
-          <p class="text-[10px] font-mono text-zinc-400 leading-relaxed">
-            GTA Online is the apex of the franchise arc — Full MMT sovereign with live policy.
-            Every mechanic GTA VI inherits starts here.
-          </p>
-          <a href="/gta-vi/economy" class="inline-block mt-2 text-[11px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors uppercase tracking-widest">
-            GTA VI economy preview →
-          </a>
-        </div>
-      </div>
+    <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-bg)">
+      <CircularEconomy titleId="gta-online" mode="full" />
+      <CardFooter anchorId="eco-gta-online" sources="Source: GTAVI.AI Economic Model Analysis · GTA Online 2013–2026 · community benchmarks" shareText="GTA Online's economy is a Full MMT Sovereign: Rockstar controls the money supply, wages, and inflation. 10 years of data modelled across 5 circular flows." />
     </div>
   </div>
 
@@ -221,46 +203,10 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
       ))}
     </div>
-    <!-- GTA VI Lineage (moved from CircularEconomy component) -->
-    <div class="rounded-lg border border-gta-gold/15 px-4 py-3" style="background:var(--c-hero-bloom)">
-      <div class="text-[10px] font-mono text-gta-gold/60 uppercase tracking-widest mb-1">GTA VI Lineage</div>
-      <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">
-        GTA Online is the apex of the franchise economic arc. Every mechanic GTA VI inherits — business ownership, passive income, Shark Cards, live events, regional pricing — was first proven here at scale. The dual-territory model is the next evolution of the MMT sovereign, applied across geography.
-      </p>
-    </div>
   </div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
-    <!-- ═══════════════════════════════════════════════════════
-         SECTION: MODEL
-    ══════════════════════════════════════════════════════════ -->
-    <section id="model" style="scroll-margin-top:80px">
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-indigo/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Sovereign Model · 3-Actor Analysis</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
-
-      <!-- Sovereign box -->
-      <div class="rounded-xl border border-gta-indigo/60 bg-gta-indigo/20 p-5 mb-4">
-        <div class="text-center mb-3">
-          <div class="text-[11px] font-mono text-gta-indigo uppercase tracking-[0.25em] mb-1">SOVEREIGN MONETARY AUTHORITY</div>
-          <div class="text-2xl font-black text-gta-indigo">Rockstar / Take-Two</div>
-          <div class="text-[11px] text-zinc-500 font-mono mt-1">Currency issuer · Price setter · Employer · Legislature</div>
-        </div>
-        <div class="flex flex-wrap justify-center gap-2 mt-3">
-          {["Money supply (Shark Cards)","Wage floors (mission payouts)","Price level (DLC costs)","Patch law (nerfs/buffs)","Bonus rates (weekly events)"].map(p => (
-            <span class="text-[10px] font-mono border border-gta-indigo/60 bg-gta-indigo/30 text-gta-indigo px-2.5 py-1 rounded-full">{p}</span>
-          ))}
-        </div>
-      </div>
-
-      <!-- Policy interface arrow -->
-      <div class="flex justify-center my-2 text-zinc-400 font-mono text-xs">↕ policy interface</div>
-
-
-    </section><!-- /model -->
 
 
     <!-- ═══════════════════════════════════════════════════════
