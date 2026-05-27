@@ -891,20 +891,20 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     });
   });
 
-  // ── IntersectionObserver chart init ───────────────────────────────────────
-  // All charts are now in the DOM and visible. Init each when it enters viewport.
-  const initOnce = new Set<string>();
-  function observeChart(id: string, initFn: () => void) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !initOnce.has(id)) {
-        initOnce.add(id);
-        io.disconnect();
-        initFn();
-      }
-    }, { threshold: 0.1 });
-    io.observe(el);
+  // ── Chart init helper ─────────────────────────────────────────────────────
+  // All sections are now always visible — no hidden panels — so every chart
+  // element has real clientWidth at page load. Use a single double-rAF to let
+  // the browser finish its initial layout pass, then init all charts at once.
+  // IntersectionObserver is not used here because charts below the fold may
+  // not have fired before the user scrolls past them with momentum scrolling.
+  function runAllCharts() {
+    initWagesChart();
+    initSpendingChart();
+    initSavingsChart();
+    initSharkChart();
+    initPassiveChart();
+    initPpiChart();
+    initHealthChart();
   }
 
   // ── D3 chart helpers ──────────────────────────────────────────────────────
@@ -1174,12 +1174,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       .call(g=>g.selectAll("text").attr("fill",cc.text6).attr("font-size","9").attr("font-family","monospace"));
   }
 
-  // ── Register each chart to init when it scrolls into view ────────────────
-  observeChart("chart-wages",      initWagesChart);
-  observeChart("chart-spending",   initSpendingChart);
-  observeChart("chart-savings",    initSavingsChart);
-  observeChart("chart-sharkcards", initSharkChart);
-  observeChart("chart-investment", initPassiveChart);
-  observeChart("chart-ppi",        initPpiChart);
-  observeChart("chart-health",     initHealthChart);
+  // Two rAF frames: first lets the browser compute layout, second runs after paint.
+  // At that point every chart container has accurate clientWidth.
+  requestAnimationFrame(() => requestAnimationFrame(runAllCharts));
 </script>
