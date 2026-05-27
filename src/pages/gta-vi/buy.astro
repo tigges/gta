@@ -4,6 +4,7 @@ import CrossLinks from "../../components/CrossLinks.astro";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import { tagAmazonUrl, PRODUCT_LINKS } from "../../config/affiliates";
+import SectionHeader from "../../components/SectionHeader.astro";
 
 const LAUNCH_DATE = "2026-11-19";
 const LAUNCH_DISPLAY = "November 19, 2026";
@@ -267,12 +268,7 @@ const COUNTRIES: Country[] = [
          PLATFORM STATUS
     ══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Platforms</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">Source: Rockstar Games</span>
-      </div>
+      <SectionHeader label="// Confirmed Platforms" dotColor="var(--c-live)" />
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {PLATFORMS.map(p => (
           <div class={`rounded-xl border p-5 ${p.border} ${p.bg} relative overflow-hidden`} style="background:var(--c-card)">
@@ -309,12 +305,7 @@ const COUNTRIES: Country[] = [
          WHERE TO BUY — locale-aware
     ══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-5">
-        <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Where to Buy</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">Digital + Physical · Pre-orders imminent</span>
-      </div>
+      <SectionHeader label="// Where to Buy" />
 
       <!-- Country selector strip -->
       <div class="flex items-center gap-2 mb-5 overflow-x-auto pb-1 scrollbar-none">
@@ -485,12 +476,7 @@ const COUNTRIES: Country[] = [
          CHARACTERS — visual anchor
     ══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Protagonists</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full intel →</a>
-      </div>
+      <SectionHeader label="// Confirmed Protagonists" dotColor="var(--c-live)" pillHref="/gta-vi/intel" pillLabel="Full intel →" />
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {([
           { name: "Lucia Caminos", role: "Protagonist", img: "Lucia_Caminos_06.jpg", desc: "Confirmed via official Trailer 1. First female lead in the mainline GTA series." },

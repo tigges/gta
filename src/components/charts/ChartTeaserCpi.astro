@@ -4,6 +4,7 @@
  * Shows real-terms launch prices across franchise. No D3, no JS, always renders.
  */
 import ShareDropdown from "../ShareDropdown.astro";
+import ChartBadgeRow from "../ChartBadgeRow.astro";
 import cpiData from "../../../data/franchise/cpi.json";
 
 const base = (cpiData as any).base_cpi as number;
@@ -26,6 +27,7 @@ const maxReal = Math.max(...rows.map((r: any) => r.real));
 <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
   <!-- Header -->
   <div class="px-5 py-4 border-b border-border-dim">
+    <ChartBadgeRow game="franchise" category="CPI · Pricing" />
     <div class="font-semibold text-zinc-200 text-sm mb-0.5">
       GTA VI at $79.99 Is the Cheapest GTA at Launch — In Real Terms
     </div>

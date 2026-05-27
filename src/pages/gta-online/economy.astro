@@ -5,6 +5,8 @@ import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import CardFooter from "../../components/CardFooter.astro";
+import ReadItBlock from "../../components/ReadItBlock.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
 
 import type {
   GtaPpiData, MetaHistoryData, RevenueTiersData, SpendingDistributionData,
@@ -144,11 +146,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
        CIRCULAR ECONOMY OVERVIEW (Full MMT Sovereign)
   ═══════════════════════════════════════════════════════ -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-2">
-    <div class="flex items-center gap-3 mb-4">
-      <span class="w-1.5 h-1.5 rounded-full bg-gta-online-vivid/60 shrink-0"></span>
-      <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// GTA Online Circular Economy</span>
-      <div class="flex-1 h-px bg-border-dim"></div>
-    </div>
+    <SectionHeader label="// GTA Online Circular Economy" dotColor="var(--c-title-online)" class="mb-4" />
   </div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
     <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-bg)">
@@ -161,11 +159,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
        ECONOMIC FRAMEWORK — Innovation · Inflation · Key Departures
   ══════════════════════════════════════════════════════════ -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
-    <div class="flex items-center gap-3 mb-4">
-      <span class="w-1.5 h-1.5 rounded-full bg-gta-indigo/60 shrink-0"></span>
-      <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Framework · Key Departures</span>
-      <div class="flex-1 h-px bg-border-dim"></div>
-    </div>
+    <SectionHeader label="// Economic Framework · Key Departures" dotColor="var(--c-economy)" class="mb-4" />
     <div class="rounded-xl border border-border-dim overflow-hidden flex flex-col gap-0" style="background:var(--c-card)">
       <!-- Key Innovation -->
       <div class="px-5 py-4">
@@ -223,12 +217,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
          SECTION: FOUR FLOWS
     ══════════════════════════════════════════════════════════ -->
     <section id="four-flows" style="scroll-margin-top:80px">
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-online-vivid/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Money Flows — One chart per money flow between actors</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <a href="/charts?title=gta-online" class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-border-mid hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">All GTA Online charts →</a>
-      </div>
+      <SectionHeader label="// Money Flows — One chart per money flow between actors" dotColor="var(--c-title-online)" pillHref="/charts?title=gta-online" pillLabel="All GTA Online charts →" />
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
@@ -260,11 +249,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             </div>
           </div>
           <div class="px-5 pb-4">
-            <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
-              <p class="text-[11px] text-zinc-400 leading-relaxed">
-                <span class="font-semibold text-zinc-200">Read it:</span> When the line dips after a major DLC, Rockstar has nerfed the previous meta activity to push players toward new content. The 2021 Cayo nerf cut wages 40% in a single patch — prices unchanged.
-              </p>
-            </div>
+            <ReadItBlock accentColor="var(--c-brand)">When the line dips after a major DLC, Rockstar has nerfed the previous meta activity to push players toward new content. The 2021 Cayo nerf cut wages 40% in a single patch — prices unchanged.</ReadItBlock>
 
           <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5 mt-1">
             <div class="min-w-0 shrink-0"><a href="/charts?title=gta-online#section-eco-wages" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full chart →</a></div>
@@ -304,11 +289,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             ))}
           </div>
           <div class="px-5 pb-4">
-            <div class="border-l-2 border-orange-600/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
-              <p class="text-[11px] text-zinc-400 leading-relaxed">
-                <span class="font-semibold text-zinc-200">Read it:</span> Vehicles are the dominant consumer good — equivalent to housing in the real economy. Every DLC that adds desirable cars drives a consumer spending spike. The Oppressor Mk II alone moved the needle in 2018.
-              </p>
-            </div>
+            <ReadItBlock accentColor="var(--c-flow-spending)">Vehicles are the dominant consumer good — equivalent to housing in the real economy. Every DLC that adds desirable cars drives a consumer spending spike. The Oppressor Mk II alone moved the needle in 2018.</ReadItBlock>
 
           <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5 mt-1">
             <div class="min-w-0 shrink-0"><a href="/charts?title=gta-online#section-eco-spending" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full chart →</a></div>
@@ -347,11 +328,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             </div>
           </div>
           <div class="px-5 pb-4">
-            <div class="border-l-2 border-gta-green/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
-              <p class="text-[11px] text-zinc-400 leading-relaxed">
-                <span class="font-semibold text-zinc-200">Read it:</span> High savings = money not flowing back to businesses. The $2.1B cap on the transaction screen is GTA's version of a savings ceiling. The 2020 Covid spike (29%) was forced saving — Cayo Perico compounded balances with nowhere to spend.
-              </p>
-            </div>
+            <ReadItBlock accentColor="var(--c-growth)">High savings = money not flowing back to businesses. The $2.1B cap on the transaction screen is GTA's version of a savings ceiling. The 2020 Covid spike (29%) was forced saving — Cayo Perico compounded balances with nowhere to spend.</ReadItBlock>
 
           <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5 mt-1">
             <div class="min-w-0 shrink-0"><span class="text-[10px] font-mono text-zinc-600">Community-modelled estimate</span></div>
@@ -390,11 +367,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             </div>
           </div>
           <div class="px-5 pb-4">
-            <div class="border-l-2 border-blue-700/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
-              <p class="text-[11px] text-zinc-400 leading-relaxed">
-                <span class="font-semibold text-zinc-200">Read it:</span> Shark Cards are exogenous money — real GBP/USD enters as GTA$. Spikes correlate with payout nerfs (players cash-bridging the gap) and major DLC releases. This is the real credit channel, not Maze Bank.
-              </p>
-            </div>
+            <ReadItBlock accentColor="var(--c-title-online)">Shark Cards are exogenous money — real GBP/USD enters as GTA$. Spikes correlate with payout nerfs (players cash-bridging the gap) and major DLC releases. This is the real credit channel, not Maze Bank.</ReadItBlock>
 
           <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5 mt-1">
             <div class="min-w-0 shrink-0"><a href="/charts?title=gta-online#section-eco-sharkcards" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full chart →</a></div>
@@ -443,11 +416,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
               <div class="text-[10px] font-mono text-zinc-400">~15h break-even at $1.24M/hr</div>
             </div>
           </div>
-          <div class="border-l-2 border-gta-indigo/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
-            <p class="text-[11px] text-zinc-400 leading-relaxed">
-              <span class="font-semibold text-zinc-200">Read it:</span> The 2022 Criminal Enterprises patch tripled the value of the passive stack overnight. The Acid Lab addition in Dec 2022 pushed passive yield above $1M/hr — meaning veterans with the full stack now earn more passively than most active grind methods.
-            </p>
-          </div>
+          <ReadItBlock accentColor="var(--c-economy)">The 2022 Criminal Enterprises patch tripled the value of the passive stack overnight. The Acid Lab addition in Dec 2022 pushed passive yield above $1M/hr — meaning veterans with the full stack now earn more passively than most active grind methods.</ReadItBlock>
         </div>
         <div class="px-5 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5">
           <a href="/charts?title=gta-online#section-passive-stack-chart" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full chart →</a>
@@ -465,11 +434,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
          SECTION: HEALTH MONITOR
     ══════════════════════════════════════════════════════════ -->
     <section id="health-monitor" style="scroll-margin-top:80px">
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-teal/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Health Monitor · GTA-PPI</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// Economic Health Monitor · GTA-PPI" dotColor="var(--c-live)" />
 
       <!-- Headline stats row -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -504,11 +469,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <span class="text-[10px] font-mono text-zinc-600">GTA-PPI peaked at 207.1 (After Hours era, 22.2h to buy basket) · all-time low 41.4 post-Cayo</span>
         </div>
         <div class="px-5 py-3 border-t border-border-dim">
-          <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
-            <p class="text-[11px] text-zinc-400 leading-relaxed">
-              <span class="font-semibold text-zinc-200">Read it:</span> When PPI spikes, Rockstar has either nerfed wages or added an expensive new aspirational item to the basket. The 2018 spike (Oppressor Mk II launch) was a structural break — basket cost doubled overnight with no wage change. The 2021 nerf reversed Cayo Perico's golden era.
-            </p>
-          </div>
+          <ReadItBlock accentColor="var(--c-brand)">When PPI spikes, Rockstar has either nerfed wages or added an expensive new aspirational item to the basket. The 2018 spike (Oppressor Mk II launch) was a structural break — basket cost doubled overnight with no wage change. The 2021 nerf reversed Cayo Perico's golden era.</ReadItBlock>
         </div>
         <div class="px-5 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5">
           <a href="/charts?title=gta-online#section-eco-ppi" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full chart →</a>
@@ -537,11 +498,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             <span class="flex items-center gap-1.5"><span class="w-8 h-0.5 bg-gta-green inline-block"></span>Passive stack</span>
             <span class="flex items-center gap-1.5"><span class="w-8 h-0.5 border-t-2 border-dashed border-gta-indigo inline-block"></span>GTA-PPI (inverted)</span>
           </div>
-          <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
-            <p class="text-[11px] text-zinc-400 leading-relaxed">
-              <span class="font-semibold text-zinc-200">Read it:</span> When hourly yield (amber) falls after a nerf while Shark Card reliance (orange) rises, the economy is running on real-money credit, not earned income. Unsustainable. The Cayo Perico nerf (2022) shows exactly this pattern.
-            </p>
-          </div>
+          <ReadItBlock accentColor="var(--c-brand)">When hourly yield (amber) falls after a nerf while Shark Card reliance (orange) rises, the economy is running on real-money credit, not earned income. Unsustainable. The Cayo Perico nerf (2022) shows exactly this pattern.</ReadItBlock>
         </div>
         <div class="px-5 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5">
           <a href="/charts?title=gta-online#section-eco-health" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full chart →</a>
@@ -559,11 +516,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
          SECTION: PRICE BASKET
     ══════════════════════════════════════════════════════════ -->
     <section id="price-basket" style="scroll-margin-top:80px">
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// GTA Price Basket · Real purchasing power</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// GTA Price Basket · Real purchasing power" dotColor="var(--c-brand)" />
 
       <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
         <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between gap-4">
@@ -674,12 +627,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
          SECTION: GTA VI READINESS
     ══════════════════════════════════════════════════════════ -->
     <section id="gta-vi-readiness" style="scroll-margin-top:80px">
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-vi-coral/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// GTA VI Readiness · What GTA Online passes forward</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <a href="/gta-vi/economy" class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-border-mid hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">GTA VI Economy →</a>
-      </div>
+      <SectionHeader label="// GTA VI Readiness · What GTA Online passes forward" dotColor="var(--c-title-vi)" pillHref="/gta-vi/economy" pillLabel="GTA VI Economy →" />
 
       <!-- Hero -->
       <div class="rounded-xl border border-gta-gold/20 overflow-hidden mb-6" style="background:linear-gradient(135deg,var(--c-card) 0%,color-mix(in srgb,var(--c-growth) 5%,var(--c-card)) 100%)">

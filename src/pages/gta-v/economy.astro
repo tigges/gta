@@ -10,6 +10,7 @@ import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import GamePill from "../../components/GamePill.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
 
 import economyData  from "../../../data/franchise/economy-models.json";
 import stocksData   from "../../../data/gta-5/economy/assassination-stocks.json";
@@ -63,11 +64,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
 
     <!-- Circular Economy Diagram -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Circular Economy Model</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// Circular Economy Model" />
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 rounded-xl border border-border-dim p-5" style="background:var(--c-bg)">
           <CircularEconomy titleId="gta-5" mode="full" />
@@ -123,11 +120,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
 
     <!-- Key Innovation -->
     <section>
-      <div class="flex items-center gap-3 mb-4">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Key Innovation</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// Key Innovation" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card);border-left:3px solid var(--c-brand)">
         <div class="px-6 py-5">
           <div class="text-[10px] font-mono uppercase tracking-widest mb-2 text-gta-gold">Capital Market Era — {economy.title_name}</div>

@@ -10,6 +10,7 @@ import { C_LIVE, C_GROWTH, C_ALERT, C_BRAND, C_CARD, C_TEXT_7, C_CHART_PURPLE, C
 import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CardFooter from "../../components/CardFooter.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import ChartPreviewCard from "../../components/charts/ChartPreviewCard.astro";
@@ -94,11 +95,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
          COMPLEXITY ARC CHART
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Complexity — Full Franchise Timeline 1997–2026</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// Economic Complexity — Full Franchise Timeline 1997–2026" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
         <div class="px-5 py-4 border-b border-border-dim">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5">Economic Complexity — Full Franchise Arc</div>
@@ -121,10 +118,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
          OVERVIEW TABLE
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// All Economies — Overview</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// All Economies — Overview" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
         <div class="overflow-x-auto">
           <table class="w-full text-xs font-mono" style="min-width:700px">
@@ -226,11 +220,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
          ECONOMY BROWSER — expandable per-title diagrams
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economy Browser — Expand to View Circular Flow</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">Click to expand · Full page → for deep dive</span>
-      </div>
+      <SectionHeader label="// Economy Browser — Expand to View Circular Flow" />
       <div class="flex flex-col gap-2">
         {economies.map((e: any) => {
           const pageUrl = ECONOMY_PAGES[e.title_id];
