@@ -452,12 +452,37 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       <div id="mobile-grid" class="flex-1 overflow-y-auto p-4">
         <div class="grid grid-cols-2 gap-3">
           {navGroups.map(group => {
-            // Title hub groups (have a hub href matching group.href as first dropdown item)
-            // navigate directly to hub in one tap — sub-pages accessible from hub nav tiles
-            const firstDropHref = group.dropdown?.[0]?.href;
-            const hasHub = group.dropdown && firstDropHref === group.href;
+            // Groups with dropdown → sub-panel button (all sub-pages accessible in one step)
+            // Groups without dropdown → direct link tile
+            if (group.dropdown) {
+              // Determine the sub-labels to preview in the tile
+              const firstDropHref = group.dropdown[0]?.href;
+              const hasHub = firstDropHref === group.href;
+              // hasHub: first item IS the hub → show sub-items from slice(1)
+              // no-hub: all items are sub-pages → show all
+              const previewLabels = hasHub
+                ? group.dropdown.slice(1).map(d => d.label)
+                : group.dropdown.map(d => d.label);
 
-            if (!group.dropdown || hasHub) return (
+              return (
+                <button
+                  data-mobile-section={group.label}
+                  class="flex flex-col gap-2 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all active:bg-white/5 text-left w-full"
+                  style="background:#131316">
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-zinc-200 text-sm">{group.label}</span>
+                    <span class="text-zinc-600 text-xs">›</span>
+                  </div>
+                  <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.6`}></span>
+                  <span class="text-[10px] font-mono text-zinc-600 leading-snug line-clamp-2">
+                    {previewLabels.join(" · ")}
+                  </span>
+                </button>
+              );
+            }
+
+            // Direct-link tile (no dropdown)
+            return (
               <a href={group.href}
                  class="flex flex-col gap-2 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all active:bg-white/5"
                  style="background:#131316">
@@ -466,27 +491,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
                   <span class="text-zinc-600 text-xs">→</span>
                 </div>
                 <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.6`}></span>
-                {hasHub && group.dropdown && (
-                  <span class="text-[10px] font-mono text-zinc-600 leading-snug">
-                    {group.dropdown.slice(1).map(d => d.label).join(" · ")}
-                  </span>
-                )}
               </a>
-            );
-            return (
-              <button
-                data-mobile-section={group.label}
-                class="flex flex-col gap-2 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all active:bg-white/5 text-left w-full"
-                style="background:#131316">
-                <div class="flex items-center justify-between">
-                  <span class="font-semibold text-zinc-200 text-sm">{group.label}</span>
-                  <span class="text-zinc-600 text-xs">›</span>
-                </div>
-                <span class="w-8 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.6`}></span>
-                <span class="text-[10px] font-mono text-zinc-600 leading-snug">
-                  {group.dropdown.map(d => d.label).join(" · ")}
-                </span>
-              </button>
             );
           })}
         </div>
@@ -505,35 +510,47 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       </div>
 
       <!-- Sub-section views (one per section with dropdown, hidden by default) -->
-      {navGroups.filter(g => g.dropdown).map(group => (
-        <div id={`mobile-sub-${group.label}`} class="mobile-sub hidden flex-col flex-1 overflow-y-auto">
-          <!-- Sub-header with back button -->
-          <div class="flex items-center gap-3 px-4 py-3 border-b border-[#1e1e23] shrink-0">
-            <button data-mobile-back class="flex items-center gap-1.5 text-zinc-500 hover:text-zinc-200 transition-colors text-sm">
-              <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M10 13L5 8l5-5"/>
-              </svg>
-              All
-            </button>
-            <span class="text-sm font-semibold text-zinc-200">{group.label}</span>
-            <span class="ml-auto w-6 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.7`}></span>
+      {navGroups.filter(g => g.dropdown).map(group => {
+        const firstDropHref = group.dropdown![0]?.href;
+        const hasHub = firstDropHref === group.href;
+        return (
+          <div id={`mobile-sub-${group.label}`} class="mobile-sub hidden flex-col flex-1 overflow-y-auto">
+            <!-- Sub-header with back button -->
+            <div class="flex items-center gap-3 px-4 py-3 border-b border-[#1e1e23] shrink-0">
+              <button data-mobile-back class="flex items-center gap-1.5 text-zinc-500 hover:text-zinc-200 transition-colors text-sm">
+                <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 13L5 8l5-5"/>
+                </svg>
+                All
+              </button>
+              <span class="text-sm font-semibold text-zinc-200">{group.label}</span>
+              <span class="ml-auto w-6 h-0.5 rounded-full" style={`background:${group.identityColor};opacity:0.7`}></span>
+            </div>
+            <!-- Sub-destination list — flat, one tap each -->
+            <div class="flex-1 p-4 flex flex-col gap-3">
+              {group.dropdown?.map((item, i) => {
+                const isHubLink = hasHub && i === 0;
+                return (
+                  <a href={item.href}
+                     class={`group/ms flex items-start gap-4 p-4 rounded-xl border hover:bg-white/[0.02] transition-all ${isHubLink ? "border-opacity-40" : "border-[#1e1e23] hover:border-[#2a2a31]"}`}
+                     style={isHubLink
+                       ? `background:#131316;border-color:color-mix(in srgb,${group.identityColor} 30%,transparent)`
+                       : "background:#131316"}>
+                    <HudIcon name={item.iconName as any} size={20} class={`transition-colors mt-0.5 shrink-0 ${isHubLink ? "text-zinc-400 group-hover/ms:text-zinc-200" : "text-zinc-500 group-hover/ms:text-zinc-300"}`} />
+                    <div>
+                      <div class={`text-sm font-semibold group-hover/ms:text-white transition-colors mb-0.5 ${isHubLink ? "text-zinc-200" : "text-zinc-200"}`}>
+                        {item.label}
+                        {isHubLink && <span class="text-[10px] font-mono text-zinc-600 ml-2 normal-case tracking-normal">Hub overview</span>}
+                      </div>
+                      <div class="text-[11px] font-mono text-zinc-600 leading-snug">{item.sub}</div>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
           </div>
-          <!-- Sub-destination list — flat, one tap each -->
-          <div class="flex-1 p-4 flex flex-col gap-3">
-            {group.dropdown?.map(item => (
-              <a href={item.href}
-                 class="group/ms flex items-start gap-4 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all"
-                 style="background:#131316">
-                <HudIcon name={item.iconName as any} size={20} class="text-zinc-500 group-hover/ms:text-zinc-300 transition-colors mt-0.5 shrink-0" />
-                <div>
-                  <div class="text-sm font-semibold text-zinc-200 group-hover/ms:text-white transition-colors mb-0.5">{item.label}</div>
-                  <div class="text-[11px] font-mono text-zinc-600 leading-snug">{item.sub}</div>
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
 
     <script>
