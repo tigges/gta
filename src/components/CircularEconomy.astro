@@ -15,9 +15,12 @@ interface Props {
   mode?: "full" | "compact";
   /** In compact mode: URL to the full economy page. Shows "Full model →" CTA. */
   fullModelHref?: string;
+  /** Hide Key Innovation + Inflation Channels metadata — use when the page
+   *  renders those sections separately (e.g. in a dedicated cluster section). */
+  showMetadata?: boolean;
 }
 
-const { titleId, mode = "full", fullModelHref } = Astro.props;
+const { titleId, mode = "full", fullModelHref, showMetadata = true } = Astro.props;
 const isCompact = mode === "compact";
 
 const typedData  = economyData as unknown as EconomyModelsData;
@@ -357,8 +360,8 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
     </div>
   )}
 
-  {/* ── Economy metadata (full mode) ─────────────────────────────────────── */}
-  {!isCompact && (
+  {/* ── Economy metadata (full mode, shown when showMetadata=true) ─────── */}
+  {!isCompact && showMetadata && (
     <div class="grid grid-cols-1 gap-3 mt-4">
       {/* Compact mode keeps Economy Type + Analogue as context labels; full mode
           omits them — the page hero already carries that context. */}
