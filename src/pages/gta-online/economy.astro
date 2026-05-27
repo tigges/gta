@@ -135,36 +135,6 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             One chart per arrow in the circular flow. GTA Online data 2013–2025. Each chart tracks a single money flow between actors.
           </p>
         </div>
-        <!-- Actor selector -->
-        <div class="flex flex-col gap-2 shrink-0">
-          <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">// ACTORS</div>
-          <div class="flex items-stretch gap-1.5">
-            <button id="actor-businesses" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-gta-gold/50 bg-gta-gold/10 text-gta-gold transition-all" data-actor="businesses">
-              <span class="text-[11px] font-black tracking-wider">BUSINESSES</span>
-              <span class="text-[11px] font-mono text-gta-gold/60 mt-0.5">produce · contract</span>
-              <div class="flex flex-col items-center gap-0.5 mt-2 text-[11px] font-mono">
-                <span style="color:var(--c-income)">① Y · INCOME →</span>
-                <span class="text-zinc-400">← SPENDING ②</span>
-              </div>
-            </button>
-            <button id="actor-players" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-border-mid text-zinc-400 transition-all hover:border-zinc-600" data-actor="players">
-              <span class="text-[11px] font-black tracking-wider">PLAYERS</span>
-              <span class="text-[11px] font-mono text-zinc-400 mt-0.5">earn · spend · save</span>
-              <div class="flex flex-col items-center gap-0.5 mt-2 text-[11px] font-mono">
-                <span class="text-zinc-500">③ SAVINGS →</span>
-                <span class="text-zinc-500">← SHARK CARDS ④</span>
-              </div>
-            </button>
-            <button id="actor-mazebank" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-border-mid text-zinc-400 transition-all hover:border-zinc-600" data-actor="mazebank">
-              <span class="text-[11px] font-black tracking-wider">MAZE BANK</span>
-              <span class="text-[11px] font-mono text-zinc-400 mt-0.5">hold · (no real lend)</span>
-              <div class="flex flex-col items-center gap-0.5 mt-2 text-[11px] font-mono">
-                <span class="text-zinc-500">decorative</span>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -182,37 +152,59 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
   </div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
     <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-bg)">
-      <CircularEconomy titleId="gta-online" mode="full" />
+      <CircularEconomy titleId="gta-online" mode="full" showMetadata={false} />
       <CardFooter anchorId="eco-gta-online" sources="Source: GTAVI.AI Economic Model Analysis · GTA Online 2013–2026 · community benchmarks" shareText="GTA Online's economy is a Full MMT Sovereign: Rockstar controls the money supply, wages, and inflation. 10 years of data modelled across 5 circular flows." />
     </div>
   </div>
 
-  <!-- Key Departures + GTA VI Lineage — full-width band below diagram grid -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-6 flex flex-col gap-4">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      {[
-        {
-          label: "Maze Bank ≠ real bank",
-          body: "Holds savings but creates no credit. It is NOT equivalent to a commercial bank. The real 'bank' function is Rockstar — they inject GTA$ via Shark Cards."
-        },
-        {
-          label: "Shark Cards = QE, not loans",
-          body: "Real GBP/USD enters the system as GTA$ with no repayment obligation. Closer to central bank QE or colonial currency board issuance than consumer credit."
-        },
-        {
-          label: "Inflation is hidden",
-          body: "Nominal DLC prices can stay flat while real purchasing power collapses via payout nerfs. The GTA-PPI captures this. Track wage/price ratio, not prices alone."
-        },
-        {
-          label: "Rockstar's incentive",
-          body: "Engineering real-terms inflation (via nerfs) increases Shark Card demand → Take-Two revenue. Track as the key political economy dynamic of the Online ecosystem."
-        },
-      ].map(d => (
-        <div class="rounded-lg border border-border-dim p-4" style="background:var(--c-card)">
-          <div class="text-[11px] font-bold text-zinc-200 mb-1.5">{d.label}</div>
-          <p class="text-[11px] text-zinc-500 leading-relaxed">{d.body}</p>
+  <!-- ══════════════════════════════════════════════════════════
+       ECONOMIC FRAMEWORK — Innovation · Inflation · Key Departures
+  ══════════════════════════════════════════════════════════ -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-1.5 h-1.5 rounded-full bg-gta-indigo/60 shrink-0"></span>
+      <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Framework · Key Departures</span>
+      <div class="flex-1 h-px bg-border-dim"></div>
+    </div>
+    <div class="rounded-xl border border-border-dim overflow-hidden flex flex-col gap-0" style="background:var(--c-card)">
+      <!-- Key Innovation -->
+      <div class="px-5 py-4 border-b border-border-dim">
+        <div class="text-[10px] font-mono text-gta-indigo uppercase tracking-widest mb-1.5">Key GTA Online Economy Innovation ★★★★</div>
+        <div class="text-[13px] font-semibold text-zinc-100 mb-1">Live sovereign monetary policy — complete circular flow with 5 levers and 3 inflation channels</div>
+        <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">
+          Rockstar actively manages wages, prices, and money supply in real time — for profit. The GTA-PPI (basket cost ÷ top hourly yield) is the essential metric. The Cayo Perico nerf of 2021 is a ~40% real wage cut with zero nominal price change. Pure hidden inflation, by design.
+        </p>
+      </div>
+      <!-- Inflation Channels -->
+      <div class="px-5 py-4 border-b border-border-dim" style="background:color-mix(in srgb,var(--c-alert) 4%,var(--c-card))">
+        <div class="text-[10px] font-mono text-gta-red uppercase tracking-widest mb-2">Inflation Channels</div>
+        <div class="flex flex-col gap-1.5">
+          {[
+            "Price rises — nominal DLC price increases (rare, hidden)",
+            "Payout nerfs — real wage cuts via activity nerf (common; Cayo Perico 2021 = −40% real wage)",
+            "SC ratio degradation — structural GTA$/real-currency erosion over time",
+          ].map(ch => (
+            <div class="flex items-start gap-1.5">
+              <span class="text-gta-red shrink-0 text-[11px] mt-0.5">↑</span>
+              <span class="text-[11px] font-mono text-zinc-300 leading-snug">{ch}</span>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
+      <!-- Key Departures (4 cards) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
+        {[
+          { label: "Maze Bank ≠ real bank",    body: "Holds savings but creates no credit. It is NOT equivalent to a commercial bank. The real 'bank' function is Rockstar — they inject GTA$ via Shark Cards." },
+          { label: "Shark Cards = QE, not loans", body: "Real GBP/USD enters the system as GTA$ with no repayment obligation. Closer to central bank QE or colonial currency board issuance than consumer credit." },
+          { label: "Inflation is hidden",       body: "Nominal DLC prices can stay flat while real purchasing power collapses via payout nerfs. The GTA-PPI captures this. Track wage/price ratio, not prices alone." },
+          { label: "Rockstar's incentive",      body: "Engineering real-terms inflation (via nerfs) increases Shark Card demand → Take-Two revenue. Track as the key political economy dynamic of the Online ecosystem." },
+        ].map(d => (
+          <div class="px-4 py-4">
+            <div class="text-[11px] font-bold text-zinc-200 mb-1">{d.label}</div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">{d.body}</p>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 
@@ -245,9 +237,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             <div class="text-lg font-bold text-white">Hourly GTA$ Yield</div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Top-tier activity $/hr at each major patch. The in-game "real wage."</div>
           </div>
-          <div class="px-5 py-2 border-t border-b border-border-dim flex items-center justify-between" style="background:var(--c-bg)">
+          <div class="px-5 py-2 border-t border-b border-border-dim" style="background:var(--c-bg)">
             <span class="text-[10px] font-mono text-zinc-600">Wages rose from $250k/hr (2013) → $1.7M/hr (2026) across 12 major patches</span>
-            <a href="/charts?title=gta-online#section-eco-wages" class="shrink-0 text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase ml-4">Full chart →</a>
           </div>
           <div class="px-5 py-3 border-t border-border-dim grid grid-cols-2 gap-4">
             <div>
@@ -289,9 +280,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             <div class="text-lg font-bold text-white">Spending Distribution</div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Where GTA$ flows after it's earned. Community-estimated by DLC era.</div>
           </div>
-          <div class="px-5 py-2 border-t border-b border-border-dim flex items-center justify-between" style="background:var(--c-bg)">
+          <div class="px-5 py-2 border-t border-b border-border-dim" style="background:var(--c-bg)">
             <span class="text-[10px] font-mono text-zinc-600">Vehicles 44% · Properties/Biz 33% · Weapons/Mods 18% · Other 5% (current era)</span>
-            <a href="/charts?title=gta-online#section-eco-spending" class="shrink-0 text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase ml-4">Full chart →</a>
           </div>
           <div class="px-5 py-3 border-t border-border-dim grid grid-cols-3 gap-3">
             {[
@@ -377,9 +367,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             <div class="text-lg font-bold text-white">Shark Card Injections</div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Take-Two recurrent consumer spending as Shark Card proxy (USD billion).</div>
           </div>
-          <div class="px-5 py-2 border-t border-b border-border-dim flex items-center justify-between" style="background:var(--c-bg)">
+          <div class="px-5 py-2 border-t border-b border-border-dim" style="background:var(--c-bg)">
             <span class="text-[10px] font-mono text-zinc-600">Take-Two recurrent revenue peaked at $1.62B (FY2022) — tracked as Shark Card proxy</span>
-            <a href="/charts?title=gta-online#section-eco-sharkcards" class="shrink-0 text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase ml-4">Full chart →</a>
           </div>
           <div class="px-5 py-3 border-t border-border-dim grid grid-cols-2 gap-4">
             <div>
@@ -431,9 +420,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 bg-gta-green inline-block rounded"></span>Acid Lab</span>
           </div>
         </div>
-        <div class="px-5 py-2 border-t border-b border-border-dim flex items-center justify-between" style="background:var(--c-bg)">
+        <div class="px-5 py-2 border-t border-b border-border-dim" style="background:var(--c-bg)">
           <span class="text-[10px] font-mono text-zinc-600">Passive yield grew from $0 (2013) → $1.24M/hr (2022) across 4 businesses</span>
-          <a href="/charts?title=gta-online#section-passive-stack-chart" class="shrink-0 text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase ml-4">Full chart →</a>
         </div>
         <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between flex-wrap gap-4">
           <div class="flex items-center gap-6">
@@ -726,25 +714,3 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 
 </Base>
 
-<script>
-  // ── Actor filter buttons — highlight flow cards in-place ──────────────────
-  document.querySelectorAll<HTMLButtonElement>(".actor-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const actor = btn.dataset.actor!;
-      document.querySelectorAll<HTMLButtonElement>(".actor-btn").forEach(b => {
-        const active = b.dataset.actor === actor;
-        b.style.borderColor     = active ? "color-mix(in srgb,var(--c-brand) 50%,transparent)" : "var(--c-border-2)";
-        b.style.backgroundColor = active ? "color-mix(in srgb,var(--c-brand) 8%,transparent)" : "";
-        b.style.color           = active ? "var(--c-brand)" : "var(--c-text-4)";
-      });
-      document.querySelectorAll<HTMLElement>(".flow-card").forEach(card => {
-        const actors = card.dataset.actors?.split(",") ?? [];
-        const match = actors.includes(actor);
-        card.style.boxShadow = match ? "0 0 0 1px var(--c-brand)" : "";
-        card.style.opacity   = match ? "1" : "0.45";
-      });
-      // Scroll to the four-flows section
-      document.getElementById("four-flows")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  });
-</script>
