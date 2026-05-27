@@ -1,17 +1,19 @@
 ---
 /**
- * CrossLinks — contextual "Related Intelligence" bridge strips.
+ * CrossLinks — contextual "Related Intelligence" tile strips.
+ *
+ * Uses the canonical thumbnail tile design (image + badge + title + sub + arrow)
+ * consistent with the Explore sections on the GTA VI and GTA Online hub pages.
  *
  * Rendered at build time from live data counts, so labels stay accurate
  * automatically as scrapers update JSON files nightly.
  *
  * Usage:
  *   <CrossLinks context="vi-intel-predictions" />
- *   <CrossLinks context="database" />
+ *   <CrossLinks context="charts" />
  *   etc.
  */
 
-import HudIcon from "./HudIcon.astro";
 import type {
   EntityIndex, LeonidaData, NewswireData, RedditData,
   VehiclesData, TrailersData, PredictionsData, FeaturesData, FranchiseSalesData,
@@ -59,222 +61,408 @@ interface CrossLink {
   href: string;
   label: string;
   sub: string;
-  tier: string;
-  icon: string;
-  color: string;
-  border: string;
+  badge: string;
+  thumb: string;
+  accent: string;  // CSS variable for top accent line + badge colour
 }
 
 const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // After Signal Predictions on VI Intel
   "vi-intel-predictions": [
-    { href: "/charts", icon: "📈", tier: "Charts", label: "Signal charts",
-      sub: `${predCount} predictions backed by live data`, color: "text-gta-gold", border: "border-gta-gold/25" },
-    { href: "/database", icon: "🗄", tier: "Database", label: "Entity database",
-      sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/franchise", icon: "📊", tier: "Franchise", label: "Historical context",
-      sub: `${franchiseTitles} titles · 30 years of data`, color: "text-zinc-400", border: "border-zinc-700" },
-    { href: "/gta-vi/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
-      sub: "Platforms, editions, retailers", color: "text-gta-gold", border: "border-gta-gold/20" },
+    { href: "/charts", badge: "Charts",
+      label: "Signal charts",
+      sub: `${predCount} predictions backed by live data`,
+      thumb: "/assets/economy-thumbs/gta-6.png",
+      accent: "var(--c-brand)" },
+    { href: "/database", badge: "Database",
+      label: "Entity database",
+      sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`,
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-live)" },
+    { href: "/franchise", badge: "Franchise",
+      label: "Historical context",
+      sub: `${franchiseTitles} titles · 30 years of data`,
+      thumb: "/assets/economy-thumbs/franchise.png",
+      accent: "var(--c-brand)" },
+    { href: "/gta-vi/buy", badge: "Pre-order",
+      label: "Pre-order tracker",
+      sub: "Platforms, editions, retailers",
+      thumb: "/assets/gta6/locations/Ambrosia_02.jpg",
+      accent: "var(--c-title-vi)" },
   ],
 
   // After Cast strip (VI Intel + Home)
   "vi-intel-cast": [
-    { href: "/database?type=character", icon: "👤", tier: "Database", label: "All characters",
+    { href: "/database?type=character", badge: "Database",
+      label: "All characters",
       sub: `${(leonidaData.by_category?.["Characters"] ?? 0) + (entityIndex.by_type?.["character"] ?? 0)} indexed across both sources`,
-      color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/news", icon: "📰", tier: "News", label: "Character intel",
-      sub: `${newsItems} articles tracked nightly`, color: "text-zinc-400", border: "border-zinc-700" },
-    { href: "/gta-vi/intel", icon: "🎬", tier: "GTA VI", label: "Trailer analysis",
-      sub: `${trailerCount} official trailers analysed`, color: "text-gta-gold", border: "border-gta-gold/20" },
+      thumb: "/assets/gta6/characters/Jason_Duval_01.jpg",
+      accent: "var(--c-live)" },
+    { href: "/news", badge: "News",
+      label: "Character intel",
+      sub: `${newsItems} articles tracked nightly`,
+      thumb: "/assets/gta6/locations/Grassrivers_01.jpg",
+      accent: "var(--c-brand)" },
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "Trailer analysis",
+      sub: `${trailerCount} official trailers analysed`,
+      thumb: "https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg",
+      accent: "var(--c-title-vi)" },
   ],
 
   // After Location gallery (VI Intel)
   "vi-intel-locations": [
-    { href: "/database?type=location", icon: "📍", tier: "Database", label: "All locations",
+    { href: "/database?type=location", badge: "Database",
+      label: "All locations",
       sub: `${leonidaData.by_category?.["Locations"] ?? 0} Leonida Intel locations`,
-      color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/charts", icon: "🗺", tier: "Charts", label: "Region evidence heatmap",
-      sub: "Confidence density per location per source", color: "text-gta-gold", border: "border-gta-gold/25" },
-    { href: "/news", icon: "📰", tier: "News", label: "Location coverage",
-      sub: "Vice City, Port Gellhorn, Ambrosia in the news", color: "text-zinc-400", border: "border-zinc-700" },
+      thumb: "/assets/gta6/locations/Leonida_Keys_01.jpg",
+      accent: "var(--c-live)" },
+    { href: "/charts", badge: "Charts",
+      label: "Region evidence heatmap",
+      sub: "Confidence density per location per source",
+      thumb: "/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg",
+      accent: "var(--c-brand)" },
+    { href: "/news", badge: "News",
+      label: "Location coverage",
+      sub: "Vice City, Port Gellhorn, Ambrosia in the news",
+      thumb: "/assets/gta6/locations/Grassrivers_01.jpg",
+      accent: "var(--c-brand)" },
   ],
 
   // After Feature Tracker (VI Intel)
   "vi-intel-features": [
-    { href: "/database", icon: "🗄", tier: "Database", label: "Browse all entities",
+    { href: "/database", badge: "Database",
+      label: "Browse all entities",
       sub: `${gta6Entities.toLocaleString()} entries · vehicle, character, weapon, mission`,
-      color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/charts", icon: "📈", tier: "Charts", label: "Franchise benchmarks",
-      sub: "How GTA V's features compare at launch", color: "text-gta-gold", border: "border-gta-gold/25" },
+      thumb: "/assets/gta6/characters/Lucia_Caminos_01.jpg",
+      accent: "var(--c-live)" },
+    { href: "/charts", badge: "Charts",
+      label: "Franchise benchmarks",
+      sub: "How GTA V's features compare at launch",
+      thumb: "/assets/economy-thumbs/franchise.png",
+      accent: "var(--c-brand)" },
   ],
 
   // After Trailer Analysis (VI Intel)
   "vi-intel-trailers": [
-    { href: "/database?type=vehicle", icon: "🚗", tier: "Database", label: "Vehicles spotted",
-      sub: `${leonidaData.by_category?.["Vehicles"] ?? 0} GTA VI vehicles indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/database?type=character", icon: "👤", tier: "Database", label: "Characters confirmed",
-      sub: "Lucia, Jason + supporting cast", color: "text-zinc-400", border: "border-zinc-700" },
-    { href: "/charts", icon: "📈", tier: "Charts", label: "Trailer view velocity",
-      sub: `${trailerCount} trailers · live view count tracking`, color: "text-gta-gold", border: "border-gta-gold/25" },
+    { href: "/database?type=vehicle", badge: "Database",
+      label: "Vehicles spotted",
+      sub: `${leonidaData.by_category?.["Vehicles"] ?? 0} GTA VI vehicles indexed`,
+      thumb: "/assets/gta6/locations/Ambrosia_03.jpg",
+      accent: "var(--c-live)" },
+    { href: "/database?type=character", badge: "Database",
+      label: "Characters confirmed",
+      sub: "Lucia, Jason + supporting cast",
+      thumb: "/assets/gta6/characters/Jason_Duval_02.jpg",
+      accent: "var(--c-live)" },
+    { href: "/charts", badge: "Charts",
+      label: "Trailer view velocity",
+      sub: `${trailerCount} trailers · live view count tracking`,
+      thumb: "https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg",
+      accent: "var(--c-brand)" },
   ],
 
   // Database page
   "database": [
-    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "GTA VI intelligence",
       sub: `${predCount} predictions · cast · locations · trailer analysis`,
-      color: "text-gta-gold", border: "border-gta-gold/20" },
-    { href: "/news", icon: "📰", tier: "News", label: "Live news feed",
-      sub: `${newsItems} articles · press + Reddit r/GTA6`, color: "text-zinc-400", border: "border-zinc-700" },
-    { href: "/charts", icon: "📈", tier: "Charts", label: "GTA V performance data",
-      sub: `${gta5Vehicles} vehicles · Broughy benchmarks`, color: "text-gta-gold", border: "border-gta-gold/25" },
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/news", badge: "News",
+      label: "Live news feed",
+      sub: `${newsItems} articles · press + Reddit r/GTA6`,
+      thumb: "/assets/gta6/locations/Ambrosia_01.jpg",
+      accent: "var(--c-brand)" },
+    { href: "/charts", badge: "Charts",
+      label: "GTA V performance data",
+      sub: `${gta5Vehicles} vehicles · Broughy benchmarks`,
+      thumb: "/assets/gta5/dlc/acid-lab.jpg",
+      accent: "var(--c-brand)" },
   ],
 
   // GTA V story mode page
   "gta-v": [
-    { href: "/database?game=gta-online", icon: "💰", tier: "GTA Online", label: "GTA Online income sources",
-      sub: "56 methods · S→D tier · full profiles", color: "text-gta-teal", border: "border-gta-teal/30" },
-    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
-      sub: `${predCount} predictions · what GTA V data says about VI`, color: "text-gta-gold", border: "border-gta-gold/20" },
-    { href: "/franchise", icon: "📖", tier: "Franchise", label: "Franchise history",
-      sub: `${franchiseTitles} titles · 30 years of sales data`, color: "text-zinc-400", border: "border-zinc-700" },
+    { href: "/database?game=gta-online", badge: "GTA Online",
+      label: "GTA Online income sources",
+      sub: "56 methods · S→D tier · full profiles",
+      thumb: "/assets/gta5/dlc/cayo-perico.jpg",
+      accent: "var(--c-title-online)" },
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "GTA VI intelligence",
+      sub: `${predCount} predictions · what GTA V data says about VI`,
+      thumb: "/assets/gta6/characters/Jason_Duval_01.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/franchise", badge: "Franchise",
+      label: "Franchise history",
+      sub: `${franchiseTitles} titles · 30 years of sales data`,
+      thumb: "/assets/covers/gta-5.jpg",
+      accent: "var(--c-brand)" },
   ],
 
   // News page
   "news": [
-    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI predictions",
-      sub: `${predCount} confidence-scored signals`, color: "text-gta-gold", border: "border-gta-gold/20" },
-    { href: "/database", icon: "🗄", tier: "Database", label: "Entity database",
-      sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`, color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/gta-vi/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
-      sub: "PS5 · Xbox · retailer watch", color: "text-zinc-400", border: "border-zinc-700" },
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "GTA VI predictions",
+      sub: `${predCount} confidence-scored signals`,
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/database", badge: "Database",
+      label: "Entity database",
+      sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`,
+      thumb: "/assets/gta6/characters/Jason_Duval_01.jpg",
+      accent: "var(--c-live)" },
+    { href: "/gta-vi/buy", badge: "Pre-order",
+      label: "Pre-order tracker",
+      sub: "PS5 · Xbox · retailer watch",
+      thumb: "/assets/gta6/locations/Ambrosia_02.jpg",
+      accent: "var(--c-title-vi)" },
   ],
 
   // Charts page
   "charts": [
-    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "What the data predicts",
-      sub: `${predCount} confidence-scored GTA VI predictions`, color: "text-gta-gold", border: "border-gta-gold/20" },
-    { href: "/franchise", icon: "📊", tier: "Franchise", label: "30-year franchise history",
-      sub: `${franchiseTitles} titles · sales · scores · map growth`, color: "text-zinc-400", border: "border-zinc-700" },
-    { href: "/database", icon: "🚗", tier: "Database", label: "GTA V vehicle benchmarks",
-      sub: `${gta5Vehicles} vehicles · lap times · top speeds`, color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "What the data predicts",
+      sub: `${predCount} confidence-scored GTA VI predictions`,
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/franchise", badge: "Franchise",
+      label: "30-year franchise history",
+      sub: `${franchiseTitles} titles · sales · scores · map growth`,
+      thumb: "/assets/economy-thumbs/franchise.png",
+      accent: "var(--c-brand)" },
+    { href: "/database", badge: "Database",
+      label: "GTA V vehicle benchmarks",
+      sub: `${gta5Vehicles} vehicles · lap times · top speeds`,
+      thumb: "/assets/gta5/dlc/acid-lab.jpg",
+      accent: "var(--c-live)" },
   ],
 
   // Franchise page
   "franchise": [
-    { href: "/charts", icon: "📈", tier: "Charts", label: "Full chart suite",
-      sub: "Sales velocity, CPI pricing, Metacritic, revenue model", color: "text-gta-gold", border: "border-gta-gold/25" },
-    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI predictions",
-      sub: "What 30 years of data says about VI", color: "text-gta-gold", border: "border-gta-gold/20" },
-    { href: "/database", icon: "🗄", tier: "Database", label: "GTA V + VI entities",
-      sub: `${gta5Vehicles} GTA V vehicles · ${gta6Entities.toLocaleString()} GTA VI entries`, color: "text-gta-teal", border: "border-gta-teal/20" },
+    { href: "/charts", badge: "Charts",
+      label: "Full chart suite",
+      sub: "Sales velocity, CPI pricing, Metacritic, revenue model",
+      thumb: "/assets/economy-thumbs/franchise.png",
+      accent: "var(--c-brand)" },
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "GTA VI predictions",
+      sub: "What 30 years of data says about VI",
+      thumb: "/assets/gta6/characters/Jason_Duval_01.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/database", badge: "Database",
+      label: "GTA V + VI entities",
+      sub: `${gta5Vehicles} GTA V vehicles · ${gta6Entities.toLocaleString()} GTA VI entries`,
+      thumb: "/assets/gta5/dlc/acid-lab.jpg",
+      accent: "var(--c-live)" },
   ],
 
   // Home page
   "home": [
-    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI intelligence",
-      sub: `${predCount} predictions · cast · locations · timelines`, color: "text-gta-gold", border: "border-gta-gold/20" },
-    { href: "/charts", icon: "📈", tier: "Charts", label: "Data visualised",
-      sub: "15+ live charts — franchise sales to search signal", color: "text-gta-gold", border: "border-gta-gold/25" },
-    { href: "/database", icon: "🗄", tier: "Database", label: "Entity database",
-      sub: `${gta6Entities.toLocaleString()} GTA VI · ${gta5Vehicles} GTA V`, color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/news", icon: "📰", tier: "News", label: "Live intelligence feed",
-      sub: `${newsItems} articles · updated nightly`, color: "text-zinc-400", border: "border-zinc-700" },
-    { href: "/gta-vi/buy", icon: "🛒", tier: "Buy", label: "Pre-order tracker",
-      sub: "Editions, platforms, retailer watch", color: "text-zinc-300", border: "border-zinc-600" },
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "GTA VI intelligence",
+      sub: `${predCount} predictions · cast · locations · timelines`,
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/charts", badge: "Charts",
+      label: "Data visualised",
+      sub: "15+ live charts — franchise sales to search signal",
+      thumb: "/assets/economy-thumbs/gta-online.png",
+      accent: "var(--c-brand)" },
+    { href: "/database", badge: "Database",
+      label: "Entity database",
+      sub: `${gta6Entities.toLocaleString()} GTA VI · ${gta5Vehicles} GTA V`,
+      thumb: "/assets/gta6/characters/Jason_Duval_01.jpg",
+      accent: "var(--c-live)" },
+    { href: "/news", badge: "News",
+      label: "Live intelligence feed",
+      sub: `${newsItems} articles · updated nightly`,
+      thumb: "/assets/gta6/locations/Grassrivers_01.jpg",
+      accent: "var(--c-brand)" },
+    { href: "/gta-vi/buy", badge: "Pre-order",
+      label: "Pre-order tracker",
+      sub: "Editions, platforms, retailer watch",
+      thumb: "/assets/gta6/locations/Ambrosia_02.jpg",
+      accent: "var(--c-title-vi)" },
   ],
 
   // Buy page
   "buy": [
-    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "Intelligence backing these prices",
-      sub: `${predCount} predictions · ${trailerCount} trailers analysed`, color: "text-gta-gold", border: "border-gta-gold/20" },
-    { href: "/charts", icon: "📈", tier: "Charts", label: "CPI-adjusted pricing history",
-      sub: "Is $79.99 cheap vs every prior GTA at launch?", color: "text-gta-gold", border: "border-gta-gold/25" },
-    { href: "/news", icon: "📰", tier: "News", label: "Pre-order news",
-      sub: `Latest from ${newsItems} tracked sources`, color: "text-zinc-400", border: "border-zinc-700" },
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "Intelligence backing these prices",
+      sub: `${predCount} predictions · ${trailerCount} trailers analysed`,
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/charts", badge: "Charts",
+      label: "CPI-adjusted pricing history",
+      sub: "Is $79.99 cheap vs every prior GTA at launch?",
+      thumb: "/assets/economy-thumbs/gta-6.png",
+      accent: "var(--c-brand)" },
+    { href: "/news", badge: "News",
+      label: "Pre-order news",
+      sub: `Latest from ${newsItems} tracked sources`,
+      thumb: "/assets/gta6/locations/Ambrosia_01.jpg",
+      accent: "var(--c-brand)" },
   ],
 
   // GTA Online hub
   "gta-online": [
-    { href: "/database?game=gta-online", icon: "💰", tier: "GTA Online", label: "Income database",
-      sub: `S→D tier · ${gta5Vehicles > 0 ? "56" : "50"}+ methods profiled · full profiles`, color: "text-gta-teal", border: "border-gta-teal/30" },
-    { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
-      sub: "Weekly calendar · 42 weeks of history · sale intelligence", color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
-      sub: "GTA-PPI · inflation · passive stack tracker", color: "text-gta-gold", border: "border-gta-gold/25" },
-    { href: "/gta-vi/intel", icon: "🎯", tier: "GTA VI", label: "GTA VI — what comes next",
-      sub: `${predCount} predictions · economy preview · pre-order`, color: "text-gta-gold", border: "border-gta-gold/20" },
+    { href: "/database?game=gta-online", badge: "Income",
+      label: "Income database",
+      sub: `S→D tier · ${gta5Vehicles > 0 ? "56" : "50"}+ methods profiled · full profiles`,
+      thumb: "/assets/gta5/dlc/cayo-perico.jpg",
+      accent: "var(--c-title-online)" },
+    { href: "/gta-online/bonuses", badge: "Bonuses",
+      label: "Bonuses & promos",
+      sub: "Weekly calendar · 42 weeks of history · sale intelligence",
+      thumb: "/assets/gta5/dlc/after-hours.jpg",
+      accent: "var(--c-title-online)" },
+    { href: "/gta-online/economy", badge: "Economy",
+      label: "Economy model",
+      sub: "GTA-PPI · inflation · passive stack tracker",
+      thumb: "/assets/gta5/dlc/diamond-casino-heist.jpg",
+      accent: "var(--c-brand)" },
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "GTA VI — what comes next",
+      sub: `${predCount} predictions · economy preview · pre-order`,
+      thumb: "/assets/gta6/characters/Jason_Duval_01.jpg",
+      accent: "var(--c-title-vi)" },
   ],
 
   // GTA Online economy page
   "gta-online-economy": [
-    { href: "/database?game=gta-online", icon: "💰", tier: "GTA Online", label: "Income database",
-      sub: "All 56 methods · S→D tier · weekly bonus tracker", color: "text-gta-teal", border: "border-gta-teal/30" },
-    { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
-      sub: "Weekly calendar · sale intelligence · leaderboard", color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/franchise/charts", icon: "📈", tier: "Franchise", label: "Franchise charts",
-      sub: "Cross-title complexity · earnings · inflation", color: "text-gta-gold", border: "border-gta-gold/25" },
+    { href: "/database?game=gta-online", badge: "Income",
+      label: "Income database",
+      sub: "All 56 methods · S→D tier · weekly bonus tracker",
+      thumb: "/assets/gta5/dlc/cayo-perico.jpg",
+      accent: "var(--c-title-online)" },
+    { href: "/gta-online/bonuses", badge: "Bonuses",
+      label: "Bonuses & promos",
+      sub: "Weekly calendar · sale intelligence · leaderboard",
+      thumb: "/assets/gta5/dlc/after-hours.jpg",
+      accent: "var(--c-title-online)" },
+    { href: "/charts", badge: "Charts",
+      label: "Franchise charts",
+      sub: "Cross-title complexity · earnings · inflation",
+      thumb: "/assets/economy-thumbs/franchise.png",
+      accent: "var(--c-brand)" },
   ],
 
   // GTA Online income (Adviser page)
   "gta-online-income": [
-    { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
-      sub: "GTA-PPI · inflation · passive stack", color: "text-gta-gold", border: "border-gta-gold/25" },
-    { href: "/database?game=gta-online", icon: "💰", tier: "Database", label: "Income database",
-      sub: `${gta5Vehicles} vehicles · S→D tier · full profiles`, color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Bonuses & promos",
-      sub: "Weekly calendar · sale intelligence · leaderboard", color: "text-zinc-400", border: "border-zinc-700" },
+    { href: "/gta-online/economy", badge: "Economy",
+      label: "Economy model",
+      sub: "GTA-PPI · inflation · passive stack",
+      thumb: "/assets/gta5/dlc/diamond-casino-heist.jpg",
+      accent: "var(--c-brand)" },
+    { href: "/database?game=gta-online", badge: "Income",
+      label: "Income database",
+      sub: `${gta5Vehicles} vehicles · S→D tier · full profiles`,
+      thumb: "/assets/gta5/dlc/cayo-perico.jpg",
+      accent: "var(--c-title-online)" },
+    { href: "/gta-online/bonuses", badge: "Bonuses",
+      label: "Bonuses & promos",
+      sub: "Weekly calendar · sale intelligence · leaderboard",
+      thumb: "/assets/gta5/dlc/after-hours.jpg",
+      accent: "var(--c-title-online)" },
   ],
 
   // GTA Online bonuses page
   "gta-online-bonuses": [
-    { href: "/database?game=gta-online", icon: "💰", tier: "GTA Online", label: "Income database",
-      sub: "Find out which active bonus is worth your time", color: "text-gta-teal", border: "border-gta-teal/30" },
-    { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
-      sub: "GTA-PPI · inflation history · meta evolution", color: "text-gta-gold", border: "border-gta-gold/25" },
-    { href: "/franchise/charts", icon: "📈", tier: "Franchise", label: "Promotion analytics",
-      sub: "Bonus cadence · sale frequency over time", color: "text-zinc-400", border: "border-zinc-700" },
+    { href: "/database?game=gta-online", badge: "Income",
+      label: "Income database",
+      sub: "Find out which active bonus is worth your time",
+      thumb: "/assets/gta5/dlc/cayo-perico.jpg",
+      accent: "var(--c-title-online)" },
+    { href: "/gta-online/economy", badge: "Economy",
+      label: "Economy model",
+      sub: "GTA-PPI · inflation history · meta evolution",
+      thumb: "/assets/gta5/dlc/diamond-casino-heist.jpg",
+      accent: "var(--c-brand)" },
+    { href: "/charts", badge: "Charts",
+      label: "Promotion analytics",
+      sub: "Bonus cadence · sale frequency over time",
+      thumb: "/assets/economy-thumbs/gta-online.png",
+      accent: "var(--c-brand)" },
   ],
 
   // SEO landings: cayo-perico, assassination-guide
   "gta-online-seo": [
-    { href: "/database?game=gta-online", icon: "💰", tier: "GTA Online", label: "All income sources",
-      sub: "56 methods · S→D tier · full profit profiles", color: "text-gta-teal", border: "border-gta-teal/30" },
-    { href: "/gta-online/bonuses", icon: "🏷", tier: "GTA Online", label: "Weekly bonuses",
-      sub: "Is this method on bonus this week?", color: "text-gta-teal", border: "border-gta-teal/20" },
-    { href: "/gta-online/economy", icon: "📊", tier: "GTA Online", label: "Economy model",
-      sub: "GTA-PPI · inflation · passive vs active", color: "text-gta-gold", border: "border-gta-gold/25" },
+    { href: "/database?game=gta-online", badge: "Income",
+      label: "All income sources",
+      sub: "56 methods · S→D tier · full profit profiles",
+      thumb: "/assets/gta5/dlc/cayo-perico.jpg",
+      accent: "var(--c-title-online)" },
+    { href: "/gta-online/bonuses", badge: "Bonuses",
+      label: "Weekly bonuses",
+      sub: "Is this method on bonus this week?",
+      thumb: "/assets/gta5/dlc/after-hours.jpg",
+      accent: "var(--c-title-online)" },
+    { href: "/gta-online/economy", badge: "Economy",
+      label: "Economy model",
+      sub: "GTA-PPI · inflation · passive vs active",
+      thumb: "/assets/gta5/dlc/diamond-casino-heist.jpg",
+      accent: "var(--c-brand)" },
+  ],
+
+  // Franchise economics page
+  "franchise-economics": [
+    { href: "/charts", badge: "Charts",
+      label: "All franchise charts",
+      sub: "Sales, CPI, Metacritic, revenue model — full suite",
+      thumb: "/assets/economy-thumbs/franchise.png",
+      accent: "var(--c-brand)" },
+    { href: "/gta-vi/economy", badge: "GTA VI",
+      label: "GTA VI economy",
+      sub: "Projected dual-territory model · Day-1 ready",
+      thumb: "/assets/gta6/locations/Vice_City_03.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/gta-online/economy", badge: "GTA Online",
+      label: "GTA Online economy",
+      sub: "10-year GTA-PPI · Full MMT Sovereign model",
+      thumb: "/assets/gta5/dlc/diamond-casino-heist.jpg",
+      accent: "var(--c-title-online)" },
   ],
 };
 
 const links: CrossLink[] = ALL_LINKS[context] ?? [];
+
+// Grid class based on link count
+const gridClass = links.length <= 2
+  ? "grid-cols-1 sm:grid-cols-2"
+  : links.length === 3
+    ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+    : "grid-cols-1 sm:grid-cols-2";
 ---
 
 {links.length > 0 && (
-  <div class={`rounded-xl border border-border-dim overflow-hidden ${extraClass}`} style="background:var(--c-bg)">
-    <div class="px-5 py-3 border-b border-border-dim flex items-center gap-2">
-      <span class="w-1 h-4 rounded-full bg-gta-gold/40 shrink-0"></span>
+  <div class={`space-y-3 ${extraClass}`}>
+    <div class="flex items-center gap-3">
+      <span class="w-1 h-4 rounded-full shrink-0" style="background:var(--c-brand);opacity:0.4"></span>
       <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Related Intelligence</span>
-      <span class="text-[11px] font-mono text-zinc-800 ml-auto">auto-updated · builds nightly</span>
+      <div class="flex-1 h-px bg-border-dim"></div>
+      <span class="text-[10px] font-mono text-zinc-700">auto-updated · builds nightly</span>
     </div>
-    <div class={`grid gap-0 divide-border-dim ${links.length <= 2 ? "grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x" : links.length === 3 ? "grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x"}`}>
+    <div class={`grid gap-3 ${gridClass}`}>
       {links.map(link => (
         <a href={link.href}
-          class={`group flex items-start gap-3 px-5 py-4 hover:bg-white/2 transition-all border-border-dim`}>
-          <span class="text-lg shrink-0 mt-0.5">{link.icon}</span>
-          <div class="min-w-0">
-            <div class="flex items-center gap-2 mb-0.5">
-              <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest bg-transparent ${link.color} ${link.border}`}>
-                {link.tier}
-              </span>
+           class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-border-mid transition-all"
+           style="background:var(--c-card)">
+          <div class="h-px w-full" style={`background:linear-gradient(90deg,${link.accent},transparent 60%)`}></div>
+          <div class="flex items-center gap-4 p-4">
+            <div class="shrink-0 w-20 h-12 rounded-lg overflow-hidden border border-border-mid">
+              <img src={link.thumb} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
             </div>
-            <div class={`text-[12px] font-semibold group-hover:text-white transition-colors leading-snug mb-0.5 ${link.color}`}>
-              {link.label}
+            <div class="flex-1 min-w-0">
+              <div class="text-[10px] font-mono text-zinc-500 mb-0.5 uppercase tracking-widest">{link.badge}</div>
+              <div class="text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors truncate">{link.label}</div>
+              <div class="text-[11px] font-mono text-zinc-500 leading-snug mt-0.5 line-clamp-1">{link.sub}</div>
             </div>
-            <div class="text-[10px] font-mono text-zinc-600 leading-snug">{link.sub}</div>
+            <svg class="shrink-0 w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8h10M9 4l4 4-4 4" />
+            </svg>
           </div>
-          <span class="text-zinc-500 group-hover:text-zinc-500 font-mono text-xs ml-auto shrink-0 mt-1 transition-colors">→</span>
         </a>
       ))}
     </div>
