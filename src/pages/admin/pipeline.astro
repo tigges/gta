@@ -1,0 +1,109 @@
+---
+/**
+ * /admin/pipeline — Content Pipeline & Data Status
+ * Shows scraper status, GTA VI data readiness, nightly CI pipeline.
+ * Internal admin tool — unlisted from public nav.
+ */
+import Base from "../../layouts/Base.astro";
+---
+
+<Base title="Admin — Content Pipeline" description="GTAVI.AI scraper pipeline status and GTA VI data readiness.">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-10">
+
+    <div>
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Admin · Internal</div>
+      <h1 class="text-2xl font-bold text-white mb-1">Content Pipeline</h1>
+      <p class="text-sm text-zinc-500">Scraper status · GTA VI data readiness · nightly CI. Not visible to public users.</p>
+    </div>
+
+    <!-- GTA VI Five Flows — Day-1 State ───────────────────────────────── -->
+    <section>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-vi-coral/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// GTA VI Economy — Day-1 Data Readiness</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[
+          { flow:"①", label:"Wages",         color:"var(--c-chart-bar)",    desc:"Top heist/mission $/hr. Auto-derived from community benchmarks within 24h of launch.", ready:true  },
+          { flow:"②", label:"Spending",      color:"var(--c-cat-economy)",  desc:"GTA VI Online spending distribution by category. Community-modelled, updated each DLC cycle.", ready:false },
+          { flow:"③", label:"Savings",       color:"var(--c-chart-green)",  desc:"Idle Maze Bank balance by player progression stage. Community-modelled.", ready:false },
+          { flow:"④", label:"Shark Cards",   color:"var(--c-chart-indigo)", desc:"Take-Two recurrent consumer spending. Live from SEC EDGAR — updates with each quarterly filing.", ready:true  },
+          { flow:"⑤", label:"Passive Stack", color:"var(--c-chart-purple)", desc:"GTA VI Online passive business $/hr stack. Populated as businesses are confirmed post-launch.", ready:false },
+          { flow:"⊕", label:"GTA VI PPI",    color:"var(--c-chart-bar)",    desc:"Purchasing power index — basket cost ÷ top yield. Auto-computes once wage data is available.", ready:true  },
+        ].map(f => (
+          <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-black text-lg" style={`color:${f.color}`}>{f.flow}</span>
+                <span class="text-[11px] font-semibold text-zinc-300">{f.label}</span>
+              </div>
+              {f.ready
+                ? <span class="text-[10px] font-mono border border-gta-gold/30 bg-gta-gold/10 text-gta-gold px-1.5 py-0.5 rounded uppercase tracking-widest">Ready</span>
+                : <span class="text-[10px] font-mono border border-zinc-700 bg-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded uppercase tracking-widest">At launch</span>
+              }
+            </div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Nightly CI Pipeline ───────────────────────────────────────────── -->
+    <section>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-teal/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// GTA VI Data Pipeline — Nightly CI</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="overflow-x-auto">
+          <table class="w-full text-[11px] font-mono">
+            <thead>
+              <tr class="border-b border-border-dim">
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Scraper</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Output</th>
+                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { scraper:"fetch_gta6_missions.py",       output:"gta-6/missions/story-missions.json",    status:"ready", note:"Watches Category:Missions_in_GTA_VI" },
+                { scraper:"fetch_gta_prices.py",          output:"gta-5/economy/item-catalogue.json",     status:"live",  note:"Extends to GTA VI store pages at launch" },
+                { scraper:"fetch_gta_ppi.py",             output:"gta-6/economy/gta-vi-ppi.json",         status:"ready", note:"Computes PPI once wage data exists" },
+                { scraper:"gtavi/fetch_trailers.py",      output:"gta-6/trailers.json",                   status:"live",  note:"YouTube API — active now" },
+                { scraper:"gtavi/fetch_search_trends.py", output:"gta-6/trends/search-interest.json",     status:"live",  note:"Google Trends — active now" },
+                { scraper:"fetch_edgar.py",               output:"franchise/revenue-split.json",          status:"live",  note:"Take-Two earnings — active now" },
+                { scraper:"fetch_steam.py",               output:"gta-5/meta/steam-players.json",         status:"live",  note:"Steam Web API — current players" },
+                { scraper:"fetch_ttwo_stock.py",          output:"franchise/ttwo-stock.json",             status:"live",  note:"Yahoo Finance — daily" },
+                { scraper:"fetch_newswire.py",            output:"feeds/newswire.json",                   status:"live",  note:"Rockstar, EDGAR, Kotaku, Variety" },
+                { scraper:"fetch_reddit.py",              output:"community/reddit.json",                 status:"live",  note:"RSS fallback active" },
+                { scraper:"fetch_leonida.py",             output:"gta-6/entities/leonida-intel.json",     status:"live",  note:"Leonida Intel public API" },
+                { scraper:"fetch_preorder_listings.py",  output:"feeds/preorder-listings.json",           status:"live",  note:"Retailer listing monitor" },
+              ].map(r => (
+                <tr class="border-b border-border-dim/50 hover:bg-white/[0.02] transition-colors">
+                  <td class="px-4 py-2.5 text-gta-gold/80">{r.scraper}</td>
+                  <td class="px-4 py-2.5 text-zinc-500">{r.output}</td>
+                  <td class="px-4 py-2.5">
+                    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${r.status === 'live' ? 'border-gta-green/40 bg-gta-green/20 text-gta-green' : 'border-gta-gold/30 bg-gta-gold/10 text-gta-gold'}`}>
+                      {r.status === 'live' ? '✓ Live' : 'Day-1'}
+                    </span>
+                    <span class="ml-2 text-zinc-500">{r.note}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div class="px-5 py-3 border-t border-border-dim">
+          <span class="text-[10px] font-mono text-zinc-600">Full scraper reference: AGENTS.md · Nightly CI: .github/workflows/fetch-data.yml</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="pt-4 border-t border-border-dim">
+      <a href="/admin" class="text-[11px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors">← Admin index</a>
+    </div>
+
+  </div>
+</Base>

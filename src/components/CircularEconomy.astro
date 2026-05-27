@@ -73,12 +73,12 @@ const LAYOUTS: Record<string, Record<string, { top: number; left: number; width:
     "gambling":         { top: 72, left: 35, width: 30 },
     "stock-market":     { top: 72, left: 69, width: 30 },
   },
-  // full-mmt now uses positioned layout (same JS path as others)
+  // full-mmt: shark-cards at top (injection from outside), actors below
   "full-mmt": {
-    "businesses":       { top: 18, left:  1, width: 30 },
-    "players":          { top: 18, left: 35, width: 30 },
-    "maze-bank":        { top: 18, left: 69, width: 29 },
-    "shark-cards":      { top: 72, left: 26, width: 48 },
+    "shark-cards":      { top:  3, left: 22, width: 56 },
+    "businesses":       { top: 55, left:  1, width: 30 },
+    "players":          { top: 55, left: 35, width: 30 },
+    "maze-bank":        { top: 55, left: 69, width: 29 },
   },
   // dual-territory inner nodes (regions handled separately in HTML)
   "dual-territory": {
@@ -93,7 +93,7 @@ const nodePositions = LAYOUTS[economy.layout_template] ?? {};
 
 const HEIGHTS: Record<string, number> = {
   "one-way": 160, "proto": 300, "loop": 300,
-  "multi-stream": 420, "full-mmt": 300, "dual-territory": 380,
+  "multi-stream": 420, "full-mmt": 320, "dual-territory": 380,
 };
 const containerH = isCompact
   ? Math.round((HEIGHTS[economy.layout_template] ?? 300) * 0.75)
@@ -290,8 +290,8 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       {/* "IN-GAME CIRCULAR ECONOMY" dashed border for full-mmt */}
       {economy.layout_template === "full-mmt" && (
         <div class="absolute rounded-xl border border-dashed border-[#2a2a31] pointer-events-none"
-             style="top:10%;left:0;right:0;bottom:62%;z-index:0">
-          <div class="absolute -top-2.5 left-4 text-[11px] font-mono text-zinc-500 uppercase tracking-[0.2em] px-1" style="background:#0e0e11">
+             style="top:46%;left:0;right:0;bottom:2%;z-index:0">
+          <div class="absolute -top-2.5 left-4 text-[11px] font-mono text-zinc-500 uppercase tracking-[0.2em] px-1" style="background:var(--c-bg)">
             In-Game Circular Economy
           </div>
         </div>
@@ -359,28 +359,22 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 
   {/* ── Economy metadata (full mode) ─────────────────────────────────────── */}
   {!isCompact && (
-    <div class="grid grid-cols-2 gap-3 mt-4">
-      <div class="rounded-lg border border-[#2a2a31] px-3 py-2.5" style="background:#131316">
-        <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Economy Type</div>
-        <div class="text-sm font-semibold text-zinc-100">{economy.economy_type}</div>
-      </div>
-      <div class="rounded-lg border border-[#2a2a31] px-3 py-2.5" style="background:#131316">
-        <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Real-World Analogue</div>
-        <div class="text-sm font-semibold text-zinc-100">{economy.real_world_analogue}</div>
-      </div>
+    <div class="grid grid-cols-1 gap-3 mt-4">
+      {/* Compact mode keeps Economy Type + Analogue as context labels; full mode
+          omits them — the page hero already carries that context. */}
       {economy.key_innovation && (
-        <div class="col-span-2 rounded-lg border border-[#1e1e23] px-3 py-2.5" style="background:#131316">
+        <div class="rounded-lg border border-[#1e1e23] px-3 py-2.5" style="background:#131316">
           <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">
-            Key Innovation {"★".repeat(economy.innovation_stars)}
+            Key {economy.short ?? economy.title_name} Economy Innovation {"★".repeat(economy.innovation_stars)}
           </div>
           <div class="text-[11px] font-semibold text-zinc-200 mb-1">
             {economy.key_innovation}
           </div>
-          {!isCompact && <div class="text-[10px] font-mono text-zinc-400 leading-snug">{economy.key_innovation_note}</div>}
+          <div class="text-[10px] font-mono text-zinc-400 leading-snug">{economy.key_innovation_note}</div>
         </div>
       )}
-      {economy.inflation_channels?.length > 0 && !isCompact && (
-        <div class="col-span-2 rounded-lg border border-red-900/20 px-3 py-2.5" style="background:rgba(127,29,29,0.07)">
+      {economy.inflation_channels?.length > 0 && (
+        <div class="rounded-lg border border-red-900/20 px-3 py-2.5" style="background:rgba(127,29,29,0.07)">
           <div class="text-[11px] font-mono text-red-400 uppercase tracking-widest mb-1.5">Inflation Channels</div>
           <div class="flex flex-col gap-1">
             {economy.inflation_channels.map((ch: string) => (
@@ -394,14 +388,23 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       )}
     </div>
   )}
-
-  {/* ── GTA VI lineage ────────────────────────────────────────────────────── */}
-  {!isCompact && economy.gta_vi_lineage && (
-    <div class="mt-3 rounded-lg border border-gta-gold/15 px-3 py-2.5" style="background:rgba(245,158,11,0.03)">
-      <div class="text-[11px] font-mono text-gta-gold/70 uppercase tracking-widest mb-1">GTA VI Lineage</div>
-      <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{economy.gta_vi_lineage}</p>
+  {/* Compact mode: show Economy Type + Analogue as brief context labels */}
+  {isCompact && (
+    <div class="grid grid-cols-2 gap-2 mt-3">
+      <div class="rounded-lg border border-[#2a2a31] px-2.5 py-2" style="background:#131316">
+        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Economy Type</div>
+        <div class="text-[10px] font-semibold text-zinc-200 leading-snug">{economy.economy_type}</div>
+      </div>
+      <div class="rounded-lg border border-[#2a2a31] px-2.5 py-2" style="background:#131316">
+        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Real-World Analogue</div>
+        <div class="text-[10px] font-semibold text-zinc-200 leading-snug">{economy.real_world_analogue}</div>
+      </div>
     </div>
   )}
+
+  {/* GTA VI lineage is rendered by each per-title economy page below the
+      CircularEconomy diagram, not inside the component, so it can be
+      customised or replaced per page (e.g. Key Departures on gta-online). */}
 
   {/* ── Compact mode CTA ──────────────────────────────────────────────────── */}
   {isCompact && fullModelHref && (
@@ -515,8 +518,8 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       path.setAttribute("d", `M${p1.x},${p1.y} Q${cx},${cy} ${p2.x},${p2.y}`);
       path.setAttribute("fill", "none");
       path.setAttribute("stroke", hex);
-      path.setAttribute("stroke-width", "2");
-      path.setAttribute("stroke-opacity", "0.75");
+      path.setAttribute("stroke-width", "2.5");
+      path.setAttribute("stroke-opacity", "0.9");
       path.style.animationDuration = `${animCfg.duration_s}s`;
       if (isDashed && animClass === "") path.setAttribute("stroke-dasharray", "5,3");
       path.setAttribute("marker-end", `url(#${uid}-arr-${flow.color_token})`);
@@ -524,7 +527,8 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 
       // Flow label — positioned at t=0.25 (closer to source) to spread labels apart
       // A background rect behind the text prevents overlap illegibility
-      const label = (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim().slice(0, 18);
+      // Keep circle numbers (①②③④⑤) as part of the label — they reference the flow cards
+      const label = (flow.label as string).replace(/[←→★]/g, "").trim().slice(0, 20);
       if (label) {
         // Bezier point at t=0.25 (closer to source node — spreads labels from center)
         const t  = 0.25;
