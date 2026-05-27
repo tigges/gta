@@ -5,6 +5,7 @@ import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import GamePill from "../../components/GamePill.astro";
 import CardFooter from "../../components/CardFooter.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
 import { getEconomyModel } from "../../config/economyModels";
 import economyData from "../../../data/franchise/economy-models.json";
 
@@ -37,12 +38,7 @@ const activeDims = Object.entries(dims).filter(([, v]) => (v as number) > 0);
 
     <!-- Economy diagram + radar -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Circular Economy Model</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <a href="/franchise/economics" class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-border-mid hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">← Ten Economies</a>
-      </div>
+      <SectionHeader label="// Circular Economy Model" pillHref="/franchise/economics" pillLabel="← Ten Economies" />
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-bg)">
           <div class="p-5">
@@ -56,11 +52,7 @@ const activeDims = Object.entries(dims).filter(([, v]) => (v as number) > 0);
 
     <!-- Regression Callout — the unique story of GTA IV -->
     <section>
-      <div class="flex items-center gap-3 mb-4">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-red/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// A Deliberate Step Backward</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// A Deliberate Step Backward" dotColor="var(--c-alert)" />
       <div class="rounded-xl border overflow-hidden" style="background:color-mix(in srgb,var(--c-alert) 5%,var(--c-card));border-color:color-mix(in srgb,var(--c-alert) 20%,transparent)">
         <div class="px-6 py-5">
           <div class="text-[10px] font-mono uppercase tracking-widest mb-2" style="color:var(--c-alert)">Economic Regression — By Design</div>

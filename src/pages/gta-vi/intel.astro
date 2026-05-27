@@ -9,6 +9,7 @@ import ShareDropdown from "../../components/ShareDropdown.astro";
 import type { TrailersData, Prediction } from "../../types/gta";
 import IncomeCard from "../../components/IncomeCard.astro";
 import GamePill from "../../components/GamePill.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
 import { CATEGORY_BADGE_CLASSES } from "../../config/categoryColors";
 
 import ChartGta6SearchTrends from "../../components/charts/ChartGta6SearchTrends.astro";
@@ -263,12 +264,7 @@ const DELAY_THUMBS: Record<string,string> = {
          CONFIRMED CAST
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-2 h-2 rounded-full bg-gta-gold shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Cast</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">Official press kit · Rockstar Games</span>
-      </div>
+      <SectionHeader label="// Confirmed Cast" />
       <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         {([
           { name: "Lucia Caminos",  role: "Protagonist", img: "Lucia_Caminos_01.jpg",   video: "Lucia_Caminos_Video_Clip.mp4"   },
@@ -323,12 +319,7 @@ const DELAY_THUMBS: Record<string,string> = {
          LEONIDA — LOCATIONS
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Leonida — Confirmed Locations</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">Official press kit · Rockstar Games</span>
-      </div>
+      <SectionHeader label="// Leonida — Confirmed Locations" dotColor="var(--c-live)" />
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {([
           { name: "Vice City",      desc: "Urban hub — streets, nightlife, coast",   img: "Vice_City_04.jpg",                  shots: 9  },
@@ -627,12 +618,7 @@ const DELAY_THUMBS: Record<string,string> = {
     ═══════════════════════════════════════════════════════ -->
     {confirmedSongs.length > 0 && (
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-green shrink-0"></span>
-        <h2 class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Confirmed Soundtrack — Trailer Songs</h2>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">{confirmedSongs.length} confirmed · Spotify verified</span>
-      </div>
+      <SectionHeader label="// Confirmed Soundtrack — Trailer Songs" dotColor="var(--c-growth)" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <div class="divide-y divide-border-dim">
           {confirmedSongs.map((song, i) => (

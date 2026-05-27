@@ -10,6 +10,7 @@ import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import CardFooter from "../../components/CardFooter.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import GamePill from "../../components/GamePill.astro";
 
@@ -87,12 +88,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
          CIRCULAR ECONOMY DIAGRAM
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="identity-dot"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Projected Circular Economy</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">dual-territory · all nodes projected</span>
-      </div>
+      <SectionHeader label="// Projected Circular Economy" dotColor="var(--c-title-vi)" />
       <div class="rounded-xl border border-border-dim p-6" style="background:var(--c-bg)">
         <CircularEconomy titleId="gta-6" mode="full" />
         <CardFooter anchorId="eco-gta-vi" sources="Source: GTAVI.AI Economic Model — predicted pre-launch · GTA Online precedent · trailer analysis" shareText="GTA VI predicted economy: Full MMT sovereign with dual-territory model. Predicted to surpass GTA Online in complexity at launch. 10 active income predictions tracked." />
@@ -103,12 +99,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
          COMPLEXITY RADAR
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="identity-dot"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Complexity — Franchise Context</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <a href="/franchise/economics" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">All 10 economies →</a>
-      </div>
+      <SectionHeader label="// Economic Complexity — Franchise Context" dotColor="var(--c-title-vi)" pillHref="/franchise/economics" pillLabel="All 10 economies →" />
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ChartComplexityRadar titleId="gta-6" size={280} showAverage={true} />
         <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card)">
@@ -234,12 +225,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
          ECONOMIC PREDICTIONS
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="identity-dot"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Structure Predictions</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">{econPreds.length} model-derived</span>
-      </div>
+      <SectionHeader label="// Economic Structure Predictions" dotColor="var(--c-title-vi)" />
       <div class="flex flex-col gap-3">
         {econPreds.map((pred: any) => {
           const tierColor = pred.confidence_tier === "reported" ? "var(--c-growth)" : pred.confidence_tier === "confirmed" ? "var(--c-live)" : "var(--c-brand)";
@@ -278,10 +264,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
          GTA ONLINE → GTA VI LINEAGE
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Economic Lineage — The Arc Ends Here</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// Economic Lineage — The Arc Ends Here" dotColor="var(--c-title-vi)" />
       <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card)">
         <p class="text-[11px] font-mono text-zinc-500 leading-relaxed mb-4">
           {economy?.summary}

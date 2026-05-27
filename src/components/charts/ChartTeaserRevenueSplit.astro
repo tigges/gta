@@ -4,6 +4,7 @@
  * Shows the box-sales-to-Shark-Cards shift. No D3, always renders.
  */
 import ShareDropdown from "../ShareDropdown.astro";
+import ChartBadgeRow from "../ChartBadgeRow.astro";
 import revenueSplit from "../../../data/franchise/revenue-split.json";
 
 const KEY_YEARS = ["FY2014", "FY2018", "FY2020", "FY2022"];
@@ -14,6 +15,7 @@ const years = (revenueSplit as any).years
 <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
   <!-- Header -->
   <div class="px-5 py-4 border-b border-border-dim">
+    <ChartBadgeRow game="franchise" category="Revenue" />
     <div class="font-semibold text-zinc-200 text-sm mb-0.5">
       GTA V: From Box Sales to Shark Cards — 13-Year Revenue Shift
     </div>

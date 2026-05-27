@@ -4,6 +4,7 @@
  * Shows GTA 6 search trend with T1/T2 peaks marked. No D3, always renders.
  */
 import ShareDropdown from "../ShareDropdown.astro";
+import ChartBadgeRow from "../ChartBadgeRow.astro";
 import trendsData from "../../../data/gta-6/trends/search-interest.json";
 
 const gta6kw = (trendsData as any).keywords.find((k: any) => k.keyword === "GTA 6") as any;
@@ -31,6 +32,7 @@ const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString(
 <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
   <!-- Header -->
   <div class="px-5 py-4 border-b border-border-dim">
+    <ChartBadgeRow game="gta-vi" category="Search Trends" />
     <div class="font-semibold text-zinc-200 text-sm mb-0.5">
       GTA VI Search Interest — Two Trailer Spikes, Trend Still Rising
     </div>
