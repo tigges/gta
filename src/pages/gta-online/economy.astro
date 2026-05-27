@@ -234,10 +234,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             label: "Shark Cards = QE, not loans",
             body: "Real GBP/USD enters the system as GTA$ with no repayment obligation. Closer to central bank QE or colonial currency board issuance than consumer credit."
           },
-          {
-            label: "Inflation is hidden",
-            body: "Nominal DLC prices can stay flat while real purchasing power collapses via payout nerfs. The GTA-PPI captures this. Track wage/price ratio, not prices alone."
-          },
+
           {
             label: "Rockstar's incentive",
             body: "Engineering real-terms inflation (via nerfs) increases Shark Card demand → Take-Two revenue. Track as the key political economy dynamic of the Online ecosystem."
@@ -250,38 +247,6 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         ))}
       </div>
 
-      <!-- Academic framework table -->
-      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
-        <div class="px-5 py-3 border-b border-border-dim">
-          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">// ACADEMIC FRAMEWORK</div>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-[11px] font-mono">
-            <thead>
-              <tr class="border-b border-border-dim">
-                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Framework</th>
-                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Real-world source</th>
-                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">GTA application</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["MMT / Sovereign money",    "Wray (2015), Mosler (2010)",      "Rockstar as monopoly currency issuer"],
-                ["CPI basket method",        "ONS CPI; BLS CPI methodology",    "Fixed basket of in-game goods tracked per patch"],
-                ["Labour-time / Big Mac",     "Ricardo; The Economist",          "Minutes of top-activity grind per basket unit"],
-                ["Price-wage spiral",        "Phillips Curve; ONS real wages",  "Δ DLC price vs Δ mission payout per patch cycle"],
-                ["Virtual economy theory",   "Lehdonvirta (2014) MIT Press",    "Foundational framework for in-game economic analysis"],
-              ].map(([f,s,g]) => (
-                <tr class="border-b border-border-dim/50 hover:bg-white/[0.02] transition-colors">
-                  <td class="px-4 py-2.5 text-gta-gold/80">{f}</td>
-                  <td class="px-4 py-2.5 text-zinc-500">{s}</td>
-                  <td class="px-4 py-2.5 text-zinc-400">{g}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
 
     </section><!-- /model -->
 
@@ -746,44 +711,6 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         ))}
       </div>
 
-      <!-- Pipeline status -->
-      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
-        <div class="px-5 py-3 border-b border-border-dim">
-          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">// GTA VI DATA PIPELINE — NIGHTLY CI</div>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-[11px] font-mono">
-            <thead>
-              <tr class="border-b border-border-dim">
-                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Scraper</th>
-                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Output</th>
-                <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { scraper:"fetch_gta6_missions.py",    output:"gta-6/missions/story-missions.json", status:"ready",  note:"Watches Category:Missions_in_GTA_VI" },
-                { scraper:"fetch_gta_prices.py",       output:"gta-5/economy/item-catalogue.json",  status:"live",   note:"Extends to GTA VI store pages at launch" },
-                { scraper:"fetch_gta_ppi.py",          output:"gta-6/economy/gta-vi-ppi.json",      status:"ready",  note:"Computes PPI once wage data exists" },
-                { scraper:"gtavi/fetch_trailers.py",   output:"gta-6/trailers.json",                status:"live",   note:"YouTube API — active now" },
-                { scraper:"gtavi/fetch_search_trends.py", output:"gta-6/trends/search-interest.json", status:"live", note:"Google Trends — active now" },
-                { scraper:"fetch_edgar.py",            output:"franchise/revenue-split.json",        status:"live",   note:"Take-Two earnings — active now" },
-              ].map(r => (
-                <tr class="border-b border-border-dim/50 hover:bg-white/[0.02] transition-colors">
-                  <td class="px-4 py-2.5 text-gta-gold/80">{r.scraper}</td>
-                  <td class="px-4 py-2.5 text-zinc-500">{r.output}</td>
-                  <td class="px-4 py-2.5">
-                    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${r.status === 'live' ? 'border-gta-green/40 bg-gta-green/20 text-gta-green' : 'border-gta-gold/30 bg-gta-gold/10 text-gta-gold'}`}>
-                      {r.status === 'live' ? '✓ Live' : 'Day-1'}
-                    </span>
-                    <span class="ml-2 text-zinc-500">{r.note}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
 
     </section><!-- /gta-vi-readiness -->
 
