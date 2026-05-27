@@ -328,7 +328,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
             const hex = flowHex(color);
             return (
               <marker id={`${uid}-arr-${color}`}
-                      markerWidth="7" markerHeight="7"
+                      markerWidth="9" markerHeight="9"
                       refX="5" refY="3"
                       orient="auto" markerUnits="strokeWidth">
                 <path d="M0,0 L0,6 L7,3 z" fill={hex} opacity="0.85" />
@@ -518,8 +518,8 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       path.setAttribute("d", `M${p1.x},${p1.y} Q${cx},${cy} ${p2.x},${p2.y}`);
       path.setAttribute("fill", "none");
       path.setAttribute("stroke", hex);
-      path.setAttribute("stroke-width", "2.5");
-      path.setAttribute("stroke-opacity", "0.9");
+      path.setAttribute("stroke-width", "3");
+      path.setAttribute("stroke-opacity", "1");
       path.style.animationDuration = `${animCfg.duration_s}s`;
       if (isDashed && animClass === "") path.setAttribute("stroke-dasharray", "5,3");
       path.setAttribute("marker-end", `url(#${uid}-arr-${flow.color_token})`);
@@ -544,9 +544,9 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
         const lx = Math.round(bx + perpX);
         const ly = Math.round(by + perpY);
 
-        const FONT_SIZE = 10;
-        const estimatedW = label.length * 5.8 + 8;
-        const estimatedH = FONT_SIZE + 4;
+        const FONT_SIZE = 11;
+        const estimatedW = label.length * 6.4 + 10;
+        const estimatedH = FONT_SIZE + 6;
 
         // Background rect for readability
         const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -557,7 +557,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
         bg.setAttribute("height", String(estimatedH));
         bg.setAttribute("rx", "3");
         bg.setAttribute("fill", "#0a0a0d");
-        bg.setAttribute("fill-opacity", "0.82");
+        bg.setAttribute("fill-opacity", "0.95");
         svg.appendChild(bg);
 
         // Label text
@@ -578,28 +578,35 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   }
 
   // ── Init on page load ────────────────────────────────────────────────────
-  // Use ResizeObserver so drawArrows only runs once the grid has a real width.
-  // A single rAF is often too early on pages with complex layouts (e.g. the
-  // economy page where the diagram sits inside a multi-level flex/grid stack).
+  // Guard: both the grid AND its child node elements must have non-zero
+  // bounding rects before drawing. The grid getting a width (ResizeObserver)
+  // is necessary but not sufficient — absolutely-positioned child nodes need
+  // an additional layout pass before getBoundingClientRect() is meaningful.
   document.querySelectorAll<HTMLElement>(".ce-node-grid").forEach(grid => {
+    let drawn = false;
+
     function tryDraw() {
-      if (grid.clientWidth > 10) {
-        drawArrows(grid);
-        return true;
-      }
-      return false;
+      if (drawn) return true;
+      if (grid.clientWidth < 10) return false;
+      // Verify at least one node element has real dimensions
+      const firstNode = grid.querySelector<HTMLElement>("[data-node-id]");
+      if (firstNode && firstNode.getBoundingClientRect().width < 5) return false;
+      drawn = true;
+      drawArrows(grid);
+      return true;
     }
 
-    // Immediate attempt
-    if (!tryDraw()) {
-      // Fallback: ResizeObserver fires once the grid gets real dimensions
-      const ro = new ResizeObserver(() => {
-        if (tryDraw()) ro.disconnect();
-      });
-      ro.observe(grid);
-      // Safety net: give up after 4s (prevents zombie observer)
-      setTimeout(() => ro.disconnect(), 4000);
-    }
+    // Three escalating attempts to handle various layout timing scenarios:
+    requestAnimationFrame(() => {
+      if (!tryDraw()) {
+        requestAnimationFrame(() => {
+          if (!tryDraw()) {
+            // Final fallback: 200ms gives even slow layouts time to settle
+            setTimeout(() => tryDraw(), 200);
+          }
+        });
+      }
+    });
   });
 
   // ── Re-draw on resize ─────────────────────────────────────────────────────
