@@ -30,15 +30,15 @@ import heistsData        from "../../data/gta-5/economy/online-heists.json";
 import spendingDistData  from "../../data/gta-5/economy/spending-distribution.json";
 
 // ── Filter system constants ───────────────────────────────────────────────────
-const CATEGORIES = ["All", "Economy-IG", "Economy-RL", "Promotions", "Performance", "Community", "History"] as const;
+const CATEGORIES = ["All", "Economy-IG", "Economy-RL", "Promotions", "Community", "History"] as const;
 const CAT_LABELS: Record<string, string> = {
   "All":        "All",
-  "Economy-IG": "⚡ Economy (In-Game)",
-  "Economy-RL": "📊 Economy (Real-Life)",
+  "Economy-IG": "IG Economy",
+  "Economy-RL": "RL Economy",
   "Promotions": "🏷 Promotions",
-  "Performance":"🏎 Performance",
+  
   "Community":  "🌐 Community",
-  "History":    "📖 Franchise History",
+  "History":    "History",
 };
 
 // ── Page header stats ─────────────────────────────────────────────────────────
@@ -112,38 +112,6 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
           </p>
         </div>
 
-        <!-- Cover strip — clickable title filters -->
-        <div id="cover-strip" class="flex items-end gap-2 flex-wrap">
-          {([
-            { id: "gta-6",      short: "GTA VI",     title: "gta-vi"    },
-            { id: "gta-online", short: "GTA Online", title: "gta-online" },
-            { id: "gta-5",      short: "GTA V",      title: "gta-v"     },
-            { id: "gta-4",      short: "GTA IV",     title: "franchise" },
-            { id: "gta-sa",     short: "GTA SA",     title: "franchise" },
-            { id: "gta-vc",     short: "GTA VC",     title: "franchise" },
-            { id: "gta-3",      short: "GTA III",    title: "franchise" },
-            { id: "gta-2",      short: "GTA 2",      title: "franchise" },
-            { id: "gta-1",      short: "GTA 1",      title: "franchise" },
-          ] as const).map(g => (
-            <button
-              class="cover-title-filter flex flex-col items-center gap-1 group transition-all"
-              data-title={g.title}
-              data-cover-id={g.id}
-              aria-label={`Filter by ${g.short}`}
-            >
-              <img
-                src={g.id === "gta-online" ? "/assets/covers/gta-online.png" : `/assets/covers/${g.id}.jpg`}
-                alt={g.short}
-                class={`rounded border object-cover transition-all duration-200 group-hover:scale-105 ${
-              g.id === "gta-6" ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10 group-hover:border-gta-gold/60" :
-              g.id === "gta-online" ? "w-9 h-12 border-gta-teal/30 group-hover:border-gta-teal/50" :
-              "w-9 h-12 border-[#2a2a31] group-hover:border-gta-gold/40"}`}
-                loading="eager"
-              />
-              <span class={`text-[10px] font-mono tracking-widest ${g.id === "gta-6" ? "text-gta-gold" : "text-zinc-500"}`}>{g.short}</span>
-            </button>
-          ))}
-        </div>
       </div>
 
       <!-- Filter bar: title pills + category pills stacked -->
@@ -166,10 +134,6 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
                   data-title="gta-v"
                   style="color:var(--c-title-v,#9898b8);border-color:color-mix(in srgb,var(--c-title-v,#9898b8) 25%,transparent);background:color-mix(in srgb,var(--c-title-v,#9898b8) 8%,transparent)"
                   >GTA V</button>
-          <button class="chart-title-filter px-3 py-1 rounded border text-[10px] font-mono uppercase tracking-widest transition-all"
-                  data-title="franchise"
-                  style="color:var(--c-brand);border-color:color-mix(in srgb,var(--c-brand) 25%,transparent);background:color-mix(in srgb,var(--c-brand) 8%,transparent)"
-                  >Franchise</button>
         </div>
 
         <!-- Row 2: Category filter -->
