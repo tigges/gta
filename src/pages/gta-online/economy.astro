@@ -124,7 +124,10 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-start justify-between flex-wrap gap-6">
         <div>
-          <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-1">// CIRCULAR FLOW · 3-ACTOR MODEL</div>
+          <div class="flex items-center gap-2 mb-3">
+            <GamePill game="gta-online" size="xs" />
+            <span class="text-[10px] font-mono text-zinc-500 border border-border-mid px-2 py-0.5 rounded uppercase tracking-widest">Circular Flow · 3-Actor Model</span>
+          </div>
           <h1 class="text-4xl sm:text-5xl font-black text-white leading-tight mb-1">
             GTA Online<br/>Economic Model
           </h1>
@@ -140,7 +143,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
               <span class="text-[11px] font-black tracking-wider">BUSINESSES</span>
               <span class="text-[11px] font-mono text-gta-gold/60 mt-0.5">produce · contract</span>
               <div class="flex flex-col items-center gap-0.5 mt-2 text-[11px] font-mono">
-                <span class="text-gta-gold/80">① WAGES →</span>
+                <span style="color:var(--c-income)">① Y · INCOME →</span>
                 <span class="text-zinc-400">← SPENDING ②</span>
               </div>
             </button>
@@ -222,7 +225,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     ══════════════════════════════════════════════════════════ -->
     <section id="four-flows" style="scroll-margin-top:80px">
       <div class="flex items-center gap-3 mb-6">
-        <GamePill game="gta-online" size="xs" />
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-online-vivid/60 shrink-0"></span>
         <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Money Flows — One chart per money flow between actors</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <a href="/charts?title=gta-online" class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-border-mid hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">All GTA Online charts →</a>
@@ -235,9 +238,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-gta-gold/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                <span class="inline-flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-black" style="background:color-mix(in srgb,var(--c-brand) 25%,transparent);color:var(--c-brand);border:1px solid color-mix(in srgb,var(--c-brand) 50%,transparent)">①</span><span class="ml-1">BUSINESSES → PLAYERS</span>
+                <span class="font-black text-[14px] mr-1" style="color:var(--c-income)">①</span>BUSINESSES → PLAYERS</span>
               </div>
-              <span class="text-[11px] font-mono border border-gta-gold/40 bg-gta-gold/10 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">WAGES</span>
+              <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-income) 40%,transparent);background:color-mix(in srgb,var(--c-income) 12%,transparent);color:var(--c-income)">Y · INCOME</span>
             </div>
             <div class="text-lg font-bold text-white">Hourly GTA$ Yield</div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Top-tier activity $/hr at each major patch. The in-game "real wage."</div>
@@ -272,9 +275,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-zinc-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                <span class="inline-flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-black" style="background:color-mix(in srgb,var(--c-flow-spending) 25%,transparent);color:var(--c-flow-spending);border:1px solid color-mix(in srgb,var(--c-flow-spending) 50%,transparent)">②</span><span class="ml-1">PLAYERS → BUSINESSES</span>
+                <span class="font-black text-[14px] mr-1" style="color:var(--c-flow-spending)">②</span>PLAYERS → BUSINESSES</span>
               </div>
-              <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-flow-spending) 40%,transparent);background:color-mix(in srgb,var(--c-flow-spending) 12%,transparent);color:var(--c-flow-spending)">SPENDING (C)</span>
+              <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-flow-spending) 40%,transparent);background:color-mix(in srgb,var(--c-flow-spending) 12%,transparent);color:var(--c-flow-spending)">C · CONSUMPTION</span>
             </div>
             <div class="text-lg font-bold text-white">Spending Distribution</div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Where GTA$ flows after it's earned. Community-estimated by DLC era.</div>
@@ -310,7 +313,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-gta-green/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                <span class="inline-flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-black" style="background:color-mix(in srgb,var(--c-growth) 25%,transparent);color:var(--c-growth);border:1px solid color-mix(in srgb,var(--c-growth) 50%,transparent)">③</span><span class="ml-1">PLAYERS → MAZE BANK</span>
+                <span class="font-black text-[14px] mr-1" style="color:var(--c-growth)">③</span>PLAYERS → MAZE BANK</span>
               </div>
               <span class="text-[11px] font-mono border border-gta-green/40 bg-gta-green/20 text-gta-green px-2 py-0.5 rounded uppercase tracking-widest">SAVINGS</span>
             </div>
@@ -346,9 +349,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-blue-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                <span class="inline-flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-black" style="background:color-mix(in srgb,var(--c-title-online) 25%,transparent);color:var(--c-title-online);border:1px solid color-mix(in srgb,var(--c-title-online) 50%,transparent)">④</span><span class="ml-1">ROCKSTAR → PLAYERS</span>
+                <span class="font-black text-[14px] mr-1" style="color:var(--c-title-online)">④</span>ROCKSTAR → PLAYERS</span>
               </div>
-              <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-title-online) 40%,transparent);background:color-mix(in srgb,var(--c-title-online) 12%,transparent);color:var(--c-title-online)">SHARK CARDS</span>
+              <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-title-online) 40%,transparent);background:color-mix(in srgb,var(--c-title-online) 12%,transparent);color:var(--c-title-online)">J · INJECTION</span>
             </div>
             <div class="text-lg font-bold text-white">Shark Card Injections</div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Take-Two recurrent consumer spending as Shark Card proxy (USD billion).</div>
@@ -386,7 +389,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div>
             <div class="flex items-center justify-between mb-2 gap-4">
               <div class="text-[11px] font-mono text-gta-indigo/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                <span class="inline-flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-black" style="background:color-mix(in srgb,var(--c-economy) 25%,transparent);color:var(--c-economy);border:1px solid color-mix(in srgb,var(--c-economy) 50%,transparent)">⑤</span><span class="ml-1">PLAYERS → BUSINESSES (Investment)</span>
+                <span class="font-black text-[14px] mr-1" style="color:var(--c-economy)">⑤</span>PLAYERS → BUSINESSES (Investment)</span>
               </div>
               <span class="text-[11px] font-mono border border-gta-indigo/40 bg-gta-indigo/20 text-gta-indigo px-2 py-0.5 rounded uppercase tracking-widest">INVESTMENT</span>
             </div>
