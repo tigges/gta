@@ -503,9 +503,10 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       // to visually separate arrows that share the same node pair
       const midX = (p1.x + p2.x) / 2, midY = (p1.y + p2.y) / 2;
       const dx   = p2.x - p1.x,       dy   = p2.y - p1.y;
-      // More curvature on multi-stream template and bidirectional flows
+      // More curvature separates parallel arrows (wages/spending/investment
+      // all run between the same businesses↔players nodes).
       const isMulti = grid.dataset.template === "multi-stream";
-      const curve = flow.bidirectional ? 0.28 : isMulti ? 0.22 : 0.14;
+      const curve = flow.bidirectional ? 0.35 : isMulti ? 0.28 : 0.22;
       const curveDir = pass % 2 === 0 ? 1 : -1; // alternate sides for parallel arrows
       const cx = midX - dy * curve * curveDir, cy = midY + dx * curve * curveDir;
 
@@ -527,8 +528,10 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 
       // Flow label — positioned at t=0.25 (closer to source) to spread labels apart
       // A background rect behind the text prevents overlap illegibility
-      // Keep circle numbers (①②③④⑤) as part of the label — they reference the flow cards
-      const label = (flow.label as string).replace(/[←→★]/g, "").trim().slice(0, 20);
+      // Show only the circle number (①②③④⑤) on the arrow — clean, no overlap.
+      // Full label text lives on the money flow cards below the diagram.
+      const circleNum = (flow.label as string).match(/[①②③④⑤]/)?.[0] ?? "";
+      const label = circleNum || (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim().slice(0, 8);
       if (label) {
         // Bezier point at t=0.25 (closer to source node — spreads labels from center)
         const t  = 0.25;
@@ -539,8 +542,8 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
         // Slight perpendicular offset so label doesn't sit on the path
         const pathDx = p2.x - p1.x, pathDy = p2.y - p1.y;
         const pathLen = Math.sqrt(pathDx*pathDx + pathDy*pathDy) || 1;
-        const perpX = -pathDy / pathLen * 9;
-        const perpY =  pathDx / pathLen * 9;
+        const perpX = -pathDy / pathLen * 14;
+        const perpY =  pathDx / pathLen * 14;
         const lx = Math.round(bx + perpX);
         const ly = Math.round(by + perpY);
 
@@ -578,36 +581,12 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   }
 
   // ── Init on page load ────────────────────────────────────────────────────
-  // Guard: both the grid AND its child node elements must have non-zero
-  // bounding rects before drawing. The grid getting a width (ResizeObserver)
-  // is necessary but not sufficient — absolutely-positioned child nodes need
-  // an additional layout pass before getBoundingClientRect() is meaningful.
-  document.querySelectorAll<HTMLElement>(".ce-node-grid").forEach(grid => {
-    let drawn = false;
-
-    function tryDraw() {
-      if (drawn) return true;
-      if (grid.clientWidth < 10) return false;
-      // Verify at least one node element has real dimensions
-      const firstNode = grid.querySelector<HTMLElement>("[data-node-id]");
-      if (firstNode && firstNode.getBoundingClientRect().width < 5) return false;
-      drawn = true;
-      drawArrows(grid);
-      return true;
-    }
-
-    // Three escalating attempts to handle various layout timing scenarios:
-    requestAnimationFrame(() => {
-      if (!tryDraw()) {
-        requestAnimationFrame(() => {
-          if (!tryDraw()) {
-            // Final fallback: 200ms gives even slow layouts time to settle
-            setTimeout(() => tryDraw(), 200);
-          }
-        });
-      }
-    });
-  });
+  // 350ms matches the ChartPreviewCard expand delay that reliably works on
+  // the franchise/economics page — gives layout enough time to settle before
+  // getBoundingClientRect() is called on absolutely-positioned child nodes.
+  setTimeout(() => {
+    document.querySelectorAll<HTMLElement>(".ce-node-grid").forEach(drawArrows);
+  }, 350);
 
   // ── Re-draw on resize ─────────────────────────────────────────────────────
   let resizeTimer: ReturnType<typeof setTimeout>;
