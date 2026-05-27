@@ -359,28 +359,22 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 
   {/* ── Economy metadata (full mode) ─────────────────────────────────────── */}
   {!isCompact && (
-    <div class="grid grid-cols-2 gap-3 mt-4">
-      <div class="rounded-lg border border-[#2a2a31] px-3 py-2.5" style="background:#131316">
-        <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Economy Type</div>
-        <div class="text-sm font-semibold text-zinc-100">{economy.economy_type}</div>
-      </div>
-      <div class="rounded-lg border border-[#2a2a31] px-3 py-2.5" style="background:#131316">
-        <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Real-World Analogue</div>
-        <div class="text-sm font-semibold text-zinc-100">{economy.real_world_analogue}</div>
-      </div>
+    <div class="grid grid-cols-1 gap-3 mt-4">
+      {/* Compact mode keeps Economy Type + Analogue as context labels; full mode
+          omits them — the page hero already carries that context. */}
       {economy.key_innovation && (
-        <div class="col-span-2 rounded-lg border border-[#1e1e23] px-3 py-2.5" style="background:#131316">
+        <div class="rounded-lg border border-[#1e1e23] px-3 py-2.5" style="background:#131316">
           <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">
-            Key Innovation {"★".repeat(economy.innovation_stars)}
+            Key {economy.short ?? economy.title_name} Economy Innovation {"★".repeat(economy.innovation_stars)}
           </div>
           <div class="text-[11px] font-semibold text-zinc-200 mb-1">
             {economy.key_innovation}
           </div>
-          {!isCompact && <div class="text-[10px] font-mono text-zinc-400 leading-snug">{economy.key_innovation_note}</div>}
+          <div class="text-[10px] font-mono text-zinc-400 leading-snug">{economy.key_innovation_note}</div>
         </div>
       )}
-      {economy.inflation_channels?.length > 0 && !isCompact && (
-        <div class="col-span-2 rounded-lg border border-red-900/20 px-3 py-2.5" style="background:rgba(127,29,29,0.07)">
+      {economy.inflation_channels?.length > 0 && (
+        <div class="rounded-lg border border-red-900/20 px-3 py-2.5" style="background:rgba(127,29,29,0.07)">
           <div class="text-[11px] font-mono text-red-400 uppercase tracking-widest mb-1.5">Inflation Channels</div>
           <div class="flex flex-col gap-1">
             {economy.inflation_channels.map((ch: string) => (
@@ -394,14 +388,23 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       )}
     </div>
   )}
-
-  {/* ── GTA VI lineage ────────────────────────────────────────────────────── */}
-  {!isCompact && economy.gta_vi_lineage && (
-    <div class="mt-3 rounded-lg border border-gta-gold/15 px-3 py-2.5" style="background:rgba(245,158,11,0.03)">
-      <div class="text-[11px] font-mono text-gta-gold/70 uppercase tracking-widest mb-1">GTA VI Lineage</div>
-      <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{economy.gta_vi_lineage}</p>
+  {/* Compact mode: show Economy Type + Analogue as brief context labels */}
+  {isCompact && (
+    <div class="grid grid-cols-2 gap-2 mt-3">
+      <div class="rounded-lg border border-[#2a2a31] px-2.5 py-2" style="background:#131316">
+        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Economy Type</div>
+        <div class="text-[10px] font-semibold text-zinc-200 leading-snug">{economy.economy_type}</div>
+      </div>
+      <div class="rounded-lg border border-[#2a2a31] px-2.5 py-2" style="background:#131316">
+        <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Real-World Analogue</div>
+        <div class="text-[10px] font-semibold text-zinc-200 leading-snug">{economy.real_world_analogue}</div>
+      </div>
     </div>
   )}
+
+  {/* GTA VI lineage is rendered by each per-title economy page below the
+      CircularEconomy diagram, not inside the component, so it can be
+      customised or replaced per page (e.g. Key Departures on gta-online). */}
 
   {/* ── Compact mode CTA ──────────────────────────────────────────────────── */}
   {isCompact && fullModelHref && (
