@@ -128,7 +128,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         <div>
           <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-1">// CIRCULAR FLOW · 3-ACTOR MODEL</div>
           <h1 class="text-4xl sm:text-5xl font-black text-white leading-tight mb-1">
-            Five Flows.<br/>One Economy.
+            GTA Online<br/>Economic Model
           </h1>
           <p class="text-sm text-zinc-400 max-w-sm mt-3">
             One chart per arrow in the circular flow. GTA Online data 2013–2025. Each chart tracks a single money flow between actors.
@@ -1191,11 +1191,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
   defer("health", initPpiChart);
   defer("health", initHealthChart);
 
-  // Init flows tab immediately (it may be activated by actor-btn click)
-  // Use requestAnimationFrame to ensure DOM is laid out
-  requestAnimationFrame(() => {
-    document.querySelector<HTMLButtonElement>('[data-tab="flows"]')?.click();
-    // Restore model tab as default
-    document.querySelector<HTMLButtonElement>('[data-tab="model"]')?.click();
-  });
+  // Do NOT pre-init the flows tab — all D3 charts use lazy init (pendingInits/runPending).
+  // Pre-initialising in a rAF caused charts to render at clientWidth=0 (panel still
+  // hidden during layout pass), leaving them permanently broken since doneInits blocks
+  // a second attempt. Charts initialise correctly on first manual tab click instead.
 </script>

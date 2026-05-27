@@ -90,7 +90,13 @@ const isProjected = (economy as any).projected;
 <script>
   import * as d3 from "d3";
 
-  document.querySelectorAll<HTMLElement>(".chart-complexity-radar").forEach(el => {
+  function initRadar(el: HTMLElement) {
+    // Prevent double-init if ResizeObserver fires after first render
+    if (el.dataset.initialized === "1") return;
+    // Bail if the element has no real width yet (hidden panel, rAF race, etc.)
+    if (el.clientWidth < 10) return;
+    el.dataset.initialized = "1";
+
     const scores   = JSON.parse(el.dataset.scores   || "{}") as Record<string,number>;
     const avg      = JSON.parse(el.dataset.avg      || "{}") as Record<string,number>;
     const axes     = JSON.parse(el.dataset.axes     || "[]") as { key: string; label: string }[];
@@ -98,7 +104,7 @@ const isProjected = (economy as any).projected;
     const color    = el.dataset.color    ?? "#0d9488";
     const isProj   = el.dataset.projected === "true";
 
-    const W  = el.clientWidth  || 260;
+    const W  = el.clientWidth;
     const H  = el.clientHeight || 260;
     const cx = W / 2, cy = H / 2;
     const R  = Math.min(cx, cy) - 38;
@@ -188,5 +194,24 @@ const isProjected = (economy as any).projected;
       .attr("text-anchor", "end").attr("fill", "#27272a")
       .attr("font-size", 7).attr("font-family", "monospace")
       .text("GTAVI.AI");
+  }
+
+  // Initialise all radar instances. Use ResizeObserver as a fallback for
+  // elements that have zero clientWidth at module-eval time (grid not yet laid
+  // out, or element inside a hidden tab panel on first page load).
+  document.querySelectorAll<HTMLElement>(".chart-complexity-radar").forEach(el => {
+    // Try immediately
+    if (el.clientWidth >= 10) {
+      initRadar(el);
+    } else {
+      // Wait for the element to get real dimensions (grid layout, tab reveal, etc.)
+      const ro = new ResizeObserver(() => {
+        if (el.clientWidth >= 10) {
+          ro.disconnect();
+          initRadar(el);
+        }
+      });
+      ro.observe(el);
+    }
   });
 </script>
