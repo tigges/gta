@@ -117,11 +117,11 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 >
 
   <!-- ── Page header ──────────────────────────────────────── -->
-  <section class="relative border-b border-[#1e1e23] overflow-hidden">
+  <section class="relative border-b border-border-dim overflow-hidden">
     <div class="absolute inset-0">
       <img src="/assets/gta5/story/gta-v-cover.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 40%" aria-hidden="true" />
-      <div class="absolute inset-0" style="background:linear-gradient(to right,#0a0a0d 0%,#0a0a0dcc 55%,#0a0a0d88 100%)"></div>
-      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,#0a0a0d 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg-deep) 0%,color-mix(in srgb,var(--c-bg-deep) 80%,transparent) 55%,color-mix(in srgb,var(--c-bg-deep) 53%,transparent) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,var(--c-bg-deep) 100%)"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-start justify-between flex-wrap gap-6">
@@ -146,7 +146,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
                 <span class="text-zinc-400">← SPENDING ②</span>
               </div>
             </button>
-            <button id="actor-players" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-[#2a2a31] text-zinc-400 transition-all hover:border-zinc-600" data-actor="players">
+            <button id="actor-players" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-border-mid text-zinc-400 transition-all hover:border-zinc-600" data-actor="players">
               <span class="text-[11px] font-black tracking-wider">PLAYERS</span>
               <span class="text-[11px] font-mono text-zinc-400 mt-0.5">earn · spend · save</span>
               <div class="flex flex-col items-center gap-0.5 mt-2 text-[11px] font-mono">
@@ -154,7 +154,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
                 <span class="text-zinc-500">← SHARK CARDS ④</span>
               </div>
             </button>
-            <button id="actor-mazebank" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-[#2a2a31] text-zinc-400 transition-all hover:border-zinc-600" data-actor="mazebank">
+            <button id="actor-mazebank" class="actor-btn flex flex-col items-center px-4 py-2.5 rounded-lg border border-border-mid text-zinc-400 transition-all hover:border-zinc-600" data-actor="mazebank">
               <span class="text-[11px] font-black tracking-wider">MAZE BANK</span>
               <span class="text-[11px] font-mono text-zinc-400 mt-0.5">hold · (no real lend)</span>
               <div class="flex flex-col items-center gap-0.5 mt-2 text-[11px] font-mono">
@@ -168,7 +168,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
   </section>
 
   <!-- ── Main tab nav ─────────────────────────────────────── -->
-  <div class="sticky top-16 z-40 border-b border-[#1e1e23]" style="background:rgba(14,14,17,0.97);backdrop-filter:blur(12px)">
+  <div class="sticky top-16 z-40 border-b border-border-dim" style="background:rgba(14,14,17,0.97);backdrop-filter:blur(12px)">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="flex items-center gap-0 overflow-x-auto">
         {[
@@ -194,13 +194,13 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
   ═══════════════════════════════════════════════════════ -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-6">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-2 rounded-xl border border-[#1e1e23] p-5" style="background:#0e0e11">
+      <div class="lg:col-span-2 rounded-xl border border-border-dim p-5" style="background:var(--c-bg)">
         <CircularEconomy titleId="gta-online" mode="full" />
         <CardFooter anchorId="eco-gta-online" sources="Source: GTAVI.AI Economic Model Analysis · GTA Online 2013–2026 · community benchmarks" shareText="GTA Online's economy is a Full MMT Sovereign: Rockstar controls the money supply, wages, and inflation. 10 years of data modelled across 5 circular flows." />
       </div>
       <div class="flex flex-col gap-4">
         <ChartComplexityRadar titleId="gta-online" size={260} />
-        <div class="rounded-xl border border-[#1e1e23] px-4 py-3" style="background:#131316">
+        <div class="rounded-xl border border-border-dim px-4 py-3" style="background:var(--c-card)">
           <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Franchise Arc</div>
           <p class="text-[10px] font-mono text-zinc-400 leading-relaxed">
             GTA Online is the apex of the franchise arc — Full MMT sovereign with live policy.
@@ -239,7 +239,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       <div class="flex justify-center my-2 text-zinc-400 font-mono text-xs">↕ policy interface</div>
 
       <!-- In-game circular economy -->
-      <div class="rounded-xl border border-[#2a2a31] p-5 mb-4" style="background:#0e0e11">
+      <div class="rounded-xl border border-border-mid p-5 mb-4" style="background:var(--c-bg)">
         <div class="text-center mb-4">
           <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-[0.2em]">IN-GAME CIRCULAR ECONOMY · UNIT OF ANALYSIS</div>
         </div>
@@ -268,7 +268,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 
           <!-- Players -->
           <div class="flex flex-col items-center gap-1">
-            <div class="rounded-xl border border-[#2a2a31] bg-[#1a1a1e] px-5 py-3 text-center min-w-[120px]">
+            <div class="rounded-xl border border-border-mid bg-surface-2 px-5 py-3 text-center min-w-[120px]">
               <div class="text-sm font-black text-zinc-200 tracking-wide">Players</div>
               <div class="text-[11px] font-mono text-zinc-400 mt-0.5">earn · spend · hold</div>
             </div>
@@ -322,7 +322,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             body: "Engineering real-terms inflation (via nerfs) increases Shark Card demand → Take-Two revenue. Track as the key political economy dynamic of the Online ecosystem."
           },
         ].map(d => (
-          <div class="rounded-lg border border-[#1e1e23] p-4" style="background:#131316">
+          <div class="rounded-lg border border-border-dim p-4" style="background:var(--c-card)">
             <div class="text-[11px] font-bold text-zinc-200 mb-1.5">{d.label}</div>
             <p class="text-[11px] text-zinc-500 leading-relaxed">{d.body}</p>
           </div>
@@ -330,14 +330,14 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       </div>
 
       <!-- Academic framework table -->
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-3 border-b border-[#1e1e23]">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-3 border-b border-border-dim">
           <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">// ACADEMIC FRAMEWORK</div>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-[11px] font-mono">
             <thead>
-              <tr class="border-b border-[#1e1e23]">
+              <tr class="border-b border-border-dim">
                 <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Framework</th>
                 <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Real-world source</th>
                 <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">GTA application</th>
@@ -351,7 +351,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
                 ["Price-wage spiral",        "Phillips Curve; ONS real wages",  "Δ DLC price vs Δ mission payout per patch cycle"],
                 ["Virtual economy theory",   "Lehdonvirta (2014) MIT Press",    "Foundational framework for in-game economic analysis"],
               ].map(([f,s,g]) => (
-                <tr class="border-b border-[#1e1e23]/50 hover:bg-white/[0.02] transition-colors">
+                <tr class="border-b border-border-dim/50 hover:bg-white/[0.02] transition-colors">
                   <td class="px-4 py-2.5 text-gta-gold/80">{f}</td>
                   <td class="px-4 py-2.5 text-zinc-500">{s}</td>
                   <td class="px-4 py-2.5 text-zinc-400">{g}</td>
@@ -373,8 +373,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
         <!-- Flow ① — Hourly GTA$ Yield (Wages) -->
-        <div class="rounded-xl border border-[#1e1e23] overflow-hidden flow-card" data-flow="wages" data-actors="businesses,players" style="background:#131316">
-          <div class="px-5 py-4 border-b border-[#1e1e23]">
+        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="wages" data-actors="businesses,players" style="background:var(--c-card)">
+          <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-gta-gold/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
                 <span class="text-gta-gold/40">①</span> BUSINESSES → PLAYERS
@@ -387,7 +387,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div id="chart-wages" class="w-full" style="height:220px"
             data-series={JSON.stringify(liveMetaSeries)}
           ></div>
-          <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-2 gap-4">
+          <div class="px-5 py-3 border-t border-border-dim grid grid-cols-2 gap-4">
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">CURRENT</div>
               <div class="text-2xl font-black" style={`color:var(--c-chart-bar);font-family:'Inter',sans-serif`}>${Math.round((latestYield?.top_gta_per_hr ?? 0)/1000)}K/hr</div>
@@ -400,7 +400,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             </div>
           </div>
           <div class="px-5 pb-4">
-            <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+            <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
               <p class="text-[11px] text-zinc-400 leading-relaxed">
                 <span class="font-semibold text-zinc-200">Read it:</span> When the line dips after a major DLC, Rockstar has nerfed the previous meta activity to push players toward new content. The 2021 Cayo nerf cut wages 40% in a single patch — prices unchanged.
               </p>
@@ -409,8 +409,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
 
         <!-- Flow ② — Spending Distribution -->
-        <div class="rounded-xl border border-[#1e1e23] overflow-hidden flow-card" data-flow="spending" data-actors="players,businesses" style="background:#131316">
-          <div class="px-5 py-4 border-b border-[#1e1e23]">
+        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="spending" data-actors="players,businesses" style="background:var(--c-card)">
+          <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-zinc-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
                 <span class="text-zinc-400">②</span> PLAYERS → BUSINESSES
@@ -423,7 +423,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div id="chart-spending" class="w-full" style="height:220px"
             data-eras={JSON.stringify(spendEras)}
           ></div>
-          <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-3 gap-3">
+          <div class="px-5 py-3 border-t border-border-dim grid grid-cols-3 gap-3">
             {[
               { label:"VEHICLES",       val:`${spendEras.at(-1)?.vehicles_pct ?? 0}%`,  sub:"consumer goods",   color:"var(--c-chart-bar)" },
               { label:"PROPERTIES/BIZ", val:`${spendEras.at(-1)?.properties_pct ?? 0}%`,sub:"capital investment",color:"var(--c-cat-economy)" },
@@ -437,7 +437,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             ))}
           </div>
           <div class="px-5 pb-4">
-            <div class="border-l-2 border-orange-600/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+            <div class="border-l-2 border-orange-600/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
               <p class="text-[11px] text-zinc-400 leading-relaxed">
                 <span class="font-semibold text-zinc-200">Read it:</span> Vehicles are the dominant consumer good — equivalent to housing in the real economy. Every DLC that adds desirable cars drives a consumer spending spike. The Oppressor Mk II alone moved the needle in 2018.
               </p>
@@ -446,8 +446,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
 
         <!-- Flow ③ — Savings -->
-        <div class="rounded-xl border border-[#1e1e23] overflow-hidden flow-card" data-flow="savings" data-actors="players,mazebank" style="background:#131316">
-          <div class="px-5 py-4 border-b border-[#1e1e23]">
+        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="savings" data-actors="players,mazebank" style="background:var(--c-card)">
+          <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-gta-green/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
                 <span class="text-gta-green/40">③</span> PLAYERS → MAZE BANK
@@ -460,7 +460,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div id="chart-savings" class="w-full" style="height:220px"
             data-stages={JSON.stringify(savingsStages)}
           ></div>
-          <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-2 gap-4">
+          <div class="px-5 py-3 border-t border-border-dim grid grid-cols-2 gap-4">
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">TOP SAVER CAP</div>
               <div class="text-2xl font-black text-gta-green">$2.1B</div>
@@ -473,7 +473,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             </div>
           </div>
           <div class="px-5 pb-4">
-            <div class="border-l-2 border-gta-green/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+            <div class="border-l-2 border-gta-green/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
               <p class="text-[11px] text-zinc-400 leading-relaxed">
                 <span class="font-semibold text-zinc-200">Read it:</span> High savings = money not flowing back to businesses. The $2.1B cap on the transaction screen is GTA's version of a savings ceiling. The 2020 Covid spike (29%) was forced saving — Cayo Perico compounded balances with nowhere to spend.
               </p>
@@ -482,8 +482,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
 
         <!-- Flow ④ — Shark Card Injections -->
-        <div class="rounded-xl border border-[#1e1e23] overflow-hidden flow-card" data-flow="sharkcards" data-actors="mazebank,players" style="background:#131316">
-          <div class="px-5 py-4 border-b border-[#1e1e23]">
+        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="sharkcards" data-actors="mazebank,players" style="background:var(--c-card)">
+          <div class="px-5 py-4 border-b border-border-dim">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-blue-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
                 <span class="text-blue-500/40">④</span> ROCKSTAR → PLAYERS
@@ -496,7 +496,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           <div id="chart-sharkcards" class="w-full" style="height:220px"
             data-years={JSON.stringify(revYears.filter((y:any) => y.calendar_year >= 2014 && y.calendar_year <= 2025))}
           ></div>
-          <div class="px-5 py-3 border-t border-[#1e1e23] grid grid-cols-2 gap-4">
+          <div class="px-5 py-3 border-t border-border-dim grid grid-cols-2 gap-4">
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">PEAK YEAR</div>
               <div class="text-2xl font-black text-blue-400">$1.62B</div>
@@ -509,7 +509,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             </div>
           </div>
           <div class="px-5 pb-4">
-            <div class="border-l-2 border-blue-700/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+            <div class="border-l-2 border-blue-700/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
               <p class="text-[11px] text-zinc-400 leading-relaxed">
                 <span class="font-semibold text-zinc-200">Read it:</span> Shark Cards are exogenous money — real GBP/USD enters as GTA$. Spikes correlate with payout nerfs (players cash-bridging the gap) and major DLC releases. This is the real credit channel, not Maze Bank.
               </p>
@@ -520,8 +520,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       </div><!-- /2-col grid -->
 
       <!-- Flow ⑤ — Passive Income Stack (full width) -->
-      <div class="mt-5 rounded-xl border border-[#1e1e23] overflow-hidden flow-card" data-flow="investment" data-actors="players,businesses" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+      <div class="mt-5 rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="investment" data-actors="players,businesses" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="flex items-center justify-between mb-2 gap-4">
               <div class="text-[11px] font-mono text-gta-indigo/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
@@ -542,7 +542,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         <div id="chart-investment" class="w-full" style="height:200px"
           data-series={JSON.stringify(passiveSeries)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between flex-wrap gap-4">
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between flex-wrap gap-4">
           <div class="flex items-center gap-6">
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">FULL STACK PASSIVE</div>
@@ -555,7 +555,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
               <div class="text-[10px] font-mono text-zinc-400">~15h break-even at $1.24M/hr</div>
             </div>
           </div>
-          <div class="border-l-2 border-gta-indigo/40 pl-3 py-1 rounded-r max-w-lg" style="background:#1a1a1e">
+          <div class="border-l-2 border-gta-indigo/40 pl-3 py-1 rounded-r max-w-lg" style="background:var(--c-card-raised)">
             <p class="text-[11px] text-zinc-400 leading-relaxed">
               <span class="font-semibold text-zinc-200">Read it:</span> The 2022 Criminal Enterprises patch tripled the value of the passive stack overnight. The Acid Lab addition in Dec 2022 pushed passive yield above $1M/hr — meaning veterans with the full stack now earn more passively than most active grind methods.
             </p>
@@ -573,19 +573,19 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 
       <!-- Headline stats row -->
       <div class="grid grid-cols-3 gap-4 mb-6">
-        <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
+        <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
           <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1">CURRENT GTA-PPI</div>
           <div class="text-3xl font-black" style={`color:${latestPPI?.ppi <= 50 ? 'var(--c-chart-green)' : latestPPI?.ppi <= 80 ? 'var(--c-chart-bar)' : 'var(--c-chart-red)'};font-family:'Inter',sans-serif`}>
             {latestPPI?.ppi}
           </div>
           <div class="text-[10px] font-mono text-zinc-400">{latestPPI?.hours_to_basket}h to buy basket</div>
         </div>
-        <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
+        <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
           <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1">ALL-TIME BEST (lowest PPI)</div>
           <div class="text-3xl font-black text-gta-green">{troughPPI?.ppi}</div>
           <div class="text-[10px] font-mono text-zinc-400">{troughPPI?.patch} · {troughPPI?.hours_to_basket}h</div>
         </div>
-        <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
+        <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
           <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1">ALL-TIME WORST (highest PPI)</div>
           <div class="text-3xl font-black text-red-400">{peakPPI?.ppi}</div>
           <div class="text-[10px] font-mono text-zinc-400">{peakPPI?.patch} · {peakPPI?.hours_to_basket}h</div>
@@ -593,22 +593,22 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       </div>
 
       <!-- GTA-PPI chart -->
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden mb-5" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-1">// ALL THREE ACTORS · COMPOSITE</div>
             <div class="text-lg font-bold text-white">GTA-PPI — Purchasing Power Index</div>
             <div class="text-[11px] text-zinc-500 font-mono">Hours to buy the fixed reference basket at current top hourly yield. Base 100 = Oct 2013 launch.</div>
           </div>
           <div class="flex items-center gap-2 shrink-0">
-            <button id="health-view-btn" class="text-[11px] font-mono border border-[#2a2a31] text-zinc-500 px-3 py-1.5 rounded hover:border-zinc-500 hover:text-zinc-300 transition-all" data-view="ppi">Full loop</button>
+            <button id="health-view-btn" class="text-[11px] font-mono border border-border-mid text-zinc-500 px-3 py-1.5 rounded hover:border-zinc-500 hover:text-zinc-300 transition-all" data-view="ppi">Full loop</button>
           </div>
         </div>
         <div id="chart-ppi" class="w-full" style="height:280px"
           data-series={JSON.stringify(ppiSeries)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
-          <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+        <div class="px-5 py-3 border-t border-border-dim">
+          <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
             <p class="text-[11px] text-zinc-400 leading-relaxed">
               <span class="font-semibold text-zinc-200">Read it:</span> When PPI spikes, Rockstar has either nerfed wages or added an expensive new aspirational item to the basket. The 2018 spike (Oppressor Mk II launch) was a structural break — basket cost doubled overnight with no wage change. The 2021 nerf reversed Cayo Perico's golden era.
             </p>
@@ -617,8 +617,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       </div>
 
       <!-- Composite health monitor (multi-line) -->
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-1">// ALL THREE ACTORS · COMPOSITE</div>
             <div class="text-lg font-bold text-white">Circular Flow Health Monitor</div>
@@ -631,14 +631,14 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           data-revenue={JSON.stringify(revYears.filter((y:any) => y.calendar_year >= 2013 && y.calendar_year <= 2025))}
           data-passive={JSON.stringify(passiveSeries)}
         ></div>
-        <div class="px-5 py-3 border-t border-[#1e1e23]">
+        <div class="px-5 py-3 border-t border-border-dim">
           <div class="flex items-center gap-6 mb-3 flex-wrap text-[10px] font-mono">
             <span class="flex items-center gap-1.5"><span class="w-8 h-0.5 bg-gta-gold inline-block"></span>Hourly yield</span>
             <span class="flex items-center gap-1.5"><span class="w-8 h-0.5 bg-orange-400 inline-block"></span>Shark Card reliance</span>
             <span class="flex items-center gap-1.5"><span class="w-8 h-0.5 bg-gta-green inline-block"></span>Passive stack</span>
             <span class="flex items-center gap-1.5"><span class="w-8 h-0.5 border-t-2 border-dashed border-gta-indigo inline-block"></span>GTA-PPI (inverted)</span>
           </div>
-          <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:#1a1a1e">
+          <div class="border-l-2 border-gta-gold/40 pl-3 py-1 rounded-r" style="background:var(--c-card-raised)">
             <p class="text-[11px] text-zinc-400 leading-relaxed">
               <span class="font-semibold text-zinc-200">Read it:</span> When hourly yield (amber) falls after a nerf while Shark Card reliance (orange) rises, the economy is running on real-money credit, not earned income. Unsustainable. The Cayo Perico nerf (2022) shows exactly this pattern.
             </p>
@@ -654,8 +654,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     ══════════════════════════════════════════════════════════ -->
     <div id="tab-basket" class="eco-panel hidden">
 
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden mb-5" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between gap-4">
+      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between gap-4">
           <div>
             <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-1">// GTA-CPI BASKET</div>
             <div class="text-lg font-bold text-white">Fixed Reference Basket</div>
@@ -669,7 +669,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         <div class="overflow-x-auto">
           <table class="w-full text-[11px] font-mono">
             <thead>
-              <tr class="border-b border-[#1e1e23]">
+              <tr class="border-b border-border-dim">
                 <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Item</th>
                 <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Category</th>
                 <th class="text-right px-4 py-2.5 text-zinc-400 font-normal">Weight</th>
@@ -680,7 +680,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             </thead>
             <tbody>
               {basketItems.map((item:any) => (
-                <tr class="border-b border-[#1e1e23]/50 hover:bg-white/[0.02] transition-colors">
+                <tr class="border-b border-border-dim/50 hover:bg-white/[0.02] transition-colors">
                   <td class="px-4 py-2.5 text-zinc-200 font-semibold">{item.name}</td>
                   <td class="px-4 py-2.5">
                     <span class="border px-1.5 py-0.5 rounded text-[11px] uppercase tracking-widest"
@@ -697,7 +697,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
             </tbody>
           </table>
         </div>
-        <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center gap-4 flex-wrap">
+        <div class="px-5 py-3 border-t border-border-dim flex items-center gap-4 flex-wrap">
           <div>
             <span class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest">BASKET COST (live)</span>
             <span class="text-[13px] font-bold text-gta-gold ml-3 font-mono">${liveBasketCost.toLocaleString()}</span>
@@ -721,7 +721,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       </div>
 
       <!-- Price stability note -->
-      <div class="rounded-xl border border-[#1e1e23] p-5" style="background:#131316">
+      <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card)">
         <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-3">// KEY INSIGHT — PRICE STABILITY</div>
         <p class="text-[12px] text-zinc-400 leading-relaxed mb-3">
           GTA Online nominal prices are remarkably stable. The Zentorno has cost $725,000 since 2013. The Buzzard has cost $1,750,000 since 2014. Rockstar has never raised the price of an existing vehicle or property.
@@ -733,7 +733,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 
 
       <!-- Data confidence standards (moved from Sources tab) -->
-      <div class="rounded-xl border border-[#1e1e23] p-5 mt-4" style="background:#131316">
+      <div class="rounded-xl border border-border-dim p-5 mt-4" style="background:var(--c-card)">
         <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em] mb-3">// DATA CONFIDENCE STANDARDS</div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
@@ -758,7 +758,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     <div id="tab-gta6" class="eco-panel hidden">
 
       <!-- Hero -->
-      <div class="rounded-xl border border-gta-gold/20 overflow-hidden mb-6" style="background:linear-gradient(135deg,#131316 0%,#1a1a0e 100%)">
+      <div class="rounded-xl border border-gta-gold/20 overflow-hidden mb-6" style="background:linear-gradient(135deg,var(--c-card) 0%,color-mix(in srgb,var(--c-growth) 5%,var(--c-card)) 100%)">
         <div class="px-6 py-8 text-center">
           <div class="text-[11px] font-mono text-gta-gold/60 uppercase tracking-[0.3em] mb-3">// GTA VI ECONOMY · DAY-1 READY</div>
           <h2 class="text-3xl font-black text-white mb-3">
@@ -785,7 +785,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           { flow:"⑤", label:"Passive Stack", color:"var(--c-chart-purple)", desc:"GTA VI Online passive business $/hr stack. Populated as businesses are confirmed post-launch.", ready:false },
           { flow:"⊕", label:"GTA VI PPI",    color:"var(--c-chart-bar)",    desc:"Purchasing power index — basket cost ÷ top yield. Auto-computes once wage data is available.", ready:true  },
         ].map(f => (
-          <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
+          <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
             <div class="flex items-center justify-between mb-2">
               <div class="flex items-center gap-2">
                 <span class="font-mono font-black text-lg" style={`color:${f.color}`}>{f.flow}</span>
@@ -802,14 +802,14 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       </div>
 
       <!-- Pipeline status -->
-      <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-3 border-b border-[#1e1e23]">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-3 border-b border-border-dim">
           <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">// GTA VI DATA PIPELINE — NIGHTLY CI</div>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-[11px] font-mono">
             <thead>
-              <tr class="border-b border-[#1e1e23]">
+              <tr class="border-b border-border-dim">
                 <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Scraper</th>
                 <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Output</th>
                 <th class="text-left px-4 py-2.5 text-zinc-400 font-normal">Status</th>
@@ -824,7 +824,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
                 { scraper:"gtavi/fetch_search_trends.py", output:"gta-6/trends/search-interest.json", status:"live", note:"Google Trends — active now" },
                 { scraper:"fetch_edgar.py",            output:"franchise/revenue-split.json",        status:"live",   note:"Take-Two earnings — active now" },
               ].map(r => (
-                <tr class="border-b border-[#1e1e23]/50 hover:bg-white/[0.02] transition-colors">
+                <tr class="border-b border-border-dim/50 hover:bg-white/[0.02] transition-colors">
                   <td class="px-4 py-2.5 text-gta-gold/80">{r.scraper}</td>
                   <td class="px-4 py-2.5 text-zinc-500">{r.output}</td>
                   <td class="px-4 py-2.5">
@@ -899,8 +899,8 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       const actor = btn.dataset.actor!;
       document.querySelectorAll<HTMLButtonElement>(".actor-btn").forEach(b => {
         const active = b.dataset.actor === actor;
-        b.style.borderColor     = active ? "rgba(245,158,11,0.5)" : "#2a2a31";
-        b.style.backgroundColor = active ? "rgba(245,158,11,0.08)" : "";
+        b.style.borderColor     = active ? "color-mix(in srgb,var(--c-brand) 50%,transparent)" : "var(--c-border-2)";
+        b.style.backgroundColor = active ? "color-mix(in srgb,var(--c-brand) 8%,transparent)" : "";
         b.style.color           = active ? "var(--c-brand)" : "var(--c-text-4)";
       });
       // Highlight matching flow cards
