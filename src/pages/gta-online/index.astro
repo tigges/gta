@@ -100,7 +100,7 @@ const BONUS_LABEL: Record<string, string> = {
 
         <!-- This week's top bonus — hero teaser card (mirrors GTA VI Hub trailer card) -->
         {bonuses.length > 0 && (
-          <a href="/gta-online/bonuses"
+          <a href="#section-bonuses"
              class="group hidden sm:flex flex-col gap-2 rounded-xl border border-border-mid hover:border-gta-online-vivid/30 transition-all p-4 shrink-0 w-52"
              style="background:color-mix(in srgb,var(--c-title-online) 5%,var(--c-card))">
             <div class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-title-online)">This week · active now</div>
@@ -125,7 +125,7 @@ const BONUS_LABEL: Record<string, string> = {
     <!-- ══════════════════════════════════════════════════════════
          ACTIVE WEEKLY BONUS CARDS
     ══════════════════════════════════════════════════════════ -->
-    <section>
+    <section id="section-bonuses" style="scroll-margin-top:80px">
       <BonusCardsTeaser />
     </section>
 
