@@ -51,7 +51,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
 
   <!-- Hero header -->
   <section class="relative border-b border-border-dim overflow-hidden" style="min-height:260px">
-    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 70% 50%, var(--c-hero-bloom) 0%, transparent 65%), #0a0a0d"></div>
+    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 70% 50%, var(--c-hero-bloom) 0%, transparent 65%), var(--c-bg-deep)"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-4">
         <GamePill game="gta-vi" size="xs" />
@@ -102,9 +102,12 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
       <SectionHeader label="// Economic Complexity — Franchise Context" dotColor="var(--c-title-vi)" pillHref="/franchise/economics" pillLabel="All 10 economies →" />
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ChartComplexityRadar titleId="gta-6" size={280} showAverage={true} />
-        <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card)">
-          <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-4">Franchise Arc — Complexity Trajectory</div>
-          <div class="flex flex-col gap-2">
+        <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+          <div class="px-5 py-3 border-b border-border-dim">
+            <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Franchise Arc — Complexity Trajectory</div>
+            <div class="text-[10px] font-mono text-zinc-600 mt-0.5">Complexity score / 17 max per title</div>
+          </div>
+          <div class="px-5 py-4 flex flex-col gap-2">
             {economyData.economies.map((e) => {
               const pct = Math.round((e.complexity_score / 17) * 100);
               const isGtaVI = e.title_id === "gta-6";
@@ -113,7 +116,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
               return (
                 <div class="flex items-center gap-3">
                   <div class="w-20 shrink-0 text-[11px] font-mono text-zinc-500 text-right">{e.short}</div>
-                  <div class="flex-1 h-2 rounded-full bg-border-dim overflow-hidden">
+                  <div class="flex-1 h-2 rounded-full overflow-hidden" style="background:var(--c-border-1)">
                     <div class="h-full rounded-full transition-all"
                          style={`width:${pct}%;background:${color};opacity:${isRegression ? 0.5 : 0.75}${e.projected ? ";border-right:2px dashed " + color : ""}`}></div>
                   </div>
@@ -122,8 +125,28 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
               );
             })}
           </div>
-          <div class="mt-3 pt-3 border-t border-border-dim text-[11px] font-mono text-zinc-500 leading-relaxed">
+          <div class="px-5 pb-3 pt-0 text-[11px] font-mono text-zinc-600 leading-relaxed border-t border-border-dim pt-3">
             {economyData.complexity_chart_note}
+          </div>
+          <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
+            <div class="flex items-center gap-4 text-[11px] font-mono text-zinc-500 flex-wrap">
+              <span class="flex items-center gap-1.5">
+                <div class="w-4 h-1.5 rounded-full shrink-0" style="background:var(--c-live);opacity:0.75"></div>
+                Standard
+              </span>
+              <span class="flex items-center gap-1.5">
+                <div class="w-4 h-1.5 rounded-full shrink-0" style="background:var(--c-alert);opacity:0.5"></div>
+                Regression era
+              </span>
+              <span class="flex items-center gap-1.5">
+                <div class="w-4 h-1.5 rounded-full shrink-0" style="background:var(--c-brand);opacity:0.75"></div>
+                GTA VI
+              </span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[10px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+              <ShareDropdown anchorId="eco-complexity" shareText="GTA VI projected economic complexity: 17/17 — the franchise maximum. Every prior title mapped across 5 dimensions. GTAVI.AI" size="sm" />
+            </div>
           </div>
         </div>
       </div>
@@ -133,11 +156,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
          THE EUROZONE ANALOGY
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="text-[11px] font-mono bg-gta-gold/30 border border-gta-gold/40 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">Analysis</span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The Eurozone Analogy</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// The Eurozone Analogy" dotColor="var(--c-brand)" class="mb-6" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
           <div class="px-6 py-5">
@@ -191,12 +210,7 @@ const onlineEconomy = economyData.economies.find(e => e.title_id === "gta-online
          GTA-RPP — REGIONAL PURCHASING PARITY
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="text-[11px] font-mono bg-gta-teal/30 border border-gta-teal/40 text-gta-teal px-2 py-0.5 rounded uppercase tracking-widest">New Metric</span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// GTA-RPP — Regional Purchasing Parity</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">Day-1 ready · awaiting launch data</span>
-      </div>
+      <SectionHeader label="// GTA-RPP — Regional Purchasing Parity" dotColor="var(--c-live)" pillLabel="Day-1 ready · awaiting launch data" class="mb-6" />
       <div class="rounded-xl border border-gta-teal/20 p-6" style="background:color-mix(in srgb,var(--c-growth) 4%,var(--c-bg))">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
           {[
