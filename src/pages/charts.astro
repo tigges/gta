@@ -274,6 +274,9 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
     btn.addEventListener("click", () => {
       activeTitle = btn.dataset.title!;
       applyFilters();
+      if (typeof (window as any).plausible === "function" && activeTitle !== "All") {
+        (window as any).plausible("ChartFilter", { props: { title: activeTitle } });
+      }
     });
   });
 
@@ -283,6 +286,9 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
       const t = btn.dataset.title!;
       activeTitle = activeTitle === t ? "All" : t;
       applyFilters();
+      if (typeof (window as any).plausible === "function" && activeTitle !== "All") {
+        (window as any).plausible("ChartFilter", { props: { title: activeTitle } });
+      }
     });
   });
 
