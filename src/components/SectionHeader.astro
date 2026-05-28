@@ -27,7 +27,11 @@
 interface Props {
   /** Section label — always include "// " prefix, e.g. "// Key Charts" */
   label: string;
-  /** CSS variable for the identity dot colour. Defaults to var(--c-brand). */
+  /**
+   * CSS variable for the identity dot colour.
+   * When omitted the dot is NOT rendered — just the line and label.
+   * e.g. dotColor="var(--c-brand)"
+   */
   dotColor?: string;
   /** If set, renders a "Full XYZ →" pill link on the right. */
   pillHref?: string;
@@ -39,19 +43,20 @@ interface Props {
 
 const {
   label,
-  dotColor = "var(--c-brand)",
+  dotColor,
   pillHref,
   pillLabel,
   class: extraClass = "",
 } = Astro.props;
 
+const hasDot  = !!dotColor;
 const hasPill = !!(pillHref && pillLabel);
 ---
 
 {hasPill ? (
   <div class={`flex items-center justify-between gap-3 mb-6 ${extraClass}`}>
     <div class="flex items-center gap-3 min-w-0">
-      <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${dotColor};opacity:0.6`}></span>
+      {hasDot && <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${dotColor};opacity:0.6`}></span>}
       <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">{label}</span>
       <div class="flex-1 h-px bg-border-dim"></div>
     </div>
@@ -64,7 +69,7 @@ const hasPill = !!(pillHref && pillLabel);
   </div>
 ) : (
   <div class={`flex items-center gap-3 mb-6 ${extraClass}`}>
-    <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${dotColor};opacity:0.6`}></span>
+    {hasDot && <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${dotColor};opacity:0.6`}></span>}
     <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">{label}</span>
     <div class="flex-1 h-px bg-border-dim"></div>
   </div>

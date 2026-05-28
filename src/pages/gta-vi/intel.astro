@@ -7,10 +7,8 @@ import ShareDropdown from "../../components/ShareDropdown.astro";
 
 import type { TrailersData, Prediction } from "../../types/gta";
 import IncomeCard from "../../components/IncomeCard.astro";
-import GamePill from "../../components/GamePill.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
 import CastCard from "../../components/CastCard.astro";
-import { CATEGORY_BADGE_CLASSES } from "../../config/categoryColors";
 
 import ChartTeaserSearchSignal from "../../components/charts/ChartTeaserSearchSignal.astro";
 import predictionsData from "../../../data/gta-6/predictions.json";
@@ -123,11 +121,7 @@ const CAT_THUMBS: Record<string,string> = {
          SIGNAL PREDICTIONS
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-7">
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Economic Predictions</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">confidence-scored · data-derived</span>
-      </div>
+      <SectionHeader label="// Economic Predictions" />
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {predictions.map((p) => {
           return (
@@ -157,13 +151,7 @@ const CAT_THUMBS: Record<string,string> = {
          INCOME PREDICTIONS — GTA VI Online
     ═══════════════════════════════════════════════════════ -->
     <section id="section-income-predictions" class="mt-16" style="scroll-margin-top:80px">
-      <div class="flex items-center gap-3 mb-7">
-        <GamePill game="gta-vi" size="xs" />
-        <span class={CATEGORY_BADGE_CLASSES}>Economy-IG</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Online — Predicted Income Sources</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">pre-launch estimates · trailer-confirmed activities</span>
-      </div>
+      <SectionHeader label="// GTA VI Online — Predicted Income Sources" dotColor="var(--c-title-vi)" />
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {(incomeData as any).income_predictions.map((p: any) => (
           <IncomeCard
@@ -193,11 +181,7 @@ const CAT_THUMBS: Record<string,string> = {
     ═══════════════════════════════════════════════════════ -->
     {trailers.length > 0 && (
       <section id="section-trailers">
-        <div class="flex items-center gap-3 mb-7">
-          <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Official Trailers</span>
-          <div class="flex-1 h-px bg-border-dim"></div>
-          <span class="text-[10px] font-mono text-zinc-500">{trailers.length} released · Rockstar Games</span>
-        </div>
+        <SectionHeader label="// Official Trailers" />
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {trailers.map((t: any, i: number) => (
             <a
@@ -300,12 +284,7 @@ const CAT_THUMBS: Record<string,string> = {
          CONFIRMED FEATURE TRACKER
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-7">
-        <span class="w-2 h-2 rounded-full bg-gta-teal shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Confirmed Feature Tracker</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">Rockstar official + community tracking</span>
-      </div>
+      <SectionHeader label="// GTA VI Confirmed Feature Tracker" dotColor="var(--c-live)" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
