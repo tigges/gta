@@ -10,6 +10,7 @@ import type { TrailersData, Prediction } from "../../types/gta";
 import IncomeCard from "../../components/IncomeCard.astro";
 import GamePill from "../../components/GamePill.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
+import CastCard from "../../components/CastCard.astro";
 import { CATEGORY_BADGE_CLASSES } from "../../config/categoryColors";
 
 import ChartGta6SearchTrends from "../../components/charts/ChartGta6SearchTrends.astro";
@@ -265,51 +266,15 @@ const DELAY_THUMBS: Record<string,string> = {
     ═══════════════════════════════════════════════════════ -->
     <section>
       <SectionHeader label="// Confirmed Cast" />
-      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-        {([
-          { name: "Lucia Caminos",  role: "Protagonist", img: "Lucia_Caminos_01.jpg",   video: "Lucia_Caminos_Video_Clip.mp4"   },
-          { name: "Jason Duval",    role: "Protagonist", img: "Jason_Duval_01.jpg",     video: "Jason_Duval_Video_Clip.mp4"     },
-          { name: "Raul Bautista",  role: "Supporting",  img: "Raul_Bautista_01.jpg",   video: "Raul_Bautista_Video_Clip.mp4"   },
-          { name: "Boobie Ike",     role: "Supporting",  img: "Boobie_Ike_01.jpg",      video: "Boobie_Ike_Video_Clip.mp4"      },
-          { name: "Brian Heder",    role: "Supporting",  img: "Brian_Heder_01.jpg",     video: "Brian_Heder_Video_Clip.mp4"     },
-          { name: "Cal Hampton",    role: "Supporting",  img: "Cal_Hampton_01.jpg",     video: "Cal_Hampton_Video_Clip.mp4"     },
-          { name: "DreQuan Priest", role: "Supporting",  img: "DreQuan_Priest_01.jpg",  video: "DreQuan_Priest_Video_Clip.mp4"  },
-          { name: "Real Dimez",     role: "Supporting",  img: "Real_Dimez_01.jpg",      video: "Real_Dimez_Video_Clip.mp4"      },
-        ] as const).map(c => (
-          <div class="char-card group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-gold/30 transition-all duration-300 cursor-default"
-            data-video={`/assets/gta6/videos/${c.video}`}>
-            <!-- Still photo (shown by default) -->
-            <div class="aspect-[3/4] overflow-hidden">
-              <img
-                src={`/assets/gta6/characters/${c.img}`}
-                alt={c.name}
-                class="char-still w-full h-full object-cover object-top transition-all duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-              <!-- Video clip (plays on hover) -->
-              <video
-                class="char-video absolute inset-0 w-full h-full object-cover object-top opacity-0 transition-opacity duration-300"
-                muted loop playsinline preload="none"
-              >
-                <source src={`/assets/gta6/videos/${c.video}`} type="video/mp4" />
-              </video>
-              <div class="absolute inset-0" style="background:linear-gradient(to top, #0e0e11 0%, #0e0e1180 35%, transparent 60%)"></div>
-            </div>
-            <!-- Name overlay -->
-            <div class="absolute bottom-0 left-0 right-0 px-2.5 pb-2.5">
-              <div class="text-[11px] font-semibold text-white leading-tight mb-0.5">{c.name}</div>
-              <span class={`text-[10px] font-mono uppercase tracking-widest ${c.role === "Protagonist" ? "text-gta-gold" : "text-zinc-500"}`}>{c.role}</span>
-            </div>
-            <!-- Confirmed badge -->
-            <div class="absolute top-2 right-2">
-              <span class="text-[7px] font-mono bg-gta-gold/15 text-gta-gold border border-gta-gold/20 px-1.5 py-0.5 rounded uppercase tracking-widest">✓</span>
-            </div>
-            <!-- Play indicator -->
-            <div class="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span class="text-[7px] font-mono bg-black/60 text-white border border-white/20 px-1.5 py-0.5 rounded uppercase tracking-widest">▶ clip</span>
-            </div>
-          </div>
-        ))}
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <CastCard name="Lucia Caminos"  role="Protagonist" img="Lucia_Caminos_01.jpg"  video="Lucia_Caminos_Video_Clip.mp4"  />
+        <CastCard name="Jason Duval"    role="Protagonist" img="Jason_Duval_01.jpg"    video="Jason_Duval_Video_Clip.mp4"    />
+        <CastCard name="Raul Bautista"  role="Supporting"  img="Raul_Bautista_01.jpg"  video="Raul_Bautista_Video_Clip.mp4"  />
+        <CastCard name="Boobie Ike"     role="Supporting"  img="Boobie_Ike_01.jpg"     video="Boobie_Ike_Video_Clip.mp4"     />
+        <CastCard name="Brian Heder"    role="Supporting"  img="Brian_Heder_01.jpg"    video="Brian_Heder_Video_Clip.mp4"    />
+        <CastCard name="Cal Hampton"    role="Supporting"  img="Cal_Hampton_01.jpg"    video="Cal_Hampton_Video_Clip.mp4"    />
+        <CastCard name="DreQuan Priest" role="Supporting"  img="DreQuan_Priest_01.jpg" video="DreQuan_Priest_Video_Clip.mp4" />
+        <CastCard name="Real Dimez"     role="Supporting"  img="Real_Dimez_01.jpg"     video="Real_Dimez_Video_Clip.mp4"     />
       </div>
     </section>
 
@@ -866,23 +831,4 @@ const DELAY_THUMBS: Record<string,string> = {
     });
   }
 
-  // ── Character card video hover ────────────────────────────────────────────
-  document.querySelectorAll<HTMLElement>(".char-card").forEach(card => {
-    const video = card.querySelector<HTMLVideoElement>(".char-video");
-    const still = card.querySelector<HTMLImageElement>(".char-still");
-    if (!video) return;
-
-    card.addEventListener("mouseenter", () => {
-      video.src = card.dataset.video ?? "";
-      video.load();
-      video.play().catch(() => {});
-      video.style.opacity = "1";
-      if (still) still.style.opacity = "0";
-    });
-    card.addEventListener("mouseleave", () => {
-      video.pause();
-      video.style.opacity = "0";
-      if (still) still.style.opacity = "1";
-    });
-  });
 </script>
