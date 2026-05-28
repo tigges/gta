@@ -7,6 +7,7 @@ import CircularEconomy from "../../components/CircularEconomy.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import ReadItBlock from "../../components/ReadItBlock.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
+import StatBox from "../../components/StatBox.astro";
 
 import type {
   GtaPpiData, MetaHistoryData, RevenueTiersData, SpendingDistributionData,
@@ -438,23 +439,24 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 
       <!-- Headline stats row -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
-          <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1">CURRENT GTA-PPI</div>
-          <div class="text-3xl font-black" style={`color:${latestPPI?.ppi <= 50 ? 'var(--c-chart-green)' : latestPPI?.ppi <= 80 ? 'var(--c-chart-bar)' : 'var(--c-chart-red)'};font-family:'Inter',sans-serif`}>
-            {latestPPI?.ppi}
-          </div>
-          <div class="text-[10px] font-mono text-zinc-400">{latestPPI?.hours_to_basket}h to buy basket</div>
-        </div>
-        <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
-          <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1">ALL-TIME BEST (lowest PPI)</div>
-          <div class="text-3xl font-black text-gta-green">{troughPPI?.ppi}</div>
-          <div class="text-[10px] font-mono text-zinc-400">{troughPPI?.patch} · {troughPPI?.hours_to_basket}h</div>
-        </div>
-        <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
-          <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1">ALL-TIME WORST (highest PPI)</div>
-          <div class="text-3xl font-black text-red-400">{peakPPI?.ppi}</div>
-          <div class="text-[10px] font-mono text-zinc-400">{peakPPI?.patch} · {peakPPI?.hours_to_basket}h</div>
-        </div>
+        <StatBox
+          value={String(latestPPI?.ppi ?? "—")}
+          label="Current GTA-PPI"
+          sub={`${latestPPI?.hours_to_basket}h to buy basket`}
+          color={latestPPI?.ppi <= 50 ? "var(--c-chart-green)" : latestPPI?.ppi <= 80 ? "var(--c-chart-bar)" : "var(--c-chart-red)"}
+        />
+        <StatBox
+          value={String(troughPPI?.ppi ?? "—")}
+          label="All-time best (lowest PPI)"
+          sub={`${troughPPI?.patch} · ${troughPPI?.hours_to_basket}h`}
+          color="var(--c-chart-green)"
+        />
+        <StatBox
+          value={String(peakPPI?.ppi ?? "—")}
+          label="All-time worst (highest PPI)"
+          sub={`${peakPPI?.patch} · ${peakPPI?.hours_to_basket}h`}
+          color="var(--c-chart-red)"
+        />
       </div>
 
       <!-- GTA-PPI chart -->
