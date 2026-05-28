@@ -10,11 +10,30 @@ import salesData     from "../../../data/franchise/sales.json";
 import metacriticData from "../../../data/franchise/metacritic.json";
 import releasesData  from "../../../data/shared/releases.json";
 import vgchartzData  from "../../../data/franchise/vgchartz.json";
+import trailerAnalysis from "../../../data/gta-6/trailer-analysis.json";
+import delayData       from "../../../data/gta-6/delay-timeline.json";
 
 const titles    = (salesData as any).titles as any[];
 const scores    = ((metacriticData as any).titles as any[]);
 const releases  = (releasesData as any).releases as any[];
 const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.total_m);
+
+const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trailer: any) => {
+  const byType: Record<string,number> = {};
+  for (const e of trailer.events) byType[e.type] = (byType[e.type] ?? 0) + 1;
+  const confirmedCount: number = trailer.events.filter((e: any) => e.confidence === "confirmed").length;
+  return { ...trailer, byType, confirmedCount };
+});
+
+const TRAILER_THUMBS: Record<string,string> = {
+  "2023-12-04": "QdBZY2fkU-0",
+  "2025-05-06": "VQRLujxTm3c",
+};
+const DELAY_THUMBS: Record<string,string> = {
+  date_confirmed: "/assets/gta6/locations/Vice_City_07.jpg",
+  date_set:       "/assets/gta6/locations/Ambrosia_01.jpg",
+  delay:          "/assets/gta6/locations/Port_Gellhorn_01.jpg",
+};
 
 // Cover images by game id (used in both tables)
 const COVERS: Record<string, string> = {
@@ -61,7 +80,7 @@ const COVERS: Record<string, string> = {
       <section>
         <div class="flex items-center gap-3 mb-5">
           <GamePill game="franchise" size="xs" />
-          <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Critic & User Scores</span>
+          <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">Critic & User Scores</span>
           <div class="flex-1 h-px bg-border-dim"></div>
         </div>
         <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
@@ -118,7 +137,7 @@ const COVERS: Record<string, string> = {
     <section id="metacritic-scores">
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="franchise" size="xs" />
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Release Timeline</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">Release Timeline</span>
         <div class="flex-1 h-px bg-border-dim"></div>
       </div>
       <ReleaseTimeline releases={releases} />
@@ -129,7 +148,7 @@ const COVERS: Record<string, string> = {
     <section>
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="franchise" size="xs" />
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Regional Sales Breakdown</span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">Regional Sales Breakdown</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">NA · EU · JP · Other</span>
       </div>
@@ -198,6 +217,167 @@ const COVERS: Record<string, string> = {
       </div>
     </section>
     )}
+
+    <!-- ═══════════════════════════════════════════════════════
+         TRAILER ENTITY ANALYSIS
+    ═══════════════════════════════════════════════════════ -->
+    {analysisTrailers.length > 0 && (
+      <section>
+        <div class="flex items-center gap-3 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+          <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Trailer Entity Analysis</span>
+          <div class="flex-1 h-px bg-border-dim"></div>
+          <span class="text-[10px] font-mono text-zinc-500">Frame-by-frame · {analysisTrailers.reduce((s: number, t: any) => s + t.total_entities, 0)} reveals across {analysisTrailers.length} trailers</span>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {analysisTrailers.map((trailer: any) => {
+            const { byType, confirmedCount } = trailer;
+            return (
+              <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+                <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between gap-3 flex-wrap">
+                  <div>
+                    <div class="text-sm font-semibold text-zinc-200 mb-0.5">{trailer.title}</div>
+                    <div class="flex items-center gap-3 text-[10px] font-mono text-zinc-600">
+                      <span>{trailer.published_at}</span>
+                      <span class="text-zinc-800">·</span>
+                      <span>{Math.floor(trailer.duration_sec / 60)}:{String(trailer.duration_sec % 60).padStart(2,"0")} runtime</span>
+                      <span class="text-zinc-800">·</span>
+                      <span>{trailer.total_entities} entities</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest bg-gta-gold/10 border-gta-gold/20 text-gta-gold">{confirmedCount} confirmed</span>
+                    <a href={`https://www.youtube.com/watch?v=${trailer.youtube_id}`} target="_blank" rel="noopener noreferrer"
+                      class="text-[10px] font-mono text-zinc-600 hover:text-gta-gold transition-colors">↗ Watch</a>
+                  </div>
+                </div>
+                <div class="px-5 py-3 border-b border-border-dim flex items-center gap-4 flex-wrap">
+                  {Object.entries(byType).map(([type, count]: [string, any]) => (
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-[10px]">
+                        {type === "vehicle" ? "🚗" : type === "character" ? "👤" : type === "location" ? "📍" : type === "weapon" ? "🔫" : type === "wildlife" ? "🐊" : type === "audio" ? "🎵" : type === "reveal" ? "⭐" : "•"}
+                      </span>
+                      <span class="text-[10px] font-mono text-zinc-500">{count} {type}</span>
+                    </div>
+                  ))}
+                </div>
+                <div class="divide-y divide-border-dim">
+                  {(trailer.events as any[]).map((event: any) => {
+                    const confColor = event.confidence === "confirmed"
+                      ? "text-gta-gold border-gta-gold/20 bg-gta-gold/10"
+                      : "text-zinc-500 border-zinc-800 bg-zinc-900/50";
+                    const typeIcon = event.type === "vehicle" ? "🚗" : event.type === "character" ? "👤"
+                      : event.type === "location" ? "📍" : event.type === "weapon" ? "🔫"
+                      : event.type === "wildlife" ? "🐊" : event.type === "audio" ? "🎵"
+                      : event.type === "reveal" ? "⭐" : "•";
+                    const mins = Math.floor(event.t / 60);
+                    const secs = String(event.t % 60).padStart(2, "0");
+                    return (
+                      <div class="px-5 py-2.5 flex items-start gap-3">
+                        <span class="text-[10px] font-mono text-zinc-500 shrink-0 w-10">{mins}:{secs}</span>
+                        <span class="text-base shrink-0">{typeIcon}</span>
+                        <div class="flex-1 min-w-0">
+                          <div class="text-[11px] font-semibold text-zinc-300 leading-snug">{event.entity}</div>
+                          {event.note && <div class="text-[10px] text-zinc-600 mt-0.5 leading-relaxed">{event.note}</div>}
+                        </div>
+                        <span class={`shrink-0 text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${confColor}`}>{event.confidence}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    <!-- ═══════════════════════════════════════════════════════
+         DEVELOPMENT + DELAY TIMELINE
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-red/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Development + Delay Timeline</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+        <span class="text-[10px] font-mono text-zinc-500">{(delayData as any).total_delays} delay · {(delayData as any).timeline.length} events · SEC EDGAR sourced</span>
+      </div>
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="relative p-5">
+          <div class="absolute left-[120px] top-5 bottom-5 w-px bg-border-dim"></div>
+          <div class="flex flex-col gap-0">
+            {(() => {
+              const typeColors: {[k:string]:string} = {
+                milestone: "text-zinc-500", development: "text-zinc-400",
+                leak: "text-gta-red", trailer: "text-gta-gold",
+                date_set: "text-gta-teal", delay: "text-gta-red",
+                date_confirmed: "text-gta-teal",
+              };
+              const dotColors: {[k:string]:string} = {
+                trailer: "bg-gta-gold border-gta-gold",
+                delay: "bg-gta-red/20 border-gta-red",
+                date_confirmed: "bg-gta-teal/20 border-gta-teal",
+                date_set: "bg-gta-teal/10 border-gta-teal/50",
+                default: "bg-[#131316] border-border-mid",
+              };
+              return ((delayData as any).timeline as any[]).map((event: any) => {
+                const dotClass  = dotColors[event.type] ?? dotColors["default"];
+                const textClass = typeColors[event.type] ?? "text-zinc-400";
+                const ytId      = event.type === "trailer" ? TRAILER_THUMBS[event.date.slice(0,10)] : null;
+                const sideThumb = ytId ? null : (DELAY_THUMBS[event.type] ?? null);
+                const isKey     = ["trailer","date_confirmed","delay"].includes(event.type);
+                return (
+                  <div class={`relative flex items-start gap-4 pb-6 last:pb-0 ${isKey ? "group" : ""}`}>
+                    <div class="w-24 shrink-0 text-right pt-0.5">
+                      <span class="text-[10px] font-mono text-zinc-600">{event.date.slice(0,7)}</span>
+                    </div>
+                    <div class={`relative z-10 mt-1 shrink-0 w-2.5 h-2.5 rounded-full border ${dotClass}`}></div>
+                    <div class="flex-1 min-w-0 flex items-start gap-3">
+                      <div class="flex-1">
+                        <p class={`text-[12px] font-medium leading-snug ${textClass}`}>{event.event}</p>
+                        <div class="flex items-center gap-2 mt-1">
+                          <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">{event.type.replace("_"," ")}</span>
+                          <span class="text-zinc-800">·</span>
+                          <span class="text-[11px] font-mono text-zinc-500">{event.source}</span>
+                        </div>
+                      </div>
+                      {ytId && (
+                        <a href={`https://www.youtube.com/watch?v=${ytId}`} target="_blank" rel="noopener noreferrer"
+                          class="shrink-0 relative overflow-hidden rounded-lg border border-border-mid hover:border-gta-gold/30 transition-all group/yt">
+                          <img src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
+                            alt="Trailer" class="w-28 h-16 object-cover transition-transform duration-300 group-hover/yt:scale-105" loading="lazy" />
+                          <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 60%)"></div>
+                          <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover/yt:opacity-100 transition-opacity">
+                            <div class="w-6 h-6 rounded-full bg-black/60 flex items-center justify-center border border-gta-gold/30">
+                              <span class="text-white text-[10px] ml-px">▶</span>
+                            </div>
+                          </div>
+                          <div class="absolute bottom-1 left-1.5">
+                            <span class="text-[7px] font-mono text-gta-gold">Official Trailer</span>
+                          </div>
+                        </a>
+                      )}
+                      {sideThumb && isKey && (
+                        <div class="shrink-0 overflow-hidden rounded-lg border border-border-mid opacity-50 group-hover:opacity-80 transition-opacity">
+                          <img src={sideThumb} alt="" class="w-20 h-12 object-cover" loading="lazy" aria-hidden="true" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              });
+            })()}
+          </div>
+        </div>
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-500 font-mono">Sources: SEC EDGAR Take-Two 8-K filings + official announcements</span>
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+            <ShareDropdown anchorId="delay-timeline" shareText="GTA VI has been delayed twice. The full development timeline — from GTA V launch to Nov 19, 2026 confirmed date." size="sm" />
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Charts cross-link -->
     <div class="rounded-xl border border-border-dim px-5 py-4 flex items-center gap-4" style={`background:${C_CARD}`}>

@@ -4,6 +4,7 @@
  * The permanent home for what was scattered across the intel page and footer.
  */
 import Base from "../layouts/Base.astro";
+import SectionHeader from "../components/SectionHeader.astro";
 import HudIcon from "../components/HudIcon.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 ---
@@ -37,11 +38,7 @@ import CrossLinks from "../components/CrossLinks.astro";
 
     <!-- ── The dual economy ─────────────────────────────────────── -->
     <section>
-      <div class="flex items-center gap-3 mb-7">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The Dual Economy</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// The Dual Economy" dotColor="var(--c-brand)" />
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
@@ -106,11 +103,7 @@ import CrossLinks from "../components/CrossLinks.astro";
 
     <!-- ── The intelligence layer ────────────────────────────────── -->
     <section>
-      <div class="flex items-center gap-3 mb-7">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The Intelligence Layer</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// The Intelligence Layer" dotColor="var(--c-brand)" />
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
@@ -164,11 +157,7 @@ import CrossLinks from "../components/CrossLinks.astro";
 
     <!-- ── Methodology ────────────────────────────────────────────── -->
     <section>
-      <div class="flex items-center gap-3 mb-7">
-        <span class="w-1.5 h-1.5 rounded-full bg-zinc-700 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-500 tracking-[0.2em] uppercase">// Methodology & Signal Standards</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
+      <SectionHeader label="// Methodology & Signal Standards" />
 
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
