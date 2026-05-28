@@ -1,0 +1,214 @@
+---
+/**
+ * ChartMetaShift — GTA Online top-earner $/hr over time.
+ *
+ * Step-line chart showing how the #1 income method's hourly yield changed
+ * at every major DLC / patch milestone from 2013 to present.
+ *
+ * Self-contained: imports its own data, runs its own D3 script.
+ * Only interactive D3 chart embedded outside /charts — preserve accordingly.
+ */
+import metaHistoryRaw from "../../../data/gta-5/economy/meta-history.json";
+import ShareDropdown   from "../ShareDropdown.astro";
+
+interface MetaEntry {
+  date: string;
+  patch: string;
+  top_method: string;
+  top_gta_per_hr: number;
+  notes?: string;
+}
+
+const history = (metaHistoryRaw as any).meta_history as MetaEntry[];
+const latest  = history.at(-1);
+const peak    = history.reduce((a, b) => b.top_gta_per_hr > a.top_gta_per_hr ? b : a);
+---
+
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+
+  <!-- Header -->
+  <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-4">
+    <div>
+      <div class="font-semibold text-zinc-200 text-sm">GTA Online — Top Earner $/hr History</div>
+      <div class="text-[11px] text-zinc-500 font-mono mt-0.5">
+        How the #1 income method changed at every major DLC. Cayo Perico was nerfed 40% in Jan 2022 — still stayed #1.
+      </div>
+    </div>
+    <div class="flex items-center gap-6 text-right shrink-0">
+      <div>
+        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-0.5">Current meta</div>
+        <div class="text-xl font-black font-mono" style="color:var(--c-economy)">${Math.round((latest?.top_gta_per_hr ?? 0) / 1000)}K/hr</div>
+        <div class="text-[10px] font-mono text-zinc-600">{latest?.top_method}</div>
+      </div>
+      <div>
+        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-0.5">All-time peak</div>
+        <div class="text-xl font-black font-mono text-gta-green">${Math.round((peak?.top_gta_per_hr ?? 0) / 1000)}K/hr</div>
+        <div class="text-[10px] font-mono text-zinc-600">{peak?.patch?.split(" ").slice(0, 2).join(" ")}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary strip -->
+  <div class="px-5 py-2 border-b border-border-dim" style="background:var(--c-bg)">
+    <span class="text-[10px] font-mono text-zinc-600">
+      Wages rose from $250k/hr (2013) → ${Math.round((peak?.top_gta_per_hr ?? 0) / 1000)}K/hr ({peak?.patch?.split(" ").slice(0,2).join(" ")}) across {history.length} major patches
+    </span>
+  </div>
+
+  <!-- D3 chart container — data passed via attribute -->
+  <div
+    id="meta-shift-chart"
+    class="w-full"
+    style="height:300px"
+    data-history={JSON.stringify(history)}
+  ></div>
+
+  <!-- Footer -->
+  <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
+    <span class="text-[10px] text-zinc-500 font-mono">Source: GTAForums · community archives · patch notes · Rockstar Newswire</span>
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+      <ShareDropdown
+        anchorId="meta-shift-chart"
+        shareText="GTA Online money history: from $250K/hr Contact Missions (2013) to over $1M/hr (2022+). Every meta shift charted. GTAVI.AI"
+        size="sm"
+      />
+    </div>
+  </div>
+
+</div>
+
+<script>
+  import * as d3 from "d3";
+
+  (function () {
+    const el = document.getElementById("meta-shift-chart") as HTMLElement | null;
+    if (!el) return;
+
+    // Defer until element has real width (e.g. inside a hidden tab or lazy section)
+    function tryInit() {
+      if (el.clientWidth < 10) { requestAnimationFrame(tryInit); return; }
+      render();
+    }
+
+    function render() {
+      const history: any[] = JSON.parse(el.dataset.history || "[]");
+      if (!history.length) return;
+
+      const margin = { top: 20, right: 24, bottom: 52, left: 82 };
+      const W = el.clientWidth  - margin.left - margin.right;
+      const H = el.clientHeight - margin.top  - margin.bottom;
+
+      const svg = d3.select(el)
+        .append("svg")
+        .attr("width", "100%")
+        .attr("viewBox", `0 0 ${el.clientWidth} ${el.clientHeight}`)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const dates = history.map((d: any) => new Date(d.date));
+      const maxY  = (d3.max(history, (d: any) => d.top_gta_per_hr) ?? 2_000_000) * 1.12;
+
+      const x = d3.scaleTime().domain([dates[0], new Date()]).range([0, W]);
+      const y = d3.scaleLinear().domain([0, maxY]).range([H, 0]);
+
+      // Grid lines
+      svg.append("g")
+        .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
+        .call(g => g.select(".domain").remove())
+        .call(g => g.selectAll(".tick line")
+          .attr("stroke", "var(--c-border-1)")
+          .attr("stroke-dasharray", "3,3"));
+
+      // Area gradient
+      const defs    = svg.append("defs");
+      const gradId  = "msh-area-grad";
+      const accentColor = getComputedStyle(document.documentElement)
+        .getPropertyValue("--c-economy").trim() || "#818cf8";
+      const grad = defs.append("linearGradient")
+        .attr("id", gradId)
+        .attr("gradientUnits", "userSpaceOnUse")
+        .attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", H);
+      grad.append("stop").attr("offset", "0%").attr("stop-color", accentColor).attr("stop-opacity", 0.22);
+      grad.append("stop").attr("offset", "100%").attr("stop-color", accentColor).attr("stop-opacity", 0.01);
+
+      // Extend last value to today
+      const extHistory = [...history, { date: new Date().toISOString(), top_gta_per_hr: history.at(-1)?.top_gta_per_hr ?? 0 }];
+
+      svg.append("path")
+        .datum(extHistory)
+        .attr("fill", `url(#${gradId})`)
+        .attr("d", d3.area<any>()
+          .x((d: any) => x(new Date(d.date)))
+          .y0(H)
+          .y1((d: any) => y(d.top_gta_per_hr))
+          .curve(d3.curveStepAfter));
+
+      svg.append("path")
+        .datum(extHistory)
+        .attr("fill", "none")
+        .attr("stroke", accentColor)
+        .attr("stroke-width", 2)
+        .attr("d", d3.line<any>()
+          .x((d: any) => x(new Date(d.date)))
+          .y((d: any) => y(d.top_gta_per_hr))
+          .curve(d3.curveStepAfter));
+
+      // Event dots + labels (every other point to avoid overlap)
+      history.forEach((d: any, i: number) => {
+        const cx = x(new Date(d.date));
+        const cy = y(d.top_gta_per_hr);
+        const prev = history[i - 1];
+        const isNerf = prev && d.top_gta_per_hr < prev.top_gta_per_hr;
+        const dotColor = isNerf ? "var(--c-chart-red)" : accentColor;
+
+        svg.append("circle")
+          .attr("cx", cx).attr("cy", cy).attr("r", 4)
+          .attr("fill", dotColor)
+          .attr("stroke", "var(--c-card)")
+          .attr("stroke-width", 2);
+
+        if (i % 2 === 0) {
+          svg.append("text")
+            .attr("x", cx).attr("y", cy - 9)
+            .attr("text-anchor", "middle")
+            .attr("fill", "var(--c-text-4)")
+            .attr("font-size", 8)
+            .attr("font-family", "monospace")
+            .text(d.patch.split(" ")[0].slice(0, 10));
+        }
+      });
+
+      // Axes
+      svg.append("g")
+        .attr("transform", `translate(0,${H})`)
+        .call(d3.axisBottom(x).ticks(7).tickFormat(d3.timeFormat("%Y") as any))
+        .call(g => g.select(".domain").attr("stroke", "var(--c-border-2)"))
+        .call(g => g.selectAll(".tick line").attr("stroke", "var(--c-border-2)"))
+        .call(g => g.selectAll("text")
+          .attr("fill", "var(--c-text-6)")
+          .attr("font-size", 9)
+          .attr("font-family", "monospace"));
+
+      svg.append("g")
+        .call(d3.axisLeft(y).ticks(5).tickFormat((d: any) => `$${Math.round(+d / 1000)}k`))
+        .call(g => g.select(".domain").remove())
+        .call(g => g.selectAll(".tick line").remove())
+        .call(g => g.selectAll("text")
+          .attr("fill", "var(--c-text-6)")
+          .attr("font-size", 9)
+          .attr("font-family", "monospace"));
+
+      // Watermark
+      svg.append("text")
+        .attr("x", W - 4).attr("y", H - 6)
+        .attr("text-anchor", "end")
+        .attr("fill", "var(--c-text-7)")
+        .attr("font-size", 8)
+        .attr("font-family", "monospace")
+        .text("GTAVI.AI");
+    }
+
+    tryInit();
+  })();
+</script>
