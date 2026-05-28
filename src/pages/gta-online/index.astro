@@ -12,7 +12,7 @@ import IncomeCard from "../../components/IncomeCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
 import ChartTeaserOnlineMetaCeiling    from "../../components/charts/ChartTeaserOnlineMetaCeiling.astro";
 import ChartTeaserOnlineSharkCard      from "../../components/charts/ChartTeaserOnlineSharkCard.astro";
-import ChartTeaserOnlineBonusCalendar  from "../../components/charts/ChartTeaserOnlineBonusCalendar.astro";
+import BonusCardsTeaser                from "../../components/BonusCardsTeaser.astro";
 import ChartMetaShift                  from "../../components/charts/ChartMetaShift.astro";
 
 import steamRaw      from "../../../data/gta-5/meta/steam-players.json";
@@ -123,11 +123,10 @@ const BONUS_LABEL: Record<string, string> = {
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
 
     <!-- ══════════════════════════════════════════════════════════
-         BONUS CALENDAR TEASER
+         ACTIVE WEEKLY BONUS CARDS
     ══════════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Bonus Calendar · Frequency & Predictions" dotColor="var(--c-title-online)" pillHref="/gta-online/bonuses" pillLabel="Full calendar →" />
-      <ChartTeaserOnlineBonusCalendar />
+      <BonusCardsTeaser />
     </section>
 
     <!-- ══════════════════════════════════════════════════════════
