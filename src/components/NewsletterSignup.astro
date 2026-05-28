@@ -10,7 +10,7 @@ interface Props {
 }
 const { variant = "full" } = Astro.props;
 
-const BEEHIIV_URL = "https://gtavi.ai/newsletter";   // swap for live Beehiiv embed URL
+const BEEHIIV_URL = "https://gtavi.beehiiv.com/subscribe";
 ---
 
 {variant === "compact" ? (
@@ -54,7 +54,7 @@ const BEEHIIV_URL = "https://gtavi.ai/newsletter";   // swap for live Beehiiv em
           class="newsletter-cta inline-flex items-center gap-2 bg-gta-gold hover:bg-gta-bright text-black font-mono font-bold text-xs px-6 py-3 rounded transition-colors tracking-wide uppercase">
           Subscribe free →
         </a>
-        <div class="text-[11px] font-mono text-zinc-500 mt-3">No spam · unsubscribe anytime · gtavi.ai/newsletter</div>
+        <div class="text-[11px] font-mono text-zinc-500 mt-3">No spam · unsubscribe anytime · gtavi.beehiiv.com</div>
       </div>
     </div>
     <!-- What you get -->
