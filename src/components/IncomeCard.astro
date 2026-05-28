@@ -29,6 +29,7 @@
  *   Footer     DLC label · Full profile → · GTAVI.AI · Share
  */
 import GamePill from "./GamePill.astro";
+import Badge from "./Badge.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 import { playTypeColor, getRegionType, getConfidenceType, pillStyle } from "../config/semanticTypes";
 import { TIER_STYLES } from "../config/tierStyles";
@@ -141,9 +142,16 @@ const cardBorderColor = isGtaVI ? confColor : tierColor;
 
 // ── Play type + region ────────────────────────────────────────────────────
 const playColor   = playTypeColor(play_type ?? category ?? "");
+// Normalize play type to a Badge variant id
+const playBadgeVariant = (play_type ?? category ?? "").toLowerCase().replace(/ /g, "-") as any;
+// Region: look up each territory individually for plain-text rendering
+const vcRegion  = getRegionType("vice-city");
+const leoRegion = getRegionType("leonida");
 const regionType  = (isGtaVI && region) ? getRegionType(region) : null;
 const regionLabel = regionType?.label ?? null;
 const regionColor = regionType?.colorToken ?? null;
+const showVc  = isGtaVI && (region === "vice-city" || region === "both");
+const showLeo = isGtaVI && (region === "leonida"   || region === "both");
 
 // ── GTA Online bar + enrichment ───────────────────────────────────────────
 const barPct = isOnline || isGtaV
@@ -203,10 +211,7 @@ const showEnrichment = !compact;
       <!-- Tier / confidence badge top-right -->
       <div class="absolute top-2 right-2 z-20">
         {isGtaVI && confType ? (
-          <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
-                style={pillStyle(confColor)}>
-            {confType.label}
-          </span>
+          <Badge variant={confidence_tier} size="xs" />
         ) : (
           <span class="font-mono font-black text-lg leading-none px-1.5 py-0.5 rounded"
                 style={`color:${tierColor};background:${tierBg};border:1px solid ${tierBorder}`}>
@@ -219,10 +224,7 @@ const showEnrichment = !compact;
     <div class="px-4 pt-3 pb-2 flex items-center justify-between relative z-20">
       <GamePill game={GAME_PILL_MAP[game] as any} size="xs" />
       {isGtaVI && confType ? (
-        <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
-              style={pillStyle(confColor)}>
-          {confType.label}
-        </span>
+        <Badge variant={confidence_tier} size="xs" />
       ) : (
         <span class="font-mono font-black text-2xl leading-none" style={`color:${tierColor}`}>{tier}</span>
       )}
@@ -234,15 +236,14 @@ const showEnrichment = !compact;
 
     <!-- Context row: type · region/solo/difficulty · trailer evidence -->
     <div class="flex items-center gap-1.5 flex-wrap">
-      <span class="text-[10px] font-mono uppercase tracking-widest" style={`color:${playColor}`}>
-        {play_type ?? category}
-      </span>
+      <Badge variant={playBadgeVariant} size="xs" />
       {isGtaVI ? (
         <>
-          {regionLabel && regionColor && (
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border uppercase tracking-widest"
-                  style={`color:${regionColor};border-color:color-mix(in srgb,${regionColor} 35%,transparent);background:color-mix(in srgb,${regionColor} 12%,transparent)`}>
-              {regionLabel}
+          {(showVc || showLeo) && (
+            <span class="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest">
+              {showVc  && <span style={`color:${vcRegion.colorToken}`}>{vcRegion.label}</span>}
+              {showVc && showLeo && <span class="text-zinc-700">·</span>}
+              {showLeo && <span style={`color:${leoRegion.colorToken}`}>{leoRegion.label}</span>}
             </span>
           )}
           {trailer_evidence && (
