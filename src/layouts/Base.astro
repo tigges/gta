@@ -31,6 +31,11 @@ const resolvedOgImage =
   (ogPage ? `${SITE_BASE}/og/${ogPage}.png` : null) ??
   `https://img.youtube.com/vi/VQRLujxTm3c/maxresdefault.jpg`;
 
+// Canonical URL — strips trailing slash except for root
+const rawPath = Astro.url.pathname;
+const canonicalPath = rawPath === "/" ? "/" : rawPath.replace(/\/$/, "");
+const canonicalUrl = `${SITE_BASE}${canonicalPath}`;
+
 // Nav group definition — icon names map to HudIcon component
 interface DropdownItem {
   href: string;
@@ -143,13 +148,22 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
 
+    <!-- Canonical -->
+    <link rel="canonical" href={canonicalUrl} />
+
     <!-- Open Graph -->
     <meta property="og:title"       content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image"       content={resolvedOgImage} />
+    <meta property="og:url"         content={canonicalUrl} />
     <meta property="og:type"        content="website" />
-    <meta name="twitter:card"       content="summary_large_image" />
-    <meta name="twitter:image"      content={resolvedOgImage} />
+    <meta property="og:site_name"   content="GTA VI.AI" />
+
+    <!-- Twitter / X Cards -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image"       content={resolvedOgImage} />
 
     <link rel="icon" type="image/png" href="/assets/logos/gtavi_ai_logo_transparent.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

@@ -447,7 +447,10 @@ const gridClass = links.length <= 2
     <div class={`grid gap-3 ${gridClass}`}>
       {links.map(link => (
         <a href={link.href}
-           class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-border-mid transition-all"
+           class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-border-mid transition-all crosslink-tile"
+           data-crosslink-from={context}
+           data-crosslink-to={link.href}
+           data-crosslink-label={link.label}
            style="background:var(--c-card)">
           <div class="h-px w-full" style={`background:linear-gradient(90deg,${link.accent},transparent 60%)`}></div>
           <div class="flex items-center gap-4 p-4">
@@ -468,3 +471,18 @@ const gridClass = links.length <= 2
     </div>
   </div>
 )}
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>(".crosslink-tile").forEach(tile => {
+    tile.addEventListener("click", () => {
+      if (typeof (window as any).plausible !== "function") return;
+      (window as any).plausible("CrossLink", {
+        props: {
+          from:  tile.dataset.crosslinkFrom  ?? "",
+          to:    tile.dataset.crosslinkTo    ?? "",
+          label: tile.dataset.crosslinkLabel ?? "",
+        },
+      });
+    });
+  });
+</script>

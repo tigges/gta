@@ -57,6 +57,7 @@ const tierLabel: Record<string, string> = {
 <div
   class="cast-card group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-gold/30 transition-all duration-300 cursor-pointer select-none"
   data-video={video ? `/assets/gta6/videos/${video}` : ""}
+  data-cast-name={name}
   aria-label={`${name} — ${hasClip ? "tap to play clip" : "confirmed cast"}`}
 >
   <!-- Media: 3:4 aspect ratio -->
@@ -130,6 +131,13 @@ const tierLabel: Record<string, string> = {
 
     let playing = false;
 
+    function fireCastClip(action: "play" | "pause") {
+      if (typeof (window as any).plausible !== "function") return;
+      (window as any).plausible("CastClip", {
+        props: { name: card.dataset.castName ?? "", action },
+      });
+    }
+
     card.addEventListener("click", () => {
       if (playing) {
         // Pause and restore still
@@ -138,6 +146,7 @@ const tierLabel: Record<string, string> = {
         if (still) still.style.transform = "";
         if (pill)  pill.textContent = "▶ Clip";
         playing = false;
+        fireCastClip("pause");
       } else {
         // Load src lazily on first play
         if (!video.src || video.src === window.location.href) {
@@ -150,6 +159,7 @@ const tierLabel: Record<string, string> = {
         if (still) still.style.transform = "scale(1.05)";
         if (pill)  pill.textContent = "⏸ Clip";
         playing = true;
+        fireCastClip("play");
       }
     });
 

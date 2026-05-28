@@ -82,7 +82,8 @@ const dropId  = `share-drop-${anchorId}`;
       href={tweetUrl}
       target="_blank"
       rel="noopener noreferrer"
-      class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-white/[0.04] transition-colors"
+      class="share-x-link flex items-center gap-3 px-3.5 py-2.5 hover:bg-white/[0.04] transition-colors"
+      data-anchor={anchorId}
       role="menuitem"
     >
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="shrink-0 share-item-icon">
@@ -98,7 +99,8 @@ const dropId  = `share-drop-${anchorId}`;
       href={redditUrl}
       target="_blank"
       rel="noopener noreferrer"
-      class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-white/[0.04] transition-colors"
+      class="share-reddit-link flex items-center gap-3 px-3.5 py-2.5 hover:bg-white/[0.04] transition-colors"
+      data-anchor={anchorId}
       role="menuitem"
     >
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="shrink-0 share-item-icon">
@@ -185,11 +187,17 @@ const dropId  = `share-drop-${anchorId}`;
     });
   });
 
+  function fireShare(via: string, anchor: string) {
+    if (typeof (window as any).plausible === "function") {
+      (window as any).plausible("Share", { props: { via, anchor } });
+    }
+  }
+
   // Copy link handler
   document.querySelectorAll<HTMLButtonElement>(".share-copy-item").forEach(btn => {
     btn.addEventListener("click", async () => {
       // Build URL at runtime so staging.gtavi.ai copies a staging link, not production.
-      const anchor = btn.dataset.anchor;
+      const anchor = btn.dataset.anchor ?? "";
       const url = anchor
         ? `${window.location.origin}${window.location.pathname}#${anchor}`
         : btn.dataset.url!;
@@ -200,22 +208,40 @@ const dropId  = `share-drop-${anchorId}`;
           label.textContent = "Copied!";
           setTimeout(() => { label.textContent = "Copy link"; }, 2000);
         }
+        fireShare("copy", anchor);
       } catch { /* clipboard blocked */ }
       const menu = btn.closest<HTMLElement>(".share-dropdown-menu");
       if (menu) menu.classList.add("hidden");
     });
   });
 
+  // X share click
+  document.querySelectorAll<HTMLElement>(".share-x-link").forEach(link => {
+    link.addEventListener("click", () => {
+      const anchor = link.dataset.anchor ?? "";
+      fireShare("x", anchor);
+    });
+  });
+
+  // Reddit share click
+  document.querySelectorAll<HTMLElement>(".share-reddit-link").forEach(link => {
+    link.addEventListener("click", () => {
+      const anchor = link.dataset.anchor ?? "";
+      fireShare("reddit", anchor);
+    });
+  });
+
   // Native Web Share handler
   document.querySelectorAll<HTMLButtonElement>(".share-native-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
-      const anchor = btn.dataset.anchor;
+      const anchor = btn.dataset.anchor ?? "";
       const url = anchor
         ? `${window.location.origin}${window.location.pathname}#${anchor}`
         : btn.dataset.url!;
       const text = btn.dataset.text!;
       try {
         await navigator.share({ url, text });
+        fireShare("native", anchor);
       } catch { /* cancelled or unsupported */ }
     });
   });
