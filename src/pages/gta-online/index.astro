@@ -10,8 +10,10 @@ import SectionHeader from "../../components/SectionHeader.astro";
 import EconomyCircle from "../../components/EconomyCircle.astro";
 import IncomeCard from "../../components/IncomeCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
-import ChartTeaserOnlineMetaCeiling  from "../../components/charts/ChartTeaserOnlineMetaCeiling.astro";
-import ChartTeaserOnlineSharkCard    from "../../components/charts/ChartTeaserOnlineSharkCard.astro";
+import ChartTeaserOnlineMetaCeiling    from "../../components/charts/ChartTeaserOnlineMetaCeiling.astro";
+import ChartTeaserOnlineSharkCard      from "../../components/charts/ChartTeaserOnlineSharkCard.astro";
+import BonusCardsTeaser                from "../../components/BonusCardsTeaser.astro";
+import ChartMetaShift                  from "../../components/charts/ChartMetaShift.astro";
 
 import steamRaw      from "../../../data/gta-5/meta/steam-players.json";
 import weeklyBonuses from "../../../data/gta-5/economy/weekly-bonuses.json";
@@ -102,6 +104,7 @@ const BONUS_LABEL: Record<string, string> = {
              class="group hidden sm:flex flex-col gap-2 rounded-xl border border-border-mid hover:border-gta-online-vivid/30 transition-all p-4 shrink-0 w-52"
              style="background:color-mix(in srgb,var(--c-title-online) 5%,var(--c-card))">
             <div class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-title-online)">This week · active now</div>
+            {weekStart && <div class="text-[9px] font-mono text-zinc-600 -mt-1">W/C {weekStart}</div>}
             {bonuses.slice(0, 3).map((b: any) => (
               <div class="flex items-center gap-2">
                 <span class="text-base font-mono font-black leading-none" style="color:var(--c-brand)">{b.multiplier}×</span>
@@ -120,27 +123,11 @@ const BONUS_LABEL: Record<string, string> = {
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
 
     <!-- ══════════════════════════════════════════════════════════
-         WEEKLY BONUSES (mirrors Predictions carousel on GTA VI Hub)
+         ACTIVE WEEKLY BONUS CARDS
     ══════════════════════════════════════════════════════════ -->
-    {bonuses.length > 0 && (
-      <section>
-        <SectionHeader label={`// This week's bonuses · W/C ${weekStart}`} dotColor="var(--c-title-online)" pillHref="/gta-online/bonuses" pillLabel="Full calendar →" />
-        <div class={`grid gap-3 ${bonuses.length === 1 ? "grid-cols-1 max-w-sm" : bonuses.length === 2 ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-3"}`}>
-          {bonuses.map((b: any) => (
-            <div class="rounded-xl border border-border-dim px-4 py-3.5 flex items-center gap-4"
-                 style="background:color-mix(in srgb,var(--c-brand) 5%,var(--c-card))">
-              <span class="text-3xl font-mono font-black leading-none shrink-0" style="color:var(--c-brand)">{b.multiplier}×</span>
-              <div>
-                <div class="text-sm font-semibold text-zinc-200 capitalize">
-                  {BONUS_LABEL[b.activity_id] ?? b.activity_id.replace(/-/g, " ")}
-                </div>
-                <div class="text-[10px] font-mono text-zinc-600 mt-0.5">GTA$ bonus multiplier active</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    )}
+    <section>
+      <BonusCardsTeaser />
+    </section>
 
     <!-- ══════════════════════════════════════════════════════════
          CHART TEASERS — 2 top + 1 full-width below
@@ -240,6 +227,15 @@ const BONUS_LABEL: Record<string, string> = {
         </div>
 
       </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         META SHIFT — Top Earner $/hr History
+         Only inline D3 chart on a hub page — extracted from /gta-online/income
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader label="// $/hr Meta History — How the Top Earner Changed" dotColor="var(--c-economy)" pillHref="/charts?title=gta-online" pillLabel="All GTA Online charts →" />
+      <ChartMetaShift />
     </section>
 
     <!-- ══════════════════════════════════════════════════════════

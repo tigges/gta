@@ -78,6 +78,8 @@ python3 scrapers/fetch_newswire.py
 | `REDDIT_CLIENT_ID` | `fetch_reddit.py` | No — RSS fallback active |
 | `REDDIT_CLIENT_SECRET` | `fetch_reddit.py` | No — RSS fallback active |
 | `DISCORD_WEBHOOK_URL` | `post_discord_digest.py` | No — digest skipped if absent |
+| `RESEND_API_KEY` | `post_weekly_digest_resend.py` | No — digest skipped if absent |
+| `RESEND_AUDIENCE_ID` | `post_weekly_digest_resend.py`, `functions/api/subscribe.ts` | No — skipped if absent. Create at resend.com → Audiences |
 
 Secrets are configured in: **GitHub repo → Settings → Secrets and variables → Actions**
 
@@ -117,6 +119,7 @@ python3 scrapers/fetch_trailers.py
 | `fetch_vgchartz.py` | `franchise/vgchartz.json` | ❌ | Run manually if data drift |
 | `fetch_leonida.py` | `gta-6/entities/leonida-intel.json` | ✅ | Leonida Intel public API; no auth |
 | `post_discord_digest.py` | Discord webhook | ✅ | Runs after commit; needs `DISCORD_WEBHOOK_URL`; `continue-on-error: true` |
+| `post_weekly_digest_resend.py` | Resend email → subscribers | ✅ | Every Tuesday 10:00 UTC via `weekly-digest.yml`; needs `RESEND_API_KEY` + `RESEND_AUDIENCE_ID` |
 | `fetch_gta_wiki.py` | `gta-6/entities/*.json` | ❌ | Run manually after major reveals |
 | `fetch_press_assets.py` | `gta-6/press-assets.json` | ❌ | Run manually after press drops |
 
