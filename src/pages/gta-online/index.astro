@@ -12,6 +12,7 @@ import IncomeCard from "../../components/IncomeCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
 import ChartTeaserOnlineMetaCeiling  from "../../components/charts/ChartTeaserOnlineMetaCeiling.astro";
 import ChartTeaserOnlineSharkCard    from "../../components/charts/ChartTeaserOnlineSharkCard.astro";
+import ChartMetaShift                from "../../components/charts/ChartMetaShift.astro";
 
 import steamRaw      from "../../../data/gta-5/meta/steam-players.json";
 import weeklyBonuses from "../../../data/gta-5/economy/weekly-bonuses.json";
@@ -240,6 +241,15 @@ const BONUS_LABEL: Record<string, string> = {
         </div>
 
       </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         META SHIFT — Top Earner $/hr History
+         Only inline D3 chart on a hub page — extracted from /gta-online/income
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader label="// $/hr Meta History — How the Top Earner Changed" dotColor="var(--c-economy)" pillHref="/charts?title=gta-online" pillLabel="All GTA Online charts →" />
+      <ChartMetaShift />
     </section>
 
     <!-- ══════════════════════════════════════════════════════════
