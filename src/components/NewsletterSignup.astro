@@ -22,9 +22,18 @@ const BEEHIIV_URL = "https://gtavi.ai/newsletter";   // swap for live Beehiiv em
       <div class="text-[10px] font-mono text-zinc-600">One email. Top signals + any prediction changes.</div>
     </div>
     <a href={BEEHIIV_URL} target="_blank" rel="noopener noreferrer"
-      class="shrink-0 inline-flex items-center gap-1.5 text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 hover:bg-gta-gold/15 px-3 py-1.5 rounded uppercase tracking-widest transition-all">
+      class="newsletter-cta-compact shrink-0 inline-flex items-center gap-1.5 text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 hover:bg-gta-gold/15 px-3 py-1.5 rounded uppercase tracking-widest transition-all">
       Subscribe →
     </a>
+<script>
+  document.querySelectorAll<HTMLAnchorElement>(".newsletter-cta-compact").forEach(el => {
+    el.addEventListener("click", () => {
+      if (typeof (window as any).plausible === "function") {
+        (window as any).plausible("NewsletterSignup", { props: { variant: "compact" } });
+      }
+    });
+  });
+</script>
   </div>
 ) : (
   <!-- Full: standalone section card -->
@@ -33,7 +42,7 @@ const BEEHIIV_URL = "https://gtavi.ai/newsletter";   // swap for live Beehiiv em
     <div class="relative px-6 py-8 text-center overflow-hidden">
       <div class="absolute inset-0">
         <img src="/assets/gta6/locations/Vice_City_07.jpg" alt="" class="w-full h-full object-cover opacity-10" aria-hidden="true" />
-        <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,#131316 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,var(--c-card) 100%)"></div>
       </div>
       <div class="relative">
         <div class="text-2xl mb-3">📬</div>
@@ -42,7 +51,7 @@ const BEEHIIV_URL = "https://gtavi.ai/newsletter";   // swap for live Beehiiv em
           One email per week. Top signals, any prediction changes, and what the data says about GTA VI launch week.
         </p>
         <a href={BEEHIIV_URL} target="_blank" rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 bg-gta-gold hover:bg-gta-bright text-black font-mono font-bold text-xs px-6 py-3 rounded transition-colors tracking-wide uppercase">
+          class="newsletter-cta inline-flex items-center gap-2 bg-gta-gold hover:bg-gta-bright text-black font-mono font-bold text-xs px-6 py-3 rounded transition-colors tracking-wide uppercase">
           Subscribe free →
         </a>
         <div class="text-[11px] font-mono text-zinc-500 mt-3">No spam · unsubscribe anytime · gtavi.ai/newsletter</div>
@@ -50,6 +59,15 @@ const BEEHIIV_URL = "https://gtavi.ai/newsletter";   // swap for live Beehiiv em
     </div>
     <!-- What you get -->
     <div class="border-t border-border-dim grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
+<script>
+  document.querySelectorAll<HTMLAnchorElement>(".newsletter-cta").forEach(el => {
+    el.addEventListener("click", () => {
+      if (typeof (window as any).plausible === "function") {
+        (window as any).plausible("NewsletterSignup", { props: { variant: "full" } });
+      }
+    });
+  });
+</script>
       {[
         { icon: "📊", label: "Signal update", desc: "Predictions and confidence changes" },
         { icon: "📰", label: "Top intel",     desc: "3 best press + community stories" },

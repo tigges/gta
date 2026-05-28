@@ -17,10 +17,19 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
 
 <Base
   titleContext="gta-online"
-  title="Cayo Perico Heist Guide — Best Solo Money GTA Online"
+  title="Cayo Perico Heist Guide 2026 — Best Solo Money GTA Online"
   description={`Cayo Perico Heist: $${(cayo.net_profit_per_hr/1000).toFixed(0)}k/hr solo. Full guide — loot tiers, optimal strategy, setup cost, break-even. The #1 solo money method in GTA Online.`}
-  ogPage="gta-online"
+  ogPage="cayo-perico"
 >
+<script is:inline type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "GTA Online", "item": "https://gtavi.ai/gta-online" },
+    { "@type": "ListItem", "position": 2, "name": "Income Sources", "item": "https://gtavi.ai/gta-online/income" },
+    { "@type": "ListItem", "position": 3, "name": "Cayo Perico Heist Guide", "item": "https://gtavi.ai/gta-online/cayo-perico" },
+  ]
+})}</script>
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
 
     <!-- Breadcrumb -->

@@ -14,6 +14,8 @@ interface Props {
   titleContext?:
     | "gta-vi" | "gta-online" | "gta-v" | "gta-iv"
     | "gta-sa" | "gta-vc" | "gta-iii" | "franchise" | "news";
+  /** Admin/internal pages only — prevents search engine indexing. */
+  noindex?: boolean;
 }
 
 const SITE_BASE = import.meta.env.SITE ?? "https://gtavi.ai";
@@ -24,6 +26,7 @@ const {
   ogImage,
   ogPage,
   titleContext,
+  noindex = false,
 } = Astro.props;
 
 const resolvedOgImage =
@@ -150,6 +153,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 
     <!-- Canonical -->
     <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
 
     <!-- Open Graph -->
     <meta property="og:title"       content={fullTitle} />

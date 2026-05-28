@@ -50,6 +50,18 @@ const CAT_THUMBS: Record<string,string> = {
   description="GTA VI predictions — confidence-scored from 30 years of GTA data. Launch price, income yields, Shark Card mechanics, and what the franchise numbers say about GTA VI's economy."
   ogPage="vi-intel"
 >
+<script is:inline type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": predictions.slice(0, 8).map(p => ({
+    "@type": "Question",
+    "name": `GTA VI ${p.title}`,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": `${p.value}${p.unit ? " " + p.unit : ""}. ${p.basis} (Confidence: ${p.confidence}%, ${p.confidence_tier}).`
+    }
+  }))
+})}</script>
 
   <!-- ═══════════════════════════════════════════════════════
        HERO — Split character backdrop + trailer anchor
@@ -60,16 +72,16 @@ const CAT_THUMBS: Record<string,string> = {
       <div class="flex-1 relative overflow-hidden">
         <img src="/assets/gta6/characters/Lucia_Caminos_03.jpg" alt="Lucia Caminos"
           class="w-full h-full object-cover object-top" loading="eager" />
-        <div class="absolute inset-0" style="background:linear-gradient(to right,#0e0e11 0%,transparent 35%,transparent 50%,#0e0e11 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg) 0%,transparent 35%,transparent 50%,var(--c-bg) 100%)"></div>
       </div>
       <div class="flex-1 relative overflow-hidden">
         <img src="/assets/gta6/characters/Jason_Duval_02.jpg" alt="Jason Duval"
           class="w-full h-full object-cover object-top" loading="eager" />
-        <div class="absolute inset-0" style="background:linear-gradient(to left,#0e0e11 0%,transparent 35%,transparent 50%,#0e0e11 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to left,var(--c-bg) 0%,transparent 35%,transparent 50%,var(--c-bg) 100%)"></div>
       </div>
     </div>
     <!-- Top/bottom fades -->
-    <div class="absolute inset-0" style="background:linear-gradient(to bottom,#0e0e11 0%,transparent 20%,transparent 60%,#0e0e11 100%)"></div>
+    <div class="absolute inset-0" style="background:linear-gradient(to bottom,var(--c-bg) 0%,transparent 20%,transparent 60%,var(--c-bg) 100%)"></div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-12 pt-20 w-full">
       <div class="flex items-end justify-between flex-wrap gap-6">
@@ -96,7 +108,7 @@ const CAT_THUMBS: Record<string,string> = {
               alt={heroTrailer.title}
               class="w-full object-cover transition-transform duration-500 group-hover:scale-105"
               style="height:135px" loading="eager" />
-            <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 55%)"></div>
+            <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%,transparent 55%)"></div>
             <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <div class="w-10 h-10 rounded-full bg-black/60 border border-gta-gold/30 flex items-center justify-center">
                 <span class="text-white ml-0.5">▶</span>
@@ -196,7 +208,7 @@ const CAT_THUMBS: Record<string,string> = {
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
                 />
-                <div class="absolute inset-0" style="background:linear-gradient(to top, #0e0e11 0%, transparent 55%)"></div>
+                <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, transparent 55%)"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
                   <div class="w-12 h-12 rounded-full bg-black/60 border border-white/20 flex items-center justify-center group-hover:bg-gta-gold/20 group-hover:border-gta-gold/40 transition-all">
                     <span class="text-white ml-0.5">▶</span>
@@ -262,7 +274,7 @@ const CAT_THUMBS: Record<string,string> = {
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               />
-              <div class="absolute inset-0" style="background:linear-gradient(to top, #0e0e11 0%, #0e0e1170 40%, transparent 70%)"></div>
+              <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, rgba(14,14,17,0.44) 40%, transparent 70%)"></div>
             </div>
             <div class="absolute bottom-0 left-0 right-0 px-4 pb-4">
               <div class="flex items-center gap-2 mb-0.5">
@@ -312,7 +324,7 @@ const CAT_THUMBS: Record<string,string> = {
                 {thumb && (
                   <div class="absolute inset-0">
                     <img src={thumb} alt="" class="w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
-                    <div class="absolute inset-0" style="background:linear-gradient(to bottom,#131316 0%,transparent 40%,#131316 100%)"></div>
+                    <div class="absolute inset-0" style="background:linear-gradient(to bottom,var(--c-card) 0%,transparent 40%,var(--c-card) 100%)"></div>
                   </div>
                 )}
                 <div class="relative px-5 py-5">
@@ -330,7 +342,7 @@ const CAT_THUMBS: Record<string,string> = {
                     <span class="text-[10px] font-mono text-zinc-600">reported</span>
                   </div>
                   <!-- Progress bar -->
-                  <div class="h-1.5 rounded-full overflow-hidden flex" style="background:#1e1e23">
+                  <div class="h-1.5 rounded-full overflow-hidden flex" style="background:var(--c-border-1)">
                     {confirmedPct > 0 && <div class="h-full bg-gta-gold" style={`width:${confirmedPct}%`}></div>}
                     {reportedPct  > 0 && <div class="h-full bg-zinc-500 ml-px" style={`width:${reportedPct}%`}></div>}
                     {indexedPct   > 0 && <div class="h-full bg-zinc-700 ml-px" style={`width:${indexedPct}%`}></div>}

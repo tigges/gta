@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import CrossLinks from "../components/CrossLinks.astro";
 import IncomeCard from "../components/IncomeCard.astro";
+import StatBox from "../components/StatBox.astro";
 import { regionFromName } from "../config/semanticTypes";
 import type {
   EntityIndex, LeonidaData, VehiclesData, BusinessProfiles,
@@ -313,33 +314,20 @@ const HEIST_THUMBS: Record<string, string> = {
 
       <!-- GTA VI stats -->
       <div id="header-gta6">
-        <p class="text-sm text-zinc-400 max-w-xl mb-2">
-          {gta6Entities.length.toLocaleString()} GTA VI entities from GTA Fandom Wiki + Leonida Intel.
-          Filter by type, confidence tier and source.
-        </p>
-        <div class="flex items-center gap-4 flex-wrap text-[11px] font-mono text-zinc-600">
-          <span>{fandByConf.confirmed ?? 0} confirmed (Wiki)</span>
-          <span class="text-zinc-800">·</span>
-          <span>{leonidaStats.confirmed} confirmed (Leonida)</span>
-          <span class="text-zinc-800">·</span>
-          <span>{fandomEntities.length} Fandom Wiki</span>
-          <span class="text-zinc-800">·</span>
-          <span>{leonidaEntities.length} Leonida Intel</span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+          <StatBox value={gta6Entities.length.toLocaleString()} label="Entities indexed" sub="Fandom Wiki + Leonida Intel" color="var(--c-title-vi)" />
+          <StatBox value={String((fandByConf.confirmed ?? 0) + leonidaStats.confirmed)} label="Confirmed" sub="across both sources" color="var(--c-live)" />
+          <StatBox value={String(fandomEntities.length)} label="Fandom Wiki" sub="characters · locations · vehicles" color="var(--c-brand)" />
+          <StatBox value={String(leonidaEntities.length)} label="Leonida Intel" sub="curated intelligence" color="var(--c-growth)" />
         </div>
       </div>
 
       <!-- GTA V stats -->
       <div id="header-gta5" class="hidden">
-        <p class="text-sm text-zinc-400 max-w-xl mb-2">
-          {gta5Vehicles.length} GTA V vehicles with Broughy1322 performance benchmarks.
-          Lap times and top speeds from the Broughy1322 Comprehensive Vehicle List.
-        </p>
-        <div class="flex items-center gap-4 flex-wrap text-[11px] font-mono text-zinc-600">
-          <span>{gta5Classes.length} vehicle classes</span>
-          <span class="text-zinc-800">·</span>
-          <span>Source: Broughy1322 Google Sheet</span>
-          <span class="text-zinc-800">·</span>
-          <span>Updated: {new Date(gta5UpdatedAt).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}</span>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
+          <StatBox value={String(gta5Vehicles.length)} label="Vehicles" sub="Broughy1322 benchmarks" color="var(--c-title-v)" />
+          <StatBox value={String(gta5Classes.length)} label="Vehicle classes" sub="lap times + top speeds" color="var(--c-brand)" />
+          <StatBox value={new Date(gta5UpdatedAt).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})} label="Data updated" sub="Broughy1322 sheet" color="var(--c-live)" />
         </div>
       </div>
     </div>
@@ -990,6 +978,9 @@ const HEIST_THUMBS: Record<string, string> = {
     btn.addEventListener("click", () => {
       activeGame = btn.dataset.game!;
       currentPage = 0;
+      if (typeof (window as any).plausible === "function") {
+        (window as any).plausible("DatabaseTab", { props: { game: activeGame } });
+      }
 
       const isGta6    = activeGame === "gta-6";
       const isOnline  = activeGame === "gta-online";
@@ -1060,6 +1051,9 @@ const HEIST_THUMBS: Record<string, string> = {
         b.className = "db-type-filter px-2.5 py-1 rounded text-[10px] font-mono border transition-all";
         b.style.cssText = active ? dbFilterGoldActive : dbFilterInactive;
       });
+      if (typeof (window as any).plausible === "function" && activeType !== "all") {
+        (window as any).plausible("DatabaseFilter", { props: { type: activeType, game: activeGame } });
+      }
       renderGta6();
     });
   });

@@ -232,10 +232,10 @@ const featuredIncome = incomeList
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- Income side (Y) — teal left border matches economy circle income arc -->
-        <div class="rounded-xl border border-border-dim px-4 pt-3 pb-4" style="border-left:3px solid var(--c-income);background:rgba(13,148,136,0.03)">
+        <div class="rounded-xl border border-border-dim px-4 pt-3 pb-4" style="border-left:3px solid var(--c-income);background:color-mix(in srgb,var(--c-income) 3%,transparent)">
           <div class="flex items-center gap-2 mb-3">
             <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-income)">Y — Income</span>
-            <div class="flex-1 h-px" style="background:rgba(13,148,136,0.2)"></div>
+            <div class="flex-1 h-px" style="background:color-mix(in srgb,var(--c-income) 20%,transparent)"></div>
             <a href="/gta-vi/intel#section-income-predictions"
                class="text-[10px] font-mono uppercase tracking-widest transition-colors"
                style="color:var(--c-live);opacity:var(--o-tertiary)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
@@ -265,10 +265,10 @@ const featuredIncome = incomeList
         </div>
 
         <!-- Expenditure side (C+I) — orange right border matches economy circle expenditure arc -->
-        <div class="rounded-xl border border-border-dim px-4 pt-3 pb-4" style="border-right:3px solid var(--c-flow-spending);background:rgba(249,115,22,0.03)">
+        <div class="rounded-xl border border-border-dim px-4 pt-3 pb-4" style="border-right:3px solid var(--c-flow-spending);background:color-mix(in srgb,var(--c-flow-spending) 3%,transparent)">
           <div class="flex items-center gap-2 mb-3">
             <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending)">C+I — Expenditure</span>
-            <div class="flex-1 h-px" style="background:rgba(245,158,11,0.2)"></div>
+            <div class="flex-1 h-px" style="background:color-mix(in srgb,var(--c-flow-spending) 20%,transparent)"></div>
             <!-- No dedicated GTA VI I&C database yet — links to economy model page -->
             <a href="/gta-vi/economy"
                class="text-[10px] font-mono uppercase tracking-widest transition-colors shrink-0"
