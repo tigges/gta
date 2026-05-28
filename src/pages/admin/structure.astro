@@ -1,0 +1,249 @@
+---
+/**
+ * /admin/structure — Site Structure & Design System Reference
+ * Auto-generated sections refresh on every build.
+ * Static ASCII sections: update manually when design system changes.
+ * Internal admin tool — unlisted from public nav.
+ */
+import Base from "../../layouts/Base.astro";
+import { SITE_VERSION, SITE_VERSION_DATE } from "../../config/version";
+import { ALL_CHARTS } from "../../config/allCharts";
+import { GAME_TYPES, CONFIDENCE_TYPES, PLAY_TYPES, REGION_TYPES } from "../../config/semanticTypes";
+
+import predictionsRaw  from "../../../data/gta-6/predictions.json";
+import entityIndexRaw  from "../../../data/gta-6/entities/index.json";
+import leonidaRaw      from "../../../data/gta-6/entities/leonida-intel.json";
+import newswireRaw     from "../../../data/feeds/newswire.json";
+import salesRaw        from "../../../data/franchise/sales.json";
+
+const predCount     = (predictionsRaw as any).predictions.length;
+const entityCount   = (entityIndexRaw as any).total + ((leonidaRaw as any).entity_stats?.total ?? 0);
+const newsCount     = (newswireRaw as any).items.length;
+const franchiseCount = (salesRaw as any).titles.length;
+const chartCount    = ALL_CHARTS.length;
+
+// Group charts by game
+const chartsByGame = ALL_CHARTS.reduce((acc: any, c: any) => {
+  (acc[c.game] = acc[c.game] ?? []).push(c);
+  return acc;
+}, {} as Record<string, typeof ALL_CHARTS>);
+
+// Pages glob
+const pages = await Astro.glob("../**/*.astro");
+const publicPages = pages
+  .filter(p => !p.file.includes("/admin/") && !p.file.includes("/og/") && !p.file.includes("/income/"))
+  .map(p => p.file.replace(/.*\/src\/pages/, "").replace(/\.astro$/, "").replace(/\/index$/, "/") || "/")
+  .sort();
+---
+
+<Base title="Admin — Site Structure" description="GTAVI.AI site structure, design system reference and live inventory.">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-10">
+
+    <div>
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">Admin · Internal</div>
+      <h1 class="text-2xl font-bold text-white mb-1">Site Structure</h1>
+      <p class="text-sm text-zinc-500">
+        Design system reference · content hierarchy · live inventory.
+        Built at deploy time from source — auto-updated sections marked ↻.
+        ASCII prose sections updated manually when design changes.
+      </p>
+      <div class="mt-3 text-[10px] font-mono text-zinc-600">
+        v{SITE_VERSION} · {SITE_VERSION_DATE}
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         LIVE INVENTORY  ↻  auto-updates on every build
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">↻ Live Inventory</div>
+      <pre class="font-mono text-xs text-zinc-400 whitespace-pre bg-zinc-900/60 border border-border-dim rounded-xl p-5 overflow-x-auto leading-relaxed">{`Predictions        ${predCount}
+Entities (GTA VI)  ${entityCount.toLocaleString()}
+News items         ${newsCount}
+Franchise titles   ${franchiseCount}
+Charts             ${chartCount}
+Public pages       ${publicPages.length}`}</pre>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         CHART INVENTORY  ↻
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">↻ Chart Inventory — {chartCount} charts</div>
+      <pre class="font-mono text-xs text-zinc-400 whitespace-pre bg-zinc-900/60 border border-border-dim rounded-xl p-5 overflow-x-auto leading-relaxed">{
+        Object.entries(chartsByGame).map(([game, charts]: [string, any]) =>
+          `${game.padEnd(14)} (${String((charts as any[]).length).padStart(2)})\n` +
+          (charts as any[]).map((c: any) => `  section-${c.id}`).join("\n")
+        ).join("\n\n")
+      }</pre>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         TOKEN INVENTORY  ↻
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">↻ Semantic Token Inventory</div>
+      <pre class="font-mono text-xs text-zinc-400 whitespace-pre bg-zinc-900/60 border border-border-dim rounded-xl p-5 overflow-x-auto leading-relaxed">{`GAME TYPES (GamePill + semanticTypes)
+${GAME_TYPES.filter(t => !["all","gta-6","gta-5"].includes(t.id)).map(t => `  ${t.id.padEnd(14)} ${t.colorToken}`).join("\n")}
+
+CONFIDENCE TIERS (Badge.astro)
+${CONFIDENCE_TYPES.map(t => `  ${t.id.padEnd(14)} ${t.colorToken}`).join("\n")}
+
+PLAY TYPES (Badge.astro)
+${PLAY_TYPES.map(t => `  ${t.id.padEnd(14)} ${t.colorToken}`).join("\n")}
+
+REGION TYPES (plain text labels, not pills)
+${REGION_TYPES.map(t => `  ${t.id.padEnd(14)} ${t.colorToken}  "${t.label}"`).join("\n")}`}</pre>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         PAGE LIST  ↻
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">↻ Public Pages ({publicPages.length})</div>
+      <pre class="font-mono text-xs text-zinc-400 whitespace-pre bg-zinc-900/60 border border-border-dim rounded-xl p-5 overflow-x-auto leading-relaxed">{publicPages.join("\n")}</pre>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         SITE HIERARCHY  (static — update when structure changes)
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Site Structure & Hierarchy</div>
+      <pre class="font-mono text-xs text-zinc-400 whitespace-pre bg-zinc-900/60 border border-border-dim rounded-xl p-5 overflow-x-auto leading-relaxed">{`META LAYER (every page)
+  OPS BAR     Follow the GTA$ · version · staging badge
+  NAV         GTA VI · AI · Data · GTA Online · V
+              Hamburger → full-screen tile launcher (mobile)
+  FOOTER      Terms · Privacy · Scoring · ● Data refreshed nightly
+
+PAGE ANATOMY (top to bottom)
+  HERO
+    Full-bleed image/gradient backdrop
+    Contextual label  (text-[10px] mono, no //)
+    H1 Page Title     (text-3xl–5xl font-bold white)
+    Subtitle          (text-sm zinc-400)
+    Optional: Countdown · CTA buttons · GamePill
+
+  PAGE BODY  max-w-7xl, px-4/6, py-12/14 gap between sections
+
+    ● // SECTION TITLE ────────── [Full XYZ →]   ← SectionHeader
+      Cards / tiles
+    ● // SECTION TITLE ────────────────────────
+      Chart or diagram
+    // RELATED INTELLIGENCE ── auto-updated      ← CrossLinks bridge
+      Navigation tiles
+
+SECTION HEADER RULES
+  ● dot    optional — only when dotColor passed
+  // label always starts with //
+  ─ line   always full width or to pill
+  [pill]   optional right side (pill link only)
+  NOTHING before // except the dot — no GamePill, no Badge
+
+CARD TYPES
+
+  TYPE 1 — Identity card (IncomeCard, PredictionCard, CastCard, HeistCard)
+    [thumbnail — optional]
+    [GamePill]              [Badge tier]    ← identity row
+    Badge  plain-text       ▶ evidence      ← context row (no pill for region)
+    Card title  text-sm font-semibold
+    Rate / value / confidence
+    Progress bar / enrichment / ReadItBlock
+    ────────────────────────────────────
+    Full → · GTAVI.AI · Share              ← CardFooter
+
+  TYPE 2 — Chart teaser (ChartTeaserXxx)
+    [GamePill] [Category]        Full →    ← ChartBadgeRow
+    Card title  text-sm font-semibold
+    Subtitle    text-[11px] mono zinc-500
+    Static CSS visualisation
+    Key stat callout
+    ────────────────────────────────────
+    Source attribution · GTAVI.AI · Share
+
+  TYPE 3 — Navigation tile (CrossLinks, Explore)
+    [thumbnail]  CATEGORY LABEL
+                 Card title  text-sm font-semibold
+                 Subtitle    text-[11px] mono zinc-500
+                                               →
+
+  TYPE 4 — Content / analysis card (flow cards, framework)
+    INTERNAL LABEL  (no //, no dot)            ← text-[10px] mono uppercase
+    Card title  text-lg font-bold white
+    Subtitle
+    Data rows / annotations / ReadItBlock
+    ────────────────────────────────────
+    Full chart →  GTAVI.AI · Share
+
+PILL COMPONENTS
+  GamePill.astro     game identity  opaque dark bg  always top-left on cards
+  Badge.astro        all semantic labels  semi-transparent  via semanticTypes.ts
+  Neither before //  in SectionHeader
+
+// LABELS
+  Only in SectionHeader (page sections)
+  NOT inside cards or components (use plain uppercase label instead)
+
+DIAGRAMS
+  CircularEconomy    per-title node graph (SVG arrows, D3 runtime)
+  EconomyCircle      macro Y=C+I (pure CSS, hub pages only)
+  ReleaseTimeline    vertical franchise timeline
+  ChartComplexityRadar  D3 radar polygon
+
+CHARTS (interactive D3, on /charts)
+  Rendered by ChartSection → id=section-{chartId}
+  Link pattern: /charts?title={game}#section-{chartId}
+
+CHART TEASERS (static HTML, on hub pages)
+  ChartTeaserXxx — static CSS/bar/sparkline, always renders
+  Links to full interactive chart via Full chart → anchor
+
+PAGE ROLES
+  /                    Home              franchise overview, signal teasers
+  /gta-vi              GTA VI hub        predictions, trailers, economy, buy
+  /gta-vi/intel        Intelligence      predictions, cast, locations, features
+  /gta-vi/economy      Economy           projected circular flow, complexity
+  /gta-vi/buy          Buy guide         platforms, editions, retailers
+  /gta-vi/trailers     Trailers          official footage, velocity
+  /gta-online          Online hub        bonuses, income, economy, charts
+  /gta-online/economy  Economy           GTA-PPI, five flows, price basket
+  /gta-online/bonuses  Bonuses           weekly calendar, history
+  /database            Database          GTA VI entities + GTA V income
+  /charts              Charts            all D3 charts, filterable by title
+  /franchise           Franchise         all titles overview
+  /franchise/history   History           sales, scores, timeline, trailers
+  /franchise/economics Economics         10 economy models, browser
+  /news                News              Rockstar + EDGAR + Kotaku + Reddit
+  /methodology         Methodology       scoring standards (footer link only)
+  /intelligence        Intelligence hub  economy + predictions overview`}</pre>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         DESIGN TOKEN SOURCES  (static)
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Design Token Sources</div>
+      <pre class="font-mono text-xs text-zinc-400 whitespace-pre bg-zinc-900/60 border border-border-dim rounded-xl p-5 overflow-x-auto leading-relaxed">{`src/styles/tokens.css        CSS custom properties  var(--c-*)
+src/config/colors.ts         D3 / JS runtime mirrors  C_*, cc.*
+src/config/semanticTypes.ts  Game / confidence / play / region types
+src/components/GamePill.astro    Game identity pill
+src/components/Badge.astro       All semantic label pills
+src/components/SectionHeader.astro  Page section headers
+src/components/CardFooter.astro     Card footer (source + share)
+src/components/ReadItBlock.astro    Left-border annotation
+src/components/ChartBadgeRow.astro  Chart teaser headers
+src/components/CrossLinks.astro     Related intelligence tiles
+src/components/CastCard.astro       Character cards (click-to-play)
+src/components/IncomeCard.astro     Income / prediction cards
+src/components/CircularEconomy.astro  Per-title economy diagram
+src/components/EconomyCircle.astro    Macro Y=C+I diagram (hub only)
+src/components/Countdown.astro      Launch countdown timer`}</pre>
+    </section>
+
+  </div>
+</Base>
