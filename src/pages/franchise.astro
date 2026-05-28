@@ -18,7 +18,7 @@ const titleCount = titles.length;
   ogPage="franchise"
 >
   <!-- Hero -->
-  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:240px">
+  <section class="relative border-b border-border-dim overflow-hidden" style="min-height:240px">
     <div class="absolute inset-0">
       <img src="/assets/covers/gta-5.jpg" alt="" class="absolute right-0 top-0 h-full w-auto object-cover opacity-8"
            aria-hidden="true" style="filter:saturate(0.3);max-width:40%"
@@ -50,8 +50,8 @@ const titleCount = titles.length;
 
       <!-- History & Sales -->
       <a href="/franchise/history"
-         class="group rounded-xl border border-[#1e1e23] hover:border-zinc-700 p-6 flex flex-col gap-3 transition-all"
-         style="background:#131316">
+         class="group rounded-xl border border-border-dim hover:border-zinc-700 p-6 flex flex-col gap-3 transition-all"
+         style="background:var(--c-card)">
         <div class="text-2xl">📖</div>
         <div>
           <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors">History & Sales</div>
@@ -62,8 +62,8 @@ const titleCount = titles.length;
 
       <!-- Charts -->
       <a href="/franchise/charts"
-         class="group rounded-xl border border-[#1e1e23] hover:border-gta-gold/40 p-6 flex flex-col gap-3 transition-all hover:bg-gta-gold/[0.03]"
-         style="background:#131316">
+         class="group rounded-xl border border-border-dim hover:border-gta-gold/40 p-6 flex flex-col gap-3 transition-all hover:bg-gta-gold/[0.03]"
+         style="background:var(--c-card)">
         <div class="text-2xl">📈</div>
         <div>
           <div class="font-semibold text-zinc-200 text-sm mb-1 group-hover:text-white transition-colors">Charts</div>
@@ -74,8 +74,8 @@ const titleCount = titles.length;
 
       <!-- GTA V Story -->
       <a href="/gta-v"
-         class="group rounded-xl border border-[#1e1e23] hover:border-zinc-700 p-6 flex flex-col gap-3 transition-all"
-         style="background:#131316">
+         class="group rounded-xl border border-border-dim hover:border-zinc-700 p-6 flex flex-col gap-3 transition-all"
+         style="background:var(--c-card)">
         <div class="flex items-center gap-2 mb-1">
           <img src="/assets/logos/gta-v.png" alt="GTA V" class="h-8 w-auto" loading="lazy" />
         </div>
@@ -91,8 +91,8 @@ const titleCount = titles.length;
     <div class="mb-12">
       <div class="flex items-center gap-3 mb-5">
         <GamePill game="franchise" size="xs" />
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// All Titles</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">All Titles</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
       </div>
       <div class="flex flex-wrap gap-3">
         {([
@@ -108,7 +108,7 @@ const titleCount = titles.length;
           <a href={t.href ?? "/franchise/history"}
              class="group flex flex-col items-center gap-1.5 hover:opacity-90 transition-opacity">
             <img src={`/assets/covers/${t.id}.jpg`} alt={t.label}
-                 class="w-12 h-16 object-cover rounded border border-[#2a2a31] group-hover:border-zinc-600 transition-colors" loading="lazy" />
+                 class="w-12 h-16 object-cover rounded border border-border-mid group-hover:border-zinc-600 transition-colors" loading="lazy" />
             <div class="text-[10px] font-mono text-zinc-600">{t.year}</div>
           </a>
         ))}

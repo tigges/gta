@@ -46,7 +46,7 @@ const tools = [
       {tools.map(t => (
         <a
           href={t.href}
-          class="group flex items-start gap-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] px-5 py-4 transition-colors"
+          class="group flex items-start gap-4 rounded-xl border border-border-dim hover:border-border-mid px-5 py-4 transition-colors"
           style="background:var(--c-card)"
         >
           <div class="w-1 self-stretch rounded-full shrink-0 mt-0.5" style={`background:${t.color}`}></div>
@@ -59,7 +59,7 @@ const tools = [
       ))}
     </div>
 
-    <div class="mt-10 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:var(--c-card)">
+    <div class="mt-10 rounded-lg border border-border-dim px-4 py-3" style="background:var(--c-card)">
       <p class="text-[10px] font-mono text-zinc-600">
         Admin pages are public URLs — read-only operations, no server writes.
         Direct URL access only; not linked from the main nav.

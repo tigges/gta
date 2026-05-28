@@ -19,8 +19,8 @@ const liveMetaSeries = lastMeta?.date === today
   : [...metaSeries, { date: today, patch: "Current", top_method: liveTopName, top_gta_per_hr: liveTopYield, notes: "Live — from revenue-tiers.json" }];
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-  <div class="px-5 py-3 border-b border-[#1e1e23]">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+  <div class="px-5 py-3 border-b border-border-dim">
     <div class="font-semibold text-zinc-200 text-sm">GTA Online Income Ceiling — Best $/hr Over the Years</div>
     <div class="text-[10px] font-mono text-zinc-600 mt-0.5">Top money method per patch · community benchmarks · auto-updated nightly</div>
   </div>

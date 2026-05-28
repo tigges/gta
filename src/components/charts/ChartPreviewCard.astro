@@ -18,16 +18,16 @@ const { cardId, title, description, category, deepLink, thumbUrl } = Astro.props
 const thumb = thumbUrl ?? `https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg`;
 ---
 
-<div class="chart-preview-card rounded-xl border border-[#1e1e23] overflow-hidden transition-all duration-300" style="background:#131316" data-card-id={cardId}>
+<div class="chart-preview-card rounded-xl border border-border-dim overflow-hidden transition-all duration-300" style="background:var(--c-card)" data-card-id={cardId}>
   <!-- Identity accent: 1px top border in current page's title colour -->
   <div class="h-px w-full" style="background:linear-gradient(90deg,var(--c-identity),transparent 60%)"></div>
   <button
     class="preview-toggle w-full flex items-center gap-4 px-4 py-3 hover:bg-white/[0.02] transition-colors text-left"
-    aria-expanded="false"
+    aria-expanded="true"
     aria-controls={`preview-body-${cardId}`}
   >
     <!-- Thumbnail — larger for mission briefing card feel -->
-    <div class="shrink-0 w-24 h-14 rounded overflow-hidden border border-[#2a2a31]">
+    <div class="shrink-0 w-24 h-14 rounded overflow-hidden border border-border-mid">
       <img src={thumb} alt="" class="w-full h-full object-cover" loading="lazy" aria-hidden="true" />
     </div>
     <div class="flex-1 min-w-0 text-left">
@@ -36,18 +36,18 @@ const thumb = thumbUrl ?? `https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg`
       <div class="text-[10px] font-mono text-zinc-500 leading-snug">{description}</div>
     </div>
     <div class="shrink-0 flex items-center gap-2">
-      <svg class="preview-chevron w-3.5 h-3.5 text-zinc-600 transition-transform duration-200 shrink-0"
+      <svg class="preview-chevron w-3.5 h-3.5 text-zinc-600 transition-transform duration-200 shrink-0" style="transform:rotate(180deg)"
            viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M1 1l4 4 4-4"/>
       </svg>
     </div>
   </button>
 
-  <div id={`preview-body-${cardId}`} class="preview-body hidden border-t border-[#1e1e23]">
+  <div id={`preview-body-${cardId}`} class="preview-body border-t border-border-dim">
     <div class="preview-chart-slot">
       <slot />
     </div>
-    <div class="px-4 py-2 flex items-center justify-end" style="background:#0a0a0d">
+    <div class="px-4 py-2 flex items-center justify-end" style="background:var(--c-bg-deep)">
       <a href={deepLink} class="text-[10px] font-mono uppercase tracking-widest transition-colors"
          style="color:var(--c-identity);opacity:var(--o-secondary)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
         Full chart →
@@ -76,13 +76,9 @@ const thumb = thumbUrl ?? `https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg`
         toggle.setAttribute("aria-expanded", "true");
         if (chevron) (chevron as HTMLElement).style.transform = "rotate(180deg)";
 
-        // Force-init any charts that haven't rendered yet (were hidden at viewport entry)
-        // Use rAF to ensure the element is laid out before D3 measures clientWidth
         requestAnimationFrame(() => {
           body.querySelectorAll<HTMLElement>('[id]').forEach(el => {
-            if (!el.querySelector('svg')) {
-              triggerChart(el.id);
-            }
+            if (!el.querySelector('svg')) triggerChart(el.id);
           });
         });
       }

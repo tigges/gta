@@ -10,7 +10,7 @@ import CrossLinks from "../../components/CrossLinks.astro";
   ogPage="franchise"
 >
   <!-- Breadcrumb -->
-  <div class="border-b border-[#1e1e23]" style="background:#0a0a0d">
+  <div class="border-b border-border-dim" style="background:var(--c-bg-deep)">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-[10px] font-mono text-zinc-600">
       <a href="/franchise" class="hover:text-zinc-400 transition-colors">Franchise</a>
       <span class="text-zinc-800">›</span>
@@ -18,7 +18,7 @@ import CrossLinks from "../../components/CrossLinks.astro";
     </div>
   </div>
 
-  <section class="border-b border-[#1e1e23]" style="background:#0a0a0d">
+  <section class="border-b border-border-dim" style="background:var(--c-bg-deep)">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Grand Theft Auto · Data Visualised</div>
       <h1 class="text-3xl font-bold text-white mb-3">Franchise Charts</h1>
@@ -44,8 +44,8 @@ import CrossLinks from "../../components/CrossLinks.astro";
         { href: "/charts#competitors-chart",           icon: "🏁", label: "Competitor Comparison",      sub: "RDR2 · GTAV · GTA VI projected" },
       ].map(c => (
         <a href={c.href}
-           class="group rounded-xl border border-[#1e1e23] hover:border-zinc-700 p-4 flex items-start gap-3 transition-all"
-           style="background:#131316">
+           class="group rounded-xl border border-border-dim hover:border-zinc-700 p-4 flex items-start gap-3 transition-all"
+           style="background:var(--c-card)">
           <span class="text-xl shrink-0 mt-0.5">{c.icon}</span>
           <div>
             <div class="font-semibold text-zinc-200 text-sm mb-0.5 group-hover:text-white transition-colors">{c.label}</div>
@@ -57,7 +57,7 @@ import CrossLinks from "../../components/CrossLinks.astro";
     </div>
 
     <!-- All charts link -->
-    <div class="rounded-xl border border-[#1e1e23] px-5 py-4 flex items-center gap-4 mb-10" style="background:#131316">
+    <div class="rounded-xl border border-border-dim px-5 py-4 flex items-center gap-4 mb-10" style="background:var(--c-card)">
       <div class="flex-1">
         <div class="font-semibold text-zinc-200 text-sm mb-1">All 35+ Charts — Including GTA Online & Community Data</div>
         <div class="text-[10px] font-mono text-zinc-600">Filter by Economy, Promotions, Performance, Community or History categories.</div>

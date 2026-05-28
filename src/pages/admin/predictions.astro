@@ -42,7 +42,7 @@ const HUB_LIMIT  = predictions.filter((p: any) => (p.pages ?? []).includes("gta-
             { id: "gta-vi", label: `Hub (${HUB_LIMIT})` },
             { id: "intel",  label: "Intel only" },
           ].map(f => (
-            <button class="view-filter px-2.5 py-1 rounded border transition-all border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+            <button class="view-filter px-2.5 py-1 rounded border transition-all border-border-mid text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
                     data-filter={f.id}>{f.label}</button>
           ))}
         </div>
@@ -74,7 +74,7 @@ const HUB_LIMIT  = predictions.filter((p: any) => (p.pages ?? []).includes("gta-
         return (
           <>
             <div
-              class="pred-row rounded-lg border border-[#1e1e23] hover:border-[#2a2a31] transition-colors group"
+              class="pred-row rounded-lg border border-border-dim hover:border-border-mid transition-colors group"
               data-id={p.id}
               data-order={p.display_order}
               data-pages={JSON.stringify(pages)}
@@ -153,7 +153,7 @@ const HUB_LIMIT  = predictions.filter((p: any) => (p.pages ?? []).includes("gta-
     </div>
 
     <!-- How to apply footer -->
-    <div class="mt-6 rounded-lg border border-[#1e1e23] px-4 py-3" style="background:var(--c-card)">
+    <div class="mt-6 rounded-lg border border-border-dim px-4 py-3" style="background:var(--c-card)">
       <p class="text-[10px] font-mono text-zinc-600">
         Changes are in-memory only. Click titles to edit. Use ▲/▼ to rerank. Toggle Home/Hub pills for page visibility.
         When done, click <span class="text-zinc-400">Copy JSON patch</span> and paste into

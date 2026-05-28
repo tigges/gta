@@ -155,7 +155,7 @@ const updatedAt = feedData.last_updated;
 >
 
   <!-- Header -->
-  <section class="relative border-b border-[#1e1e23] overflow-hidden">
+  <section class="relative border-b border-border-dim overflow-hidden">
     <div class="absolute inset-0">
       <img src="/assets/gta6/locations/Vice_City_03.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 40%" aria-hidden="true" />
       <div class="absolute inset-0" style="background:linear-gradient(to right, #0a0a0d 0%, #0a0a0dcc 50%, #0a0a0d88 100%)"></div>
@@ -206,14 +206,14 @@ const updatedAt = feedData.last_updated;
     </div>
   </section>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10" style="background:#0e0e11">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10" style="background:var(--c-bg)">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
       <!-- Main feed -->
       <div class="lg:col-span-2 flex flex-col gap-3">
         <div class="flex items-center gap-3 mb-2">
           <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Latest Intel</span>
-          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <div class="flex-1 h-px bg-border-dim"></div>
           <span class="text-[10px] font-mono text-zinc-500">newest first</span>
         </div>
 
@@ -224,8 +224,8 @@ const updatedAt = feedData.last_updated;
             <a
               href={item.url}
               target="_blank" rel="noopener noreferrer"
-              class="group rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] overflow-hidden flex items-stretch transition-all"
-              style="background:#131316"
+              class="group rounded-xl border border-border-dim hover:border-border-mid overflow-hidden flex items-stretch transition-all"
+              style="background:var(--c-card)"
             >
               <!-- Thumbnail (if matched) -->
               {thumb && (
@@ -279,7 +279,7 @@ const updatedAt = feedData.last_updated;
       <div class="flex flex-col gap-4">
 
         <!-- Reddit community signal -->
-        <div class="rounded-xl border border-gta-reddit/20 overflow-hidden" style="background:#131316">
+        <div class="rounded-xl border border-gta-reddit/20 overflow-hidden" style="background:var(--c-card)">
           <div class="px-4 py-3 border-b border-gta-reddit/20 flex items-center justify-between">
             <div class="text-[10px] font-mono text-gta-reddit uppercase tracking-[0.2em]">// r/GTA6 Community Signal</div>
             <span class="w-1.5 h-1.5 rounded-full bg-gta-reddit animate-pulse"></span>
@@ -304,11 +304,11 @@ const updatedAt = feedData.last_updated;
         </div>
 
         <!-- Source reliability key -->
-        <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-          <div class="px-4 py-3 border-b border-[#1e1e23]">
+        <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+          <div class="px-4 py-3 border-b border-border-dim">
             <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Source Tiers</div>
           </div>
-          <div class="divide-y divide-[#1e1e23]">
+          <div class="divide-y divide-border-dim">
             {[
               { tier: "OFFICIAL",  color: "text-gta-gold",    badge: "bg-gta-gold/10 border-gta-gold/20",      desc: "Rockstar Games, Take-Two IR, or SEC EDGAR filings. Highest credibility." },
               { tier: "PRESS",     color: "text-gta-gold",   badge: "bg-gta-gold/8 border-gta-gold/25",    desc: "Specialist and mainstream gaming press. Credibility varies by outlet." },
@@ -325,11 +325,11 @@ const updatedAt = feedData.last_updated;
         </div>
 
         <!-- Active sources -->
-        <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-          <div class="px-4 py-3 border-b border-[#1e1e23]">
+        <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+          <div class="px-4 py-3 border-b border-border-dim">
             <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Active Sources</div>
           </div>
-          <div class="divide-y divide-[#1e1e23]">
+          <div class="divide-y divide-border-dim">
             {([
               { name: "Rockstar Intel",  items: bySource["Rockstar Intel"] ?? 0,  status: "live" as const },
               { name: "Kotaku",          items: bySource["Kotaku"] ?? 0,          status: "live" as const },
@@ -355,7 +355,7 @@ const updatedAt = feedData.last_updated;
         <NewsletterSignup variant="compact" />
 
         <!-- Methodology note -->
-        <div class="rounded-xl border border-[#1e1e23] p-4" style="background:#131316">
+        <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
           <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Note</div>
           <p class="text-[11px] text-zinc-600 leading-relaxed">
             GTA VI.AI aggregates public RSS feeds and the Reddit r/GTA6 RSS. All articles link to their original source.

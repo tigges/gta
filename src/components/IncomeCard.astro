@@ -29,6 +29,7 @@
  *   Footer     DLC label · Full profile → · GTAVI.AI · Share
  */
 import GamePill from "./GamePill.astro";
+import Badge from "./Badge.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 import { playTypeColor, getRegionType, getConfidenceType, pillStyle } from "../config/semanticTypes";
 import { TIER_STYLES } from "../config/tierStyles";
@@ -141,9 +142,16 @@ const cardBorderColor = isGtaVI ? confColor : tierColor;
 
 // ── Play type + region ────────────────────────────────────────────────────
 const playColor   = playTypeColor(play_type ?? category ?? "");
+// Normalize play type to a Badge variant id
+const playBadgeVariant = (play_type ?? category ?? "").toLowerCase().replace(/ /g, "-") as any;
+// Region: look up each territory individually for plain-text rendering
+const vcRegion  = getRegionType("vice-city");
+const leoRegion = getRegionType("leonida");
 const regionType  = (isGtaVI && region) ? getRegionType(region) : null;
 const regionLabel = regionType?.label ?? null;
 const regionColor = regionType?.colorToken ?? null;
+const showVc  = isGtaVI && (region === "vice-city" || region === "both");
+const showLeo = isGtaVI && (region === "leonida"   || region === "both");
 
 // ── GTA Online bar + enrichment ───────────────────────────────────────────
 const barPct = isOnline || isGtaV
@@ -203,10 +211,7 @@ const showEnrichment = !compact;
       <!-- Tier / confidence badge top-right -->
       <div class="absolute top-2 right-2 z-20">
         {isGtaVI && confType ? (
-          <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
-                style={pillStyle(confColor)}>
-            {confType.label}
-          </span>
+          <Badge variant={confidence_tier} size="xs" />
         ) : (
           <span class="font-mono font-black text-lg leading-none px-1.5 py-0.5 rounded"
                 style={`color:${tierColor};background:${tierBg};border:1px solid ${tierBorder}`}>
@@ -219,10 +224,7 @@ const showEnrichment = !compact;
     <div class="px-4 pt-3 pb-2 flex items-center justify-between relative z-20">
       <GamePill game={GAME_PILL_MAP[game] as any} size="xs" />
       {isGtaVI && confType ? (
-        <span class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
-              style={pillStyle(confColor)}>
-          {confType.label}
-        </span>
+        <Badge variant={confidence_tier} size="xs" />
       ) : (
         <span class="font-mono font-black text-2xl leading-none" style={`color:${tierColor}`}>{tier}</span>
       )}
@@ -234,15 +236,14 @@ const showEnrichment = !compact;
 
     <!-- Context row: type · region/solo/difficulty · trailer evidence -->
     <div class="flex items-center gap-1.5 flex-wrap">
-      <span class="text-[10px] font-mono uppercase tracking-widest" style={`color:${playColor}`}>
-        {play_type ?? category}
-      </span>
+      <Badge variant={playBadgeVariant} size="xs" />
       {isGtaVI ? (
         <>
-          {regionLabel && regionColor && (
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border uppercase tracking-widest"
-                  style={`color:${regionColor};border-color:color-mix(in srgb,${regionColor} 35%,transparent);background:color-mix(in srgb,${regionColor} 12%,transparent)`}>
-              {regionLabel}
+          {(showVc || showLeo) && (
+            <span class="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest">
+              {showVc  && <span style={`color:${vcRegion.colorToken}`}>{vcRegion.label}</span>}
+              {showVc && showLeo && <span class="text-zinc-700">·</span>}
+              {showLeo && <span style={`color:${leoRegion.colorToken}`}>{leoRegion.label}</span>}
             </span>
           )}
           {trailer_evidence && (
@@ -253,9 +254,9 @@ const showEnrichment = !compact;
         <>
           {solo
             ? <span class="text-[10px] font-mono border border-gta-teal/25 bg-gta-teal/8 px-1 py-0.5 rounded" style="color:var(--c-live)">solo ✓</span>
-            : min_players && <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{min_players}–{max_players}p</span>
+            : min_players && <span class="text-[10px] font-mono text-zinc-600 border border-border-mid px-1 py-0.5 rounded">{min_players}–{max_players}p</span>
           }
-          <span class="text-[10px] font-mono text-zinc-600 border border-[#2a2a31] px-1 py-0.5 rounded">{diffLabel}</span>
+          <span class="text-[10px] font-mono text-zinc-600 border border-border-mid px-1 py-0.5 rounded">{diffLabel}</span>
         </>
       )}
     </div>
@@ -330,7 +331,7 @@ const showEnrichment = !compact;
 
         <!-- Enrichment slot: Setup + break-even (GTA Online) OR Confidence + analogue (GTA VI) -->
         {isGtaVI ? (
-          <div class="grid grid-cols-2 gap-x-3 text-[10px] font-mono border-t border-[#1e1e23] pt-2">
+          <div class="grid grid-cols-2 gap-x-3 text-[10px] font-mono border-t border-border-dim pt-2">
             <div>
               <div class="text-zinc-600 uppercase tracking-widest mb-0.5">Confidence</div>
               <div style={`color:${confColor}`}>{confidence_score}%</div>
@@ -388,7 +389,7 @@ const showEnrichment = !compact;
 
         <!-- Basis text (GTA VI, replaces tips) -->
         {isGtaVI && basis && (
-          <div class="rounded-lg px-2.5 py-2 text-[10px] font-mono text-zinc-400 border-t border-[#1e1e23] pt-2 flex gap-1.5 items-start">
+          <div class="rounded-lg px-2.5 py-2 text-[10px] font-mono text-zinc-400 border-t border-border-dim pt-2 flex gap-1.5 items-start">
             <span class="text-zinc-600 shrink-0">▶</span>
             <span class="leading-snug">{basis}</span>
           </div>
@@ -396,7 +397,7 @@ const showEnrichment = !compact;
 
         <!-- Daily fee (GTA Online) -->
         {!isGtaVI && daily_fee && (
-          <div class="text-[11px] font-mono text-zinc-600 border-t border-[#1e1e23] pt-2 flex items-center gap-1.5">
+          <div class="text-[11px] font-mono text-zinc-600 border-t border-border-dim pt-2 flex items-center gap-1.5">
             <span style="color:var(--c-text-6)">⚙</span>
             <span>${daily_fee.toLocaleString()}/day upkeep</span>
             <span class="text-zinc-500 ml-0.5">(${Math.round(daily_fee * 365 / 1000)}k/yr)</span>
@@ -405,7 +406,7 @@ const showEnrichment = !compact;
 
         <!-- Bonus cadence (GTA Online) -->
         {!isGtaVI && bonus_count && (
-          <div class={`text-[11px] font-mono flex items-center gap-1.5 ${daily_fee ? "" : "border-t border-[#1e1e23] pt-2"}`}>
+          <div class={`text-[11px] font-mono flex items-center gap-1.5 ${daily_fee ? "" : "border-t border-border-dim pt-2"}`}>
             {bonusActive ? (
               <span class="font-bold px-1.5 py-0.5 rounded"
                     style="color:var(--c-growth);background:color-mix(in srgb,var(--c-growth) 12%,transparent);border:1px solid color-mix(in srgb,var(--c-growth) 25%,transparent)">
@@ -423,7 +424,7 @@ const showEnrichment = !compact;
 
         <!-- Nerf indicator (GTA Online) -->
         {!isGtaVI && last_nerfed && (
-          <div class={`text-[11px] font-mono flex items-center gap-1.5 ${(daily_fee || bonus_count) ? "" : "border-t border-[#1e1e23] pt-2"}`}
+          <div class={`text-[11px] font-mono flex items-center gap-1.5 ${(daily_fee || bonus_count) ? "" : "border-t border-border-dim pt-2"}`}
                style="color:var(--c-brand)">
             <span>⚡</span>
             <span>Nerfed {new Date(last_nerfed).toLocaleDateString("en-GB", { month:"short", year:"numeric" })}</span>
@@ -438,7 +439,7 @@ const showEnrichment = !compact;
 
         <!-- Top tip (GTA Online) -->
         {!isGtaVI && tips && tips[0] && (
-          <div class="rounded-lg px-2.5 py-2 text-[11px] font-mono text-zinc-400 border-t border-[#1e1e23] pt-2 flex gap-1.5 items-start">
+          <div class="rounded-lg px-2.5 py-2 text-[11px] font-mono text-zinc-400 border-t border-border-dim pt-2 flex gap-1.5 items-start">
             <span style="color:var(--c-brand)" class="shrink-0">▶</span>
             <span class="leading-snug">{tips[0]}</span>
           </div>

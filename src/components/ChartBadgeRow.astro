@@ -1,0 +1,50 @@
+---
+/**
+ * ChartBadgeRow — [GamePill] [Category badge] header row for chart teasers.
+ *
+ * Standard header used on all chart teaser components (GTA Online, GTA VI,
+ * Franchise). Renders the game pill + category at text-[9px] scale, plus an
+ * optional "Full →" link top-right.
+ *
+ * Per P2 rule: Full chart link appears top-right ONLY when the top-right
+ * corner is otherwise empty. If a tier pill or other badge occupies top-right,
+ * the Full link moves to the card footer instead.
+ *
+ * Usage:
+ *   <ChartBadgeRow game="gta-online" category="IG Economy" fullHref="/charts?title=gta-online#section-eco-wages" />
+ *   <ChartBadgeRow game="gta-vi" category="Franchise" />
+ */
+
+import GamePill from "./GamePill.astro";
+
+interface Props {
+  game: "gta-vi" | "gta-online" | "gta-v" | "gta-sa" | "gta-vc" | "gta-iii" | "franchise";
+  category: string;
+  /** Optional "Full →" link shown top-right. Omit if top-right is occupied. */
+  fullHref?: string;
+  /** Label for the full link. Defaults to "Full →". */
+  fullLabel?: string;
+}
+
+const { game, category, fullHref, fullLabel = "Full →" } = Astro.props;
+---
+
+<div class="flex items-center justify-between gap-2 mb-1">
+  <div class="flex items-center gap-2">
+    <GamePill game={game} size="xs" />
+    <span
+      class="text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+      style="color:var(--c-text-4);border-color:var(--c-border-2)"
+    >
+      {category}
+    </span>
+  </div>
+  {fullHref && (
+    <a
+      href={fullHref}
+      class="shrink-0 text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors uppercase tracking-widest whitespace-nowrap"
+    >
+      {fullLabel}
+    </a>
+  )}
+</div>

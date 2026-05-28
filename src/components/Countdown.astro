@@ -5,19 +5,23 @@ interface Props {
   variant?: "hero" | "compact";
 }
 const { variant = "hero" } = Astro.props;
+const units = ["days", "hrs", "min", "sec"] as const;
 ---
 
 {variant === "hero" ? (
-  <div id="countdown-hero" class="flex items-center gap-1 sm:gap-2 flex-wrap" data-launch={LAUNCH_DATE}>
-    {["days", "hrs", "min", "sec"].map((unit) => (
-      <div class="flex flex-col items-center min-w-[52px]">
-        <span
-          id={`cd-${unit}`}
-          class="text-2xl sm:text-3xl font-mono font-bold text-gta-bright tabular-nums"
-        >--</span>
-        <span class="text-[11px] font-mono text-zinc-600 uppercase tracking-[0.2em] mt-0.5">{unit}</span>
-      </div>
-      <span class="text-zinc-500 font-mono text-xl pb-4 last:hidden">·</span>
+  <div class="countdown-root flex items-center gap-1 sm:gap-2 flex-wrap" data-launch={LAUNCH_DATE}>
+    {units.map((unit, i) => (
+      <>
+        <div class="flex flex-col items-center min-w-[52px]">
+          <span
+            class={`countdown-val countdown-${unit} text-2xl sm:text-3xl font-mono font-bold text-gta-bright tabular-nums`}
+          >--</span>
+          <span class="text-[11px] font-mono text-zinc-600 uppercase tracking-[0.2em] mt-0.5">{unit}</span>
+        </div>
+        {i < units.length - 1 && (
+          <span class="text-zinc-500 font-mono text-xl pb-4">·</span>
+        )}
+      </>
     ))}
     <div class="ml-2 flex flex-col justify-center">
       <span class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest">until launch</span>
@@ -25,43 +29,44 @@ const { variant = "hero" } = Astro.props;
     </div>
   </div>
 ) : (
-  <div id="countdown-compact" class="flex items-center gap-2" data-launch={LAUNCH_DATE}>
+  <div class="countdown-root flex items-center gap-2" data-launch={LAUNCH_DATE}>
     <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
-    <span id="cd-compact" class="text-[10px] font-mono text-zinc-400 tracking-wide">-- D · -- H · -- M</span>
+    <span class="countdown-compact text-[10px] font-mono text-zinc-400 tracking-wide">-- D · -- H · -- M</span>
     <span class="text-[10px] font-mono text-zinc-500">to launch</span>
   </div>
 )}
 
 <script>
-  const LAUNCH = new Date("2026-11-19T00:00:00Z").getTime();
-
+  // Scoped tick — finds countdown containers on THIS page only.
+  // Handles both hero and compact variants simultaneously.
   function pad(n: number) { return String(Math.floor(n)).padStart(2, "0"); }
 
-  function tick() {
-    const now = Date.now();
-    const diff = Math.max(0, LAUNCH - now);
+  function tickAll() {
+    document.querySelectorAll<HTMLElement>(".countdown-root").forEach(root => {
+      const launch = new Date(root.dataset.launch ?? "2026-11-19T00:00:00Z").getTime();
+      const diff   = Math.max(0, launch - Date.now());
+      const s      = diff / 1000;
+      const days   = Math.floor(s / 86400);
+      const hrs    = Math.floor((s % 86400) / 3600);
+      const min    = Math.floor((s % 3600) / 60);
+      const sec    = Math.floor(s % 60);
 
-    const totalSec = diff / 1000;
-    const days = Math.floor(totalSec / 86400);
-    const hrs  = Math.floor((totalSec % 86400) / 3600);
-    const min  = Math.floor((totalSec % 3600) / 60);
-    const sec  = Math.floor(totalSec % 60);
+      // Hero variant
+      const dEl = root.querySelector<HTMLElement>(".countdown-days");
+      const hEl = root.querySelector<HTMLElement>(".countdown-hrs");
+      const mEl = root.querySelector<HTMLElement>(".countdown-min");
+      const sEl = root.querySelector<HTMLElement>(".countdown-sec");
+      if (dEl) dEl.textContent = String(days);
+      if (hEl) hEl.textContent = pad(hrs);
+      if (mEl) mEl.textContent = pad(min);
+      if (sEl) sEl.textContent = pad(sec);
 
-    // Hero variant
-    const dEl = document.getElementById("cd-days");
-    const hEl = document.getElementById("cd-hrs");
-    const mEl = document.getElementById("cd-min");
-    const sEl = document.getElementById("cd-sec");
-    if (dEl) dEl.textContent = String(days);
-    if (hEl) hEl.textContent = pad(hrs);
-    if (mEl) mEl.textContent = pad(min);
-    if (sEl) sEl.textContent = pad(sec);
-
-    // Compact variant
-    const cEl = document.getElementById("cd-compact");
-    if (cEl) cEl.textContent = `${days} D · ${pad(hrs)} H · ${pad(min)} M`;
+      // Compact variant
+      const cEl = root.querySelector<HTMLElement>(".countdown-compact");
+      if (cEl) cEl.textContent = `${days} D · ${pad(hrs)} H · ${pad(min)} M`;
+    });
   }
 
-  tick();
-  setInterval(tick, 1000);
+  tickAll();
+  setInterval(tickAll, 1000);
 </script>

@@ -22,6 +22,7 @@ const { fullEconomyHref, id: anchorId = "eco-model" } = Astro.props;
 const shareText = "The GTA circular economy — how GTA$ flows through income, consumption and investment. Intelligence on GTAVI.AI";
 ---
 
+<div class="eco-card">
 <div class="eco-wrap">
 
   <!-- ── ROW 1: INJECTION (full width) ──────────────────────────────── -->
@@ -163,7 +164,9 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
 
   </div>
 
-  {/* ── Footer: GTAVI.AI + Share (right-aligned, like all cards) ──── */}
+</div>
+
+  {/* ── Footer: outside eco-wrap so ShareDropdown is not clipped by overflow:hidden ── */}
   <div id={anchorId} class="eco-footer" style="scroll-margin-top:72px">
     <div class="flex-1"></div>
     <span class="footer-brand">GTAVI.AI</span>
@@ -174,13 +177,21 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
 
 <style>
 /* ── Root ─────────────────────────────────────────────────────────── */
-.eco-wrap {
+/* eco-card: visible card frame (border, radius, background).
+   No overflow:hidden here so ShareDropdown can open freely. */
+.eco-card {
   width: 100%;
   border-radius: 12px;
   border: 1px solid var(--c-border-1);
-  overflow: hidden;
   background: var(--c-card);
   font-family: var(--font-mono,monospace);
+}
+
+/* eco-wrap: clips the coloured row backgrounds to the top card corners.
+   Stops at the footer — the footer sits outside this wrapper. */
+.eco-wrap {
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
 }
 
 /* ── Row 1: Injection ──────────────────────────────────────────────── */
@@ -401,6 +412,7 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
   padding: 8px 16px;
   border-top: 1px solid var(--c-border-1);
   background: var(--c-card);
+  border-radius: 0 0 12px 12px;
 }
 .footer-brand {
   font-size: 10px; font-family: var(--font-mono,monospace);

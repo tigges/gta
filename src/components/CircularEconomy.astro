@@ -15,9 +15,12 @@ interface Props {
   mode?: "full" | "compact";
   /** In compact mode: URL to the full economy page. Shows "Full model →" CTA. */
   fullModelHref?: string;
+  /** Hide Key Innovation + Inflation Channels metadata — use when the page
+   *  renders those sections separately (e.g. in a dedicated cluster section). */
+  showMetadata?: boolean;
 }
 
-const { titleId, mode = "full", fullModelHref } = Astro.props;
+const { titleId, mode = "full", fullModelHref, showMetadata = true } = Astro.props;
 const isCompact = mode === "compact";
 
 const typedData  = economyData as unknown as EconomyModelsData;
@@ -51,19 +54,19 @@ const LAYOUTS: Record<string, Record<string, { top: number; left: number; width:
     "world-shops":      { top: 18, left: 56, width: 40 },
   },
   "proto": {
-    "missions-jobs":    { top: 10, left:  1, width: 26 },
-    "missions-hits":    { top: 10, left:  1, width: 26 },
-    "player":           { top: 10, left: 33, width: 34 },
-    "businesses":       { top: 10, left: 70, width: 28 },
-    "world":            { top: 10, left: 70, width: 28 },
-    "world-shops":      { top: 68, left: 33, width: 34 },
-    "tbogt-bridge":     { top: 70, left: 22, width: 56 },
+    "missions-jobs":    { top: 10, left:  2, width: 22 },
+    "missions-hits":    { top: 10, left:  2, width: 22 },
+    "player":           { top: 10, left: 33, width: 28 },
+    "businesses":       { top: 10, left: 71, width: 24 },
+    "world":            { top: 10, left: 71, width: 24 },
+    "world-shops":      { top: 68, left: 33, width: 28 },
+    "tbogt-bridge":     { top: 70, left: 24, width: 50 },
   },
   "loop": {
-    "heists-missions":  { top:  8, left:  1, width: 26 },
-    "player":           { top:  8, left: 32, width: 36 },
-    "properties":       { top:  8, left: 71, width: 27 },
-    "bawsaq-lcn":       { top: 65, left: 26, width: 48 },
+    "heists-missions":  { top:  8, left:  2, width: 23 },
+    "player":           { top:  8, left: 33, width: 30 },
+    "properties":       { top:  8, left: 72, width: 24 },
+    "bawsaq-lcn":       { top: 65, left: 28, width: 42 },
   },
   "multi-stream": {
     "missions-jobs":    { top:  3, left: 33, width: 34 },
@@ -75,10 +78,10 @@ const LAYOUTS: Record<string, Record<string, { top: number; left: number; width:
   },
   // full-mmt: shark-cards at top (injection from outside), actors below
   "full-mmt": {
-    "shark-cards":      { top:  3, left: 22, width: 56 },
-    "businesses":       { top: 55, left:  1, width: 30 },
-    "players":          { top: 55, left: 35, width: 30 },
-    "maze-bank":        { top: 55, left: 69, width: 29 },
+    "shark-cards":      { top:  3, left: 26, width: 48 },
+    "businesses":       { top: 55, left:  2, width: 27 },
+    "players":          { top: 55, left: 36, width: 27 },
+    "maze-bank":        { top: 55, left: 70, width: 27 },
   },
   // dual-territory inner nodes (regions handled separately in HTML)
   "dual-territory": {
@@ -289,7 +292,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 
       {/* "IN-GAME CIRCULAR ECONOMY" dashed border for full-mmt */}
       {economy.layout_template === "full-mmt" && (
-        <div class="absolute rounded-xl border border-dashed border-[#2a2a31] pointer-events-none"
+        <div class="absolute rounded-xl border border-dashed border-border-mid pointer-events-none"
              style="top:46%;left:0;right:0;bottom:2%;z-index:0">
           <div class="absolute -top-2.5 left-4 text-[11px] font-mono text-zinc-500 uppercase tracking-[0.2em] px-1" style="background:var(--c-bg)">
             In-Game Circular Economy
@@ -309,7 +312,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
                  isNodeProjected ? "border-dashed" : "",
                  nodeBorder(node.color_token),
                ].join(" ")}
-               style={`top:${pos.top}%;left:${pos.left}%;width:${pos.width}%;padding:8px 10px;background:rgba(10,10,13,0.85);z-index:5`}>
+               style={`top:${pos.top}%;left:${pos.left}%;width:${pos.width}%;padding:5px 8px;background:rgba(10,10,13,0.85);z-index:5`}>
             <div class={`text-[11px] font-semibold leading-snug ${nodeText(node.color_token)}`}>
               {node.label}
             </div>
@@ -328,7 +331,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
             const hex = flowHex(color);
             return (
               <marker id={`${uid}-arr-${color}`}
-                      markerWidth="9" markerHeight="9"
+                      markerWidth="7" markerHeight="7"
                       refX="5" refY="3"
                       orient="auto" markerUnits="strokeWidth">
                 <path d="M0,0 L0,6 L7,3 z" fill={hex} opacity="0.85" />
@@ -342,7 +345,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
 
   {/* ── Flow legend ───────────────────────────────────────────────────────── */}
   {!isCompact && flows.length > 0 && economy.layout_template !== "dual-territory" && (
-    <div class="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 pt-3 border-t border-[#1e1e23]">
+    <div class="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 pt-3 border-t border-border-dim">
       {flows.map((flow: any) => {
         const hex = flowHex(flow.color_token);
         const label = (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim();
@@ -357,13 +360,13 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
     </div>
   )}
 
-  {/* ── Economy metadata (full mode) ─────────────────────────────────────── */}
-  {!isCompact && (
+  {/* ── Economy metadata (full mode, shown when showMetadata=true) ─────── */}
+  {!isCompact && showMetadata && (
     <div class="grid grid-cols-1 gap-3 mt-4">
       {/* Compact mode keeps Economy Type + Analogue as context labels; full mode
           omits them — the page hero already carries that context. */}
       {economy.key_innovation && (
-        <div class="rounded-lg border border-[#1e1e23] px-3 py-2.5" style="background:#131316">
+        <div class="rounded-lg border border-border-dim px-3 py-2.5" style="background:var(--c-card)">
           <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mb-1">
             Key {economy.short ?? economy.title_name} Economy Innovation {"★".repeat(economy.innovation_stars)}
           </div>
@@ -391,11 +394,11 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   {/* Compact mode: show Economy Type + Analogue as brief context labels */}
   {isCompact && (
     <div class="grid grid-cols-2 gap-2 mt-3">
-      <div class="rounded-lg border border-[#2a2a31] px-2.5 py-2" style="background:#131316">
+      <div class="rounded-lg border border-border-mid px-2.5 py-2" style="background:var(--c-card)">
         <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Economy Type</div>
         <div class="text-[10px] font-semibold text-zinc-200 leading-snug">{economy.economy_type}</div>
       </div>
-      <div class="rounded-lg border border-[#2a2a31] px-2.5 py-2" style="background:#131316">
+      <div class="rounded-lg border border-border-mid px-2.5 py-2" style="background:var(--c-card)">
         <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-0.5">Real-World Analogue</div>
         <div class="text-[10px] font-semibold text-zinc-200 leading-snug">{economy.real_world_analogue}</div>
       </div>
@@ -484,6 +487,13 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       return { from: getEdgePt(fromEl, fd, offset), to: getEdgePt(toEl, td, 0) };
     }
 
+    // Pre-count how many flows share each node-pair (for curvature decisions)
+    const totalPairFlows: Record<string, number> = {};
+    for (const f of flows) {
+      const k = [f.from as string, f.to as string].sort().join("|");
+      totalPairFlows[k] = (totalPairFlows[k] ?? 0) + 1;
+    }
+
     const pairCount: Record<string, number> = {};
     for (const flow of flows) {
       const fromEl = grid.querySelector<HTMLElement>(`[data-node-id="${flow.from}"]`);
@@ -494,20 +504,21 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       const pass    = pairCount[pairKey] ?? 0;
       pairCount[pairKey] = pass + 1;
 
-      const edges  = bestEdges(fromEl, toEl, pass * 8);
+      const edges  = bestEdges(fromEl, toEl, pass * 6);
       const p1 = edges.from, p2 = edges.to;
       const hex    = FLOW_HEX[flow.color_token] ?? "#71717a";
       const isDashed = flow.projected || !flow.active;
 
-      // Bezier control point — more curvature on bidirectional/parallel flows
-      // to visually separate arrows that share the same node pair
       const midX = (p1.x + p2.x) / 2, midY = (p1.y + p2.y) / 2;
       const dx   = p2.x - p1.x,       dy   = p2.y - p1.y;
-      // More curvature separates parallel arrows (wages/spending/investment
-      // all run between the same businesses↔players nodes).
-      const isMulti = grid.dataset.template === "multi-stream";
-      const curve = flow.bidirectional ? 0.35 : isMulti ? 0.28 : 0.22;
-      const curveDir = pass % 2 === 0 ? 1 : -1; // alternate sides for parallel arrows
+
+      // Curvature: high when multiple flows share the same node pair so
+      // arrows arc clearly above/below each other. First arrow curves one
+      // direction (curveDir +1), second the opposite (-1) — "one up, one down".
+      const isMulti    = grid.dataset.template === "multi-stream";
+      const isParallel = (totalPairFlows[pairKey] ?? 1) > 1;
+      const curve    = isParallel ? 0.48 : isMulti ? 0.22 : 0.18;
+      const curveDir = pass % 2 === 0 ? 1 : -1;
       const cx = midX - dy * curve * curveDir, cy = midY + dx * curve * curveDir;
 
       // Determine animation from flow type
@@ -519,8 +530,8 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       path.setAttribute("d", `M${p1.x},${p1.y} Q${cx},${cy} ${p2.x},${p2.y}`);
       path.setAttribute("fill", "none");
       path.setAttribute("stroke", hex);
-      path.setAttribute("stroke-width", "3");
-      path.setAttribute("stroke-opacity", "1");
+      path.setAttribute("stroke-width", "1.8");
+      path.setAttribute("stroke-opacity", "0.9");
       path.style.animationDuration = `${animCfg.duration_s}s`;
       if (isDashed && animClass === "") path.setAttribute("stroke-dasharray", "5,3");
       path.setAttribute("marker-end", `url(#${uid}-arr-${flow.color_token})`);

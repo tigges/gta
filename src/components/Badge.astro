@@ -22,6 +22,7 @@ interface Props {
     | "confirmed" | "reported" | "predicted" | "indexed"
     // Cluster C — play types
     | "active" | "passive" | "semi-passive" | "hybrid" | "heist" | "mission"
+    | "contract" | "business"
     // Expenditure variants
     | "investment" | "injection" | "consumption"
     // Chart category (neutral)
@@ -60,6 +61,8 @@ const VARIANTS: Record<string, { token: string; defaultLabel: string }> = {
   "hybrid":        { token: "var(--c-play-semi)",     defaultLabel: "Hybrid"       },
   "heist":         { token: "var(--c-play-heist)",    defaultLabel: "Heist"        },
   "mission":       { token: "var(--c-play-mission)",  defaultLabel: "Mission"      },
+  "contract":      { token: "var(--c-live)",          defaultLabel: "Contract"     },
+  "business":      { token: "var(--c-live)",          defaultLabel: "Business"     },
   // Expenditure variants
   "investment":    { token: "var(--c-brand)",         defaultLabel: "Investment"   },
   "injection":     { token: "var(--c-economy)",       defaultLabel: "Injection"    },

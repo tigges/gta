@@ -14,9 +14,9 @@ const totalPts = keywords.reduce((s: number, k: any) => s + k.data.length, 0);
 const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" });
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
   <!-- Header: trailer thumbnails + keyword toggles -->
-  <div class="flex border-b border-[#1e1e23]">
+  <div class="flex border-b border-border-dim">
     {trailers.slice(0, 2).map((t: any, i: number) => (
       <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
          class="relative overflow-hidden group shrink-0" style="width:140px">

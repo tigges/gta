@@ -3,8 +3,8 @@ import steamData from "../../data/gta-5/meta/steam-players.json";
 import ShareDropdown from "./ShareDropdown.astro";
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-  <div class="px-5 py-4 border-b border-[#1e1e23] flex items-start justify-between flex-wrap gap-3">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+  <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
     <div>
       <div class="font-semibold text-zinc-200 text-sm">GTA V — Steam Player Count</div>
       <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Monthly avg &amp; peak concurrent (PC)</div>
@@ -15,7 +15,7 @@ import ShareDropdown from "./ShareDropdown.astro";
     </div>
   </div>
   <div id="player-chart" class="w-full h-64 px-4 py-2" data-points={JSON.stringify(steamData.data)}></div>
-  <div class="px-5 py-3 border-t border-[#1e1e23] flex items-center justify-between gap-3">
+  <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
     <span class="text-[10px] text-zinc-600 font-mono">Source: SteamCharts · Updated {new Date(steamData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</span>
     <div class="flex items-center gap-2 shrink-0">
       <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>

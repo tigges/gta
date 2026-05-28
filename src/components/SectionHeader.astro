@@ -1,0 +1,76 @@
+---
+/**
+ * SectionHeader — canonical "// SECTION TITLE" header used across all pages.
+ *
+ * Two structural variants chosen automatically:
+ *   Without pill → single flex row (dot · label · divider)
+ *   With pill    → justify-between with nested left group (prevents divider
+ *                  from crushing the pill on narrow screens)
+ *
+ * Usage:
+ *   <SectionHeader label="// Key Charts" />
+ *   <SectionHeader label="// Signal Intelligence" pillHref="/gta-vi/intel" pillLabel="All predictions →" />
+ *   <SectionHeader label="// Explore GTA Online" dotColor="var(--c-title-online)" />
+ *
+ * dotColor tokens:
+ *   var(--c-brand)         gold  — GTA VI, franchise, primary data
+ *   var(--c-title-online)  cyan  — GTA Online context
+ *   var(--c-live)          teal  — confirmed / live data
+ *   var(--c-growth)        green — passive income / S+ tier
+ *   var(--c-economy)       indigo — economy / capital
+ *   var(--c-text-4)        zinc  — neutral / explore
+ *
+ * The dot always renders at 60% opacity so strong accent colours stay subtle.
+ * Pill link is always text-[10px] per the site standard (P4 fix).
+ */
+
+interface Props {
+  /** Section label — always include "// " prefix, e.g. "// Key Charts" */
+  label: string;
+  /**
+   * CSS variable for the identity dot colour.
+   * When omitted the dot is NOT rendered — just the line and label.
+   * e.g. dotColor="var(--c-brand)"
+   */
+  dotColor?: string;
+  /** If set, renders a "Full XYZ →" pill link on the right. */
+  pillHref?: string;
+  /** Text for the pill link. Required when pillHref is set. */
+  pillLabel?: string;
+  /** Extra classes on the outer row (e.g. "mt-4"). Does not override mb-6. */
+  class?: string;
+}
+
+const {
+  label,
+  dotColor,
+  pillHref,
+  pillLabel,
+  class: extraClass = "",
+} = Astro.props;
+
+const hasDot  = !!dotColor;
+const hasPill = !!(pillHref && pillLabel);
+---
+
+{hasPill ? (
+  <div class={`flex items-center justify-between gap-3 mb-6 ${extraClass}`}>
+    <div class="flex items-center gap-3 min-w-0">
+      {hasDot && <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${dotColor};opacity:0.6`}></span>}
+      <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">{label}</span>
+      <div class="flex-1 h-px bg-border-dim"></div>
+    </div>
+    <a
+      href={pillHref}
+      class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-border-mid hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest"
+    >
+      {pillLabel}
+    </a>
+  </div>
+) : (
+  <div class={`flex items-center gap-3 mb-6 ${extraClass}`}>
+    {hasDot && <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${dotColor};opacity:0.6`}></span>}
+    <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">{label}</span>
+    <div class="flex-1 h-px bg-border-dim"></div>
+  </div>
+)}

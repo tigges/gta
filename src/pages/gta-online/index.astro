@@ -6,6 +6,7 @@
  */
 import Base from "../../layouts/Base.astro";
 import GamePill from "../../components/GamePill.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
 import EconomyCircle from "../../components/EconomyCircle.astro";
 import IncomeCard from "../../components/IncomeCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
@@ -59,7 +60,7 @@ const BONUS_LABEL: Record<string, string> = {
   <!-- ══════════════════════════════════════════════════════════
        HERO
   ══════════════════════════════════════════════════════════ -->
-  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:320px;display:flex;align-items:flex-end">
+  <section class="relative border-b border-border-dim overflow-hidden" style="min-height:320px;display:flex;align-items:flex-end">
     <div class="absolute inset-0">
       <img src="/assets/gta6/locations/Vice_City_03.jpg" alt=""
            class="w-full h-full object-cover" style="object-position:center 30%" aria-hidden="true" loading="eager" />
@@ -71,7 +72,7 @@ const BONUS_LABEL: Record<string, string> = {
         <div class="max-w-xl">
           <div class="flex items-center gap-2 mb-3">
             <GamePill game="gta-online" size="sm" />
-            <span class="text-[11px] font-mono text-zinc-500 border border-[#2a2a31] px-2 py-0.5 rounded uppercase tracking-widest">Live since 2013</span>
+            <span class="text-[11px] font-mono text-zinc-500 border border-border-mid px-2 py-0.5 rounded uppercase tracking-widest">Live since 2013</span>
           </div>
           <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">GTA Online</h1>
           <p class="text-zinc-400 text-sm leading-relaxed mb-5 max-w-sm">
@@ -79,7 +80,7 @@ const BONUS_LABEL: Record<string, string> = {
           </p>
           <!-- Live player count as the "countdown" equivalent -->
           {latestSteam && (
-            <div class="inline-flex items-center gap-2 border border-[#2a2a31] rounded-lg px-4 py-2.5" style="background:rgba(0,212,232,0.04)">
+            <div class="inline-flex items-center gap-2 border border-border-mid rounded-lg px-4 py-2.5" style="background:rgba(0,212,232,0.04)">
               <span class="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style="background:var(--c-title-online)"></span>
               <div>
                 <div class="text-xl font-mono font-bold leading-none" style="color:var(--c-title-online)">
@@ -98,7 +99,7 @@ const BONUS_LABEL: Record<string, string> = {
         <!-- This week's top bonus — hero teaser card (mirrors GTA VI Hub trailer card) -->
         {bonuses.length > 0 && (
           <a href="/gta-online/bonuses"
-             class="group hidden sm:flex flex-col gap-2 rounded-xl border border-[#2a2a31] hover:border-gta-online-vivid/30 transition-all p-4 shrink-0 w-52"
+             class="group hidden sm:flex flex-col gap-2 rounded-xl border border-border-mid hover:border-gta-online-vivid/30 transition-all p-4 shrink-0 w-52"
              style="background:color-mix(in srgb,var(--c-title-online) 5%,var(--c-card))">
             <div class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-title-online)">This week · active now</div>
             {bonuses.slice(0, 3).map((b: any) => (
@@ -123,18 +124,10 @@ const BONUS_LABEL: Record<string, string> = {
     ══════════════════════════════════════════════════════════ -->
     {bonuses.length > 0 && (
       <section>
-        <div class="flex items-center gap-3 mb-6">
-          <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-title-online)"></span>
-          <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// This week's bonuses · W/C {weekStart}</span>
-          <div class="flex-1 h-px bg-[#1e1e23]"></div>
-          <a href="/gta-online/bonuses"
-             class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
-            Full calendar →
-          </a>
-        </div>
+        <SectionHeader label={`// This week's bonuses · W/C ${weekStart}`} dotColor="var(--c-title-online)" pillHref="/gta-online/bonuses" pillLabel="Full calendar →" />
         <div class={`grid gap-3 ${bonuses.length === 1 ? "grid-cols-1 max-w-sm" : bonuses.length === 2 ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-3"}`}>
           {bonuses.map((b: any) => (
-            <div class="rounded-xl border border-[#1e1e23] px-4 py-3.5 flex items-center gap-4"
+            <div class="rounded-xl border border-border-dim px-4 py-3.5 flex items-center gap-4"
                  style="background:color-mix(in srgb,var(--c-brand) 5%,var(--c-card))">
               <span class="text-3xl font-mono font-black leading-none shrink-0" style="color:var(--c-brand)">{b.multiplier}×</span>
               <div>
@@ -153,15 +146,7 @@ const BONUS_LABEL: Record<string, string> = {
          CHART TEASERS — 2 top + 1 full-width below
     ══════════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Key Charts</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/charts?title=gta-online"
-           class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
-          All GTA Online charts →
-        </a>
-      </div>
+      <SectionHeader label="// Key Charts" pillHref="/charts?title=gta-online" pillLabel="All GTA Online charts →" />
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ChartTeaserOnlineMetaCeiling />
         <ChartTeaserOnlineSharkCard />
@@ -172,15 +157,7 @@ const BONUS_LABEL: Record<string, string> = {
          ECONOMY — Circular Flow Model
     ══════════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-title-online)"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// The GTA Online Economy · Simplified</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-        <a href="/gta-online/economy"
-           class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
-          Full model →
-        </a>
-      </div>
+      <SectionHeader label="// The GTA Online Economy · Simplified" dotColor="var(--c-title-online)" pillHref="/gta-online/economy" pillLabel="Full model →" />
       <EconomyCircle fullEconomyHref="/gta-online/economy" />
     </section>
 
@@ -191,7 +168,7 @@ const BONUS_LABEL: Record<string, string> = {
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- LEFT: J (injection) + Y (income) — inputs to GTA$ balance -->
-        <div class="rounded-xl border border-[#1e1e23] px-4 pt-3 pb-4"
+        <div class="rounded-xl border border-border-dim px-4 pt-3 pb-4"
              style="border-left:3px solid var(--c-title-online);background:color-mix(in srgb,var(--c-title-online) 3%,transparent)">
           <div class="flex items-center gap-2 mb-4">
             <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-title-online)">J + Y — Injection & Income</span>
@@ -239,7 +216,7 @@ const BONUS_LABEL: Record<string, string> = {
         </div>
 
         <!-- RIGHT: C+I (investment + consumption) — outflows from GTA$ balance -->
-        <div class="rounded-xl border border-[#1e1e23] px-4 pt-3 pb-4"
+        <div class="rounded-xl border border-border-dim px-4 pt-3 pb-4"
              style="border-right:3px solid var(--c-flow-spending);background:color-mix(in srgb,var(--c-flow-spending) 3%,transparent)">
           <div class="flex items-center gap-2 mb-4">
             <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending)">C+I — Expenditure</span>
@@ -269,11 +246,7 @@ const BONUS_LABEL: Record<string, string> = {
          NAV TILES (mirrors GTA VI Hub explore section)
     ══════════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-zinc-700 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-500 tracking-[0.2em] uppercase">// Explore GTA Online</span>
-        <div class="flex-1 h-px bg-[#1e1e23]"></div>
-      </div>
+      <SectionHeader label="// Explore GTA Online" dotColor="var(--c-text-4)" />
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
           { href: "/charts?title=gta-online",   label: "Charts",             sub: "Meta evolution · Shark Card inflation · income data · economy",      badge: "Charts",    thumb: "/assets/gta5/dlc/acid-lab.jpg"            },
@@ -281,11 +254,11 @@ const BONUS_LABEL: Record<string, string> = {
           { href: "/gta-online/economy",        label: "Economy",            sub: "GTA-PPI · Shark Card inflation · circular flow · passive stack",      badge: "Economy",   thumb: "/assets/gta5/dlc/diamond-casino-heist.jpg"},
         ].map(tile => (
           <a href={tile.href}
-             class="group relative overflow-hidden rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] transition-all"
+             class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-border-mid transition-all"
              style="background:var(--c-card)">
             <div class="h-px w-full" style="background:linear-gradient(90deg,var(--c-title-online),transparent 60%)"></div>
             <div class="flex items-center gap-4 p-4">
-              <div class="shrink-0 w-20 h-12 rounded-lg overflow-hidden border border-[#2a2a31]">
+              <div class="shrink-0 w-20 h-12 rounded-lg overflow-hidden border border-border-mid">
                 <img src={tile.thumb} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
               </div>
               <div class="flex-1 min-w-0">

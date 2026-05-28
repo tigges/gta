@@ -62,8 +62,8 @@ const displayMeta = metaOverride !== undefined ? metaOverride : chart.meta;
     <GamePill game={chart.game} size="xs" />
     {secondaryGames && secondaryGames.map(g => <GamePill game={g} size="xs" />)}
     <span class={CATEGORY_BADGE_CLASSES}>{chart.badge}</span>
-    <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// {chart.label}</span>
-    <div class="flex-1 h-px bg-[#1e1e23]"></div>
+    <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">{chart.label}</span>
+    <div class="flex-1 h-px bg-border-dim"></div>
     {metaHref && metaLabel && (
       <a
         href={metaHref}

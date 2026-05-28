@@ -31,6 +31,11 @@ const resolvedOgImage =
   (ogPage ? `${SITE_BASE}/og/${ogPage}.png` : null) ??
   `https://img.youtube.com/vi/VQRLujxTm3c/maxresdefault.jpg`;
 
+// Canonical URL — strips trailing slash except for root
+const rawPath = Astro.url.pathname;
+const canonicalPath = rawPath === "/" ? "/" : rawPath.replace(/\/$/, "");
+const canonicalUrl = `${SITE_BASE}${canonicalPath}`;
+
 // Nav group definition — icon names map to HudIcon component
 interface DropdownItem {
   href: string;
@@ -136,20 +141,29 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth" style="background:#0e0e11;color:#fafafa">
+<html lang="en" class="scroll-smooth" style="background:var(--c-bg);color:#fafafa">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
 
+    <!-- Canonical -->
+    <link rel="canonical" href={canonicalUrl} />
+
     <!-- Open Graph -->
     <meta property="og:title"       content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image"       content={resolvedOgImage} />
+    <meta property="og:url"         content={canonicalUrl} />
     <meta property="og:type"        content="website" />
-    <meta name="twitter:card"       content="summary_large_image" />
-    <meta name="twitter:image"      content={resolvedOgImage} />
+    <meta property="og:site_name"   content="GTA VI.AI" />
+
+    <!-- Twitter / X Cards -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image"       content={resolvedOgImage} />
 
     <link rel="icon" type="image/png" href="/assets/logos/gtavi_ai_logo_transparent.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -174,12 +188,12 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 
   <body
     class="min-h-screen flex flex-col font-sans antialiased"
-    style="background:#0e0e11"
+    style="background:var(--c-bg)"
     data-title-context={titleContext ?? "franchise"}
   >
 
     <!-- Ops status bar -->
-    <div class="border-b border-[#1e1e23] bg-[#0a0a0d]">
+    <div class="border-b border-border-dim bg-[#0a0a0d]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-7">
         <div class="flex items-center gap-4">
           <span class="flex items-center gap-1.5">
@@ -190,7 +204,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
         </div>
         <div class="flex items-center gap-2">
           <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTA VI.AI</span>
-          <span class="text-[10px] font-mono text-zinc-500 border border-[#2a2a31] rounded px-1">{SITE_VERSION_LABEL}</span>
+          <span class="text-[10px] font-mono text-zinc-500 border border-border-mid rounded px-1">{SITE_VERSION_LABEL}</span>
           <span id="staging-badge" style="display:none" class="text-[10px] font-mono text-amber-400 border border-amber-500/40 bg-amber-500/10 rounded px-1.5 tracking-widest">staging</span>
           <script is:inline>
             if (location.hostname.includes("staging") || location.hostname.includes("pages.dev")) {
@@ -209,7 +223,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
          Desktop: 64px bar · all tabs always visible · mega-panel on click
          Mobile:  logo + grid icon → full-screen 2-col tile launcher
     ═══════════════════════════════════════════════════════ -->
-    <header id="main-nav" class="border-b border-[#1e1e23] sticky top-0 z-50" style="background:rgba(14,14,17,0.97);backdrop-filter:blur(16px)">
+    <header id="main-nav" class="border-b border-border-dim sticky top-0 z-50" style="background:rgba(14,14,17,0.97);backdrop-filter:blur(16px)">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center h-16 gap-6">
 
         <!-- Wordmark -->
@@ -296,15 +310,15 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 
       <!-- GTA VI panel -->
       <div id="nav-panel-GTA VI"
-           class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-[#1e1e23] shadow-2xl shadow-black/70"
+           class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-border-dim shadow-2xl shadow-black/70"
            style="top:64px;background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
         <div class="h-0.5" style="background:linear-gradient(90deg,var(--c-title-vi),transparent)"></div>
         <div class="max-w-7xl mx-auto px-6 py-6">
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {navGroups.find(g => g.label === "GTA VI")?.dropdown?.map(item => (
               <a href={item.href}
-                 class="group/pt flex items-start gap-4 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all"
-                 style="background:#131316">
+                 class="group/pt flex items-start gap-4 p-4 rounded-xl border border-border-dim hover:border-border-mid hover:bg-white/[0.02] transition-all"
+                 style="background:var(--c-card)">
                 <HudIcon name={item.iconName as any} size={20} class="text-zinc-500 group-hover/pt:text-zinc-300 transition-colors mt-0.5 shrink-0" />
                 <div>
                   <div class="text-sm font-semibold text-zinc-200 group-hover/pt:text-white transition-colors mb-1">{item.label}</div>
@@ -318,15 +332,15 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 
       <!-- GTA Online panel -->
       <div id="nav-panel-GTA Online"
-           class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-[#1e1e23] shadow-2xl shadow-black/70"
+           class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-border-dim shadow-2xl shadow-black/70"
            style="top:64px;background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
         <div class="h-0.5" style="background:linear-gradient(90deg,var(--c-title-online),transparent)"></div>
         <div class="max-w-7xl mx-auto px-6 py-6">
           <div class="grid grid-cols-3 gap-4 mb-4">
             {navGroups.find(g => g.label === "GTA Online")?.dropdown?.map(item => (
               <a href={item.href}
-                 class="group/pt flex items-start gap-4 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all"
-                 style="background:#131316">
+                 class="group/pt flex items-start gap-4 p-4 rounded-xl border border-border-dim hover:border-border-mid hover:bg-white/[0.02] transition-all"
+                 style="background:var(--c-card)">
                 <HudIcon name={item.iconName as any} size={20} class="text-zinc-500 group-hover/pt:text-zinc-300 transition-colors mt-0.5 shrink-0" />
                 <div>
                   <div class="text-sm font-semibold text-zinc-200 group-hover/pt:text-white transition-colors mb-1">{item.label}</div>
@@ -337,7 +351,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
           </div>
           <!-- Live strip (MCT status bar) -->
           <a href="/gta-online/bonuses"
-             class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg border border-[#1e1e23] hover:border-gta-teal/30 hover:bg-gta-teal/[0.03] transition-all group/ls"
+             class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg border border-border-dim hover:border-gta-teal/30 hover:bg-gta-teal/[0.03] transition-all group/ls"
              style="background:#0e1a0e">
             <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
             <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Live this week</span>
@@ -349,15 +363,15 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 
       <!-- Franchise panel -->
       <div id="nav-panel-Franchise"
-           class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-[#1e1e23] shadow-2xl shadow-black/70"
+           class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-border-dim shadow-2xl shadow-black/70"
            style="top:64px;background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
         <div class="h-0.5" style="background:linear-gradient(90deg,var(--c-brand),transparent)"></div>
         <div class="max-w-7xl mx-auto px-6 py-6">
           <div class="grid grid-cols-2 gap-4 mb-5">
             {navGroups.find(g => g.label === "Franchise")?.dropdown?.map(item => (
               <a href={item.href}
-                 class="group/pt flex items-start gap-4 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all"
-                 style="background:#131316">
+                 class="group/pt flex items-start gap-4 p-4 rounded-xl border border-border-dim hover:border-border-mid hover:bg-white/[0.02] transition-all"
+                 style="background:var(--c-card)">
                 <HudIcon name={item.iconName as any} size={20} class="text-zinc-500 group-hover/pt:text-zinc-300 transition-colors mt-0.5 shrink-0" />
                 <div>
                   <div class="text-sm font-semibold text-zinc-200 group-hover/pt:text-white transition-colors mb-1">{item.label}</div>
@@ -381,7 +395,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
             ] as const).map(t => (
               <a href={t.href} class="group/cv flex flex-col items-center gap-1">
                 <img src={`/assets/covers/${t.id}.jpg`} alt={t.id.toUpperCase()}
-                     class="w-9 h-12 object-cover rounded border border-[#2a2a31] group-hover/cv:border-gta-gold/40 transition-colors" loading="lazy" />
+                     class="w-9 h-12 object-cover rounded border border-border-mid group-hover/cv:border-gta-gold/40 transition-colors" loading="lazy" />
                 <span class="text-[9px] font-mono text-zinc-700 group-hover/cv:text-zinc-500 transition-colors">{t.year}</span>
               </a>
             ))}
@@ -401,7 +415,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-[#1e1e23] mt-24" style="background:#0a0a0d">
+    <footer class="border-t border-border-dim mt-24" style="background:var(--c-bg-deep)">
 
       <!-- Bottom bar -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5">
@@ -413,8 +427,9 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
           </div>
           <!-- Legal links — centre -->
           <div class="flex items-center gap-4">
-            <a href="/terms"   class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Terms</a>
-            <a href="/privacy" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Privacy</a>
+            <a href="/terms"       class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Terms</a>
+            <a href="/privacy"     class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Privacy</a>
+            <a href="/methodology" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Scoring</a>
           </div>
           <!-- Data note — right -->
           <div class="flex items-center gap-1.5">
@@ -436,7 +451,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
          style="background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
 
       <!-- Mobile nav header bar -->
-      <div class="flex items-center justify-between px-4 h-16 border-b border-[#1e1e23] shrink-0">
+      <div class="flex items-center justify-between px-4 h-16 border-b border-border-dim shrink-0">
         <a href="/" class="font-mono font-bold text-xl leading-none flex items-center gap-1">
           <span class="text-white mr-1">GTA</span><span class="text-gta-gold">VI</span>
           <span class="text-sm font-mono font-bold text-white border-2 border-zinc-200/70 rounded pl-0.5 pr-1.5 py-0.5 tracking-widest leading-none">.AI</span>
@@ -467,8 +482,8 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
               return (
                 <button
                   data-mobile-section={group.label}
-                  class="flex flex-col gap-2 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all active:bg-white/5 text-left w-full"
-                  style="background:#131316">
+                  class="flex flex-col gap-2 p-4 rounded-xl border border-border-dim hover:border-border-mid hover:bg-white/[0.02] transition-all active:bg-white/5 text-left w-full"
+                  style="background:var(--c-card)">
                   <div class="flex items-center justify-between">
                     <span class="font-semibold text-zinc-200 text-sm">{group.label}</span>
                     <span class="text-zinc-600 text-xs">›</span>
@@ -484,8 +499,8 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
             // Direct-link tile (no dropdown)
             return (
               <a href={group.href}
-                 class="flex flex-col gap-2 p-4 rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] hover:bg-white/[0.02] transition-all active:bg-white/5"
-                 style="background:#131316">
+                 class="flex flex-col gap-2 p-4 rounded-xl border border-border-dim hover:border-border-mid hover:bg-white/[0.02] transition-all active:bg-white/5"
+                 style="background:var(--c-card)">
                 <div class="flex items-center justify-between">
                   <span class="font-semibold text-zinc-200 text-sm">{group.label}</span>
                   <span class="text-zinc-600 text-xs">→</span>
@@ -516,7 +531,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
         return (
           <div id={`mobile-sub-${group.label}`} class="mobile-sub hidden flex-col flex-1 overflow-y-auto">
             <!-- Sub-header with back button -->
-            <div class="flex items-center gap-3 px-4 py-3 border-b border-[#1e1e23] shrink-0">
+            <div class="flex items-center gap-3 px-4 py-3 border-b border-border-dim shrink-0">
               <button data-mobile-back class="flex items-center gap-1.5 text-zinc-500 hover:text-zinc-200 transition-colors text-sm">
                 <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M10 13L5 8l5-5"/>
@@ -532,10 +547,10 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
                 const isHubLink = hasHub && i === 0;
                 return (
                   <a href={item.href}
-                     class={`group/ms flex items-start gap-4 p-4 rounded-xl border hover:bg-white/[0.02] transition-all ${isHubLink ? "border-opacity-40" : "border-[#1e1e23] hover:border-[#2a2a31]"}`}
+                     class={`group/ms flex items-start gap-4 p-4 rounded-xl border hover:bg-white/[0.02] transition-all ${isHubLink ? "border-opacity-40" : "border-border-dim hover:border-border-mid"}`}
                      style={isHubLink
-                       ? `background:#131316;border-color:color-mix(in srgb,${group.identityColor} 30%,transparent)`
-                       : "background:#131316"}>
+                       ? `background:var(--c-card);border-color:color-mix(in srgb,${group.identityColor} 30%,transparent)`
+                       : "background:var(--c-card)"}>
                     <HudIcon name={item.iconName as any} size={20} class={`transition-colors mt-0.5 shrink-0 ${isHubLink ? "text-zinc-400 group-hover/ms:text-zinc-200" : "text-zinc-500 group-hover/ms:text-zinc-300"}`} />
                     <div>
                       <div class={`text-sm font-semibold group-hover/ms:text-white transition-colors mb-0.5 ${isHubLink ? "text-zinc-200" : "text-zinc-200"}`}>

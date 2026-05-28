@@ -1,0 +1,176 @@
+---
+/**
+ * CastCard.astro — confirmed GTA VI character card.
+ *
+ * Layout:
+ *   Top-left:  GamePill (game title badge)
+ *   Top-right: Tier badge (Confirmed / Reported / Predicted)
+ *   Bottom:    Name + ▶ Clip pill, then role
+ *
+ * Clicking the card toggles inline video playback.
+ * On desktop the hover scale is kept as a visual affordance.
+ *
+ * Usage:
+ *   <CastCard name="Lucia Caminos" role="Protagonist"
+ *     img="Lucia_Caminos_01.jpg" video="Lucia_Caminos_Video_Clip.mp4" />
+ */
+
+import GamePill from "./GamePill.astro";
+
+interface Props {
+  name: string;
+  role: string;
+  /** Filename inside /assets/gta6/characters/ */
+  img: string;
+  /** Filename inside /assets/gta6/videos/ — omit if no clip exists */
+  video?: string;
+  /** Game context for the top-left pill. Defaults to gta-vi. */
+  game?: "gta-vi" | "gta-online" | "gta-v" | "gta-sa" | "gta-vc" | "gta-iv" | "gta-iii" | "franchise";
+  /** Confirmation tier. Defaults to confirmed. */
+  tier?: "confirmed" | "reported" | "predicted";
+}
+
+const {
+  name,
+  role,
+  img,
+  video,
+  game = "gta-vi",
+  tier = "confirmed",
+} = Astro.props;
+
+const isProtagonist = role === "Protagonist";
+const hasClip       = !!video;
+
+const tierStyles: Record<string, string> = {
+  confirmed: "bg-gta-teal/15 text-gta-teal border-gta-teal/25",
+  reported:  "bg-gta-gold/15 text-gta-gold border-gta-gold/25",
+  predicted: "bg-zinc-800 text-zinc-400 border-zinc-700",
+};
+const tierLabel: Record<string, string> = {
+  confirmed: "Confirmed",
+  reported:  "Reported",
+  predicted: "Predicted",
+};
+---
+
+<div
+  class="cast-card group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-gold/30 transition-all duration-300 cursor-pointer select-none"
+  data-video={video ? `/assets/gta6/videos/${video}` : ""}
+  data-cast-name={name}
+  aria-label={`${name} — ${hasClip ? "tap to play clip" : "confirmed cast"}`}
+>
+  <!-- Media: 3:4 aspect ratio -->
+  <div class="aspect-[3/4] relative overflow-hidden">
+    <!-- Still photo -->
+    <img
+      src={`/assets/gta6/characters/${img}`}
+      alt={name}
+      class="cast-still w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+      loading="lazy"
+    />
+
+    <!-- Video clip — hidden until clicked -->
+    {hasClip && (
+      <video
+        class="cast-video absolute inset-0 w-full h-full object-cover object-top opacity-0 transition-opacity duration-300 pointer-events-none"
+        muted
+        loop
+        playsinline
+        preload="none"
+      >
+        <source src={`/assets/gta6/videos/${video}`} type="video/mp4" />
+      </video>
+    )}
+
+    <!-- Bottom gradient -->
+    <div
+      class="absolute inset-0 pointer-events-none"
+      style="background:linear-gradient(to top,#0e0e11 0%,rgba(14,14,17,0.55) 35%,transparent 62%)"
+    ></div>
+  </div>
+
+  <!-- Top-left: game title pill -->
+  <div class="absolute top-2 left-2 pointer-events-none">
+    <GamePill game={game} size="xs" />
+  </div>
+
+  <!-- Top-right: tier badge -->
+  <div class="absolute top-2 right-2 pointer-events-none">
+    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${tierStyles[tier]}`}>
+      {tierLabel[tier]}
+    </span>
+  </div>
+
+  <!-- Bottom overlay: name + clip pill + role -->
+  <div class="absolute bottom-0 left-0 right-0 px-2.5 pb-2.5 pointer-events-none">
+    <!-- Name row -->
+    <div class="flex items-center gap-1.5 mb-0.5">
+      <div class="text-[11px] font-semibold text-white leading-tight truncate min-w-0">{name}</div>
+      {hasClip && (
+        <span class="cast-clip-pill shrink-0 inline-flex items-center gap-0.5 text-[9px] font-mono bg-black/70 text-white border border-white/20 px-1.5 py-0.5 rounded uppercase tracking-wider transition-colors duration-200">
+          ▶ Clip
+        </span>
+      )}
+    </div>
+    <!-- Role -->
+    <span class={`text-[10px] font-mono uppercase tracking-widest ${isProtagonist ? "text-gta-gold" : "text-zinc-500"}`}>
+      {role}
+    </span>
+  </div>
+
+</div>
+
+<script>
+  // Runs once per page (Astro deduplicates). Handles all .cast-card elements.
+  document.querySelectorAll<HTMLElement>(".cast-card").forEach(card => {
+    const video = card.querySelector<HTMLVideoElement>(".cast-video");
+    const still = card.querySelector<HTMLImageElement>(".cast-still");
+    const pill  = card.querySelector<HTMLElement>(".cast-clip-pill");
+    if (!video) return;
+
+    let playing = false;
+
+    function fireCastClip(action: "play" | "pause") {
+      if (typeof (window as any).plausible !== "function") return;
+      (window as any).plausible("CastClip", {
+        props: { name: card.dataset.castName ?? "", action },
+      });
+    }
+
+    card.addEventListener("click", () => {
+      if (playing) {
+        // Pause and restore still
+        video.pause();
+        video.style.opacity = "0";
+        if (still) still.style.transform = "";
+        if (pill)  pill.textContent = "▶ Clip";
+        playing = false;
+        fireCastClip("pause");
+      } else {
+        // Load src lazily on first play
+        if (!video.src || video.src === window.location.href) {
+          const src = card.dataset.video ?? "";
+          video.querySelector("source")!.src = src;
+          video.load();
+        }
+        video.play().catch(() => {});
+        video.style.opacity = "1";
+        if (still) still.style.transform = "scale(1.05)";
+        if (pill)  pill.textContent = "⏸ Clip";
+        playing = true;
+        fireCastClip("play");
+      }
+    });
+
+    // Reset state if video ends naturally (loop prevents this but belt-and-braces)
+    video.addEventListener("ended", () => {
+      if (!video.loop) {
+        video.style.opacity = "0";
+        if (still) still.style.transform = "";
+        if (pill)  pill.textContent = "▶ Clip";
+        playing = false;
+      }
+    });
+  });
+</script>

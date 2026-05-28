@@ -9,8 +9,8 @@ import metaHistoryData   from "../../../data/gta-5/economy/meta-history.json";
 import CardFooter from "../CardFooter.astro";
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="grid grid-cols-3 divide-x divide-[#1e1e23] border-b border-[#1e1e23]">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="grid grid-cols-3 divide-x divide-border-dim border-b border-border-dim">
           {[
             { label: "Launch (base)",  value: "100",  sub: "10.7 hrs to basket",  color: "#71717a" },
             { label: "After Hours peak", value: "207", sub: "Oppressor doubled basket", color: "#ef4444" },
@@ -23,7 +23,7 @@ import CardFooter from "../CardFooter.astro";
             </div>
           ))}
         </div>
-        <div class="px-5 py-4 border-b border-[#1e1e23]">
+        <div class="px-5 py-4 border-b border-border-dim">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5">GTA Online Purchasing Power Index — 2013 to 2026</div>
           <div class="text-[11px] text-zinc-500 font-mono">Hours needed to buy a fixed basket of goods at the meta income ceiling per era. Rising = hidden inflation via payout nerfs. Nominal GTA$ prices barely changed — the economy got harder by cutting wages.</div>
         </div>

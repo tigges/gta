@@ -28,7 +28,7 @@ const BEEHIIV_URL = "https://gtavi.ai/newsletter";   // swap for live Beehiiv em
   </div>
 ) : (
   <!-- Full: standalone section card -->
-  <div class="rounded-xl border border-gta-gold/20 overflow-hidden" style="background:#131316">
+  <div class="rounded-xl border border-gta-gold/20 overflow-hidden" style="background:var(--c-card)">
     <!-- Header with background -->
     <div class="relative px-6 py-8 text-center overflow-hidden">
       <div class="absolute inset-0">
@@ -49,7 +49,7 @@ const BEEHIIV_URL = "https://gtavi.ai/newsletter";   // swap for live Beehiiv em
       </div>
     </div>
     <!-- What you get -->
-    <div class="border-t border-[#1e1e23] grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#1e1e23]">
+    <div class="border-t border-border-dim grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
       {[
         { icon: "📊", label: "Signal update", desc: "Predictions and confidence changes" },
         { icon: "📰", label: "Top intel",     desc: "3 best press + community stories" },

@@ -30,15 +30,15 @@ import heistsData        from "../../data/gta-5/economy/online-heists.json";
 import spendingDistData  from "../../data/gta-5/economy/spending-distribution.json";
 
 // ── Filter system constants ───────────────────────────────────────────────────
-const CATEGORIES = ["All", "Economy-IG", "Economy-RL", "Promotions", "Performance", "Community", "History"] as const;
+const CATEGORIES = ["All", "Economy-IG", "Economy-RL", "Promotions", "Community", "History"] as const;
 const CAT_LABELS: Record<string, string> = {
   "All":        "All",
-  "Economy-IG": "⚡ Economy (In-Game)",
-  "Economy-RL": "📊 Economy (Real-Life)",
+  "Economy-IG": "IG Economy",
+  "Economy-RL": "RL Economy",
   "Promotions": "🏷 Promotions",
-  "Performance":"🏎 Performance",
+  
   "Community":  "🌐 Community",
-  "History":    "📖 Franchise History",
+  "History":    "History",
 };
 
 // ── Page header stats ─────────────────────────────────────────────────────────
@@ -94,7 +94,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
 >
 
   <!-- Page header -->
-  <section class="relative border-b border-[#1e1e23] overflow-hidden">
+  <section class="relative border-b border-border-dim overflow-hidden">
     <div class="absolute inset-0">
       <img src="/assets/gta6/locations/Ambrosia_02.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 55%" aria-hidden="true" />
       <div class="absolute inset-0" style="background:linear-gradient(to right, #0a0a0d 0%, #0a0a0dcc 55%, #0a0a0d88 100%)"></div>
@@ -105,49 +105,17 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
       <!-- Top row: headline left · cover strip right (clickable filter) -->
       <div class="flex items-start justify-between flex-wrap gap-4 mb-6">
         <div>
-          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Every number in the dual economy</div>
+          <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">Every number in the dual economy</div>
           <h1 class="text-3xl font-bold text-white mb-2">Charts</h1>
           <p class="text-sm text-zinc-400 max-w-lg">
             Where does the GTA$ come from, where does it go — and how has Rockstar's revenue machine changed over 30 years? Filterable, sourced, updated nightly.
           </p>
         </div>
 
-        <!-- Cover strip — clickable title filters -->
-        <div id="cover-strip" class="flex items-end gap-2 flex-wrap">
-          {([
-            { id: "gta-6",      short: "GTA VI",     title: "gta-vi"    },
-            { id: "gta-online", short: "GTA Online", title: "gta-online" },
-            { id: "gta-5",      short: "GTA V",      title: "gta-v"     },
-            { id: "gta-4",      short: "GTA IV",     title: "franchise" },
-            { id: "gta-sa",     short: "GTA SA",     title: "franchise" },
-            { id: "gta-vc",     short: "GTA VC",     title: "franchise" },
-            { id: "gta-3",      short: "GTA III",    title: "franchise" },
-            { id: "gta-2",      short: "GTA 2",      title: "franchise" },
-            { id: "gta-1",      short: "GTA 1",      title: "franchise" },
-          ] as const).map(g => (
-            <button
-              class="cover-title-filter flex flex-col items-center gap-1 group transition-all"
-              data-title={g.title}
-              data-cover-id={g.id}
-              aria-label={`Filter by ${g.short}`}
-            >
-              <img
-                src={g.id === "gta-online" ? "/assets/covers/gta-online.png" : `/assets/covers/${g.id}.jpg`}
-                alt={g.short}
-                class={`rounded border object-cover transition-all duration-200 group-hover:scale-105 ${
-              g.id === "gta-6" ? "w-10 h-14 border-gta-gold/40 shadow-lg shadow-gta-gold/10 group-hover:border-gta-gold/60" :
-              g.id === "gta-online" ? "w-9 h-12 border-gta-teal/30 group-hover:border-gta-teal/50" :
-              "w-9 h-12 border-[#2a2a31] group-hover:border-gta-gold/40"}`}
-                loading="eager"
-              />
-              <span class={`text-[10px] font-mono tracking-widest ${g.id === "gta-6" ? "text-gta-gold" : "text-zinc-500"}`}>{g.short}</span>
-            </button>
-          ))}
-        </div>
       </div>
 
       <!-- Filter bar: title pills + category pills stacked -->
-      <div class="border-t border-[#1e1e23] pt-4 flex flex-col gap-3">
+      <div class="border-t border-border-dim pt-4 flex flex-col gap-3">
 
         <!-- Row 1: Title filter — GamePill-style buttons -->
         <div class="flex items-center gap-2 flex-wrap">
@@ -166,10 +134,6 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
                   data-title="gta-v"
                   style="color:var(--c-title-v,#9898b8);border-color:color-mix(in srgb,var(--c-title-v,#9898b8) 25%,transparent);background:color-mix(in srgb,var(--c-title-v,#9898b8) 8%,transparent)"
                   >GTA V</button>
-          <button class="chart-title-filter px-3 py-1 rounded border text-[10px] font-mono uppercase tracking-widest transition-all"
-                  data-title="franchise"
-                  style="color:var(--c-brand);border-color:color-mix(in srgb,var(--c-brand) 25%,transparent);background:color-mix(in srgb,var(--c-brand) 8%,transparent)"
-                  >Franchise</button>
         </div>
 
         <!-- Row 2: Category filter -->
@@ -181,7 +145,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
               class:list={[
                 cat === "All"
                   ? "border-gta-gold/40 text-gta-gold bg-gta-gold/8"
-                  : "border-[#2a2a31] text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+                  : "border-border-mid text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
               ]}
               data-filter={cat}
             >{CAT_LABELS[cat] ?? cat}</button>
@@ -300,7 +264,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
         .trim();
       b.classList.add(...(active
         ? ["border-gta-gold/40", "text-gta-gold", "bg-gta-gold/8"]
-        : ["border-[#2a2a31]", "text-zinc-500"]
+        : ["border-border-mid", "text-zinc-500"]
       ));
     });
   }

@@ -69,7 +69,7 @@ function getActivityMeta(id: string): ActivityMeta {
 >
 
   <!-- Hero -->
-  <section class="relative border-b border-[#1e1e23] overflow-hidden" style="min-height:180px">
+  <section class="relative border-b border-border-dim overflow-hidden" style="min-height:180px">
     <div class="absolute inset-0" style={`background:radial-gradient(ellipse at 70% 50%, color-mix(in srgb,${C_GROWTH} 7%,transparent) 0%, transparent 55%), ${C_BG_DEEP}`}></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-start justify-between flex-wrap gap-4">
@@ -101,9 +101,9 @@ function getActivityMeta(id: string): ActivityMeta {
           <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em]">
             Active bonuses{weekStart ? ` · w/c ${weekStart}` : ""}
           </span>
-          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <div class="flex-1 h-px bg-border-dim"></div>
           <a href="/charts?title=gta-online#section-bonus-heatmap"
-             class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-[#2a2a31] hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
+             class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-border-mid hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
             Full history →
           </a>
         </div>
@@ -117,7 +117,7 @@ function getActivityMeta(id: string): ActivityMeta {
             const multiplierColor = isBig ? C_BRAND : C_LIVE;
 
             return (
-              <div class="group relative rounded-xl border border-[#1e1e23] hover:border-[#2a2a31] overflow-hidden transition-all"
+              <div class="group relative rounded-xl border border-border-dim hover:border-border-mid overflow-hidden transition-all"
                    style={`background:${C_CARD};border-left:3px solid color-mix(in srgb,${multiplierColor} 60%,transparent)`}>
 
                 {/* Thumbnail */}
@@ -151,7 +151,7 @@ function getActivityMeta(id: string): ActivityMeta {
 
                 {/* Frequency context */}
                 {count !== null && (
-                  <div class="px-4 py-2 border-t border-[#1e1e23] flex items-center justify-between gap-2">
+                  <div class="px-4 py-2 border-t border-border-dim flex items-center justify-between gap-2">
                     <span class="text-[10px] font-mono text-zinc-600">
                       Bonused <span class="text-zinc-400">{count}×</span> in {totalWeeks} weeks
                       {freq?.avg_gap_weeks ? <span> · ~{Math.round(freq.avg_gap_weeks)}w avg</span> : null}
@@ -168,7 +168,7 @@ function getActivityMeta(id: string): ActivityMeta {
                   </div>
                 )}
                 {count === null && meta.href && (
-                  <div class="px-4 py-2 border-t border-[#1e1e23]">
+                  <div class="px-4 py-2 border-t border-border-dim">
                     <a href={meta.href}
                        class="text-[10px] font-mono uppercase tracking-widest transition-colors"
                        style={`color:color-mix(in srgb,${multiplierColor} 70%,transparent)`}
@@ -189,12 +189,12 @@ function getActivityMeta(id: string): ActivityMeta {
          ON SALE THIS WEEK
     ═══════════════════════════════════════════════════ -->
     {sales.length > 0 && (
-      <div class="mb-8 rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
-        <div class="px-5 py-3 border-b border-[#1e1e23] flex items-center gap-2">
+      <div class="mb-8 rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
+        <div class="px-5 py-3 border-b border-border-dim flex items-center gap-2">
           <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">On Sale This Week</span>
-          <div class="flex-1 h-px bg-[#1e1e23]"></div>
+          <div class="flex-1 h-px bg-border-dim"></div>
         </div>
-        <div class="divide-y divide-[#1e1e23]">
+        <div class="divide-y divide-border-dim">
           {sales.map((s: any) => (
             <div class="px-5 py-3 flex items-center gap-3">
               <span class="shrink-0 font-mono font-bold text-sm w-12"
@@ -209,7 +209,7 @@ function getActivityMeta(id: string): ActivityMeta {
     )}
 
     {bonuses.length === 0 && sales.length === 0 && (
-      <div class="mb-8 rounded-xl border border-[#1e1e23] px-6 py-10 text-center" style={`background:${C_CARD}`}>
+      <div class="mb-8 rounded-xl border border-border-dim px-6 py-10 text-center" style={`background:${C_CARD}`}>
         <div class="text-zinc-500 font-mono text-sm">No bonus events found for this week. Check back Thursday.</div>
       </div>
     )}
@@ -242,14 +242,14 @@ function getActivityMeta(id: string): ActivityMeta {
       <div class="flex items-center gap-2">
         <span class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest">Week</span>
         <button id="lb-filter-all"  class="lb-week-btn px-2.5 py-1 rounded text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all" data-week="">All time</button>
-        <button id="lb-filter-week" class="lb-week-btn px-2.5 py-1 rounded text-[10px] font-mono border border-[#2a2a31] text-zinc-500 hover:border-zinc-600 transition-all" data-week="current">This week</button>
+        <button id="lb-filter-week" class="lb-week-btn px-2.5 py-1 rounded text-[10px] font-mono border border-border-mid text-zinc-500 hover:border-zinc-600 transition-all" data-week="current">This week</button>
       </div>
-      <div class="flex-1 h-px bg-[#1e1e23]"></div>
+      <div class="flex-1 h-px bg-border-dim"></div>
       <div id="lb-meta" class="text-[10px] font-mono text-zinc-600"></div>
     </div>
 
     <!-- Leaderboard table -->
-    <div class="rounded-xl border border-[#1e1e23] overflow-hidden" style={`background:${C_CARD}`}>
+    <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
 
       <!-- Loading state -->
       <div id="lb-loading" class="py-16 text-center">
@@ -268,7 +268,7 @@ function getActivityMeta(id: string): ActivityMeta {
       </div>
 
       <!-- Leaderboard rows -->
-      <div id="lb-rows" class="hidden divide-y divide-[#1e1e23]"></div>
+      <div id="lb-rows" class="hidden divide-y divide-border-dim"></div>
 
     </div>
 
@@ -333,7 +333,7 @@ function getActivityMeta(id: string): ActivityMeta {
     container.innerHTML = entries.map(e => {
       const isMe = myUsername && e.username === myUsername;
       const stackSummary = e.stack.slice(0, 4).map((s: any) =>
-        `<span class="text-[11px] font-mono text-zinc-600 border border-[#2a2a31] px-1.5 py-0.5 rounded">${s.name.split(' ')[0]}</span>`
+        `<span class="text-[11px] font-mono text-zinc-600 border border-border-mid px-1.5 py-0.5 rounded">${s.name.split(' ')[0]}</span>`
       ).join(' ') + (e.stack.length > 4 ? ` <span class="text-[11px] font-mono text-zinc-500">+${e.stack.length - 4}</span>` : '');
 
       const rankColor = tierColor(e.rank);
@@ -413,7 +413,7 @@ function getActivityMeta(id: string): ActivityMeta {
     pager.innerHTML = Array.from({ length: Math.min(pages, 10) }, (_, i) => {
       const active = i === current;
       return `<button onclick="loadLeaderboard(${i * PAGE_SIZE})"
-        class="px-3 py-1.5 rounded text-[10px] font-mono border transition-all ${active ? 'border-gta-gold/40 text-gta-gold bg-gta-gold/8' : 'border-[#2a2a31] text-zinc-500 hover:text-zinc-300'}">${i + 1}</button>`;
+        class="px-3 py-1.5 rounded text-[10px] font-mono border transition-all ${active ? 'border-gta-gold/40 text-gta-gold bg-gta-gold/8' : 'border-border-mid text-zinc-500 hover:text-zinc-300'}">${i + 1}</button>`;
     }).join('');
   }
 
@@ -460,7 +460,7 @@ function getActivityMeta(id: string): ActivityMeta {
           .replace(/border-gta-gold\/40|text-gta-gold|bg-gta-gold\/8|border-\[#2a2a31\]|text-zinc-500/g, '').trim();
         b.classList.add(...(active
           ? ['border-gta-gold/40', 'text-gta-gold', 'bg-gta-gold/8']
-          : ['border-[#2a2a31]', 'text-zinc-500']));
+          : ['border-border-mid', 'text-zinc-500']));
       });
       loadLeaderboard(0);
     });

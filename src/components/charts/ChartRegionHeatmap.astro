@@ -8,8 +8,8 @@ import regionsData       from "../../../data/franchise/regions-evidence.json";
 import CardFooter from "../CardFooter.astro";
 ---
 
-<div class="rounded-xl border border-[#1e1e23] overflow-hidden" style="background:#131316">
-        <div class="px-5 py-4 border-b border-[#1e1e23]">
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-5 py-4 border-b border-border-dim">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5">
             How Much Does Rockstar Actually Want You to Know?
           </div>
@@ -52,7 +52,7 @@ import CardFooter from "../CardFooter.astro";
     table.innerHTML = `
       <table class="w-full text-xs font-mono">
         <thead>
-          <tr class="border-b border-[#1e1e23]">
+          <tr class="border-b border-border-dim">
             <th class="text-left px-5 py-2.5 text-zinc-600 font-normal w-44">Region</th>
             ${COL_LABELS.map(l => `<th class="text-center px-3 py-2.5 text-zinc-600 font-normal">${l}</th>`).join("")}
             <th class="text-right px-5 py-2.5 text-zinc-600 font-normal">Confidence</th>
@@ -68,7 +68,7 @@ import CardFooter from "../CardFooter.astro";
                  </div>`
               : r.name;
             return `
-            <tr class="border-b border-[#1e1e23]/50 hover:bg-white/2 transition-colors">
+            <tr class="border-b border-border-dim/50 hover:bg-white/2 transition-colors">
               <td class="px-5 py-2.5 font-semibold ${r.confirmed ? "text-zinc-200" : "text-zinc-600"}">
                 ${nameCell}
               </td>
@@ -86,7 +86,7 @@ import CardFooter from "../CardFooter.astro";
               }).join("")}
               <td class="px-5 py-2.5 text-right">
                 <div class="flex items-center justify-end gap-2">
-                  <div class="h-1 w-16 rounded-full bg-[#1e1e23] overflow-hidden">
+                  <div class="h-1 w-16 rounded-full bg-border-dim overflow-hidden">
                     <div class="h-full rounded-full ${r.confirmed?"bg-gta-gold":"bg-zinc-600"}"
                          style="width:${r.confidence_pct}%"></div>
                   </div>
