@@ -397,7 +397,7 @@ export const ALL_CHARTS: ChartMeta[] = [
     game:      "gta-online",
     category:  "Economy-RL",
     badge:     "RL Economy",
-    label:     "GTA Online Property Costs — Full Expenditure Registry",
+    label:     "GTA Online Property Costs — Full Expense Registry",
     meta:      null, // dynamic: property_count
     sources:   "Source: GTA Fandom Wiki · community records",
     shareText: "GTA Online complete property cost guide — apartments to Kosatka submarine. Every purchasable property and what it actually costs.",
