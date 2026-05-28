@@ -101,6 +101,43 @@ ${REGION_TYPES.map(t => `  ${t.id.padEnd(14)} ${t.colorToken}  "${t.label}"`).jo
 
 
     <!-- ═══════════════════════════════════════════════════════
+         GAMEPILL DEFINITIONS  (static — update with GamePill.astro)
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">GamePill — Identity Pill Definitions</div>
+      <pre class="font-mono text-xs text-zinc-400 whitespace-pre bg-zinc-900/60 border border-border-dim rounded-xl p-5 overflow-x-auto leading-relaxed">{`GamePill.astro — opaque dark pill, identity colour for text + border only
+Usage: <GamePill game="gta-vi" size="xs|sm" />
+  size xs → text-[10px] px-1.5 py-0.5   (inside cards, overlays)
+  size sm → text-[11px] px-2   py-0.5   (heroes, section intros)   [default]
+
+GAME    LABEL          CSS TOKEN                  HEX FALLBACK   NOTES
+──────────────────────────────────────────────────────────────────────────────
+gta-vi     GTA VI      var(--c-title-vi)          #ff6b9d        Pink-coral (gradient start)
+gta-online GTA Online  var(--c-title-online)      #00d4e8        Vivid cyan
+gta-v      GTA V       var(--c-title-v)           #f59e0b        Amber = C_BRAND (intentional)
+gta-sa     GTA SA      var(--c-title-sa)          #c0392b        Street red
+gta-vc     GTA VC      var(--c-title-vc)          #ff2d78        Neon pink
+gta-iv     GTA IV      (no token — inline hex)    #6b6b7e        Subdued grey = C_TEXT_6
+gta-iii    GTA III     (no token — inline hex)    #9898b8        Muted = C_TEXT_4
+franchise  Franchise   (no token — inline hex)    #f59e0b        Amber = C_BRAND
+
+BACKGROUND (all):  rgba(10,10,13,0.88) — near-black opaque; legible on any surface
+BORDER:            pill colour at 33% opacity  (${"{"}colour}55 appended)
+
+RULES
+  ● Always top-left on identity cards (IncomeCard, CastCard, PredictionCard)
+  ● Never before // in a SectionHeader
+  ● Never standalone without a card context
+  ● Do NOT add a pill to CrossLinks tiles (badge label replaces it)
+  ● gta-iv / gta-iii use inline hex fallbacks — no CSS token defined yet
+
+TOKEN GAP: gta-iv and gta-iii have no --c-title-* token.
+  To add: define --c-title-iv and --c-title-iii in tokens.css + colors.ts,
+  then update GAME_COLOUR map in GamePill.astro and GAME_TYPES in semanticTypes.ts.`}</pre>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
          PAGE LIST  ↻
     ═══════════════════════════════════════════════════════ -->
     <section>
