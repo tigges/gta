@@ -9,6 +9,7 @@ import Base from "../../layouts/Base.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import IncomeAdviser from "../../components/IncomeAdviser.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
 
 import type { BusinessProfiles, MetaHistoryData, WeeklyBonusesData } from "../../types/gta";
 
@@ -50,15 +51,7 @@ const bizProfiles = bizData.businesses;
          INCOME STACK ADVISER
     ═══════════════════════════════════════════════════════ -->
     <section id="income-adviser">
-      <div class="flex items-center gap-3 mb-6">
-        <span class="text-[11px] font-mono bg-gta-teal/30 text-gta-teal border border-gta-teal/40 px-2 py-0.5 rounded uppercase tracking-widest">Adviser</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Personalised Income Stack Builder</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <a href="/database?game=gta-online"
-           class="shrink-0 text-[10px] font-mono text-zinc-500 hover:text-zinc-200 border border-border-mid hover:border-zinc-600 px-3 py-1 rounded transition-colors uppercase tracking-widest">
-          Full database →
-        </a>
-      </div>
+      <SectionHeader label="// Personalised Income Stack Builder" dotColor="var(--c-live)" pillHref="/database?game=gta-online" pillLabel="Full database →" class="mb-6" />
       <IncomeAdviser
         businesses={bizProfiles}
         weeklyBonuses={bonusData.bonuses ?? []}
@@ -70,12 +63,7 @@ const bizProfiles = bizData.businesses;
          META SHIFT HISTORY
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-6">
-        <span class="text-[11px] font-mono bg-gta-indigo/30 text-gta-indigo border border-gta-indigo/40 px-2 py-0.5 rounded uppercase tracking-widest">History</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// $/hr Meta History — How the Top Earner Changed</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-        <span class="text-[10px] font-mono text-zinc-500">{metaData.meta_history.length} DLC milestones · 2013→2026</span>
-      </div>
+      <SectionHeader label="// $/hr Meta History — How the Top Earner Changed" dotColor="var(--c-economy)" class="mb-6" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <div class="px-5 py-4 border-b border-border-dim">
           <div class="font-semibold text-zinc-200 text-sm">GTA Online Top Earner by DLC — The Economic History</div>
@@ -116,22 +104,23 @@ const bizProfiles = bizData.businesses;
     const y = d3.scaleLinear().domain([0, (d3.max(history,(d:any)=>d.top_gta_per_hr)??2000000)*1.1]).range([H,0]);
     svg.append("g").call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(()=>""))
       .call(g=>g.select(".domain").remove())
-      .call(g=>g.selectAll(".tick line").attr("stroke","#1e1e23").attr("stroke-dasharray","3,3"));
+      .call(g=>g.selectAll(".tick line").attr("stroke","var(--c-border-1)").attr("stroke-dasharray","3,3"));
     const defs = svg.append("defs");
     const grad = defs.append("linearGradient").attr("id","msh-grad").attr("gradientUnits","userSpaceOnUse").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",H);
-    grad.append("stop").attr("offset","0%").attr("stop-color","#818cf8").attr("stop-opacity",0.2);
-    grad.append("stop").attr("offset","100%").attr("stop-color","#818cf8").attr("stop-opacity",0.01);
+    const accentColor = getComputedStyle(document.documentElement).getPropertyValue("--c-economy").trim() || "#818cf8";
+    grad.append("stop").attr("offset","0%").attr("stop-color",accentColor).attr("stop-opacity",0.2);
+    grad.append("stop").attr("offset","100%").attr("stop-color",accentColor).attr("stop-opacity",0.01);
     svg.append("path").datum(history).attr("fill","url(#msh-grad)")
       .attr("d",d3.area<any>().x((d:any)=>x(new Date(d.date))).y0(H).y1((d:any)=>y(d.top_gta_per_hr)).curve(d3.curveStepAfter));
-    svg.append("path").datum(history).attr("fill","none").attr("stroke","#818cf8").attr("stroke-width",2)
+    svg.append("path").datum(history).attr("fill","none").attr("stroke",accentColor).attr("stroke-width",2)
       .attr("d",d3.line<any>().x((d:any)=>x(new Date(d.date))).y((d:any)=>y(d.top_gta_per_hr)).curve(d3.curveStepAfter));
     history.forEach((d:any) => {
       const cx = x(new Date(d.date)), cy = y(d.top_gta_per_hr);
       svg.append("circle").attr("cx",cx).attr("cy",cy).attr("r",4)
-        .attr("fill","#818cf8").attr("stroke","var(--c-card)").attr("stroke-width",2);
+        .attr("fill",accentColor).attr("stroke","var(--c-card)").attr("stroke-width",2);
       if (history.indexOf(d) % 2 === 0) {
         svg.append("text").attr("x",cx).attr("y",cy-8).attr("text-anchor","middle")
-          .attr("fill","#9090a8").attr("font-size","8").attr("font-family","monospace")
+          .attr("fill","var(--c-text-4)").attr("font-size","8").attr("font-family","monospace")
           .text(d.patch.split(" ")[0].slice(0,10));
       }
     });

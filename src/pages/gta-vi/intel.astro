@@ -50,6 +50,18 @@ const CAT_THUMBS: Record<string,string> = {
   description="GTA VI predictions — confidence-scored from 30 years of GTA data. Launch price, income yields, Shark Card mechanics, and what the franchise numbers say about GTA VI's economy."
   ogPage="vi-intel"
 >
+<script is:inline type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": predictions.slice(0, 8).map(p => ({
+    "@type": "Question",
+    "name": `GTA VI ${p.title}`,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": `${p.value}${p.unit ? " " + p.unit : ""}. ${p.basis} (Confidence: ${p.confidence}%, ${p.confidence_tier}).`
+    }
+  }))
+})}</script>
 
   <!-- ═══════════════════════════════════════════════════════
        HERO — Split character backdrop + trailer anchor

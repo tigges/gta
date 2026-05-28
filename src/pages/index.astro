@@ -123,6 +123,19 @@ const TIER_COLOR: Record<string,string> = {
   description="Follow the GTA$ — GTA's dual economy tracked, predicted and explained. Income yields, Shark Card inflation, and what the numbers say about GTA VI."
   ogPage="home"
 >
+<script is:inline type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "GTA VI.AI",
+  "alternateName": "GTAVI.AI",
+  "url": "https://gtavi.ai",
+  "description": "Data-driven intelligence across every GTA generation — confidence-scored predictions, franchise analytics, income data, and what the numbers say about GTA VI.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": { "@type": "EntryPoint", "urlTemplate": "https://gtavi.ai/database?q={search_term_string}" },
+    "query-input": "required name=search_term_string"
+  }
+})}</script>
 
   <!-- ═══════════════════════════════════════════════════════
        HERO — full-bleed behind nav, content bottom, compact trailer card
