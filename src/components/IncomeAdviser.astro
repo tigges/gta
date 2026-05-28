@@ -146,7 +146,7 @@ const ownableBusinesses = businesses.filter(b =>
   <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3" style="background:var(--c-bg)">
     <div class="flex items-center gap-3">
       <span class="text-[10px] text-zinc-500 font-mono">Personalised recommendations · based on what you own and your budget</span>
-      <a href="/gta-online/bonuses" class="text-[10px] font-mono text-gta-teal/60 hover:text-gta-teal transition-colors tracking-widest uppercase shrink-0">Community →</a>
+      <a href="/gta-online" class="text-[10px] font-mono text-gta-teal/60 hover:text-gta-teal transition-colors tracking-widest uppercase shrink-0">GTA Online →</a>
     </div>
     <div class="flex items-center gap-3 shrink-0">
       <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
@@ -351,7 +351,7 @@ const ownableBusinesses = businesses.filter(b =>
           ? `$${(data.total_hr / 1e6).toFixed(1)}M`
           : `$${Math.round(data.total_hr / 1000)}K`;
         const tierEmoji = rank === 1 ? '🥇' : rank <= 3 ? '🥈' : rank <= 10 ? '🏆' : `#${rank}`;
-        const tweetText = `${tierEmoji} I'm rank #${rank} with ${scoreStr}/hr on the GTAVI.AI community income leaderboard. Can you beat me? gtavi.ai/gta-online/bonuses`;
+        const tweetText = `${tierEmoji} I'm rank #${rank} with ${scoreStr}/hr on the GTAVI.AI community income leaderboard. Can you beat me? gtavi.ai/gta-online`;
         const tweetUrl  = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
 
         result.innerHTML = `
@@ -360,8 +360,8 @@ const ownableBusinesses = businesses.filter(b =>
             style="display:inline-flex;align-items:center;gap:4px;margin-left:8px;padding:2px 8px;border-radius:4px;border:1px solid color-mix(in srgb,${C_BRAND} 30%,transparent);color:${C_BRAND};font-size:10px;text-decoration:none;letter-spacing:0.1em;text-transform:uppercase">
             Tweet rank
           </a>
-          <a href="/gta-online/bonuses" style="margin-left:6px;color:${C_LIVE};text-decoration:underline;font-size:10px">
-            View leaderboard →
+          <a href="/gta-online" style="margin-left:6px;color:${C_LIVE};text-decoration:underline;font-size:10px">
+            GTA Online hub →
           </a>`;
         btn.textContent = 'Submitted ✓';
       } else {
