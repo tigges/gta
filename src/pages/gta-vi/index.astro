@@ -11,6 +11,7 @@ import IncomeCard from "../../components/IncomeCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
 import EconomyCircle from "../../components/EconomyCircle.astro";
+import EconomyDualTerritory from "../../components/EconomyDualTerritory.astro";
 import Countdown from "../../components/Countdown.astro";
 import ChartTeaserCpi          from "../../components/charts/ChartTeaserCpi.astro";
 import ChartTeaserRevenueSplit  from "../../components/charts/ChartTeaserRevenueSplit.astro";
@@ -223,7 +224,12 @@ const featuredIncome = incomeList
     <section>
       <SectionHeader label="// The Dual Economy · Simplified · where does the money go?" pillHref="/gta-vi/economy" pillLabel="Full model →" />
 
-      <!-- Circular economy diagram -->
+      <!-- Dual-territory diagram — GTA VI specific: VC + Leonida, one GTA$ -->
+      <div class="mb-4" id="economy-dual-territory" style="scroll-margin-top:80px">
+        <EconomyDualTerritory fullEconomyHref="/gta-vi/economy" />
+      </div>
+
+      <!-- Circular economy mechanism diagram -->
       <div class="mb-6">
         <EconomyCircle fullEconomyHref="/gta-vi/economy" />
       </div>
