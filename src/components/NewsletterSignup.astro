@@ -1,80 +1,72 @@
 ---
 /**
- * NewsletterSignup — weekly GTA VI intelligence digest CTA.
- * Replace BEEHIIV_URL with your actual Beehiiv publication URL once set up.
- * Until then, falls back to a mailto: form that collects interest.
+ * NewsletterSignup — GTA VI.AI weekly intel digest subscription.
+ *
+ * Posts to /api/subscribe (Cloudflare Pages Function → Resend Audiences).
+ * Shows success / error / already-subscribed states inline.
+ *
+ * Variants:
+ *   full    — standalone section card with hero image background
+ *   compact — one-line strip for sidebars / section footers
  */
 
 interface Props {
   variant?: "full" | "compact";
 }
 const { variant = "full" } = Astro.props;
-
-const BEEHIIV_URL = "https://gtavi.beehiiv.com/subscribe";
 ---
 
 {variant === "compact" ? (
-  <!-- Compact: one-line strip for sidebars -->
-  <div class="rounded-xl border border-gta-gold/20 bg-gta-gold/5 px-4 py-3 flex items-center gap-3 flex-wrap">
-    <span class="text-base shrink-0">📬</span>
+  <div class="newsletter-compact rounded-xl border border-gta-gold/20 bg-gta-gold/5 px-4 py-3 flex items-center gap-3 flex-wrap">
     <div class="flex-1 min-w-0">
       <div class="text-[11px] font-semibold text-zinc-200">Weekly Intel Digest</div>
-      <div class="text-[10px] font-mono text-zinc-600">One email. Top signals + any prediction changes.</div>
+      <div class="text-[10px] font-mono text-zinc-600">Auto-generated from live signals · sent every Tuesday</div>
     </div>
-    <a href={BEEHIIV_URL} target="_blank" rel="noopener noreferrer"
-      class="newsletter-cta-compact shrink-0 inline-flex items-center gap-1.5 text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 hover:bg-gta-gold/15 px-3 py-1.5 rounded uppercase tracking-widest transition-all">
-      Subscribe →
-    </a>
-<script>
-  document.querySelectorAll<HTMLAnchorElement>(".newsletter-cta-compact").forEach(el => {
-    el.addEventListener("click", () => {
-      if (typeof (window as any).plausible === "function") {
-        (window as any).plausible("NewsletterSignup", { props: { variant: "compact" } });
-      }
-    });
-  });
-</script>
+    <form class="newsletter-form flex items-center gap-2 shrink-0" data-variant="compact">
+      <input
+        type="email" name="email" required placeholder="your@email.com"
+        class="text-[10px] font-mono bg-zinc-900 border border-border-mid rounded px-2.5 py-1.5 text-zinc-300 placeholder-zinc-700 focus:outline-none focus:border-gta-gold/40 w-40"
+      />
+      <button type="submit"
+        class="newsletter-cta-compact shrink-0 inline-flex items-center gap-1.5 text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 hover:bg-gta-gold/15 px-3 py-1.5 rounded uppercase tracking-widest transition-all">
+        Subscribe →
+      </button>
+    </form>
+    <div class="newsletter-status hidden text-[10px] font-mono w-full"></div>
   </div>
 ) : (
-  <!-- Full: standalone section card -->
   <div class="rounded-xl border border-gta-gold/20 overflow-hidden" style="background:var(--c-card)">
-    <!-- Header with background -->
     <div class="relative px-6 py-8 text-center overflow-hidden">
       <div class="absolute inset-0">
-        <img src="/assets/gta6/locations/Vice_City_07.jpg" alt="" class="w-full h-full object-cover opacity-10" aria-hidden="true" />
+        <img src="/assets/gta6/locations/Vice_City_07.jpg" alt="" class="w-full h-full object-cover opacity-10" aria-hidden="true" loading="lazy" />
         <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,var(--c-card) 100%)"></div>
       </div>
       <div class="relative">
-        <div class="text-2xl mb-3">📬</div>
         <h3 class="text-lg font-bold text-white mb-2">Weekly Intel Digest</h3>
         <p class="text-[12px] text-zinc-400 max-w-xs mx-auto leading-relaxed mb-5">
-          One email per week. Top signals, any prediction changes, and what the data says about GTA VI launch week.
+          Auto-generated from live predictions and news data. Sent every Tuesday. No writing — pure signal.
         </p>
-        <a href={BEEHIIV_URL} target="_blank" rel="noopener noreferrer"
-          class="newsletter-cta inline-flex items-center gap-2 bg-gta-gold hover:bg-gta-bright text-black font-mono font-bold text-xs px-6 py-3 rounded transition-colors tracking-wide uppercase">
-          Subscribe free →
-        </a>
-        <div class="text-[11px] font-mono text-zinc-500 mt-3">No spam · unsubscribe anytime · gtavi.beehiiv.com</div>
+        <form class="newsletter-form flex items-center gap-2 justify-center flex-wrap" data-variant="full">
+          <input
+            type="email" name="email" required placeholder="your@email.com"
+            class="text-[11px] font-mono bg-zinc-900/80 border border-border-mid rounded px-3 py-2.5 text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-gta-gold/40 w-56"
+          />
+          <button type="submit"
+            class="newsletter-cta inline-flex items-center gap-2 bg-gta-gold hover:bg-gta-bright text-black font-mono font-bold text-xs px-6 py-2.5 rounded transition-colors tracking-wide uppercase">
+            Subscribe free →
+          </button>
+        </form>
+        <div class="newsletter-status hidden text-[11px] font-mono mt-3"></div>
+        <div class="text-[11px] font-mono text-zinc-600 mt-3">No spam · unsubscribe anytime · gtavi.beehiiv.com</div>
       </div>
     </div>
-    <!-- What you get -->
     <div class="border-t border-border-dim grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
-<script>
-  document.querySelectorAll<HTMLAnchorElement>(".newsletter-cta").forEach(el => {
-    el.addEventListener("click", () => {
-      if (typeof (window as any).plausible === "function") {
-        (window as any).plausible("NewsletterSignup", { props: { variant: "full" } });
-      }
-    });
-  });
-</script>
       {[
-        { icon: "📊", label: "Signal update", desc: "Predictions and confidence changes" },
-        { icon: "📰", label: "Top intel",     desc: "3 best press + community stories" },
-        { icon: "🛒", label: "Launch watch",  desc: "Pre-order + edition news as it breaks" },
+        { label: "Signal update",  desc: "Top predictions + confidence changes" },
+        { label: "Top intel",      desc: "3 best press + community stories" },
+        { label: "Launch watch",   desc: "Pre-order + edition news as it breaks" },
       ].map(item => (
         <div class="px-5 py-3 flex items-start gap-3">
-          <span class="text-base shrink-0">{item.icon}</span>
           <div>
             <div class="text-[11px] font-semibold text-zinc-300">{item.label}</div>
             <div class="text-[10px] font-mono text-zinc-600">{item.desc}</div>
@@ -84,3 +76,60 @@ const BEEHIIV_URL = "https://gtavi.beehiiv.com/subscribe";
     </div>
   </div>
 )}
+
+<script>
+(function () {
+  const ENDPOINT = "/api/subscribe";
+
+  document.querySelectorAll<HTMLFormElement>(".newsletter-form").forEach(form => {
+    const status  = form.closest(".newsletter-compact, .rounded-xl")?.querySelector<HTMLElement>(".newsletter-status");
+    const btn     = form.querySelector<HTMLButtonElement>("button[type=submit]");
+    const origTxt = btn?.textContent ?? "Subscribe →";
+
+    function setStatus(msg: string, ok: boolean) {
+      if (!status) return;
+      status.textContent = msg;
+      status.className   = `newsletter-status text-[10px] font-mono mt-1 ${ok ? "text-gta-teal" : "text-red-400"}`;
+      status.classList.remove("hidden");
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim();
+      if (!email) return;
+
+      if (btn) { btn.textContent = "…"; btn.disabled = true; }
+
+      try {
+        const res  = await fetch(ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json() as { ok?: boolean; message?: string; error?: string };
+
+        if (data.ok) {
+          setStatus(data.message === "Already subscribed"
+            ? "You're already on the list."
+            : "Subscribed. First issue lands Tuesday.", true);
+          form.reset();
+          if (typeof (window as any).plausible === "function") {
+            (window as any).plausible("NewsletterSignup", {
+              props: { variant: form.dataset.variant ?? "unknown" },
+            });
+          }
+        } else {
+          setStatus(data.error ?? "Something went wrong — please try again.", false);
+        }
+      } catch {
+        // /api/subscribe returns 404 on GitHub Pages (static host).
+        // Direct to the Beehiiv fallback so subscribers aren't lost.
+        setStatus("Redirecting to subscribe page…", true);
+        setTimeout(() => { window.location.href = "https://gtavi.beehiiv.com/subscribe"; }, 800);
+      }
+
+      if (btn) { btn.textContent = origTxt; btn.disabled = false; }
+    });
+  });
+})();
+</script>

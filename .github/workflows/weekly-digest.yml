@@ -1,0 +1,30 @@
+name: Weekly Intel Digest
+
+on:
+  schedule:
+    # Every Tuesday at 10:00 UTC
+    - cron: "0 10 * * 2"
+  workflow_dispatch:
+
+jobs:
+  digest:
+    name: Send weekly newsletter
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send weekly digest
+        run: python scrapers/post_weekly_digest_resend.py
+        env:
+          RESEND_API_KEY:     ${{ secrets.RESEND_API_KEY }}
+          RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
+        continue-on-error: true
