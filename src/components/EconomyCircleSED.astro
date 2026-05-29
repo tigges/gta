@@ -205,7 +205,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
   position: relative;
   border-bottom: 1px solid var(--c-border-1);
   background: color-mix(in srgb, var(--c-flow-injection) 5%, transparent);
-  padding: 12px 16px 22px; /* extra bottom padding for J↓ bottom label */
+  padding: 12px 16px 36px; /* extra bottom padding so J↓ pill inside box has room */
 }
 .inject-inner {
   display: flex;
@@ -230,18 +230,19 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
   margin-top: 4px;
 }
 
-/* J↓ on the BOTTOM border of the injection box — mirrors Y/C/I on top borders */
+/* J↓ at the bottom of the injection box — sits inside, 4px above the lower edge */
 .inject-j-bottom {
   position: absolute;
-  bottom: -14px;
+  bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 1.1rem;
   font-weight: 700;
   line-height: 1;
   color: var(--c-flow-injection);
-  background: var(--c-card);
-  padding: 0 6px;
+  background: color-mix(in srgb, var(--c-flow-injection) 8%, var(--c-bg-deep));
+  padding: 2px 8px;
+  border-radius: 4px;
   z-index: 10;
   white-space: nowrap;
 }
