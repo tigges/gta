@@ -9,9 +9,9 @@ import Base from "../../layouts/Base.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy     from "../../components/CircularEconomy.astro";
 import EconomyCircleSEDVI  from "../../components/EconomyCircleSEDVI.astro";
+import ChartComplexityHtml from "../../components/ChartComplexityHtml.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
-import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import GamePill from "../../components/GamePill.astro";
 import ReadItBlock from "../../components/ReadItBlock.astro";
 
@@ -119,7 +119,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
     <section>
       <SectionHeader label="// Economic Complexity — Franchise Context" dotColor="var(--c-title-vi)" pillHref="/franchise/economics" pillLabel="All 10 economies →" />
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChartComplexityRadar titleId="gta-6" size={280} showAverage={true} />
+        <ChartComplexityHtml titleId="gta-6" showAverage={true} />
         <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
           <div class="px-5 py-3 border-b border-border-dim">
             <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Franchise Arc — Complexity Trajectory</div>
