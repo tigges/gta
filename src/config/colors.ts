@@ -81,8 +81,10 @@ export const C_CHART_INDIGO  = C_ECONOMY;
 export const C_WATERMARK     = C_TEXT_7;
 
 // ── Economy diagram flows (CircularEconomy component only) ────────────────
-export const C_FLOW_SPENDING = "#f97316";
-export const C_FLOW_PASSIVE  = "#fbbf24";
+export const C_FLOW_INJECTION = "#00d4e8";  // J — exogenous injection (Shark Cards, GTA+); mirrors --c-flow-injection
+export const C_FLOW_EXPENSE   = "#f97316";  // Expense (C+I combined) — Level 1 SED; mirrors --c-flow-expense
+export const C_FLOW_SPENDING  = "#f97316";  // C — consumption; mirrors --c-flow-spending
+export const C_FLOW_PASSIVE   = "#fbbf24";
 export const C_FLOW_CAPITAL  = "#a78bfa";
 export const C_FLOW_STOCKS   = "#d97706";
 
