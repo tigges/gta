@@ -55,9 +55,12 @@ export const cc = {
   get text2()   { return cssVar("--c-text-2", "#d4d4d8"); },
   get text3()   { return cssVar("--c-text-3", "#b8b8c4"); },
   get text4()   { return cssVar("--c-text-4", "#9898b8"); }, // muted labels
-  get text5()   { return cssVar("--c-text-5", "#b4b4cc"); }, // label floor — minimum for readable text
-  // text6 removed — --c-text-6 retired. Use text5 as the minimum readable floor.
-  get watermark()   { return cssVar("--c-watermark", "#3f3f46"); }, // SVG watermarks only — never for text
+  get text5()     { return cssVar("--c-text-5",   "#b4b4cc"); }, // label floor — minimum for readable text
+  /** @deprecated --c-text-6 retired. Alias to text5 so existing D3 charts don't break. */
+  get text6()     { return cssVar("--c-text-5",   "#b4b4cc"); },
+  get watermark() { return cssVar("--c-watermark", "#3f3f46"); }, // SVG watermarks only — never on readable text
+  /** @deprecated Use watermark for SVG stamps. Alias kept so existing chart scripts don't break. */
+  get text7()     { return cssVar("--c-watermark", "#3f3f46"); },
 
   // ── Category badges ────────────────────────────────────────
   get catFranchise()   { return cssVar("--c-cat-franchise",   "#f59e0b"); },

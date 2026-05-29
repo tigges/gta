@@ -60,7 +60,7 @@ import CardFooter from "../CardFooter.astro";
       const score = t.complexity_score || 0;
       const barW = x(score);
       const isPeak = score === MAX_SCORE;
-      const color = score >= 8 ? cc.bar : score >= 5 ? cc.teal : cc.text7;
+      const color = score >= 8 ? cc.bar : score >= 5 ? cc.teal : cc.text5;
 
       // Bar
       const isPred = !!(t as any).is_prediction;
