@@ -217,7 +217,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 .item-label  { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
 .inject-centre { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .rockstar-label { font-size: 9px; color: var(--c-flow-injection); opacity: var(--o-tertiary); letter-spacing: .25em; text-transform: uppercase; }
-.inject-title { font-size: 2rem; font-weight: 900; line-height: 1; color: var(--c-flow-injection); }
+.inject-title { font-size: clamp(1rem,2.5vw,1.6rem); font-weight: 900; line-height: 1; color: var(--c-flow-injection); }
 /* J definition — no frame, cycle-note style, injection colour */
 .j-flow-note {
   font-size: 8px;
@@ -399,7 +399,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 .box-inner { padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; }
 /* flex-wrap lets cycle-note push right on desktop and reflow on mobile */
 .box-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.box-title { font-size: clamp(1rem,2.5vw,1.3rem); font-weight: 900; line-height: 1; }
+.box-title { font-size: clamp(1rem,2.5vw,1.6rem); font-weight: 900; line-height: 1; }
 .icon-row { display: flex; gap: 12px; }
 .icon-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .icon-label { font-size: 8px; color: var(--c-text-3); text-align: center; }
@@ -457,7 +457,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 @media (max-width: 599px) {
   /* Injection row: tighter gap, smaller headline */
   .inject-inner  { gap: 16px; }
-  .inject-title  { font-size: 1.4rem; }
+  /* inject-title now uses clamp — no mobile override needed */
   .blip          { width: 42px; height: 42px; }
 
   /* Mid-row: hide flanking super-headers, show circle only */
@@ -483,7 +483,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 
   /* Box row: compact padding */
   .box-inner     { padding: 10px 8px; gap: 6px; }
-  .box-title     { font-size: .7rem; }
+  .box-title     { font-size: clamp(.85rem, 4vw, 1.6rem); }
 
   /* Icons: stack vertically, each item becomes a horizontal blip+label row */
   .icon-row      { flex-direction: column; gap: 4px; }
