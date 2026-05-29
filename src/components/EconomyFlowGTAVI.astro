@@ -83,14 +83,11 @@ const KEY_INNOVATION = {
         <span class="ef-lever">{l}</span>
       ))}
     </div>
-    <!-- Sovereign → Injection arrow -->
-    <div class="ef-sov-arrow">
-      <span class="ef-arrow-chr" style="color:var(--c-flow-injection)">↓</span>
-    </div>
   </div>
 
   <!-- ── INJECTION ─────────────────────────────────────────────────── -->
-  <div class="ef-injection">
+  <!-- position:relative so the border-straddling ↓ can be absolutely placed -->
+  <div class="ef-injection" style="position:relative">
     <div class="ef-inj-inner">
       <div class="ef-inj-item">
         <div class="ef-blip" style="--bc:var(--c-flow-injection)">
@@ -110,13 +107,18 @@ const KEY_INNOVATION = {
         <span class="ef-inj-label" style="color:var(--c-flow-injection)">GTA+</span>
       </div>
     </div>
+    <!-- ↓ straddles the bottom border of the injection box, pointing into the GTA$ hub row below -->
+    <div class="ef-inj-j-bottom">
+      <span class="ef-arrow-chr" style="color:var(--c-flow-injection)">↓</span>
+    </div>
   </div>
 
-  <!-- GTA$ hub + flow routing connector -->
+  <!-- GTA$ hub — cross-territory connector row -->
   <div class="ef-inj-to-region">
+    <!-- Left: Cross-territory GTA$ flow into the hub -->
     <div class="ef-itl-left">
-      <span class="ef-arrow-chr" style="color:var(--c-flow-injection)">↓</span>
-      <span class="ef-itl-label" style="color:var(--c-flow-injection)">④ J · to VC Protagonist</span>
+      <span class="ef-itl-label" style="color:var(--c-gta-dollar)">↑ ③ Cross-Territory GTA$ Flow</span>
+      <span class="ef-itl-arrow-in" style="color:var(--c-gta-dollar)">→</span>
     </div>
     <div class="ef-itl-centre">
       <div class="ef-gta-hub">
@@ -125,9 +127,10 @@ const KEY_INNOVATION = {
         <span class="ef-hub-sub">all regions · one currency</span>
       </div>
     </div>
+    <!-- Right: Cross-territory player movement out of the hub -->
     <div class="ef-itl-right">
-      <span class="ef-itl-label" style="color:var(--c-text-4)">③ Cross-territory flow</span>
-      <span class="ef-itl-label" style="color:var(--c-text-5)">VC ↔ Leonida players</span>
+      <span class="ef-itl-arrow-out" style="color:var(--c-text-4)">←</span>
+      <span class="ef-itl-label" style="color:var(--c-text-4)">③ Cross-Territory Player Movement ↓</span>
     </div>
   </div>
 
@@ -393,14 +396,16 @@ const KEY_INNOVATION = {
   border-radius: 4px; padding: 2px 7px;
 }
 
-/* Sovereign → Injection connector */
-.ef-sov-arrow {
-  display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 12px;
-}
-.ef-arrow-label {
-  font-size: 11px; font-weight: 700; color: var(--c-flow-injection); letter-spacing: .06em;
+/* ↓ straddling the bottom border of the injection box — points into the hub row */
+.ef-inj-j-bottom {
+  position: absolute;
+  bottom: -18px;       /* half above, half below the border */
+  left: 50%;
+  transform: translateX(-50%);
   background: var(--c-card);
-  padding: 2px 10px; border-radius: 3px;
+  padding: 0 6px;
+  z-index: 10;
+  line-height: 1;
 }
 
 /* ── Injection ────────────────────────────────────────────────────── */
@@ -420,14 +425,16 @@ const KEY_INNOVATION = {
 /* ── Injection → Region connector row ─────────────────────────────── */
 .ef-inj-to-region {
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
-  padding: 8px 20px;
+  padding: 28px 20px 12px;   /* extra top padding for the straddling ↓ arrow */
   background: var(--c-bg-deep);
   border-bottom: 1px solid var(--c-border-1);
-  gap: 12px;
+  gap: 16px;
 }
-.ef-itl-left  { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.ef-itl-right { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.ef-itl-label { font-size: 1.05rem; letter-spacing: .04em; font-weight: 900; }
+.ef-itl-left  { display: flex; flex-direction: column; align-items: flex-end;   gap: 4px; }
+.ef-itl-right { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.ef-itl-label       { font-size: 1.05rem; letter-spacing: .04em; font-weight: 900; }
+.ef-itl-arrow-in    { font-size: 1.3rem;  font-weight: 900; line-height: 1; }
+.ef-itl-arrow-out   { font-size: 1.3rem;  font-weight: 900; line-height: 1; }
 
 /* Shared arrow character — used wherever a directional indicator is needed */
 .ef-arrow-chr { font-size: 1.3rem; font-weight: 900; line-height: 1; }
