@@ -172,7 +172,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 
   {/* ── Footer: outside eco-wrap so ShareDropdown is not clipped by overflow:hidden ── */}
   <div id={anchorId} class="eco-footer" style="scroll-margin-top:72px">
-    <span class="footer-formula">(J) + Y = C + I · Base Economy Model across all GTA titles</span>
+    <span class="footer-formula">Base Economy Model across all GTA titles · (J) + Y = C + I</span>
     <div class="flex-1"></div>
     {fullEconomyHref && (
       <a href={fullEconomyHref} class="text-[10px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors uppercase tracking-widest shrink-0">Full model →</a>
@@ -457,7 +457,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 .footer-formula {
   font-size: 10px; font-family: var(--font-mono,monospace);
   letter-spacing: .04em;
-  color: var(--c-text-6);
+  color: var(--c-text-5);  /* brighter than --c-text-6; no opacity modifier */
   flex-shrink: 1;
   min-width: 0;
   overflow: hidden;
