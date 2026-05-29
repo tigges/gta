@@ -537,12 +537,8 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       path.setAttribute("marker-end", `url(#${uid}-arr-${flow.color_token})`);
       svg.appendChild(path);
 
-      // Flow label — positioned at t=0.25 (closer to source) to spread labels apart
-      // A background rect behind the text prevents overlap illegibility
-      // Show only the circle number (①②③④⑤) on the arrow — clean, no overlap.
-      // Full label text lives on the money flow cards below the diagram.
-      const circleNum = (flow.label as string).match(/[①②③④⑤]/)?.[0] ?? "";
-      const label = circleNum || (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim().slice(0, 8);
+      // Flow label — full descriptive text, stripped of directional arrows and circle numbers
+      const label = (flow.label as string).replace(/[←→①②③④⑤★]/g, "").trim();
       if (label) {
         // Bezier point at t=0.25 (closer to source node — spreads labels from center)
         const t  = 0.25;
