@@ -317,7 +317,7 @@ D3/JS runtime colours must come from `src/config/colors.ts` named exports (`C_BR
 - `--c-text-6` has been **removed** from the token system. Do not add it back.
 - `--c-watermark` exists solely for D3 SVG watermark stamps (the tiny `GTAVI.AI` corner text in charts). Never use it on HTML text.
 - Tailwind `text-zinc-600` and `text-zinc-700` both map to `--c-text-5` — the floor.
-- If text would be too dim at `--c-text-5`, **omit the text entirely** rather than dimming it further.
+- If text would be too dim at `--c-text-5`, use `--c-text-4` or higher — never go below the floor.
 
 ### Minimum font size rule (P1 — no exceptions)
 
