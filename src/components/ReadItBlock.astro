@@ -1,37 +1,98 @@
 ---
 /**
- * ReadItBlock — left-border annotation block used in Money Flow cards,
- * Health Monitor cards, and wherever an editorial "Read it:" insight appears.
+ * ReadItBlock — left-border annotation block.
  *
- * The slot should contain the full paragraph text. The "Read it:" prefix
- * is rendered automatically as a semibold span.
+ * Two modes:
  *
- * Usage:
- *   <ReadItBlock accentColor="var(--c-brand)">
- *     When the line dips after a major DLC, Rockstar has nerfed...
- *   </ReadItBlock>
+ * 1. DEFAULT (no intent) — left accent border only, inline annotation.
+ *    Used in flow cards, health monitor, framework cards.
+ *    <ReadItBlock accentColor="var(--c-brand)">When the line dips...</ReadItBlock>
  *
- *   <ReadItBlock accentColor="var(--c-flow-spending)">
- *     Vehicles are the dominant consumer good...
- *   </ReadItBlock>
+ * 2. FRAMED (intent provided) — adds surrounding border + intent-tinted background.
+ *    Used in chart teasers as the key insight callout.
+ *    <ReadItBlock
+ *      accentColor="var(--c-brand)"
+ *      intent="positive"
+ *      fullChartHref="/charts#section-cpi-chart"
+ *      showPrefix={false}
+ *    >GTA VI is <span ...>12% cheaper</span>...</ReadItBlock>
+ *
+ * Props:
+ *   accentColor   — CSS value for the left border colour. Default: var(--c-brand)
+ *   showPrefix    — render "Read it: " label. Default: true (false for teasers)
+ *   intent        — enables framed mode + tinted background:
+ *                     "positive" → subtle green tint (cheaper, growing, hotter)
+ *                     "negative" → subtle red tint  (nerf, regression, declining)
+ *                     "neutral"  → subtle amber tint (informational, no clear valence)
+ *   fullChartHref — optional "Full chart →" link shown in framed footer row
+ *   fullChartLabel — link text. Default: "Full chart →"
  */
 
 interface Props {
-  /** CSS variable for the left border + optional tint. Defaults to var(--c-brand). */
-  accentColor?: string;
-  /** When false, the "Read it:" prefix label is omitted. Defaults to true. */
-  showPrefix?: boolean;
+  accentColor?:    string;
+  showPrefix?:     boolean;
+  intent?:         "positive" | "negative" | "neutral";
+  fullChartHref?:  string;
+  fullChartLabel?: string;
 }
 
-const { accentColor = "var(--c-brand)", showPrefix = true } = Astro.props;
+const {
+  accentColor   = "var(--c-brand)",
+  showPrefix    = true,
+  intent,
+  fullChartHref,
+  fullChartLabel = "Full chart →",
+} = Astro.props;
+
+const bgTint = intent === "positive"
+  ? "color-mix(in srgb,var(--c-growth) 5%,var(--c-bg-deep))"
+  : intent === "negative"
+  ? "color-mix(in srgb,var(--c-alert) 5%,var(--c-bg-deep))"
+  : intent === "neutral"
+  ? "color-mix(in srgb,var(--c-brand) 6%,var(--c-bg-deep))"
+  : null;
+
+const framed = !!bgTint;
 ---
 
-<div
-  class="border-l-2 pl-3 py-1 rounded-r"
-  style={`border-color:color-mix(in srgb,${accentColor} 40%,transparent);background:var(--c-card-raised)`}
->
-  <p class="text-[11px] text-zinc-400 leading-relaxed">
-    {showPrefix && <span class="font-semibold text-zinc-200">Read it: </span>}
-    <slot />
-  </p>
-</div>
+{framed ? (
+  <!-- ── Framed mode (chart teaser callouts) ── -->
+  <div
+    class="rounded-xl overflow-hidden"
+    style={`border:1px solid var(--c-border-2);background:${bgTint}`}
+  >
+    <div
+      class="border-l-2 px-4 py-3"
+      style={`border-color:color-mix(in srgb,${accentColor} 50%,transparent)`}
+    >
+      <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">
+        {showPrefix && <span class="font-semibold text-zinc-200">Read it: </span>}
+        <slot />
+      </p>
+    </div>
+    {fullChartHref && (
+      <div
+        class="px-4 py-2 flex justify-end"
+        style="border-top:1px solid var(--c-border-1)"
+      >
+        <a
+          href={fullChartHref}
+          class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors uppercase tracking-widest whitespace-nowrap"
+        >
+          {fullChartLabel}
+        </a>
+      </div>
+    )}
+  </div>
+) : (
+  <!-- ── Default mode (flow cards, inline annotation) ── -->
+  <div
+    class="border-l-2 pl-3 py-1 rounded-r"
+    style={`border-color:color-mix(in srgb,${accentColor} 40%,transparent);background:var(--c-card-raised)`}
+  >
+    <p class="text-[11px] text-zinc-400 leading-relaxed">
+      {showPrefix && <span class="font-semibold text-zinc-200">Read it: </span>}
+      <slot />
+    </p>
+  </div>
+)}
