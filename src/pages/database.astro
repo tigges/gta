@@ -340,9 +340,29 @@ const HEIST_THUMBS: Record<string, string> = {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3 flex-wrap">
 
       <!-- GTA VI filters -->
-      <div id="filters-gta6" class="flex items-center gap-3 flex-wrap w-full">
+      <div id="filters-gta6" class="flex flex-col gap-2 w-full">
+        <!-- Row 1: Tier toggles + Search -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest shrink-0">Tier</span>
+          {CONFIDENCE_TIERS.map(tier => {
+            const meta = TIER_META[tier];
+            return (
+              <button class={`db-tier-filter px-2.5 py-1 rounded text-[11px] font-mono uppercase tracking-widest transition-all shrink-0 ${meta.active}`} data-tier={tier} data-active="true">
+                {meta.label}
+              </button>
+            );
+          })}
+          <input
+            id="db-search-gta6"
+            type="text"
+            placeholder="Search 2,187 entities..."
+            class="flex-1 min-w-0 px-3 py-1.5 rounded border border-border-mid text-zinc-200 text-[11px] font-mono placeholder-zinc-600 focus:outline-none focus:border-gta-gold/50 focus:placeholder-zinc-700 transition-colors"
+            style="background:var(--c-card-raised)"
+          />
+        </div>
+        <!-- Row 2: Type filter -->
         <div class="flex items-center gap-1.5 flex-wrap">
-          <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1">Type</span>
+          <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1 shrink-0">Type</span>
           <button class="db-type-filter px-2.5 py-1 rounded text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all" data-type="all">All</button>
           {GTA6_TYPES.map(t => (
             <button class="db-type-filter px-2.5 py-1 rounded text-[10px] font-mono border border-border-mid text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-type={t}>
@@ -350,23 +370,6 @@ const HEIST_THUMBS: Record<string, string> = {
             </button>
           ))}
         </div>
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1">Tier</span>
-          {CONFIDENCE_TIERS.map(tier => {
-            const meta = TIER_META[tier];
-            return (
-              <button class={`db-tier-filter px-2.5 py-1 rounded text-[11px] font-mono uppercase tracking-widest transition-all ${meta.active}`} data-tier={tier} data-active="true">
-                {meta.label}
-              </button>
-            );
-          })}
-        </div>
-        <input
-          id="db-search-gta6"
-          type="text"
-          placeholder="Search GTA VI..."
-          class="px-3 py-1.5 rounded border border-border-mid bg-surface-2 text-zinc-300 text-[11px] font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-gold/40 w-36"
-        />
       </div>
 
       <!-- GTA V filters -->
@@ -434,7 +437,6 @@ const HEIST_THUMBS: Record<string, string> = {
     <div class="flex items-center gap-3 mb-5">
       <span id="db-count" class="text-[10px] font-mono text-zinc-600">{gta6Entities.length} entities</span>
       <div class="flex-1 h-px bg-border-dim"></div>
-      <span id="db-source-label" class="text-[10px] font-mono text-zinc-500">GTA VI · Fandom Wiki + Leonida Intel</span>
     </div>
 
     <!-- GTA VI entity grid -->
@@ -706,7 +708,6 @@ const HEIST_THUMBS: Record<string, string> = {
   const gridGta5    = document.getElementById("db-grid-gta5") as HTMLElement;
   const countEl     = document.getElementById("db-count") as HTMLElement;
   const emptyEl     = document.getElementById("db-empty") as HTMLElement;
-  const srcLabel    = document.getElementById("db-source-label") as HTMLElement;
   const filtersGta6 = document.getElementById("filters-gta6") as HTMLElement;
   const filtersGta5 = document.getElementById("filters-gta5") as HTMLElement;
   const headerGta6  = document.getElementById("header-gta6") as HTMLElement;
@@ -1012,13 +1013,6 @@ const HEIST_THUMBS: Record<string, string> = {
       noteGta5.classList.toggle("hidden", !isGta5Eco);
       document.getElementById("source-note-wrapper")?.classList.toggle("hidden", isOnline);
 
-      // Count label
-      const labels: Record<string,string> = {
-        "gta-6": "GTA VI · Fandom Wiki + Leonida Intel",
-        "gta-online": "GTA Online · Economic Intelligence",
-        "gta-5": "GTA V · Story + Heists + Stocks",
-      };
-      srcLabel.textContent = labels[activeGame] ?? "";
 
       // Tab button styles
   // ── Shared filter style helpers (from semanticTypes registry) ──────────────
@@ -1059,7 +1053,7 @@ const HEIST_THUMBS: Record<string, string> = {
       if (typeof (window as any).plausible === "function" && activeType !== "all") {
         (window as any).plausible("DatabaseFilter", { props: { type: activeType, game: activeGame } });
       }
-      renderGta6();
+      requestAnimationFrame(() => renderGta6());
     });
   });
 
@@ -1091,7 +1085,7 @@ const HEIST_THUMBS: Record<string, string> = {
 
       if (wasActive) activeTiers.delete(tier); else activeTiers.add(tier);
       currentPage = 0;
-      renderGta6();
+      requestAnimationFrame(() => renderGta6());
     });
   });
 
