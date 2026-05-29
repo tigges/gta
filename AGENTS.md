@@ -316,6 +316,40 @@ All pill links in section headers and card footers: **`text-[10px]`**. No except
 
 ---
 
+## Simplified Economy Diagram (SED)
+
+The SED is the **canonical, title-neutral visual representation of GTA's circular economy**.
+It is the base model from which per-title variants will be derived. Never game-specific.
+
+**Formula:** `(J) + Y = C + I`
+
+| Symbol | Name | Role | Token | Colour |
+|---|---|---|---|---|
+| J | Injection | Exogenous — real money → GTA$ (Shark Cards, GTA+) | `--c-flow-injection` | Cyan |
+| Y | Income | Earned in-game — missions, passive, heists | `--c-gta-dollar` | Green |
+| C | Consumption | Non-returning spend — clothing, ammo | `--c-flow-spending` | Orange |
+| I | Investment | Capital spend returning to Y — businesses, property | `--c-economy` | Indigo |
+| GTA$ | Currency hub | The shared in-game currency | `--c-gta-dollar` | Green |
+
+**Simplification levels (same diagram, different decomposition of right side):**
+```
+Income = Expense               ← Level 1 — binary left/right
+Y = C + I                      ← Level 2 — three components
+(J) + Y = C + I                ← THE SED — full base model, all four dimensions
+Per-title variants             ← SED + title-specific actors, complexity, annotations
+```
+
+**Component:** `src/components/EconomyCircleSED.astro`
+- `EconomyCircle.astro` is retired — use `EconomyCircleSED.astro` everywhere
+- Used on hub pages (`/gta-vi`, `/gta-online`) to introduce the economy before the full `CircularEconomy` node graph
+
+**Rules:**
+- No game identity colours (`--c-title-online`, `--c-title-vi`, etc.) anywhere in the SED
+- J includes "* Only in GTA Online currently" note — honest scope marker
+- The SED does not change per title; only per-title variant components do
+- `--c-gta-dollar` (green, `#22c55e`) is the canonical GTA$ colour — matches in-game HUD across all titles
+
+
 ## TypeScript types
 
 Shared interfaces live in `src/types/gta.ts`:
