@@ -186,7 +186,7 @@ const peak    = history.reduce((a, b) => b.top_gta_per_hr > a.top_gta_per_hr ? b
         .call(g => g.select(".domain").attr("stroke", "var(--c-border-2)"))
         .call(g => g.selectAll(".tick line").attr("stroke", "var(--c-border-2)"))
         .call(g => g.selectAll("text")
-          .attr("fill", "var(--c-text-6)")
+          .attr("fill", "var(--c-text-5)")
           .attr("font-size", 9)
           .attr("font-family", "monospace"));
 
@@ -195,7 +195,7 @@ const peak    = history.reduce((a, b) => b.top_gta_per_hr > a.top_gta_per_hr ? b
         .call(g => g.select(".domain").remove())
         .call(g => g.selectAll(".tick line").remove())
         .call(g => g.selectAll("text")
-          .attr("fill", "var(--c-text-6)")
+          .attr("fill", "var(--c-text-5)")
           .attr("font-size", 9)
           .attr("font-family", "monospace"));
 
@@ -203,7 +203,7 @@ const peak    = history.reduce((a, b) => b.top_gta_per_hr > a.top_gta_per_hr ? b
       svg.append("text")
         .attr("x", W - 4).attr("y", H - 6)
         .attr("text-anchor", "end")
-        .attr("fill", "var(--c-text-7)")
+        .attr("fill", "var(--c-watermark)")
         .attr("font-size", 8)
         .attr("font-family", "monospace")
         .text("GTAVI.AI");

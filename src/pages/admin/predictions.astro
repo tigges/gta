@@ -117,12 +117,12 @@ const HUB_LIMIT  = predictions.filter((p: any) => (p.pages ?? []).includes("gta-
                 <div class="flex items-center gap-1 shrink-0">
                   <button class="page-toggle text-[9px] font-mono px-1.5 py-0.5 rounded border transition-all"
                           data-page="home"
-                          style={onHome ? "color:var(--c-brand);border-color:color-mix(in srgb,var(--c-brand) 40%,transparent);background:color-mix(in srgb,var(--c-brand) 8%,transparent)" : "color:var(--c-text-6);border-color:var(--c-border-2)"}>
+                          style={onHome ? "color:var(--c-brand);border-color:color-mix(in srgb,var(--c-brand) 40%,transparent);background:color-mix(in srgb,var(--c-brand) 8%,transparent)" : "color:var(--c-text-5);border-color:var(--c-border-2)"}>
                     Home
                   </button>
                   <button class="page-toggle text-[9px] font-mono px-1.5 py-0.5 rounded border transition-all"
                           data-page="gta-vi"
-                          style={onHub ? "color:var(--c-title-vi);border-color:color-mix(in srgb,var(--c-title-vi) 40%,transparent);background:color-mix(in srgb,var(--c-title-vi) 8%,transparent)" : "color:var(--c-text-6);border-color:var(--c-border-2)"}>
+                          style={onHub ? "color:var(--c-title-vi);border-color:color-mix(in srgb,var(--c-title-vi) 40%,transparent);background:color-mix(in srgb,var(--c-title-vi) 8%,transparent)" : "color:var(--c-text-5);border-color:var(--c-border-2)"}>
                     Hub
                   </button>
                 </div>
@@ -232,11 +232,11 @@ const HUB_LIMIT  = predictions.filter((p: any) => (p.pages ?? []).includes("gta-
         const page = btn.dataset.page!;
         const active = s.pages.includes(page);
         if (page === "home") {
-          btn.style.color = active ? "var(--c-brand)" : "var(--c-text-6)";
+          btn.style.color = active ? "var(--c-brand)" : "var(--c-text-5)";
           btn.style.borderColor = active ? "color-mix(in srgb,var(--c-brand) 40%,transparent)" : "var(--c-border-2)";
           btn.style.background = active ? "color-mix(in srgb,var(--c-brand) 8%,transparent)" : "";
         } else {
-          btn.style.color = active ? "var(--c-title-vi)" : "var(--c-text-6)";
+          btn.style.color = active ? "var(--c-title-vi)" : "var(--c-text-5)";
           btn.style.borderColor = active ? "color-mix(in srgb,var(--c-title-vi) 40%,transparent)" : "var(--c-border-2)";
           btn.style.background = active ? "color-mix(in srgb,var(--c-title-vi) 8%,transparent)" : "";
         }

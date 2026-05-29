@@ -46,7 +46,7 @@ const totalWeeks = 42;
         const isMidRecent = a.daysAgo < 60;
         const barColor = isRecent
           ? "var(--c-brand)"
-          : isMidRecent ? "var(--c-growth)" : "var(--c-text-6)";
+          : isMidRecent ? "var(--c-growth)" : "var(--c-text-5)";
         return (
           <div class="flex items-center gap-3">
             <!-- Activity name -->
@@ -60,7 +60,7 @@ const totalWeeks = 42;
             <!-- Count + recency -->
             <div class="flex items-center gap-2 shrink-0 text-[9px] font-mono">
               <span class="text-zinc-500 w-6 text-right">{a.count}×</span>
-              <span style={`color:${isRecent ? "var(--c-brand)" : "var(--c-text-6)"}`}>
+              <span style={`color:${isRecent ? "var(--c-brand)" : "var(--c-text-5)"}`}>
                 {a.daysAgo}d ago
               </span>
             </div>
@@ -74,7 +74,7 @@ const totalWeeks = 42;
     <div class="flex items-center gap-4 text-[9px] font-mono">
       <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-sm" style="background:var(--c-brand)"></span><span class="text-zinc-600">2× event</span></span>
       <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-sm" style="background:var(--c-growth)"></span><span class="text-zinc-600">recent</span></span>
-      <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-sm" style="background:var(--c-text-6)"></span><span class="text-zinc-600">older</span></span>
+      <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-sm" style="background:var(--c-text-5)"></span><span class="text-zinc-600">older</span></span>
       <span class="text-zinc-600">{totalWeeks} weeks · Rockstar Newswire</span>
     </div>
     <div class="flex items-center gap-2 shrink-0">

@@ -51,8 +51,8 @@ export const GAME_TYPES: SemanticType[] = [
   { id: "franchise",   label: "Franchise",   colorToken: "var(--c-brand)"             },
   { id: "gta-sa",      label: "GTA SA",      colorToken: "var(--c-title-sa)"          },
   { id: "gta-vc",      label: "GTA VC",      colorToken: "var(--c-title-vc)"          },
-  { id: "gta-iv",      label: "GTA IV",      colorToken: "var(--c-text-6)"            },
-  { id: "gta-iii",     label: "GTA III",     colorToken: "var(--c-text-6)"            },
+  { id: "gta-iv",      label: "GTA IV",      colorToken: "var(--c-text-5)"            },
+  { id: "gta-iii",     label: "GTA III",     colorToken: "var(--c-text-5)"            },
   // Filter-only aliases
   { id: "all",         label: "All",         colorToken: "var(--c-text-4)"            },
   { id: "gta-6",       label: "GTA VI",      colorToken: "var(--c-title-vi)"          },
@@ -75,7 +75,7 @@ export const CONFIDENCE_TYPES: SemanticType[] = [
   { id: "confirmed",  label: "Confirmed",  colorToken: "var(--c-live)"   },
   { id: "reported",   label: "Reported",   colorToken: "var(--c-brand)"  },
   { id: "predicted",  label: "Predicted",  colorToken: "var(--c-text-4)" },
-  { id: "indexed",    label: "Indexed",    colorToken: "var(--c-text-6)" },
+  { id: "indexed",    label: "Indexed",    colorToken: "var(--c-text-5)" },
 ];
 
 export const CONFIDENCE_TYPE_MAP: Record<string, SemanticType> = Object.fromEntries(

@@ -310,6 +310,19 @@ All pages must use these canonical components. Never rebuild these patterns inli
 
 D3/JS runtime colours must come from `src/config/colors.ts` named exports (`C_BRAND`, `C_LIVE`, etc.). Never write hex in a `<script>` block.
 
+### Minimum contrast rule (P1 — no exceptions)
+
+**`--c-text-5` is the dim floor for all readable text.** Nothing goes below it.
+
+- `--c-text-6` has been **removed** from the token system. Do not add it back.
+- `--c-watermark` exists solely for D3 SVG watermark stamps (the tiny `GTAVI.AI` corner text in charts). Never use it on HTML text.
+- Tailwind `text-zinc-600` and `text-zinc-700` both map to `--c-text-5` — the floor.
+- If text would be too dim at `--c-text-5`, **omit the text entirely** rather than dimming it further.
+
+### Minimum font size rule (P1 — no exceptions)
+
+**9px is the minimum font size for any readable text.** Use `text-[9px]` or larger. The 7px and 8px scales are banned for text content. They may only appear in CSS comments, SVG attributes set by D3, or `font-size` properties on non-text decorative SVG elements.
+
 ### Pill text size rule (P4)
 
 All pill links in section headers and card footers: **`text-[10px]`**. No exceptions.
