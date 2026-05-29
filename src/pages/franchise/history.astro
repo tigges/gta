@@ -1,7 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { C_LIVE, C_GROWTH, C_BRAND, C_CARD, C_BG_DEEP } from "../../config/colors";
-import CrossLinks from "../../components/CrossLinks.astro";
 import ReleaseTimeline from "../../components/ReleaseTimeline.astro";
 import GamePill from "../../components/GamePill.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
@@ -53,6 +52,7 @@ const COVERS: Record<string, string> = {
   title="GTA Franchise History & Sales"
   description="Grand Theft Auto franchise sales history, Metacritic scores, map size progression and DLC timeline across all 8 main titles from 1997 to 2026."
   ogPage="franchise"
+  crossLinksContext="franchise"
 >
   <!-- Breadcrumb -->
   <div class="border-b border-border-dim" style={`background:${C_BG_DEEP}`}>
@@ -390,6 +390,5 @@ const COVERS: Record<string, string> = {
       </a>
     </div>
 
-    <CrossLinks context="franchise" />
   </div>
 </Base>

@@ -1,6 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import CrossLinks from "../components/CrossLinks.astro";
 import IncomeCard from "../components/IncomeCard.astro";
 import StatBox from "../components/StatBox.astro";
 import { regionFromName } from "../config/semanticTypes";
@@ -284,6 +283,7 @@ const HEIST_THUMBS: Record<string, string> = {
   title="Database"
   description={`GTA franchise entity database — ${gta6Entities.length.toLocaleString()} GTA VI entities (Fandom Wiki + Leonida Intel) and ${gta5Vehicles.length} GTA V vehicles with Broughy performance benchmarks.`}
   ogPage="database"
+  crossLinksContext="database"
 >
 
   <!-- Header -->
@@ -672,7 +672,6 @@ const HEIST_THUMBS: Record<string, string> = {
       </div>
     </div>
 
-    <CrossLinks context="database" class="mt-8" />
   </div>
 </Base>
 

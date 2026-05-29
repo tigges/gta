@@ -1,6 +1,5 @@
 ---
 import Base from "../../layouts/Base.astro";
-import CrossLinks from "../../components/CrossLinks.astro";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import { tagAmazonUrl, PRODUCT_LINKS } from "../../config/affiliates";
@@ -189,6 +188,7 @@ const COUNTRIES: Country[] = [
   title="Buy"
   description="GTA VI launch editions, platform availability, and where to pre-order — PS5, Xbox Series X, and PC. Confirmed platforms, speculative edition breakdown based on Rockstar precedent."
   ogPage="buy"
+  crossLinksContext="buy"
 >
 
   <!-- ══════════════════════════════════════════════════════
@@ -500,7 +500,6 @@ const COUNTRIES: Country[] = [
       </div>
     </section>
 
-    <CrossLinks context="buy" />
 
     <!-- ══════════════════════════════════════════════════════
          INTELLIGENCE NOTE

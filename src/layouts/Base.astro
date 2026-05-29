@@ -2,6 +2,7 @@
 import { SITE_VERSION_LABEL, SITE_VERSION_DATE } from "../config/version";
 import "../styles/tokens.css";
 import HudIcon from "../components/HudIcon.astro";
+import CrossLinks from "../components/CrossLinks.astro";
 import weeklyBonusesRaw from "../../data/gta-5/economy/weekly-bonuses.json";
 
 interface Props {
@@ -16,6 +17,11 @@ interface Props {
     | "gta-sa" | "gta-vc" | "gta-iii" | "franchise" | "news";
   /** Admin/internal pages only — prevents search engine indexing. */
   noindex?: boolean;
+  /**
+   * Context key for the CrossLinks "Related Intelligence" strip rendered
+   * above the footer. Omit on admin/legal pages. Matches keys in CrossLinks ALL_LINKS.
+   */
+  crossLinksContext?: string;
 }
 
 const SITE_BASE = import.meta.env.SITE ?? "https://gtavi.ai";
@@ -27,6 +33,7 @@ const {
   ogPage,
   titleContext,
   noindex = false,
+  crossLinksContext,
 } = Astro.props;
 
 const resolvedOgImage =
@@ -417,6 +424,13 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
     <main class="flex-1 bg-grid">
       <slot />
     </main>
+
+    <!-- Related Intelligence cross-link strip (omitted on admin/legal pages) -->
+    {crossLinksContext && (
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-12">
+        <CrossLinks context={crossLinksContext} />
+      </div>
+    )}
 
     <!-- Footer -->
     <footer class="border-t border-border-dim mt-24" style="background:var(--c-bg-deep)">

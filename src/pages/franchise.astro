@@ -1,6 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import CrossLinks from "../components/CrossLinks.astro";
 import GamePill from "../components/GamePill.astro";
 import salesData   from "../../data/franchise/sales.json";
 import metacriticData from "../../data/franchise/metacritic.json";
@@ -16,6 +15,7 @@ const titleCount = titles.length;
   title="GTA Franchise History"
   description="30 years of Grand Theft Auto franchise data — sales history, Metacritic scores, DLC timelines, map size progression, and economic complexity across all 8 titles."
   ogPage="franchise"
+  crossLinksContext="franchise"
 >
   <!-- Hero -->
   <section class="relative border-b border-border-dim overflow-hidden" style="min-height:240px">
@@ -115,6 +115,5 @@ const titleCount = titles.length;
       </div>
     </div>
 
-    <CrossLinks context="franchise" />
   </div>
 </Base>

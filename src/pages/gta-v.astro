@@ -4,7 +4,6 @@ import PlayerChart from "../components/PlayerChart.astro";
 import TrendsChart from "../components/TrendsChart.astro";
 import VehicleChart from "../components/VehicleChart.astro";
 import ShareDropdown from "../components/ShareDropdown.astro";
-import CrossLinks from "../components/CrossLinks.astro";
 import StockCalculator from "../components/StockCalculator.astro";
 import SocialClubConnector from "../components/SocialClubConnector.astro";
 import GamePill from "../components/GamePill.astro";
@@ -53,6 +52,7 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
   title="GTA V Story Mode"
   description="GTA V story mode data — mission earnings, heist payouts, assassination stock guide, vehicle benchmarks, and the complete $2B money strategy."
   ogPage="gta-v"
+  crossLinksContext="gta-v"
 >
 
   <!-- Page header -->
@@ -266,7 +266,6 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
       </div>
     </section>
 
-    <CrossLinks context="gta-v" />
 
   </div>
 </Base>
