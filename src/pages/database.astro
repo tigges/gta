@@ -148,7 +148,7 @@ const fandByType   = entityIndex.by_type;
 const fandByConf   = entityIndex.by_confidence;
 const leonidaStats = leonida.entity_stats;
 
-const GTA6_TYPES = ["character","location","business","mission","activity","property","vehicle","weapon","animal"] as const;
+const GTA6_TYPES = ["business","property","mission","activity","character","location","vehicle","weapon","animal"] as const;
 const GTA5_TIER_LABELS: Record<string,string> = {
   S:"S — Tier",A:"A — Tier",B:"B — Tier",C:"C — Tier",
   D:"D — Tier",E:"E — Tier",F:"F — Tier",G:"G — Tier",
@@ -314,11 +314,13 @@ const HEIST_THUMBS: Record<string, string> = {
 
       <!-- GTA VI stats -->
       <div id="header-gta6">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
-          <StatBox value={gta6Entities.length.toLocaleString()} label="Entities indexed" sub="Fandom Wiki + Leonida Intel" color="var(--c-title-vi)" />
-          <StatBox value={String((fandByConf.confirmed ?? 0) + leonidaStats.confirmed)} label="Confirmed" sub="across both sources" color="var(--c-live)" />
-          <StatBox value={String(fandomEntities.length)} label="Fandom Wiki" sub="characters · locations · vehicles" color="var(--c-brand)" />
-          <StatBox value={String(leonidaEntities.length)} label="Leonida Intel" sub="curated intelligence" color="var(--c-growth)" />
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-3">
+          <StatBox value={gta6Entities.length.toLocaleString()} label="Entities indexed" color="var(--c-title-vi)" />
+          <StatBox value={String((fandByConf.confirmed ?? 0) + leonidaStats.confirmed)} label="Confirmed" color="var(--c-live)" />
+          <StatBox value={String((fandByType?.mission ?? 0) + (leonida.entity_stats?.by_category?.["Missions"] ?? 0))} label="Missions" color="var(--c-brand)" />
+          <StatBox value={String((fandByType?.character ?? 0) + (leonida.entity_stats?.by_category?.["Characters"] ?? 0))} label="Characters" color="var(--c-brand)" />
+          <StatBox value={String((fandByType?.location ?? 0) + (leonida.entity_stats?.by_category?.["Locations"] ?? 0))} label="Locations" color="var(--c-brand)" />
+          <StatBox value={String(leonidaEntities.length)} label="Curated intelligence" color="var(--c-growth)" />
         </div>
       </div>
 
@@ -358,12 +360,6 @@ const HEIST_THUMBS: Record<string, string> = {
               </button>
             );
           })}
-        </div>
-        <div class="flex items-center gap-1.5 ml-auto">
-          <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1">Source</span>
-          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-border-mid text-zinc-500 hover:border-zinc-500 transition-all" data-source="all" data-active="true">All</button>
-          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-border-mid text-zinc-500 hover:border-zinc-500 transition-all" data-source="fandom" data-active="true">Fandom Wiki</button>
-          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-border-mid text-zinc-500 hover:border-zinc-500 transition-all" data-source="leonida" data-active="true">Leonida Intel</button>
         </div>
         <input
           id="db-search-gta6"
@@ -931,15 +927,25 @@ const HEIST_THUMBS: Record<string, string> = {
     targetGrid.after(pager);
   }
 
+  // Economic relevance order — determines card sort when type filter is "All"
+  const ECO_ORDER: Record<string, number> = {
+    business: 0, property: 1, mission: 2, activity: 3,
+    character: 4, location: 5, vehicle: 6, weapon: 7, animal: 8,
+  };
+
   // ── GTA VI render ─────────────────────────────────────────────────────────
   function renderGta6() {
-    const filtered = allGta6.filter(e => {
+    let filtered = allGta6.filter(e => {
       if (activeType !== "all" && e.type !== activeType) return false;
       if (!activeTiers.has(e.confidence_tier)) return false;
       if (activeSource !== "all" && e.source_id !== activeSource) return false;
       if (gta6Search && !e.name.toLowerCase().includes(gta6Search)) return false;
       return true;
     });
+    // When showing All, surface economically relevant types first
+    if (activeType === "all" && !gta6Search) {
+      filtered = [...filtered].sort((a, b) => (ECO_ORDER[a.type] ?? 9) - (ECO_ORDER[b.type] ?? 9));
+    }
     const page = filtered.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
     gridGta6.innerHTML = page.map(buildGta6Card).join("");
     countEl.textContent = `${filtered.length} entities`;
