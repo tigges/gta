@@ -25,6 +25,19 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 ---
 
 <div class="eco-card">
+
+  <!-- ── Card header (Option B, no pill) ──────────────────────────── -->
+  <div class="sed-header">
+    <div>
+      <div class="sed-category">Economy Model</div>
+      <div class="sed-title">Circular GTA Economy — Simplified</div>
+      <div class="sed-sub">(J) + Y = C + I · base model across all GTA titles</div>
+    </div>
+    {fullEconomyHref && (
+      <a href={fullEconomyHref} class="sed-full-link">Full model →</a>
+    )}
+  </div>
+
 <div class="eco-wrap">
 
   <!-- ── ROW 1: INJECTION (full width) ──────────────────────────────── -->
@@ -56,7 +69,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
     <!-- INCOME super-header — mirrors EXPENDITURE on right -->
     <div class="income-super">
       <div class="income-super-inner">
-        <HudIcon name="dollar" size={26} style="color:var(--c-income)"/>
+        <HudIcon name="dollar" size={26} style="color:var(--c-gta-dollar)"/>
         <span class="income-title">INCOME</span>
       </div>
     </div>
@@ -182,6 +195,47 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 </div>
 
 <style>
+/* ── Card header ─────────────────────────────────────────────────── */
+.sed-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--c-border-1);
+}
+.sed-category {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: var(--c-text-6);
+  margin-bottom: 3px;
+}
+.sed-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-text-1);
+  line-height: 1.2;
+  font-family: var(--font-sans, sans-serif);
+}
+.sed-sub {
+  font-size: 9px;
+  color: var(--c-text-6);
+  margin-top: 2px;
+  letter-spacing: .05em;
+}
+.sed-full-link {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--c-text-6);
+  text-decoration: none;
+  white-space: nowrap;
+  padding-top: 2px;
+  transition: color .15s;
+}
+.sed-full-link:hover { color: var(--c-text-2); }
+
 /* ── Root ─────────────────────────────────────────────────────────── */
 /* eco-card: visible card frame (border, radius, background).
    No overflow:hidden here so ShareDropdown can open freely. */
@@ -271,14 +325,14 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 .income-super-inner {
   display: flex; align-items: center; gap: 10px;
   padding: 8px 16px;
-  border: 1.5px solid color-mix(in srgb, var(--c-income) 35%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--c-gta-dollar) 35%, transparent);
   border-radius: 8px;
-  background: color-mix(in srgb, var(--c-income) 7%, transparent);
+  background: color-mix(in srgb, var(--c-gta-dollar) 7%, transparent);
 }
 .income-title {
   font-size: clamp(1rem,2.5vw,1.6rem);
   font-weight: 900;
-  color: var(--c-income);
+  color: var(--c-gta-dollar);
   letter-spacing: -.01em;
 }
 
@@ -319,7 +373,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
   display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 2px;
 }
-.gta-label { font-size: 11px; font-weight: 900; color: var(--c-gta-dollar); }
+.gta-label { font-size: 15px; font-weight: 900; color: var(--c-gta-dollar); }
 
 /* CSS triangle arrows */
 .tri-in {
@@ -460,19 +514,25 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
   /* inject-title now uses clamp — no mobile override needed */
   .blip          { width: 42px; height: 42px; }
 
-  /* Mid-row: hide flanking super-headers, show circle only */
+  /* Mid-row: show flanking super-headers as icon-only on mobile */
   .income-super,
-  .expend-super  { display: none; }
-  .mid-row       { display: flex; justify-content: center; padding: 10px 16px; }
+  .expend-super  { display: flex; }
+  .income-super  { padding-right: 4px; }
+  .expend-super  { padding-left: 4px; }
+  .income-super-inner,
+  .expend-super-inner { padding: 6px 8px; gap: 0; }
+  .income-title,
+  .expend-title  { display: none; } /* hide text, keep icon */
+  .mid-row       { grid-template-columns: auto auto auto; padding: 8px 4px; }
 
   /* Circle: slightly smaller */
-  .ring-wrap     { width: 96px; height: 96px; }
+  .ring-wrap     { width: 80px; height: 80px; }
   .ring {
-    -webkit-mask: radial-gradient(circle, transparent 33px, black 35px);
-    mask:         radial-gradient(circle, transparent 33px, black 35px);
+    -webkit-mask: radial-gradient(circle, transparent 27px, black 29px);
+    mask:         radial-gradient(circle, transparent 27px, black 29px);
   }
-  .ring-centre   { inset: 10px; }
-  .gta-label     { font-size: 9px; }
+  .ring-centre   { inset: 8px; }
+  .gta-label     { font-size: 11px; }
 
   /* Arrows: smaller */
   .tri-in, .tri-out {
