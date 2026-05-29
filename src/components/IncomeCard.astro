@@ -127,7 +127,7 @@ const GAME_PILL_MAP: Record<string, string> = {
 const TIER_COLOR: Record<string, string> = {
   "S+": "var(--c-growth)",   S: "var(--c-brand)",
   A:    "var(--c-live)",     B: "var(--c-economy)",
-  C:    "var(--c-text-4)",   D: "var(--c-text-6)",
+  C:    "var(--c-text-4)",   D: "var(--c-text-5)",
 };
 const tierColor  = TIER_COLOR[tier] ?? "var(--c-text-4)";
 const tierBorder = `color-mix(in srgb,${tierColor} 30%,transparent)`;
@@ -398,7 +398,7 @@ const showEnrichment = !compact;
         <!-- Daily fee (GTA Online) -->
         {!isGtaVI && daily_fee && (
           <div class="text-[11px] font-mono text-zinc-600 border-t border-border-dim pt-2 flex items-center gap-1.5">
-            <span style="color:var(--c-text-6)">⚙</span>
+            <span style="color:var(--c-text-5)">⚙</span>
             <span>${daily_fee.toLocaleString()}/day upkeep</span>
             <span class="text-zinc-500 ml-0.5">(${Math.round(daily_fee * 365 / 1000)}k/yr)</span>
           </div>
@@ -413,7 +413,7 @@ const showEnrichment = !compact;
                 🔁 BONUS ACTIVE NOW
               </span>
             ) : (
-              <span style="color:var(--c-text-6)">
+              <span style="color:var(--c-text-5)">
                 🔁 Bonus ×{bonus_count}
                 {bonusDaysAgo !== null && <span> · last {bonusDaysAgo}d ago</span>}
                 {bonus_avg_gap_weeks && <span class="text-zinc-500"> · ~{Math.round(bonus_avg_gap_weeks)}w avg</span>}

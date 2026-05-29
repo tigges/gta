@@ -73,7 +73,7 @@ const { fullEconomyHref = "/gta-vi/economy" } = Astro.props;
             <div style={`width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:${f.color};background:color-mix(in srgb,${f.color} 15%,transparent);border:1px solid color-mix(in srgb,${f.color} 35%,transparent);flex-shrink:0;margin-top:1px`}>{f.letter}</div>
             <div>
               <div style={`font-size:11px;font-weight:700;color:${f.color};line-height:1.2`}>{f.label}</div>
-              <div style="font-size:9px;color:var(--c-text-6);margin-top:1px">{f.sub}</div>
+              <div style="font-size:9px;color:var(--c-text-5);margin-top:1px">{f.sub}</div>
             </div>
           </div>
         ))}
@@ -85,23 +85,23 @@ const { fullEconomyHref = "/gta-vi/economy" } = Astro.props;
       <!-- GTA$ circle -->
       <div style="width:64px;height:64px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:color-mix(in srgb,var(--c-bg-deep) 90%,transparent);border:2px solid color-mix(in srgb,var(--c-brand) 40%,transparent)">
         <span style="font-size:9px;font-weight:900;color:var(--c-brand);letter-spacing:-.01em">GTA$</span>
-        <span style="font-size:7px;color:var(--c-text-6);text-transform:uppercase;letter-spacing:.08em">shared</span>
+        <span style="font-size:7px;color:var(--c-text-5);text-transform:uppercase;letter-spacing:.08em">shared</span>
       </div>
 
       <!-- Bidirectional arrow -->
       <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
         <div style="display:flex;align-items:center;gap:4px">
           <span style="color:var(--c-title-vi);font-size:14px;line-height:1">←</span>
-          <span style="font-size:7px;color:var(--c-text-6);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap">Player</span>
+          <span style="font-size:7px;color:var(--c-text-5);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap">Player</span>
           <span style="color:var(--c-growth);font-size:14px;line-height:1">→</span>
         </div>
-        <span style="font-size:7px;color:var(--c-text-6);text-transform:uppercase;letter-spacing:.08em">Movement</span>
+        <span style="font-size:7px;color:var(--c-text-5);text-transform:uppercase;letter-spacing:.08em">Movement</span>
       </div>
 
       <!-- RPP badge -->
       <div style="border:1px solid color-mix(in srgb,var(--c-brand) 30%,transparent);border-radius:4px;padding:3px 7px;text-align:center;background:color-mix(in srgb,var(--c-brand) 8%,transparent)">
         <div style="font-size:8px;font-weight:900;color:var(--c-brand);letter-spacing:.05em">GTA-RPP</div>
-        <div style="font-size:7px;color:var(--c-text-6)">parity index</div>
+        <div style="font-size:7px;color:var(--c-text-5)">parity index</div>
       </div>
     </div>
 
@@ -121,7 +121,7 @@ const { fullEconomyHref = "/gta-vi/economy" } = Astro.props;
             <div style={`width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:${f.color};background:color-mix(in srgb,${f.color} 15%,transparent);border:1px solid color-mix(in srgb,${f.color} 35%,transparent);flex-shrink:0;margin-top:1px`}>{f.letter}</div>
             <div>
               <div style={`font-size:11px;font-weight:700;color:${f.color};line-height:1.2`}>{f.label}</div>
-              <div style="font-size:9px;color:var(--c-text-6);margin-top:1px">{f.sub}</div>
+              <div style="font-size:9px;color:var(--c-text-5);margin-top:1px">{f.sub}</div>
             </div>
           </div>
         ))}
@@ -133,17 +133,17 @@ const { fullEconomyHref = "/gta-vi/economy" } = Astro.props;
   <!-- ── Equation strip ─────────────────────────────────────────────── -->
   <div style="padding:10px 20px;border-bottom:1px solid var(--c-border-1);display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--c-bg-deep)">
     <span style="font-size:11px;font-weight:900;color:var(--c-brand);letter-spacing:.03em">Y = C + I</span>
-    <span style="font-size:8px;color:var(--c-text-6)">·</span>
-    <span style="font-size:9px;color:var(--c-text-6);text-transform:uppercase;letter-spacing:.1em">per region</span>
-    <span style="font-size:8px;color:var(--c-text-6)">·</span>
-    <span style="font-size:9px;color:var(--c-text-6);text-transform:uppercase;letter-spacing:.1em">one shared GTA$</span>
+    <span style="font-size:8px;color:var(--c-text-5)">·</span>
+    <span style="font-size:9px;color:var(--c-text-5);text-transform:uppercase;letter-spacing:.1em">per region</span>
+    <span style="font-size:8px;color:var(--c-text-5)">·</span>
+    <span style="font-size:9px;color:var(--c-text-5);text-transform:uppercase;letter-spacing:.1em">one shared GTA$</span>
     <span style="flex:1"></span>
     <span style="font-size:8px;color:color-mix(in srgb,var(--c-title-vi) 60%,transparent);text-transform:uppercase;letter-spacing:.12em;border:1px solid color-mix(in srgb,var(--c-title-vi) 25%,transparent);padding:2px 6px;border-radius:3px">Projected</span>
   </div>
 
   <!-- ── Footer ─────────────────────────────────────────────────────── -->
   <div style="padding:8px 16px;display:flex;align-items:center;gap:12px;background:var(--c-card)">
-    <div style="display:flex;align-items:center;gap:16px;font-size:9px;color:var(--c-text-6)">
+    <div style="display:flex;align-items:center;gap:16px;font-size:9px;color:var(--c-text-5)">
       <span style="display:flex;align-items:center;gap:5px">
         <span style="display:inline-block;width:10px;height:2px;border-radius:1px;background:var(--c-title-vi)"></span>
         Vice City
@@ -159,7 +159,7 @@ const { fullEconomyHref = "/gta-vi/economy" } = Astro.props;
     </div>
     <span style="flex:1"></span>
     {fullEconomyHref && (
-      <a href={fullEconomyHref} style="font-size:9px;color:var(--c-text-6);text-transform:uppercase;letter-spacing:.12em;text-decoration:none" class="hover:text-zinc-200 transition-colors">Full model →</a>
+      <a href={fullEconomyHref} style="font-size:9px;color:var(--c-text-5);text-transform:uppercase;letter-spacing:.12em;text-decoration:none" class="hover:text-zinc-200 transition-colors">Full model →</a>
     )}
     <span style="font-size:9px;color:var(--c-text-5);text-transform:uppercase;letter-spacing:.12em">GTAVI.AI</span>
     <ShareDropdown
