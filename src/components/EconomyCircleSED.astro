@@ -39,6 +39,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
         <span class="rockstar-label">Rockstar</span>
         <span class="inject-title">INJECTION</span>
         <span class="j-arrow">J &#8595;</span>
+        <span class="j-definition">J &middot; REAL MONEY &#8594; GTA$</span>
       </div>
 
       <div class="inject-item">
@@ -46,7 +47,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
         <span class="item-label" style="color:var(--c-flow-injection)">GTA+</span>
       </div>
     </div>
-    <span class="online-note">&#42; Exogenous · real money &#8594; GTA$</span>
+    <span class="online-note">&#42; J currently only in GTA Online</span>
   </div>
 
   <!-- ── ROW 2: INCOME super-header · Circle · EXPENDITURE super-header ── -->
@@ -218,6 +219,19 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 .rockstar-label { font-size: 9px; color: var(--c-flow-injection); opacity: var(--o-tertiary); letter-spacing: .25em; text-transform: uppercase; }
 .inject-title { font-size: 2rem; font-weight: 900; line-height: 1; color: var(--c-flow-injection); }
 .j-arrow { font-size: 1.1rem; font-weight: 700; color: var(--c-flow-injection); }
+.j-definition {
+  margin-top: 6px;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--c-flow-injection);
+  border: 1px solid color-mix(in srgb, var(--c-flow-injection) 35%, transparent);
+  background: color-mix(in srgb, var(--c-flow-injection) 10%, transparent);
+  border-radius: 4px;
+  padding: 3px 7px;
+  white-space: nowrap;
+}
 .online-note {
   position: absolute; top: 8px; right: 12px;
   font-size: 8px; color: var(--c-text-5); opacity: var(--o-secondary);
@@ -287,11 +301,11 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
   position: absolute; inset: 14px;
   border-radius: 50%;
   background: color-mix(in srgb, var(--c-bg-deep) 90%, transparent);
-  border: 1.5px solid color-mix(in srgb, var(--c-brand) 35%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--c-gta-dollar) 35%, transparent);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 2px;
 }
-.gta-label { font-size: 11px; font-weight: 900; color: var(--c-brand); }
+.gta-label { font-size: 11px; font-weight: 900; color: var(--c-gta-dollar); }
 
 /* CSS triangle arrows */
 .tri-in {
