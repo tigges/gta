@@ -1,44 +1,65 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "game": "gta-6",
   "status": "pre-launch",
-  "last_updated": "2026-05-18T00:00:00Z",
-  "note": "GTA VI property registry — pre-launch stub. Schema mirrors data/gta-5/economy/properties.json. Populate at launch from GTA VI wiki, Rockstar press kit, and community records.",
+  "last_updated": "2026-05-29T00:00:00Z",
+  "note": "GTA VI property registry — pre-launch stub. Schema v1.1 adds regions[], coordinates, and explicit monetary_dimension fields. Populate at launch from GTA VI wiki, Rockstar press kit, and community records.",
   "launch_date": "2026-11-19",
-  "property_count": 0,
-  "properties": [],
+  "sources": [],
   "fields": {
-    "id":            "string — kebab-case",
-    "name":          "string",
-    "type":          "string — apartment | office | business | vehicle-warehouse | etc.",
-    "price_min":     "number — cheapest location/config",
-    "price_max":     "number — most expensive location/config",
-    "dlc":           "string — GTA VI launch or DLC name",
-    "capacity_vehicles": "number | null",
-    "daily_fee":     "number — GTA$/day when owned",
-    "upgrade_cost":  "number | null — full upgrade cost",
-    "purchase_site": "string — in-game website name",
-    "notes":         "string"
+    "id":                    "string — kebab-case",
+    "name":                  "string",
+    "type":                  "string — apartment | safehouse | office | business | garage | warehouse | hangar | yacht | other",
+    "regions":               "string[] — region IDs from world/regions.json",
+    "coordinates":           "{x: number|null, y: number|null} — property entrance location",
+    "price_gta$":            "number | null — purchase price (monetary_dimension: price)",
+    "price_min_gta$":        "number | null — cheapest location/config",
+    "price_max_gta$":        "number | null — most expensive location/config",
+    "upgrade_cost_gta$":     "number | null — full upgrade cost (monetary_dimension: price)",
+    "daily_fee_gta$":        "number | null — GTA$/day upkeep when owned (monetary_dimension: cost)",
+    "passive_yield_gta$_hr": "number | null — passive income when not playing (monetary_dimension: yield)",
+    "capacity_vehicles":     "number | null",
+    "dlc":                   "string — GTA VI launch or DLC name",
+    "purchase_site":         "string | null — in-game website name (Dynasty 8 equivalent)",
+    "confidence_tier":       "string — confirmed | reported | predicted",
+    "source":                "string",
+    "notes":                 "string"
   },
+  "properties": [],
   "confirmed_pre_launch": {
     "note": "Properties visible in official GTA VI trailers and press material",
     "items": [
       {
-        "id": "leonida-safehouse-1",
+        "id": "vice-city-safehouse-trailer",
         "name": "Vice City Safehouse (trailer visible)",
-        "type": "apartment",
-        "price_min": null,
-        "price_max": null,
-        "notes": "Seen in Trailer 1 and 2. Price unconfirmed. Typical GTA VI starting safehouse.",
-        "source": "Trailer analysis",
-        "confirmed": false
+        "type": "safehouse",
+        "regions": ["vice-city"],
+        "coordinates": { "x": null, "y": null },
+        "price_gta$": null,
+        "confidence_tier": "confirmed",
+        "source": "Trailer 1 + Trailer 2 analysis",
+        "notes": "Seen in T1 and T2. Price unconfirmed. Interior layout partially visible."
+      },
+      {
+        "id": "leonida-keys-safehouse-trailer",
+        "name": "Leonida Keys Waterfront Safehouse",
+        "type": "safehouse",
+        "regions": ["leonida-keys"],
+        "coordinates": { "x": null, "y": null },
+        "price_gta$": null,
+        "confidence_tier": "reported",
+        "source": "Community screenshot analysis",
+        "notes": "Waterfront property visible in trailer backgrounds. Region and ownership TBC."
       }
     ]
   },
   "day1_checklist": [
     "Scrape Dynasty 8 / Maze Bank Foreclosures GTA VI equivalents from wiki",
     "Run fetch_gta_properties.py adapted for GTA VI property categories",
-    "Confirm property types — GTA VI may rename or restructure from Online",
-    "Note: GTA VI Leonida setting likely means different location names"
+    "Record all purchase prices with monetary_dimension: price",
+    "Record daily upkeep fees with monetary_dimension: cost",
+    "Calculate break-even hours for each income-generating property",
+    "Add game-cartesian coordinates from community map tools",
+    "Note multi-region price differentials for the same property type"
   ]
 }

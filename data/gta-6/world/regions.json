@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "game": "gta-6",
+  "status": "pre-launch",
+  "last_updated": "2026-05-29T00:00:00Z",
+  "note": "Canonical region registry for GTA VI. All economy, mission, POI, and collectible data references region IDs from this file. Extend post-launch as districts and sub-regions are confirmed by community mapping. 'dual-territory' terminology retired — GTA VI has multiple regions sharing one GTA$ economy.",
+  "sources": [
+    "Rockstar Games Official Trailers (T1, T2)",
+    "Leonida Intel API",
+    "GTA Fandom Wiki pre-launch stubs",
+    "Community mapping (GTAForums, Reddit r/GTA6)"
+  ],
+  "regions": [
+    {
+      "id": "vice-city",
+      "name": "Vice City",
+      "type": "urban",
+      "price_tier": "high",
+      "confidence_tier": "confirmed",
+      "real_world_approx": "Miami, FL",
+      "description": "Dense urban core — skyscrapers, beach strip, nightlife, high-end retail. Highest property and commodity prices. GTA Online equivalent: Los Santos.",
+      "trailer_evidence": "T1 — 0:08, T2 — 0:12",
+      "districts": [],
+      "area_km2_est": null,
+      "coordinates_bounds": { "x_min": null, "x_max": null, "y_min": null, "y_max": null }
+    },
+    {
+      "id": "leonida-keys",
+      "name": "Leonida Keys",
+      "type": "coastal",
+      "price_tier": "medium",
+      "confidence_tier": "confirmed",
+      "real_world_approx": "Florida Keys",
+      "description": "Island chain south of Vice City — marinas, fishing villages, smuggling routes. Mid-tier pricing. Strong black market economy signal.",
+      "trailer_evidence": "T1 — 0:23",
+      "districts": [],
+      "area_km2_est": null,
+      "coordinates_bounds": { "x_min": null, "x_max": null, "y_min": null, "y_max": null }
+    },
+    {
+      "id": "port-gellhorn",
+      "name": "Port Gellhorn",
+      "type": "suburban-port",
+      "price_tier": "medium-low",
+      "confidence_tier": "confirmed",
+      "real_world_approx": "Port Everglades / Fort Lauderdale area",
+      "description": "Industrial port suburb — container yards, warehouses, working-class neighbourhoods. Import/export hub. Lower property prices, strong criminal enterprise potential.",
+      "trailer_evidence": "T2 — 0:31",
+      "districts": [],
+      "area_km2_est": null,
+      "coordinates_bounds": { "x_min": null, "x_max": null, "y_min": null, "y_max": null }
+    },
+    {
+      "id": "grassrivers",
+      "name": "Grassrivers",
+      "type": "rural",
+      "price_tier": "low",
+      "confidence_tier": "confirmed",
+      "real_world_approx": "Florida Everglades / rural inland",
+      "description": "Vast rural interior — swamps, farms, trailer parks, airstrips. Cheapest commodity prices. Smuggling, agriculture, off-grid criminal economy. GTA Online equivalent: Blaine County.",
+      "trailer_evidence": "T1 — 0:45",
+      "districts": [],
+      "area_km2_est": null,
+      "coordinates_bounds": { "x_min": null, "x_max": null, "y_min": null, "y_max": null }
+    },
+    {
+      "id": "ambrosia",
+      "name": "Ambrosia",
+      "type": "beach-resort",
+      "price_tier": "high",
+      "confidence_tier": "reported",
+      "real_world_approx": "South Beach / Art Deco district",
+      "description": "Upscale beach resort district — luxury hotels, beach clubs, art deco architecture. Likely a sub-district of or adjacent to Vice City. Reported from press assets and Leonida Intel.",
+      "trailer_evidence": "T2 press assets",
+      "districts": [],
+      "area_km2_est": null,
+      "coordinates_bounds": { "x_min": null, "x_max": null, "y_min": null, "y_max": null }
+    },
+    {
+      "id": "mount-kalaga",
+      "name": "Mount Kalaga",
+      "type": "wilderness",
+      "price_tier": "low",
+      "confidence_tier": "reported",
+      "real_world_approx": null,
+      "description": "Highland/mountain national park area. Likely part of the wider Leonida state. Sparse population, natural landmark.",
+      "trailer_evidence": "Press assets — Mount Kalaga National Park",
+      "districts": [],
+      "area_km2_est": null,
+      "coordinates_bounds": { "x_min": null, "x_max": null, "y_min": null, "y_max": null }
+    }
+  ],
+  "day1_checklist": [
+    "Confirm all region IDs against in-game map and signage",
+    "Add coordinates_bounds for each region from dataminer-confirmed game-space grid",
+    "Populate districts[] arrays with named sub-areas",
+    "Add any new regions not listed here",
+    "Update confidence_tier to 'confirmed' for all verified regions",
+    "Cross-reference with map.json coordinate anchor points"
+  ]
+}

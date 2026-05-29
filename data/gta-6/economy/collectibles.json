@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "game": "gta-6",
+  "status": "stub",
+  "last_updated": "2026-05-29T00:00:00Z",
+  "note": "GTA VI collectible registry. Collectibles are the highest-density coordinate dataset in any GTA title — typically 50–200 items each with a unique map location. Coordinates in game-cartesian system — see data/gta-6/world/map.json. Economy relevance: collectibles provide GTA$ rewards, unique items, or unlock content that affects income capacity.",
+  "sources": [],
+  "collectible_types": [
+    { "id": "hidden-package",   "name": "Hidden Packages",      "precedent": "GTA III / Vice City" },
+    { "id": "letter-scrap",     "name": "Letter Scraps",        "precedent": "GTA V" },
+    { "id": "signal-jammer",    "name": "Signal Jammers",       "precedent": "GTA Online (Casino Heist)" },
+    { "id": "action-figure",    "name": "Action Figures",       "precedent": "GTA Online (Diamond Casino)" },
+    { "id": "exotic-export",    "name": "Exotic Exports",       "precedent": "GTA Online (Contract DLC)" },
+    { "id": "stash-house",      "name": "Stash Houses",         "precedent": "GTA Online (San Andreas Mercenaries)" },
+    { "id": "weapon-pickup",    "name": "Weapon Pickups",       "precedent": "GTA V story mode" },
+    { "id": "cash-drop",        "name": "Cash Drops",           "precedent": "GTA V / GTA Online" },
+    { "id": "unknown",          "name": "Unknown Type",         "precedent": "TBC at launch" }
+  ],
+  "fields": {
+    "id":                   "string — kebab-case",
+    "type":                 "string — collectible_types.id",
+    "name":                 "string — display name or descriptor",
+    "description":          "string | null",
+    "regions":              "string[] — region IDs",
+    "coordinates":          "{x: number|null, y: number|null}",
+    "reward_type":          "string — gta$ | item | unlock | stat-boost | none",
+    "reward_gta$":          "number | null — GTA$ reward if applicable",
+    "reward_item":          "string | null — item name if reward is an item",
+    "reward_unlock":        "string | null — what it unlocks",
+    "collection_set_id":    "string | null — parent collection set ID",
+    "collection_set_bonus": "number | null — bonus GTA$ for completing full set",
+    "repeatable":           "boolean",
+    "confidence_tier":      "string — confirmed | reported | predicted",
+    "source":               "string"
+  },
+  "collectibles": [],
+  "day1_checklist": [
+    "Identify all collectible types from GTA VI wiki Categories and in-game UI",
+    "Assign type IDs from collectible_types or add new types",
+    "Record game-cartesian coordinates from community mapping (MapGenie, GTAForums)",
+    "Note GTA$ rewards and collection set bonuses",
+    "Flag any collectibles with income-relevant unlocks (business discounts, property access, etc.)",
+    "Add collection set completion bonuses to income-sources.json"
+  ]
+}
