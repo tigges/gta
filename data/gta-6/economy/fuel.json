@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "game": "gta-6",
+  "status": "stub",
+  "last_updated": "2026-05-29T00:00:00Z",
+  "note": "GTA VI fuel / petrol station registry. Fuel mechanics are rumoured for GTA VI — vehicles may require refuelling, introducing an ongoing operational cost. If confirmed, fuel prices are a primary multi-region economy signal (price differentials between Vice City and Grassrivers reflect the real-world urban/rural price gap and will vary). Coordinates in game-cartesian system — see data/gta-6/world/map.json.",
+  "fuel_mechanic_confirmed": false,
+  "sources": [
+    "Community leaks — fuel mechanic rumoured via Reddit r/GTA6 and GTAForums datamining discussions",
+    "Trailer analysis — petrol station signs visible in T1"
+  ],
+  "fuel_grades": [
+    { "id": "regular",   "name": "Regular",   "octane": 87,  "notes": "Cheapest. Standard for civilian vehicles." },
+    { "id": "midgrade",  "name": "Mid-Grade",  "octane": 89,  "notes": "Mid-tier." },
+    { "id": "premium",   "name": "Premium",    "octane": 93,  "notes": "Performance vehicles, higher cost." },
+    { "id": "diesel",    "name": "Diesel",     "octane": null, "notes": "Trucks, commercial vehicles." }
+  ],
+  "fields": {
+    "id":                "string — kebab-case",
+    "name":              "string — station name / brand (RON, LTD, etc.)",
+    "brand":             "string | null — parent fuel brand",
+    "regions":           "string[] — region IDs",
+    "coordinates":       "{x: number|null, y: number|null}",
+    "prices":            "array — [{grade_id, price_gta$_per_unit, monetary_dimension: 'cost', last_updated}]",
+    "services":          "string[] — fuel | carwash | repair | snacks",
+    "confidence_tier":   "string — confirmed | reported | predicted",
+    "source":            "string"
+  },
+  "stations": [
+    {
+      "id": "ltd-gasoline-vice-city-beach",
+      "name": "LTD Gasoline — Vice City Beach",
+      "brand": "LTD Gasoline",
+      "regions": ["vice-city"],
+      "coordinates": { "x": null, "y": null },
+      "prices": [],
+      "services": ["fuel", "snacks"],
+      "confidence_tier": "predicted",
+      "source": "Franchise precedent — LTD Gasoline present in GTA V",
+      "notes": "Urban pricing expected higher than rural stations."
+    },
+    {
+      "id": "ron-grassrivers-highway",
+      "name": "RON — Grassrivers Highway",
+      "brand": "RON",
+      "regions": ["grassrivers"],
+      "coordinates": { "x": null, "y": null },
+      "prices": [],
+      "services": ["fuel", "repair"],
+      "confidence_tier": "predicted",
+      "source": "Franchise precedent — RON present in GTA V rural areas",
+      "notes": "Rural pricing expected cheaper than Vice City. Price differential is a key economy signal."
+    }
+  ],
+  "day1_checklist": [
+    "Confirm fuel mechanic exists in-game — set fuel_mechanic_confirmed: true",
+    "Record petrol prices per grade per station from launch-day community reports",
+    "Map all station locations with game-cartesian coordinates",
+    "Calculate inter-region price differential (Vice City premium vs Grassrivers discount)",
+    "Add fuel cost to income-sources.json operational cost fields for vehicle-dependent activities",
+    "Track weekly/dynamic price changes if fuel prices fluctuate"
+  ]
+}

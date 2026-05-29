@@ -1,12 +1,16 @@
 ---
 /**
- * EconomyDualTerritory — GTA VI dual-territory currency union diagram.
+ * EconomyMultiRegion — GTA VI multi-region currency union diagram.
  *
  * Simplified conceptual diagram: what makes GTA VI's economy structurally
- * different from GTA Online — two territories, one shared GTA$.
+ * different from GTA Online — multiple regions, one shared GTA$.
  *
  * Pure CSS/HTML. No JS, no D3. Always renders.
  * Sits above EconomyCircle on the GTA VI hub page.
+ *
+ * Currently renders Vice City + Leonida as the two confirmed primary regions.
+ * Additional regions (Port Gellhorn, Grassrivers, Ambrosia, etc.) will be
+ * added as distinct economic zones post-launch.
  *
  * Palette:
  *   Vice City  → var(--c-title-vi)   pink-coral
@@ -47,7 +51,7 @@ const { fullEconomyHref = "/gta-vi/economy" } = Astro.props;
         <span style="font-size:9px;color:var(--c-title-vi);text-transform:uppercase;letter-spacing:.12em">GTA+</span>
       </div>
     </div>
-    <div style="position:absolute;top:8px;right:12px;font-size:8px;color:var(--c-text-5);opacity:0.5">* unified GTA$ across both territories</div>
+    <div style="position:absolute;top:8px;right:12px;font-size:8px;color:var(--c-text-5);opacity:0.5">* unified GTA$ across all regions</div>
   </div>
 
   <!-- ── Territory grid ────────────────────────────────────────────── -->
@@ -130,7 +134,7 @@ const { fullEconomyHref = "/gta-vi/economy" } = Astro.props;
   <div style="padding:10px 20px;border-bottom:1px solid var(--c-border-1);display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--c-bg-deep)">
     <span style="font-size:11px;font-weight:900;color:var(--c-brand);letter-spacing:.03em">Y = C + I</span>
     <span style="font-size:8px;color:var(--c-text-6)">·</span>
-    <span style="font-size:9px;color:var(--c-text-6);text-transform:uppercase;letter-spacing:.1em">per territory</span>
+    <span style="font-size:9px;color:var(--c-text-6);text-transform:uppercase;letter-spacing:.1em">per region</span>
     <span style="font-size:8px;color:var(--c-text-6)">·</span>
     <span style="font-size:9px;color:var(--c-text-6);text-transform:uppercase;letter-spacing:.1em">one shared GTA$</span>
     <span style="flex:1"></span>
@@ -159,8 +163,8 @@ const { fullEconomyHref = "/gta-vi/economy" } = Astro.props;
     )}
     <span style="font-size:9px;color:var(--c-text-5);text-transform:uppercase;letter-spacing:.12em">GTAVI.AI</span>
     <ShareDropdown
-      anchorId="economy-dual-territory"
-      shareText="GTA VI's economy is a dual-territory currency union — Vice City and Leonida share one GTA$, like the Eurozone. The GTA-RPP index will track the purchasing power gap between regions."
+      anchorId="economy-multi-region"
+      shareText="GTA VI's economy is a multi-region currency union — Vice City, Leonida and more all share one GTA$. The GTA-RPP index tracks purchasing power gaps between regions. GTAVI.AI"
       size="sm"
     />
   </div>

@@ -83,8 +83,8 @@ const LAYOUTS: Record<string, Record<string, { top: number; left: number; width:
     "players":          { top: 55, left: 36, width: 27 },
     "maze-bank":        { top: 55, left: 70, width: 27 },
   },
-  // dual-territory inner nodes (regions handled separately in HTML)
-  "dual-territory": {
+  // multi-region inner nodes (regions handled separately in HTML)
+  "multi-region": {
     "businesses-vc":      { top: 32, left:  2, width: 22 },
     "players-vc":         { top: 32, left: 26, width: 22 },
     "businesses-leonida": { top: 32, left: 54, width: 22 },
@@ -96,7 +96,7 @@ const nodePositions = LAYOUTS[economy.layout_template] ?? {};
 
 const HEIGHTS: Record<string, number> = {
   "one-way": 160, "proto": 300, "loop": 300,
-  "multi-stream": 420, "full-mmt": 320, "dual-territory": 380,
+  "multi-stream": 420, "full-mmt": 320, "multi-region": 380,
 };
 const containerH = isCompact
   ? Math.round((HEIGHTS[economy.layout_template] ?? 300) * 0.75)
@@ -192,8 +192,8 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
     </svg>
   </div>
 
-  {/* ── Dual-territory: special two-region HTML layout ────────────────────── */}
-  {economy.layout_template === "dual-territory" ? (
+  {/* ── Multi-region: special per-region HTML layout ────────────────────── */}
+  {economy.layout_template === "multi-region" ? (
     <div class="w-full space-y-3">
       <div class="grid grid-cols-2 gap-3">
         {/* VC region */}
@@ -344,7 +344,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   )}
 
   {/* ── Flow legend ───────────────────────────────────────────────────────── */}
-  {!isCompact && flows.length > 0 && economy.layout_template !== "dual-territory" && (
+  {!isCompact && flows.length > 0 && economy.layout_template !== "multi-region" && (
     <div class="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 pt-3 border-t border-border-dim">
       {flows.map((flow: any) => {
         const hex = flowHex(flow.color_token);

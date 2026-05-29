@@ -1,8 +1,32 @@
 {
-  "schema_version": "1.0",
-  "last_updated": "2026-05-20T06:52:43+00:00",
+  "schema_version": "1.1",
+  "last_updated": "2026-05-29T00:00:00Z",
   "source": "GTA Fandom Wiki (gta.fandom.com) · Category:Missions_in_GTA_VI",
-  "note": "GTA VI story mission data. Populated automatically from GTA Fandom Wiki when the game launches and the wiki is updated. Pre-launch: empty schema stub.",
+  "note": "GTA VI story mission data. Schema v1.1 adds regions[], coordinates, and monetary block. Populated automatically from GTA Fandom Wiki when the game launches and the wiki is updated. Pre-launch: empty missions array.",
   "game": "gta-6",
+  "fields": {
+    "id":              "string — kebab-case",
+    "name":            "string — mission display name",
+    "giver":           "string — mission giver NPC name",
+    "strand":          "string — mission strand / chapter",
+    "sequence":        "number | null — order within strand",
+    "regions":         "string[] — region IDs where mission takes place",
+    "coordinates":     "{x: number|null, y: number|null} — mission start marker location",
+    "characters":      "string[] — key character IDs involved",
+    "monetary": {
+      "payout_gta$":               "number | null — base completion reward (monetary_dimension: payout)",
+      "payout_range":              "{low: number|null, high: number|null}",
+      "gold_medal_bonus_gta$":     "number | null — bonus for gold medal completion",
+      "operational_cost_est_gta$": "number | null — estimated ammo/cost (monetary_dimension: cost)",
+      "net_est_gta$":              "number | null — payout minus estimated operational cost"
+    },
+    "unlock_requires":   "string | null — required prior mission or property",
+    "unlocks":           "string[] — what completing this mission unlocks",
+    "gold_objectives":   "string[] — conditions for gold medal",
+    "avg_time_min":      "number | null — average completion time",
+    "difficulty":        "number | null — 1–5",
+    "confidence_tier":   "string — confirmed | reported | predicted",
+    "source":            "string"
+  },
   "missions": []
 }

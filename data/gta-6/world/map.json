@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "game": "gta-6",
+  "status": "stub",
+  "last_updated": "2026-05-29T00:00:00Z",
+  "note": "GTA VI world coordinate system definition. All coordinates stored as game-cartesian {x, y} matching the system dataminers will confirm post-launch. Real-world lat/lng anchor provided for geo-adjacent tools. Bounds are null pre-launch — replace with confirmed values on Day 1 from community mapping tools (MapGenie-style interactive maps typically appear within hours of launch).",
+  "coordinate_system": {
+    "type": "game-cartesian",
+    "description": "GTA V used a Cartesian grid centred near Los Santos. GTA VI likely follows the same convention. X = west-east, Y = south-north. Units = game metres (approx 1:1 with real metres at ground level).",
+    "x_axis": "west (-) to east (+)",
+    "y_axis": "south (-) to north (+)",
+    "z_axis": "below sea level (-) to above (+)",
+    "bounds": {
+      "x_min": null,
+      "x_max": null,
+      "y_min": null,
+      "y_max": null,
+      "z_min": null,
+      "z_max": null
+    }
+  },
+  "real_world_anchor": {
+    "note": "Vice City is modelled on Miami, FL. Anchor point is a best-estimate pre-launch. Replace with dataminer-confirmed mapping on Day 1.",
+    "landmark": "Vice City — downtown core (approx Brickell/Downtown Miami)",
+    "real_lat": 25.7617,
+    "real_lng": -80.1918,
+    "game_x": null,
+    "game_y": null
+  },
+  "region_anchors": [],
+  "known_landmarks": [
+    {
+      "id": "vice-city-beach-strip",
+      "name": "Vice City Beach Strip",
+      "region": "vice-city",
+      "real_world_approx": { "lat": 25.7743, "lng": -80.1300 },
+      "game_coords": { "x": null, "y": null },
+      "confidence_tier": "predicted",
+      "source": "Trailer analysis"
+    },
+    {
+      "id": "leonida-keys-marina",
+      "name": "Leonida Keys Marina",
+      "region": "leonida-keys",
+      "real_world_approx": { "lat": 25.1166, "lng": -80.4214 },
+      "game_coords": { "x": null, "y": null },
+      "confidence_tier": "predicted",
+      "source": "Trailer analysis"
+    },
+    {
+      "id": "port-gellhorn-docks",
+      "name": "Port Gellhorn Container Docks",
+      "region": "port-gellhorn",
+      "real_world_approx": { "lat": 26.0917, "lng": -80.1200 },
+      "game_coords": { "x": null, "y": null },
+      "confidence_tier": "predicted",
+      "source": "Trailer analysis"
+    }
+  ],
+  "community_maps": [
+    {
+      "name": "MapGenie GTA VI (anticipated)",
+      "url": "https://mapgenie.io/grand-theft-auto-6",
+      "status": "pre-launch",
+      "note": "MapGenie typically launches interactive community maps within 24–48 hours of a major game release. Monitor and ingest coordinate data from here on Day 1."
+    },
+    {
+      "name": "GTAForums Map Thread (anticipated)",
+      "url": "https://gtaforums.com",
+      "status": "pre-launch",
+      "note": "Community coordinate extraction threads appear within hours of launch. High-fidelity coordinate grids often published within 48–72 hours."
+    }
+  ],
+  "day1_checklist": [
+    "Extract confirmed coordinate bounds from dataminer reports — update bounds.x_min/max, y_min/max",
+    "Set real_world_anchor.game_x and game_y from confirmed downtown Vice City coords",
+    "Add region_anchors entries for each region in regions.json",
+    "Update known_landmarks.game_coords from community map tools",
+    "Add new landmarks as community mapping progresses",
+    "Wire fetch_gta6_map.py to ingest MapGenie POI data once map is live"
+  ]
+}
