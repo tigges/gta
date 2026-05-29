@@ -26,18 +26,6 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 
 <div class="eco-card">
 
-  <!-- ── Card header (Option B, no pill) ──────────────────────────── -->
-  <div class="sed-header">
-    <div>
-      <div class="sed-category">Economy Model</div>
-      <div class="sed-title">Circular GTA Economy — Simplified</div>
-      <div class="sed-sub">(J) + Y = C + I · base model across all GTA titles</div>
-    </div>
-    {fullEconomyHref && (
-      <a href={fullEconomyHref} class="sed-full-link">Full model →</a>
-    )}
-  </div>
-
 <div class="eco-wrap">
 
   <!-- ── ROW 1: INJECTION (full width) ──────────────────────────────── -->
@@ -195,47 +183,6 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 </div>
 
 <style>
-/* ── Card header ─────────────────────────────────────────────────── */
-.sed-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px 10px;
-  border-bottom: 1px solid var(--c-border-1);
-}
-.sed-category {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: .2em;
-  color: var(--c-text-6);
-  margin-bottom: 3px;
-}
-.sed-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--c-text-1);
-  line-height: 1.2;
-  font-family: var(--font-sans, sans-serif);
-}
-.sed-sub {
-  font-size: 9px;
-  color: var(--c-text-6);
-  margin-top: 2px;
-  letter-spacing: .05em;
-}
-.sed-full-link {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  color: var(--c-text-6);
-  text-decoration: none;
-  white-space: nowrap;
-  padding-top: 2px;
-  transition: color .15s;
-}
-.sed-full-link:hover { color: var(--c-text-2); }
-
 /* ── Root ─────────────────────────────────────────────────────────── */
 /* eco-card: visible card frame (border, radius, background).
    No overflow:hidden here so ShareDropdown can open freely. */
