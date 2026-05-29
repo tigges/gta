@@ -16,7 +16,7 @@ const years = (revenueSplit as any).years
 <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
   <!-- Header -->
   <div class="px-5 py-4 border-b border-border-dim">
-    <ChartBadgeRow game="franchise" category="Revenue" />
+    <ChartBadgeRow game="franchise" category="Revenue" fullHref="/charts?title=gta-vi#section-revenue-split-chart" fullLabel="Full chart →" />
     <div class="font-semibold text-zinc-200 text-sm mb-0.5">
       GTA V: From Box Sales to Shark Cards — 13-Year Revenue Shift
     </div>
@@ -71,7 +71,7 @@ const years = (revenueSplit as any).years
     <ReadItBlock
       accentColor="var(--c-live)"
       intent="neutral"
-      fullChartHref="/charts?title=gta-vi#section-revenue-split-chart"
+      href="/charts?title=gta-vi#section-revenue-split-chart"
       showPrefix={false}
     >
       Online revenue grew from <span class="text-zinc-200 font-semibold">16% → 90%</span> in 9 years. GTA VI starts there.

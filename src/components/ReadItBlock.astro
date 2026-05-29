@@ -8,40 +8,41 @@
  *    Used in flow cards, health monitor, framework cards.
  *    <ReadItBlock accentColor="var(--c-brand)">When the line dips...</ReadItBlock>
  *
- * 2. FRAMED (intent provided) — adds surrounding border + intent-tinted background.
- *    Used in chart teasers as the key insight callout.
+ * 2. FRAMED (intent provided) — single-block callout with surrounding border
+ *    and intent-tinted background. Used in chart teasers as the key insight.
+ *    Pass href to make the entire block a clickable link.
+ *    "Full chart →" goes top-right via ChartBadgeRow fullHref (P2 rule).
+ *
  *    <ReadItBlock
  *      accentColor="var(--c-brand)"
  *      intent="positive"
- *      fullChartHref="/charts#section-cpi-chart"
+ *      href="/charts?title=gta-vi#section-cpi-chart"
  *      showPrefix={false}
  *    >GTA VI is <span ...>12% cheaper</span>...</ReadItBlock>
  *
  * Props:
- *   accentColor   — CSS value for the left border colour. Default: var(--c-brand)
- *   showPrefix    — render "Read it: " label. Default: true (false for teasers)
- *   intent        — enables framed mode + tinted background:
- *                     "positive" → subtle green tint (cheaper, growing, hotter)
- *                     "negative" → subtle red tint  (nerf, regression, declining)
- *                     "neutral"  → subtle amber tint (informational, no clear valence)
- *   fullChartHref — optional "Full chart →" link shown in framed footer row
- *   fullChartLabel — link text. Default: "Full chart →"
+ *   accentColor — CSS value for the left border colour. Default: var(--c-brand)
+ *   showPrefix  — render "Read it: " label. Default: true (false for teasers)
+ *   intent      — enables framed mode + tinted background:
+ *                   "positive" → subtle green tint (cheaper, growing, hotter)
+ *                   "negative" → subtle red tint  (nerf, regression, declining)
+ *                   "neutral"  → subtle amber tint (informational, no clear valence)
+ *   href        — optional URL; wraps the framed block in <a> so the whole
+ *                 callout is clickable. Has no effect in default mode.
  */
 
 interface Props {
-  accentColor?:    string;
-  showPrefix?:     boolean;
-  intent?:         "positive" | "negative" | "neutral";
-  fullChartHref?:  string;
-  fullChartLabel?: string;
+  accentColor?: string;
+  showPrefix?:  boolean;
+  intent?:      "positive" | "negative" | "neutral";
+  href?:        string;
 }
 
 const {
-  accentColor   = "var(--c-brand)",
-  showPrefix    = true,
+  accentColor = "var(--c-brand)",
+  showPrefix  = true,
   intent,
-  fullChartHref,
-  fullChartLabel = "Full chart →",
+  href,
 } = Astro.props;
 
 const bgTint = intent === "positive"
@@ -53,37 +54,39 @@ const bgTint = intent === "positive"
   : null;
 
 const framed = !!bgTint;
+
+const outerStyle = `border:1px solid var(--c-border-2);background:${bgTint}`;
+const innerStyle = `border-color:color-mix(in srgb,${accentColor} 50%,transparent)`;
+const outerClass = "rounded-xl overflow-hidden";
+const innerClass = "border-l-2 px-4 py-3";
 ---
 
 {framed ? (
-  <!-- ── Framed mode (chart teaser callouts) ── -->
-  <div
-    class="rounded-xl overflow-hidden"
-    style={`border:1px solid var(--c-border-2);background:${bgTint}`}
-  >
-    <div
-      class="border-l-2 px-4 py-3"
-      style={`border-color:color-mix(in srgb,${accentColor} 50%,transparent)`}
+  href ? (
+    <!-- ── Framed + clickable ── -->
+    <a
+      href={href}
+      class={`block ${outerClass} transition-opacity hover:opacity-75`}
+      style={outerStyle}
     >
-      <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">
-        {showPrefix && <span class="font-semibold text-zinc-200">Read it: </span>}
-        <slot />
-      </p>
-    </div>
-    {fullChartHref && (
-      <div
-        class="px-4 py-2 flex justify-end"
-        style="border-top:1px solid var(--c-border-1)"
-      >
-        <a
-          href={fullChartHref}
-          class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors uppercase tracking-widest whitespace-nowrap"
-        >
-          {fullChartLabel}
-        </a>
+      <div class={innerClass} style={innerStyle}>
+        <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">
+          {showPrefix && <span class="font-semibold text-zinc-200">Read it: </span>}
+          <slot />
+        </p>
       </div>
-    )}
-  </div>
+    </a>
+  ) : (
+    <!-- ── Framed, non-clickable ── -->
+    <div class={outerClass} style={outerStyle}>
+      <div class={innerClass} style={innerStyle}>
+        <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">
+          {showPrefix && <span class="font-semibold text-zinc-200">Read it: </span>}
+          <slot />
+        </p>
+      </div>
+    </div>
+  )
 ) : (
   <!-- ── Default mode (flow cards, inline annotation) ── -->
   <div
