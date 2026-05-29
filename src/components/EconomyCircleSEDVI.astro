@@ -1,0 +1,482 @@
+---
+/**
+ * EconomyCircleSEDVI.astro — GTA VI per-title SED variant.
+ *
+ * Extends the base SED (EconomyCircleSED.astro) for GTA VI:
+ *   - Formula unchanged: (J) + Y = C + I
+ *   - Color tokens unchanged: all from SED token palette
+ *   - GTA VI-specific content: regional income streams, fuel (predicted),
+ *     cross-region investment, multi-region GTA$ unity strip
+ *   - Marked "Projected" throughout — pre-launch, model-derived
+ *
+ * Rules:
+ *   - No game-identity colours (no --c-title-vi, no pink-coral)
+ *   - All colours from SED semantic tokens only
+ *   - CSS class names mirror EconomyCircleSED for consistency
+ */
+import HudIcon from "./HudIcon.astro";
+import ShareDropdown from "./ShareDropdown.astro";
+
+interface Props {
+  fullEconomyHref?: string;
+  id?: string;
+}
+const { fullEconomyHref, id: anchorId = "eco-model-vi" } = Astro.props;
+const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple regions — Vice City, Leonida, Port Gellhorn and more all share one GTA$. Multi-region currency union. GTAVI.AI";
+---
+
+<div class="vi-eco-card">
+
+<div class="vi-eco-wrap">
+
+  <!-- ── ROW 0: Projected badge strip ───────────────────────────────── -->
+  <div class="vi-proj-strip">
+    <span class="vi-proj-badge">Projected · Pre-Launch</span>
+    <span class="vi-proj-note">Model-derived from GTA Online precedent + trailer analysis</span>
+  </div>
+
+  <!-- ── ROW 1: INJECTION (full width) ─────────────────────────────── -->
+  <div class="vi-inject-row">
+    <div class="vi-inject-inner">
+      <div class="vi-inject-item">
+        <div class="vi-blip" style="--bc:var(--c-flow-injection)">
+          <HudIcon name="shark-card" size={28} style="color:#fff"/>
+        </div>
+        <span class="vi-item-label" style="color:var(--c-flow-injection)">Shark Card</span>
+      </div>
+
+      <div class="vi-inject-centre">
+        <span class="vi-rockstar-label">Rockstar / Take-Two</span>
+        <span class="vi-inject-title">INJECTION</span>
+        <span class="vi-j-flow-note">J &middot; REAL MONEY &#8594; GTA$</span>
+      </div>
+
+      <div class="vi-inject-item">
+        <div class="vi-blip" style="--bc:var(--c-flow-injection)">
+          <HudIcon name="subscription" size={28} style="color:#fff"/>
+        </div>
+        <span class="vi-item-label" style="color:var(--c-flow-injection)">GTA+</span>
+      </div>
+    </div>
+    <div class="vi-inject-j-bottom">J &#8595;</div>
+    <span class="vi-online-note">&#42; GTA VI projected — Shark Cards confirmed at launch</span>
+  </div>
+
+  <!-- ── ROW 2: INCOME · Circle hub · EXPENSE ──────────────────────── -->
+  <div class="vi-mid-row">
+
+    <div class="vi-income-super">
+      <div class="vi-income-super-inner">
+        <HudIcon name="dollar" size={26} style="color:var(--c-gta-dollar)"/>
+        <span class="vi-income-title">INCOME</span>
+      </div>
+    </div>
+
+    <div class="vi-circle-hub">
+      <div class="vi-tri-in"></div>
+      <div class="vi-ring-wrap">
+        <div class="vi-ring"></div>
+        <div class="vi-ring-centre">
+          <HudIcon name="bank" size={28} style="color:var(--c-flow-injection)"/>
+          <span class="vi-gta-label">GTA$</span>
+          <span class="vi-gta-sub">all regions</span>
+        </div>
+      </div>
+      <div class="vi-tri-out"></div>
+    </div>
+
+    <div class="vi-expend-super">
+      <div class="vi-expend-super-inner">
+        <HudIcon name="buy" size={26} style="color:var(--c-flow-spending)"/>
+        <span class="vi-expend-title">EXPENSE</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── ROW 3: Y = C + I boxes ────────────────────────────────────── -->
+  <div class="vi-box-row">
+
+    <!-- Y — Income -->
+    <div class="vi-box vi-income-box">
+      <div class="vi-box-top-label" style="color:var(--c-growth)">Y</div>
+      <div class="vi-box-inner">
+        <div class="vi-box-header">
+          <span class="vi-box-title" style="color:var(--c-growth)">INCOME</span>
+          <span class="vi-cycle-note" style="color:var(--c-growth)">Y grows &#8594; next cycle</span>
+        </div>
+        <div class="vi-icon-row">
+          <div class="vi-icon-item">
+            <div class="vi-blip-lg" style="--bc:var(--c-live)">
+              <HudIcon name="mission" size={30} style="color:#fff"/>
+            </div>
+            <span class="vi-icon-label">Missions</span>
+            <span class="vi-icon-sub">all regions</span>
+          </div>
+          <div class="vi-icon-item">
+            <div class="vi-blip-lg" style="--bc:var(--c-growth)">
+              <HudIcon name="passive" size={30} style="color:#fff"/>
+            </div>
+            <span class="vi-icon-label">Passive</span>
+            <span class="vi-icon-sub">businesses</span>
+          </div>
+        </div>
+        <div class="vi-region-tag" style="border-color:color-mix(in srgb,var(--c-growth) 30%,transparent);color:var(--c-growth)">
+          VC high-wage · Leonida lower-wage · RPP tracks the gap
+        </div>
+      </div>
+    </div>
+
+    <!-- = -->
+    <div class="vi-divider-eq"><span class="vi-eq-sign">=</span></div>
+
+    <!-- C — Consumption -->
+    <div class="vi-box vi-consump-box">
+      <div class="vi-box-top-label" style="color:var(--c-flow-spending)">C</div>
+      <div class="vi-box-inner">
+        <div class="vi-box-header">
+          <span class="vi-box-title" style="color:var(--c-flow-spending)">CONSUMPTION</span>
+          <span class="vi-cycle-note" style="color:var(--c-flow-spending)">C spent &#8594; lost after use</span>
+        </div>
+        <div class="vi-icon-row">
+          <div class="vi-icon-item">
+            <div class="vi-blip-lg" style="--bc:var(--c-flow-spending)">
+              <HudIcon name="clothing" size={30} style="color:#fff"/>
+            </div>
+            <span class="vi-icon-label">Clothing</span>
+            <span class="vi-icon-sub">ammo · gear</span>
+          </div>
+          <div class="vi-icon-item">
+            <div class="vi-blip-lg" style="--bc:var(--c-flow-spending)">
+              <HudIcon name="car" size={30} style="color:#fff"/>
+            </div>
+            <span class="vi-icon-label">Fuel ★</span>
+            <span class="vi-icon-sub">predicted</span>
+          </div>
+        </div>
+        <div class="vi-region-tag" style="border-color:color-mix(in srgb,var(--c-flow-spending) 30%,transparent);color:var(--c-flow-spending)">
+          ★ Fuel mechanic predicted — price varies by region
+        </div>
+      </div>
+    </div>
+
+    <!-- + -->
+    <div class="vi-divider-plus"><span class="vi-plus-sign">+</span></div>
+
+    <!-- I — Investment -->
+    <div class="vi-box vi-invest-box">
+      <div class="vi-box-top-label" style="color:var(--c-economy)">I</div>
+      <div class="vi-box-inner">
+        <div class="vi-box-header">
+          <span class="vi-box-title" style="color:var(--c-economy)">INVESTMENT</span>
+          <span class="vi-cycle-note" style="color:var(--c-economy)">I returns to Y &#8594;</span>
+        </div>
+        <div class="vi-icon-row">
+          <div class="vi-icon-item">
+            <div class="vi-blip-lg" style="--bc:var(--c-economy)">
+              <HudIcon name="property" size={30} style="color:#fff"/>
+            </div>
+            <span class="vi-icon-label">Property</span>
+            <span class="vi-icon-sub">multi-region</span>
+          </div>
+          <div class="vi-icon-item">
+            <div class="vi-blip-lg" style="--bc:var(--c-economy)">
+              <HudIcon name="briefcase" size={30} style="color:#fff"/>
+            </div>
+            <span class="vi-icon-label">Business</span>
+            <span class="vi-icon-sub">enterprises</span>
+          </div>
+        </div>
+        <div class="vi-region-tag" style="border-color:color-mix(in srgb,var(--c-economy) 30%,transparent);color:var(--c-economy)">
+          VC premium ROI · Leonida lower cost · cross-region arbitrage
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── ROW 4: Multi-region unity strip ───────────────────────────── -->
+  <div class="vi-region-strip">
+    <div class="vi-region-dots">
+      {["Vice City", "Leonida Keys", "Port Gellhorn", "Grassrivers"].map(r => (
+        <span class="vi-region-dot">
+          <span class="vi-dot"></span>
+          {r}
+        </span>
+      ))}
+    </div>
+    <span class="vi-region-eq">— one GTA$ across all regions</span>
+  </div>
+
+</div>
+
+<!-- ── Footer ──────────────────────────────────────────────────────── -->
+<div id={anchorId} class="vi-eco-footer" style="scroll-margin-top:72px">
+  <span class="vi-footer-formula">GTA VI Projected · (J) + Y = C + I · Multi-Region Currency Union</span>
+  <div style="flex:1"></div>
+  {fullEconomyHref && (
+    <a href={fullEconomyHref} class="text-[10px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors uppercase tracking-widest shrink-0">Full model →</a>
+  )}
+  <span class="vi-footer-brand">GTAVI.AI</span>
+  <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
+</div>
+
+</div>
+
+<style>
+/* ── Root card ────────────────────────────────────────────────────── */
+.vi-eco-card {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--c-border-1);
+  background: var(--c-card);
+  font-family: var(--font-mono, monospace);
+}
+.vi-eco-wrap {
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+}
+
+/* ── Row 0: Projected badge ───────────────────────────────────────── */
+.vi-proj-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px;
+  background: color-mix(in srgb, var(--c-brand) 6%, var(--c-bg-deep));
+  border-bottom: 1px solid var(--c-border-1);
+}
+.vi-proj-badge {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--c-brand);
+  border: 1px solid color-mix(in srgb, var(--c-brand) 35%, transparent);
+  background: color-mix(in srgb, var(--c-brand) 12%, transparent);
+  border-radius: 4px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+.vi-proj-note {
+  font-size: 9px;
+  color: var(--c-text-6);
+  letter-spacing: .04em;
+}
+
+/* ── Row 1: Injection ─────────────────────────────────────────────── */
+.vi-inject-row {
+  position: relative;
+  border-bottom: 1px solid var(--c-border-1);
+  background: color-mix(in srgb, var(--c-flow-injection) 5%, transparent);
+  padding: 12px 16px 28px;
+}
+.vi-inject-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+}
+.vi-inject-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.vi-item-label  { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
+.vi-inject-centre { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.vi-rockstar-label { font-size: 9px; color: var(--c-flow-injection); opacity: var(--o-tertiary); letter-spacing: .25em; text-transform: uppercase; }
+.vi-inject-title { font-size: clamp(0.85rem, 2.5vw, 1.3rem); font-weight: 900; line-height: 1; color: var(--c-flow-injection); }
+.vi-j-flow-note {
+  font-size: 8px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--c-flow-injection);
+  opacity: var(--o-secondary); text-align: center; margin-top: 4px;
+}
+.vi-inject-j-bottom {
+  position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%);
+  font-size: 1.1rem; font-weight: 900; line-height: 1;
+  color: var(--c-flow-injection); background: var(--c-card);
+  padding: 2px 8px; border-radius: 4px; z-index: 10; white-space: nowrap;
+}
+.vi-online-note {
+  position: absolute; top: 8px; right: 12px;
+  font-size: 8px; color: var(--c-text-5); opacity: var(--o-secondary);
+}
+
+/* ── Row 2: INCOME · Circle · EXPENSE ────────────────────────────── */
+.vi-mid-row {
+  display: grid;
+  grid-template-columns: 40% auto 1fr;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--c-border-1);
+  background: rgba(0, 0, 0, .2);
+}
+.vi-income-super {
+  display: flex; align-items: center; justify-content: flex-end; padding-right: 12px;
+}
+.vi-income-super-inner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
+  border: 1.5px solid color-mix(in srgb, var(--c-gta-dollar) 35%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--c-gta-dollar) 7%, transparent);
+}
+.vi-income-title { font-size: clamp(1rem, 2.5vw, 1.6rem); font-weight: 900; color: var(--c-gta-dollar); letter-spacing: -.01em; }
+
+.vi-circle-hub { display: flex; align-items: center; gap: 0; justify-content: center; }
+.vi-ring-wrap { position: relative; width: 120px; height: 120px; flex-shrink: 0; z-index: 5; }
+.vi-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(
+    from 137.5deg,
+    var(--c-economy)         0deg  75deg,
+    var(--c-growth)         75deg 200deg,
+    var(--c-flow-injection) 200deg 245deg,
+    var(--c-flow-spending)  245deg 325deg,
+    var(--c-economy)        325deg 360deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 42px, black 44px);
+  mask:         radial-gradient(circle, transparent 42px, black 44px);
+  opacity: .95;
+}
+.vi-ring-centre {
+  position: absolute; inset: 14px; border-radius: 50%;
+  background: color-mix(in srgb, var(--c-bg-deep) 90%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--c-gta-dollar) 35%, transparent);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+}
+.vi-gta-label { font-size: 14px; font-weight: 900; color: var(--c-gta-dollar); }
+.vi-gta-sub   { font-size: 7px; color: var(--c-text-6); text-transform: uppercase; letter-spacing: .08em; }
+
+.vi-tri-in {
+  width: 0; height: 0;
+  border-top: 22px solid transparent; border-bottom: 22px solid transparent;
+  border-left: 28px solid color-mix(in srgb, var(--c-growth) 80%, transparent);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--c-growth) 40%, transparent));
+}
+.vi-tri-out {
+  width: 0; height: 0;
+  border-top: 22px solid transparent; border-bottom: 22px solid transparent;
+  border-left: 28px solid color-mix(in srgb, var(--c-flow-spending) 80%, transparent);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--c-flow-spending) 40%, transparent));
+}
+.vi-expend-super { display: flex; align-items: center; padding-left: 12px; }
+.vi-expend-super-inner {
+  display: flex; align-items: center; gap: 10px; padding: 8px 16px;
+  border: 1.5px solid color-mix(in srgb, var(--c-flow-spending) 35%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--c-flow-spending) 7%, transparent);
+}
+.vi-expend-title { font-size: clamp(1rem, 2.5vw, 1.6rem); font-weight: 900; color: var(--c-flow-spending); letter-spacing: -.01em; }
+
+/* ── Row 3: Y = C + I boxes ──────────────────────────────────────── */
+.vi-box-row { display: flex; align-items: stretch; }
+.vi-box { flex: 1; min-width: 0; position: relative; }
+.vi-income-box  { background: color-mix(in srgb, var(--c-growth) 22%, var(--c-bg-deep)); border-left: 3px solid color-mix(in srgb, var(--c-growth) 55%, transparent); }
+.vi-consump-box { background: color-mix(in srgb, var(--c-flow-spending) 20%, var(--c-bg-deep)); border-left: 3px solid color-mix(in srgb, var(--c-flow-spending) 55%, transparent); }
+.vi-invest-box  { background: color-mix(in srgb, var(--c-economy) 18%, var(--c-bg-deep)); border-left: 3px solid color-mix(in srgb, var(--c-economy) 55%, transparent); }
+
+.vi-box-top-label {
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  font-size: 1.1rem; font-weight: 900; background: var(--c-card);
+  padding: 0 4px; z-index: 10; line-height: 1;
+}
+.vi-box-inner { padding: 16px 14px; display: flex; flex-direction: column; gap: 8px; }
+.vi-box-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.vi-box-title { font-size: clamp(0.75rem, 2vw, 1.1rem); font-weight: 900; line-height: 1; }
+.vi-icon-row { display: flex; gap: 12px; }
+.vi-icon-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.vi-icon-label { font-size: 8px; color: var(--c-text-3); text-align: center; font-weight: 600; }
+.vi-icon-sub   { font-size: 7px; color: var(--c-text-6); text-align: center; }
+.vi-cycle-note { font-size: 8px; text-transform: uppercase; letter-spacing: .1em; opacity: var(--o-secondary); margin-left: auto; text-align: right; }
+
+/* Regional context tag inside each box */
+.vi-region-tag {
+  font-size: 8px; font-family: var(--font-mono, monospace);
+  border: 1px solid; border-radius: 4px;
+  padding: 3px 7px; line-height: 1.4; opacity: .7;
+}
+
+.vi-divider-eq, .vi-divider-plus {
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; flex-shrink: 0;
+  background: rgba(0, 0, 0, .3);
+  border-left: 1px solid var(--c-border-1);
+  border-right: 1px solid var(--c-border-1);
+}
+.vi-eq-sign   { font-size: 1.4rem; font-weight: 900; color: var(--c-flow-spending); }
+.vi-plus-sign { font-size: 1.4rem; font-weight: 900; color: var(--c-economy); }
+
+/* ── Blip sizes ──────────────────────────────────────────────────── */
+.vi-blip, .vi-blip-lg {
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--bc) 25%, transparent);
+  border: 2px solid color-mix(in srgb, var(--bc) 55%, transparent);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.vi-blip    { width: 52px; height: 52px; }
+.vi-blip-lg { width: 52px; height: 52px; border-width: 2px; }
+
+/* ── Row 4: Multi-region unity strip ─────────────────────────────── */
+.vi-region-strip {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 8px 16px;
+  background: color-mix(in srgb, var(--c-gta-dollar) 4%, var(--c-bg-deep));
+  border-top: 1px solid var(--c-border-1);
+}
+.vi-region-dots { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.vi-region-dot  { display: flex; align-items: center; gap: 5px; font-size: 9px; color: var(--c-text-5); text-transform: uppercase; letter-spacing: .08em; }
+.vi-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--c-gta-dollar); opacity: .5; flex-shrink: 0;
+}
+.vi-region-eq { font-size: 9px; color: var(--c-gta-dollar); opacity: .6; letter-spacing: .06em; margin-left: auto; white-space: nowrap; }
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.vi-eco-footer {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--c-border-1);
+  background: var(--c-card);
+  border-radius: 0 0 12px 12px;
+}
+.vi-footer-brand {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: var(--c-text-5);
+}
+.vi-footer-formula {
+  font-size: 10px; letter-spacing: .04em; color: var(--c-text-5);
+  flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ── Mobile ──────────────────────────────────────────────────────── */
+@media (max-width: 599px) {
+  .vi-inject-inner  { gap: 16px; }
+  .vi-blip          { width: 42px; height: 42px; }
+  .vi-income-super, .vi-expend-super { display: flex; }
+  .vi-income-super  { padding-right: 4px; }
+  .vi-expend-super  { padding-left: 4px; }
+  .vi-income-super-inner, .vi-expend-super-inner { padding: 6px 8px; gap: 0; }
+  .vi-income-title, .vi-expend-title { display: none; }
+  .vi-mid-row       { grid-template-columns: auto auto auto; padding: 8px 4px; }
+  .vi-ring-wrap     { width: 80px; height: 80px; }
+  .vi-ring {
+    -webkit-mask: radial-gradient(circle, transparent 27px, black 29px);
+    mask:         radial-gradient(circle, transparent 27px, black 29px);
+  }
+  .vi-ring-centre   { inset: 8px; }
+  .vi-gta-label     { font-size: 11px; }
+  .vi-gta-sub       { display: none; }
+  .vi-tri-in, .vi-tri-out { border-top-width: 16px; border-bottom-width: 16px; border-left-width: 20px; }
+  .vi-box-inner     { padding: 10px 8px; gap: 4px; }
+  .vi-icon-row      { flex-direction: column; gap: 4px; }
+  .vi-icon-item     { flex-direction: row; gap: 8px; align-items: center; }
+  .vi-blip-lg       { width: 40px; height: 40px; }
+  .vi-icon-label    { font-size: 8px; text-align: left; }
+  .vi-icon-sub      { display: none; }
+  .vi-region-tag    { display: none; }
+  .vi-divider-eq, .vi-divider-plus { width: 16px; }
+  .vi-eq-sign, .vi-plus-sign       { font-size: .9rem; }
+  .vi-region-strip  { gap: 6px; padding: 6px 12px; }
+  .vi-region-eq     { margin-left: 0; width: 100%; }
+  .vi-online-note   { display: none; }
+  .vi-proj-note     { display: none; }
+}
+</style>

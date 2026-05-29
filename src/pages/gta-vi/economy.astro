@@ -7,7 +7,8 @@
  */
 import Base from "../../layouts/Base.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
-import CircularEconomy from "../../components/CircularEconomy.astro";
+import CircularEconomy     from "../../components/CircularEconomy.astro";
+import EconomyCircleSEDVI  from "../../components/EconomyCircleSEDVI.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
@@ -92,6 +93,14 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
   </section>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+
+    <!-- ═══════════════════════════════════════════════════════
+         GTA VI SED — SIMPLIFIED ECONOMY DIAGRAM
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader label="// The GTA VI Economy · Simplified · where does the money go?" dotColor="var(--c-gta-dollar)" />
+      <EconomyCircleSEDVI fullEconomyHref="/gta-vi/economy#eco-gta-vi" />
+    </section>
 
     <!-- ═══════════════════════════════════════════════════════
          CIRCULAR ECONOMY DIAGRAM
