@@ -155,29 +155,26 @@ const KEY_INNOVATION = {
         <span class="ef-node-badge" style="color:var(--c-growth)">Y</span>
       </div>
 
-      <!-- VC flow connector -->
+      <!-- VC flow connector — Y·Income left, region label centre, I·Investment right -->
       <div class="ef-flow-connector">
         <div class="ef-fc-left">
           <div class="ef-fc-line" style="background:var(--c-growth)"></div>
           <div class="ef-fc-arrow" style="border-top-color:var(--c-growth)"></div>
+          <span class="ef-fc-pill" style="color:var(--c-growth);border-color:color-mix(in srgb,var(--c-growth) 35%,transparent);background:color-mix(in srgb,var(--c-growth) 8%,transparent)">① Y · Income</span>
+          <span class="ef-fc-sub">Y grows → next cycle</span>
         </div>
         <div class="ef-fc-label">
-          <span class="ef-fc-pill" style="color:var(--c-growth);border-color:color-mix(in srgb,var(--c-growth) 35%,transparent);background:color-mix(in srgb,var(--c-growth) 8%,transparent)">
-            ① Y · Income
-          </span>
-          <span class="ef-fc-sub">Y grows → next cycle</span>
-          <span class="ef-fc-pill ef-fc-pill-inv" style="color:var(--c-economy);border-color:color-mix(in srgb,var(--c-economy) 35%,transparent);background:color-mix(in srgb,var(--c-economy) 8%,transparent)">
-            I · Investment ↑
-          </span>
-          <span class="ef-fc-sub">I returns to Y →</span>
+          <span class="ef-fc-sub">high-wage region</span>
         </div>
         <div class="ef-fc-right">
+          <span class="ef-fc-pill ef-fc-pill-inv" style="color:var(--c-economy);border-color:color-mix(in srgb,var(--c-economy) 35%,transparent);background:color-mix(in srgb,var(--c-economy) 8%,transparent)">I · Investment ↑</span>
+          <span class="ef-fc-sub">I returns to Y →</span>
           <div class="ef-fc-arrow-up" style="border-bottom-color:var(--c-economy)"></div>
           <div class="ef-fc-line" style="background:var(--c-economy)"></div>
         </div>
       </div>
 
-      <!-- Players -->
+      <!-- Players — C badge removed; C is shown in outflow box below -->
       <div class="ef-node" style="border-color:color-mix(in srgb,var(--c-text-4) 30%,transparent);background:color-mix(in srgb,var(--c-text-4) 5%,var(--c-bg-deep))">
         <div class="ef-node-icon" style="--bc:var(--c-text-4)">
           <HudIcon name="mission" size={18} style="color:#fff" />
@@ -186,7 +183,6 @@ const KEY_INNOVATION = {
           <span class="ef-node-label" style="color:var(--c-text-3)">Players</span>
           <span class="ef-node-detail">Earn · spend · invest · move cross-region</span>
         </div>
-        <span class="ef-node-badge" style="color:var(--c-flow-spending)">C</span>
       </div>
 
       <!-- VC spending outflow -->
@@ -242,29 +238,26 @@ const KEY_INNOVATION = {
         <span class="ef-node-badge" style="color:var(--c-growth)">Y</span>
       </div>
 
-      <!-- Leonida flow connector -->
+      <!-- Leonida flow connector — Y·Income left, region label centre, I·Investment right -->
       <div class="ef-flow-connector">
         <div class="ef-fc-left">
           <div class="ef-fc-line" style="background:var(--c-growth)"></div>
           <div class="ef-fc-arrow" style="border-top-color:var(--c-growth)"></div>
+          <span class="ef-fc-pill" style="color:var(--c-growth);border-color:color-mix(in srgb,var(--c-growth) 35%,transparent);background:color-mix(in srgb,var(--c-growth) 8%,transparent)">② Y · Income</span>
+          <span class="ef-fc-sub">Y grows → next cycle</span>
         </div>
         <div class="ef-fc-label">
-          <span class="ef-fc-pill" style="color:var(--c-growth);border-color:color-mix(in srgb,var(--c-growth) 35%,transparent);background:color-mix(in srgb,var(--c-growth) 8%,transparent)">
-            ② Y · Income
-          </span>
-          <span class="ef-fc-sub">Y grows → next cycle</span>
-          <span class="ef-fc-pill ef-fc-pill-inv" style="color:var(--c-economy);border-color:color-mix(in srgb,var(--c-economy) 35%,transparent);background:color-mix(in srgb,var(--c-economy) 8%,transparent)">
-            I · Investment ↑
-          </span>
-          <span class="ef-fc-sub">I returns to Y →</span>
+          <span class="ef-fc-sub">lower-wage region</span>
         </div>
         <div class="ef-fc-right">
+          <span class="ef-fc-pill ef-fc-pill-inv" style="color:var(--c-economy);border-color:color-mix(in srgb,var(--c-economy) 35%,transparent);background:color-mix(in srgb,var(--c-economy) 8%,transparent)">I · Investment ↑</span>
+          <span class="ef-fc-sub">I returns to Y →</span>
           <div class="ef-fc-arrow-up" style="border-bottom-color:var(--c-economy)"></div>
           <div class="ef-fc-line" style="background:var(--c-economy)"></div>
         </div>
       </div>
 
-      <!-- Players -->
+      <!-- Players — C badge removed; C is shown in outflow box below -->
       <div class="ef-node" style="border-color:color-mix(in srgb,var(--c-text-4) 30%,transparent);background:color-mix(in srgb,var(--c-text-4) 5%,var(--c-bg-deep))">
         <div class="ef-node-icon" style="--bc:var(--c-text-4)">
           <HudIcon name="mission" size={18} style="color:#fff" />
@@ -273,7 +266,6 @@ const KEY_INNOVATION = {
           <span class="ef-node-label" style="color:var(--c-text-3)">Players</span>
           <span class="ef-node-detail">Earn · spend · invest · cross-region access</span>
         </div>
-        <span class="ef-node-badge" style="color:var(--c-flow-spending)">C</span>
       </div>
 
       <!-- Leonida spending outflow -->
@@ -492,14 +484,13 @@ const KEY_INNOVATION = {
 .ef-flow-connector {
   display: flex; align-items: center; gap: 6px; padding: 0 4px;
 }
-.ef-fc-left, .ef-fc-right {
-  display: flex; flex-direction: column; align-items: center; gap: 0; flex-shrink: 0;
-}
+.ef-fc-left  { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.ef-fc-right { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
 .ef-fc-line   { width: 1.5px; height: 18px; }
 .ef-fc-arrow  { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top-width: 7px; border-top-style: solid; }
 .ef-fc-arrow-up { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom-width: 7px; border-bottom-style: solid; }
 
-.ef-fc-label { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ef-fc-label { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 8px; }
 .ef-fc-pill {
   font-size: 1.05rem; font-weight: 900; letter-spacing: .04em;
   border: 1px solid; border-radius: 5px; padding: 3px 10px;
