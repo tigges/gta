@@ -536,29 +536,40 @@ const KEY_INNOVATION = {
 .ef-rpp-sub    { font-size: 9px; color: var(--c-brand); }
 .ef-rpp-detail { font-size: 9px; color: var(--c-text-5); text-transform: uppercase; letter-spacing: .08em; }
 
-/* ── Meta: key innovation + inflation ────────────────────────────── */
+/* ── Meta: key innovation + inflation ─────────────────────────────
+   Side-by-side framed cards, matching CircularEconomy card style   */
 .ef-meta {
-  display: grid; grid-template-columns: 1fr 1fr;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  padding: 14px 16px;
   border-top: 1px solid var(--c-border-1);
+  background: var(--c-bg-deep);
 }
 .ef-innovation {
+  border: 1px solid var(--c-border-1);
+  border-radius: 8px;
   padding: 14px 16px;
-  border-right: 1px solid var(--c-border-1);
-  display: flex; flex-direction: column; gap: 5px;
+  background: var(--c-card);
+  display: flex; flex-direction: column; gap: 6px;
 }
 .ef-innov-header { display: flex; align-items: center; gap: 6px; }
-.ef-innov-star   { font-size: 10px; color: var(--c-brand); letter-spacing: -.03em; }
+.ef-innov-star   { font-size: 11px; color: var(--c-brand); letter-spacing: -.02em; }
 .ef-innov-label  { font-size: 9px; color: var(--c-text-5); text-transform: uppercase; letter-spacing: .1em; }
-.ef-innov-title  { font-size: 11px; font-weight: 700; color: var(--c-text-3); line-height: 1.3; }
-.ef-innov-note   { font-size: 9px; color: var(--c-text-5); line-height: 1.4; }
+.ef-innov-title  { font-size: 11px; font-weight: 700; color: var(--c-text-2); line-height: 1.3; }
+.ef-innov-note   { font-size: 9px; color: var(--c-text-4); line-height: 1.5; }
 
-.ef-inflation { padding: 14px 16px; display: flex; flex-direction: column; gap: 5px; }
+.ef-inflation {
+  border: 1px solid color-mix(in srgb, var(--c-alert) 25%, transparent);
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--c-alert) 6%, var(--c-bg-deep));
+  display: flex; flex-direction: column; gap: 6px;
+}
 .ef-inf-header { font-size: 9px; font-weight: 700; color: var(--c-alert); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 2px; }
-.ef-inf-list   { display: flex; flex-direction: column; gap: 5px; }
-.ef-inf-row    { display: flex; align-items: flex-start; gap: 6px; }
-.ef-inf-arrow  { color: var(--c-alert); font-size: 10px; flex-shrink: 0; margin-top: 1px; }
-.ef-inf-name   { font-size: 9px; font-weight: 700; color: var(--c-text-3); }
-.ef-inf-detail { font-size: 9px; color: var(--c-text-5); }
+.ef-inf-list   { display: flex; flex-direction: column; gap: 6px; }
+.ef-inf-row    { display: flex; align-items: flex-start; gap: 8px; }
+.ef-inf-arrow  { color: var(--c-alert); font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+.ef-inf-name   { font-size: 11px; font-weight: 700; color: var(--c-text-2); }
+.ef-inf-detail { font-size: 9px; color: var(--c-text-4); }
 
 /* ── Flow legend ──────────────────────────────────────────────────── */
 .ef-legend {
@@ -600,7 +611,6 @@ const KEY_INNOVATION = {
   .ef-centre-sep    { flex-direction: row; min-width: unset; padding: 10px 14px; border: none; border-top: 1px solid var(--c-border-1); border-bottom: 1px solid var(--c-border-1); }
   .ef-vc            { border-right: none; border-bottom: 1px solid var(--c-border-1); }
   .ef-meta          { grid-template-columns: 1fr; }
-  .ef-innovation    { border-right: none; border-bottom: 1px solid var(--c-border-1); }
   .ef-inj-inner     { gap: 20px; }
   .ef-inj-to-region { grid-template-columns: 1fr; gap: 6px; }
   .ef-itl-right     { display: none; }
