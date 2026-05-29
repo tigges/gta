@@ -9,6 +9,7 @@ import Base from "../../layouts/Base.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy     from "../../components/CircularEconomy.astro";
 import EconomyCircleSEDVI  from "../../components/EconomyCircleSEDVI.astro";
+import EconomyFlowGTAVI    from "../../components/EconomyFlowGTAVI.astro";
 import ChartComplexityHtml from "../../components/ChartComplexityHtml.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
@@ -103,10 +104,18 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         CIRCULAR ECONOMY DIAGRAM
+         FULL GTA VI ECONOMY FLOW DIAGRAM (HTML)
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Projected Circular Economy" dotColor="var(--c-title-vi)" />
+      <SectionHeader label="// Full GTA VI Economy Model · All Nodes + Flows" dotColor="var(--c-title-vi)" />
+      <EconomyFlowGTAVI />
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CIRCULAR ECONOMY DIAGRAM (D3)
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader label="// Projected Circular Economy · D3 Reference" dotColor="var(--c-title-vi)" />
       <div class="rounded-xl border border-border-dim p-6" style="background:var(--c-bg)">
         <CircularEconomy titleId="gta-6" mode="full" />
         <CardFooter anchorId="eco-gta-vi" sources="Source: GTAVI.AI Economic Model — predicted pre-launch · GTA Online precedent · trailer analysis" shareText="GTA VI predicted economy: Full MMT sovereign with multi-region model. Predicted to surpass GTA Online in complexity at launch. 10 active income predictions tracked." />
