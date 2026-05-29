@@ -226,8 +226,11 @@ PILL COMPONENTS
   NOT inside cards or components (use plain uppercase label instead)
 
 DIAGRAMS
+  EconomyCircleSED   Simplified Economy Diagram — canonical SED, (J)+Y=C+I, title-neutral
+                     src/components/EconomyCircleSED.astro — used on all hub pages
+                     Tokens: --c-flow-injection (J) · --c-gta-dollar (Y/GTA$) · --c-flow-spending (C) · --c-economy (I)
+                     EconomyCircle.astro → RETIRED — do not use
   CircularEconomy    per-title node graph (SVG arrows, D3 runtime)
-  EconomyCircle      macro Y=C+I (pure CSS, hub pages only)
   ReleaseTimeline    vertical franchise timeline
   ChartComplexityRadar  D3 radar polygon
 
@@ -246,9 +249,8 @@ PAGE ROLES
   /gta-vi/economy      Economy           projected circular flow, complexity
   /gta-vi/buy          Buy guide         platforms, editions, retailers
   /gta-vi/trailers     Trailers          official footage, velocity
-  /gta-online          Online hub        bonuses, income, economy, charts
+  /gta-online          Online hub        active bonuses, income, economy, charts
   /gta-online/economy  Economy           GTA-PPI, five flows, price basket
-  /gta-online/bonuses  Bonuses           weekly calendar, history
   /database            Database          GTA VI entities + GTA V income
   /charts              Charts            all D3 charts, filterable by title
   /franchise           Franchise         all titles overview
@@ -278,7 +280,8 @@ src/components/CrossLinks.astro     Related intelligence tiles
 src/components/CastCard.astro       Character cards (click-to-play)
 src/components/IncomeCard.astro     Income / prediction cards
 src/components/CircularEconomy.astro  Per-title economy diagram
-src/components/EconomyCircle.astro    Macro Y=C+I diagram (hub only)
+src/components/EconomyCircleSED.astro  SED — canonical (J)+Y=C+I (hub pages, title-neutral)
+src/components/EconomyCircle.astro    RETIRED — replaced by EconomyCircleSED
 src/components/Countdown.astro      Launch countdown timer`}</pre>
     </section>
 

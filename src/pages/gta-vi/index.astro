@@ -10,7 +10,7 @@ import PredictionCard from "../../components/PredictionCard.astro";
 import IncomeCard from "../../components/IncomeCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
-import EconomyCircle from "../../components/EconomyCircle.astro";
+import EconomyCircleSED from "../../components/EconomyCircleSED.astro";
 import Countdown from "../../components/Countdown.astro";
 import ChartTeaserCpi          from "../../components/charts/ChartTeaserCpi.astro";
 import ChartTeaserRevenueSplit  from "../../components/charts/ChartTeaserRevenueSplit.astro";
@@ -221,11 +221,11 @@ const featuredIncome = incomeList
          LAYER 3: ECONOMY — diagram + income + expenditure
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// The Dual Economy · Simplified · where does the money go?" pillHref="/gta-vi/economy" pillLabel="Full model →" />
+      <SectionHeader label="// The Circular GTA Economy · Simplified · where does the money go?" pillHref="/gta-vi/economy" pillLabel="Full model →" />
 
-      <!-- Circular economy diagram -->
+      <!-- Simplified Economy Diagram (SED) — canonical base model -->
       <div class="mb-6">
-        <EconomyCircle fullEconomyHref="/gta-vi/economy" />
+        <EconomyCircleSED fullEconomyHref="/gta-vi/economy" />
       </div>
 
       <!-- Income + Expenditure cards: 2-col split with teal/orange column borders -->
@@ -267,7 +267,7 @@ const featuredIncome = incomeList
         <!-- Expenditure side (C+I) — orange right border matches economy circle expenditure arc -->
         <div class="rounded-xl border border-border-dim px-4 pt-3 pb-4" style="border-right:3px solid var(--c-flow-spending);background:color-mix(in srgb,var(--c-flow-spending) 3%,transparent)">
           <div class="flex items-center gap-2 mb-3">
-            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending)">C+I — Expenditure</span>
+            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending)">C+I — Expense</span>
             <div class="flex-1 h-px" style="background:color-mix(in srgb,var(--c-flow-spending) 20%,transparent)"></div>
             <!-- No dedicated GTA VI I&C database yet — links to economy model page -->
             <a href="/gta-vi/economy"

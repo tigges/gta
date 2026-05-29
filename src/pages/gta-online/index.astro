@@ -7,7 +7,7 @@
 import Base from "../../layouts/Base.astro";
 import GamePill from "../../components/GamePill.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
-import EconomyCircle from "../../components/EconomyCircle.astro";
+import EconomyCircleSED from "../../components/EconomyCircleSED.astro";
 import IncomeCard from "../../components/IncomeCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
 import ChartTeaserOnlineMetaCeiling    from "../../components/charts/ChartTeaserOnlineMetaCeiling.astro";
@@ -100,7 +100,7 @@ const BONUS_LABEL: Record<string, string> = {
 
         <!-- This week's top bonus — hero teaser card (mirrors GTA VI Hub trailer card) -->
         {bonuses.length > 0 && (
-          <a href="/gta-online/bonuses"
+          <a href="#section-bonuses"
              class="group hidden sm:flex flex-col gap-2 rounded-xl border border-border-mid hover:border-gta-online-vivid/30 transition-all p-4 shrink-0 w-52"
              style="background:color-mix(in srgb,var(--c-title-online) 5%,var(--c-card))">
             <div class="text-[9px] font-mono uppercase tracking-widest" style="color:var(--c-title-online)">This week · active now</div>
@@ -125,7 +125,7 @@ const BONUS_LABEL: Record<string, string> = {
     <!-- ══════════════════════════════════════════════════════════
          ACTIVE WEEKLY BONUS CARDS
     ══════════════════════════════════════════════════════════ -->
-    <section>
+    <section id="section-bonuses" style="scroll-margin-top:80px">
       <BonusCardsTeaser />
     </section>
 
@@ -145,7 +145,7 @@ const BONUS_LABEL: Record<string, string> = {
     ══════════════════════════════════════════════════════════ -->
     <section>
       <SectionHeader label="// The GTA Online Economy · Simplified" dotColor="var(--c-title-online)" pillHref="/gta-online/economy" pillLabel="Full model →" />
-      <EconomyCircle fullEconomyHref="/gta-online/economy" />
+      <EconomyCircleSED fullEconomyHref="/gta-online/economy" />
     </section>
 
     <!-- ══════════════════════════════════════════════════════════
@@ -206,7 +206,7 @@ const BONUS_LABEL: Record<string, string> = {
         <div class="rounded-xl border border-border-dim px-4 pt-3 pb-4"
              style="border-right:3px solid var(--c-flow-spending);background:color-mix(in srgb,var(--c-flow-spending) 3%,transparent)">
           <div class="flex items-center gap-2 mb-4">
-            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending)">C+I — Expenditure</span>
+            <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-flow-spending)">C+I — Expense</span>
             <div class="flex-1 h-px" style="background:color-mix(in srgb,var(--c-flow-spending) 20%,transparent)"></div>
             <a href="/gta-online/economy"
                class="text-[10px] font-mono uppercase tracking-widest transition-colors shrink-0"

@@ -1,15 +1,17 @@
 ---
 /**
- * EconomyCircle.astro — GTA circular economy diagram v9.
+ * EconomyCircleSED.astro — Simplified Economy Diagram (SED) · token-correct rebuild.
  *
- * Layout:
- *   Row 1 (full): INJECTION — Shark Card | ROCKSTAR INJECTION J↓ | GTA+
- *   Row 2 (mid):  INCOME super-header (left) | Circle (centre) | EXPENDITURE super-header (right)
- *   Row 3 (bot):  INCOME (left, 40%) | CONSUMPTION (centre, 30%) | INVESTMENT (right, 30%)
+ * Represents the canonical GTA economy formula: (J) + Y = C + I
+ * Title-neutral: no game-specific identity colours. Semantic tokens only.
  *
- * Equation: INCOME [=] CONSUMPTION [+] INVESTMENT
- * Y, C, I letters on TOP BORDERS of each box.
- * Injection ring arc centred at 12 o'clock (injection blue at top).
+ *   J — Injection  → var(--c-flow-injection)  cyan  (exogenous, Shark Cards)
+ *   Y — Income     → var(--c-income)           teal  (earned, in-game)
+ *   C — Consumption → var(--c-flow-spending)   orange (non-returning spend)
+ *   I — Investment → var(--c-economy)           indigo (returns to Y)
+ *   GTA$ hub       → var(--c-brand)             gold  (franchise currency)
+ *
+ * This is the base SED from which per-title variants will be derived.
  */
 import HudIcon from "./HudIcon.astro";
 import ShareDropdown from "./ShareDropdown.astro";
@@ -19,32 +21,34 @@ interface Props {
   id?: string;  // for share anchor, defaults to "eco-model"
 }
 const { fullEconomyHref, id: anchorId = "eco-model" } = Astro.props;
-const shareText = "The GTA circular economy — how GTA$ flows through income, consumption and investment. Intelligence on GTAVI.AI";
+const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, income, consumption, investment — how GTA$ flows. GTAVI.AI";
 ---
 
 <div class="eco-card">
+
 <div class="eco-wrap">
 
   <!-- ── ROW 1: INJECTION (full width) ──────────────────────────────── -->
   <div class="inject-row">
     <div class="inject-inner">
       <div class="inject-item">
-        <div class="blip" style="--bc:var(--c-title-online)"><HudIcon name="shark-card" size={28} style="color:#fff"/></div>
-        <span class="item-label" style="color:var(--c-title-online)">Shark Card</span>
+        <div class="blip" style="--bc:var(--c-flow-injection)"><HudIcon name="shark-card" size={28} style="color:#fff"/></div>
+        <span class="item-label" style="color:var(--c-flow-injection)">Shark Card</span>
       </div>
 
       <div class="inject-centre">
         <span class="rockstar-label">Rockstar</span>
         <span class="inject-title">INJECTION</span>
-        <span class="j-arrow">J &#8595;</span>
+        <span class="j-flow-note">J &middot; REAL MONEY &#8594; GTA$</span>
       </div>
 
       <div class="inject-item">
-        <div class="blip" style="--bc:var(--c-title-online)"><HudIcon name="subscription" size={28} style="color:#fff"/></div>
-        <span class="item-label" style="color:var(--c-title-online)">GTA+</span>
+        <div class="blip" style="--bc:var(--c-flow-injection)"><HudIcon name="subscription" size={28} style="color:#fff"/></div>
+        <span class="item-label" style="color:var(--c-flow-injection)">GTA+</span>
       </div>
     </div>
-    <span class="online-note">&#42; Only in GTA Online for now</span>
+    <div class="inject-j-bottom">J &#8595;</div>
+  <span class="online-note">&#42; Only in GTA Online currently</span>
   </div>
 
   <!-- ── ROW 2: INCOME super-header · Circle · EXPENDITURE super-header ── -->
@@ -53,7 +57,7 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
     <!-- INCOME super-header — mirrors EXPENDITURE on right -->
     <div class="income-super">
       <div class="income-super-inner">
-        <HudIcon name="dollar" size={26} style="color:var(--c-income)"/>
+        <HudIcon name="dollar" size={26} style="color:var(--c-gta-dollar)"/>
         <span class="income-title">INCOME</span>
       </div>
     </div>
@@ -67,7 +71,7 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
       <div class="ring-wrap">
         <div class="ring"></div>
         <div class="ring-centre">
-          <HudIcon name="bank" size={28} style="color:var(--c-title-online)"/>
+          <HudIcon name="bank" size={28} style="color:var(--c-flow-injection)"/>
           <span class="gta-label">GTA$</span>
         </div>
       </div>
@@ -168,10 +172,11 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
 
   {/* ── Footer: outside eco-wrap so ShareDropdown is not clipped by overflow:hidden ── */}
   <div id={anchorId} class="eco-footer" style="scroll-margin-top:72px">
+    <span class="footer-formula">Base Economy Model across all GTA titles · (J) + Y = C + I</span>
+    <div class="flex-1"></div>
     {fullEconomyHref && (
       <a href={fullEconomyHref} class="text-[10px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors uppercase tracking-widest shrink-0">Full model →</a>
     )}
-    <div class="flex-1"></div>
     <span class="footer-brand">GTAVI.AI</span>
     <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
   </div>
@@ -201,8 +206,8 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
 .inject-row {
   position: relative;
   border-bottom: 1px solid var(--c-border-1);
-  background: color-mix(in srgb, var(--c-title-online) 5%, transparent);
-  padding: 12px 16px;
+  background: color-mix(in srgb, var(--c-flow-injection) 5%, transparent);
+  padding: 12px 16px 28px; /* bottom padding for J↓ straddling the lower border */
 }
 .inject-inner {
   display: flex;
@@ -213,9 +218,36 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
 .inject-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .item-label  { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
 .inject-centre { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.rockstar-label { font-size: 9px; color: var(--c-title-online); opacity: var(--o-tertiary); letter-spacing: .25em; text-transform: uppercase; }
-.inject-title { font-size: 2rem; font-weight: 900; line-height: 1; color: var(--c-title-online); }
-.j-arrow { font-size: 1.1rem; font-weight: 700; color: var(--c-title-online); }
+.rockstar-label { font-size: 9px; color: var(--c-flow-injection); opacity: var(--o-tertiary); letter-spacing: .25em; text-transform: uppercase; }
+.inject-title { font-size: clamp(0.85rem,2.5vw,1.3rem); font-weight: 900; line-height: 1; color: var(--c-flow-injection); } /* = box titles */
+/* J definition — no frame, cycle-note style, injection colour */
+.j-flow-note {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--c-flow-injection);
+  opacity: var(--o-secondary);
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* J↓ straddles the bottom border of the injection box — ~1/3 below, ~2/3 inside */
+.inject-j-bottom {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--c-flow-injection);
+  background: var(--c-card);
+  padding: 2px 8px;
+  border-radius: 4px;
+  z-index: 10;
+  white-space: nowrap;
+}
 .online-note {
   position: absolute; top: 8px; right: 12px;
   font-size: 8px; color: var(--c-text-5); opacity: var(--o-secondary);
@@ -241,14 +273,14 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
 .income-super-inner {
   display: flex; align-items: center; gap: 10px;
   padding: 8px 16px;
-  border: 1.5px solid color-mix(in srgb, var(--c-income) 35%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--c-gta-dollar) 35%, transparent);
   border-radius: 8px;
-  background: color-mix(in srgb, var(--c-income) 7%, transparent);
+  background: color-mix(in srgb, var(--c-gta-dollar) 7%, transparent);
 }
 .income-title {
   font-size: clamp(1rem,2.5vw,1.6rem);
   font-weight: 900;
-  color: var(--c-income);
+  color: var(--c-gta-dollar);
   letter-spacing: -.01em;
 }
 
@@ -273,7 +305,7 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
     from 137.5deg,
     var(--c-economy)        0deg  75deg,
     var(--c-growth)        75deg 200deg,
-    var(--c-title-online) 200deg 245deg,
+    var(--c-flow-injection) 200deg 245deg,
     var(--c-flow-spending) 245deg 325deg,
     var(--c-economy)      325deg 360deg
   );
@@ -285,11 +317,11 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
   position: absolute; inset: 14px;
   border-radius: 50%;
   background: color-mix(in srgb, var(--c-bg-deep) 90%, transparent);
-  border: 1.5px solid color-mix(in srgb, var(--c-title-online) 30%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--c-gta-dollar) 35%, transparent);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 2px;
 }
-.gta-label { font-size: 11px; font-weight: 900; color: var(--c-title-online); }
+.gta-label { font-size: 15px; font-weight: 900; color: var(--c-gta-dollar); }
 
 /* CSS triangle arrows */
 .tri-in {
@@ -369,7 +401,7 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
 .box-inner { padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; }
 /* flex-wrap lets cycle-note push right on desktop and reflow on mobile */
 .box-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.box-title { font-size: clamp(1rem,2.5vw,1.3rem); font-weight: 900; line-height: 1; }
+.box-title { font-size: clamp(0.85rem,2.5vw,1.3rem); font-weight: 900; line-height: 1; }
 .icon-row { display: flex; gap: 12px; }
 .icon-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .icon-label { font-size: 8px; color: var(--c-text-3); text-align: center; }
@@ -422,27 +454,43 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
   text-transform: uppercase; letter-spacing: .12em;
   color: var(--c-text-5);
 }
+.footer-formula {
+  font-size: 10px; font-family: var(--font-mono,monospace);
+  letter-spacing: .04em;
+  color: var(--c-text-5);  /* brighter than --c-text-6; no opacity modifier */
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 /* ── Mobile (≤599px) ─────────────────────────────────────────────────── */
 @media (max-width: 599px) {
   /* Injection row: tighter gap, smaller headline */
   .inject-inner  { gap: 16px; }
-  .inject-title  { font-size: 1.4rem; }
+  /* inject-title now uses clamp — no mobile override needed */
   .blip          { width: 42px; height: 42px; }
 
-  /* Mid-row: hide flanking super-headers, show circle only */
+  /* Mid-row: show flanking super-headers as icon-only on mobile */
   .income-super,
-  .expend-super  { display: none; }
-  .mid-row       { display: flex; justify-content: center; padding: 10px 16px; }
+  .expend-super  { display: flex; }
+  .income-super  { padding-right: 4px; }
+  .expend-super  { padding-left: 4px; }
+  .income-super-inner,
+  .expend-super-inner { padding: 6px 8px; gap: 0; }
+  .income-title,
+  .expend-title  { display: none; } /* hide text, keep icon */
+  .mid-row       { grid-template-columns: auto auto auto; padding: 8px 4px; }
 
   /* Circle: slightly smaller */
-  .ring-wrap     { width: 96px; height: 96px; }
+  .ring-wrap     { width: 80px; height: 80px; }
   .ring {
-    -webkit-mask: radial-gradient(circle, transparent 33px, black 35px);
-    mask:         radial-gradient(circle, transparent 33px, black 35px);
+    -webkit-mask: radial-gradient(circle, transparent 27px, black 29px);
+    mask:         radial-gradient(circle, transparent 27px, black 29px);
   }
-  .ring-centre   { inset: 10px; }
-  .gta-label     { font-size: 9px; }
+  .ring-centre   { inset: 8px; }
+  .gta-label     { font-size: 11px; }
 
   /* Arrows: smaller */
   .tri-in, .tri-out {
@@ -453,7 +501,7 @@ const shareText = "The GTA circular economy — how GTA$ flows through income, c
 
   /* Box row: compact padding */
   .box-inner     { padding: 10px 8px; gap: 6px; }
-  .box-title     { font-size: .7rem; }
+  .box-title     { font-size: 0.75rem; } /* hard cap on mobile — prevents 'CONSUMPTION' overflow */
 
   /* Icons: stack vertically, each item becomes a horizontal blip+label row */
   .icon-row      { flex-direction: column; gap: 4px; }
