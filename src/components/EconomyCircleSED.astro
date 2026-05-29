@@ -38,8 +38,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
       <div class="inject-centre">
         <span class="rockstar-label">Rockstar</span>
         <span class="inject-title">INJECTION</span>
-        <span class="j-arrow">J &#8595;</span>
-        <span class="j-definition">J &middot; REAL MONEY &#8594; GTA$</span>
+        <span class="j-flow-note">J &middot; REAL MONEY &#8594; GTA$</span>
       </div>
 
       <div class="inject-item">
@@ -47,7 +46,8 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
         <span class="item-label" style="color:var(--c-flow-injection)">GTA+</span>
       </div>
     </div>
-    <span class="online-note">&#42; J currently only in GTA Online</span>
+    <div class="inject-j-bottom">J &#8595;</div>
+  <span class="online-note">&#42; Only in GTA Online currently</span>
   </div>
 
   <!-- ── ROW 2: INCOME super-header · Circle · EXPENDITURE super-header ── -->
@@ -205,7 +205,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
   position: relative;
   border-bottom: 1px solid var(--c-border-1);
   background: color-mix(in srgb, var(--c-flow-injection) 5%, transparent);
-  padding: 12px 16px;
+  padding: 12px 16px 22px; /* extra bottom padding for J↓ bottom label */
 }
 .inject-inner {
   display: flex;
@@ -218,18 +218,31 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 .inject-centre { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .rockstar-label { font-size: 9px; color: var(--c-flow-injection); opacity: var(--o-tertiary); letter-spacing: .25em; text-transform: uppercase; }
 .inject-title { font-size: 2rem; font-weight: 900; line-height: 1; color: var(--c-flow-injection); }
-.j-arrow { font-size: 1.1rem; font-weight: 700; color: var(--c-flow-injection); }
-.j-definition {
-  margin-top: 6px;
+/* J definition — no frame, cycle-note style, injection colour */
+.j-flow-note {
   font-size: 8px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .08em;
+  letter-spacing: .1em;
   color: var(--c-flow-injection);
-  border: 1px solid color-mix(in srgb, var(--c-flow-injection) 35%, transparent);
-  background: color-mix(in srgb, var(--c-flow-injection) 10%, transparent);
-  border-radius: 4px;
-  padding: 3px 7px;
+  opacity: var(--o-secondary);
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* J↓ on the BOTTOM border of the injection box — mirrors Y/C/I on top borders */
+.inject-j-bottom {
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--c-flow-injection);
+  background: var(--c-card);
+  padding: 0 6px;
+  z-index: 10;
   white-space: nowrap;
 }
 .online-note {
