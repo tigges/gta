@@ -1,6 +1,5 @@
 ---
 import Base from "../../layouts/Base.astro";
-import CrossLinks from "../../components/CrossLinks.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import GamePill from "../../components/GamePill.astro";
@@ -20,6 +19,7 @@ const activeDims = Object.entries(dims).filter(([, v]) => (v as number) > 0);
   ogPage="gta-iv-eco"
   title={`${economy.title_name} — Economy`}
   description={`${economy.economy_type} · ${economy.real_world_analogue} · GTAVI.AI franchise economic analysis.`}
+  crossLinksContext="franchise"
 >
   <!-- Hero -->
   <section class="relative border-b border-border-dim overflow-hidden" style="min-height:200px">
@@ -92,6 +92,5 @@ const activeDims = Object.entries(dims).filter(([, v]) => (v as number) > 0);
       <a href="/gta-v/economy" class="px-4 py-2 rounded border border-gta-gold/30 text-gta-gold text-[11px] font-mono hover:bg-gta-gold/10 transition-all">GTA V: Capital Market Recovery →</a>
     </div>
 
-    <CrossLinks context="franchise" />
   </div>
 </Base>

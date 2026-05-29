@@ -1,6 +1,5 @@
 ---
 import Base from "../../layouts/Base.astro";
-import CrossLinks from "../../components/CrossLinks.astro";
 ---
 
 <Base
@@ -8,6 +7,7 @@ import CrossLinks from "../../components/CrossLinks.astro";
   title="GTA Online Charts"
   description="GTA Online economy and promotions charts — GTA-PPI inflation index, passive income stack, meta evolution, heist comparison, spending distribution and bonus calendar."
   ogPage="charts"
+  crossLinksContext="charts"
 >
   <!-- Hero -->
   <section class="border-b border-border-dim" style="background:var(--c-bg-deep)">
@@ -59,6 +59,5 @@ import CrossLinks from "../../components/CrossLinks.astro";
       </a>
     </div>
 
-    <CrossLinks context="charts" />
   </div>
 </Base>

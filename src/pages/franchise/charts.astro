@@ -1,6 +1,5 @@
 ---
 import Base from "../../layouts/Base.astro";
-import CrossLinks from "../../components/CrossLinks.astro";
 ---
 
 <Base
@@ -8,6 +7,7 @@ import CrossLinks from "../../components/CrossLinks.astro";
   title="GTA Franchise Charts"
   description="Grand Theft Auto franchise charts — sales velocity, CPI-adjusted pricing, critic vs user score divergence, DLC cadence, cross-title economic complexity and earnings curve."
   ogPage="franchise"
+  crossLinksContext="franchise"
 >
   <!-- Breadcrumb -->
   <div class="border-b border-border-dim" style="background:var(--c-bg-deep)">
@@ -67,6 +67,5 @@ import CrossLinks from "../../components/CrossLinks.astro";
       </a>
     </div>
 
-    <CrossLinks context="franchise" />
   </div>
 </Base>

@@ -7,7 +7,6 @@
  */
 import Base from "../../../layouts/Base.astro";
 import ShareDropdown from "../../../components/ShareDropdown.astro";
-import CrossLinks from "../../../components/CrossLinks.astro";
 import revenueTiersData from "../../../../data/gta-5/economy/revenue-tiers.json";
 import weeklyBonuses    from "../../../../data/gta-5/economy/weekly-bonuses.json";
 import saleFreqData     from "../../../../data/gta-5/economy/sale-frequency.json";
@@ -82,6 +81,7 @@ const bonusFreqs = COMPONENTS.map(comp => ({
   title="GTA Online Full Meta Stack — $1.7M/hr Optimal Income Guide"
   description="The complete GTA Online optimal income strategy: Cayo Perico + Agency contracts + passive stack. $1.7M/hr total. Full setup path, component breakdown, and timing guide."
   ogImage="https://gtavi.ai/og/online/cayo-perico.png"
+  crossLinksContext="gta-online-income"
 >
   <!-- Breadcrumb -->
   <div class="border-b border-border-dim" style="background:var(--c-bg-deep)">
@@ -255,6 +255,5 @@ const bonusFreqs = COMPONENTS.map(comp => ({
       </div>
     </div>
 
-    <CrossLinks context="gta-online-income" />
   </div>
 </Base>

@@ -2,7 +2,6 @@
 // SEO landing page: /gta-online/cayo-perico
 // Target queries: "cayo perico heist guide", "best solo money gta online", "cayo perico $/hr"
 import Base from "../../layouts/Base.astro";
-import CrossLinks from "../../components/CrossLinks.astro";
 import IncomeCard from "../../components/IncomeCard.astro";
 import StockCalculator from "../../components/StockCalculator.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
@@ -20,6 +19,7 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
   title="Cayo Perico Heist Guide 2026 — Best Solo Money GTA Online"
   description={`Cayo Perico Heist: $${(cayo.net_profit_per_hr/1000).toFixed(0)}k/hr solo. Full guide — loot tiers, optimal strategy, setup cost, break-even. The #1 solo money method in GTA Online.`}
   ogPage="cayo-perico"
+  crossLinksContext="gta-online-seo"
 >
 <script is:inline type="application/ld+json">{JSON.stringify({
   "@context": "https://schema.org",
@@ -128,7 +128,6 @@ const effectiveHr = cayo.net_profit_per_hr * (cayoBonus?.multiplier ?? 1);
       </div>
     </section>
 
-    <CrossLinks context="gta-online-seo" />
 
     <!-- Link back -->
     <div class="flex items-center justify-between flex-wrap gap-3">

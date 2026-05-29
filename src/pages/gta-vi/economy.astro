@@ -6,7 +6,6 @@
  * Predictions from economy-models analysis, populated Day-1 from scrapers.
  */
 import Base from "../../layouts/Base.astro";
-import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import CardFooter from "../../components/CardFooter.astro";
@@ -56,6 +55,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
   title="GTA VI Economy — Dual-Territory Currency Union"
   description="GTA VI projected economy analysis: dual-territory currency union (Vice City + Leonida), regional purchasing parity, Shark Card mechanics, and the Eurozone analogue. Updated as intelligence confirms."
   ogPage="vi-intel"
+  crossLinksContext="gta-online-economy"
 >
 
   <!-- Hero header -->
@@ -537,6 +537,5 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
       </div>
     </div>
 
-    <CrossLinks context="gta-online-economy" />
   </div>
 </Base>
