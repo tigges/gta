@@ -1,0 +1,612 @@
+---
+/**
+ * EconomyFlowGTAVI.astro — Full GTA VI economy flow diagram.
+ *
+ * Pure HTML/CSS. No D3, no JS. Always renders.
+ *
+ * Replaces CircularEconomy titleId="gta-6" on /gta-vi/economy.
+ * Design follows SED conventions: semantic color tokens, card structure,
+ * monospace labels, circuit-board node language.
+ *
+ * Economy: (J) + Y = C + I across two structural regions, one GTA$.
+ *
+ * Nodes (from economy-models.json):
+ *   sovereign          — Rockstar / Take-Two
+ *   shark-cards        — Shark Cards (J injection source)
+ *   region-1           — Vice City (Urban, high-wage)
+ *   businesses-vc      — VC Businesses
+ *   players-vc         — VC Players
+ *   region-2           — Leonida (Rural, low-wage)
+ *   businesses-leonida — Leonida Businesses
+ *   players-leonida    — Leonida Players
+ *
+ * Flows:
+ *   ① businesses-vc → players-vc       "VC · Income"       wages   amber
+ *   ② businesses-leonida → players-leo "Leonida · Income"  wages   teal
+ *   ③ players-vc → players-leonida      "Cross-territory"  spending zinc
+ *   ④ shark-cards → players-vc         "J · Injection"    injection cyan
+ *
+ * Tokens used (SED palette — no game-identity colours):
+ *   --c-flow-injection  cyan   J axis
+ *   --c-gta-dollar      green  GTA$ hub
+ *   --c-flow-spending   orange C axis
+ *   --c-economy         indigo I axis / Sovereign
+ *   --c-brand           gold   VC region / Income
+ *   --c-live            teal   Leonida region
+ */
+
+import HudIcon from "./HudIcon.astro";
+import ShareDropdown from "./ShareDropdown.astro";
+
+interface Props {
+  id?: string;
+}
+const { id: anchorId = "eco-flow-vi" } = Astro.props;
+
+const SOVEREIGN_LEVERS = [
+  "Regional price floors",
+  "Shark Card cross-region rates",
+  "Mission payout floors per territory",
+  "Weekly events — regional bonus rotations",
+  "Mobile-linked persistence",
+];
+
+const INFLATION_CHANNELS = [
+  { label: "Regional price divergence", detail: "Vice City vs Leonida purchasing power gap" },
+  { label: "Shark Card ratio degradation", detail: "Structural — inherits from GTA Online" },
+  { label: "Payout nerfs", detail: "Expected to continue as live-service mechanic" },
+];
+
+const KEY_INNOVATION = {
+  title: "Regional purchasing parity — two structural economies, one currency",
+  note: "One monetary authority (Rockstar as ECB), two structurally different regional economies. If price divergence is real, GTA-RPP differs by region — a research axis unique to this site.",
+};
+---
+
+<div class="ef-card">
+
+  <!-- ── PROJECTED BADGE ──────────────────────────────────────────── -->
+  <div class="ef-proj-strip">
+    <span class="ef-proj-badge">Projected · Pre-Launch</span>
+    <span class="ef-proj-note">Source: GTA Online precedent · trailer analysis · GTAVI.AI economic model</span>
+  </div>
+
+  <!-- ── SOVEREIGN ─────────────────────────────────────────────────── -->
+  <div class="ef-sovereign">
+    <div class="ef-sov-header">
+      <span class="ef-sov-eyebrow">SOVEREIGN</span>
+      <span class="ef-sov-name">Rockstar / Take-Two</span>
+      <span class="ef-sov-detail">Currency issuer · Price setter · Legislature (patch law) · Weekly policy events</span>
+    </div>
+    <div class="ef-lever-row">
+      {SOVEREIGN_LEVERS.map(l => (
+        <span class="ef-lever">{l}</span>
+      ))}
+    </div>
+    <!-- Sovereign → Injection arrow -->
+    <div class="ef-sov-arrow">
+      <div class="ef-vline"></div>
+      <div class="ef-arrow-label">Shark Cards ↓</div>
+      <div class="ef-vline"></div>
+    </div>
+  </div>
+
+  <!-- ── INJECTION ─────────────────────────────────────────────────── -->
+  <div class="ef-injection">
+    <div class="ef-inj-inner">
+      <div class="ef-inj-item">
+        <div class="ef-blip" style="--bc:var(--c-flow-injection)">
+          <HudIcon name="shark-card" size={22} style="color:#fff" />
+        </div>
+        <span class="ef-inj-label" style="color:var(--c-flow-injection)">Shark Card</span>
+      </div>
+      <div class="ef-inj-centre">
+        <span class="ef-inj-sub">Real Money → GTA$</span>
+        <span class="ef-inj-title">④ J · INJECTION</span>
+        <span class="ef-inj-note">Exogenous inflow — GTA$ created without in-game labour</span>
+      </div>
+      <div class="ef-inj-item">
+        <div class="ef-blip" style="--bc:var(--c-flow-injection)">
+          <HudIcon name="subscription" size={22} style="color:#fff" />
+        </div>
+        <span class="ef-inj-label" style="color:var(--c-flow-injection)">GTA+</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Injection → regions connector -->
+  <div class="ef-inj-to-region">
+    <div class="ef-itl-left">
+      <div class="ef-itl-line"></div>
+      <div class="ef-arrow-dn"></div>
+      <span class="ef-itl-label" style="color:var(--c-flow-injection)">→ VC Players</span>
+    </div>
+    <div class="ef-itl-centre">
+      <div class="ef-gta-hub">
+        <HudIcon name="bank" size={20} style="color:var(--c-gta-dollar)" />
+        <span class="ef-hub-label">GTA$</span>
+        <span class="ef-hub-sub">all regions · one currency</span>
+      </div>
+    </div>
+    <div class="ef-itl-right">
+      <span class="ef-itl-label" style="color:var(--c-live)">③ Cross-territory →</span>
+      <div class="ef-itl-line"></div>
+    </div>
+  </div>
+
+  <!-- ── DUAL-REGION BODY ──────────────────────────────────────────── -->
+  <div class="ef-regions">
+
+    <!-- ── VICE CITY ─────────────────────────────────────────────── -->
+    <div class="ef-region ef-vc">
+      <div class="ef-region-header" style="color:var(--c-brand);border-color:color-mix(in srgb,var(--c-brand) 35%,transparent)">
+        <HudIcon name="economy" size={14} style="color:var(--c-brand)" />
+        <span>Vice City</span>
+        <span class="ef-region-tag">Urban · High-wage</span>
+      </div>
+
+      <!-- Businesses -->
+      <div class="ef-node" style="border-color:color-mix(in srgb,var(--c-brand) 40%,transparent);background:color-mix(in srgb,var(--c-brand) 7%,var(--c-bg-deep))">
+        <div class="ef-node-icon" style="--bc:var(--c-brand)">
+          <HudIcon name="briefcase" size={18} style="color:#fff" />
+        </div>
+        <div class="ef-node-body">
+          <span class="ef-node-label" style="color:var(--c-brand)">Businesses</span>
+          <span class="ef-node-detail">Heists · passive stack · enterprises</span>
+        </div>
+        <span class="ef-node-badge" style="color:var(--c-brand)">Y</span>
+      </div>
+
+      <!-- VC flow connector -->
+      <div class="ef-flow-connector">
+        <div class="ef-fc-left">
+          <div class="ef-fc-line" style="background:var(--c-brand)"></div>
+          <div class="ef-fc-arrow" style="border-top-color:var(--c-brand)"></div>
+        </div>
+        <div class="ef-fc-label">
+          <span class="ef-fc-pill" style="color:var(--c-brand);border-color:color-mix(in srgb,var(--c-brand) 35%,transparent);background:color-mix(in srgb,var(--c-brand) 8%,transparent)">
+            ① Y · Income
+          </span>
+          <span class="ef-fc-sub">high-wage region</span>
+          <span class="ef-fc-pill ef-fc-pill-inv" style="color:var(--c-economy);border-color:color-mix(in srgb,var(--c-economy) 35%,transparent);background:color-mix(in srgb,var(--c-economy) 8%,transparent)">
+            I · Investment ↑
+          </span>
+        </div>
+        <div class="ef-fc-right">
+          <div class="ef-fc-arrow-up" style="border-bottom-color:var(--c-economy)"></div>
+          <div class="ef-fc-line" style="background:var(--c-economy)"></div>
+        </div>
+      </div>
+
+      <!-- Players -->
+      <div class="ef-node" style="border-color:color-mix(in srgb,var(--c-text-4) 30%,transparent);background:color-mix(in srgb,var(--c-text-4) 5%,var(--c-bg-deep))">
+        <div class="ef-node-icon" style="--bc:var(--c-text-4)">
+          <HudIcon name="mission" size={18} style="color:#fff" />
+        </div>
+        <div class="ef-node-body">
+          <span class="ef-node-label" style="color:var(--c-text-3)">Players</span>
+          <span class="ef-node-detail">Earn · spend · invest · move cross-region</span>
+        </div>
+        <span class="ef-node-badge" style="color:var(--c-flow-spending)">C</span>
+      </div>
+
+      <!-- VC spending outflow -->
+      <div class="ef-outflow">
+        <div class="ef-of-line" style="background:color-mix(in srgb,var(--c-flow-spending) 50%,transparent)"></div>
+        <span class="ef-of-label" style="color:var(--c-flow-spending)">C · Consumption outflow</span>
+        <span class="ef-of-sub">clothing · ammo · fuel · non-returning spend</span>
+      </div>
+    </div>
+
+    <!-- ── CENTRE SEPARATOR ──────────────────────────────────────── -->
+    <div class="ef-centre-sep">
+      <!-- Cross-territory top -->
+      <div class="ef-cross-top">
+        <div class="ef-cross-line"></div>
+        <span class="ef-cross-label">③ Player movement</span>
+        <div class="ef-cross-line"></div>
+      </div>
+
+      <!-- RPP index -->
+      <div class="ef-rpp">
+        <span class="ef-rpp-label">GTA-RPP</span>
+        <span class="ef-rpp-sub">VC ÷ Leonida</span>
+        <span class="ef-rpp-detail">parity index</span>
+      </div>
+
+      <!-- Cross-territory bottom -->
+      <div class="ef-cross-bot">
+        <div class="ef-cross-line"></div>
+        <span class="ef-cross-label">cross-region spend</span>
+        <div class="ef-cross-line"></div>
+      </div>
+    </div>
+
+    <!-- ── LEONIDA ────────────────────────────────────────────────── -->
+    <div class="ef-region ef-leonida">
+      <div class="ef-region-header" style="color:var(--c-live);border-color:color-mix(in srgb,var(--c-live) 35%,transparent)">
+        <HudIcon name="economy" size={14} style="color:var(--c-live)" />
+        <span>Leonida</span>
+        <span class="ef-region-tag">Rural · Lower-wage</span>
+      </div>
+
+      <!-- Businesses -->
+      <div class="ef-node" style="border-color:color-mix(in srgb,var(--c-live) 40%,transparent);background:color-mix(in srgb,var(--c-live) 7%,var(--c-bg-deep))">
+        <div class="ef-node-icon" style="--bc:var(--c-live)">
+          <HudIcon name="briefcase" size={18} style="color:#fff" />
+        </div>
+        <div class="ef-node-body">
+          <span class="ef-node-label" style="color:var(--c-live)">Businesses</span>
+          <span class="ef-node-detail">Smuggling · farms · rural operations</span>
+        </div>
+        <span class="ef-node-badge" style="color:var(--c-live)">Y</span>
+      </div>
+
+      <!-- Leonida flow connector -->
+      <div class="ef-flow-connector">
+        <div class="ef-fc-left">
+          <div class="ef-fc-line" style="background:var(--c-live)"></div>
+          <div class="ef-fc-arrow" style="border-top-color:var(--c-live)"></div>
+        </div>
+        <div class="ef-fc-label">
+          <span class="ef-fc-pill" style="color:var(--c-live);border-color:color-mix(in srgb,var(--c-live) 35%,transparent);background:color-mix(in srgb,var(--c-live) 8%,transparent)">
+            ② Y · Income
+          </span>
+          <span class="ef-fc-sub">lower-wage region</span>
+          <span class="ef-fc-pill ef-fc-pill-inv" style="color:var(--c-economy);border-color:color-mix(in srgb,var(--c-economy) 35%,transparent);background:color-mix(in srgb,var(--c-economy) 8%,transparent)">
+            I · Investment ↑
+          </span>
+        </div>
+        <div class="ef-fc-right">
+          <div class="ef-fc-arrow-up" style="border-bottom-color:var(--c-economy)"></div>
+          <div class="ef-fc-line" style="background:var(--c-economy)"></div>
+        </div>
+      </div>
+
+      <!-- Players -->
+      <div class="ef-node" style="border-color:color-mix(in srgb,var(--c-text-4) 30%,transparent);background:color-mix(in srgb,var(--c-text-4) 5%,var(--c-bg-deep))">
+        <div class="ef-node-icon" style="--bc:var(--c-text-4)">
+          <HudIcon name="mission" size={18} style="color:#fff" />
+        </div>
+        <div class="ef-node-body">
+          <span class="ef-node-label" style="color:var(--c-text-3)">Players</span>
+          <span class="ef-node-detail">Earn · spend · invest · cross-region access</span>
+        </div>
+        <span class="ef-node-badge" style="color:var(--c-flow-spending)">C</span>
+      </div>
+
+      <!-- Leonida spending outflow -->
+      <div class="ef-outflow">
+        <div class="ef-of-line" style="background:color-mix(in srgb,var(--c-flow-spending) 50%,transparent)"></div>
+        <span class="ef-of-label" style="color:var(--c-flow-spending)">C · Consumption outflow</span>
+        <span class="ef-of-sub">lower price tier · rural goods · fuel</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── KEY INNOVATION + INFLATION ───────────────────────────────── -->
+  <div class="ef-meta">
+
+    <!-- Key innovation -->
+    <div class="ef-innovation">
+      <div class="ef-innov-header">
+        <span class="ef-innov-star">★★★★</span>
+        <span class="ef-innov-label">Key GTA VI Economy Innovation</span>
+      </div>
+      <div class="ef-innov-title">{KEY_INNOVATION.title}</div>
+      <div class="ef-innov-note">{KEY_INNOVATION.note}</div>
+    </div>
+
+    <!-- Inflation channels -->
+    <div class="ef-inflation">
+      <div class="ef-inf-header">↑ Inflation Channels</div>
+      <div class="ef-inf-list">
+        {INFLATION_CHANNELS.map(ch => (
+          <div class="ef-inf-row">
+            <span class="ef-inf-arrow">↑</span>
+            <div>
+              <span class="ef-inf-name">{ch.label}</span>
+              <span class="ef-inf-detail"> — {ch.detail}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── FLOW LEGEND ───────────────────────────────────────────────── -->
+  <div class="ef-legend">
+    {[
+      { num: "①", label: "VC · Income",        color: "var(--c-brand)",          sub: "wages   amber" },
+      { num: "②", label: "Leonida · Income",   color: "var(--c-live)",           sub: "wages   teal"  },
+      { num: "③", label: "Cross-territory",    color: "var(--c-text-4)",         sub: "spending zinc"  },
+      { num: "④", label: "J · Injection",      color: "var(--c-flow-injection)", sub: "real money cyan" },
+      { num: "I",  label: "Investment",         color: "var(--c-economy)",        sub: "returns to Y   indigo" },
+      { num: "C",  label: "Consumption",        color: "var(--c-flow-spending)",  sub: "non-returning  orange" },
+    ].map(f => (
+      <span class="ef-legend-item">
+        <span class="ef-legend-num" style={`color:${f.color}`}>{f.num}</span>
+        <span class="ef-legend-name">{f.label}</span>
+      </span>
+    ))}
+  </div>
+
+  <!-- ── FOOTER ────────────────────────────────────────────────────── -->
+  <div id={anchorId} class="ef-footer" style="scroll-margin-top:72px">
+    <span class="ef-footer-formula">GTA VI Projected · (J) + Y = C + I · Multi-Region Currency Union</span>
+    <div style="flex:1"></div>
+    <span class="ef-footer-brand">GTAVI.AI</span>
+    <ShareDropdown
+      anchorId={anchorId}
+      shareText="GTA VI projected economy: multi-region currency union — Vice City (urban, high-wage) + Leonida (rural, low-wage), one GTA$. The Eurozone analogy applied to a video game. GTAVI.AI"
+      size="sm"
+    />
+  </div>
+
+</div>
+
+<style>
+/* ── Card root ────────────────────────────────────────────────────── */
+.ef-card {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--c-border-1);
+  background: var(--c-card);
+  font-family: var(--font-mono, monospace);
+  overflow: hidden;
+}
+
+/* ── Projected strip ──────────────────────────────────────────────── */
+.ef-proj-strip {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 6px 16px;
+  background: color-mix(in srgb, var(--c-brand) 5%, var(--c-bg-deep));
+  border-bottom: 1px solid var(--c-border-1);
+}
+.ef-proj-badge {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--c-brand);
+  border: 1px solid color-mix(in srgb, var(--c-brand) 35%, transparent);
+  background: color-mix(in srgb, var(--c-brand) 10%, transparent);
+  border-radius: 4px; padding: 2px 7px; white-space: nowrap;
+}
+.ef-proj-note { font-size: 9px; color: var(--c-text-6); }
+
+/* ── Sovereign ────────────────────────────────────────────────────── */
+.ef-sovereign {
+  padding: 16px 20px 12px;
+  background: color-mix(in srgb, var(--c-economy) 7%, var(--c-bg-deep));
+  border-bottom: 1px dashed var(--c-border-1);
+  position: relative;
+}
+.ef-sov-header {
+  display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; margin-bottom: 12px;
+}
+.ef-sov-eyebrow { font-size: 9px; text-transform: uppercase; letter-spacing: .25em; color: var(--c-economy); opacity: .7; }
+.ef-sov-name    { font-size: 1.1rem; font-weight: 900; color: var(--c-economy); line-height: 1; }
+.ef-sov-detail  { font-size: 9px; color: var(--c-text-5); }
+.ef-lever-row   { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.ef-lever {
+  font-size: 9px; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--c-economy); opacity: .8;
+  border: 1px solid color-mix(in srgb, var(--c-economy) 30%, transparent);
+  background: color-mix(in srgb, var(--c-economy) 8%, transparent);
+  border-radius: 4px; padding: 2px 7px;
+}
+
+/* Sovereign → Injection connector */
+.ef-sov-arrow {
+  display: flex; flex-direction: column; align-items: center; gap: 0; margin-top: 12px;
+}
+.ef-vline { width: 1px; height: 8px; background: color-mix(in srgb, var(--c-flow-injection) 50%, transparent); }
+.ef-arrow-label {
+  font-size: 9px; color: var(--c-flow-injection); letter-spacing: .06em;
+  background: var(--c-card);
+  padding: 1px 8px; border-radius: 3px;
+}
+
+/* ── Injection ────────────────────────────────────────────────────── */
+.ef-injection {
+  padding: 12px 20px 16px;
+  background: color-mix(in srgb, var(--c-flow-injection) 5%, transparent);
+  border-bottom: 1px solid var(--c-border-1);
+}
+.ef-inj-inner  { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.ef-inj-item   { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.ef-inj-label  { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
+.ef-inj-centre { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+.ef-inj-sub    { font-size: 8px; color: var(--c-flow-injection); opacity: .6; text-transform: uppercase; letter-spacing: .2em; }
+.ef-inj-title  { font-size: 1.05rem; font-weight: 900; color: var(--c-flow-injection); line-height: 1; }
+.ef-inj-note   { font-size: 8px; color: var(--c-text-5); margin-top: 2px; }
+
+/* ── Injection → Region connector row ─────────────────────────────── */
+.ef-inj-to-region {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  padding: 8px 20px;
+  background: var(--c-bg-deep);
+  border-bottom: 1px solid var(--c-border-1);
+  gap: 12px;
+}
+.ef-itl-left  { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ef-itl-right { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ef-itl-line  { width: 1.5px; height: 16px; background: currentColor; opacity: .4; }
+.ef-arrow-dn  { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid color-mix(in srgb, var(--c-flow-injection) 70%, transparent); }
+.ef-itl-label { font-size: 9px; letter-spacing: .06em; font-weight: 600; }
+
+/* GTA$ hub in centre connector */
+.ef-gta-hub {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 8px 14px;
+  border: 1.5px solid color-mix(in srgb, var(--c-gta-dollar) 40%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--c-gta-dollar) 8%, var(--c-bg-deep));
+}
+.ef-hub-label { font-size: 13px; font-weight: 900; color: var(--c-gta-dollar); line-height: 1; }
+.ef-hub-sub   { font-size: 7px; color: var(--c-gta-dollar); opacity: .6; text-transform: uppercase; letter-spacing: .1em; white-space: nowrap; }
+
+/* ── Dual-region body ─────────────────────────────────────────────── */
+.ef-regions {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  border-bottom: 1px solid var(--c-border-1);
+}
+
+/* Shared region column styles */
+.ef-region { padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+.ef-vc      { background: color-mix(in srgb, var(--c-brand) 3%, transparent); border-right: 1px solid var(--c-border-1); }
+.ef-leonida { background: color-mix(in srgb, var(--c-live)  3%, transparent); }
+
+.ef-region-header {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  border-bottom: 1.5px solid; padding-bottom: 6px;
+}
+.ef-region-tag {
+  font-size: 8px; font-weight: 400; opacity: .7; margin-left: auto;
+}
+
+/* Nodes */
+.ef-node {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid; border-radius: 8px; padding: 10px 12px;
+}
+.ef-node-icon {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--bc) 20%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--bc) 45%, transparent);
+}
+.ef-node-body   { flex: 1; min-width: 0; }
+.ef-node-label  { display: block; font-size: 11px; font-weight: 700; line-height: 1.2; }
+.ef-node-detail { display: block; font-size: 8px; color: var(--c-text-5); margin-top: 2px; line-height: 1.3; }
+.ef-node-badge  { font-size: 1rem; font-weight: 900; flex-shrink: 0; }
+
+/* Flow connector between nodes */
+.ef-flow-connector {
+  display: flex; align-items: center; gap: 6px; padding: 0 4px;
+}
+.ef-fc-left, .ef-fc-right {
+  display: flex; flex-direction: column; align-items: center; gap: 0; flex-shrink: 0;
+}
+.ef-fc-line   { width: 1.5px; height: 18px; }
+.ef-fc-arrow  { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top-width: 7px; border-top-style: solid; }
+.ef-fc-arrow-up { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom-width: 7px; border-bottom-style: solid; }
+
+.ef-fc-label { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ef-fc-pill {
+  font-size: 9px; font-weight: 700; letter-spacing: .06em;
+  border: 1px solid; border-radius: 4px; padding: 2px 7px;
+  white-space: nowrap; text-align: center;
+}
+.ef-fc-pill-inv { opacity: .8; }
+.ef-fc-sub { font-size: 7px; color: var(--c-text-6); text-align: center; }
+
+/* Outflow strip at bottom of each region */
+.ef-outflow {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 6px 8px;
+  background: color-mix(in srgb, var(--c-flow-spending) 5%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--c-flow-spending) 25%, transparent);
+  border-radius: 6px;
+}
+.ef-of-line   { width: 1.5px; height: 10px; }
+.ef-of-label  { font-size: 9px; font-weight: 700; text-align: center; }
+.ef-of-sub    { font-size: 7px; color: var(--c-text-6); text-align: center; }
+
+/* ── Centre separator ─────────────────────────────────────────────── */
+.ef-centre-sep {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; padding: 16px 10px; min-width: 80px;
+  background: rgba(0,0,0,.15);
+  border-left: 1px solid var(--c-border-1);
+  border-right: 1px solid var(--c-border-1);
+}
+.ef-cross-top, .ef-cross-bot {
+  display: flex; align-items: center; gap: 4px; width: 100%;
+}
+.ef-cross-line  { flex: 1; height: 1px; background: var(--c-border-1); opacity: .6; }
+.ef-cross-label { font-size: 7px; color: var(--c-text-6); text-transform: uppercase; letter-spacing: .06em; text-align: center; white-space: nowrap; }
+
+.ef-rpp {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--c-brand) 30%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--c-brand) 6%, transparent);
+}
+.ef-rpp-label  { font-size: 10px; font-weight: 900; color: var(--c-brand); }
+.ef-rpp-sub    { font-size: 8px; color: var(--c-brand); opacity: .7; }
+.ef-rpp-detail { font-size: 7px; color: var(--c-text-6); text-transform: uppercase; letter-spacing: .08em; }
+
+/* ── Meta: key innovation + inflation ────────────────────────────── */
+.ef-meta {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--c-border-1);
+}
+.ef-innovation {
+  padding: 14px 16px;
+  border-right: 1px solid var(--c-border-1);
+  display: flex; flex-direction: column; gap: 5px;
+}
+.ef-innov-header { display: flex; align-items: center; gap: 6px; }
+.ef-innov-star   { font-size: 10px; color: var(--c-brand); letter-spacing: -.03em; }
+.ef-innov-label  { font-size: 9px; color: var(--c-text-5); text-transform: uppercase; letter-spacing: .1em; }
+.ef-innov-title  { font-size: 11px; font-weight: 700; color: var(--c-text-3); line-height: 1.3; }
+.ef-innov-note   { font-size: 9px; color: var(--c-text-6); line-height: 1.4; }
+
+.ef-inflation { padding: 14px 16px; display: flex; flex-direction: column; gap: 5px; }
+.ef-inf-header { font-size: 9px; font-weight: 700; color: var(--c-alert); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 2px; }
+.ef-inf-list   { display: flex; flex-direction: column; gap: 5px; }
+.ef-inf-row    { display: flex; align-items: flex-start; gap: 6px; }
+.ef-inf-arrow  { color: var(--c-alert); font-size: 10px; flex-shrink: 0; margin-top: 1px; }
+.ef-inf-name   { font-size: 9px; font-weight: 700; color: var(--c-text-3); }
+.ef-inf-detail { font-size: 8px; color: var(--c-text-6); }
+
+/* ── Flow legend ──────────────────────────────────────────────────── */
+.ef-legend {
+  display: flex; flex-wrap: wrap; gap: 8px 16px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--c-border-1);
+  background: var(--c-bg-deep);
+}
+.ef-legend-item { display: flex; align-items: center; gap: 5px; }
+.ef-legend-num  { font-size: 11px; font-weight: 900; }
+.ef-legend-name { font-size: 9px; color: var(--c-text-5); text-transform: uppercase; letter-spacing: .06em; }
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.ef-footer {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--c-border-1);
+  background: var(--c-card);
+}
+.ef-footer-formula {
+  font-size: 10px; letter-spacing: .04em; color: var(--c-text-5);
+  flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ef-footer-brand {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: var(--c-text-5);
+}
+
+/* ── Blip ─────────────────────────────────────────────────────────── */
+.ef-blip {
+  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--bc) 20%, transparent);
+  border: 2px solid color-mix(in srgb, var(--bc) 50%, transparent);
+}
+
+/* ── Mobile ──────────────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .ef-regions       { grid-template-columns: 1fr; }
+  .ef-centre-sep    { flex-direction: row; min-width: unset; padding: 10px 14px; border: none; border-top: 1px solid var(--c-border-1); border-bottom: 1px solid var(--c-border-1); }
+  .ef-vc            { border-right: none; border-bottom: 1px solid var(--c-border-1); }
+  .ef-meta          { grid-template-columns: 1fr; }
+  .ef-innovation    { border-right: none; border-bottom: 1px solid var(--c-border-1); }
+  .ef-inj-inner     { gap: 20px; }
+  .ef-inj-to-region { grid-template-columns: 1fr; gap: 6px; }
+  .ef-itl-right     { display: none; }
+  .ef-cross-top, .ef-cross-bot { display: none; }
+}
+</style>
