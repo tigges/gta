@@ -85,9 +85,8 @@ const KEY_INNOVATION = {
     </div>
     <!-- Sovereign → Injection arrow -->
     <div class="ef-sov-arrow">
-      <div class="ef-vline"></div>
-      <div class="ef-arrow-label">Shark Cards ↓</div>
-      <div class="ef-vline"></div>
+      <span class="ef-arrow-chr" style="color:var(--c-flow-injection)">↓</span>
+      <span class="ef-arrow-label">Shark Cards</span>
     </div>
   </div>
 
@@ -117,9 +116,8 @@ const KEY_INNOVATION = {
   <!-- Injection → regions connector -->
   <div class="ef-inj-to-region">
     <div class="ef-itl-left">
-      <div class="ef-itl-line"></div>
-      <div class="ef-arrow-dn"></div>
-      <span class="ef-itl-label" style="color:var(--c-flow-injection)">→ VC Players</span>
+      <span class="ef-arrow-chr" style="color:var(--c-flow-injection)">↓</span>
+      <span class="ef-itl-label" style="color:var(--c-flow-injection)">→ VC Protagonist</span>
     </div>
     <div class="ef-itl-centre">
       <div class="ef-gta-hub">
@@ -130,7 +128,7 @@ const KEY_INNOVATION = {
     </div>
     <div class="ef-itl-right">
       <span class="ef-itl-label" style="color:var(--c-live)">③ Cross-territory →</span>
-      <div class="ef-itl-line"></div>
+      <span class="ef-arrow-chr" style="color:var(--c-live)">→</span>
     </div>
   </div>
 
@@ -192,7 +190,7 @@ const KEY_INNOVATION = {
 
       <!-- VC spending outflow -->
       <div class="ef-outflow">
-        <div class="ef-of-line" style="background:color-mix(in srgb,var(--c-flow-spending) 50%,transparent)"></div>
+        <span class="ef-arrow-chr" style="color:var(--c-flow-spending)">↓</span>
         <span class="ef-of-label" style="color:var(--c-flow-spending)">C · Consumption outflow</span>
         <span class="ef-of-sub">clothing · ammo · fuel · non-returning spend</span>
       </div>
@@ -277,7 +275,7 @@ const KEY_INNOVATION = {
 
       <!-- Leonida spending outflow -->
       <div class="ef-outflow">
-        <div class="ef-of-line" style="background:color-mix(in srgb,var(--c-flow-spending) 50%,transparent)"></div>
+        <span class="ef-arrow-chr" style="color:var(--c-flow-spending)">↓</span>
         <span class="ef-of-label" style="color:var(--c-flow-spending)">C · Consumption outflow</span>
         <span class="ef-of-sub">lower price tier · rural goods · fuel</span>
       </div>
@@ -398,13 +396,12 @@ const KEY_INNOVATION = {
 
 /* Sovereign → Injection connector */
 .ef-sov-arrow {
-  display: flex; flex-direction: column; align-items: center; gap: 0; margin-top: 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 12px;
 }
-.ef-vline { width: 1px; height: 8px; background: color-mix(in srgb, var(--c-flow-injection) 50%, transparent); }
 .ef-arrow-label {
-  font-size: 9px; color: var(--c-flow-injection); letter-spacing: .06em;
+  font-size: 11px; font-weight: 700; color: var(--c-flow-injection); letter-spacing: .06em;
   background: var(--c-card);
-  padding: 1px 8px; border-radius: 3px;
+  padding: 2px 10px; border-radius: 3px;
 }
 
 /* ── Injection ────────────────────────────────────────────────────── */
@@ -429,11 +426,12 @@ const KEY_INNOVATION = {
   border-bottom: 1px solid var(--c-border-1);
   gap: 12px;
 }
-.ef-itl-left  { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.ef-itl-right { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.ef-itl-line  { width: 1.5px; height: 16px; background: currentColor; opacity: .4; }
-.ef-arrow-dn  { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid color-mix(in srgb, var(--c-flow-injection) 70%, transparent); }
-.ef-itl-label { font-size: 9px; letter-spacing: .06em; font-weight: 600; }
+.ef-itl-left  { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ef-itl-right { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ef-itl-label { font-size: 11px; letter-spacing: .06em; font-weight: 700; }
+
+/* Shared arrow character — used wherever a directional indicator is needed */
+.ef-arrow-chr { font-size: 1.3rem; font-weight: 900; line-height: 1; }
 
 /* GTA$ hub in centre connector */
 .ef-gta-hub {
@@ -510,8 +508,7 @@ const KEY_INNOVATION = {
   border: 1px dashed color-mix(in srgb, var(--c-flow-spending) 25%, transparent);
   border-radius: 6px;
 }
-.ef-of-line   { width: 1.5px; height: 10px; }
-.ef-of-label  { font-size: 9px; font-weight: 700; text-align: center; }
+.ef-of-label  { font-size: 11px; font-weight: 700; text-align: center; }
 .ef-of-sub    { font-size: 9px; color: var(--c-text-5); text-align: center; }
 
 /* ── Centre separator ─────────────────────────────────────────────── */
