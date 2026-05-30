@@ -18,10 +18,20 @@ interface Env {
   POLL_VOTES: KVNamespace;
 }
 
+export const onRequestOptions: PagesFunction = async () =>
+  new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin":  "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+    },
+  });
+
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
   const headers = {
     "Content-Type": "application/json",
     "Cache-Control": "no-store",
+    "Access-Control-Allow-Origin": "*",
   };
 
   if (!env.POLL_VOTES) {
