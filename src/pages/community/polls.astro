@@ -1,0 +1,86 @@
+---
+import Base from "../../layouts/Base.astro";
+import VoteCard from "../../components/VoteCard.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import GamePill from "../../components/GamePill.astro";
+import type { PredictionsData } from "../../types/gta";
+import predRaw from "../../../data/gta-6/predictions.json";
+
+const predData = predRaw as unknown as PredictionsData;
+
+// All predictions with a poll_question, grouped by confidence tier
+const pollPreds = predData.predictions.filter((p: any) => p.poll_question);
+
+const confirmed = pollPreds.filter((p: any) => p.confidence_tier === "confirmed");
+const reported  = pollPreds.filter((p: any) => p.confidence_tier === "reported");
+const predicted = pollPreds.filter((p: any) => p.confidence_tier === "predicted");
+---
+
+<Base
+  title="Community Polls — GTA VI.AI"
+  description={`${pollPreds.length} community polls on GTA VI predictions. Vote on launch price, wanted system, hunting, regional economy, and more. See what the community thinks.`}
+  titleContext="gta-vi"
+  crossLinksContext="polls"
+  ogPage="gta-vi"
+>
+  <!-- Hero -->
+  <section class="border-b border-border-dim" style="background:var(--c-bg-deep)">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <div class="flex items-center gap-2 mb-3">
+        <GamePill game="gta-vi" size="xs" />
+        <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Community</span>
+      </div>
+      <h1 class="text-3xl font-bold text-white mb-2">Community Polls</h1>
+      <p class="text-sm text-zinc-400 max-w-xl leading-relaxed">
+        Vote on GTA VI predictions and see what the community thinks. Each poll is tied to a
+        confidence-scored prediction — confirmed, reported, or model-derived.
+      </p>
+      <div class="flex items-center gap-4 mt-4 text-[10px] font-mono text-zinc-500 flex-wrap">
+        <span><span class="text-brand font-bold">{pollPreds.length}</span> active polls</span>
+        <span>·</span>
+        <span><span class="text-gta-gold font-bold">{confirmed.length}</span> confirmed topics</span>
+        <span>·</span>
+        <span><span class="text-zinc-300 font-bold">{reported.length}</span> reported topics</span>
+        <span>·</span>
+        <span><span class="text-zinc-500 font-bold">{predicted.length}</span> predicted topics</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+
+    {reported.length > 0 && (
+      <section>
+        <SectionHeader label="// Reported Mechanics · Community Verdict" dotColor="var(--c-live)" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {reported.map((p: any) => (
+            <VoteCard predictionId={p.id} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {predicted.length > 0 && (
+      <section>
+        <SectionHeader label="// Model Predictions · What do you think?" dotColor="var(--c-brand)" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {predicted.map((p: any) => (
+            <VoteCard predictionId={p.id} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {confirmed.length > 0 && (
+      <section>
+        <SectionHeader label="// Confirmed Facts · Gut-check" dotColor="var(--c-live)" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {confirmed.map((p: any) => (
+            <VoteCard predictionId={p.id} />
+          ))}
+        </div>
+      </section>
+    )}
+
+  </div>
+</Base>
