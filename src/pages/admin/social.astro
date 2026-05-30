@@ -29,10 +29,50 @@ const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
         <div class="flex-1 h-px bg-border-dim"></div>
       </div>
 
+      <!-- Per-poll social copy -->
+      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+        <div class="px-4 py-3 border-b border-border-dim flex items-center justify-between">
+          <span class="text-[11px] font-semibold text-zinc-300">Ready-to-Post Copy — {polls.length} polls</span>
+          <span class="text-[10px] font-mono text-zinc-600">Click any field to copy</span>
+        </div>
+        <div class="divide-y divide-border-dim/40 max-h-[500px] overflow-y-auto">
+          {polls.map((p: any) => {
+            const pollUrl = `https://gtavi.ai/community/polls/${p.id}`;
+            const xText   = `${p.poll_question}\n\nVote on GTAVI.AI 👇\n${pollUrl}`;
+            const rdTitle = `${p.poll_question} — Community Poll [GTAVI.AI]`;
+            const rdBody  = `GTAVI.AI model prediction (${p.confidence}% confidence, ${p.confidence_tier}):\n\n${p.basis?.slice(0,200)}…\n\nVote: ${pollUrl}`;
+            return (
+              <div class="px-4 py-3">
+                <div class="text-[11px] font-semibold text-zinc-300 mb-2 truncate">{p.poll_question}</div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <div>
+                    <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">𝕏 Tweet</div>
+                    <button class="copy-text-btn w-full text-left text-[10px] font-mono text-zinc-500 hover:text-zinc-200 rounded px-2 py-1.5 transition-colors leading-relaxed break-words" style="background:var(--c-bg-deep)" data-text={xText}>
+                      {p.poll_question}<br/><span class="text-zinc-700">↗ {p.id}</span>
+                    </button>
+                  </div>
+                  <div>
+                    <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Reddit title</div>
+                    <button class="copy-text-btn w-full text-left text-[10px] font-mono text-zinc-500 hover:text-zinc-200 rounded px-2 py-1.5 transition-colors leading-relaxed" style="background:var(--c-bg-deep)" data-text={rdTitle}>
+                      {rdTitle.slice(0, 80)}{rdTitle.length > 80 ? '…' : ''}
+                    </button>
+                  </div>
+                  <div>
+                    <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Poll URL</div>
+                    <button class="copy-text-btn w-full text-left text-[10px] font-mono text-gta-vi-coral/60 hover:text-gta-vi-coral rounded px-2 py-1.5 transition-colors" style="background:var(--c-bg-deep)" data-text={pollUrl}>
+                      /community/polls/{p.id}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
       <p class="text-[13px] text-zinc-400 leading-relaxed mb-4">
         Every poll has a standalone embed URL at <code class="text-gta-gold/80 bg-zinc-800 px-1.5 py-0.5 rounded text-[11px]">/community/polls/embed/[pollId]</code>.
         These are iframe-ready, token-styled, and link back to <code class="text-gta-gold/80 bg-zinc-800 px-1.5 py-0.5 rounded text-[11px]">gtavi.ai</code>.
-        Use them to drop live interactive polls into Reddit, GTAForums, Beehiiv newsletters, and Discord announcements.
+        Each poll also has a shareable landing page at <code class="text-gta-gold/80 bg-zinc-800 px-1.5 py-0.5 rounded text-[11px]">/community/polls/[pollId]</code> with OG image, full context, and share CTAs.
       </p>
 
       <!-- Embed snippet -->
@@ -217,33 +257,33 @@ const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
         </div>
       </div>
 
-      <!-- Two workflows -->
+      <!-- Two workflows — now with repo file references -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
         {[
           {
             title: "Main Weekly Pipeline",
-            file: "n8n-gtavi-main-pipeline.json",
+            file: "n8n/main-pipeline.json",
             trigger: "Monday 08:00 UTC (cron)",
             color: "var(--c-brand)",
             steps: [
-              "Fetch 16 top predictions from gtavi.ai/gta-vi/intel",
-              "Claude generates 3 post variants per prediction (X / Reddit / long-form)",
-              "Schedules posts via Publer across X, Instagram, Reddit",
-              "Publishes Beehiiv newsletter with top 5 + poll embeds",
-              "Posts weekly digest to Discord via webhook",
+              "Fetches featured poll from GTAVI.AI predictions",
+              "Claude generates X / Reddit / Discord copy variants",
+              "Publer schedules X, Instagram, Reddit posts simultaneously",
+              "Beehiiv creates newsletter draft (review before sending)",
+              "Discord webhook posts weekly digest embed",
             ],
           },
           {
             title: "Pre-order Launch Blast",
-            file: "n8n-gtavi-preorder-blast.json",
-            trigger: "Manual trigger — activate when GTA VI pre-orders go live",
+            file: "n8n/preorder-blast.json",
+            trigger: "Manual trigger — activate when pre-orders go live (Nov 2026)",
             color: "var(--c-gta-vi-coral)",
             steps: [
               "One-shot blast to all channels simultaneously",
-              "Replace REPLACE_GTA6_AMAZON_US and REPLACE_GTA6_AMAZON_UK with affiliate links",
-              "CDKeys and Eneba affiliate links preferred (5–8% vs Amazon 1–3%)",
-              "Discord, Beehiiv, X, Instagram, Reddit in one coordinated push",
-              "Activate November 2026 when pre-orders go live",
+              "Publer posts X + Instagram + Reddit in one call",
+              "Beehiiv sends launch email immediately (status: confirmed)",
+              "Discord posts rich embed with best-price affiliate links",
+              "Replace all REPLACE_* placeholders before activating",
             ],
           },
         ].map(wf => (
@@ -253,7 +293,10 @@ const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
               <span class="text-[12px] font-semibold text-zinc-200">{wf.title}</span>
             </div>
             <p class="text-[10px] font-mono text-zinc-600 mb-3">{wf.trigger}</p>
-            <code class="block text-[10px] font-mono text-zinc-600 mb-3 border border-border-dim rounded px-2 py-1" style="background:var(--c-bg-deep)">{wf.file}</code>
+            <div class="flex items-center gap-2 mb-3">
+              <code class="flex-1 text-[10px] font-mono text-zinc-500 border border-border-dim rounded px-2 py-1 truncate" style="background:var(--c-bg-deep)">{wf.file}</code>
+              <span class="text-[10px] font-mono text-zinc-600">in repo</span>
+            </div>
             <ul class="space-y-1.5">
               {wf.steps.map((s: string) => (
                 <li class="flex gap-2 text-[11px] text-zinc-500 leading-relaxed">
@@ -264,6 +307,27 @@ const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
             </ul>
           </div>
         ))}
+      </div>
+
+      <!-- Import instructions -->
+      <div class="rounded-xl border border-gta-teal/20 p-4 mb-5" style="background:color-mix(in srgb,var(--c-live) 5%,var(--c-card))">
+        <div class="text-[11px] font-semibold text-gta-teal/80 mb-3">Import to n8n Cloud — Step by Step</div>
+        <ol class="space-y-1.5">
+          {[
+            "Go to tigges.app.n8n.cloud → Workflows → Add Workflow → Import from file",
+            "Import n8n/main-pipeline.json first, then n8n/preorder-blast.json",
+            "In each workflow, find every node marked REPLACE_* and fill in your credentials",
+            "Add credentials: Anthropic API key, Publer token, Beehiiv API key (n8n Credentials tab)",
+            "Test main-pipeline manually: click Execute Workflow, check each node's output",
+            "Activate the main-pipeline cron when satisfied with test output",
+            "Keep preorder-blast inactive — activate only when GTA VI pre-orders go live",
+          ].map((step, i) => (
+            <li class="flex gap-3 text-[11px] text-zinc-500 leading-relaxed">
+              <span class="text-[10px] font-mono text-gta-teal/60 shrink-0 w-4 mt-0.5">{i + 1}.</span>
+              <span>{step}</span>
+            </li>
+          ))}
+        </ol>
       </div>
 
       <!-- Poll integration in n8n -->
@@ -500,3 +564,18 @@ const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
 
   </div>
 </Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>(".copy-text-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const text = btn.dataset.text ?? "";
+      try {
+        await navigator.clipboard.writeText(text);
+        const orig = btn.innerHTML;
+        btn.style.color = "var(--c-live)";
+        btn.innerHTML = "<span>✓ Copied</span>";
+        setTimeout(() => { btn.innerHTML = orig; btn.style.color = ""; }, 1800);
+      } catch {}
+    });
+  });
+</script>

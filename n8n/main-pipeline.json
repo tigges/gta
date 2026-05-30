@@ -1,0 +1,271 @@
+{
+  "name": "GTAVI.AI — Weekly Content Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "cron-trigger",
+      "name": "Every Monday 08:00 UTC",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://gtavi.ai/api/predictions-feed",
+        "options": {}
+      },
+      "id": "fetch-predictions",
+      "name": "Fetch Top Predictions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300],
+      "notes": "Fetches current predictions from GTAVI.AI. If /api/predictions-feed doesn't exist, replace with a Code node that hard-codes the week's featured prediction IDs."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Select this week's featured prediction\n// Rotate through the top predictions by week number\nconst items = $input.all();\nconst preds = items[0].json.predictions ?? [];\nconst weekNum = Math.floor(Date.now() / (7 * 24 * 3600 * 1000));\nconst featured = preds[weekNum % preds.length] ?? preds[0];\n\nreturn [{\n  json: {\n    pollId: featured.id,\n    question: featured.poll_question,\n    options: featured.poll_options,\n    basis: featured.basis,\n    confidence: featured.confidence,\n    tier: featured.confidence_tier,\n    pollUrl: `https://gtavi.ai/community/polls/${featured.id}`,\n    embedUrl: `https://gtavi.ai/community/polls/embed/${featured.id}`,\n    ogImageUrl: `https://gtavi.ai/og/poll/${featured.id}.png`,\n  }\n}];"
+      },
+      "id": "select-featured",
+      "name": "Select Featured Poll",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "model": "claude-opus-4-5",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are the GTAVI.AI content strategist. Write short, punchy social posts about GTA VI economy predictions. Tone: analytical but hype. No emojis unless they serve the point. No hashtag spam — max 2 hashtags. Always include the poll URL."
+            },
+            {
+              "role": "user",
+              "content": "Write 3 post variants for this poll:\n\nQuestion: {{ $json.question }}\nOptions: {{ $json.options.join(' / ') }}\nBasis: {{ $json.basis.slice(0, 300) }}\nConfidence: {{ $json.confidence }}% ({{ $json.tier }})\nPoll URL: {{ $json.pollUrl }}\n\nVariant 1: X/Twitter (max 240 chars, punchy, question format, ends with URL)\nVariant 2: Reddit title + 3-line body (analytical tone, cite the confidence score, invite debate)\nVariant 3: Discord announcement (1 paragraph, bold the question, include embed URL)\n\nReturn as JSON: { x: string, reddit: { title: string, body: string }, discord: string }"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "claude-generate",
+      "name": "Claude — Generate Post Variants",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [900, 300],
+      "credentials": {
+        "anthropicApi": {
+          "id": "REPLACE_WITH_ANTHROPIC_CREDENTIAL_ID",
+          "name": "Anthropic — GTAVI.AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Claude's JSON response\nconst raw = $input.first().json.text ?? $input.first().json.content ?? '';\nlet parsed;\ntry {\n  const jsonMatch = raw.match(/\\{[\\s\\S]+\\}/);\n  parsed = JSON.parse(jsonMatch ? jsonMatch[0] : raw);\n} catch {\n  parsed = { x: raw.slice(0, 240), reddit: { title: 'GTA VI Poll', body: raw.slice(0, 300) }, discord: raw.slice(0, 500) };\n}\nconst featured = $('Select Featured Poll').first().json;\nreturn [{ json: { ...featured, copy: parsed } }];"
+      },
+      "id": "parse-copy",
+      "name": "Parse Copy",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.publer.io/v1/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer REPLACE_PUBLER_TOKEN" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "post",
+              "value": "={{ JSON.stringify({ profile_ids: ['REPLACE_PROFILE_ID_X'], text: $json.copy.x, media_urls: [$json.ogImageUrl], scheduled_at: new Date(Date.now() + 3600000).toISOString() }) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "publer-x",
+      "name": "Publer — Schedule X Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 180],
+      "notes": "Replace REPLACE_PUBLER_TOKEN with your Publer API token. Replace REPLACE_PROFILE_ID_X with your X profile ID from Publer dashboard."
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.publer.io/v1/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer REPLACE_PUBLER_TOKEN" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "post",
+              "value": "={{ JSON.stringify({ profile_ids: ['REPLACE_PROFILE_ID_IG'], text: $json.copy.x, media_urls: [$json.ogImageUrl], scheduled_at: new Date(Date.now() + 5400000).toISOString() }) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "publer-ig",
+      "name": "Publer — Schedule Instagram Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 300],
+      "notes": "Replace REPLACE_PROFILE_ID_IG with your Instagram profile ID from Publer dashboard."
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.publer.io/v1/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer REPLACE_PUBLER_TOKEN" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "post",
+              "value": "={{ JSON.stringify({ profile_ids: ['REPLACE_PROFILE_ID_REDDIT'], text: $json.copy.reddit.body, title: $json.copy.reddit.title, url: $json.pollUrl, scheduled_at: new Date(Date.now() + 7200000).toISOString() }) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "publer-reddit",
+      "name": "Publer — Schedule Reddit Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 420],
+      "notes": "Replace REPLACE_PROFILE_ID_REDDIT with your Reddit profile ID from Publer dashboard."
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.beehiiv.com/v2/publications/REPLACE_BEEHIIV_PUBLICATION_ID/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer REPLACE_BEEHIIV_API_KEY" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "post",
+              "value": "={{ JSON.stringify({ subject: `GTA VI Poll: ${$('Select Featured Poll').first().json.question}`, content: `<h2>${$json.copy.reddit.title}</h2><p>${$json.copy.reddit.body}</p><p><strong>Vote now:</strong> <a href=\"${$json.pollUrl}\">${$json.pollUrl}</a></p><iframe src=\"${$json.embedUrl}\" width=\"420\" height=\"380\" style=\"border:none;border-radius:12px\"></iframe><p><a href=\"https://gtavi.ai/gta-vi/intel\">See all predictions →</a></p>`, status: 'draft', audience: 'free' }) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "beehiiv-newsletter",
+      "name": "Beehiiv — Create Newsletter Draft",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 300],
+      "notes": "Creates as 'draft' — review in Beehiiv before sending. Change status to 'confirmed' to auto-send. Replace REPLACE_BEEHIIV_PUBLICATION_ID and REPLACE_BEEHIIV_API_KEY."
+    },
+    {
+      "parameters": {
+        "url": "REPLACE_DISCORD_WEBHOOK_URL",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $json.copy.discord }}"
+            },
+            {
+              "name": "embeds",
+              "value": "={{ JSON.stringify([{ title: $json.question, url: $json.pollUrl, color: 16096777, image: { url: $json.ogImageUrl }, fields: $json.options.map((opt, i) => ({ name: `Option ${i+1}`, value: opt, inline: true })), footer: { text: `${$json.confidence}% confidence · ${$json.tier} · GTAVI.AI` } }]) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "discord-webhook",
+      "name": "Discord — Post Digest",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 480],
+      "notes": "Replace REPLACE_DISCORD_WEBHOOK_URL with your Discord webhook URL from Settings → Integrations → Webhooks."
+    }
+  ],
+  "connections": {
+    "Every Monday 08:00 UTC": {
+      "main": [[{ "node": "Fetch Top Predictions", "type": "main", "index": 0 }]]
+    },
+    "Fetch Top Predictions": {
+      "main": [[{ "node": "Select Featured Poll", "type": "main", "index": 0 }]]
+    },
+    "Select Featured Poll": {
+      "main": [[{ "node": "Claude — Generate Post Variants", "type": "main", "index": 0 }]]
+    },
+    "Claude — Generate Post Variants": {
+      "main": [[{ "node": "Parse Copy", "type": "main", "index": 0 }]]
+    },
+    "Parse Copy": {
+      "main": [[
+        { "node": "Publer — Schedule X Post", "type": "main", "index": 0 },
+        { "node": "Publer — Schedule Instagram Post", "type": "main", "index": 0 },
+        { "node": "Publer — Schedule Reddit Post", "type": "main", "index": 0 },
+        { "node": "Beehiiv — Create Newsletter Draft", "type": "main", "index": 0 },
+        { "node": "Discord — Post Digest", "type": "main", "index": 0 }
+      ]]
+    },
+    "Publer — Schedule X Post": {
+      "main": [[{ "node": "Beehiiv — Create Newsletter Draft", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "tags": ["gtavi", "social", "automation"],
+  "meta": {
+    "description": "Weekly GTAVI.AI social media pipeline. Fetches featured poll, generates copy via Claude, schedules posts via Publer to X/Instagram/Reddit, creates Beehiiv newsletter draft, posts Discord digest. Runs Monday 08:00 UTC.",
+    "placeholders": {
+      "REPLACE_WITH_ANTHROPIC_CREDENTIAL_ID": "Create in n8n: Credentials → New → Anthropic",
+      "REPLACE_PUBLER_TOKEN": "Publer Dashboard → Settings → API → Copy token",
+      "REPLACE_PROFILE_ID_X": "Publer Dashboard → Profiles → X → Copy profile ID",
+      "REPLACE_PROFILE_ID_IG": "Publer Dashboard → Profiles → Instagram → Copy profile ID",
+      "REPLACE_PROFILE_ID_REDDIT": "Publer Dashboard → Profiles → Reddit → Copy profile ID",
+      "REPLACE_BEEHIIV_PUBLICATION_ID": "Beehiiv Dashboard → Settings → Publication ID",
+      "REPLACE_BEEHIIV_API_KEY": "Beehiiv Dashboard → Settings → API Keys → Generate",
+      "REPLACE_DISCORD_WEBHOOK_URL": "Discord → Server Settings → Integrations → Webhooks → Copy URL"
+    }
+  }
+}
