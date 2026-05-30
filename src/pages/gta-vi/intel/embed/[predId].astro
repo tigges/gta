@@ -248,7 +248,8 @@ const sourceColor =
       display: flex; align-items: center; justify-content: space-between;
       background: var(--c-card);
     }
-    .pc-footer-label { font-size: 9px; font-family: var(--font-mono); color: var(--c-text-4); text-transform: uppercase; letter-spacing: .12em; }
+    .pc-footer-label { font-size: 9px; font-family: var(--font-mono); color: var(--c-text-4); text-transform: uppercase; letter-spacing: .12em; transition: color .15s; }
+    .pc-footer-label:hover { color: #f59e0b; }
     .pc-full-link {
       font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
       color: #f59e0b;
@@ -358,7 +359,7 @@ const sourceColor =
 
   <!-- Footer -->
   <div class="pc-footer">
-    <span class="pc-footer-label">GTAVI.AI</span>
+    <a href="https://gtavi.ai" target="_blank" rel="noopener noreferrer" class="pc-footer-label" style="text-decoration:none">GTAVI.AI</a>
     <a href={fullUrl} target="_blank" rel="noopener noreferrer" class="pc-full-link">
       Full analysis →
     </a>

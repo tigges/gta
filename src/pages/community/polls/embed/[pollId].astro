@@ -288,7 +288,9 @@ const shareText  = `${question} — Vote on GTAVI.AI`;
       color: var(--c-text-5);
       text-transform: uppercase;
       letter-spacing: .12em;
+      transition: color .15s;
     }
+    .ec-footer-label:hover { color: #f59e0b; }
 
     .ec-full-link {
       font-size: 9px;
@@ -362,7 +364,7 @@ const shareText  = `${question} — Vote on GTAVI.AI`;
 
   <!-- Footer -->
   <div class="ec-footer">
-    <span class="ec-footer-label">GTAVI.AI · Community</span>
+    <a href="https://gtavi.ai" target="_blank" rel="noopener noreferrer" class="ec-footer-label" style="text-decoration:none">GTAVI.AI · Community</a>
     <a
       href={pollUrl}
       target="_blank"
