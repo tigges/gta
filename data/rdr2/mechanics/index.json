@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "last_updated": "2026-05-30T00:00:00Z",
+  "last_updated": "2026-05-30T10:36:07+00:00",
   "note": "RDR2 mechanics reported to return in GTA VI. Each entry has an economic_impact field describing the GTA VI economy model implications. Source: community leak reports, GTAForums, Reddit r/GTA6.",
   "mechanics": [
     {
@@ -10,7 +10,37 @@
       "gta_vi_status": "reported",
       "source": "Community reports — multiple GTAForums/Reddit threads",
       "economic_impact": "MODERATE — If tied to a reputation system, repeated greeting/antagonizing affects NPC pricing and mission availability. Reputation = new economic variable.",
-      "gta_vi_prediction_id": "pred-rdr2-honour-pricing"
+      "gta_vi_prediction_id": "pred-rdr2-honour-pricing",
+      "wiki_page": "https://reddead.fandom.com/wiki/Honor_(Red_Dead_Redemption_2)",
+      "wiki_summary": "The Honor system in Red Dead Redemption 2 measures Arthur Morgan's moral standing, ranging from Dishonorable (−8) to Honorable (+8). Honour affects NPC dialogue, shop prices (±25%), mission availability, and the game's ending. Greet/antagonize interactions are the primary real-time honour adjustment mechanic.",
+      "honour_tiers": [
+        {
+          "tier": "Dishonorable",
+          "score": -8,
+          "price_effect": "Fence −25%; stores +10%"
+        },
+        {
+          "tier": "Low",
+          "score": -4,
+          "price_effect": "Fence −10%; stores neutral"
+        },
+        {
+          "tier": "Neutral",
+          "score": 0,
+          "price_effect": "No modifier"
+        },
+        {
+          "tier": "Honorable",
+          "score": 4,
+          "price_effect": "Stores −10%"
+        },
+        {
+          "tier": "Most Honorable",
+          "score": 8,
+          "price_effect": "Stores −25%"
+        }
+      ],
+      "wiki_summary_source": "seed"
     },
     {
       "id": "limited-weapon-inventory",
@@ -19,7 +49,16 @@
       "gta_vi_status": "reported",
       "source": "Community reports",
       "economic_impact": "HIGH — Creates a new C (Consumption) category: weapon storage upgrades for vehicles. Limits active loadout, increases tactical spending per mission. Affects net GTA$/hr calculation.",
-      "gta_vi_prediction_id": "pred-rdr2-weapon-carry"
+      "gta_vi_prediction_id": "pred-rdr2-weapon-carry",
+      "wiki_page": "https://reddead.fandom.com/wiki/Weapons_in_Red_Dead_Redemption_2",
+      "wiki_summary": "RDR2 limits Arthur to carrying 2 long guns (rifles/shotguns) and 4 handguns simultaneously. Additional weapons are stored on the horse and accessed from the horse's side. This creates a supply/demand tension for tactical loadout decisions that GTA VI is reportedly inheriting.",
+      "carry_limits": {
+        "handguns": 4,
+        "long_guns": 2,
+        "horse_storage": "unlimited (all owned weapons)",
+        "thrown_items": "1 type equipped, stack in satchel"
+      },
+      "wiki_summary_source": "seed"
     },
     {
       "id": "advanced-looting",
@@ -28,7 +67,23 @@
       "gta_vi_status": "reported",
       "source": "Community reports",
       "economic_impact": "MODERATE — Increases time-cost per loot interaction. Higher payout-per-loot needed to compensate. Affects ambient income floor and mission preparation speed.",
-      "gta_vi_prediction_id": "pred-rdr2-looting"
+      "gta_vi_prediction_id": "pred-rdr2-looting",
+      "wiki_page": "https://reddead.fandom.com/wiki/Looting_(Red_Dead_Redemption_2)",
+      "wiki_summary": "Manual looting in RDR2 requires the player to hold a button and watch an animation to search bodies, open drawers, and check containers. Each loot action takes 2–5 real seconds. There is no instant-loot mechanic. This time-cost is a key design signal for GTA VI's expected loot system.",
+      "loot_sources": [
+        "bodies",
+        "drawers",
+        "safes",
+        "gloveboxes",
+        "wardrobes",
+        "lockboxes"
+      ],
+      "avg_loot_time_seconds": 3,
+      "typical_loot_rdr$": {
+        "low": 0.1,
+        "high": 25.0
+      },
+      "wiki_summary_source": "seed"
     },
     {
       "id": "dynamic-wanted-system",
@@ -37,7 +92,44 @@
       "gta_vi_status": "reported",
       "source": "Multiple community sources + trailer analysis (witness NPC visible in T2)",
       "economic_impact": "HIGH — 6th star = military response = mission risk ceiling increases. Affects heist insurance modelling and payout premiums for dangerous missions. Bounty system = new ongoing C cost.",
-      "gta_vi_prediction_id": "pred-rdr2-wanted-stars"
+      "gta_vi_prediction_id": "pred-rdr2-wanted-stars",
+      "wiki_page": "https://reddead.fandom.com/wiki/Wanted_Level_(Red_Dead_Redemption_2)",
+      "wiki_summary": "RDR2's wanted system is witness-driven rather than detection-based. NPCs who witness a crime flee and alert law enforcement. Law arrives only after a witness reports. Wearing a mask prevents identification (bounty accrual) if no witness survives. Six wanted stars reintroduce military-grade army response.",
+      "star_thresholds": [
+        {
+          "stars": 1,
+          "response": "Deputy",
+          "note": "Single witness report"
+        },
+        {
+          "stars": 2,
+          "response": "Sheriff posse",
+          "note": "Active pursuit"
+        },
+        {
+          "stars": 3,
+          "response": "Bounty hunters",
+          "note": "Cross-county chase"
+        },
+        {
+          "stars": 4,
+          "response": "Pinkerton agents",
+          "note": "Interstate pursuit"
+        },
+        {
+          "stars": 5,
+          "response": "Army",
+          "note": "Military response"
+        },
+        {
+          "stars": 6,
+          "response": "Full military",
+          "note": "Rumoured GTA VI return; T2 trailer hint"
+        }
+      ],
+      "mask_mechanic": "Wearing mask prevents bounty accumulation if no witness survives",
+      "bounty_persistence": "Cross-session; cleared at sheriff's office (fee) or post office",
+      "wiki_summary_source": "seed"
     },
     {
       "id": "relationship-honour-system",
@@ -55,7 +147,17 @@
       "gta_vi_status": "reported",
       "source": "Community reports + Grassrivers region trailer evidence",
       "economic_impact": "HIGH — New Y (Income) stream: ambient passive income from Grassrivers/rural regions. Low GTA$/hr but zero setup cost. Strong regional economy signal for Leonida vs Vice City income divergence.",
-      "gta_vi_prediction_id": "pred-rdr2-hunting"
+      "gta_vi_prediction_id": "pred-rdr2-hunting",
+      "wiki_page": "https://reddead.fandom.com/wiki/Hunting_(Red_Dead_Redemption_2)",
+      "wiki_summary": "Hunting in RDR2 requires tracking animals using Eagle Eye, studying them, and using the correct weapon/ammo to achieve a perfect pelt. Disturbing an animal (wrong ammo, wrong approach) degrades pelt quality. Perfect pelts unlock exclusive Trapper clothing. The system is the most sophisticated hunting mechanic in any GTA-adjacent title.",
+      "quality_factors": [
+        "weapon calibre",
+        "ammo type",
+        "hit location",
+        "animal study"
+      ],
+      "trapper_unlock": "Unique clothing sets (not available at standard shops)",
+      "wiki_summary_source": "seed"
     },
     {
       "id": "threat-detection",
@@ -66,5 +168,6 @@
       "economic_impact": "LOW — Primarily gameplay. May affect mission prep efficiency (faster loot identification = slightly higher ambient income rate).",
       "gta_vi_prediction_id": null
     }
-  ]
+  ],
+  "enriched_count": 5
 }

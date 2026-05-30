@@ -1,21 +1,156 @@
 {
-  "schema_version": "1.0",
-  "last_updated": "2026-05-30T00:00:00Z",
+  "schema_version": "1.1",
   "note": "RDR2 hunting is the primary passive income source. Perfect pelts sell to the Trapper for crafting materials. Carcasses sell to the Butcher for RDR$. The income rate is low vs active missions but zero-risk and always available. GTA VI hunting system is reported to be modelled on this.",
   "income_model": "passive-ambient",
   "gta_vi_analogue": "data/gta-6/economy/income-sources.json — hunting category",
-  "pelt_quality_tiers": ["poor", "good", "perfect"],
-  "sample_payouts_rdr$": [
-    { "animal": "White-tailed Deer (perfect pelt)", "payout": 4.00, "sell_to": "Trapper or Butcher" },
-    { "animal": "Bison (perfect pelt)", "payout": 7.50, "sell_to": "Trapper" },
-    { "animal": "Grizzly Bear (perfect pelt)", "payout": 7.50, "sell_to": "Trapper" },
-    { "animal": "Small game (rabbit, etc.)", "payout": 0.25, "sell_to": "Butcher" }
+  "pelt_quality_tiers": [
+    "poor",
+    "good",
+    "perfect"
+  ],
+  "animals": [
+    {
+      "animal": "White-tailed Deer",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 4.0,
+      "sell_to": "Trapper / Butcher",
+      "habitat": "Heartlands / Roanoke"
+    },
+    {
+      "animal": "Bison",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 7.5,
+      "sell_to": "Trapper",
+      "habitat": "Great Plains"
+    },
+    {
+      "animal": "Grizzly Bear",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 7.5,
+      "sell_to": "Trapper",
+      "habitat": "Grizzlies"
+    },
+    {
+      "animal": "Black Bear",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 3.5,
+      "sell_to": "Trapper",
+      "habitat": "West Elizabeth"
+    },
+    {
+      "animal": "Moose",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 9.0,
+      "sell_to": "Trapper",
+      "habitat": "Roanoke Ridge"
+    },
+    {
+      "animal": "Elk",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 6.5,
+      "sell_to": "Trapper / Butcher",
+      "habitat": "Ambarino"
+    },
+    {
+      "animal": "Pronghorn",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 3.5,
+      "sell_to": "Trapper / Butcher",
+      "habitat": "New Austin"
+    },
+    {
+      "animal": "Panther",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 5.5,
+      "sell_to": "Trapper",
+      "habitat": "Lemoyne (rare)"
+    },
+    {
+      "animal": "Alligator",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 5.0,
+      "sell_to": "Trapper",
+      "habitat": "Bayou Nwa"
+    },
+    {
+      "animal": "Rabbit",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 0.25,
+      "sell_to": "Butcher",
+      "habitat": "Widespread"
+    },
+    {
+      "animal": "Beaver",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 1.75,
+      "sell_to": "Trapper",
+      "habitat": "Lakay / Roanoke"
+    },
+    {
+      "animal": "Fox",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 2.0,
+      "sell_to": "Trapper",
+      "habitat": "Widespread"
+    },
+    {
+      "animal": "Wolf",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 2.0,
+      "sell_to": "Trapper",
+      "habitat": "Ambarino / Grizzlies"
+    },
+    {
+      "animal": "Coyote",
+      "pelt_quality": "perfect",
+      "payout_rdr$": 1.5,
+      "sell_to": "Trapper",
+      "habitat": "Widespread"
+    },
+    {
+      "animal": "Legendary Buck",
+      "pelt_quality": "legendary",
+      "payout_rdr$": 7.5,
+      "sell_to": "Trapper",
+      "habitat": "Big Valley"
+    },
+    {
+      "animal": "Legendary Elk",
+      "pelt_quality": "legendary",
+      "payout_rdr$": 17.5,
+      "sell_to": "Trapper",
+      "habitat": "Ambarino"
+    },
+    {
+      "animal": "Legendary Panther",
+      "pelt_quality": "legendary",
+      "payout_rdr$": 54.0,
+      "sell_to": "Trapper",
+      "habitat": "Lemoyne"
+    },
+    {
+      "animal": "Legendary Grizzly",
+      "pelt_quality": "legendary",
+      "payout_rdr$": 25.5,
+      "sell_to": "Trapper",
+      "habitat": "Grizzlies"
+    }
   ],
   "estimated_rdr$_per_hr": 20,
+  "optimal_route_rdr$_per_hr": 35,
+  "optimal_route_notes": "Heartlands deer + small game loop; sell at Valentine",
   "gta_vi_income_prediction": {
     "note": "If GTA VI implements hunting, estimated GTA$/hr based on scaled RDR2 income rates and GTA VI's higher overall income ceiling. Likely a low-tier ambient income source.",
-    "estimated_gta$_per_hr_range": { "low": 15000, "high": 45000 },
+    "estimated_gta$_per_hr_range": {
+      "low": 15000,
+      "high": 45000
+    },
     "confidence": "predicted"
   },
-  "sources": ["Red Dead Wiki hunting guides", "Community income benchmarks"]
+  "sources": [
+    "Red Dead Wiki hunting guides",
+    "Community income benchmarks"
+  ],
+  "last_updated": "2026-05-30T10:35:56+00:00",
+  "data_source": "seed"
 }
