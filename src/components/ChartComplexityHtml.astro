@@ -1,0 +1,167 @@
+---
+/**
+ * ChartComplexityHtml.astro
+ * Pure HTML/CSS replacement for ChartComplexityRadar.
+ *
+ * Renders the 5-dimension economic complexity profile as horizontal bars —
+ * no D3, no JS, no SVG. Always renders, even with JS disabled.
+ *
+ * Each row shows:
+ *   - Dimension label
+ *   - Bar track: full-width = score 4 (max)
+ *     · Gold filled bar = title score
+ *     · Dashed franchise average tick at the avg position
+ *   - Score badge: "N / 4"
+ *
+ * Usage (matches ChartComplexityRadar API):
+ *   <ChartComplexityHtml titleId="gta-6" showAverage={true} />
+ */
+
+import type { EconomyModel } from "../types/gta";
+import ShareDropdown from "./ShareDropdown.astro";
+import economyData from "../../data/franchise/economy-models.json";
+
+interface Props {
+  titleId: string;
+  showAverage?: boolean;
+}
+
+const { titleId, showAverage = true } = Astro.props;
+
+const allEconomies = (economyData as any).economies as EconomyModel[];
+const economy = allEconomies.find((e: any) => e.title_id === titleId);
+if (!economy) throw new Error(`ChartComplexityHtml: unknown titleId "${titleId}"`);
+
+const AXES = [
+  { key: "circular_flow",        label: "Circular Flow",    note: "Does money return to the player as capital?" },
+  { key: "passive_income",       label: "Passive Income",   note: "Can assets earn without active play?" },
+  { key: "capital_market",       label: "Capital Market",   note: "Stocks, banking, asset speculation?" },
+  { key: "inflation",            label: "Inflation",        note: "Does the currency's real value erode?" },
+  { key: "sovereign_complexity", label: "Sovereign",        note: "How many policy levers does Rockstar control?" },
+] as const;
+
+const MAX_SCORE = 4;
+const scores = (economy as any).dimension_scores as Record<string, number>;
+const complexityScore = (economy as any).complexity_score as number;
+const isProjected = (economy as any).projected === true;
+
+// Franchise averages per axis — computed at build time
+const avgScores = Object.fromEntries(
+  AXES.map(ax => [
+    ax.key,
+    allEconomies.reduce((s: number, e: any) => s + ((e.dimension_scores?.[ax.key]) ?? 0), 0) / allEconomies.length,
+  ])
+) as Record<string, number>;
+
+// Highlight colour — gold for projected, teal for live
+const barColor = isProjected ? "var(--c-brand)" : "var(--c-live)";
+---
+
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+
+  <!-- ── Header ─────────────────────────────────────────────────────── -->
+  <div class="px-5 py-3 border-b border-border-dim flex items-center justify-between">
+    <div>
+      <div class="font-semibold text-zinc-200 text-sm flex items-center gap-2">
+        Economic Complexity
+        {isProjected && (
+          <span class="text-[11px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
+                style="color:var(--c-brand);border-color:color-mix(in srgb,var(--c-brand) 35%,transparent);background:color-mix(in srgb,var(--c-brand) 10%,transparent)">
+            Projected
+          </span>
+        )}
+      </div>
+      <div class="text-[10px] font-mono text-zinc-400 mt-0.5">5 dimensions · franchise baseline comparison</div>
+    </div>
+    <div class="text-right">
+      <div class="text-2xl font-mono font-black" style={`color:${barColor}`}>{complexityScore}</div>
+      <div class="text-[11px] font-mono text-zinc-500">/ 17 max</div>
+    </div>
+  </div>
+
+  <!-- ── Dimension bars ─────────────────────────────────────────────── -->
+  <div class="px-5 py-4 flex flex-col gap-4">
+    {AXES.map(ax => {
+      const score = scores[ax.key] ?? 0;
+      const avg   = avgScores[ax.key] ?? 0;
+      const scorePct = Math.round((score / MAX_SCORE) * 100);
+      const avgPct   = Math.round((avg   / MAX_SCORE) * 100);
+      const isMax    = score >= MAX_SCORE;
+
+      return (
+        <div>
+          <!-- Row label + score -->
+          <div class="flex items-center justify-between mb-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="text-[11px] font-mono font-semibold text-zinc-300">{ax.label}</span>
+              <span class="text-[9px] font-mono text-zinc-600 hidden sm:inline">{ax.note}</span>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              {isMax && (
+                <span class="text-[9px] font-mono uppercase tracking-widest"
+                      style={`color:${barColor};opacity:0.7`}>max</span>
+              )}
+              <span class="text-[11px] font-mono font-bold" style={`color:${barColor}`}>
+                {score}<span class="text-zinc-600 font-normal"> / {MAX_SCORE}</span>
+              </span>
+            </div>
+          </div>
+          <!-- Bar track -->
+          <div class="relative h-4 rounded overflow-visible" style="background:var(--c-border-1)">
+            <!-- Title score bar -->
+            <div class="absolute inset-y-0 left-0 rounded transition-all duration-700"
+                 style={`width:${scorePct}%;background:${barColor};opacity:${isProjected ? 0.65 : 0.8}`}>
+            </div>
+            <!-- Franchise average tick (dashed vertical) -->
+            {showAverage && avg > 0 && (
+              <div class="absolute inset-y-0 flex items-center"
+                   style={`left:${avgPct}%;z-index:10`}>
+                <div class="w-px h-full border-l border-dashed border-zinc-500 opacity-60"></div>
+              </div>
+            )}
+            <!-- Franchise avg value label -->
+            {showAverage && avg > 0 && (
+              <div class="absolute -bottom-4 text-[8px] font-mono text-zinc-600"
+                   style={`left:${avgPct}%;transform:translateX(-50%)`}>
+                {avg.toFixed(1)}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  <!-- ── Legend note ────────────────────────────────────────────────── -->
+  {showAverage && (
+    <div class="px-5 pb-1 text-[9px] font-mono text-zinc-700 flex items-center gap-2">
+      <span class="border-l border-dashed border-zinc-600 h-3 opacity-60 inline-block"></span>
+      Dashed tick = franchise average across all titles
+    </div>
+  )}
+
+  <!-- ── Footer ─────────────────────────────────────────────────────── -->
+  <div class="px-5 py-3 mt-3 border-t border-border-dim flex items-center justify-between gap-3">
+    <div class="flex items-center gap-4 text-[11px] font-mono text-zinc-400">
+      <span class="flex items-center gap-1.5">
+        <div class="w-4 h-1.5 rounded-full shrink-0" style={`background:${barColor};opacity:0.7`}></div>
+        {(economy as any).short ?? (economy as any).title_name}
+      </span>
+      {showAverage && (
+        <span class="flex items-center gap-1.5">
+          <div class="w-4 h-px border-t border-dashed border-zinc-600"></div>
+          Franchise avg
+        </span>
+      )}
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      <ShareDropdown
+        anchorId={`complexity-html-${titleId}`}
+        shareText={`GTA ${(economy as any).short ?? (economy as any).title_name} economic complexity: ${complexityScore}/17 across 5 dimensions — circular flow, capital market, passive income, inflation, and sovereign complexity. GTAVI.AI`}
+        size="sm"
+      />
+    </div>
+  </div>
+
+</div>

@@ -7,7 +7,6 @@
  */
 import Base from "../../layouts/Base.astro";
 import { C_LIVE, C_GROWTH, C_ALERT, C_BRAND, C_CARD, C_TEXT_7, C_CHART_PURPLE, C_BG_DEEP } from "../../config/colors";
-import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
@@ -57,6 +56,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
   title="Franchise Economics — Ten Economies. One Franchise."
   description="The complete GTA franchise economic arc from score counter to live MMT sovereign. Every title's circular economy mapped, compared, and contextualised against real-world macroeconomic analogues."
   ogPage="franchise"
+  crossLinksContext="franchise-economics"
 >
 
   <!-- Hero -->
@@ -252,7 +252,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
         <div class="px-6 py-6">
           <div class="text-[11px] font-mono text-gta-gold/40 uppercase tracking-widest mb-3">The Arc Ends Here</div>
           <div class="font-semibold text-gta-gold text-base mb-2">
-            GTA VI — The Dual-Territory Currency Union
+            GTA VI — The Multi-Region Currency Union
           </div>
           <p class="text-[11px] font-mono text-zinc-300 leading-relaxed mb-4 max-w-2xl">
             {arcSummary}
@@ -264,7 +264,6 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
       </div>
     </section>
 
-    <CrossLinks context="franchise" />
   </div>
 </Base>
 

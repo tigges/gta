@@ -258,6 +258,87 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       accent: "var(--c-live)" },
   ],
 
+  // GTA VI hub
+  "gta-vi": [
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "GTA VI intelligence",
+      sub: `${predCount} confidence-scored predictions · cast · locations`,
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/gta-vi/economy", badge: "Economy",
+      label: "GTA VI economy model",
+      sub: "Day-1 income · Shark Card projections · multi-region",
+      thumb: "/assets/gta6/locations/Vice_City_03.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/charts?title=gta-vi", badge: "Charts",
+      label: "GTA VI data charts",
+      sub: "Search trends · CPI pricing · trailer velocity",
+      thumb: "/assets/economy-thumbs/gta-6.png",
+      accent: "var(--c-brand)" },
+    { href: "/gta-vi/buy", badge: "Pre-order",
+      label: "Pre-order tracker",
+      sub: "PS5 · Xbox Series X|S · edition comparison",
+      thumb: "/assets/gta6/locations/Ambrosia_02.jpg",
+      accent: "var(--c-title-vi)" },
+  ],
+
+  // Bottom of GTA VI intel page (after all mid-page CrossLinks)
+  "gta-vi-intel": [
+    { href: "/charts?title=gta-vi", badge: "Charts",
+      label: "Full GTA VI chart suite",
+      sub: "Search signal · CPI pricing · trailer velocity · franchise benchmarks",
+      thumb: "/assets/economy-thumbs/gta-6.png",
+      accent: "var(--c-brand)" },
+    { href: "/database", badge: "Database",
+      label: "GTA VI entity database",
+      sub: `${gta6Entities.toLocaleString()} characters · vehicles · locations · weapons`,
+      thumb: "/assets/gta6/characters/Jason_Duval_01.jpg",
+      accent: "var(--c-live)" },
+    { href: "/gta-vi/buy", badge: "Pre-order",
+      label: "Pre-order tracker",
+      sub: "Platforms, editions, retailer watch",
+      thumb: "/assets/gta6/locations/Ambrosia_02.jpg",
+      accent: "var(--c-title-vi)" },
+  ],
+
+  // Predictions page
+  "predictions": [
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "Full GTA VI intelligence",
+      sub: `${predCount} predictions · cast · locations · trailer analysis`,
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/charts", badge: "Charts",
+      label: "Signal charts",
+      sub: "Search interest · trailer velocity · franchise benchmarks",
+      thumb: "/assets/economy-thumbs/franchise.png",
+      accent: "var(--c-brand)" },
+    { href: "/database", badge: "Database",
+      label: "Entity database",
+      sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`,
+      thumb: "/assets/gta6/characters/Jason_Duval_02.jpg",
+      accent: "var(--c-live)" },
+  ],
+
+  // Polls page
+  "polls": [
+    { href: "/gta-vi/intel", badge: "GTA VI",
+      label: "GTA VI Intelligence",
+      sub: `${predCount} predictions behind these polls`,
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/charts", badge: "Charts",
+      label: "Signal charts",
+      sub: "Data visualised — franchise benchmarks",
+      thumb: "/assets/economy-thumbs/franchise.png",
+      accent: "var(--c-brand)" },
+    { href: "/news", badge: "News",
+      label: "Latest intelligence",
+      sub: `${newsItems} articles tracked nightly`,
+      thumb: "/assets/gta6/locations/Vice_City_01.jpg",
+      accent: "var(--c-brand)" },
+  ],
+
   // Home page
   "home": [
     { href: "/gta-vi/intel", badge: "GTA VI",
@@ -415,7 +496,7 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       accent: "var(--c-brand)" },
     { href: "/gta-vi/economy", badge: "GTA VI",
       label: "GTA VI economy",
-      sub: "Projected dual-territory model · Day-1 ready",
+      sub: "Projected multi-region model · Day-1 ready",
       thumb: "/assets/gta6/locations/Vice_City_03.jpg",
       accent: "var(--c-title-vi)" },
     { href: "/gta-online/economy", badge: "GTA Online",
@@ -439,7 +520,6 @@ const gridClass = links.length <= 2
 {links.length > 0 && (
   <div class={`space-y-3 ${extraClass}`}>
     <div class="flex items-center gap-3">
-      <span class="w-1 h-4 rounded-full shrink-0" style="background:var(--c-brand);opacity:0.4"></span>
       <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em]">// Related Intelligence</span>
       <div class="flex-1 h-px bg-border-dim"></div>
       <span class="text-[10px] font-mono text-zinc-700">auto-updated · builds nightly</span>

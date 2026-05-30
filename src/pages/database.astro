@@ -1,6 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import CrossLinks from "../components/CrossLinks.astro";
 import IncomeCard from "../components/IncomeCard.astro";
 import StatBox from "../components/StatBox.astro";
 import { regionFromName } from "../config/semanticTypes";
@@ -149,7 +148,7 @@ const fandByType   = entityIndex.by_type;
 const fandByConf   = entityIndex.by_confidence;
 const leonidaStats = leonida.entity_stats;
 
-const GTA6_TYPES = ["character","location","business","mission","activity","property","vehicle","weapon","animal"] as const;
+const GTA6_TYPES = ["business","property","mission","activity","character","location","vehicle","weapon","animal"] as const;
 const GTA5_TIER_LABELS: Record<string,string> = {
   S:"S — Tier",A:"A — Tier",B:"B — Tier",C:"C — Tier",
   D:"D — Tier",E:"E — Tier",F:"F — Tier",G:"G — Tier",
@@ -284,6 +283,7 @@ const HEIST_THUMBS: Record<string, string> = {
   title="Database"
   description={`GTA franchise entity database — ${gta6Entities.length.toLocaleString()} GTA VI entities (Fandom Wiki + Leonida Intel) and ${gta5Vehicles.length} GTA V vehicles with Broughy performance benchmarks.`}
   ogPage="database"
+  crossLinksContext="database"
 >
 
   <!-- Header -->
@@ -314,11 +314,13 @@ const HEIST_THUMBS: Record<string, string> = {
 
       <!-- GTA VI stats -->
       <div id="header-gta6">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
-          <StatBox value={gta6Entities.length.toLocaleString()} label="Entities indexed" sub="Fandom Wiki + Leonida Intel" color="var(--c-title-vi)" />
-          <StatBox value={String((fandByConf.confirmed ?? 0) + leonidaStats.confirmed)} label="Confirmed" sub="across both sources" color="var(--c-live)" />
-          <StatBox value={String(fandomEntities.length)} label="Fandom Wiki" sub="characters · locations · vehicles" color="var(--c-brand)" />
-          <StatBox value={String(leonidaEntities.length)} label="Leonida Intel" sub="curated intelligence" color="var(--c-growth)" />
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-3">
+          <StatBox value={gta6Entities.length.toLocaleString()} label="Entities indexed" color="var(--c-title-vi)" />
+          <StatBox value={String((fandByConf.confirmed ?? 0) + leonidaStats.confirmed)} label="Confirmed" color="var(--c-live)" />
+          <StatBox value={String((fandByType?.mission ?? 0) + (leonida.entity_stats?.by_category?.["Missions"] ?? 0))} label="Missions" color="var(--c-brand)" />
+          <StatBox value={String((fandByType?.character ?? 0) + (leonida.entity_stats?.by_category?.["Characters"] ?? 0))} label="Characters" color="var(--c-brand)" />
+          <StatBox value={String((fandByType?.location ?? 0) + (leonida.entity_stats?.by_category?.["Locations"] ?? 0))} label="Locations" color="var(--c-brand)" />
+          <StatBox value={String(leonidaEntities.length)} label="Curated intelligence" color="var(--c-growth)" />
         </div>
       </div>
 
@@ -338,9 +340,29 @@ const HEIST_THUMBS: Record<string, string> = {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3 flex-wrap">
 
       <!-- GTA VI filters -->
-      <div id="filters-gta6" class="flex items-center gap-3 flex-wrap w-full">
+      <div id="filters-gta6" class="flex flex-col gap-2 w-full">
+        <!-- Row 1: Tier toggles + Search -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest shrink-0">Tier</span>
+          {CONFIDENCE_TIERS.map(tier => {
+            const meta = TIER_META[tier];
+            return (
+              <button class={`db-tier-filter px-2.5 py-1 rounded text-[11px] font-mono uppercase tracking-widest transition-all shrink-0 ${meta.active}`} data-tier={tier} data-active="true">
+                {meta.label}
+              </button>
+            );
+          })}
+          <input
+            id="db-search-gta6"
+            type="text"
+            placeholder="Search 2,187 entities..."
+            class="flex-1 min-w-0 px-3 py-1.5 rounded border border-border-mid text-zinc-200 text-[11px] font-mono placeholder-zinc-600 focus:outline-none focus:border-gta-gold/50 focus:placeholder-zinc-700 transition-colors"
+            style="background:var(--c-card-raised)"
+          />
+        </div>
+        <!-- Row 2: Type filter -->
         <div class="flex items-center gap-1.5 flex-wrap">
-          <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1">Type</span>
+          <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1 shrink-0">Type</span>
           <button class="db-type-filter px-2.5 py-1 rounded text-[10px] font-mono border border-gta-gold/40 text-gta-gold bg-gta-gold/8 transition-all" data-type="all">All</button>
           {GTA6_TYPES.map(t => (
             <button class="db-type-filter px-2.5 py-1 rounded text-[10px] font-mono border border-border-mid text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all" data-type={t}>
@@ -348,29 +370,6 @@ const HEIST_THUMBS: Record<string, string> = {
             </button>
           ))}
         </div>
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1">Tier</span>
-          {CONFIDENCE_TIERS.map(tier => {
-            const meta = TIER_META[tier];
-            return (
-              <button class={`db-tier-filter px-2.5 py-1 rounded text-[11px] font-mono uppercase tracking-widest transition-all ${meta.active}`} data-tier={tier} data-active="true">
-                {meta.label}
-              </button>
-            );
-          })}
-        </div>
-        <div class="flex items-center gap-1.5 ml-auto">
-          <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest mr-1">Source</span>
-          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-border-mid text-zinc-500 hover:border-zinc-500 transition-all" data-source="all" data-active="true">All</button>
-          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-border-mid text-zinc-500 hover:border-zinc-500 transition-all" data-source="fandom" data-active="true">Fandom Wiki</button>
-          <button class="db-source-filter px-2.5 py-1 rounded text-[11px] font-mono border border-border-mid text-zinc-500 hover:border-zinc-500 transition-all" data-source="leonida" data-active="true">Leonida Intel</button>
-        </div>
-        <input
-          id="db-search-gta6"
-          type="text"
-          placeholder="Search GTA VI..."
-          class="px-3 py-1.5 rounded border border-border-mid bg-surface-2 text-zinc-300 text-[11px] font-mono placeholder-zinc-700 focus:outline-none focus:border-gta-gold/40 w-36"
-        />
       </div>
 
       <!-- GTA V filters -->
@@ -438,7 +437,6 @@ const HEIST_THUMBS: Record<string, string> = {
     <div class="flex items-center gap-3 mb-5">
       <span id="db-count" class="text-[10px] font-mono text-zinc-600">{gta6Entities.length} entities</span>
       <div class="flex-1 h-px bg-border-dim"></div>
-      <span id="db-source-label" class="text-[10px] font-mono text-zinc-500">GTA VI · Fandom Wiki + Leonida Intel</span>
     </div>
 
     <!-- GTA VI entity grid -->
@@ -672,7 +670,6 @@ const HEIST_THUMBS: Record<string, string> = {
       </div>
     </div>
 
-    <CrossLinks context="database" class="mt-8" />
   </div>
 </Base>
 
@@ -711,7 +708,6 @@ const HEIST_THUMBS: Record<string, string> = {
   const gridGta5    = document.getElementById("db-grid-gta5") as HTMLElement;
   const countEl     = document.getElementById("db-count") as HTMLElement;
   const emptyEl     = document.getElementById("db-empty") as HTMLElement;
-  const srcLabel    = document.getElementById("db-source-label") as HTMLElement;
   const filtersGta6 = document.getElementById("filters-gta6") as HTMLElement;
   const filtersGta5 = document.getElementById("filters-gta5") as HTMLElement;
   const headerGta6  = document.getElementById("header-gta6") as HTMLElement;
@@ -932,15 +928,25 @@ const HEIST_THUMBS: Record<string, string> = {
     targetGrid.after(pager);
   }
 
+  // Economic relevance order — determines card sort when type filter is "All"
+  const ECO_ORDER: Record<string, number> = {
+    business: 0, property: 1, mission: 2, activity: 3,
+    character: 4, location: 5, vehicle: 6, weapon: 7, animal: 8,
+  };
+
   // ── GTA VI render ─────────────────────────────────────────────────────────
   function renderGta6() {
-    const filtered = allGta6.filter(e => {
+    let filtered = allGta6.filter(e => {
       if (activeType !== "all" && e.type !== activeType) return false;
       if (!activeTiers.has(e.confidence_tier)) return false;
       if (activeSource !== "all" && e.source_id !== activeSource) return false;
       if (gta6Search && !e.name.toLowerCase().includes(gta6Search)) return false;
       return true;
     });
+    // When showing All, surface economically relevant types first
+    if (activeType === "all" && !gta6Search) {
+      filtered = [...filtered].sort((a, b) => (ECO_ORDER[a.type] ?? 9) - (ECO_ORDER[b.type] ?? 9));
+    }
     const page = filtered.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
     gridGta6.innerHTML = page.map(buildGta6Card).join("");
     countEl.textContent = `${filtered.length} entities`;
@@ -1007,13 +1013,6 @@ const HEIST_THUMBS: Record<string, string> = {
       noteGta5.classList.toggle("hidden", !isGta5Eco);
       document.getElementById("source-note-wrapper")?.classList.toggle("hidden", isOnline);
 
-      // Count label
-      const labels: Record<string,string> = {
-        "gta-6": "GTA VI · Fandom Wiki + Leonida Intel",
-        "gta-online": "GTA Online · Economic Intelligence",
-        "gta-5": "GTA V · Story + Heists + Stocks",
-      };
-      srcLabel.textContent = labels[activeGame] ?? "";
 
       // Tab button styles
   // ── Shared filter style helpers (from semanticTypes registry) ──────────────
@@ -1054,7 +1053,7 @@ const HEIST_THUMBS: Record<string, string> = {
       if (typeof (window as any).plausible === "function" && activeType !== "all") {
         (window as any).plausible("DatabaseFilter", { props: { type: activeType, game: activeGame } });
       }
-      renderGta6();
+      requestAnimationFrame(() => renderGta6());
     });
   });
 
@@ -1086,7 +1085,7 @@ const HEIST_THUMBS: Record<string, string> = {
 
       if (wasActive) activeTiers.delete(tier); else activeTiers.add(tier);
       currentPage = 0;
-      renderGta6();
+      requestAnimationFrame(() => renderGta6());
     });
   });
 

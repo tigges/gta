@@ -7,7 +7,6 @@ import type { GetStaticPaths } from "astro";
 import Base from "../../../layouts/Base.astro";
 import { C_LIVE, C_GROWTH, C_BRAND, C_ALERT, C_CARD, C_TEXT_7 } from "../../../config/colors";
 import IncomeCard from "../../../components/IncomeCard.astro";
-import CrossLinks from "../../../components/CrossLinks.astro";
 import ShareDropdown from "../../../components/ShareDropdown.astro";
 import type {
   BusinessProfiles, Business, OnlineHeistsData, OnlineHeist,
@@ -87,6 +86,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
   title={title}
   description={description}
   ogImage={`https://gtavi.ai/og/online/${id}.png`}
+  crossLinksContext="database"
 >
   <!-- Breadcrumb -->
   <div class="border-b border-border-dim" style="background:var(--c-bg-deep)">
@@ -376,7 +376,6 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
     </div>
 
     <div class="mt-10">
-      <CrossLinks context="database" />
     </div>
   </div>
 </Base>

@@ -80,6 +80,7 @@ python3 scrapers/fetch_newswire.py
 | `DISCORD_WEBHOOK_URL` | `post_discord_digest.py` | No — digest skipped if absent |
 | `RESEND_API_KEY` | `post_weekly_digest_resend.py` | No — digest skipped if absent |
 | `RESEND_AUDIENCE_ID` | `post_weekly_digest_resend.py`, `functions/api/subscribe.ts` | No — skipped if absent. Create at resend.com → Audiences |
+| `POLL_VOTES` (KV) | `functions/api/poll/[pollId]/vote.ts`, `results.ts` | No — polls degrade gracefully. Set up: Cloudflare Pages → Settings → Functions → KV Namespace Bindings → Variable: `POLL_VOTES` |
 
 Secrets are configured in: **GitHub repo → Settings → Secrets and variables → Actions**
 
@@ -309,6 +310,19 @@ All pages must use these canonical components. Never rebuild these patterns inli
 | Any `rgba(...)` that approximates a token | Use `color-mix(in srgb, var(--c-*) N%, transparent)` |
 
 D3/JS runtime colours must come from `src/config/colors.ts` named exports (`C_BRAND`, `C_LIVE`, etc.). Never write hex in a `<script>` block.
+
+### Minimum contrast rule (P1 — no exceptions)
+
+**`--c-text-5` is the dim floor for all readable text.** Nothing goes below it.
+
+- `--c-text-6` has been **removed** from the token system. Do not add it back.
+- `--c-watermark` exists solely for D3 SVG watermark stamps (the tiny `GTAVI.AI` corner text in charts). Never use it on HTML text.
+- Tailwind `text-zinc-600` and `text-zinc-700` both map to `--c-text-5` — the floor.
+- If text would be too dim at `--c-text-5`, use `--c-text-4` or higher — never go below the floor.
+
+### Minimum font size rule (P1 — no exceptions)
+
+**9px is the minimum font size for any readable text.** Use `text-[9px]` or larger. The 7px and 8px scales are banned for text content. They may only appear in CSS comments, SVG attributes set by D3, or `font-size` properties on non-text decorative SVG elements.
 
 ### Pill text size rule (P4)
 

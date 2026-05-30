@@ -4,7 +4,6 @@
  * GTA V Story Mode economy page — mixed market + capital market (BAWSAQ).
  */
 import Base from "../../layouts/Base.astro";
-import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
@@ -31,6 +30,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
   ogPage="gta-v-eco"
   title="GTA V Economy — Mixed Market + BAWSAQ Capital"
   description="GTA V Story Mode economy analysis: BAWSAQ mission-linked capital market, Lester assassination stocks, property passive income, and the complete $2B money strategy."
+  crossLinksContext="gta-v"
 >
   <!-- Header -->
   <section class="relative border-b border-border-dim overflow-hidden" style="min-height:220px">
@@ -152,6 +152,5 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
       <a href="/gta-online/economy" class="px-4 py-2 rounded border border-gta-teal/30 text-gta-teal text-[11px] font-mono hover:bg-gta-teal/20 transition-all">What came next: GTA Online →</a>
     </div>
 
-    <CrossLinks context="gta-v" />
   </div>
 </Base>

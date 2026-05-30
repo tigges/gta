@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "game": "gta-6",
+  "status": "stub",
+  "last_updated": "2026-05-29T00:00:00Z",
+  "note": "GTA VI random encounters and stranger missions. Separate from story missions (story-missions.json) and Online contact missions (online-missions.json). Economy relevance: strangers provide supplemental GTA$ income, item rewards, and occasionally unlock side businesses or contacts. Coordinates mark trigger locations on the world map — see data/gta-6/world/map.json.",
+  "sources": [],
+  "encounter_types": [
+    "robbery-victim",
+    "hitchhiker",
+    "car-breakdown",
+    "ambush",
+    "drug-deal-gone-wrong",
+    "escaped-prisoner",
+    "animal-attack",
+    "smuggler",
+    "distressed-civilian",
+    "criminal-opportunity",
+    "unknown"
+  ],
+  "fields": {
+    "id":                     "string — kebab-case",
+    "name":                   "string | null — descriptor (many are unnamed in-game)",
+    "type":                   "string — encounter_types value",
+    "description":            "string — brief narrative description",
+    "regions":                "string[] — region IDs where encounter can trigger",
+    "trigger_coordinates":    "{x: number|null, y: number|null} — approximate spawn/trigger point",
+    "trigger_radius_m":       "number | null — radius in game metres where encounter can spawn",
+    "reward_type":            "string — gta$ | item | reputation | contact-unlock | none",
+    "reward_gta$":            "number | null",
+    "reward_gta$_range":      "{low: number|null, high: number|null}",
+    "reward_item":            "string | null",
+    "repeatable":             "boolean",
+    "repeat_cooldown_hrs":    "number | null — real-world hours between repeats",
+    "time_of_day":            "string | null — any | day | night",
+    "weather_condition":      "string | null — any | rain | clear | etc.",
+    "characters_involved":    "string[] — character IDs or descriptions",
+    "confidence_tier":        "string — confirmed | reported | predicted",
+    "source":                 "string"
+  },
+  "encounters": [],
+  "day1_checklist": [
+    "Record all random encounter trigger locations with game-cartesian coordinates",
+    "Note GTA$ rewards and repeat cooldowns",
+    "Flag any encounters that unlock contacts or side businesses",
+    "Record time-of-day and weather conditions for conditional encounters",
+    "Aggregate total GTA$/hr from strangers as supplemental income source"
+  ]
+}

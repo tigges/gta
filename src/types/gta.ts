@@ -235,7 +235,7 @@ export interface FeaturesData {
 export type FlowType = "wages" | "spending" | "passive" | "investment" | "capital-return" | "injection" | "savings";
 export type SovereignType = "fixed-release" | "narrative-first" | "mixed" | "live-mmt" | "projected-mmt";
 export type CircularFlowLevel = "none" | "one-way" | "proto" | "partial" | "partial-4" | "full" | "full+regional";
-export type LayoutTemplate = "one-way" | "proto" | "loop" | "multi-stream" | "full-mmt" | "dual-territory";
+export type LayoutTemplate = "one-way" | "proto" | "loop" | "multi-stream" | "full-mmt" | "multi-region";
 
 export interface EconomyNode {
   id: string;

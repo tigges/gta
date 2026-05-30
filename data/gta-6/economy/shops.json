@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "game": "gta-6",
+  "status": "stub",
+  "last_updated": "2026-05-29T00:00:00Z",
+  "note": "GTA VI retail shop registry. One entry per shop location. Prices in GTA$. Coordinates in game-cartesian system — see data/gta-6/world/map.json. Populated from GTA VI wiki and community mapping on Day 1 (Nov 19 2026).",
+  "sources": [],
+  "fields": {
+    "id":             "string — kebab-case unique identifier",
+    "name":           "string — display name (e.g. Ammu-Nation Downtown VC)",
+    "chain":          "string | null — parent brand (Ammu-Nation, Binco, etc.)",
+    "type":           "string — weapons | clothing | food | vehicles | mods | pharmacy | convenience | electronics | jewellery | other",
+    "regions":        "string[] — region IDs from world/regions.json",
+    "coordinates":    "{x: number|null, y: number|null} — game-cartesian",
+    "price_list":     "array — [{item_id, item_name, category, price_gta$, monetary_dimension}]",
+    "open_hours":     "string | null — in-game hours if applicable",
+    "blip_type":      "string | null — in-game map blip identifier",
+    "confidence_tier":"string — confirmed | reported | predicted",
+    "source":         "string"
+  },
+  "shops": [
+    {
+      "id": "ammu-nation-vice-city-downtown",
+      "name": "Ammu-Nation — Vice City Downtown",
+      "chain": "Ammu-Nation",
+      "type": "weapons",
+      "regions": ["vice-city"],
+      "coordinates": { "x": null, "y": null },
+      "price_list": [],
+      "open_hours": null,
+      "blip_type": "ammu-nation",
+      "confidence_tier": "predicted",
+      "source": "Trailer analysis — Ammu-Nation branding visible in T2",
+      "notes": "Ammu-Nation confirmed present in GTA VI via T2 signage. Location and pricing TBC at launch."
+    },
+    {
+      "id": "binco-vice-city",
+      "name": "Binco — Vice City",
+      "chain": "Binco",
+      "type": "clothing",
+      "regions": ["vice-city"],
+      "coordinates": { "x": null, "y": null },
+      "price_list": [],
+      "open_hours": null,
+      "blip_type": "clothing",
+      "confidence_tier": "predicted",
+      "source": "Franchise precedent",
+      "notes": "Budget clothing chain present in all HD Universe titles."
+    },
+    {
+      "id": "suburban-vice-city",
+      "name": "Suburban — Vice City",
+      "chain": "Suburban",
+      "type": "clothing",
+      "regions": ["vice-city"],
+      "coordinates": { "x": null, "y": null },
+      "price_list": [],
+      "open_hours": null,
+      "blip_type": "clothing",
+      "confidence_tier": "predicted",
+      "source": "Franchise precedent",
+      "notes": "Mid-range clothing. Present in GTA V and GTA Online."
+    }
+  ],
+  "day1_checklist": [
+    "Scrape shop locations from GTA VI wiki Category:Shops",
+    "Capture price lists from community screenshots and price-tracking threads",
+    "Add game-cartesian coordinates from community map tools",
+    "Record in-game blip types for map integration",
+    "Note inter-region price differentials for the same chain (economy signal)"
+  ]
+}

@@ -1,17 +1,18 @@
 ---
 /**
  * /gta-vi/economy
- * GTA VI projected economy page — dual-territory currency union model.
+ * GTA VI projected economy page — multi-region currency union model.
  * Built on the CircularEconomy + ChartComplexityRadar components.
  * Predictions from economy-models analysis, populated Day-1 from scrapers.
  */
 import Base from "../../layouts/Base.astro";
-import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
-import CircularEconomy from "../../components/CircularEconomy.astro";
+import CircularEconomy     from "../../components/CircularEconomy.astro";
+import EconomyCircleSEDVI  from "../../components/EconomyCircleSEDVI.astro";
+import EconomyFlowGTAVI    from "../../components/EconomyFlowGTAVI.astro";
+import ChartComplexityHtml from "../../components/ChartComplexityHtml.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
-import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import GamePill from "../../components/GamePill.astro";
 import ReadItBlock from "../../components/ReadItBlock.astro";
 
@@ -53,9 +54,10 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
 
 <Base
   titleContext="gta-vi"
-  title="GTA VI Economy — Dual-Territory Currency Union"
-  description="GTA VI projected economy analysis: dual-territory currency union (Vice City + Leonida), regional purchasing parity, Shark Card mechanics, and the Eurozone analogue. Updated as intelligence confirms."
+  title="GTA VI Economy — Multi-Region Currency Union"
+  description="GTA VI projected economy analysis: multi-region currency union (Vice City, Leonida + more), regional purchasing parity, Shark Card mechanics, and the Eurozone analogue. Updated as intelligence confirms."
   ogPage="vi-intel"
+  crossLinksContext="gta-online-economy"
 >
 
   <!-- Hero header -->
@@ -71,7 +73,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
       </h1>
       <p class="text-zinc-300 text-sm leading-relaxed mb-6 max-w-xl">
         The most structurally sophisticated virtual economy ever designed.
-        Two territories, one currency — a <strong class="text-gta-gold">dual-territory currency union</strong>
+        Multiple regions, one currency — a <strong class="text-gta-gold">multi-region currency union</strong>
         analogous to the Eurozone. Everything we know and predict, sourced from the franchise arc.
       </p>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
@@ -94,13 +96,29 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
 
     <!-- ═══════════════════════════════════════════════════════
-         CIRCULAR ECONOMY DIAGRAM
+         GTA VI SED — SIMPLIFIED ECONOMY DIAGRAM
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Projected Circular Economy" dotColor="var(--c-title-vi)" />
+      <SectionHeader label="// The GTA VI Economy · Simplified · where does the money go?" dotColor="var(--c-gta-dollar)" />
+      <EconomyCircleSEDVI fullEconomyHref="/gta-vi/economy#eco-gta-vi" />
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         FULL GTA VI ECONOMY FLOW DIAGRAM (HTML)
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader label="// Full GTA VI Economy Model · All Nodes + Flows" dotColor="var(--c-title-vi)" />
+      <EconomyFlowGTAVI />
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CIRCULAR ECONOMY DIAGRAM (D3)
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader label="// Projected Circular Economy · D3 Reference" dotColor="var(--c-title-vi)" />
       <div class="rounded-xl border border-border-dim p-6" style="background:var(--c-bg)">
         <CircularEconomy titleId="gta-6" mode="full" />
-        <CardFooter anchorId="eco-gta-vi" sources="Source: GTAVI.AI Economic Model — predicted pre-launch · GTA Online precedent · trailer analysis" shareText="GTA VI predicted economy: Full MMT sovereign with dual-territory model. Predicted to surpass GTA Online in complexity at launch. 10 active income predictions tracked." />
+        <CardFooter anchorId="eco-gta-vi" sources="Source: GTAVI.AI Economic Model — predicted pre-launch · GTA Online precedent · trailer analysis" shareText="GTA VI predicted economy: Full MMT sovereign with multi-region model. Predicted to surpass GTA Online in complexity at launch. 10 active income predictions tracked." />
       </div>
     </section>
 
@@ -110,7 +128,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
     <section>
       <SectionHeader label="// Economic Complexity — Franchise Context" dotColor="var(--c-title-vi)" pillHref="/franchise/economics" pillLabel="All 10 economies →" />
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChartComplexityRadar titleId="gta-6" size={280} showAverage={true} />
+        <ChartComplexityHtml titleId="gta-6" showAverage={true} />
         <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
           <div class="px-5 py-3 border-b border-border-dim">
             <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Franchise Arc — Complexity Trajectory</div>
@@ -248,7 +266,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
          FIVE FLOWS — PROJECTED
     ═══════════════════════════════════════════════════════ -->
     <section id="five-flows" style="scroll-margin-top:80px">
-      <SectionHeader label="// Money Flows — Dual-Territory Projection" dotColor="var(--c-title-vi)" pillHref="/gta-online/economy" pillLabel="GTA Online live model →" />
+      <SectionHeader label="// Money Flows — Multi-Region Projection" dotColor="var(--c-title-vi)" pillHref="/gta-online/economy" pillLabel="GTA Online live model →" />
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
@@ -286,7 +304,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
             <span class="text-[10px] font-mono text-zinc-600">Monitoring · populates at launch</span>
             <div class="flex items-center gap-2 shrink-0">
               <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
-              <ShareDropdown anchorId="flow-vc-income" shareText="GTA VI Vice City income: projected to launch above GTA Online's $1.7M/hr meta. Dual-territory RPP model tracking on GTAVI.AI." size="sm" />
+              <ShareDropdown anchorId="flow-vc-income" shareText="GTA VI Vice City income: projected to launch above GTA Online's $1.7M/hr meta. Multi-region RPP model tracking on GTAVI.AI." size="sm" />
             </div>
           </div>
         </div>
@@ -354,7 +372,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">PRECEDENT</div>
               <div class="text-xl font-black text-zinc-500">None</div>
-              <div class="text-[10px] font-mono text-zinc-500">first dual-territory GTA</div>
+              <div class="text-[10px] font-mono text-zinc-500">first multi-region GTA</div>
             </div>
           </div>
           <div class="px-5 pb-3">
@@ -364,7 +382,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
             <span class="text-[10px] font-mono text-zinc-600">New metric — tracked from launch</span>
             <div class="flex items-center gap-2 shrink-0">
               <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
-              <ShareDropdown anchorId="flow-cross-territory" shareText="GTA VI has no GTA Online precedent for cross-territory money flow. First dual-territory GTA — tracking from launch. GTAVI.AI" size="sm" />
+              <ShareDropdown anchorId="flow-cross-territory" shareText="GTA VI has no GTA Online precedent for cross-territory money flow. First multi-region GTA — tracking from launch. GTAVI.AI" size="sm" />
             </div>
           </div>
         </div>
@@ -403,7 +421,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
             <a href="/charts?title=gta-online#section-eco-sharkcards" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">GTA Online history →</a>
             <div class="flex items-center gap-2 shrink-0">
               <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
-              <ShareDropdown anchorId="flow-shark-inject" shareText="GTA VI Shark Card projection: Take-Two recurrent peak was $1.62B in FY2022. GTA VI dual-territory pricing expected to push this higher. GTAVI.AI" size="sm" />
+              <ShareDropdown anchorId="flow-shark-inject" shareText="GTA VI Shark Card projection: Take-Two recurrent peak was $1.62B in FY2022. GTA VI multi-region pricing expected to push this higher. GTAVI.AI" size="sm" />
             </div>
           </div>
         </div>
@@ -449,7 +467,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
           </div>
         </div>
         <div class="px-5 py-3 border-t border-border-dim">
-          <ReadItBlock accentColor="var(--c-brand)">The GTA-PPI framework built for GTA Online transfers directly: basket cost ÷ top hourly yield. For GTA VI, GTAVI.AI runs two parallel calculations — one per territory. The RPP ratio (VC÷Leonida) is the new research axis: does the game's dual-territory design create measurable purchasing power divergence, or do Rockstar equalise it through pricing?</ReadItBlock>
+          <ReadItBlock accentColor="var(--c-brand)">The GTA-PPI framework built for GTA Online transfers directly: basket cost ÷ top hourly yield. For GTA VI, GTAVI.AI runs two parallel calculations — one per territory. The RPP ratio (VC÷Leonida) is the new research axis: does the game's multi-region design create measurable purchasing power divergence, or do Rockstar equalise it through pricing?</ReadItBlock>
         </div>
         <div class="px-5 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5">
           <a href="/gta-online/economy#health-monitor" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">GTA Online PPI live →</a>
@@ -532,11 +550,10 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
       <div class="ml-auto">
         <div class="flex items-center gap-2 shrink-0">
           <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-          <ShareDropdown anchorId="economy" shareText="GTA VI economy analysis: dual-territory currency union (Vice City + Leonida) — the Eurozone analogy applied to the most complex virtual economy ever designed." size="sm" />
+          <ShareDropdown anchorId="economy" shareText="GTA VI economy analysis: multi-region currency union (Vice City + Leonida) — the Eurozone analogy applied to the most complex virtual economy ever designed." size="sm" />
         </div>
       </div>
     </div>
 
-    <CrossLinks context="gta-online-economy" />
   </div>
 </Base>

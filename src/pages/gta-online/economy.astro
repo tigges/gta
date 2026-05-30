@@ -1,7 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
 import GamePill from "../../components/GamePill.astro";
-import CrossLinks from "../../components/CrossLinks.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
 import CardFooter from "../../components/CardFooter.astro";
@@ -115,6 +114,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
   titleContext="gta-online"
   title="GTA Online Economy Model"
   description="A macroeconomic analysis of GTA Online's in-game circular economy — wages, spending, savings, Shark Card injections, and the GTA-PPI purchasing power index."
+  crossLinksContext="gta-online-economy"
 >
 
   <!-- ── Page header ──────────────────────────────────────── -->
@@ -679,7 +679,6 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     </section><!-- /gta-vi-readiness -->
 
 
-    <CrossLinks context="gta-online-economy" class="mt-8" />
 
   </div>
 

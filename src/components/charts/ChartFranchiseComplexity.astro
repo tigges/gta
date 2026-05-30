@@ -40,7 +40,7 @@ import CardFooter from "../CardFooter.astro";
     const FEATURE_ICONS: Record<string,string> = {
       "mission_income":"Missions","passive_income":"Passive","property_market":"Property",
       "businesses":"Business","investment":"Investment","multiplayer_economy":"Multiplayer",
-      "microtransactions":"Microtx","dual_territory":"Dual-Terr","mobile_persistence":"Mobile",
+      "microtransactions":"Microtx","multi_region":"Multi-Reg","mobile_persistence":"Mobile",
     };
 
     const rowH = 66, labelW = 150;
@@ -60,7 +60,7 @@ import CardFooter from "../CardFooter.astro";
       const score = t.complexity_score || 0;
       const barW = x(score);
       const isPeak = score === MAX_SCORE;
-      const color = score >= 8 ? cc.bar : score >= 5 ? cc.teal : cc.text7;
+      const color = score >= 8 ? cc.bar : score >= 5 ? cc.teal : cc.text5;
 
       // Bar
       const isPred = !!(t as any).is_prediction;

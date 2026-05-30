@@ -1,7 +1,6 @@
 ---
 // ── Layout + registry ─────────────────────────────────────────────────────────
 import Base from "../layouts/Base.astro";
-import CrossLinks from "../components/CrossLinks.astro";
 import ChartSection from "../components/ChartSection.astro";
 import { CHARTS_PAGE_ORDER, getChart } from "../config/allCharts";
 
@@ -91,6 +90,7 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
   title="Charts"
   description="Every number in GTA's dual economy — in-game income, real-world revenue, and what the data says about GTA VI. Filterable, sourced, updated nightly."
   ogPage="charts"
+  crossLinksContext="charts"
 >
 
   <!-- Page header -->
@@ -181,7 +181,6 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
       );
     })}
 
-    <CrossLinks context="charts" />
   </div>
 </Base>
 
