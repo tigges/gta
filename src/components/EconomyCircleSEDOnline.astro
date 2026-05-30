@@ -1,0 +1,497 @@
+---
+/**
+ * EconomyCircleSEDOnline.astro — GTA Online per-title SED variant.
+ *
+ * Extends the base SED (EconomyCircleSED.astro) for GTA Online:
+ *   - Formula unchanged: (J) + Y = C + I
+ *   - Colour tokens unchanged: all from SED semantic token palette
+ *   - GTA Online-specific content:
+ *       Y  — Heist income (Cayo Perico $1.7M/hr peak), passive business stack
+ *       C  — Clothing, ammo, daily property fees (non-returning upkeep)
+ *       I  — Business empire (Kosatka, Nightclub, Acid Lab, Bunker)
+ *       J  — Shark Cards + GTA+ (LIVE — operational since 2013)
+ *   - Status badge "Live · 2013 – 2026" to distinguish from VI projected variant
+ *   - Meta strip at bottom: current top-earner stats grounded in JSON data
+ *
+ * Rules:
+ *   - No game-identity colours anywhere in structure (no --c-title-online cyan)
+ *   - GamePill uses --c-title-online but is an opaque pill — identity, not structure
+ *   - All flow/semantic colours come from SED token palette only
+ *   - CSS class names prefixed ol- to avoid collision with base SED and vi- variant
+ */
+import HudIcon      from "./HudIcon.astro";
+import GamePill     from "./GamePill.astro";
+import ShareDropdown from "./ShareDropdown.astro";
+
+interface Props {
+  fullEconomyHref?: string;
+  id?: string;
+}
+
+const { fullEconomyHref, id: anchorId = "eco-model-online" } = Astro.props;
+const shareText = "GTA Online economy: (J) + Y = C + I — 12 years of live data. Cayo Perico hit $1.7M/hr. Endgame now costs $437 real USD via Shark Cards. GTAVI.AI";
+---
+
+<div class="ol-eco-card">
+
+<div class="ol-eco-wrap">
+
+  <!-- ── ROW 0: Identity badge strip ────────────────────────────────── -->
+  <div class="ol-proj-strip">
+    <GamePill game="gta-online" size="xs" />
+    <span class="ol-live-badge">Live · 2013 – 2026</span>
+    <span class="ol-proj-note">12 years of player data · economy tracked from launch</span>
+  </div>
+
+  <!-- ── ROW 1: INJECTION (full width) ─────────────────────────────── -->
+  <div class="ol-inject-row">
+    <div class="ol-inject-inner">
+      <div class="ol-inject-item">
+        <div class="ol-blip" style="--bc:var(--c-flow-injection)">
+          <HudIcon name="shark-card" size={28} style="color:#fff"/>
+        </div>
+        <span class="ol-item-label" style="color:var(--c-flow-injection)">Shark Card</span>
+      </div>
+
+      <div class="ol-inject-centre">
+        <span class="ol-rockstar-label">Rockstar / Take-Two</span>
+        <span class="ol-inject-title">INJECTION</span>
+        <span class="ol-j-flow-note">J &middot; REAL MONEY &#8594; GTA$</span>
+      </div>
+
+      <div class="ol-inject-item">
+        <div class="ol-blip" style="--bc:var(--c-flow-injection)">
+          <HudIcon name="subscription" size={28} style="color:#fff"/>
+        </div>
+        <span class="ol-item-label" style="color:var(--c-flow-injection)">GTA+</span>
+      </div>
+    </div>
+    <div class="ol-inject-j-bottom">J &#8595;</div>
+    <span class="ol-online-note">Endgame = $437 USD via Shark Cards · 23× more than 2013</span>
+  </div>
+
+  <!-- ── ROW 2: INCOME · Circle hub · EXPENSE ──────────────────────── -->
+  <div class="ol-mid-row">
+
+    <div class="ol-income-super">
+      <div class="ol-income-super-inner">
+        <HudIcon name="dollar" size={26} style="color:var(--c-gta-dollar)"/>
+        <span class="ol-income-title">INCOME</span>
+      </div>
+    </div>
+
+    <div class="ol-circle-hub">
+      <div class="ol-tri-in"></div>
+      <div class="ol-ring-wrap">
+        <div class="ol-ring"></div>
+        <div class="ol-ring-centre">
+          <HudIcon name="bank" size={28} style="color:var(--c-flow-injection)"/>
+          <span class="ol-gta-label">GTA$</span>
+          <span class="ol-gta-sub">Los Santos</span>
+        </div>
+      </div>
+      <div class="ol-tri-out"></div>
+    </div>
+
+    <div class="ol-expend-super">
+      <div class="ol-expend-super-inner">
+        <HudIcon name="buy" size={26} style="color:var(--c-flow-spending)"/>
+        <span class="ol-expend-title">EXPENSE</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── ROW 3: Y = C + I boxes ─────────────────────────────────────── -->
+  <div class="ol-box-row">
+
+    <!-- Y — Income -->
+    <div class="ol-box ol-income-box">
+      <div class="ol-box-top-label" style="color:var(--c-growth)">Y</div>
+      <div class="ol-box-inner">
+        <div class="ol-box-header">
+          <span class="ol-box-title" style="color:var(--c-growth)">INCOME</span>
+          <span class="ol-cycle-note" style="color:var(--c-growth)">Y grows &#8594; next cycle</span>
+        </div>
+        <div class="ol-icon-row">
+          <div class="ol-icon-item">
+            <div class="ol-blip-lg" style="--bc:var(--c-live)">
+              <HudIcon name="mission" size={30} style="color:#fff"/>
+            </div>
+            <span class="ol-icon-label">Heists</span>
+            <span class="ol-icon-sub">Cayo Perico</span>
+          </div>
+          <div class="ol-icon-item">
+            <div class="ol-blip-lg" style="--bc:var(--c-growth)">
+              <HudIcon name="passive" size={30} style="color:#fff"/>
+            </div>
+            <span class="ol-icon-label">Passive</span>
+            <span class="ol-icon-sub">Nightclub · Acid Lab</span>
+          </div>
+        </div>
+        <div class="ol-stat-tag" style="border-color:color-mix(in srgb,var(--c-growth) 30%,transparent);color:var(--c-growth)">
+          Top meta: $1.7M/hr &middot; Cayo + Agency stack
+        </div>
+      </div>
+    </div>
+
+    <!-- = -->
+    <div class="ol-divider-eq"><span class="ol-eq-sign">=</span></div>
+
+    <!-- C — Consumption -->
+    <div class="ol-box ol-consump-box">
+      <div class="ol-box-top-label" style="color:var(--c-flow-spending)">C</div>
+      <div class="ol-box-inner">
+        <div class="ol-box-header">
+          <span class="ol-box-title" style="color:var(--c-flow-spending)">CONSUMPTION</span>
+          <span class="ol-cycle-note" style="color:var(--c-flow-spending)">C spent &#8594; lost after use</span>
+        </div>
+        <div class="ol-icon-row">
+          <div class="ol-icon-item">
+            <div class="ol-blip-lg" style="--bc:var(--c-flow-spending)">
+              <HudIcon name="clothing" size={30} style="color:#fff"/>
+            </div>
+            <span class="ol-icon-label">Clothing</span>
+            <span class="ol-icon-sub">ammo · services</span>
+          </div>
+          <div class="ol-icon-item">
+            <div class="ol-blip-lg" style="--bc:var(--c-flow-spending)">
+              <HudIcon name="property" size={30} style="color:#fff"/>
+            </div>
+            <span class="ol-icon-label">Daily Fees</span>
+            <span class="ol-icon-sub">property upkeep</span>
+          </div>
+        </div>
+        <div class="ol-stat-tag" style="border-color:color-mix(in srgb,var(--c-flow-spending) 30%,transparent);color:var(--c-flow-spending)">
+          Daily fees &amp; supplies drain passives without active play
+        </div>
+      </div>
+    </div>
+
+    <!-- + -->
+    <div class="ol-divider-plus"><span class="ol-plus-sign">+</span></div>
+
+    <!-- I — Investment -->
+    <div class="ol-box ol-invest-box">
+      <div class="ol-box-top-label" style="color:var(--c-economy)">I</div>
+      <div class="ol-box-inner">
+        <div class="ol-box-header">
+          <span class="ol-box-title" style="color:var(--c-economy)">INVESTMENT</span>
+          <span class="ol-cycle-note" style="color:var(--c-economy)">I returns to Y &#8594;</span>
+        </div>
+        <div class="ol-icon-row">
+          <div class="ol-icon-item">
+            <div class="ol-blip-lg" style="--bc:var(--c-economy)">
+              <HudIcon name="briefcase" size={30} style="color:#fff"/>
+            </div>
+            <span class="ol-icon-label">Businesses</span>
+            <span class="ol-icon-sub">Nightclub · Bunker</span>
+          </div>
+          <div class="ol-icon-item">
+            <div class="ol-blip-lg" style="--bc:var(--c-economy)">
+              <HudIcon name="car" size={30} style="color:#fff"/>
+            </div>
+            <span class="ol-icon-label">Vehicles</span>
+            <span class="ol-icon-sub">Kosatka · Mk2</span>
+          </div>
+        </div>
+        <div class="ol-stat-tag" style="border-color:color-mix(in srgb,var(--c-economy) 30%,transparent);color:var(--c-economy)">
+          $15M endgame setup &rarr; $35M full empire build
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── ROW 4: Meta stats strip ────────────────────────────────────── -->
+  <div class="ol-meta-strip">
+    <div class="ol-meta-stats">
+      <span class="ol-meta-stat">
+        <span class="ol-meta-val">$1.7M</span>
+        <span class="ol-meta-label">top $/hr</span>
+      </span>
+      <span class="ol-meta-sep">·</span>
+      <span class="ol-meta-stat">
+        <span class="ol-meta-val">$437</span>
+        <span class="ol-meta-label">endgame USD</span>
+      </span>
+      <span class="ol-meta-sep">·</span>
+      <span class="ol-meta-stat">
+        <span class="ol-meta-val">12 yrs</span>
+        <span class="ol-meta-label">live economy</span>
+      </span>
+    </div>
+    <span class="ol-meta-eq">— all via one GTA$ pool, Los Santos</span>
+  </div>
+
+</div>
+
+<!-- ── Footer ──────────────────────────────────────────────────────── -->
+<div id={anchorId} class="ol-eco-footer" style="scroll-margin-top:72px">
+  <span class="ol-footer-formula">GTA Online · Live · (J) + Y = C + I · Los Santos</span>
+  <div style="flex:1"></div>
+  {fullEconomyHref && (
+    <a href={fullEconomyHref} class="text-[10px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors uppercase tracking-widest shrink-0">Full model →</a>
+  )}
+  <span class="ol-footer-brand">GTAVI.AI</span>
+  <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
+</div>
+
+</div>
+
+<style>
+/* ── Root card ────────────────────────────────────────────────────── */
+.ol-eco-card {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--c-border-1);
+  background: var(--c-card);
+  font-family: var(--font-mono, monospace);
+}
+.ol-eco-wrap {
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+}
+
+/* ── Row 0: Identity badge strip ─────────────────────────────────── */
+.ol-proj-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px;
+  background: color-mix(in srgb, var(--c-live) 5%, var(--c-bg-deep));
+  border-bottom: 1px solid var(--c-border-1);
+}
+.ol-live-badge {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--c-live);
+  border: 1px solid color-mix(in srgb, var(--c-live) 35%, transparent);
+  background: color-mix(in srgb, var(--c-live) 12%, transparent);
+  border-radius: 4px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+.ol-proj-note {
+  font-size: 9px;
+  color: var(--c-text-5);
+  letter-spacing: .04em;
+}
+
+/* ── Row 1: Injection ─────────────────────────────────────────────── */
+.ol-inject-row {
+  position: relative;
+  border-bottom: 1px solid var(--c-border-1);
+  background: color-mix(in srgb, var(--c-flow-injection) 5%, transparent);
+  padding: 12px 16px 28px;
+}
+.ol-inject-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+}
+.ol-inject-item  { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.ol-item-label   { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
+.ol-inject-centre { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ol-rockstar-label { font-size: 9px; color: var(--c-flow-injection); opacity: var(--o-secondary); letter-spacing: .25em; text-transform: uppercase; }
+.ol-inject-title { font-size: clamp(0.85rem, 2.5vw, 1.3rem); font-weight: 900; line-height: 1; color: var(--c-flow-injection); }
+.ol-j-flow-note {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--c-flow-injection);
+  opacity: var(--o-secondary); text-align: center; margin-top: 4px;
+}
+.ol-inject-j-bottom {
+  position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%);
+  font-size: 1.1rem; font-weight: 900; line-height: 1;
+  color: var(--c-flow-injection); background: var(--c-card);
+  padding: 2px 8px; border-radius: 4px; z-index: 10; white-space: nowrap;
+}
+.ol-online-note {
+  position: absolute; top: 8px; right: 12px;
+  font-size: 9px; color: var(--c-text-5);
+}
+
+/* ── Row 2: INCOME · Circle · EXPENSE ────────────────────────────── */
+.ol-mid-row {
+  display: grid;
+  grid-template-columns: 40% auto 1fr;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--c-border-1);
+  background: rgba(0, 0, 0, .2);
+}
+.ol-income-super {
+  display: flex; align-items: center; justify-content: flex-end; padding-right: 12px;
+}
+.ol-income-super-inner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
+  border: 1.5px solid color-mix(in srgb, var(--c-gta-dollar) 35%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--c-gta-dollar) 7%, transparent);
+}
+.ol-income-title { font-size: clamp(1rem, 2.5vw, 1.6rem); font-weight: 900; color: var(--c-gta-dollar); letter-spacing: -.01em; }
+
+.ol-circle-hub { display: flex; align-items: center; gap: 0; justify-content: center; }
+.ol-ring-wrap { position: relative; width: 120px; height: 120px; flex-shrink: 0; z-index: 5; }
+.ol-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(
+    from 137.5deg,
+    var(--c-economy)         0deg  75deg,
+    var(--c-growth)         75deg 200deg,
+    var(--c-flow-injection) 200deg 245deg,
+    var(--c-flow-spending)  245deg 325deg,
+    var(--c-economy)        325deg 360deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 42px, black 44px);
+  mask:         radial-gradient(circle, transparent 42px, black 44px);
+  opacity: .95;
+}
+.ol-ring-centre {
+  position: absolute; inset: 14px; border-radius: 50%;
+  background: color-mix(in srgb, var(--c-bg-deep) 90%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--c-gta-dollar) 35%, transparent);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+}
+.ol-gta-label { font-size: 14px; font-weight: 900; color: var(--c-gta-dollar); }
+.ol-gta-sub   { font-size: 9px; color: var(--c-text-5); text-transform: uppercase; letter-spacing: .08em; }
+
+.ol-tri-in {
+  width: 0; height: 0;
+  border-top: 22px solid transparent; border-bottom: 22px solid transparent;
+  border-left: 28px solid color-mix(in srgb, var(--c-growth) 80%, transparent);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--c-growth) 40%, transparent));
+}
+.ol-tri-out {
+  width: 0; height: 0;
+  border-top: 22px solid transparent; border-bottom: 22px solid transparent;
+  border-left: 28px solid color-mix(in srgb, var(--c-flow-spending) 80%, transparent);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--c-flow-spending) 40%, transparent));
+}
+.ol-expend-super { display: flex; align-items: center; padding-left: 12px; }
+.ol-expend-super-inner {
+  display: flex; align-items: center; gap: 10px; padding: 8px 16px;
+  border: 1.5px solid color-mix(in srgb, var(--c-flow-spending) 35%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--c-flow-spending) 7%, transparent);
+}
+.ol-expend-title { font-size: clamp(1rem, 2.5vw, 1.6rem); font-weight: 900; color: var(--c-flow-spending); letter-spacing: -.01em; }
+
+/* ── Row 3: Y = C + I boxes ──────────────────────────────────────── */
+.ol-box-row { display: flex; align-items: stretch; }
+.ol-box { flex: 1; min-width: 0; position: relative; }
+.ol-income-box  { background: color-mix(in srgb, var(--c-growth) 22%, var(--c-bg-deep)); border-left: 3px solid color-mix(in srgb, var(--c-growth) 55%, transparent); }
+.ol-consump-box { background: color-mix(in srgb, var(--c-flow-spending) 20%, var(--c-bg-deep)); border-left: 3px solid color-mix(in srgb, var(--c-flow-spending) 55%, transparent); }
+.ol-invest-box  { background: color-mix(in srgb, var(--c-economy) 18%, var(--c-bg-deep)); border-left: 3px solid color-mix(in srgb, var(--c-economy) 55%, transparent); }
+
+.ol-box-top-label {
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  font-size: 1.1rem; font-weight: 900; background: var(--c-card);
+  padding: 0 4px; z-index: 10; line-height: 1;
+}
+.ol-box-inner { padding: 16px 14px; display: flex; flex-direction: column; gap: 8px; }
+.ol-box-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ol-box-title { font-size: clamp(0.75rem, 2vw, 1.1rem); font-weight: 900; line-height: 1; }
+.ol-icon-row { display: flex; gap: 12px; }
+.ol-icon-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.ol-icon-label { font-size: 9px; color: var(--c-text-3); text-align: center; font-weight: 600; }
+.ol-icon-sub   { font-size: 9px; color: var(--c-text-5); text-align: center; }
+.ol-cycle-note { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; opacity: var(--o-secondary); margin-left: auto; text-align: right; }
+
+/* Stat context tag inside each box */
+.ol-stat-tag {
+  font-size: 9px; font-family: var(--font-mono, monospace);
+  border: 1px solid; border-radius: 4px;
+  padding: 3px 7px; line-height: 1.4; opacity: .7;
+}
+
+.ol-divider-eq, .ol-divider-plus {
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; flex-shrink: 0;
+  background: rgba(0, 0, 0, .3);
+  border-left: 1px solid var(--c-border-1);
+  border-right: 1px solid var(--c-border-1);
+}
+.ol-eq-sign   { font-size: 1.4rem; font-weight: 900; color: var(--c-flow-spending); }
+.ol-plus-sign { font-size: 1.4rem; font-weight: 900; color: var(--c-economy); }
+
+/* ── Blip sizes ──────────────────────────────────────────────────── */
+.ol-blip, .ol-blip-lg {
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--bc) 25%, transparent);
+  border: 2px solid color-mix(in srgb, var(--bc) 55%, transparent);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ol-blip    { width: 52px; height: 52px; }
+.ol-blip-lg { width: 52px; height: 52px; border-width: 2px; }
+
+/* ── Row 4: Meta stats strip ─────────────────────────────────────── */
+.ol-meta-strip {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 8px 16px;
+  background: color-mix(in srgb, var(--c-gta-dollar) 4%, var(--c-bg-deep));
+  border-top: 1px solid var(--c-border-1);
+}
+.ol-meta-stats { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ol-meta-stat  { display: flex; align-items: baseline; gap: 4px; }
+.ol-meta-val   { font-size: 11px; font-weight: 700; color: var(--c-gta-dollar); }
+.ol-meta-label { font-size: 9px; color: var(--c-text-5); text-transform: uppercase; letter-spacing: .06em; }
+.ol-meta-sep   { font-size: 9px; color: var(--c-text-5); }
+.ol-meta-eq    { font-size: 9px; color: var(--c-gta-dollar); opacity: 0.75; letter-spacing: .06em; margin-left: auto; white-space: nowrap; }
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.ol-eco-footer {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--c-border-1);
+  background: var(--c-card);
+  border-radius: 0 0 12px 12px;
+}
+.ol-footer-brand {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: var(--c-text-5);
+}
+.ol-footer-formula {
+  font-size: 10px; letter-spacing: .04em; color: var(--c-text-5);
+  flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ── Mobile (≤599px) ─────────────────────────────────────────────── */
+@media (max-width: 599px) {
+  .ol-inject-inner  { gap: 16px; }
+  .ol-blip          { width: 42px; height: 42px; }
+  .ol-income-super, .ol-expend-super { display: flex; }
+  .ol-income-super  { padding-right: 4px; }
+  .ol-expend-super  { padding-left: 4px; }
+  .ol-income-super-inner, .ol-expend-super-inner { padding: 6px 8px; gap: 0; }
+  .ol-income-title, .ol-expend-title { display: none; }
+  .ol-mid-row       { grid-template-columns: auto auto auto; padding: 8px 4px; }
+  .ol-ring-wrap     { width: 80px; height: 80px; }
+  .ol-ring {
+    -webkit-mask: radial-gradient(circle, transparent 27px, black 29px);
+    mask:         radial-gradient(circle, transparent 27px, black 29px);
+  }
+  .ol-ring-centre   { inset: 8px; }
+  .ol-gta-label     { font-size: 11px; }
+  .ol-gta-sub       { display: none; }
+  .ol-tri-in, .ol-tri-out { border-top-width: 16px; border-bottom-width: 16px; border-left-width: 20px; }
+  .ol-box-inner     { padding: 10px 8px; gap: 4px; }
+  .ol-icon-row      { flex-direction: column; gap: 4px; }
+  .ol-icon-item     { flex-direction: row; gap: 8px; align-items: center; }
+  .ol-blip-lg       { width: 40px; height: 40px; }
+  .ol-icon-label    { font-size: 9px; text-align: left; }
+  .ol-icon-sub      { display: none; }
+  .ol-stat-tag      { display: none; }
+  .ol-divider-eq, .ol-divider-plus { width: 16px; }
+  .ol-eq-sign, .ol-plus-sign       { font-size: .9rem; }
+  .ol-meta-strip    { gap: 6px; padding: 6px 12px; }
+  .ol-meta-eq       { margin-left: 0; width: 100%; }
+  .ol-online-note   { display: none; }
+  .ol-proj-note     { display: none; }
+}
+</style>

@@ -1,0 +1,45 @@
+---
+/**
+ * /community/polls/embed/[pollId] — Embeddable poll iframe endpoint.
+ *
+ * Renders a single VoteCard as a standalone minimal HTML page,
+ * suitable for embedding via <iframe> on external sites.
+ *
+ * Usage:
+ *   <iframe
+ *     src="https://gtavi.ai/community/polls/embed/pred-launch-price"
+ *     width="420" height="320" frameborder="0"
+ *     style="border-radius:12px;overflow:hidden"
+ *   ></iframe>
+ *
+ * Static export — all valid pollIds are pre-rendered at build time.
+ * Embedding allowed from any origin (X-Frame-Options: ALLOWALL via EmbedBase).
+ */
+
+import EmbedBase from "../../../../layouts/EmbedBase.astro";
+import VoteCard from "../../../../components/VoteCard.astro";
+import type { GetStaticPaths } from "astro";
+import predRaw from "../../../../../data/gta-6/predictions.json";
+
+export const getStaticPaths: GetStaticPaths = () => {
+  const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
+  return polls.map((p: any) => ({ params: { pollId: p.id } }));
+};
+
+const { pollId } = Astro.params;
+const pred = (predRaw as any).predictions.find((p: any) => p.id === pollId);
+
+if (!pred) return Astro.redirect("/404");
+
+const SITE_BASE = import.meta.env.SITE ?? "https://gtavi.ai";
+const pollHref  = `${SITE_BASE}/community/polls#vote-${pollId}`;
+const question  = pred.poll_question ?? pred.title;
+---
+
+<EmbedBase title={`${question} — GTAVI.AI Poll`}>
+  <VoteCard
+    predictionId={pollId}
+    embedMode={true}
+    pollHref={pollHref}
+  />
+</EmbedBase>

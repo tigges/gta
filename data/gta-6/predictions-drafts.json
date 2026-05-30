@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "description": "Intake queue for new GTA VI predictions. Add entries here — never directly to predictions.json. The nightly fetch_predictions_auto.py run promotes each pending draft into a proposal card on /admin/proposals/ for human review before it lands in predictions.json.",
+  "last_updated": "2026-05-30T11:00:00Z",
+  "workflow": [
+    "1. Add new prediction draft here (all required fields from predictions.json schema v2.0)",
+    "2. Set draft_status to 'pending'",
+    "3. Nightly CI promotes it to a proposal on /admin/proposals/",
+    "4. Reviewer copies the draft into predictions.json and removes/updates this entry",
+    "5. Set draft_status to 'promoted' here (or delete the entry) after applying"
+  ],
+  "required_fields": [
+    "id",
+    "title",
+    "value",
+    "confidence",
+    "confidence_tier",
+    "basis",
+    "source",
+    "source_type",
+    "prediction_range"
+  ],
+  "drafts": []
+}

@@ -1,0 +1,62 @@
+---
+/**
+ * /gta-vi/intel/embed/[predId] — Embeddable prediction card iframe endpoint.
+ *
+ * Renders a single PredictionCard as a standalone minimal HTML page,
+ * suitable for embedding via <iframe> on external sites.
+ *
+ * Usage:
+ *   <iframe
+ *     src="https://gtavi.ai/gta-vi/intel/embed/pred-launch-price"
+ *     width="420" height="380" frameborder="0"
+ *     style="border-radius:12px;overflow:hidden"
+ *   ></iframe>
+ *
+ * Recommended width: 320–480px.
+ * Static export — all 23 predictions pre-rendered at build time.
+ * Embedding allowed from any origin (X-Frame-Options: ALLOWALL via EmbedBase).
+ */
+
+import EmbedBase from "../../../../layouts/EmbedBase.astro";
+import PredictionCard from "../../../../components/PredictionCard.astro";
+import type { GetStaticPaths } from "astro";
+import predRaw from "../../../../../data/gta-6/predictions.json";
+
+export const getStaticPaths: GetStaticPaths = () => {
+  return (predRaw as any).predictions.map((p: any) => ({
+    params: { predId: p.id },
+  }));
+};
+
+const { predId } = Astro.params;
+const pred = (predRaw as any).predictions.find((p: any) => p.id === predId);
+
+if (!pred) return Astro.redirect("/404");
+
+const SITE_BASE  = import.meta.env.SITE ?? "https://gtavi.ai";
+const detailHref = `${SITE_BASE}/gta-vi/intel#${pred.id}`;
+---
+
+<EmbedBase title={`${pred.title} — GTAVI.AI Prediction`}>
+  <div style="width:100%;max-width:480px">
+    <PredictionCard
+      id={pred.id}
+      title={pred.title}
+      value={pred.value}
+      unit={pred.unit}
+      confidence={pred.confidence}
+      confidence_tier={pred.confidence_tier}
+      basis={pred.basis}
+      trailer_timestamp={pred.trailer_timestamp}
+      prediction_method={pred.prediction_method}
+      prediction_range={pred.prediction_range}
+      source={pred.source}
+      source_type={pred.source_type}
+      outcome_verified={pred.outcome_verified}
+      outcome_actual={pred.outcome_actual}
+      thumbnail={pred.thumbnail}
+      embedMode={true}
+      detailHref={detailHref}
+    />
+  </div>
+</EmbedBase>

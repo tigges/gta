@@ -199,6 +199,16 @@ jobs:
       - name: Fetch Box Office entertainment comparisons
         run: python scrapers/fetch_boxoffice.py
 
+      # ── RDR2 reference (static — enriches curated seed; continues on wiki blocks) ──
+
+      - name: Enrich RDR2 economy reference data (shop prices, hunting, missions, online roles)
+        continue-on-error: true
+        run: python scrapers/rdr2/fetch_rdr2_economy.py
+
+      - name: Enrich RDR2 mechanics index (honour, weapon carry, wanted system, hunting)
+        continue-on-error: true
+        run: python scrapers/rdr2/fetch_rdr2_mechanics.py
+
       # ── Prediction auto-update ─────────────────────────────────────────────
 
       - name: Auto-update confirmed predictions from source data
