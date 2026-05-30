@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import PredictionCard from "../../components/PredictionCard.astro";
 import CrossLinks from "../../components/CrossLinks.astro";
+import VoteCard from "../../components/VoteCard.astro";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 
@@ -188,6 +189,20 @@ const CAT_THUMBS: Record<string,string> = {
     </section>
 
     <CrossLinks context="vi-intel-predictions" />
+
+    <!-- ═══════════════════════════════════════════════════════
+         COMMUNITY VOTES
+    ═══════════════════════════════════════════════════════ -->
+    <section id="section-community-votes">
+      <SectionHeader label="// Community Votes · What do you think?" dotColor="var(--c-brand)" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <VoteCard predictionId="pred-rdr2-wanted-stars" />
+        <VoteCard predictionId="pred-rdr2-hunting" />
+        <VoteCard predictionId="pred-rdr2-honour-pricing" />
+        <VoteCard predictionId="pred-rdr2-weapon-carry" />
+        <VoteCard predictionId="pred-rdr2-looting" />
+      </div>
+    </section>
 
     <!-- ═══════════════════════════════════════════════════════
          OFFICIAL TRAILERS

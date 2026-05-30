@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-05-30T00:00:00Z",
+  "note": "RDR2 shop prices vary by honour level (up to ±25%). High honour = discounts at general stores and gunsmiths. Low honour = discounts at fences (black market). This honour-based pricing mechanic is a strong GTA VI prediction input.",
+  "currency": "RDR$",
+  "honour_price_modifier": {
+    "very_high_honour": -0.25,
+    "high_honour": -0.10,
+    "neutral": 0.0,
+    "low_honour": 0.10,
+    "very_low_honour": -0.25,
+    "note": "Low honour gives discounts at FENCES only, not regular stores. Very low honour = 25% discount at fence. Very high honour = 25% discount at stores."
+  },
+  "categories": ["provisions", "weapons", "ammo", "clothing", "horse", "tonics", "materials"],
+  "price_samples": [
+    { "item": "Revolver (basic)", "category": "weapons", "price_rdr$": 60, "honour_modified": true },
+    { "item": "Repeater (carbine)", "category": "weapons", "price_rdr$": 135, "honour_modified": true },
+    { "item": "Provisions (canned food)", "category": "provisions", "price_rdr$": 0.50, "honour_modified": true },
+    { "item": "Express ammo (box)", "category": "ammo", "price_rdr$": 1.50, "honour_modified": true }
+  ],
+  "gta_vi_implication": "If GTA VI adopts an honour/reputation system, NPC shop prices will diverge by protagonist behaviour. Models for this are in data/gta-6/predictions.json (pred-rdr2-honour-pricing).",
+  "sources": ["Red Dead Wiki", "Community price guides"],
+  "day1_checklist": [
+    "Run fetch_rdr2_economy.py to pull complete price list from RDR2 wiki",
+    "Verify honour modifier percentages against community benchmarks",
+    "Cross-reference with GTA VI launch pricing when available"
+  ]
+}

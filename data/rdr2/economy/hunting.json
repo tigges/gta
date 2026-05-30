@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-05-30T00:00:00Z",
+  "note": "RDR2 hunting is the primary passive income source. Perfect pelts sell to the Trapper for crafting materials. Carcasses sell to the Butcher for RDR$. The income rate is low vs active missions but zero-risk and always available. GTA VI hunting system is reported to be modelled on this.",
+  "income_model": "passive-ambient",
+  "gta_vi_analogue": "data/gta-6/economy/income-sources.json — hunting category",
+  "pelt_quality_tiers": ["poor", "good", "perfect"],
+  "sample_payouts_rdr$": [
+    { "animal": "White-tailed Deer (perfect pelt)", "payout": 4.00, "sell_to": "Trapper or Butcher" },
+    { "animal": "Bison (perfect pelt)", "payout": 7.50, "sell_to": "Trapper" },
+    { "animal": "Grizzly Bear (perfect pelt)", "payout": 7.50, "sell_to": "Trapper" },
+    { "animal": "Small game (rabbit, etc.)", "payout": 0.25, "sell_to": "Butcher" }
+  ],
+  "estimated_rdr$_per_hr": 20,
+  "gta_vi_income_prediction": {
+    "note": "If GTA VI implements hunting, estimated GTA$/hr based on scaled RDR2 income rates and GTA VI's higher overall income ceiling. Likely a low-tier ambient income source.",
+    "estimated_gta$_per_hr_range": { "low": 15000, "high": 45000 },
+    "confidence": "predicted"
+  },
+  "sources": ["Red Dead Wiki hunting guides", "Community income benchmarks"]
+}
