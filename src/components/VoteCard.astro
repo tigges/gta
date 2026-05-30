@@ -59,11 +59,12 @@ const {
 const predData = predRaw as unknown as PredictionsData;
 
 // Resolve question and options
-let question = manualQuestion ?? "";
-let options:  string[] = manualOptions ?? ["Yes", "No"];
-let pollId    = manualPollId ?? predictionId ?? "";
-let basis     = "";
+let question  = manualQuestion ?? "";
+let options:   string[] = manualOptions ?? ["Yes", "No"];
+let pollId     = manualPollId ?? predictionId ?? "";
+let basis      = "";
 let confidence: number | null = null;
+let thumbnail: string | null = null;
 
 if (predictionId) {
   const pred = predData.predictions.find((p: any) => p.id === predictionId);
@@ -73,6 +74,7 @@ if (predictionId) {
     pollId     = predictionId;
     basis      = pred.basis ?? "";
     confidence = pred.confidence ?? null;
+    thumbnail  = (pred as any).thumbnail ?? null;
   }
 }
 
@@ -83,6 +85,14 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
 ---
 
 <div class="vc-card" id={anchorId} style={embedMode ? "border-radius:0;border-left:none;border-right:none;border-top:none" : "scroll-margin-top:80px"}>
+
+  <!-- ── Thumbnail ─────────────────────────────────────────────────────── -->
+  {thumbnail && (
+    <div class="vc-thumb">
+      <img src={thumbnail} alt="" width="400" height="200" loading="lazy" decoding="async" />
+      <div class="vc-thumb-overlay"></div>
+    </div>
+  )}
 
   <!-- ── Header ──────────────────────────────────────────────────────── -->
   <div class="vc-header">
@@ -170,6 +180,29 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
   padding: 10px 16px;
   border-bottom: 1px solid var(--c-border-1);
   background: var(--c-bg-deep);
+}
+
+/* ── Thumbnail ── */
+.vc-thumb {
+  position: relative;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+}
+.vc-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .4s ease;
+}
+.vc-card:hover .vc-thumb img { transform: scale(1.03); }
+.vc-thumb-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    color-mix(in srgb, var(--c-card) 90%, transparent) 100%
+  );
+  pointer-events: none;
 }
 
 .vc-badge {
