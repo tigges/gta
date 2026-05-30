@@ -36,6 +36,14 @@ interface Props {
   question?:     string;
   options?:      string[];
   game?:         "gta-vi" | "gta-online" | "franchise";
+  /**
+   * Embed mode — suppresses ShareDropdown, replaces footer with
+   * a homepage link + "Full poll →" link back to the main polls page.
+   * Pass pollHref to set the "Full poll →" destination.
+   */
+  embedMode?: boolean;
+  /** Canonical URL for the "Full poll →" link in embed mode. */
+  pollHref?:  string;
 }
 
 const {
@@ -44,6 +52,8 @@ const {
   question: manualQuestion,
   options:  manualOptions,
   game = "gta-vi",
+  embedMode = false,
+  pollHref,
 } = Astro.props;
 
 const predData = predRaw as unknown as PredictionsData;
@@ -72,7 +82,7 @@ const anchorId  = `vote-${pollId}`;
 const shareText = `${question} — Vote on GTAVI.AI and see what the community thinks.`;
 ---
 
-<div class="vc-card" id={anchorId} style="scroll-margin-top:80px">
+<div class="vc-card" id={anchorId} style={embedMode ? "border-radius:0;border-left:none;border-right:none;border-top:none" : "scroll-margin-top:80px"}>
 
   <!-- ── Header ──────────────────────────────────────────────────────── -->
   <div class="vc-header">
@@ -130,8 +140,19 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
 
   <!-- ── Footer ──────────────────────────────────────────────────────── -->
   <div class="vc-footer">
-    <span class="vc-footer-label">GTAVI.AI · Community</span>
-    <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
+    {embedMode ? (
+      <>
+        <a href="https://gtavi.ai" target="_blank" rel="noopener noreferrer" class="vc-footer-label" style="text-decoration:none">GTAVI.AI · Community</a>
+        {pollHref && (
+          <a href={pollHref} target="_blank" rel="noopener noreferrer" class="vc-embed-link">Full poll →</a>
+        )}
+      </>
+    ) : (
+      <>
+        <span class="vc-footer-label">GTAVI.AI · Community</span>
+        <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
+      </>
+    )}
   </div>
 
 </div>
@@ -259,7 +280,19 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
 }
 .vc-footer-label {
   font-size: 9px; color: var(--c-text-5); text-transform: uppercase; letter-spacing: .12em;
+  transition: color .15s;
 }
+.vc-footer-label:hover { color: var(--c-brand); }
+
+.vc-embed-link {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  font-family: var(--font-mono, monospace);
+  color: var(--c-brand); text-decoration: none;
+  border: 1px solid color-mix(in srgb, var(--c-brand) 35%, transparent);
+  border-radius: 4px; padding: 3px 8px;
+  transition: background .15s;
+}
+.vc-embed-link:hover { background: color-mix(in srgb, var(--c-brand) 10%, transparent); }
 </style>
 
 <script>
