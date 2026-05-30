@@ -90,23 +90,25 @@ const KEY_INNOVATION = {
   <div class="ef-injection" style="position:relative">
     <div class="ef-inj-inner">
       <div class="ef-inj-item">
-        <div class="ef-blip" style="--bc:var(--c-flow-injection)">
-          <HudIcon name="shark-card" size={22} style="color:#fff" />
+        <div class="ef-blip-lg" style="--bc:var(--c-flow-injection)">
+          <HudIcon name="shark-card" size={28} style="color:#fff" />
         </div>
         <span class="ef-inj-label" style="color:var(--c-flow-injection)">Shark Card</span>
       </div>
       <div class="ef-inj-centre">
-        <span class="ef-inj-sub">J · REAL MONEY → GTA$</span>
+        <span class="ef-inj-eyebrow">Rockstar / Take-Two</span>
         <span class="ef-inj-title">④ J · INJECTION</span>
-        <span class="ef-inj-note">Exogenous inflow — GTA$ created without in-game labour</span>
+        <span class="ef-inj-sub">J · REAL MONEY → GTA$</span>
       </div>
       <div class="ef-inj-item">
-        <div class="ef-blip" style="--bc:var(--c-flow-injection)">
-          <HudIcon name="subscription" size={22} style="color:#fff" />
+        <div class="ef-blip-lg" style="--bc:var(--c-flow-injection)">
+          <HudIcon name="subscription" size={28} style="color:#fff" />
         </div>
         <span class="ef-inj-label" style="color:var(--c-flow-injection)">GTA+</span>
       </div>
     </div>
+    <!-- Exogenous note sits above the straddling ↓ arrow -->
+    <div class="ef-inj-exo-note">Exogenous inflow — GTA$ created without in-game labour</div>
     <!-- ↓ straddles the bottom border of the injection box, pointing into the GTA$ hub row below -->
     <div class="ef-inj-j-bottom">
       <span class="ef-arrow-chr" style="color:var(--c-flow-injection)">↓</span>
@@ -402,17 +404,18 @@ const KEY_INNOVATION = {
 
 /* ── Injection ────────────────────────────────────────────────────── */
 .ef-injection {
-  padding: 12px 20px 16px;
+  padding: 14px 20px 24px;
   background: color-mix(in srgb, var(--c-flow-injection) 9%, transparent);
   border-bottom: 1px solid var(--c-border-1);
 }
-.ef-inj-inner  { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
-.ef-inj-item   { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.ef-inj-inner  { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
+.ef-inj-item   { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .ef-inj-label  { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
-.ef-inj-centre { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
-.ef-inj-sub    { font-size: 9px; color: var(--c-flow-injection); opacity: 0.75; text-transform: uppercase; letter-spacing: .2em; }
-.ef-inj-title  { font-size: 1.05rem; font-weight: 900; color: var(--c-flow-injection); line-height: 1; }
-.ef-inj-note   { font-size: 9px; color: var(--c-text-5); margin-top: 2px; }
+.ef-inj-centre { display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; }
+.ef-inj-eyebrow { font-size: 9px; color: var(--c-flow-injection); opacity: 0.75; text-transform: uppercase; letter-spacing: .25em; }
+.ef-inj-title  { font-size: 1.3rem; font-weight: 900; color: var(--c-flow-injection); line-height: 1; }
+.ef-inj-sub    { font-size: 9px; color: var(--c-flow-injection); text-transform: uppercase; letter-spacing: .15em; margin-top: 2px; }
+.ef-inj-exo-note { font-size: 9px; color: var(--c-text-5); text-align: center; padding: 8px 20px 0; }
 
 /* ── Injection → Region connector row ─────────────────────────────── */
 .ef-inj-to-region {
@@ -598,12 +601,14 @@ const KEY_INNOVATION = {
 }
 
 /* ── Blip ─────────────────────────────────────────────────────────── */
-.ef-blip {
-  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+.ef-blip, .ef-blip-lg {
+  border-radius: 50%; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   background: color-mix(in srgb, var(--bc) 20%, transparent);
   border: 2px solid color-mix(in srgb, var(--bc) 50%, transparent);
 }
+.ef-blip    { width: 44px; height: 44px; }
+.ef-blip-lg { width: 52px; height: 52px; }
 
 /* ── Mobile ──────────────────────────────────────────────────────── */
 @media (max-width: 680px) {
