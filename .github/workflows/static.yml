@@ -1,21 +1,17 @@
-name: Build & Deploy to Pages
+name: Build Check
+
+# Runs on every push to main and staging.
+# Cloudflare Pages handles the actual deployment automatically
+# when it detects a push to the connected repo — no deploy step needed here.
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "staging"]
   workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
   build:
+    name: Build & type-check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,19 +26,3 @@ jobs:
       - run: npx astro check
 
       - run: npm run build
-
-      - uses: actions/configure-pages@v5
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/deploy-pages@v4
-        id: deployment

@@ -39,6 +39,13 @@ async function getVotes(kv: KVNamespace, pollId: string, options: string[]): Pro
 export const onRequestPost: PagesFunction<Env> = async ({ request, env, params }) => {
   const pollId = (params.pollId as string) || "";
 
+  if (!env.POLL_VOTES) {
+    return new Response(
+      JSON.stringify({ error: "kv_unbound", message: "POLL_VOTES KV binding missing — add it in Cloudflare Pages → Settings → Functions → KV Namespace Bindings" }),
+      { status: 503, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   // Parse request body
   let option: string;
   try {
