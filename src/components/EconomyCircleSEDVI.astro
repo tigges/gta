@@ -14,7 +14,8 @@
  *   - All colours from SED semantic tokens only
  *   - CSS class names mirror EconomyCircleSED for consistency
  */
-import HudIcon from "./HudIcon.astro";
+import HudIcon   from "./HudIcon.astro";
+import GamePill  from "./GamePill.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 
 interface Props {
@@ -31,6 +32,7 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
 
   <!-- ── ROW 0: Projected badge strip ───────────────────────────────── -->
   <div class="vi-proj-strip">
+    <GamePill game="gta-vi" size="xs" />
     <span class="vi-proj-badge">Projected · Pre-Launch</span>
     <span class="vi-proj-note">Model-derived from GTA Online precedent + trailer analysis</span>
   </div>
