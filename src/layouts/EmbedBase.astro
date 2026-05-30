@@ -1,0 +1,51 @@
+---
+/**
+ * EmbedBase.astro — shared shell for all embeddable iframe pages.
+ *
+ * Used by:
+ *   /community/polls/embed/[pollId]
+ *   /gta-vi/intel/embed/[predId]
+ *
+ * Provides:
+ *   - Dark color-scheme, CSS reset, centered flex body
+ *   - tokens.css so all --c-* vars and Tailwind utilities resolve correctly
+ *   - Google Fonts (Inter + JetBrains Mono) matching the main site
+ *   - X-Frame-Options: ALLOWALL so any site can embed
+ *   - noindex/nofollow so embed pages don't pollute search index
+ */
+
+import "../styles/tokens.css";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" style="color-scheme:dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta http-equiv="X-Frame-Options" content="ALLOWALL" />
+  <title>{title}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--c-bg); min-height: 100%; }
+    body { display: flex; align-items: flex-start; justify-content: center; }
+  </style>
+</head>
+<body>
+  <slot />
+</body>
+</html>

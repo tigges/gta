@@ -32,6 +32,11 @@ interface Props {
   short_value?: string | null;
   /** When provided in compact mode: renders "Full analysis →" link in footer */
   detailHref?: string;
+  /**
+   * Embed mode — suppresses ShareDropdown, replaces GTAVI.AI label with a
+   * homepage link. Use detailHref to set the "Full analysis →" destination.
+   */
+  embedMode?: boolean;
 }
 
 const {
@@ -39,7 +44,7 @@ const {
   trailer_timestamp, prediction_method, prediction_range,
   source, source_type, outcome_verified, outcome_actual,
   thumbnail, compact = false, game = "gta-vi",
-  id: cardId, short_value, detailHref,
+  id: cardId, short_value, detailHref, embedMode = false,
 } = Astro.props;
 
 const predAnchorId = cardId ?? `pred-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0,40)}`;
@@ -128,7 +133,7 @@ const valueFontClass =
   <div
     id={predAnchorId}
     class={`relative flex flex-col rounded-xl border border-border-dim border-l-2 ${tier.border} overflow-hidden transition-all duration-200 hover:border-border-mid hover:border-l-current group`}
-    style="background:var(--c-card);scroll-margin-top:72px"
+    style={`background:var(--c-card);scroll-margin-top:${embedMode ? "0" : "72px"}`}
   >
     {thumbnail && (
       <div class="relative h-28 overflow-hidden">
@@ -205,8 +210,16 @@ const valueFontClass =
     )}
 
     <div class="px-4 pb-3 mt-auto flex items-center justify-between border-t border-border-dim pt-2.5">
-      <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-      <ShareDropdown anchorId={predAnchorId} shareText={`GTA VI ${title}: ${value}${unit ? " — " + unit : ""} — ${confidence}% confidence. Data-driven, not speculation.`} size="sm" />
+      {embedMode ? (
+        <a href="https://gtavi.ai" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono text-zinc-600 tracking-widest hover:text-brand transition-colors" style="text-decoration:none">GTAVI.AI</a>
+      ) : (
+        <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+      )}
+      {embedMode && detailHref ? (
+        <a href={detailHref} target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono font-bold uppercase tracking-widest text-brand border border-brand/35 rounded px-2 py-0.5 hover:bg-brand/10 transition-colors" style="text-decoration:none">Full analysis →</a>
+      ) : !embedMode && (
+        <ShareDropdown anchorId={predAnchorId} shareText={`GTA VI ${title}: ${value}${unit ? " — " + unit : ""} — ${confidence}% confidence. Data-driven, not speculation.`} size="sm" />
+      )}
     </div>
 
     {outcome_verified && outcome_actual && (
