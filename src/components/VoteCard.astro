@@ -272,17 +272,25 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
     if (storedVote) {
       container.classList.add("hidden");
       votedNote.classList.remove("hidden");
-      // Fetch current results
+      // Show placeholder immediately, then replace with real counts
+      const placeholder: Record<string, number> = {};
+      options.forEach(o => { placeholder[o] = o === storedVote ? 1 : 0; });
+      showResults(placeholder);
+      results.classList.remove("hidden");
+      // Fetch live counts
       fetch(`/api/poll/${encodeURIComponent(pollId)}/results`)
         .then(r => r.ok ? r.json() : null)
-        .then(data => {
-          if (data?.votes) {
-            showResults(data.votes);
-            results.classList.remove("hidden");
-          }
-        })
-        .catch(() => {}); // Graceful degradation — KV unavailable
+        .then(data => { if (data?.votes) showResults(data.votes); })
+        .catch(() => {});
       return;
+    }
+
+    // Fallback: always render placeholder if API unavailable
+    function showPlaceholder(chosenOption: string) {
+      const placeholder: Record<string, number> = {};
+      options.forEach(o => { placeholder[o] = o === chosenOption ? 1 : 0; });
+      showResults(placeholder);
+      results.classList.remove("hidden");
     }
 
     // Vote button click
@@ -290,11 +298,16 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
       btn.addEventListener("click", async () => {
         const option = btn.dataset.option!;
 
-        // Optimistic UI — mark as voted immediately
+        // Optimistic UI — mark as voted, hide options, show note immediately
         localStorage.setItem(storageKey, option);
         container.classList.add("hidden");
         votedNote.classList.remove("hidden");
 
+        // Show placeholder immediately so the user always sees something
+        showPlaceholder(option);
+        results.classList.remove("hidden");
+
+        // Then try to get real counts from the API
         try {
           const resp = await fetch(`/api/poll/${encodeURIComponent(pollId)}/vote`, {
             method: "POST",
@@ -302,29 +315,22 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
             body: JSON.stringify({ option }),
           });
 
-          if (resp.ok) {
-            const data = await resp.json();
+          if (resp.ok || resp.status === 409) {
+            const data = await resp.json().catch(() => null);
             if (data?.votes) {
-              showResults(data.votes);
-              results.classList.remove("hidden");
-            }
-          } else if (resp.status === 409) {
-            // Already voted server-side — still fetch results
-            const r2 = await fetch(`/api/poll/${encodeURIComponent(pollId)}/results`);
-            if (r2.ok) {
-              const data = await r2.json();
-              if (data?.votes) {
-                showResults(data.votes);
-                results.classList.remove("hidden");
+              showResults(data.votes); // Replace placeholder with real counts
+            } else {
+              // No votes in response — try results endpoint
+              const r2 = await fetch(`/api/poll/${encodeURIComponent(pollId)}/results`);
+              if (r2.ok) {
+                const d2 = await r2.json().catch(() => null);
+                if (d2?.votes) showResults(d2.votes);
               }
             }
           }
+          // Any other status (404, 500): placeholder already showing — leave it
         } catch {
-          // Cloudflare KV unavailable (local dev) — show placeholder results
-          const placeholder: Record<string, number> = {};
-          options.forEach(o => { placeholder[o] = o === option ? 1 : 0; });
-          showResults(placeholder);
-          results.classList.remove("hidden");
+          // Network error or KV unavailable — placeholder already showing
         }
 
         // Plausible event
