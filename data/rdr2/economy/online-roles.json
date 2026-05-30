@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "note": "RDR Online roles are the primary end-game income structure. Each role has a passive income cycle analogous to GTA Online businesses. Used as a design reference for GTA VI's expected role/business system.",
+  "currency": "RDR$",
+  "roles": [
+    {
+      "id": "trader",
+      "name": "Trader",
+      "unlock_cost_rdr$": 15,
+      "unlock_method": "Butcher's Table (15 gold bars or Wilderness Outfitters catalogue)",
+      "income_model": "sell-delivery",
+      "max_capacity_materials": 100,
+      "payout_full_delivery_rdr$": {
+        "local": 625,
+        "distant": 781
+      },
+      "cycle_time_hrs": 2.0,
+      "gta$_per_hr_estimate": 300,
+      "gta_vi_analogue": "Acid Lab / Bunker (supply → sell cycle)"
+    },
+    {
+      "id": "collector",
+      "name": "Collector",
+      "unlock_cost_gold": 15,
+      "unlock_method": "Madam Nazar (15 gold bars)",
+      "income_model": "full-set-sell",
+      "max_set_value_rdr$": 400,
+      "sets_available": 9,
+      "avg_sell_price_complete_set_rdr$": 250,
+      "gta$_per_hr_estimate": 400,
+      "gta_vi_analogue": "Treasure hunting / collectible economy (predicted for GTA VI)"
+    },
+    {
+      "id": "bounty-hunter",
+      "name": "Bounty Hunter",
+      "unlock_cost_gold": 15,
+      "unlock_method": "Bounty Board (15 gold bars)",
+      "income_model": "per-mission",
+      "payout_per_bounty_rdr$": {
+        "low": 50,
+        "high": 150
+      },
+      "legendary_bounty_rdr$": {
+        "low": 100,
+        "high": 300
+      },
+      "gta$_per_hr_estimate": 200,
+      "gta_vi_analogue": "Bail bond / contact missions (expected GTA VI mechanic)"
+    },
+    {
+      "id": "naturalist",
+      "name": "Naturalist",
+      "unlock_cost_gold": 25,
+      "unlock_method": "Harriet Davenport (25 gold bars)",
+      "income_model": "sample-sell",
+      "payout_per_sample_rdr$": {
+        "low": 10,
+        "high": 25
+      },
+      "legendary_animal_sample_rdr$": 100,
+      "gta$_per_hr_estimate": 150,
+      "gta_vi_analogue": "Wildlife / ambient income (predicted for GTA VI's Leonida setting)"
+    }
+  ],
+  "gold_bar_to_rdr$_market_rate": 0.05,
+  "gold_note": "Gold bars are RDR Online's premium currency (like Shark Cards in GTA Online). 1 gold bar ≈ $0.05 USD to purchase. Role unlocks cost 15–25 gold bars.",
+  "gta_vi_implication": "GTA VI is expected to replicate or evolve this role/specialisation model. Multiple roles creating distinct income streams mirrors GTA Online's business model. The premium-currency unlock barrier (gold bars → Shark Cards analogue) is the key monetisation vector Rockstar is likely to retain.",
+  "sources": [
+    "Red Dead Wiki online roles",
+    "Community income benchmarks"
+  ],
+  "last_updated": "2026-05-30T10:35:58+00:00",
+  "data_source": "seed"
+}
