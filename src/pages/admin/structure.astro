@@ -117,8 +117,8 @@ gta-online GTA Online  var(--c-title-online)      #00d4e8        Vivid cyan
 gta-v      GTA V       var(--c-title-v)           #f59e0b        Amber = C_BRAND (intentional)
 gta-sa     GTA SA      var(--c-title-sa)          #c0392b        Street red
 gta-vc     GTA VC      var(--c-title-vc)          #ff2d78        Neon pink
-gta-iv     GTA IV      (no token — inline hex)    #6b6b7e        Subdued grey = C_TEXT_6
-gta-iii    GTA III     (no token — inline hex)    #9898b8        Muted = C_TEXT_4
+gta-iv     GTA IV      var(--c-title-iv)          #6b6b7e        Steel-grey — Liberty City, subdued
+gta-iii    GTA III     var(--c-title-iii)         #9898b8        Muted lavender — 3D era
 franchise  Franchise   (no token — inline hex)    #f59e0b        Amber = C_BRAND
 
 BACKGROUND (all):  rgba(10,10,13,0.88) — near-black opaque; legible on any surface
@@ -129,11 +129,11 @@ RULES
   ● Never before // in a SectionHeader
   ● Never standalone without a card context
   ● Do NOT add a pill to CrossLinks tiles (badge label replaces it)
-  ● gta-iv / gta-iii use inline hex fallbacks — no CSS token defined yet
 
-TOKEN GAP: gta-iv and gta-iii have no --c-title-* token.
-  To add: define --c-title-iv and --c-title-iii in tokens.css + colors.ts,
-  then update GAME_COLOUR map in GamePill.astro and GAME_TYPES in semanticTypes.ts.`}</pre>
+TOKEN STATUS: All game title tokens defined.
+  tokens.css:       --c-title-{vi,online,v,franchise,sa,vc,iv,iii}
+  colors.ts:        C_TITLE_{VI,ONLINE,SA,VC,IV,III}
+  semanticTypes.ts: all GAME_TYPES entries use var(--c-title-*)`}</pre>
     </section>
 
 

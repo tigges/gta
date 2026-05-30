@@ -25,6 +25,8 @@ export const C_TITLE_VI_ALT   = "#ff4060";  // GTA VI pink-coral (gradient end)
 export const C_TITLE_ONLINE   = "#00d4e8";  // GTA Online vivid cyan
 export const C_TITLE_SA       = "#c0392b";  // GTA SA street red
 export const C_TITLE_VC       = "#ff2d78";  // GTA VC neon pink
+export const C_TITLE_IV       = "#6b6b7e";  // GTA IV steel-grey — Liberty City, subdued
+export const C_TITLE_III      = "#9898b8";  // GTA III muted lavender — 3D era
 // GTA V + Franchise → C_BRAND (amber, intentional overlap)
 // ── Economy semantic aliases ──────────────────────────────────────────────
 export const C_INCOME       = C_LIVE;    // Y-axis income = teal
@@ -41,8 +43,8 @@ export const C_PLAY_SEMI    = C_BRAND;    // gold
 export const C_PLAY_ACTIVE  = C_ALERT;    // red
 export const C_PLAY_HEIST   = C_ECONOMY;  // indigo
 export const C_PLAY_MISSION = C_LIVE;     // teal
-// GTA IV            → C_TEXT_6 (subdued — regression era)
-// GTA III           → C_TEXT_4 (muted)
+// GTA IV → C_TITLE_IV (steel-grey, Liberty City)
+// GTA III → C_TITLE_III (muted lavender, 3D era)
 
 // ── Surfaces ──────────────────────────────────────────────────────────────
 export const C_BG         = "#0e0e11";
@@ -118,11 +120,11 @@ export const ERA_IDENTITY_MAP: Record<string, string> = {
 
 /** Map title_id → identity colour hex. */
 export const TITLE_IDENTITY_MAP: Record<string, string> = {
-  "gta-1-2":    C_TEXT_4,
-  "gta-3":      C_TEXT_4,
+  "gta-1-2":    C_TITLE_III,
+  "gta-3":      C_TITLE_III,
   "gta-vc":     C_TITLE_VC,
   "gta-sa":     C_TITLE_SA,
-  "gta-4":      C_TEXT_6,
+  "gta-4":      C_TITLE_IV,
   "gta-5":      C_BRAND,
   "gta-online": C_TITLE_ONLINE,
   "gta-6":      C_TITLE_VI,
