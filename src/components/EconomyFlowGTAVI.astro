@@ -140,7 +140,8 @@ const KEY_INNOVATION = {
       <div class="ef-region-header" style="color:var(--c-text-3);border-color:var(--c-border-1)">
         <HudIcon name="economy" size={14} style="color:var(--c-brand)" />
         <span>Vice City</span>
-        <span class="ef-region-tag">Urban · High-wage</span>
+        <span class="ef-region-wage">· high-wage</span>
+        <span class="ef-region-tag">Urban</span>
       </div>
 
       <!-- Businesses -->
@@ -163,9 +164,7 @@ const KEY_INNOVATION = {
           <span class="ef-fc-pill" style="color:var(--c-growth);border-color:color-mix(in srgb,var(--c-growth) 35%,transparent);background:color-mix(in srgb,var(--c-growth) 8%,transparent)">① Y · Income</span>
           <span class="ef-fc-sub">Y grows → next cycle</span>
         </div>
-        <div class="ef-fc-label">
-          <span class="ef-fc-sub">high-wage region</span>
-        </div>
+        <div class="ef-fc-label"></div>
         <div class="ef-fc-right">
           <span class="ef-fc-pill ef-fc-pill-inv" style="color:var(--c-economy);border-color:color-mix(in srgb,var(--c-economy) 35%,transparent);background:color-mix(in srgb,var(--c-economy) 8%,transparent)">I · Investment ↑</span>
           <span class="ef-fc-sub">I returns to Y →</span>
@@ -223,7 +222,8 @@ const KEY_INNOVATION = {
       <div class="ef-region-header" style="color:var(--c-text-3);border-color:var(--c-border-1)">
         <HudIcon name="economy" size={14} style="color:var(--c-live)" />
         <span>Leonida</span>
-        <span class="ef-region-tag">Rural · Lower-wage</span>
+        <span class="ef-region-wage">· lower-wage</span>
+        <span class="ef-region-tag">Rural</span>
       </div>
 
       <!-- Businesses -->
@@ -246,9 +246,7 @@ const KEY_INNOVATION = {
           <span class="ef-fc-pill" style="color:var(--c-growth);border-color:color-mix(in srgb,var(--c-growth) 35%,transparent);background:color-mix(in srgb,var(--c-growth) 8%,transparent)">② Y · Income</span>
           <span class="ef-fc-sub">Y grows → next cycle</span>
         </div>
-        <div class="ef-fc-label">
-          <span class="ef-fc-sub">lower-wage region</span>
-        </div>
+        <div class="ef-fc-label"></div>
         <div class="ef-fc-right">
           <span class="ef-fc-pill ef-fc-pill-inv" style="color:var(--c-economy);border-color:color-mix(in srgb,var(--c-economy) 35%,transparent);background:color-mix(in srgb,var(--c-economy) 8%,transparent)">I · Investment ↑</span>
           <span class="ef-fc-sub">I returns to Y →</span>
@@ -460,8 +458,11 @@ const KEY_INNOVATION = {
   font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
   border-bottom: 1.5px solid; padding-bottom: 6px;
 }
+.ef-region-wage {
+  font-size: 11px; font-weight: 400; color: var(--c-text-5); letter-spacing: .02em;
+}
 .ef-region-tag {
-  font-size: 9px; font-weight: 400; color: var(--c-text-5); margin-left: auto;
+  font-size: 9px; font-weight: 400; color: var(--c-text-5); margin-left: auto; text-transform: uppercase; letter-spacing: .08em;
 }
 
 /* Nodes */
