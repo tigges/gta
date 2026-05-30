@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "description": "Intake queue for new GTA VI predictions. Add entries here — never directly to predictions.json. The nightly fetch_predictions_auto.py run promotes each pending draft into a proposal card on /admin/proposals/ for human review before it lands in predictions.json.",
-  "last_updated": "2026-05-30T19:46:06+00:00",
+  "last_updated": "2026-05-30T19:55:00+00:00",
   "workflow": [
     "1. Add new prediction draft here (all required fields from predictions.json schema v2.0)",
     "2. Set draft_status to 'pending'",
@@ -51,7 +51,7 @@
         "gta-vi/intel"
       ],
       "display_order": 20,
-      "draft_status": "pending",
+      "draft_status": "promoted",
       "draft_notes": "Supported by mechanics/index.json greet-antagonize entry + shop-prices honour_price_modifier data"
     },
     {
@@ -84,7 +84,7 @@
         "gta-vi/intel"
       ],
       "display_order": 21,
-      "draft_status": "pending",
+      "draft_status": "promoted",
       "draft_notes": "Supported by online-roles.json Trader entry with gta_vi_analogue field"
     },
     {
@@ -116,7 +116,7 @@
         "gta-vi/intel"
       ],
       "display_order": 22,
-      "draft_status": "pending",
+      "draft_status": "promoted",
       "draft_notes": "Supported by mechanics/index.json threat-detection entry"
     },
     {
@@ -148,7 +148,7 @@
         "gta-vi/intel"
       ],
       "display_order": 23,
-      "draft_status": "pending",
+      "draft_status": "promoted",
       "draft_notes": "Supported by online-roles.json Collector entry with gta_vi_analogue field"
     }
   ]
