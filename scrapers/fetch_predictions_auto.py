@@ -175,6 +175,87 @@ class PredictionUpdater:
         print(f"  ⚑ [{pred_id}] PROPOSAL: {field} → {proposed_val!r}  ({rationale})")
 
 
+def load_drafts() -> list[dict]:
+    """
+    Load pending new prediction drafts from data/gta-6/predictions-drafts.json.
+
+    Each draft with draft_status == "pending" (or missing draft_status) is
+    treated as a candidate to promote into a proposal on /admin/proposals/.
+    Drafts already marked "promoted" are skipped.
+    """
+    drafts_path = DATA / "gta-6/predictions-drafts.json"
+    if not drafts_path.exists():
+        return []
+    try:
+        data = json.loads(drafts_path.read_text())
+        all_drafts = data.get("drafts", [])
+        pending = [
+            d for d in all_drafts
+            if d.get("draft_status", "pending") == "pending"
+        ]
+        return pending
+    except Exception as e:
+        print(f"  [warn] Could not read predictions-drafts.json: {e}")
+    return []
+
+
+def run_draft_proposals(updater: PredictionUpdater) -> None:
+    """
+    Promote pending prediction drafts into proposals for human review.
+
+    For each pending draft whose id does not yet exist in predictions.json,
+    this creates a 'new' proposal with field '_new' and the full draft object
+    as the proposed value. The /admin/proposals/ page renders these with the
+    '+ New prediction' badge and a full-object view.
+
+    Drafts whose id already exists in predictions.json are skipped (the
+    prediction was likely already applied — mark the draft as 'promoted').
+    """
+    drafts = load_drafts()
+    if not drafts:
+        return
+
+    print(f"\nProcessing {len(drafts)} pending draft(s) from predictions-drafts.json...")
+    for draft in drafts:
+        draft_id = draft.get("id", "")
+        if not draft_id:
+            print(f"  [skip] Draft missing 'id' field: {draft.get('title', '?')}")
+            continue
+
+        # Skip if the prediction already exists in predictions.json
+        existing = updater.get(draft_id)
+        if existing:
+            print(f"  [skip] {draft_id} already exists in predictions.json"
+                  " — mark draft as 'promoted'")
+            continue
+
+        # Strip the intake-only fields before proposing
+        proposal_obj = {k: v for k, v in draft.items()
+                        if k not in ("draft_status", "draft_notes")}
+        # Ensure required defaults
+        proposal_obj.setdefault("outcome_verified", False)
+        proposal_obj.setdefault("outcome_actual", None)
+        proposal_obj.setdefault("outcome_date", None)
+        proposal_obj.setdefault("prediction_method", None)
+        proposal_obj.setdefault("prediction_inputs", [])
+        proposal_obj.setdefault("trailer_timestamp", None)
+        proposal_obj.setdefault("thumbnail", None)
+        proposal_obj.setdefault("unit", None)
+        proposal_obj.setdefault("pages", ["gta-vi/intel"])
+        proposal_obj.setdefault("display_order", 99)
+        proposal_obj.setdefault("editorial_note", "draft")
+
+        notes = draft.get("draft_notes", "")
+        rationale = f"New prediction from drafts intake queue.{' ' + notes if notes else ''}"
+
+        updater.propose(
+            draft_id, "_new",
+            current_val=None,
+            proposed_val=proposal_obj,
+            rationale=rationale,
+        )
+
+
 def run_updates(updater: PredictionUpdater) -> None:
 
     # ── 1. pred-release-window: sync from delay-timeline.json ────────────────
@@ -285,6 +366,7 @@ def main() -> None:
 
     print("Running update checks...")
     run_updates(updater)
+    run_draft_proposals(updater)
 
     if not updater.changes and not updater.proposals:
         print("\nNo changes detected — predictions are up to date.")
