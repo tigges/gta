@@ -93,42 +93,24 @@ const { variant = "full" } = Astro.props;
       status.classList.remove("hidden");
     }
 
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
       const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim();
       if (!email) return;
 
       if (btn) { btn.textContent = "…"; btn.disabled = true; }
 
-      try {
-        const res  = await fetch(ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
+      if (typeof (window as any).plausible === "function") {
+        (window as any).plausible("NewsletterSignup", {
+          props: { variant: form.dataset.variant ?? "unknown" },
         });
-        const data = await res.json() as { ok?: boolean; message?: string; error?: string };
-
-        if (data.ok) {
-          setStatus(data.message === "Already subscribed"
-            ? "You're already on the list."
-            : "Subscribed. First issue lands Tuesday.", true);
-          form.reset();
-          if (typeof (window as any).plausible === "function") {
-            (window as any).plausible("NewsletterSignup", {
-              props: { variant: form.dataset.variant ?? "unknown" },
-            });
-          }
-        } else {
-          setStatus(data.error ?? "Something went wrong — please try again.", false);
-        }
-      } catch {
-        // /api/subscribe returns 404 on GitHub Pages (static host).
-        // Direct to the Beehiiv fallback so subscribers aren't lost.
-        setStatus("Redirecting to subscribe page…", true);
-        setTimeout(() => { window.location.href = "https://gtavi.beehiiv.com/subscribe"; }, 800);
       }
 
-      if (btn) { btn.textContent = origTxt; btn.disabled = false; }
+      // Send directly to Beehiiv with email pre-filled
+      setStatus("Redirecting to subscribe page…", true);
+      setTimeout(() => {
+        window.location.href = `https://gtavi.beehiiv.com/subscribe?email=${encodeURIComponent(email)}`;
+      }, 400);
     });
   });
 })();

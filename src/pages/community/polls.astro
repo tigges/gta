@@ -21,7 +21,7 @@ const predicted = pollPreds.filter((p: any) => p.confidence_tier === "predicted"
   description={`${pollPreds.length} community polls on GTA VI predictions. Vote on launch price, wanted system, hunting, regional economy, and more. See what the community thinks.`}
   titleContext="gta-vi"
   crossLinksContext="polls"
-  ogPage="vi-intel"
+  ogImage="https://gtavi.ai/og/poll/pred-rdr2-wanted-stars.png"
 >
   <!-- Hero -->
   <section class="border-b border-border-dim" style="background:var(--c-bg-deep)">
@@ -54,7 +54,13 @@ const predicted = pollPreds.filter((p: any) => p.confidence_tier === "predicted"
         <SectionHeader label="// Reported Mechanics · Community Verdict" dotColor="var(--c-live)" />
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {reported.map((p: any) => (
-            <VoteCard predictionId={p.id} />
+            <div class="flex flex-col">
+              <VoteCard predictionId={p.id} />
+              <a href={`/community/polls/${p.id}`}
+                class="text-center text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors py-1.5">
+                Full poll →
+              </a>
+            </div>
           ))}
         </div>
       </section>
@@ -65,7 +71,13 @@ const predicted = pollPreds.filter((p: any) => p.confidence_tier === "predicted"
         <SectionHeader label="// Model Predictions · What do you think?" dotColor="var(--c-brand)" />
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {predicted.map((p: any) => (
-            <VoteCard predictionId={p.id} />
+            <div class="flex flex-col">
+              <VoteCard predictionId={p.id} />
+              <a href={`/community/polls/${p.id}`}
+                class="text-center text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors py-1.5">
+                Full poll →
+              </a>
+            </div>
           ))}
         </div>
       </section>
@@ -76,7 +88,13 @@ const predicted = pollPreds.filter((p: any) => p.confidence_tier === "predicted"
         <SectionHeader label="// Confirmed Facts · Gut-check" dotColor="var(--c-live)" />
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {confirmed.map((p: any) => (
-            <VoteCard predictionId={p.id} />
+            <div class="flex flex-col">
+              <VoteCard predictionId={p.id} />
+              <a href={`/community/polls/${p.id}`}
+                class="text-center text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors py-1.5">
+                Full poll →
+              </a>
+            </div>
           ))}
         </div>
       </section>
