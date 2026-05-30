@@ -142,7 +142,7 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
   <div class="vc-footer">
     {embedMode ? (
       <>
-        <a href="https://gtavi.ai" target="_blank" rel="noopener noreferrer" class="vc-footer-label" style="text-decoration:none">GTAVI.AI · Community</a>
+        <a href="https://gtavi.ai" target="_blank" rel="noopener noreferrer" class="vc-footer-label">GTAVI.AI ↗</a>
         {pollHref && (
           <a href={pollHref} target="_blank" rel="noopener noreferrer" class="vc-embed-link">Full poll →</a>
         )}
@@ -279,8 +279,11 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
 }
 .vc-footer-label {
-  font-size: 9px; color: var(--c-text-5); text-transform: uppercase; letter-spacing: .12em;
+  font-size: 9px; font-weight: 700; color: var(--c-text-3); text-transform: uppercase; letter-spacing: .12em;
   transition: color .15s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
 }
 .vc-footer-label:hover { color: var(--c-brand); }
 
@@ -401,13 +404,17 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
       results.classList.remove("hidden");
       copyCardBtn?.classList.remove("hidden");
       updateShareLinks(storedVote, placeholder);
-      // Fetch live counts
+      // Fetch live counts — only replace placeholder if server has real data (total > 0)
       fetch(`/api/poll/${encodeURIComponent(pollId)}/results`)
         .then(r => r.ok ? r.json() : null)
         .then(data => {
           if (data?.votes) {
-            showResults(data.votes);
-            updateShareLinks(storedVote, data.votes);
+            const liveTotal = Object.values(data.votes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0);
+            if (liveTotal > 0) {
+              showResults(data.votes);
+              updateShareLinks(storedVote, data.votes);
+            }
+            // If total === 0 (KV broken/empty), keep the local placeholder — never show all-zero bars
           }
         })
         .catch(() => {});
@@ -449,15 +456,22 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
           if (resp.ok || resp.status === 409) {
             const data = await resp.json().catch(() => null);
             const liveVotes = data?.votes ?? null;
-            if (liveVotes) {
+            const liveTotal = liveVotes
+              ? Object.values(liveVotes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0)
+              : 0;
+            if (liveVotes && liveTotal > 0) {
               showResults(liveVotes);
               updateShareLinks(option, liveVotes);
             } else {
-              // Try results endpoint
+              // No real data yet — try results endpoint as fallback
               const r2 = await fetch(`/api/poll/${encodeURIComponent(pollId)}/results`);
               if (r2.ok) {
                 const d2 = await r2.json().catch(() => null);
-                if (d2?.votes) { showResults(d2.votes); updateShareLinks(option, d2.votes); }
+                const t2 = d2?.votes
+                  ? Object.values(d2.votes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0)
+                  : 0;
+                if (d2?.votes && t2 > 0) { showResults(d2.votes); updateShareLinks(option, d2.votes); }
+                // If still 0, placeholder remains — never show all-zero bars to the voter
               }
             }
           }
