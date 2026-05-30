@@ -1,0 +1,337 @@
+---
+/**
+ * VoteCard.astro — Community prediction poll card.
+ *
+ * Renders a vote card for a prediction question. Two modes:
+ *
+ * 1. PREDICTION MODE (predictionId): reads question + options from
+ *    predictions.json (poll_question + poll_options fields).
+ *
+ * 2. STANDALONE MODE (question + options): manually specified question
+ *    for polls not tied to a specific prediction.
+ *
+ * Voting:
+ *   - POSTs to /api/poll/vote with { pollId, option }
+ *   - Uses localStorage to track voted state client-side
+ *   - Cloudflare KV stores cumulative vote counts (requires POLL_VOTES KV binding)
+ *   - Falls back gracefully if KV is unavailable (shows vote UI, counts from 0)
+ *
+ * Usage:
+ *   <VoteCard predictionId="pred-rdr2-wanted-stars" />
+ *   <VoteCard
+ *     pollId="custom-poll"
+ *     question="Will GTA VI launch on PC day one?"
+ *     options={["Yes", "No", "Delayed"]}
+ *   />
+ */
+
+import type { PredictionsData } from "../types/gta";
+import ShareDropdown from "./ShareDropdown.astro";
+import GamePill from "./GamePill.astro";
+import predRaw from "../../data/gta-6/predictions.json";
+
+interface Props {
+  predictionId?: string;
+  pollId?:       string;
+  question?:     string;
+  options?:      string[];
+  game?:         "gta-vi" | "gta-online" | "franchise";
+}
+
+const {
+  predictionId,
+  pollId: manualPollId,
+  question: manualQuestion,
+  options:  manualOptions,
+  game = "gta-vi",
+} = Astro.props;
+
+const predData = predRaw as unknown as PredictionsData;
+
+// Resolve question and options
+let question = manualQuestion ?? "";
+let options:  string[] = manualOptions ?? ["Yes", "No"];
+let pollId    = manualPollId ?? predictionId ?? "";
+let basis     = "";
+let confidence: number | null = null;
+
+if (predictionId) {
+  const pred = predData.predictions.find((p: any) => p.id === predictionId);
+  if (pred) {
+    question   = (pred as any).poll_question ?? pred.title;
+    options    = (pred as any).poll_options  ?? ["Yes", "No"];
+    pollId     = predictionId;
+    basis      = pred.basis ?? "";
+    confidence = pred.confidence ?? null;
+  }
+}
+
+if (!question) throw new Error(`VoteCard: no question resolved for pollId="${pollId}"`);
+
+const anchorId  = `vote-${pollId}`;
+const shareText = `${question} — Vote on GTAVI.AI and see what the community thinks.`;
+---
+
+<div class="vc-card" id={anchorId} style="scroll-margin-top:80px">
+
+  <!-- ── Header ──────────────────────────────────────────────────────── -->
+  <div class="vc-header">
+    <div class="flex items-center gap-2 flex-wrap">
+      <GamePill game={game} size="xs" />
+      <span class="vc-badge">Community Vote</span>
+      {confidence !== null && (
+        <span class="vc-confidence">{confidence}% confidence</span>
+      )}
+    </div>
+  </div>
+
+  <!-- ── Question ────────────────────────────────────────────────────── -->
+  <div class="vc-body">
+    <div class="vc-question">{question}</div>
+
+    {basis && (
+      <div class="vc-basis">{basis.length > 200 ? basis.slice(0, 200) + "…" : basis}</div>
+    )}
+
+    <!-- Vote options — shown before voting -->
+    <div class="vc-options" data-poll-id={pollId} data-options={JSON.stringify(options)}>
+      {options.map((opt, i) => (
+        <button
+          class="vc-option"
+          data-option={opt}
+          data-index={i}
+        >
+          {opt}
+        </button>
+      ))}
+    </div>
+
+    <!-- Results — shown after voting (hidden until vote cast) -->
+    <div class="vc-results hidden" data-poll-id={pollId}>
+      {options.map(opt => (
+        <div class="vc-result-row" data-option={opt}>
+          <div class="vc-result-label">{opt}</div>
+          <div class="vc-result-track">
+            <div class="vc-result-bar" data-option={opt} style="width:0%"></div>
+          </div>
+          <div class="vc-result-pct" data-option={opt}>—</div>
+        </div>
+      ))}
+      <div class="vc-vote-count"></div>
+    </div>
+
+    <div class="vc-voted-note hidden">You voted · results shown below</div>
+  </div>
+
+  <!-- ── Footer ──────────────────────────────────────────────────────── -->
+  <div class="vc-footer">
+    <span class="vc-footer-label">GTAVI.AI · Community</span>
+    <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
+  </div>
+
+</div>
+
+<style>
+.vc-card {
+  border-radius: 12px;
+  border: 1px solid var(--c-border-1);
+  background: var(--c-card);
+  font-family: var(--font-mono, monospace);
+  overflow: hidden;
+}
+
+.vc-header {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--c-border-1);
+  background: var(--c-bg-deep);
+}
+
+.vc-badge {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--c-brand);
+  border: 1px solid color-mix(in srgb, var(--c-brand) 35%, transparent);
+  background: color-mix(in srgb, var(--c-brand) 10%, transparent);
+  border-radius: 4px; padding: 2px 7px;
+}
+
+.vc-confidence {
+  font-size: 9px; color: var(--c-text-5); letter-spacing: .06em;
+}
+
+.vc-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+.vc-question {
+  font-size: 1rem; font-weight: 700; color: var(--c-text-2); line-height: 1.4;
+  font-family: var(--font-sans, sans-serif);
+}
+
+.vc-basis {
+  font-size: 9px; color: var(--c-text-5); line-height: 1.5;
+}
+
+/* ── Options ── */
+.vc-options { display: flex; flex-direction: column; gap: 8px; }
+
+.vc-option {
+  width: 100%; padding: 10px 14px; border-radius: 8px; cursor: pointer;
+  font-size: 11px; font-weight: 700; text-align: left; letter-spacing: .04em;
+  font-family: var(--font-mono, monospace);
+  color: var(--c-text-3);
+  border: 1px solid var(--c-border-1);
+  background: var(--c-bg-deep);
+  transition: border-color .15s, background .15s, color .15s;
+}
+.vc-option:hover {
+  border-color: color-mix(in srgb, var(--c-brand) 50%, transparent);
+  background: color-mix(in srgb, var(--c-brand) 8%, transparent);
+  color: var(--c-brand);
+}
+.vc-option:active { transform: scale(0.99); }
+
+/* ── Results ── */
+.vc-results { display: flex; flex-direction: column; gap: 10px; }
+
+.vc-result-row { display: flex; align-items: center; gap: 10px; }
+
+.vc-result-label {
+  font-size: 11px; font-weight: 700; color: var(--c-text-3); width: 40%; min-width: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.vc-result-track {
+  flex: 1; height: 20px; border-radius: 4px; overflow: hidden;
+  background: var(--c-border-1);
+}
+
+.vc-result-bar {
+  height: 100%; border-radius: 4px;
+  background: var(--c-brand);
+  opacity: .8;
+  transition: width .6s cubic-bezier(.4,0,.2,1);
+}
+
+/* Different colours per option index */
+.vc-result-row:nth-child(2) .vc-result-bar { background: var(--c-live); }
+.vc-result-row:nth-child(3) .vc-result-bar { background: var(--c-alert); }
+.vc-result-row:nth-child(4) .vc-result-bar { background: var(--c-economy); }
+
+.vc-result-pct {
+  font-size: 11px; font-weight: 900; color: var(--c-text-3);
+  width: 38px; text-align: right; flex-shrink: 0;
+}
+
+.vc-vote-count {
+  font-size: 9px; color: var(--c-text-5); text-align: right; margin-top: 4px;
+}
+
+.vc-voted-note {
+  font-size: 9px; color: var(--c-growth); letter-spacing: .06em; text-align: center;
+}
+
+.hidden { display: none !important; }
+
+/* ── Footer ── */
+.vc-footer {
+  padding: 8px 16px;
+  border-top: 1px solid var(--c-border-1);
+  background: var(--c-card);
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.vc-footer-label {
+  font-size: 9px; color: var(--c-text-5); text-transform: uppercase; letter-spacing: .12em;
+}
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".vc-options").forEach(container => {
+    const pollId  = container.dataset.pollId!;
+    const options = JSON.parse(container.dataset.options || "[]") as string[];
+    const card    = container.closest<HTMLElement>(".vc-card")!;
+    const results = card.querySelector<HTMLElement>(".vc-results")!;
+    const votedNote = card.querySelector<HTMLElement>(".vc-voted-note")!;
+
+    const storageKey = `vote:${pollId}`;
+
+    // Helper: animate result bars from fetched data
+    function showResults(votes: Record<string, number>) {
+      const total = Object.values(votes).reduce((s, v) => s + v, 0);
+      options.forEach(opt => {
+        const count = votes[opt] ?? 0;
+        const pct   = total > 0 ? Math.round((count / total) * 100) : 0;
+        const bar   = results.querySelector<HTMLElement>(`.vc-result-bar[data-option="${opt}"]`);
+        const pctEl = results.querySelector<HTMLElement>(`.vc-result-pct[data-option="${opt}"]`);
+        if (bar)   bar.style.width   = `${pct}%`;
+        if (pctEl) pctEl.textContent = `${pct}%`;
+      });
+      const countEl = results.querySelector<HTMLElement>(".vc-vote-count");
+      if (countEl) countEl.textContent = `${total.toLocaleString()} vote${total !== 1 ? "s" : ""}`;
+    }
+
+    // If already voted (localStorage), show results immediately
+    const storedVote = localStorage.getItem(storageKey);
+    if (storedVote) {
+      container.classList.add("hidden");
+      votedNote.classList.remove("hidden");
+      // Fetch current results
+      fetch(`/api/poll/${encodeURIComponent(pollId)}/results`)
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data?.votes) {
+            showResults(data.votes);
+            results.classList.remove("hidden");
+          }
+        })
+        .catch(() => {}); // Graceful degradation — KV unavailable
+      return;
+    }
+
+    // Vote button click
+    container.querySelectorAll<HTMLButtonElement>(".vc-option").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const option = btn.dataset.option!;
+
+        // Optimistic UI — mark as voted immediately
+        localStorage.setItem(storageKey, option);
+        container.classList.add("hidden");
+        votedNote.classList.remove("hidden");
+
+        try {
+          const resp = await fetch(`/api/poll/${encodeURIComponent(pollId)}/vote`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ option }),
+          });
+
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data?.votes) {
+              showResults(data.votes);
+              results.classList.remove("hidden");
+            }
+          } else if (resp.status === 409) {
+            // Already voted server-side — still fetch results
+            const r2 = await fetch(`/api/poll/${encodeURIComponent(pollId)}/results`);
+            if (r2.ok) {
+              const data = await r2.json();
+              if (data?.votes) {
+                showResults(data.votes);
+                results.classList.remove("hidden");
+              }
+            }
+          }
+        } catch {
+          // Cloudflare KV unavailable (local dev) — show placeholder results
+          const placeholder: Record<string, number> = {};
+          options.forEach(o => { placeholder[o] = o === option ? 1 : 0; });
+          showResults(placeholder);
+          results.classList.remove("hidden");
+        }
+
+        // Plausible event
+        if (typeof (window as any).plausible === "function") {
+          (window as any).plausible("PollVote", { props: { pollId, option } });
+        }
+      });
+    });
+  });
+</script>

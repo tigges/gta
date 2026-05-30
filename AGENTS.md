@@ -80,6 +80,7 @@ python3 scrapers/fetch_newswire.py
 | `DISCORD_WEBHOOK_URL` | `post_discord_digest.py` | No — digest skipped if absent |
 | `RESEND_API_KEY` | `post_weekly_digest_resend.py` | No — digest skipped if absent |
 | `RESEND_AUDIENCE_ID` | `post_weekly_digest_resend.py`, `functions/api/subscribe.ts` | No — skipped if absent. Create at resend.com → Audiences |
+| `POLL_VOTES` (KV) | `functions/api/poll/[pollId]/vote.ts`, `results.ts` | No — polls degrade gracefully. Set up: Cloudflare Pages → Settings → Functions → KV Namespace Bindings → Variable: `POLL_VOTES` |
 
 Secrets are configured in: **GitHub repo → Settings → Secrets and variables → Actions**
 
