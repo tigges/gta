@@ -485,20 +485,20 @@ const KEY_INNOVATION = {
 .ef-flow-connector {
   display: flex; align-items: center; gap: 6px; padding: 0 4px;
 }
-.ef-fc-left  { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
-.ef-fc-right { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
-.ef-fc-line   { width: 1.5px; height: 18px; }
-.ef-fc-arrow  { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top-width: 7px; border-top-style: solid; }
-.ef-fc-arrow-up { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom-width: 7px; border-bottom-style: solid; }
+.ef-fc-left  { display: flex; flex-direction: column; align-items: stretch; gap: 4px; flex: 1; }
+.ef-fc-right { display: flex; flex-direction: column; align-items: stretch; gap: 4px; flex: 1; }
+.ef-fc-line     { width: 1.5px; height: 18px; align-self: center; }
+.ef-fc-arrow    { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top-width: 7px; border-top-style: solid; align-self: center; }
+.ef-fc-arrow-up { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom-width: 7px; border-bottom-style: solid; align-self: center; }
 
 .ef-fc-label { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 8px; }
 .ef-fc-pill {
   font-size: 1.05rem; font-weight: 900; letter-spacing: .04em;
   border: 1px solid; border-radius: 5px; padding: 3px 10px;
-  white-space: nowrap; text-align: center;
+  text-align: center; width: 100%; box-sizing: border-box;
 }
 .ef-fc-pill-inv { opacity: 1; }
-.ef-fc-sub { font-size: 9px; color: var(--c-text-5); text-align: center; }
+.ef-fc-sub { font-size: 9px; color: var(--c-text-5); text-align: center; width: 100%; box-sizing: border-box; }
 
 /* Outflow strip at bottom of each region */
 .ef-outflow {
