@@ -108,6 +108,7 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
 
     <!-- Results — shown after voting (hidden until vote cast) -->
     <div class="vc-results hidden" data-poll-id={pollId}>
+      <div class="vc-voted-note hidden">✓ You voted</div>
       {options.map(opt => (
         <div class="vc-result-row" data-option={opt}>
           <div class="vc-result-label">{opt}</div>
@@ -119,8 +120,6 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
       ))}
       <div class="vc-vote-count"></div>
     </div>
-
-    <div class="vc-voted-note hidden">You voted · results shown below</div>
   </div>
 
   <!-- ── Footer ──────────────────────────────────────────────────────── -->
@@ -194,13 +193,14 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
 .vc-result-row { display: flex; align-items: center; gap: 10px; }
 
 .vc-result-label {
-  font-size: 11px; font-weight: 700; color: var(--c-text-3); width: 40%; min-width: 0;
+  font-size: 11px; font-weight: 700; color: var(--c-text-3);
+  flex: 1; min-width: 0;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
 .vc-result-track {
-  flex: 1; height: 20px; border-radius: 4px; overflow: hidden;
-  background: var(--c-border-1);
+  width: 140px; flex-shrink: 0; height: 20px; border-radius: 4px; overflow: hidden;
+  background: color-mix(in srgb, var(--c-border-1) 80%, var(--c-bg-deep));
 }
 
 .vc-result-bar {
@@ -225,7 +225,8 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
 }
 
 .vc-voted-note {
-  font-size: 9px; color: var(--c-growth); letter-spacing: .06em; text-align: center;
+  font-size: 9px; color: var(--c-growth); letter-spacing: .06em;
+  margin-bottom: 4px;
 }
 
 .hidden { display: none !important; }
@@ -246,9 +247,9 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
   document.querySelectorAll<HTMLElement>(".vc-options").forEach(container => {
     const pollId  = container.dataset.pollId!;
     const options = JSON.parse(container.dataset.options || "[]") as string[];
-    const card    = container.closest<HTMLElement>(".vc-card")!;
-    const results = card.querySelector<HTMLElement>(".vc-results")!;
-    const votedNote = card.querySelector<HTMLElement>(".vc-voted-note")!;
+    const card      = container.closest<HTMLElement>(".vc-card")!;
+    const results   = card.querySelector<HTMLElement>(".vc-results")!;
+    const votedNote = results.querySelector<HTMLElement>(".vc-voted-note")!;
 
     const storageKey = `vote:${pollId}`;
 
