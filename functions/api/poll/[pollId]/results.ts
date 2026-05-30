@@ -14,6 +14,13 @@ interface Env {
 export const onRequestGet: PagesFunction<Env> = async ({ env, params }) => {
   const pollId = (params.pollId as string) || "";
 
+  if (!env.POLL_VOTES) {
+    return new Response(
+      JSON.stringify({ votes: {}, total: 0, error: "kv_unbound" }),
+      { headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } }
+    );
+  }
+
   const voteKey = `poll:${pollId}:_options`;
   const stored  = await env.POLL_VOTES.get(voteKey);
 
