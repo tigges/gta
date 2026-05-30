@@ -1,0 +1,502 @@
+---
+/**
+ * /admin/social — Social, Growth & Monetisation Strategy
+ * Full playbook: poll distribution, n8n automation, SEO, affiliate, traffic.
+ * Internal admin tool — unlisted from public nav.
+ */
+import Base from "../../layouts/Base.astro";
+import predRaw from "../../../data/gta-6/predictions.json";
+
+const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
+---
+
+<Base title="Admin — Social & Growth Strategy" description="GTAVI.AI social media strategy, n8n pipeline, SEO, affiliate and traffic playbook." noindex>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+
+    <div>
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Admin · Internal</div>
+      <h1 class="text-2xl font-bold text-white mb-1">Social &amp; Growth Strategy</h1>
+      <p class="text-sm text-zinc-500">Poll distribution · n8n automation · SEO · affiliate programme · traffic playbook. Not visible to public users.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 1 — POLL EMBED DISTRIBUTION
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// 01 — Poll Embed Distribution</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
+
+      <p class="text-[13px] text-zinc-400 leading-relaxed mb-4">
+        Every poll has a standalone embed URL at <code class="text-gta-gold/80 bg-zinc-800 px-1.5 py-0.5 rounded text-[11px]">/community/polls/embed/[pollId]</code>.
+        These are iframe-ready, token-styled, and link back to <code class="text-gta-gold/80 bg-zinc-800 px-1.5 py-0.5 rounded text-[11px]">gtavi.ai</code>.
+        Use them to drop live interactive polls into Reddit, GTAForums, Beehiiv newsletters, and Discord announcements.
+      </p>
+
+      <!-- Embed snippet -->
+      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+        <div class="px-4 py-2.5 border-b border-border-dim flex items-center gap-2">
+          <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Copy-paste embed snippet</span>
+        </div>
+        <pre class="px-4 py-4 text-[11px] font-mono text-zinc-300 overflow-x-auto whitespace-pre-wrap leading-relaxed">&lt;iframe
+  src="https://gtavi.ai/community/polls/embed/POLL_ID"
+  width="400" height="360"
+  style="border:none;border-radius:12px;overflow:hidden"
+  title="GTA VI Community Poll"
+  loading="lazy"
+&gt;&lt;/iframe&gt;</pre>
+      </div>
+
+      <!-- Poll inventory table -->
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-4 py-2.5 border-b border-border-dim flex items-center justify-between">
+          <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">{polls.length} active polls · embed-ready</span>
+          <span class="text-[10px] font-mono text-zinc-600">staging.gtavi.ai/community/polls/embed/[id]</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-[11px] font-mono">
+            <thead>
+              <tr class="border-b border-border-dim">
+                <th class="text-left px-4 py-2 text-zinc-500 font-normal">Poll ID</th>
+                <th class="text-left px-4 py-2 text-zinc-500 font-normal">Question</th>
+                <th class="text-left px-4 py-2 text-zinc-500 font-normal">Confidence</th>
+                <th class="text-left px-4 py-2 text-zinc-500 font-normal">Embed URL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {polls.map((p: any) => (
+                <tr class="border-b border-border-dim/40 hover:bg-white/[0.02] transition-colors">
+                  <td class="px-4 py-2 text-gta-gold/70">{p.id}</td>
+                  <td class="px-4 py-2 text-zinc-300 max-w-xs truncate">{p.poll_question}</td>
+                  <td class="px-4 py-2 text-zinc-500">{p.confidence}%</td>
+                  <td class="px-4 py-2">
+                    <a
+                      href={`/community/polls/embed/${p.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-gta-vi-coral/70 hover:text-gta-vi-coral transition-colors"
+                    >
+                      /embed/{p.id} ↗
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Channel-by-channel playbook -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+        {[
+          {
+            ch: "Reddit",
+            color: "var(--c-flow-spending)",
+            icon: "r/",
+            posts: [
+              "r/GTA6 — drop the top 3 polls in a weekly megathread comment",
+              "r/gtaonline — hunting, business cycle, weapon carry polls fit perfectly",
+              "Use iframe embed in comments if sub allows; otherwise paste the direct URL with context",
+              "Best time: Thursday 18:00–21:00 UTC (peak US engagement window)",
+            ],
+          },
+          {
+            ch: "GTAForums",
+            color: "var(--c-brand)",
+            icon: "GF",
+            posts: [
+              "GTA VI General Discussion — one poll thread per week",
+              "Embed via direct iframe (GTAForums allows HTML in some subforums)",
+              "Lead with the prediction context, embed below, link to /gta-vi/intel",
+              "Focus: economy/business polls — most relevant to the forum's power users",
+            ],
+          },
+          {
+            ch: "X / Twitter",
+            color: "var(--c-chart-bar)",
+            icon: "𝕏",
+            posts: [
+              "Quote the poll question as the tweet body — no extra copy needed",
+              "Attach screenshot of the VoteCard (thumbnail visible) as an image",
+              "Drop the embed URL in first reply to maximise reach without link penalty",
+              "Cadence: 1 poll tweet per Tuesday (ties to weekly digest day)",
+            ],
+          },
+          {
+            ch: "Discord",
+            color: "var(--c-economy)",
+            icon: "D",
+            posts: [
+              "Post embed snippet in #polls or #community channel",
+              "Ping @everyone only for high-confidence predictions (≥75%)",
+              "Follow-up with results summary 48h later — drives return traffic",
+              "Link to full intel page for deeper context",
+            ],
+          },
+          {
+            ch: "Beehiiv Newsletter",
+            color: "var(--c-gta-dollar)",
+            icon: "✉",
+            posts: [
+              "Embed 2 polls per newsletter issue (Beehiiv supports iframes)",
+              "Place after main article, before sponsor block",
+              "Use thumbnail polls for visual break — GTA VI location images pop",
+              "CTA below embed: 'See all community predictions → gtavi.ai/gta-vi/intel'",
+            ],
+          },
+          {
+            ch: "Instagram / TikTok",
+            color: "var(--c-gta-vi-coral)",
+            icon: "▶",
+            posts: [
+              "Screenshot VoteCard with thumbnail — strong visual content",
+              "Caption: punchy poll question + 'vote in bio link'",
+              "Stories: use poll sticker with same question as VoteCard",
+              "Repost result cards after 48h for engagement loop",
+            ],
+          },
+        ].map(c => (
+          <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-7 h-7 rounded-md flex items-center justify-center font-mono font-black text-[11px] shrink-0" style={`background:color-mix(in srgb,${c.color} 15%,transparent);color:${c.color}`}>{c.icon}</span>
+              <span class="text-[12px] font-semibold text-zinc-200">{c.ch}</span>
+            </div>
+            <ul class="space-y-1.5">
+              {c.posts.map((pt: string) => (
+                <li class="flex gap-2 text-[11px] text-zinc-500 leading-relaxed">
+                  <span class="text-zinc-700 shrink-0 mt-0.5">→</span>
+                  <span>{pt}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 2 — n8n AUTOMATION PIPELINE
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-teal/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// 02 — n8n Automation Pipeline</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+        <a href="https://tigges.app.n8n.cloud/" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-gta-teal/60 hover:text-gta-teal transition-colors">n8n Cloud ↗</a>
+      </div>
+
+      <!-- Setup checklist -->
+      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+        <div class="px-4 py-3 border-b border-border-dim">
+          <span class="text-[11px] font-semibold text-zinc-300">Setup Checklist — Credentials Required</span>
+        </div>
+        <div class="divide-y divide-border-dim/40">
+          {[
+            { cred: "ANTHROPIC_API_KEY",       used: "Claude content generation",              status: "required" },
+            { cred: "PUBLER_TOKEN",             used: "Auto-posting to X, Instagram, Reddit",  status: "required" },
+            { cred: "PUBLER_PROFILE_ID_X",      used: "X (Twitter) account ID",               status: "required" },
+            { cred: "PUBLER_PROFILE_ID_IG",     used: "Instagram account ID",                 status: "required" },
+            { cred: "PUBLER_PROFILE_ID_REDDIT", used: "Reddit account ID",                    status: "required" },
+            { cred: "DISCORD_WEBHOOK_URL",      used: "Discord community digest",             status: "optional" },
+            { cred: "BEEHIIV_API_KEY",          used: "Weekly email newsletter publish",      status: "required" },
+            { cred: "BEEHIIV_PUBLICATION_ID",   used: "Newsletter publication target",        status: "required" },
+          ].map(r => (
+            <div class="flex items-center gap-4 px-4 py-2.5">
+              <code class="text-[11px] font-mono text-gta-gold/80 min-w-0 flex-shrink-0 w-64">{r.cred}</code>
+              <span class="text-[11px] text-zinc-500 flex-1">{r.used}</span>
+              <span class={`text-[10px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest shrink-0 ${r.status === 'required' ? 'border-gta-vi-coral/40 bg-gta-vi-coral/10 text-gta-vi-coral' : 'border-zinc-700 bg-zinc-800 text-zinc-500'}`}>
+                {r.status}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div class="px-4 py-2.5 border-t border-border-dim text-[10px] font-mono text-zinc-600">
+          Add all credentials at: <a href="https://tigges.app.n8n.cloud/" target="_blank" rel="noopener noreferrer" class="text-zinc-500 hover:text-zinc-300 transition-colors">tigges.app.n8n.cloud → Credentials</a>
+        </div>
+      </div>
+
+      <!-- Two workflows -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+        {[
+          {
+            title: "Main Weekly Pipeline",
+            file: "n8n-gtavi-main-pipeline.json",
+            trigger: "Monday 08:00 UTC (cron)",
+            color: "var(--c-brand)",
+            steps: [
+              "Fetch 16 top predictions from gtavi.ai/gta-vi/intel",
+              "Claude generates 3 post variants per prediction (X / Reddit / long-form)",
+              "Schedules posts via Publer across X, Instagram, Reddit",
+              "Publishes Beehiiv newsletter with top 5 + poll embeds",
+              "Posts weekly digest to Discord via webhook",
+            ],
+          },
+          {
+            title: "Pre-order Launch Blast",
+            file: "n8n-gtavi-preorder-blast.json",
+            trigger: "Manual trigger — activate when GTA VI pre-orders go live",
+            color: "var(--c-gta-vi-coral)",
+            steps: [
+              "One-shot blast to all channels simultaneously",
+              "Replace REPLACE_GTA6_AMAZON_US and REPLACE_GTA6_AMAZON_UK with affiliate links",
+              "CDKeys and Eneba affiliate links preferred (5–8% vs Amazon 1–3%)",
+              "Discord, Beehiiv, X, Instagram, Reddit in one coordinated push",
+              "Activate November 2026 when pre-orders go live",
+            ],
+          },
+        ].map(wf => (
+          <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="w-2 h-2 rounded-full shrink-0" style={`background:${wf.color}`}></span>
+              <span class="text-[12px] font-semibold text-zinc-200">{wf.title}</span>
+            </div>
+            <p class="text-[10px] font-mono text-zinc-600 mb-3">{wf.trigger}</p>
+            <code class="block text-[10px] font-mono text-zinc-600 mb-3 border border-border-dim rounded px-2 py-1" style="background:var(--c-bg-deep)">{wf.file}</code>
+            <ul class="space-y-1.5">
+              {wf.steps.map((s: string) => (
+                <li class="flex gap-2 text-[11px] text-zinc-500 leading-relaxed">
+                  <span class="text-zinc-700 shrink-0 mt-0.5">→</span>
+                  <span>{s}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <!-- Poll integration in n8n -->
+      <div class="rounded-xl border border-gta-gold/20 p-4" style="background:color-mix(in srgb,var(--c-gta-dollar) 5%,var(--c-card))">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-[10px] font-mono text-gta-gold uppercase tracking-widest font-bold">Poll cards in the n8n pipeline</span>
+        </div>
+        <div class="text-[12px] text-zinc-400 leading-relaxed space-y-2">
+          <p>Add this step after the Publer scheduling node in the main pipeline to auto-promote polls alongside each weekly content drop:</p>
+          <ol class="list-decimal list-inside space-y-1 text-[11px] text-zinc-500 ml-2">
+            <li>HTTP Request → <code class="text-zinc-400 bg-zinc-800 px-1 rounded">GET https://gtavi.ai/community/polls</code> — fetches current poll list</li>
+            <li>Pick the poll whose <code class="text-zinc-400 bg-zinc-800 px-1 rounded">id</code> matches the week's featured prediction</li>
+            <li>Build embed snippet: <code class="text-zinc-400 bg-zinc-800 px-1 rounded">/community/polls/embed/&#123;&#123;pollId&#125;&#125;</code></li>
+            <li>Append embed to Beehiiv body + share URL to Discord digest</li>
+            <li>Screenshot the VoteCard thumbnail and attach to Publer X/Instagram post as image</li>
+          </ol>
+          <p class="text-[11px] text-zinc-600 mt-2">Each poll card includes a pre-built <strong class="text-zinc-500">share text</strong> and deep-link anchor — use those directly in your Publer payloads to avoid duplicate copy generation.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 3 — SEO STRATEGY
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-vi-coral/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// 03 — SEO Strategy</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+        {[
+          {
+            tier: "Tier 1 — Money pages",
+            color: "var(--c-live)",
+            pages: ["/gta-vi/intel", "/gta-vi/economy", "/predictions", "/charts", "/buy"],
+            strategy: "Target transactional + informational intent. H1 = primary KW. Each page needs unique meta description including 'GTA VI' + intent modifier.",
+          },
+          {
+            tier: "Tier 2 — Hub pages",
+            color: "var(--c-brand)",
+            pages: ["/gta-vi", "/gta-online", "/franchise", "/community/polls"],
+            strategy: "Internal linking hubs. Strong topical authority signals. Aim for featured snippets on 'GTA VI release date', 'GTA VI map size', 'GTA Online income 2026'.",
+          },
+          {
+            tier: "Tier 3 — Long tail",
+            color: "var(--c-economy)",
+            pages: ["/gta-vi/intel (individual predictions)", "/community/polls/[id]"],
+            strategy: "Individual prediction pages rank for 'will GTA VI have X?' queries. Each poll URL is an independent landing page — give each a rich og:title and og:description.",
+          },
+        ].map(t => (
+          <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
+            <div class="text-[11px] font-semibold mb-1" style={`color:${t.color}`}>{t.tier}</div>
+            <div class="flex flex-wrap gap-1 mb-3">
+              {t.pages.map((pg: string) => (
+                <code class="text-[10px] font-mono bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded">{pg}</code>
+              ))}
+            </div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">{t.strategy}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-4 py-3 border-b border-border-dim">
+          <span class="text-[11px] font-semibold text-zinc-300">Priority SEO Actions</span>
+        </div>
+        <div class="divide-y divide-border-dim/40">
+          {[
+            { action: "Add FAQ schema to /gta-vi/intel", priority: "High", status: "pending", note: "Each prediction = a FAQ item. Adds rich snippets to SERPs." },
+            { action: "Add Article schema to individual poll pages", priority: "High", status: "pending", note: "og:image should use the poll's thumbnail for click-through rate." },
+            { action: "Internal links from /gta-vi to every intel prediction", priority: "High", status: "done", note: "Hub → spoke structure already in place." },
+            { action: "Sitemap includes /community/polls/[id] pages", priority: "Medium", status: "pending", note: "Ensure each dynamic embed route generates a sitemap entry." },
+            { action: "Target 'GTA 6 release date 2026' with dedicated section on /gta-vi", priority: "High", status: "done", note: "pred-release-window prominently placed." },
+            { action: "Add canonical tags to embed pages pointing to /community/polls", priority: "Medium", status: "pending", note: "Prevents embed iframe URL from competing with the main poll page." },
+            { action: "Build 'GTA VI vs GTA V economy' comparison page", priority: "Medium", status: "pending", note: "High-intent informational query. Maps to franchise/sales + economy data." },
+          ].map(r => (
+            <div class="flex items-start gap-3 px-4 py-2.5">
+              <span class={`text-[10px] font-mono shrink-0 mt-0.5 border px-1.5 py-0.5 rounded uppercase tracking-widest ${r.priority === 'High' ? 'border-gta-vi-coral/40 text-gta-vi-coral' : 'border-zinc-700 text-zinc-500'}`}>{r.priority}</span>
+              <div class="flex-1 min-w-0">
+                <div class="text-[11px] text-zinc-300">{r.action}</div>
+                <div class="text-[10px] text-zinc-600 mt-0.5">{r.note}</div>
+              </div>
+              <span class={`text-[10px] font-mono shrink-0 ${r.status === 'done' ? 'text-gta-green/70' : 'text-zinc-600'}`}>{r.status === 'done' ? '✓ done' : 'todo'}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 4 — AFFILIATE STRATEGY
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-dollar/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// 04 — Affiliate Strategy</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+        {[
+          {
+            tier: "Priority — Apply Now",
+            color: "var(--c-live)",
+            partners: [
+              { name: "CDKeys", rate: "5–8%", note: "Best margin on digital codes. GTA VI key will be a top seller. Apply 3–6 months before launch.", url: "https://www.cdkeys.com/affiliates" },
+              { name: "Eneba", rate: "5–8%", note: "EU-strong digital marketplace. Strong for GTA VI pre-orders in UK/DE/FR markets.", url: "https://www.eneba.com/affiliate" },
+              { name: "Fanatical", rate: "5–8%", note: "PC game keys. Lower GTA VI volume but good for franchise back-catalogue promos.", url: "https://www.fanatical.com/en/affiliate" },
+            ],
+          },
+          {
+            tier: "Activate at Launch",
+            color: "var(--c-brand)",
+            partners: [
+              { name: "Amazon Associates", rate: "1–3%", note: "Lower rate but highest trust signal. Use for /buy page physical copy links. Replace REPLACE_GTA6_AMAZON_US in n8n preorder blast.", url: "https://affiliate-program.amazon.com" },
+              { name: "Shark Card affiliate (T2)", rate: "TBC", note: "No public programme yet. Monitor Take-Two IR announcements — they ran one for GTA Online 2013–2014.", url: "https://ir.take2games.com" },
+              { name: "GreenMan Gaming", rate: "5%", note: "PC-first audience. Good for long-tail GTA franchise catalogue sales.", url: "https://www.greenmangaming.com/affiliates" },
+            ],
+          },
+        ].map(block => (
+          <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+            <div class="px-4 py-2.5 border-b border-border-dim">
+              <span class="text-[11px] font-semibold" style={`color:${block.color}`}>{block.tier}</span>
+            </div>
+            <div class="divide-y divide-border-dim/40">
+              {block.partners.map((p: any) => (
+                <div class="px-4 py-3">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[12px] font-semibold text-zinc-200">{p.name}</span>
+                    <span class="text-[11px] font-mono text-gta-gold/80">{p.rate}</span>
+                  </div>
+                  <p class="text-[11px] text-zinc-500 mb-1.5">{p.note}</p>
+                  <a href={p.url} target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors">{p.url} ↗</a>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Affiliate page strategy -->
+      <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
+        <div class="text-[11px] font-semibold text-zinc-300 mb-3">Placement Strategy — /buy page + inline CTAs</div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            { where: "/buy page (primary)", when: "Live now", desc: "Central conversion page. Add CDKeys + Eneba links as 'Best price' options above Amazon. A/B test button copy: 'Best price' vs 'Pre-order now'." },
+            { where: "Inline CTAs on /gta-vi/intel", when: "Launch", desc: "Below 'Launch Price $79.99' prediction card — 'Pre-order from $X → CDKeys'. Contextual placement converts at 3–5× vs footer links." },
+            { where: "Newsletter footer (Beehiiv)", when: "Weekly", desc: "Standard affiliate disclosure + 'Support GTAVI.AI: use our CDKeys link'. Low friction, high trust — newsletter subscribers are buyers." },
+          ].map(pl => (
+            <div>
+              <div class="text-[11px] font-semibold text-zinc-400 mb-1">{pl.where}</div>
+              <div class="text-[10px] font-mono text-zinc-600 mb-1.5">{pl.when}</div>
+              <p class="text-[11px] text-zinc-500 leading-relaxed">{pl.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 5 — TRAFFIC PLAYBOOK
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-vi-coral/40 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// 05 — Traffic Playbook by Channel</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
+
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="overflow-x-auto">
+          <table class="w-full text-[11px] font-mono">
+            <thead>
+              <tr class="border-b border-border-dim">
+                <th class="text-left px-4 py-2.5 text-zinc-500 font-normal">Channel</th>
+                <th class="text-left px-4 py-2.5 text-zinc-500 font-normal">Traffic potential</th>
+                <th class="text-left px-4 py-2.5 text-zinc-500 font-normal">Content type</th>
+                <th class="text-left px-4 py-2.5 text-zinc-500 font-normal">Cadence</th>
+                <th class="text-left px-4 py-2.5 text-zinc-500 font-normal">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { ch: "Organic Search (Google)", vol: "★★★★★", content: "Prediction pages · intel hub · economy explainers", cadence: "Evergreen", status: "active" },
+                { ch: "Reddit r/GTA6", vol: "★★★★☆", content: "Poll embeds · community vote results · weekly data drops", cadence: "Weekly Thurs", status: "pending" },
+                { ch: "X / Twitter", vol: "★★★☆☆", content: "Poll VoteCard screenshots · prediction updates", cadence: "2× weekly", status: "pending" },
+                { ch: "GTAForums", vol: "★★★★☆", content: "Poll threads · data analysis posts · economy discussions", cadence: "Weekly", status: "pending" },
+                { ch: "Beehiiv Newsletter", vol: "★★★☆☆", content: "Weekly intel digest · top polls · affiliate CTAs", cadence: "Tuesday 10:00 UTC", status: "configured" },
+                { ch: "YouTube (embed)", vol: "★★★☆☆", content: "Data chart embeds on GTA YouTube videos via descriptions", cadence: "On new trailer", status: "pending" },
+                { ch: "Discord communities", vol: "★★☆☆☆", content: "Bot digest · poll embeds · data alerts", cadence: "Weekly + alerts", status: "configured" },
+                { ch: "Instagram / TikTok", vol: "★★★☆☆", content: "VoteCard screenshots · economy diagram shorts", cadence: "3× weekly", status: "pending" },
+              ].map(r => (
+                <tr class="border-b border-border-dim/40 hover:bg-white/[0.02] transition-colors">
+                  <td class="px-4 py-2.5 text-zinc-300">{r.ch}</td>
+                  <td class="px-4 py-2.5 text-gta-gold/70">{r.vol}</td>
+                  <td class="px-4 py-2.5 text-zinc-500">{r.content}</td>
+                  <td class="px-4 py-2.5 text-zinc-500">{r.cadence}</td>
+                  <td class="px-4 py-2.5">
+                    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${r.status === 'active' ? 'border-gta-green/40 bg-gta-green/20 text-gta-green' : r.status === 'configured' ? 'border-gta-gold/30 bg-gta-gold/10 text-gta-gold' : 'border-zinc-700 bg-zinc-800 text-zinc-500'}`}>
+                      {r.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Launch surge plan -->
+      <div class="rounded-xl border border-gta-vi-coral/20 p-4 mt-4" style="background:color-mix(in srgb,var(--c-gta-vi-coral) 5%,var(--c-card))">
+        <div class="text-[11px] font-semibold text-gta-vi-coral mb-3">Launch Surge Plan — November 2026</div>
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-[11px] text-zinc-500">
+          {[
+            { t: "T-72h", a: "Activate pre-order blast (n8n manual trigger). Switch /buy page to live affiliate links. Alert newsletter list." },
+            { t: "Launch day", a: "Publish Day-1 income benchmarks within 6h of server-up. First community poll results posted. Discord and Reddit simultaneous." },
+            { t: "Week 1", a: "Daily data drops: economy flows, mission payouts, GTA-PPI computation. 1 n8n digest per day vs weekly cadence. Affiliate CTAs on every page." },
+            { t: "Month 1", a: "Weekly digest returns to normal cadence. Focus on economy chart rankings, first DLC predictions. Transition to evergreen SEO content." },
+          ].map(step => (
+            <div>
+              <div class="text-[11px] font-mono text-gta-vi-coral/70 mb-1">{step.t}</div>
+              <p class="leading-relaxed">{step.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class="pt-4 border-t border-border-dim">
+      <a href="/admin" class="text-[11px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors">← Admin index</a>
+    </div>
+
+  </div>
+</Base>
