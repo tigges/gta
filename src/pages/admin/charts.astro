@@ -67,15 +67,17 @@ const chartItems = CHARTS_PAGE_ORDER.map((id, i) => ({
     <!-- Chart list — server-rendered for instant paint -->
     <div id="chart-list" class="flex flex-col gap-1">
       {chartItems.map(c => (
-        <div class="chart-row rounded-lg border border-border-dim hover:border-border-mid transition-colors group"
+        <div class="chart-row rounded-lg border border-border-dim hover:border-border-mid transition-colors"
              data-id={c.id} data-order={c.order} data-game={c.game}
              style="background:var(--c-card)">
           <div class="flex items-center gap-3 px-3 py-2.5">
             <span class="chart-rank text-[11px] font-mono text-zinc-600 w-6 text-right shrink-0"
                   style="font-variant-numeric:tabular-nums">{c.order}</span>
-            <div class="flex flex-col gap-px shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button class="move-up text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]" title="Move up">▲</button>
-              <button class="move-dn text-zinc-600 hover:text-zinc-300 transition-colors leading-none text-[10px]" title="Move down">▼</button>
+          <div class="flex flex-col gap-0.5 shrink-0">
+              <button class="chart-move-btn" data-dir="-1" title="Move up"
+                style="line-height:1">▲</button>
+              <button class="chart-move-btn" data-dir="1" title="Move down"
+                style="line-height:1">▼</button>
             </div>
             <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border shrink-0"
                   style={`color:${GAME_COLOR[c.game]};border-color:color-mix(in srgb,${GAME_COLOR[c.game]} 30%,transparent)`}>
@@ -99,6 +101,43 @@ const chartItems = CHARTS_PAGE_ORDER.map((id, i) => ({
 
   </div>
 </Base>
+
+<style>
+/* ── Move buttons ─────────────────────────────────────────────────────────── */
+.chart-move-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 18px;
+  border-radius: 3px;
+  font-size: 10px;
+  cursor: pointer;
+  color: var(--c-text-5);
+  background: transparent;
+  border: 1px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+  font-family: var(--font-mono, monospace);
+  user-select: none;
+}
+.chart-move-btn:hover {
+  color: var(--c-text-2);
+  background: color-mix(in srgb, var(--c-brand) 12%, transparent);
+  border-color: color-mix(in srgb, var(--c-brand) 30%, transparent);
+}
+.chart-move-btn:active {
+  transform: scale(0.93);
+}
+
+/* ── Move flash feedback ───────────────────────────────────────────────────── */
+@keyframes row-flash {
+  0%   { background: color-mix(in srgb, var(--c-brand) 18%, var(--c-card)); }
+  100% { background: var(--c-card); }
+}
+.chart-row.moved {
+  animation: row-flash 0.35s ease-out forwards;
+}
+</style>
 
 <script>
   const listEl    = document.getElementById("chart-list")!;
@@ -132,16 +171,24 @@ const chartItems = CHARTS_PAGE_ORDER.map((id, i) => ({
     } else {
       sibling.before(row);  // row goes before sibling → row moved up
     }
+
+    // Flash the moved row so the user sees it moved
+    row.classList.remove("moved");
+    void row.offsetWidth; // force reflow to restart animation
+    row.classList.add("moved");
+
     updateChanges();
   }
 
   // ── Delegated click on container (survives DOM reordering) ────────────────
   listEl.addEventListener("click", (e) => {
-    const btn = (e.target as HTMLElement).closest<HTMLElement>(".move-up, .move-dn");
+    const btn = (e.target as HTMLElement).closest<HTMLElement>(".chart-move-btn");
     if (!btn) return;
     const row = btn.closest<HTMLElement>(".chart-row");
     if (!row) return;
-    move(row, btn.classList.contains("move-up") ? -1 : 1);
+    const dir = Number(btn.dataset.dir ?? "0");
+    if (dir === 0) return;
+    move(row, dir);
   });
 
   function updateChanges() {
