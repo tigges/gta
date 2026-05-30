@@ -97,7 +97,7 @@ const KEY_INNOVATION = {
       </div>
       <div class="ef-inj-centre">
         <span class="ef-inj-eyebrow">Rockstar / Take-Two</span>
-        <span class="ef-inj-title">④ J · INJECTION</span>
+        <span class="ef-inj-title">INJECTION</span>
         <span class="ef-inj-sub">J · REAL MONEY → GTA$</span>
       </div>
       <div class="ef-inj-item">
@@ -111,6 +111,7 @@ const KEY_INNOVATION = {
     <div class="ef-inj-exo-note">Exogenous inflow — GTA$ created without in-game labour</div>
     <!-- ↓ straddles the bottom border of the injection box, pointing into the GTA$ hub row below -->
     <div class="ef-inj-j-bottom">
+      <span class="ef-inj-j-label" style="color:var(--c-flow-injection)">④ J</span>
       <span class="ef-arrow-chr" style="color:var(--c-flow-injection)">↓</span>
     </div>
   </div>
@@ -393,14 +394,15 @@ const KEY_INNOVATION = {
 /* ↓ straddling the bottom border of the injection box — points into the hub row */
 .ef-inj-j-bottom {
   position: absolute;
-  bottom: -18px;       /* half above, half below the border */
+  bottom: -18px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--c-card);
-  padding: 0 6px;
+  padding: 0 8px;
   z-index: 10;
-  line-height: 1;
+  display: flex; align-items: center; gap: 4px; line-height: 1;
 }
+.ef-inj-j-label { font-size: 1.05rem; font-weight: 900; }
 
 /* ── Injection ────────────────────────────────────────────────────── */
 .ef-injection {
