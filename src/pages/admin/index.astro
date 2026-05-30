@@ -1,6 +1,24 @@
 ---
 import Base from "../../layouts/Base.astro";
 
+const SITE_BASE     = "https://gtavi.ai";
+const STAGING_BASE  = "https://staging.gtavi.ai";
+
+const healthChecks = [
+  {
+    label:   "Production KV",
+    url:     `${SITE_BASE}/api/poll/health`,
+    env:     "gtavi.ai",
+    color:   "var(--c-live)",
+  },
+  {
+    label:   "Staging KV",
+    url:     `${STAGING_BASE}/api/poll/health`,
+    env:     "staging.gtavi.ai",
+    color:   "var(--c-brand)",
+  },
+];
+
 const tools = [
   {
     href:  "/admin/predictions",
@@ -66,7 +84,46 @@ const tools = [
       ))}
     </div>
 
-    <div class="mt-10 rounded-lg border border-border-dim px-4 py-3" style="background:var(--c-card)">
+    <!-- ── Health checks ──────────────────────────────────────────────── -->
+    <div class="mt-10">
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Infrastructure health</div>
+      <div class="flex flex-col gap-2" id="health-checks">
+        {healthChecks.map(h => (
+          <div
+            class="flex items-center justify-between gap-4 rounded-lg border border-border-dim px-4 py-3"
+            style="background:var(--c-card)"
+            data-health-url={h.url}
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${h.color}`}></div>
+              <div>
+                <div class="text-[11px] font-mono text-zinc-300 font-semibold">{h.label}</div>
+                <div class="text-[10px] font-mono text-zinc-600">{h.env}</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+              <span class="health-status text-[10px] font-mono text-zinc-600 uppercase tracking-widest">—</span>
+              <a
+                href={h.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors border border-border-dim hover:border-border-mid px-2 py-1 rounded"
+              >
+                Open ↗
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button
+        id="run-health-checks"
+        class="mt-2 text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors uppercase tracking-widest"
+      >
+        Run checks ↺
+      </button>
+    </div>
+
+    <div class="mt-6 rounded-lg border border-border-dim px-4 py-3" style="background:var(--c-card)">
       <p class="text-[10px] font-mono text-zinc-600">
         Admin pages are public URLs — read-only operations, no server writes.
         Direct URL access only; not linked from the main nav.
@@ -75,3 +132,49 @@ const tools = [
 
   </div>
 </Base>
+
+<script>
+  async function runHealthChecks() {
+    const btn = document.getElementById("run-health-checks");
+    if (btn) btn.textContent = "Checking…";
+
+    const cards = document.querySelectorAll<HTMLElement>("[data-health-url]");
+
+    await Promise.all(Array.from(cards).map(async card => {
+      const url    = card.dataset.healthUrl!;
+      const status = card.querySelector<HTMLElement>(".health-status")!;
+
+      status.textContent = "…";
+      status.style.color = "var(--c-text-5)";
+
+      try {
+        const resp = await fetch(url, { cache: "no-store" });
+        const data = await resp.json().catch(() => null);
+
+        if (data?.ok === true) {
+          status.textContent = "✓ bound";
+          status.style.color = "var(--c-live)";
+        } else if (data?.kv === "missing") {
+          status.textContent = "✗ unbound";
+          status.style.color = "var(--c-alert)";
+        } else if (data?.ok === false) {
+          status.textContent = "✗ error";
+          status.style.color = "var(--c-alert)";
+        } else {
+          status.textContent = resp.ok ? "? unknown" : `✗ ${resp.status}`;
+          status.style.color = "var(--c-alert)";
+        }
+      } catch {
+        status.textContent = "✗ unreachable";
+        status.style.color = "var(--c-alert)";
+      }
+    }));
+
+    if (btn) btn.textContent = "Run checks ↺";
+  }
+
+  document.getElementById("run-health-checks")?.addEventListener("click", runHealthChecks);
+
+  // Auto-run on page load
+  runHealthChecks();
+</script>
