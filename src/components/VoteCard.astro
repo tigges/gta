@@ -94,7 +94,7 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
     )}
 
     <!-- Vote options — shown before voting -->
-    <div class="vc-options" data-poll-id={pollId} data-options={JSON.stringify(options)}>
+    <div class="vc-options" data-poll-id={pollId} data-options={JSON.stringify(options)} data-question={question}>
       {options.map((opt, i) => (
         <button
           class="vc-option"
@@ -119,6 +119,12 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
         </div>
       ))}
       <div class="vc-vote-count"></div>
+
+      <!-- Copy result card — appears after voting -->
+      <button class="vc-copy-card hidden" type="button" aria-label="Copy result card to clipboard">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span>Copy result card</span>
+      </button>
     </div>
   </div>
 
@@ -229,6 +235,19 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
   margin-bottom: 4px;
 }
 
+.vc-copy-card {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  font-family: var(--font-mono, monospace);
+  color: var(--c-text-5);
+  background: transparent; border: 1px solid var(--c-border-1);
+  border-radius: 4px; padding: 5px 10px; cursor: pointer;
+  transition: color .15s, border-color .15s;
+  margin-top: 4px; align-self: flex-start;
+}
+.vc-copy-card:hover { color: var(--c-brand); border-color: color-mix(in srgb,var(--c-brand) 40%,transparent); }
+.vc-copy-card.copied { color: var(--c-growth); border-color: color-mix(in srgb,var(--c-growth) 40%,transparent); }
+
 .hidden { display: none !important; }
 
 /* ── Footer ── */
@@ -245,11 +264,80 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
 
 <script>
   document.querySelectorAll<HTMLElement>(".vc-options").forEach(container => {
-    const pollId  = container.dataset.pollId!;
-    const options = JSON.parse(container.dataset.options || "[]") as string[];
-    const card      = container.closest<HTMLElement>(".vc-card")!;
-    const results   = card.querySelector<HTMLElement>(".vc-results")!;
-    const votedNote = results.querySelector<HTMLElement>(".vc-voted-note")!;
+    const pollId   = container.dataset.pollId!;
+    const options  = JSON.parse(container.dataset.options || "[]") as string[];
+    const question = container.dataset.question || "";
+    const card       = container.closest<HTMLElement>(".vc-card")!;
+    const results    = card.querySelector<HTMLElement>(".vc-results")!;
+    const votedNote  = results.querySelector<HTMLElement>(".vc-voted-note")!;
+    const copyCardBtn = results.querySelector<HTMLButtonElement>(".vc-copy-card")!;
+
+    // Build the deep-link URL for this specific poll card
+    const pollAnchor = `vote-${pollId}`;
+    const pollUrl    = `${window.location.origin}${window.location.pathname}#${pollAnchor}`;
+
+    // Update share links to use deep-link anchor from the start
+    card.querySelectorAll<HTMLElement>(".share-copy-item").forEach(el => {
+      el.dataset.anchor = pollAnchor;
+    });
+    card.querySelectorAll<HTMLElement>(".share-native-btn").forEach(el => {
+      el.dataset.anchor = pollAnchor;
+    });
+
+    // Helper: build personalised share text after voting
+    function buildShareText(chosenOption: string, votes: Record<string, number>): string {
+      const total = Object.values(votes).reduce((s, v) => s + v, 0);
+      const myPct = total > 0 ? Math.round(((votes[chosenOption] ?? 1) / total) * 100) : 100;
+      const agree = myPct >= 50 ? `${myPct}% agree` : `only ${myPct}% agree`;
+      return `I voted "${chosenOption}" — ${agree} (${total} vote${total !== 1 ? "s" : ""}). ${question} → ${pollUrl}`;
+    }
+
+    // Helper: build copy-card text
+    function buildResultCard(votes: Record<string, number>): string {
+      const total = Object.values(votes).reduce((s, v) => s + v, 0);
+      const bars = options.map(opt => {
+        const pct = total > 0 ? Math.round(((votes[opt] ?? 0) / total) * 100) : 0;
+        const bar = "█".repeat(Math.round(pct / 10)) + "░".repeat(10 - Math.round(pct / 10));
+        return `${bar} ${String(pct).padStart(3)}%  ${opt}`;
+      });
+      return [
+        question,
+        "",
+        ...bars,
+        "",
+        `${total} vote${total !== 1 ? "s" : ""} · GTAVI.AI`,
+        pollUrl,
+      ].join("\n");
+    }
+
+    // Helper: update share dropdown links with personalised text
+    function updateShareLinks(chosenOption: string, votes: Record<string, number>) {
+      const shareText = buildShareText(chosenOption, votes);
+      const tweetUrl  = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText + "\n\n")}&url=${encodeURIComponent(pollUrl)}`;
+      const redditUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(pollUrl)}&title=${encodeURIComponent(shareText)}`;
+      card.querySelectorAll<HTMLAnchorElement>(".share-x-link").forEach(el => { el.href = tweetUrl; });
+      card.querySelectorAll<HTMLAnchorElement>(".share-reddit-link").forEach(el => { el.href = redditUrl; });
+      card.querySelectorAll<HTMLButtonElement>(".share-native-btn").forEach(el => { el.dataset.text = shareText; });
+    }
+
+    // Copy result card button handler
+    copyCardBtn?.addEventListener("click", async () => {
+      const storedVote = localStorage.getItem(`vote:${pollId}`) || options[0];
+      try {
+        const resp = await fetch(`/api/poll/${encodeURIComponent(pollId)}/results`);
+        const data = resp.ok ? await resp.json() : null;
+        const votes = data?.votes ?? { [storedVote]: 1 };
+        await navigator.clipboard.writeText(buildResultCard(votes));
+      } catch {
+        await navigator.clipboard.writeText(`${question}\n\n${pollUrl}`).catch(() => {});
+      }
+      const span = copyCardBtn.querySelector("span");
+      if (span) { span.textContent = "Copied!"; copyCardBtn.classList.add("copied"); }
+      setTimeout(() => {
+        if (span) span.textContent = "Copy result card";
+        copyCardBtn.classList.remove("copied");
+      }, 2500);
+    });
 
     const storageKey = `vote:${pollId}`;
 
@@ -278,10 +366,17 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
       options.forEach(o => { placeholder[o] = o === storedVote ? 1 : 0; });
       showResults(placeholder);
       results.classList.remove("hidden");
+      copyCardBtn?.classList.remove("hidden");
+      updateShareLinks(storedVote, placeholder);
       // Fetch live counts
       fetch(`/api/poll/${encodeURIComponent(pollId)}/results`)
         .then(r => r.ok ? r.json() : null)
-        .then(data => { if (data?.votes) showResults(data.votes); })
+        .then(data => {
+          if (data?.votes) {
+            showResults(data.votes);
+            updateShareLinks(storedVote, data.votes);
+          }
+        })
         .catch(() => {});
       return;
     }
@@ -307,6 +402,8 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
         // Show placeholder immediately so the user always sees something
         showPlaceholder(option);
         results.classList.remove("hidden");
+        copyCardBtn?.classList.remove("hidden");
+        updateShareLinks(option, { [option]: 1 });
 
         // Then try to get real counts from the API
         try {
@@ -318,18 +415,20 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
 
           if (resp.ok || resp.status === 409) {
             const data = await resp.json().catch(() => null);
-            if (data?.votes) {
-              showResults(data.votes); // Replace placeholder with real counts
+            const liveVotes = data?.votes ?? null;
+            if (liveVotes) {
+              showResults(liveVotes);
+              updateShareLinks(option, liveVotes);
             } else {
-              // No votes in response — try results endpoint
+              // Try results endpoint
               const r2 = await fetch(`/api/poll/${encodeURIComponent(pollId)}/results`);
               if (r2.ok) {
                 const d2 = await r2.json().catch(() => null);
-                if (d2?.votes) showResults(d2.votes);
+                if (d2?.votes) { showResults(d2.votes); updateShareLinks(option, d2.votes); }
               }
             }
           }
-          // Any other status (404, 500): placeholder already showing — leave it
+          // Any other status: placeholder already showing — leave it
         } catch {
           // Network error or KV unavailable — placeholder already showing
         }

@@ -61,9 +61,38 @@ def confidence_bar(pct: int, width: int = 20) -> str:
 
 # ── Email HTML ────────────────────────────────────────────────────────────────
 
-def build_html(news_items: list, predictions: list, stock_note: str, trailer_note: str) -> str:
+def build_html(news_items: list, predictions: list, stock_note: str, trailer_note: str, poll_preds: list | None = None) -> str:
     today_str   = datetime.now(timezone.utc).strftime("%B %d, %Y")
     days_left   = countdown_days()
+
+    # ── Poll cards ────────────────────────────────────────────────────────────
+    poll_preds = poll_preds or []
+    len_polls  = len(poll_preds)
+    poll_cards = ""
+    for p in poll_preds[:4]:
+        q       = p.get("poll_question", p.get("title", ""))[:90]
+        opts    = p.get("poll_options", ["Yes", "No"])[:3]
+        tier    = p.get("confidence_tier", "predicted")
+        conf    = p.get("confidence", 0)
+        color   = tier_hex(tier)
+        poll_url = f"{SITE_URL}/community/polls#{p.get('id', '')}"
+        opts_html = "  ".join(
+            f'<span style="color:#b4b4cc;font-size:10px;border:1px solid #2a2a31;padding:2px 8px;margin-right:4px">{o}</span>'
+            for o in opts
+        )
+        poll_cards += f"""
+        <tr>
+          <td style="padding:10px 0;border-top:1px solid #1e1e23">
+            <div style="margin-bottom:6px">
+              <span style="color:{color};font-size:9px;text-transform:uppercase;letter-spacing:0.12em;border:1px solid {color}44;padding:2px 6px;margin-right:8px">{tier}</span>
+              <span style="color:{color};font-size:11px;font-weight:700">{conf}%</span>
+            </div>
+            <a href="{poll_url}" style="color:#ebebef;font-size:13px;font-weight:700;text-decoration:none;display:block;margin-bottom:8px">{q}</a>
+            <div>{opts_html}</div>
+          </td>
+        </tr>"""
+    if not poll_cards:
+        poll_cards = '<tr><td style="color:#52525b;font-size:11px;padding:8px 0">No polls available yet.</td></tr>'
 
     # ── News items ────────────────────────────────────────────────────────────
     news_rows = ""
@@ -215,6 +244,18 @@ def build_html(news_items: list, predictions: list, stock_note: str, trailer_not
           </td>
         </tr>
 
+        <!-- ── COMMUNITY POLLS ── -->
+        <tr>
+          <td style="padding:24px 28px;border-left:1px solid #1e1e23;border-right:1px solid #1e1e23;border-bottom:1px solid #1e1e23">
+            <div style="color:#9898b8;font-size:9px;text-transform:uppercase;letter-spacing:0.2em;margin-bottom:4px">// Community Votes</div>
+            <div style="color:#52525b;font-size:9px;margin-bottom:16px">Vote on GTA VI predictions — see where the community stands</div>
+            {poll_cards}
+            <div style="margin-top:12px">
+              <a href="{SITE_URL}/community/polls" style="color:#f59e0b;font-size:10px;text-transform:uppercase;letter-spacing:0.12em;text-decoration:none">All {"{"}len_polls{"}"} polls →</a>
+            </div>
+          </td>
+        </tr>
+
         <!-- ── DATA POINT ── -->
         <tr>
           <td style="padding:20px 28px;border-left:1px solid #1e1e23;border-right:1px solid #1e1e23;border-bottom:1px solid #1e1e23">
@@ -342,10 +383,11 @@ def main() -> None:
     print("[digest] Assembling content…")
     news             = get_news()
     predictions, total_preds = get_predictions()
+    poll_preds = [p for p in predictions if p.get("poll_question")][:4]
     stock_note       = get_stock_note()
     trailer_note     = get_trailer_note()
 
-    html = build_html(news, predictions, stock_note, trailer_note)
+    html = build_html(news, predictions, stock_note, trailer_note, poll_preds=poll_preds)
     # Inject real prediction count into the "all N predictions →" link
     html = html.replace("{len_all_preds}", str(total_preds))
 
