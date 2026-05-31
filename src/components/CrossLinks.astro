@@ -534,9 +534,11 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 const links: CrossLink[] = ALL_LINKS[context] ?? [];
 
 // Standard: 2-col (4 tiles = 2×2). Allow 3-col only when tile count is exactly 3 or odd.
-const gridClass = links.length % 2 !== 0
+const isOdd     = links.length % 2 !== 0;
+const gridClass = isOdd
   ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
   : "grid-cols-1 sm:grid-cols-2";
+const gapClass  = isOdd ? "gap-3" : "gap-4";
 ---
 
 {links.length > 0 && (
@@ -546,7 +548,7 @@ const gridClass = links.length % 2 !== 0
       <div class="flex-1 h-px bg-border-dim"></div>
       <span class="text-[10px] font-mono text-zinc-700">auto-updated · builds nightly</span>
     </div>
-    <div class={`grid gap-3 ${gridClass}`}>
+    <div class={`grid w-full ${gapClass} ${gridClass}`}>
       {links.map(link => (
         <a href={link.href}
            class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-border-mid transition-all crosslink-tile"
@@ -555,7 +557,7 @@ const gridClass = links.length % 2 !== 0
            data-crosslink-label={link.label}
            style="background:var(--c-card)">
           <div class="h-px w-full" style={`background:linear-gradient(90deg,${link.accent},transparent 60%)`}></div>
-          <div class="flex items-center gap-4 p-4">
+          <div class="flex items-center gap-4 p-4 sm:p-5">
             <div class="shrink-0 w-20 h-12 rounded-lg overflow-hidden border border-border-mid">
               <img src={link.thumb} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
             </div>
