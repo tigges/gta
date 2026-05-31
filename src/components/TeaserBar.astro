@@ -3,15 +3,12 @@
  * TeaserBar.astro — homepage "jump straight in" showcase.
  *
  * Bright image-poster tiles that DEEP-LINK to a specific top-value content
- * piece (a standout chart, the income cards, the SED economy model, the
- * predictions feed) — landing the user on the content, scroll-anchored, not on
- * a generic section index.
+ * piece (a real chart, the income cards, the SED economy model, predictions) —
+ * landing the user on the content, scroll-anchored, not on a section index.
  *
  * Distinct from CrossLinks (image-forward posters vs. its text rows) but shares
- * the brand accent-token language so they feel like one family. Tokens only —
- * no raw palette colours.
- *
- * Stats are computed at build time from live JSON, so counts stay accurate.
+ * the brand accent-token language. Tokens only — no raw palette colours.
+ * Counts computed at build time from live JSON.
  */
 import predictionsData from "../config/predictions";
 import incomeData from "../../data/gta-6/income-predictions.json";
@@ -21,59 +18,65 @@ const incomeCount = (incomeData as any).income_predictions.length;
 
 interface Tile {
   href: string;
-  kicker: string;
+  kicker: string;     // "GAME · CATEGORY" — gives the title context, kept light
   headline: string;
   sub: string;
   img: string;
   accent: string;
   pos?: string;
+  op?: number;        // base image opacity (charts are dark → need more)
 }
 
 const tiles: Tile[] = [
   {
-    href: "/charts#section-cpi-chart",
-    kicker: "Chart",
-    headline: "Is $79.99 actually cheap?",
-    sub: "CPI-adjusted vs every GTA at launch",
-    img: "/assets/gta6/locations/Vice_City_01.jpg",
+    href: "/charts#section-shark-card-chart",
+    kicker: "GTA Online · Inflation",
+    headline: "Rockstar never raised prices",
+    sub: "…yet the endgame costs 23× more",
+    img: "/assets/charts/shark-card-inflation.png",
     accent: "var(--c-brand)",
-    pos: "center 30%",
+    pos: "center",
+    op: 0.8,
   },
   {
-    href: "/charts#section-franchise-complexity-chart",
-    kicker: "Chart",
-    headline: "30 years of GTA, charted",
-    sub: "Economic complexity across 10 titles",
-    img: "/assets/economy-thumbs/franchise.png",
+    href: "/charts#section-income-history-chart",
+    kicker: "GTA Online · Income",
+    headline: "13 years of nerfs & buffs",
+    sub: "Top $/hr through every major patch",
+    img: "/assets/charts/income-per-hour-history.png",
     accent: "var(--c-live)",
     pos: "center",
+    op: 0.8,
   },
   {
     href: "/gta-vi/income",
-    kicker: "Income",
+    kicker: "GTA VI · Income",
     headline: "Day-1 income sources",
     sub: `${incomeCount} predicted GTA VI streams`,
     img: "/assets/gta6/locations/Ambrosia_02.jpg",
     accent: "var(--c-gta-dollar)",
     pos: "center 40%",
+    op: 0.6,
   },
   {
     href: "/gta-vi/economy#eco-gta-vi",
-    kicker: "Economy",
+    kicker: "GTA VI · Economy",
     headline: "Where the GTA$ goes",
     sub: "The circular economy · (J) + Y = C + I",
     img: "/assets/gta6/locations/Vice_City_03.jpg",
     accent: "var(--c-economy)",
     pos: "center 45%",
+    op: 0.6,
   },
   {
     href: "/gta-vi/intel",
-    kicker: "Predictions",
+    kicker: "GTA VI · Predictions",
     headline: `${predCount} confidence-scored calls`,
     sub: "Launch price, map size, income & more",
     img: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
     accent: "var(--c-title-vi)",
     pos: "center top",
+    op: 0.6,
   },
 ];
 ---
@@ -88,22 +91,22 @@ const tiles: Tile[] = [
       <a
         href={t.href}
         class="teaser-tile group relative overflow-hidden rounded-xl border border-border-dim transition-all duration-300"
-        style={`min-height:150px;background:var(--c-card);--accent:${t.accent}`}
+        style={`min-height:150px;background:var(--c-card);--accent:${t.accent};--op:${t.op ?? 0.6}`}
       >
         <div class="absolute top-0 left-0 right-0 h-px z-20" style={`background:linear-gradient(90deg,${t.accent},transparent 70%)`}></div>
         <img
           src={t.img}
           alt=""
-          class="absolute inset-0 w-full h-full object-cover opacity-45 group-hover:opacity-60 transition-all duration-500 group-hover:scale-105"
+          class="teaser-img absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
           style={`object-position:${t.pos ?? "center"}`}
           loading="lazy"
           aria-hidden="true"
         />
-        <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-card) 12%,color-mix(in srgb,var(--c-card) 55%,transparent) 55%,transparent 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-card) 14%,color-mix(in srgb,var(--c-card) 45%,transparent) 60%,transparent 100%)"></div>
         <div class="relative p-4 h-full flex flex-col justify-end gap-1">
           <div class="text-[9px] font-mono uppercase tracking-widest" style={`color:${t.accent}`}>{t.kicker}</div>
           <div class="text-sm font-bold text-white leading-tight">{t.headline}</div>
-          <div class="text-[10px] font-mono text-zinc-400 leading-snug">{t.sub}</div>
+          <div class="text-[10px] font-mono text-zinc-300 leading-snug">{t.sub}</div>
         </div>
       </a>
     ))}
@@ -111,6 +114,8 @@ const tiles: Tile[] = [
 </section>
 
 <style>
+  .teaser-img { opacity: var(--op, 0.6); }
+  .teaser-tile:hover .teaser-img { opacity: min(1, calc(var(--op, 0.6) + 0.15)); }
   .teaser-tile:hover {
     border-color: color-mix(in srgb, var(--accent) 50%, transparent);
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
