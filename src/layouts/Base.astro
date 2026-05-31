@@ -26,6 +26,11 @@ interface Props {
 
 const SITE_BASE = import.meta.env.SITE ?? "https://gtavi.ai";
 
+// Staging badge is decided at build time from the Cloudflare Pages branch.
+// Production (main) builds omit it entirely; staging/preview branch builds show it.
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING_BUILD = CF_BRANCH !== "" && CF_BRANCH !== "main";
+
 const {
   title = "GTA VI.AI",
   description = "Follow the GTA$ — GTA's dual economy tracked, predicted and explained. In-game income, Shark Card mechanics, and what the numbers say about GTA VI.",
@@ -223,13 +228,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
         <div class="flex items-center gap-2">
           <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTA VI.AI</span>
           <span class="text-[10px] font-mono text-zinc-500 border border-border-mid rounded px-1">{SITE_VERSION_LABEL}</span>
-          <span id="staging-badge" style="display:none" class="text-[10px] font-mono text-amber-400 border border-amber-500/40 bg-amber-500/10 rounded px-1.5 tracking-widest">staging</span>
-          <script is:inline>
-            if (location.hostname.includes("staging") || location.hostname.includes("pages.dev")) {
-              document.getElementById("staging-badge").style.display = "inline";
-            }
-          </script>
-          {import.meta.env.SITE?.includes("staging") && (
+          {IS_STAGING_BUILD && (
             <span class="text-[10px] font-mono text-amber-400 border border-amber-500/40 bg-amber-500/10 rounded px-1.5 tracking-widest">staging</span>
           )}
         </div>
