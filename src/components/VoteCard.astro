@@ -38,12 +38,9 @@ interface Props {
   game?:         "gta-vi" | "gta-online" | "franchise";
   /**
    * Embed mode — suppresses ShareDropdown, replaces footer with
-   * a homepage link + "Full poll →" link back to the main polls page.
-   * Pass pollHref to set the "Full poll →" destination.
+   * a homepage link so external embeds drive traffic back to GTAVI.AI.
    */
   embedMode?: boolean;
-  /** Canonical URL for the "Full poll →" link in embed mode. */
-  pollHref?:  string;
 }
 
 const {
@@ -53,7 +50,6 @@ const {
   options:  manualOptions,
   game = "gta-vi",
   embedMode = false,
-  pollHref,
 } = Astro.props;
 
 const predData = predRaw as unknown as PredictionsData;
@@ -120,9 +116,7 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
   <div class="vc-body">
     <div class="vc-question">{question}</div>
 
-    {basis && (
-      <div class="vc-basis">{basis.length > 200 ? basis.slice(0, 200) + "…" : basis}</div>
-    )}
+    {basis && <div class="vc-basis">{basis}</div>}
 
     <!-- Vote options — shown before voting -->
     <div class="vc-options" data-poll-id={pollId} data-options={JSON.stringify(options)} data-question={question}>
@@ -151,26 +145,16 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
       ))}
       <div class="vc-vote-count"></div>
 
-      <!-- Copy result card — appears after voting -->
-      <button class="vc-copy-card hidden" type="button" aria-label="Copy result card to clipboard">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        <span>Copy result card</span>
-      </button>
     </div>
   </div>
 
   <!-- ── Footer ──────────────────────────────────────────────────────── -->
   <div class="vc-footer">
     {embedMode ? (
-      <>
-        <a href="https://gtavi.ai" target="_blank" rel="noopener noreferrer" class="vc-footer-label">GTAVI.AI ↗</a>
-        {pollHref && (
-          <a href={pollHref} target="_blank" rel="noopener noreferrer" class="vc-embed-link">Full poll →</a>
-        )}
-      </>
+      <a href="https://gtavi.ai" target="_blank" rel="noopener noreferrer" class="vc-home-link">Visit GTAVI.AI →</a>
     ) : (
       <>
-        <span class="vc-footer-label">GTAVI.AI · Community</span>
+        <a href="/" class="vc-footer-label">GTAVI.AI · Community</a>
         <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
       </>
     )}
@@ -196,9 +180,9 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
 /* ── Thumbnail ── */
 .vc-thumb {
   position: relative;
-  aspect-ratio: 16 / 7;
+  aspect-ratio: 16 / 5;
   overflow: hidden;
-  border-bottom: 1px solid var(--c-border-1);
+  margin-bottom: -22px;
 }
 .vc-thumb img {
   width: 100%; height: 100%;
@@ -211,8 +195,8 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
   position: absolute; inset: 0;
   background: linear-gradient(
     to bottom,
-    transparent 28%,
-    color-mix(in srgb, var(--c-bg-deep) 78%, transparent) 100%
+    transparent 18%,
+    color-mix(in srgb, var(--c-card) 96%, transparent) 100%
   );
   pointer-events: none;
 }
@@ -220,7 +204,7 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
   position: absolute;
   left: 14px;
   right: 14px;
-  bottom: 12px;
+  top: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -244,7 +228,14 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
   padding: 2px 7px;
 }
 
-.vc-body { padding: 18px 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+.vc-body {
+  position: relative;
+  z-index: 1;
+  padding: 28px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 .vc-card--no-thumb .vc-body { padding-top: 16px; }
 
 .vc-question {
@@ -253,7 +244,7 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
 }
 
 .vc-basis {
-  font-size: 9px; color: var(--c-text-5); line-height: 1.5;
+  font-size: 10px; color: var(--c-text-5); line-height: 1.55;
 }
 
 /* ── Options ── */
@@ -317,19 +308,6 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
   margin-bottom: 4px;
 }
 
-.vc-copy-card {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
-  font-family: var(--font-mono, monospace);
-  color: var(--c-text-5);
-  background: transparent; border: 1px solid var(--c-border-1);
-  border-radius: 4px; padding: 5px 10px; cursor: pointer;
-  transition: color .15s, border-color .15s;
-  margin-top: 4px; align-self: flex-start;
-}
-.vc-copy-card:hover { color: var(--c-brand); border-color: color-mix(in srgb,var(--c-brand) 40%,transparent); }
-.vc-copy-card.copied { color: var(--c-growth); border-color: color-mix(in srgb,var(--c-growth) 40%,transparent); }
-
 .hidden { display: none !important; }
 
 /* ── Footer ── */
@@ -348,15 +326,15 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
 }
 .vc-footer-label:hover { color: var(--c-brand); }
 
-.vc-embed-link {
-  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+.vc-home-link {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
   font-family: var(--font-mono, monospace);
   color: var(--c-brand); text-decoration: none;
   border: 1px solid color-mix(in srgb, var(--c-brand) 35%, transparent);
   border-radius: 4px; padding: 3px 8px;
   transition: background .15s;
 }
-.vc-embed-link:hover { background: color-mix(in srgb, var(--c-brand) 10%, transparent); }
+.vc-home-link:hover { background: color-mix(in srgb, var(--c-brand) 10%, transparent); }
 </style>
 
 <script>
@@ -367,7 +345,6 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
     const card       = container.closest<HTMLElement>(".vc-card")!;
     const results    = card.querySelector<HTMLElement>(".vc-results")!;
     const votedNote  = results.querySelector<HTMLElement>(".vc-voted-note")!;
-    const copyCardBtn = results.querySelector<HTMLButtonElement>(".vc-copy-card")!;
 
     // Build the deep-link URL for this specific poll card
     const pollAnchor = `vote-${pollId}`;
@@ -389,24 +366,6 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
       return `I voted "${chosenOption}" — ${agree} (${total} vote${total !== 1 ? "s" : ""}). ${question} → ${pollUrl}`;
     }
 
-    // Helper: build copy-card text
-    function buildResultCard(votes: Record<string, number>): string {
-      const total = Object.values(votes).reduce((s, v) => s + v, 0);
-      const bars = options.map(opt => {
-        const pct = total > 0 ? Math.round(((votes[opt] ?? 0) / total) * 100) : 0;
-        const bar = "█".repeat(Math.round(pct / 10)) + "░".repeat(10 - Math.round(pct / 10));
-        return `${bar} ${String(pct).padStart(3)}%  ${opt}`;
-      });
-      return [
-        question,
-        "",
-        ...bars,
-        "",
-        `${total} vote${total !== 1 ? "s" : ""} · GTAVI.AI`,
-        pollUrl,
-      ].join("\n");
-    }
-
     // Helper: update share dropdown links with personalised text
     function updateShareLinks(chosenOption: string, votes: Record<string, number>) {
       const shareText = buildShareText(chosenOption, votes);
@@ -416,25 +375,6 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
       card.querySelectorAll<HTMLAnchorElement>(".share-reddit-link").forEach(el => { el.href = redditUrl; });
       card.querySelectorAll<HTMLButtonElement>(".share-native-btn").forEach(el => { el.dataset.text = shareText; });
     }
-
-    // Copy result card button handler
-    copyCardBtn?.addEventListener("click", async () => {
-      const storedVote = localStorage.getItem(`vote:${pollId}`) || options[0];
-      try {
-        const resp = await fetch(`/api/poll/${encodeURIComponent(pollId)}/results`);
-        const data = resp.ok ? await resp.json() : null;
-        const votes = data?.votes ?? { [storedVote]: 1 };
-        await navigator.clipboard.writeText(buildResultCard(votes));
-      } catch {
-        await navigator.clipboard.writeText(`${question}\n\n${pollUrl}`).catch(() => {});
-      }
-      const span = copyCardBtn.querySelector("span");
-      if (span) { span.textContent = "Copied!"; copyCardBtn.classList.add("copied"); }
-      setTimeout(() => {
-        if (span) span.textContent = "Copy result card";
-        copyCardBtn.classList.remove("copied");
-      }, 2500);
-    });
 
     const storageKey = `vote:${pollId}`;
 
@@ -463,7 +403,6 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
       options.forEach(o => { placeholder[o] = o === storedVote ? 1 : 0; });
       showResults(placeholder);
       results.classList.remove("hidden");
-      copyCardBtn?.classList.remove("hidden");
       updateShareLinks(storedVote, placeholder);
       // Fetch live counts — only replace placeholder if server has real data (total > 0)
       fetch(`/api/poll/${encodeURIComponent(pollId)}/results`)
@@ -503,7 +442,6 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
         // Show placeholder immediately so the user always sees something
         showPlaceholder(option);
         results.classList.remove("hidden");
-        copyCardBtn?.classList.remove("hidden");
         updateShareLinks(option, { [option]: 1 });
 
         // Then try to get real counts from the API

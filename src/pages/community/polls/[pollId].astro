@@ -116,12 +116,11 @@ const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(can
       </details>
     </div>
 
-    <!-- ── Prediction basis ──────────────────────────────────────────────── -->
-    <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card)">
-      <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Why this poll</div>
-      <p class="text-[13px] text-zinc-400 leading-relaxed">{basis}</p>
-      {pred.prediction_range && (
-        <div class="mt-4 flex gap-6 flex-wrap">
+    <!-- ── Scenario range ─────────────────────────────────────────────────── -->
+    {pred.prediction_range && (
+      <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card)">
+        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Scenario range</div>
+        <div class="flex gap-6 flex-wrap">
           <div>
             <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Low scenario</div>
             <div class="text-[11px] font-mono text-zinc-300">{pred.prediction_range.low}</div>
@@ -131,8 +130,8 @@ const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(can
             <div class="text-[11px] font-mono text-zinc-300">{pred.prediction_range.high}</div>
           </div>
         </div>
-      )}
-    </div>
+      </div>
+    )}
 
     <!-- ── Back nav ──────────────────────────────────────────────────────── -->
     <div class="flex items-center justify-between text-[11px] font-mono text-zinc-600">
