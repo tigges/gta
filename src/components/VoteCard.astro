@@ -26,6 +26,7 @@
  */
 
 import type { PredictionsData } from "../types/gta";
+import Badge from "./Badge.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 import GamePill from "./GamePill.astro";
 import predRaw from "../../data/gta-6/predictions.json";
@@ -59,18 +60,18 @@ let question  = manualQuestion ?? "";
 let options:   string[] = manualOptions ?? ["Yes", "No"];
 let pollId     = manualPollId ?? predictionId ?? "";
 let basis      = "";
-let confidence: number | null = null;
+let confidence_tier: "confirmed" | "reported" | "predicted" = "predicted";
 let thumbnail: string | null = null;
 
 if (predictionId) {
   const pred = predData.predictions.find((p: any) => p.id === predictionId);
   if (pred) {
-    question   = (pred as any).poll_question ?? pred.title;
-    options    = (pred as any).poll_options  ?? ["Yes", "No"];
-    pollId     = predictionId;
-    basis      = pred.basis ?? "";
-    confidence = pred.confidence ?? null;
-    thumbnail  = (pred as any).thumbnail ?? null;
+    question        = (pred as any).poll_question ?? pred.title;
+    options         = (pred as any).poll_options  ?? ["Yes", "No"];
+    pollId          = predictionId;
+    basis           = pred.basis ?? "";
+    confidence_tier = (pred.confidence_tier as any) ?? "predicted";
+    thumbnail       = (pred as any).thumbnail ?? null;
   }
 }
 
@@ -90,11 +91,11 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
       <img src={thumbnail} alt="" width="400" height="200" loading="lazy" decoding="async" />
       <div class="vc-thumb-overlay"></div>
       <div class="vc-thumb-meta">
-        <GamePill game={game} size="xs" />
-        <span class="vc-badge">Community Vote</span>
-        {confidence !== null && (
-          <span class="vc-confidence">{confidence}% confidence</span>
-        )}
+        <div class="flex items-center gap-1.5">
+          <GamePill game={game} size="xs" />
+          <Badge variant="community" surface="opaque" />
+        </div>
+        <Badge variant={confidence_tier} surface="opaque" />
       </div>
     </div>
   )}
@@ -102,12 +103,12 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
   <!-- ── Header ──────────────────────────────────────────────────────── -->
   {!thumbnail && (
     <div class="vc-header">
-      <div class="flex items-center gap-2 flex-wrap">
-        <GamePill game={game} size="xs" />
-        <span class="vc-badge">Community Vote</span>
-        {confidence !== null && (
-          <span class="vc-confidence">{confidence}% confidence</span>
-        )}
+      <div class="flex items-center justify-between gap-2 flex-wrap">
+        <div class="flex items-center gap-1.5">
+          <GamePill game={game} size="xs" />
+          <Badge variant="community" surface="opaque" />
+        </div>
+        <Badge variant={confidence_tier} surface="opaque" />
       </div>
     </div>
   )}
@@ -154,7 +155,7 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
       <a href="https://gtavi.ai" target="_blank" rel="noopener noreferrer" class="vc-home-link">Visit GTAVI.AI →</a>
     ) : (
       <>
-        <a href="/" class="vc-footer-label">GTAVI.AI · Community</a>
+        <a href="/" class="vc-footer-label">GTAVI.AI</a>
         <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
       </>
     )}
@@ -206,26 +207,10 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
   right: 14px;
   top: 12px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 8px;
-  flex-wrap: wrap;
   z-index: 2;
-}
-
-.vc-badge {
-  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em;
-  color: var(--c-brand);
-  border: 1px solid color-mix(in srgb, var(--c-brand) 35%, transparent);
-  background: color-mix(in srgb, var(--c-brand) 10%, transparent);
-  border-radius: 4px; padding: 2px 7px;
-}
-
-.vc-confidence {
-  font-size: 9px; color: var(--c-text-5); letter-spacing: .06em;
-  border: 1px solid color-mix(in srgb, var(--c-text-5) 18%, transparent);
-  background: color-mix(in srgb, var(--c-bg-deep) 72%, transparent);
-  border-radius: 4px;
-  padding: 2px 7px;
 }
 
 .vc-body {
