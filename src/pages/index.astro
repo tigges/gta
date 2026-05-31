@@ -8,6 +8,7 @@ import NewsletterSignup from "../components/NewsletterSignup.astro";
 import ShareDropdown from "../components/ShareDropdown.astro";
 import ChartTeaserSearchSignal from "../components/charts/ChartTeaserSearchSignal.astro";
 import TeaserBar from "../components/TeaserBar.astro";
+import ChartScreenshotTeaser from "../components/ChartScreenshotTeaser.astro";
 
 import type { TrailersData, Prediction, FeaturesData, TrailerVelocityData, TrailerAnalysisData } from "../types/gta";
 
@@ -290,6 +291,25 @@ const t2TypeCounts = t2Events.reduce((acc: Record<string,number>, e: any) => {
          TEASER BAR — deep links to top-value content
     ═══════════════════════════════════════════════════════ -->
     <TeaserBar />
+
+    <!-- ═══════════════════════════════════════════════════════
+         FEATURED — Simplified Economy Diagram (SED)
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// The economy, in one picture</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
+      <ChartScreenshotTeaser
+        img="/assets/charts/circular-economy-sed.png"
+        kicker="GTA VI · Economy"
+        headline="Where every GTA$ comes from — and goes"
+        insight="The Simplified Economy Diagram — (J) + Y = C + I. Injection, income, consumption and investment: the whole GTA money loop in one picture, extended multi-region for GTA VI."
+        href="/gta-vi/economy#eco-gta-vi"
+        linkLabel="Explore the full model"
+        accent="var(--c-gta-dollar)"
+      />
+    </section>
 
     <!-- ═══════════════════════════════════════════════════════
          FEATURE TRACKER TEASER

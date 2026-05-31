@@ -1,0 +1,67 @@
+---
+/**
+ * ChartScreenshotTeaser.astro — large "single chart" teaser.
+ *
+ * Shows a full, legible chart/diagram screenshot (the live D3 versions can't
+ * render off /charts) above a caption row with a headline, one-line insight,
+ * and a deep link to the live/interactive version. The screenshot is the
+ * preview; the link is the real thing.
+ *
+ * Tokens only — accent is a CSS var (e.g. var(--c-gta-dollar)).
+ *
+ * Usage:
+ *   <ChartScreenshotTeaser
+ *     img="/assets/charts/circular-economy-sed.png"
+ *     kicker="GTA VI · Economy"
+ *     headline="Where every GTA$ comes from — and goes"
+ *     insight="The Simplified Economy Diagram: (J) + Y = C + I …"
+ *     href="/gta-vi/economy#eco-gta-vi"
+ *     linkLabel="Explore the full model"
+ *     accent="var(--c-gta-dollar)" />
+ */
+interface Props {
+  img: string;
+  kicker: string;
+  headline: string;
+  insight: string;
+  href: string;
+  linkLabel?: string;
+  accent?: string;
+  maxH?: number;        // image max height in px (default 340)
+}
+const {
+  img, kicker, headline, insight, href,
+  linkLabel = "Open the live chart",
+  accent = "var(--c-brand)",
+  maxH = 340,
+} = Astro.props;
+---
+
+<div class="cst rounded-xl border border-border-dim overflow-hidden transition-all" style={`background:var(--c-card);--accent:${accent}`}>
+  <div class="h-px w-full" style={`background:linear-gradient(90deg,${accent},transparent 60%)`}></div>
+  <a href={href} class="group block overflow-hidden" style="background:var(--c-bg-deep)" aria-label={headline}>
+    <img
+      src={img}
+      alt={headline}
+      class="w-full object-contain transition-transform duration-500 group-hover:scale-[1.01]"
+      style={`max-height:${maxH}px`}
+      loading="lazy"
+    />
+  </a>
+  <div class="px-5 py-4 border-t border-border-dim flex items-end justify-between gap-4 flex-wrap">
+    <div class="min-w-0">
+      <div class="text-[10px] font-mono uppercase tracking-widest" style={`color:${accent}`}>{kicker}</div>
+      <div class="text-base font-bold text-white leading-snug mt-0.5">{headline}</div>
+      <p class="text-[11px] font-mono text-zinc-400 leading-relaxed mt-1 max-w-2xl">{insight}</p>
+    </div>
+    <a
+      href={href}
+      class="shrink-0 inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-widest border rounded px-3 py-1.5 transition-colors"
+      style={`color:${accent};border-color:color-mix(in srgb,${accent} 35%,transparent);background:color-mix(in srgb,${accent} 8%,transparent)`}
+    >{linkLabel} →</a>
+  </div>
+</div>
+
+<style>
+  .cst:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+</style>
