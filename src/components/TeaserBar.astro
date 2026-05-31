@@ -1,0 +1,118 @@
+---
+/**
+ * TeaserBar.astro — homepage "jump straight in" showcase.
+ *
+ * Bright image-poster tiles that DEEP-LINK to a specific top-value content
+ * piece (a standout chart, the income cards, the SED economy model, the
+ * predictions feed) — landing the user on the content, scroll-anchored, not on
+ * a generic section index.
+ *
+ * Distinct from CrossLinks (image-forward posters vs. its text rows) but shares
+ * the brand accent-token language so they feel like one family. Tokens only —
+ * no raw palette colours.
+ *
+ * Stats are computed at build time from live JSON, so counts stay accurate.
+ */
+import predictionsData from "../config/predictions";
+import incomeData from "../../data/gta-6/income-predictions.json";
+
+const predCount   = predictionsData.predictions.length;
+const incomeCount = (incomeData as any).income_predictions.length;
+
+interface Tile {
+  href: string;
+  kicker: string;
+  headline: string;
+  sub: string;
+  img: string;
+  accent: string;
+  pos?: string;
+}
+
+const tiles: Tile[] = [
+  {
+    href: "/charts#section-cpi-chart",
+    kicker: "Chart",
+    headline: "Is $79.99 actually cheap?",
+    sub: "CPI-adjusted vs every GTA at launch",
+    img: "/assets/gta6/locations/Vice_City_01.jpg",
+    accent: "var(--c-brand)",
+    pos: "center 30%",
+  },
+  {
+    href: "/charts#section-franchise-complexity-chart",
+    kicker: "Chart",
+    headline: "30 years of GTA, charted",
+    sub: "Economic complexity across 10 titles",
+    img: "/assets/economy-thumbs/franchise.png",
+    accent: "var(--c-live)",
+    pos: "center",
+  },
+  {
+    href: "/gta-vi/income",
+    kicker: "Income",
+    headline: "Day-1 income sources",
+    sub: `${incomeCount} predicted GTA VI streams`,
+    img: "/assets/gta6/locations/Ambrosia_02.jpg",
+    accent: "var(--c-gta-dollar)",
+    pos: "center 40%",
+  },
+  {
+    href: "/gta-vi/economy#eco-gta-vi",
+    kicker: "Economy",
+    headline: "Where the GTA$ goes",
+    sub: "The circular economy · (J) + Y = C + I",
+    img: "/assets/gta6/locations/Vice_City_03.jpg",
+    accent: "var(--c-economy)",
+    pos: "center 45%",
+  },
+  {
+    href: "/gta-vi/intel",
+    kicker: "Predictions",
+    headline: `${predCount} confidence-scored calls`,
+    sub: "Launch price, map size, income & more",
+    img: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+    accent: "var(--c-title-vi)",
+    pos: "center top",
+  },
+];
+---
+
+<section>
+  <div class="flex items-center gap-3 mb-5">
+    <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Jump straight in</span>
+    <div class="flex-1 h-px bg-border-dim"></div>
+  </div>
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+    {tiles.map(t => (
+      <a
+        href={t.href}
+        class="teaser-tile group relative overflow-hidden rounded-xl border border-border-dim transition-all duration-300"
+        style={`min-height:150px;background:var(--c-card);--accent:${t.accent}`}
+      >
+        <div class="absolute top-0 left-0 right-0 h-px z-20" style={`background:linear-gradient(90deg,${t.accent},transparent 70%)`}></div>
+        <img
+          src={t.img}
+          alt=""
+          class="absolute inset-0 w-full h-full object-cover opacity-45 group-hover:opacity-60 transition-all duration-500 group-hover:scale-105"
+          style={`object-position:${t.pos ?? "center"}`}
+          loading="lazy"
+          aria-hidden="true"
+        />
+        <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-card) 12%,color-mix(in srgb,var(--c-card) 55%,transparent) 55%,transparent 100%)"></div>
+        <div class="relative p-4 h-full flex flex-col justify-end gap-1">
+          <div class="text-[9px] font-mono uppercase tracking-widest" style={`color:${t.accent}`}>{t.kicker}</div>
+          <div class="text-sm font-bold text-white leading-tight">{t.headline}</div>
+          <div class="text-[10px] font-mono text-zinc-400 leading-snug">{t.sub}</div>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .teaser-tile:hover {
+    border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+</style>
