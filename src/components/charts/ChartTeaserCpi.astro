@@ -28,7 +28,7 @@ const maxReal = Math.max(...rows.map((r: any) => r.real));
 <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
   <!-- Header -->
   <div class="px-5 py-4 border-b border-border-dim">
-    <ChartBadgeRow game="franchise" category="CPI · Pricing" />
+    <ChartBadgeRow game="franchise" category="CPI · Pricing" fullHref="/charts?title=gta-vi#section-cpi-chart" fullLabel="Full chart →" />
     <div class="font-semibold text-zinc-200 text-sm mb-0.5">
       GTA VI at $79.99 Is the Cheapest GTA at Launch — In Real Terms
     </div>
@@ -77,7 +77,7 @@ const maxReal = Math.max(...rows.map((r: any) => r.real));
     <ReadItBlock
       accentColor="var(--c-brand)"
       intent="positive"
-      fullChartHref="/charts?title=gta-vi#section-cpi-chart"
+      href="/charts?title=gta-vi#section-cpi-chart"
       showPrefix={false}
     >
       GTA VI is <span class="text-gta-gold font-semibold">{Math.round((maxReal - rows.at(-1)!.real) / maxReal * 100)}% cheaper</span> than {rows[0].short} in real terms

@@ -33,7 +33,7 @@ const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString(
 <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
   <!-- Header -->
   <div class="px-5 py-4 border-b border-border-dim">
-    <ChartBadgeRow game="gta-vi" category="Search Trends" />
+    <ChartBadgeRow game="gta-vi" category="Search Trends" fullHref="/charts?title=gta-vi#section-prelaunch-comparison-chart" fullLabel="Full chart →" />
     <div class="font-semibold text-zinc-200 text-sm mb-0.5">
       GTA VI Search Interest — Two Trailer Spikes, Trend Still Rising
     </div>
@@ -117,7 +117,7 @@ const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString(
     <ReadItBlock
       accentColor="var(--c-brand)"
       intent="positive"
-      fullChartHref="/charts?title=gta-vi#section-prelaunch-comparison-chart"
+      href="/charts?title=gta-vi#section-prelaunch-comparison-chart"
       showPrefix={false}
     >
       GTA VI is running <span class="text-gta-gold font-semibold">4.8× hotter</span> than GTA V was at the equivalent pre-launch moment
