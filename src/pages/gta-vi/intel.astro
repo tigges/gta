@@ -10,7 +10,6 @@ import IncomeCard from "../../components/IncomeCard.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
 import CastCard from "../../components/CastCard.astro";
 
-import ChartTeaserSearchSignal from "../../components/charts/ChartTeaserSearchSignal.astro";
 import predictionsData from "../../../data/gta-6/predictions.json";
 import incomeData from "../../../data/gta-6/income-predictions.json";
 import trailersDataRaw from "../../../data/gta-6/trailers.json";
@@ -232,50 +231,6 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════
-         OFFICIAL TRAILERS
-    ═══════════════════════════════════════════════════════ -->
-    {trailers.length > 0 && (
-      <section id="section-trailers">
-        <SectionHeader label="// Official Trailers" />
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {trailers.map((t: any, i: number) => (
-            <a
-              href={`https://www.youtube.com/watch?v=${t.youtube_id}`}
-              target="_blank" rel="noopener noreferrer"
-              class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-gold/30 transition-all duration-200"
-            >
-              <div class="relative aspect-video overflow-hidden">
-                <img
-                  src={`https://img.youtube.com/vi/${t.youtube_id}/maxresdefault.jpg`}
-                  alt={t.title ?? `GTA VI Trailer ${i + 1}`}
-                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, transparent 55%)"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <div class="w-12 h-12 rounded-full bg-black/60 border border-white/20 flex items-center justify-center group-hover:bg-gta-gold/20 group-hover:border-gta-gold/40 transition-all">
-                    <span class="text-white ml-0.5">▶</span>
-                  </div>
-                </div>
-                <div class="absolute top-3 left-3">
-                  <span class="text-[11px] font-mono bg-black/60 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">Official</span>
-                </div>
-              </div>
-              <div class="px-4 py-3 flex items-center justify-between" style="background:var(--c-card)">
-                <div>
-                  <div class="font-semibold text-zinc-200 text-sm">{t.title ?? `Grand Theft Auto VI — Trailer ${i + 1}`}</div>
-                  {t.published_at && (
-                    <div class="text-[11px] text-zinc-600 font-mono mt-0.5">{t.published_at}</div>
-                  )}
-                </div>
-                <span class="text-zinc-600 group-hover:text-gta-gold transition-colors font-mono text-xs">↗</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
 
     <!-- ═══════════════════════════════════════════════════════
          CONFIRMED CAST
@@ -416,10 +371,13 @@ const CAT_THUMBS: Record<string,string> = {
       <SectionHeader label="// GTA VI FAQ" dotColor="var(--c-brand)" />
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         {gtaViFaqs.map((faq) => (
-          <article class="rounded-xl border border-border-dim p-5" style="background:var(--c-card)">
-            <h2 class="text-sm font-bold text-zinc-200 leading-snug">{faq.question}</h2>
-            <p class="mt-2 text-sm text-zinc-400 leading-relaxed">{faq.answer}</p>
-          </article>
+          <details class="group rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+            <summary class="flex items-center justify-between gap-3 px-5 py-4 cursor-pointer list-none marker:content-none [&::-webkit-details-marker]:hidden">
+              <h2 class="text-sm font-bold text-zinc-200 leading-snug">{faq.question}</h2>
+              <span class="text-zinc-500 text-xs font-mono shrink-0 transition-transform duration-150 group-open:rotate-180">&#9662;</span>
+            </summary>
+            <p class="px-5 pb-4 text-sm text-zinc-400 leading-relaxed">{faq.answer}</p>
+          </details>
         ))}
       </div>
     </section>
@@ -456,13 +414,6 @@ const CAT_THUMBS: Record<string,string> = {
     </section>
     )}
 
-    <!-- ═══════════════════════════════════════════════════════
-         GTA VI SEARCH TRENDS
-    ═══════════════════════════════════════════════════════ -->
-    <section>
-      <SectionHeader label="// GTA VI Search Signal" dotColor="var(--c-title-vi)" />
-      <ChartTeaserSearchSignal />
-    </section>
 
 
 

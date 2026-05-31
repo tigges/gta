@@ -6,6 +6,7 @@ import Countdown from "../components/Countdown.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import NewsletterSignup from "../components/NewsletterSignup.astro";
 import ShareDropdown from "../components/ShareDropdown.astro";
+import ChartTeaserSearchSignal from "../components/charts/ChartTeaserSearchSignal.astro";
 
 import type { TrailersData, Prediction, FeaturesData, TrailerVelocityData, TrailerAnalysisData, NewswireData } from "../types/gta";
 
@@ -372,11 +373,10 @@ const TIER_COLOR: Record<string,string> = {
     <!-- ═══════════════════════════════════════════════════════
          OFFICIAL TRAILERS
     ═══════════════════════════════════════════════════════ -->
-    <section>
+    <section id="section-trailers" style="scroll-margin-top:80px">
       <div class="flex items-center gap-3 mb-7">
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Official Footage</span>
         <div class="flex-1 h-px bg-border-dim"></div>
-        <a href="/gta-vi/intel#section-trailers" class="text-[10px] font-mono text-gta-gold/70 hover:text-gta-gold transition-colors tracking-widest uppercase">Full trailers →</a>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[
@@ -426,6 +426,18 @@ const TIER_COLOR: Record<string,string> = {
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
+         GTA VI SEARCH SIGNAL (moved from /gta-vi/intel)
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// GTA VI Search Signal</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+        <a href="/charts?title=gta-vi#section-prelaunch-comparison-chart" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full chart →</a>
+      </div>
+      <ChartTeaserSearchSignal />
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
          FRAME-BY-FRAME TRAILER DISCOVERY TEASER
     ═══════════════════════════════════════════════════════ -->
     <section>
@@ -433,7 +445,7 @@ const TIER_COLOR: Record<string,string> = {
         <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Trailer 2 — Frame-by-Frame Entity Discovery</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">{t2Events.length} entities · {t2raw.duration_sec}s runtime</span>
-        <a href="/charts?title=franchise" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full analysis →</a>
+        <a href="/charts#section-trailer-discovery-chart" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase">Full analysis →</a>
       </div>
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <div class="px-5 py-4 border-b border-border-dim">
