@@ -8,7 +8,7 @@ import NewsletterSignup from "../components/NewsletterSignup.astro";
 import ShareDropdown from "../components/ShareDropdown.astro";
 import ChartTeaserSearchSignal from "../components/charts/ChartTeaserSearchSignal.astro";
 
-import type { TrailersData, Prediction, FeaturesData, TrailerVelocityData, TrailerAnalysisData, NewswireData } from "../types/gta";
+import type { TrailersData, Prediction, FeaturesData, TrailerVelocityData, TrailerAnalysisData } from "../types/gta";
 
 import releasesData      from "../../data/shared/releases.json";
 import predictionsData   from "../config/predictions";
@@ -16,13 +16,11 @@ import trailersDataRaw   from "../../data/gta-6/trailers.json";
 import steamData         from "../../data/gta-5/meta/steam-players.json";
 import featuresDataRaw   from "../../data/gta-6/features.json";
 import trailerAnalysisRaw from "../../data/gta-6/trailer-analysis.json";
-import newswireDataRaw   from "../../data/feeds/newswire.json";
 import velocityDataRaw   from "../../data/gta-6/trailer-velocity.json";
 
 const trailersData    = trailersDataRaw    as unknown as TrailersData;
 const featuresData    = featuresDataRaw    as unknown as FeaturesData;
 const trailerAnalysis = trailerAnalysisRaw as unknown as TrailerAnalysisData;
-const newswireData    = newswireDataRaw    as unknown as NewswireData;
 const velocityData    = velocityDataRaw    as unknown as TrailerVelocityData;
 
 const latestTrailer  = trailersData.trailers[0] ?? null;
@@ -110,12 +108,6 @@ const t2TypeCounts = t2Events.reduce((acc: Record<string,number>, e: any) => {
 }, {} as Record<string,number>);
 
 // ── News digest ───────────────────────────────────────────────────────────
-const recentNews = newswireData.items.slice(0, 3);
-const TIER_COLOR: Record<string,string> = {
-  press:     "text-gta-gold",
-  official:  "text-gta-teal",
-  community: "text-blue-400",
-};
 ---
 
 <Base
@@ -616,64 +608,6 @@ const TIER_COLOR: Record<string,string> = {
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════
-         INTELLIGENCE DIGEST — news preview + newsletter
-    ═══════════════════════════════════════════════════════ -->
-    <section class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
-      <!-- Visual header with location art -->
-      <div class="relative border-b border-border-dim overflow-hidden">
-        <div class="absolute inset-0">
-          <img src="/assets/gta6/locations/Vice_City_04.jpg" alt="" class="w-full h-full object-cover opacity-20" style="object-position:center 60%" loading="lazy" aria-hidden="true" />
-          <div class="absolute inset-0" style="background:linear-gradient(to right,#131316 0%,#131316aa 60%,transparent 100%)"></div>
-        </div>
-        <div class="relative px-5 py-5 flex items-center justify-between flex-wrap gap-4">
-          <div>
-            <div class="text-[10px] font-mono text-gta-teal uppercase tracking-[0.2em] mb-1 flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse inline-block"></span>
-              Intelligence Digest
-            </div>
-            <div class="font-semibold text-zinc-200 text-sm">Latest from Rockstar + Community</div>
-            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">{newswireData.items.length} stories tracked · updated nightly</div>
-          </div>
-          <a href="/news" class="text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest uppercase shrink-0">Full feed →</a>
-        </div>
-      </div>
-
-      <!-- 3 recent headlines -->
-      <div class="divide-y divide-border-dim">
-        {recentNews.map((item: any) => {
-          const daysAgo = Math.round((Date.now() - new Date(item.published_at).getTime()) / 86400000);
-          return (
-            <a href={item.url} target="_blank" rel="noopener noreferrer"
-              class="flex items-start gap-4 px-5 py-4 hover:bg-white/2 transition-colors group">
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class={`text-[11px] font-mono uppercase tracking-widest ${TIER_COLOR[item.tier] ?? "text-zinc-600"}`}>{item.source_name}</span>
-                  <span class="text-zinc-500 text-[11px] font-mono">{daysAgo === 0 ? "today" : `${daysAgo}d ago`}</span>
-                </div>
-                <div class="text-[12px] text-zinc-300 group-hover:text-white transition-colors leading-snug line-clamp-2">
-                  {item.title}
-                </div>
-              </div>
-              <span class="text-zinc-500 group-hover:text-gta-gold transition-colors text-xs font-mono shrink-0 mt-0.5">↗</span>
-            </a>
-          );
-        })}
-      </div>
-
-      <!-- Newsletter CTA -->
-      <div class="px-5 py-4 border-t border-border-dim" style="background:var(--c-bg)">
-        <div class="flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <div class="text-xs font-semibold text-zinc-300">Get the weekly digest</div>
-            <div class="text-[11px] text-zinc-500 font-mono">Economy intelligence · updated nightly</div>
-          </div>
-          <a href="/news" class="inline-flex items-center gap-2 bg-gta-gold/10 hover:bg-gta-gold/20 border border-gta-gold/25 text-gta-gold font-mono text-xs px-4 py-2 rounded transition-colors tracking-wide">
-            Read news →
-          </a>
-        </div>
-      </div>
-    </section>
 
 
   </div>
