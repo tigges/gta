@@ -1,0 +1,86 @@
+---
+/**
+ * /gta-vi/income — Full GTA VI predicted income sources.
+ * The complete list behind the teaser on /gta-vi/intel. Curated predictions
+ * (income-predictions.json) until live payout data flows from the feeds, at
+ * which point this graduates into a filterable /database view.
+ */
+import Base from "../../layouts/Base.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import IncomeCard from "../../components/IncomeCard.astro";
+import GamePill from "../../components/GamePill.astro";
+import incomeData from "../../../data/gta-6/income-predictions.json";
+
+const all = (incomeData as any).income_predictions as any[];
+const confirmed = all.filter((p) => p.confidence_tier === "confirmed");
+const reported  = all.filter((p) => p.confidence_tier === "reported");
+const predicted = all.filter((p) => p.confidence_tier === "predicted");
+
+const groups = [
+  { key: "confirmed", label: "// Confirmed Income Sources", dot: "var(--c-live)",     items: confirmed },
+  { key: "reported",  label: "// Reported Income Sources",  dot: "var(--c-brand)",    items: reported  },
+  { key: "predicted", label: "// Predicted Income Sources", dot: "var(--c-title-vi)", items: predicted },
+];
+
+---
+
+<Base
+  title="GTA VI Income Sources"
+  description={`${all.length} predicted GTA VI Online income sources — heists, businesses, passive streams and missions across Vice City and Leonida. Confidence-scored, populated from launch data.`}
+  titleContext="gta-vi"
+  crossLinksContext="vi-intel"
+>
+  <!-- Hero -->
+  <section class="border-b border-border-dim" style="background:var(--c-bg-deep)">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <div class="flex items-center gap-2 mb-3">
+        <GamePill game="gta-vi" size="xs" />
+        <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Predicted Income Model</span>
+      </div>
+      <h1 class="text-3xl font-bold text-white mb-2">GTA VI Online — Income Sources</h1>
+      <p class="text-sm text-zinc-400 max-w-xl leading-relaxed">
+        Every predicted GTA VI Online income stream — heists, businesses, passive income and missions — confidence-scored
+        from GTA Online precedent and trailer evidence. Payout figures populate from launch data.
+      </p>
+      <div class="flex items-center gap-4 mt-4 text-[10px] font-mono text-zinc-500 flex-wrap">
+        <span><span class="text-brand font-bold">{all.length}</span> sources tracked</span>
+        <span>·</span>
+        <span><span class="text-gta-teal font-bold">{confirmed.length}</span> confirmed</span>
+        <span>·</span>
+        <span><span class="text-gta-gold font-bold">{reported.length}</span> reported</span>
+        <span>·</span>
+        <span><span class="text-zinc-300 font-bold">{predicted.length}</span> predicted</span>
+        <span>·</span>
+        <a href="/gta-vi/intel#section-income-predictions" class="text-zinc-400 hover:text-zinc-200 transition-colors">← Back to Predictions</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+    {groups.filter((g) => g.items.length > 0).map((g) => (
+      <section>
+        <SectionHeader label={g.label} dotColor={g.dot} />
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {g.items.map((p) => (
+            <IncomeCard
+              id={p.id}
+              name={p.name}
+              game="gta-vi"
+              category={p.category}
+              region={p.region}
+              confidence_tier={p.confidence_tier}
+              confidence_score={p.confidence_score}
+              thumbnail={p.thumbnail}
+              trailer_evidence={p.trailer_evidence}
+              predicted_payout_per_run={p.predicted_payout_per_run}
+              predicted_gta_per_hr={p.predicted_gta_per_hr}
+              analogous_gta_online={p.analogous_gta_online}
+              basis={p.basis}
+              prediction_range={p.prediction_range}
+            />
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</Base>

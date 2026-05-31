@@ -19,7 +19,7 @@ import ChartTeaserSearchSignal  from "../../components/charts/ChartTeaserSearchS
 import type { Prediction, TrailersData } from "../../types/gta";
 import { getChart } from "../../config/allCharts";
 
-import predictionsDataRaw  from "../../../data/gta-6/predictions.json";
+import predictionsDataRaw  from "../../config/predictions";
 import incomeDataRaw        from "../../../data/gta-6/income-predictions.json";
 import trailersDataRaw      from "../../../data/gta-6/trailers.json";
 import velocityDataRaw      from "../../../data/gta-6/trailer-velocity.json";
@@ -222,11 +222,11 @@ const featuredIncome = incomeList
          LAYER 3: ECONOMY — diagram + income + expenditure
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// The Circular GTA Economy · Simplified · where does the money go?" pillHref="/gta-vi/economy" pillLabel="Full model →" />
+      <SectionHeader label="// The Circular GTA Economy · Simplified · where does the money go?" pillHref="/gta-vi/economy#eco-gta-vi" pillLabel="Full model →" />
 
       <!-- Simplified Economy Diagram (SED) — canonical base model -->
       <div class="mb-6">
-        <EconomyCircleSED fullEconomyHref="/gta-vi/economy" />
+        <EconomyCircleSED fullEconomyHref="/gta-vi/economy#eco-gta-vi" />
       </div>
 
       <!-- Income + Expenditure cards: 2-col split with teal/orange column borders -->

@@ -135,9 +135,15 @@ class PredictionUpdater:
         self.predictions = {p["id"]: p for p in predictions}
         self.changes: list[dict] = []
         self.proposals: list[dict] = []
+        self.added: list[dict] = []
 
     def get(self, pred_id: str) -> dict | None:
         return self.predictions.get(pred_id)
+
+    def add_prediction(self, obj: dict) -> None:
+        """Publish a brand-new prediction directly (auto-publish model)."""
+        self.predictions[obj["id"]] = obj
+        self.added.append(obj)
 
     def update(self, pred_id: str, field: str, old_val, new_val, source: str) -> bool:
         """Apply a confirmed update to a prediction field."""
@@ -199,17 +205,43 @@ def load_drafts() -> list[dict]:
     return []
 
 
-def run_draft_proposals(updater: PredictionUpdater) -> None:
+VALID_TIERS = {"confirmed", "reported", "predicted"}
+
+
+def passes_quality_gate(obj: dict) -> tuple[bool, str]:
     """
-    Promote pending prediction drafts into proposals for human review.
+    Automated quality gate for auto-published predictions. Replaces human
+    pre-approval: a draft must clear these checks to publish unattended.
+    Anything that fails is held back as a review proposal instead of dropped.
+    """
+    if not obj.get("id"):
+        return False, "missing id"
+    if not obj.get("title"):
+        return False, "missing title"
+    if obj.get("value") in (None, ""):
+        return False, "missing value"
+    conf = obj.get("confidence")
+    if not isinstance(conf, int) or not (0 <= conf <= 100):
+        return False, "confidence out of 0–100 range"
+    if obj.get("confidence_tier") not in VALID_TIERS:
+        return False, "invalid confidence_tier"
+    if not (obj.get("basis") or obj.get("source")):
+        return False, "no basis or source"
+    return True, "ok"
 
-    For each pending draft whose id does not yet exist in predictions.json,
-    this creates a 'new' proposal with field '_new' and the full draft object
-    as the proposed value. The /admin/proposals/ page renders these with the
-    '+ New prediction' badge and a full-object view.
 
-    Drafts whose id already exists in predictions.json are skipped (the
-    prediction was likely already applied — mark the draft as 'promoted').
+def run_draft_publish(updater: PredictionUpdater) -> None:
+    """
+    Auto-publish model: pending prediction drafts go live automatically.
+
+    For each pending draft whose id does not yet exist in predictions.json:
+      - if it clears passes_quality_gate(), it is added straight to
+        predictions.json (editorial_note "auto-published"); moderation is
+        post-publication (demote/edit/remove), not pre-publication.
+      - if it fails the gate, it falls back to a review proposal on
+        /admin/proposals so it is surfaced for a fix rather than silently lost.
+
+    Drafts whose id already exists are skipped (already live).
     """
     drafts = load_drafts()
     if not drafts:
@@ -223,37 +255,41 @@ def run_draft_proposals(updater: PredictionUpdater) -> None:
             continue
 
         # Skip if the prediction already exists in predictions.json
-        existing = updater.get(draft_id)
-        if existing:
+        if updater.get(draft_id):
             print(f"  [skip] {draft_id} already exists in predictions.json"
                   " — mark draft as 'promoted'")
             continue
 
-        # Strip the intake-only fields before proposing
-        proposal_obj = {k: v for k, v in draft.items()
-                        if k not in ("draft_status", "draft_notes")}
-        # Ensure required defaults
-        proposal_obj.setdefault("outcome_verified", False)
-        proposal_obj.setdefault("outcome_actual", None)
-        proposal_obj.setdefault("outcome_date", None)
-        proposal_obj.setdefault("prediction_method", None)
-        proposal_obj.setdefault("prediction_inputs", [])
-        proposal_obj.setdefault("trailer_timestamp", None)
-        proposal_obj.setdefault("thumbnail", None)
-        proposal_obj.setdefault("unit", None)
-        proposal_obj.setdefault("pages", ["gta-vi/intel"])
-        proposal_obj.setdefault("display_order", 99)
-        proposal_obj.setdefault("editorial_note", "draft")
+        # Strip the intake-only fields, then apply required defaults
+        obj = {k: v for k, v in draft.items()
+               if k not in ("draft_status", "draft_notes")}
+        obj.setdefault("outcome_verified", False)
+        obj.setdefault("outcome_actual", None)
+        obj.setdefault("outcome_date", None)
+        obj.setdefault("prediction_method", None)
+        obj.setdefault("prediction_inputs", [])
+        obj.setdefault("trailer_timestamp", None)
+        obj.setdefault("thumbnail", None)
+        obj.setdefault("unit", None)
+        obj.setdefault("pages", ["gta-vi/intel"])
+        obj.setdefault("display_order", 99)
 
-        notes = draft.get("draft_notes", "")
-        rationale = f"New prediction from drafts intake queue.{' ' + notes if notes else ''}"
-
-        updater.propose(
-            draft_id, "_new",
-            current_val=None,
-            proposed_val=proposal_obj,
-            rationale=rationale,
-        )
+        ok, reason = passes_quality_gate(obj)
+        if ok:
+            obj["editorial_note"] = "auto-published"
+            updater.add_prediction(obj)
+            print(f"  ✓ auto-published {draft_id}")
+        else:
+            obj["editorial_note"] = "held"
+            notes = draft.get("draft_notes", "")
+            updater.propose(
+                draft_id, "_new",
+                current_val=None,
+                proposed_val=obj,
+                rationale=f"Held for review — failed quality gate: {reason}."
+                          f"{' ' + notes if notes else ''}",
+            )
+            print(f"  ⚑ {draft_id} held for review: {reason}")
 
 
 def run_updates(updater: PredictionUpdater) -> None:
@@ -366,22 +402,27 @@ def main() -> None:
 
     print("Running update checks...")
     run_updates(updater)
-    run_draft_proposals(updater)
+    run_draft_publish(updater)
 
-    if not updater.changes and not updater.proposals:
+    if not updater.changes and not updater.proposals and not updater.added:
         print("\nNo changes detected — predictions are up to date.")
         return
 
-    # Apply confirmed changes back to the data
-    if updater.changes:
+    # Apply confirmed field changes + newly auto-published predictions
+    if updater.changes or updater.added:
         data["last_updated"] = now_iso()
         updated_ids = {c["id"] for c in updater.changes}
-        # Mark updated predictions with auto-update note
         for p in data["predictions"]:
             if p["id"] in updated_ids:
                 p["editorial_note"] = "auto-updated"
+        # Append brand-new auto-published predictions
+        for obj in updater.added:
+            data["predictions"].append(obj)
         save_json(pred_path, data)
-        print(f"\n✓ Applied {len(updater.changes)} confirmed change(s) to predictions.json")
+        if updater.changes:
+            print(f"\n✓ Applied {len(updater.changes)} confirmed change(s) to predictions.json")
+        if updater.added:
+            print(f"✓ Auto-published {len(updater.added)} new prediction(s) to predictions.json")
 
     # Write proposals for human review
     if updater.proposals:

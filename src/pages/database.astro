@@ -2,7 +2,6 @@
 import Base from "../layouts/Base.astro";
 import IncomeCard from "../components/IncomeCard.astro";
 import StatBox from "../components/StatBox.astro";
-import { regionFromName } from "../config/semanticTypes";
 import type {
   EntityIndex, LeonidaData, VehiclesData, BusinessProfiles,
   OnlineHeistsData, RevenueTiersData, StoryMissionsData, OnlineMissionsData,
@@ -674,6 +673,8 @@ const HEIST_THUMBS: Record<string, string> = {
 </Base>
 
 <script>
+  import { pillStyle, regionFromName, type BadgeSurface } from "../config/semanticTypes";
+
   // ── Shared types ──────────────────────────────────────────────────────────
   interface Gta6Entity {
     name: string; type: string; confidence_tier: string;
@@ -685,13 +686,20 @@ const HEIST_THUMBS: Record<string, string> = {
     lap_time: string | null; lap_seconds: number | null; top_speed_mph: number | null;
   }
 
-  // ── Constants ─────────────────────────────────────────────────────────────
-  const TIER_META: Record<string,{badge:string;color:string;label:string}> = {
-    confirmed: { label:"Confirmed", color:"text-gta-teal",  badge:"bg-gta-teal/10 border-gta-teal/40"  },
-    reported:  { label:"Reported",  color:"text-gta-gold",  badge:"bg-gta-gold/10 border-gta-gold/40"  },
-    predicted: { label:"Predicted", color:"text-zinc-500",  badge:"bg-zinc-800/50 border-zinc-700/40"  },
-    indexed:   { label:"Indexed",   color:"text-zinc-600",  badge:"bg-zinc-900/50 border-zinc-800/40"  },
+  // ── Tier badge — canonical Badge markup via central pillStyle() ────────────
+  // Mirrors <Badge variant=… surface=…> exactly (one canonical size text-[10px],
+  // token colours) so runtime-built cards stay in sync with the central badge
+  // system. No raw Tailwind badge strings, no sub-9px text.
+  const TIER_BADGE: Record<string,{label:string;token:string}> = {
+    confirmed: { label:"Confirmed", token:"var(--c-live)"   },
+    reported:  { label:"Reported",  token:"var(--c-brand)"  },
+    predicted: { label:"Predicted", token:"var(--c-text-2)" },
+    indexed:   { label:"Indexed",   token:"var(--c-text-2)" },
   };
+  function tierBadge(tier: string, surface: BadgeSurface = "opaque"): string {
+    const m = TIER_BADGE[tier] ?? TIER_BADGE.indexed;
+    return `<span class="inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5" style="${pillStyle(m.token, surface)}">${m.label}</span>`;
+  }
   const TYPE_ICON: Record<string,string> = {
     vehicle:"🚗", character:"👤", weapon:"🔫", business:"🏢",
     animal:"🐊", location:"📍", mission:"🎯", activity:"🎮", property:"🏠", radio:"📻",
@@ -777,7 +785,6 @@ const HEIST_THUMBS: Record<string, string> = {
   };
 
   function buildGta6Card(e: Gta6Entity): string {
-    const meta = TIER_META[e.confidence_tier] ?? TIER_META.indexed;
     const icon = TYPE_ICON[e.type] ?? "•";
     const priceLabel = PRICE_LABEL[e.type];
 
@@ -797,9 +804,7 @@ const HEIST_THUMBS: Record<string, string> = {
             <img src="${mThumb}" alt="${e.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
             <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-card) 0%,transparent 60%)"></div>
             <div class="absolute top-2 left-2">${pillHtml}</div>
-            <div class="absolute top-2 right-2">
-              <span class="text-[7px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}">${meta.label}</span>
-            </div>
+            <div class="absolute top-2 right-2">${tierBadge(e.confidence_tier, "opaque")}</div>
           </div>
           <div class="px-3 py-2.5 flex flex-col flex-1">
             <div class="flex items-center gap-1.5 mb-1.5">
@@ -850,9 +855,7 @@ const HEIST_THUMBS: Record<string, string> = {
           <div class="relative ${aspectClass} overflow-hidden bg-[#0a0a0d]">
             <img src="${thumbImg}" alt="${e.name}" class="w-full h-full object-cover ${imgPos} transition-transform duration-500 group-hover:scale-105" loading="lazy" />
             <div class="absolute inset-0" style="background:linear-gradient(to top,#131316 0%,#13131640 40%,transparent 65%)"></div>
-            <div class="absolute top-2 right-2">
-              <span class="text-[7px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}">${meta.label}</span>
-            </div>
+            <div class="absolute top-2 right-2">${tierBadge(e.confidence_tier, "opaque")}</div>
           </div>
           <div class="px-3 py-2.5 flex flex-col flex-1">
             <div class="text-xs font-semibold text-zinc-200 leading-snug group-hover:text-white transition-colors mb-1.5">${e.name}</div>
@@ -872,7 +875,7 @@ const HEIST_THUMBS: Record<string, string> = {
       <div class="rounded-lg border border-border-dim p-3 hover:border-border-mid transition-colors group flex flex-col" style="background:var(--c-card)">
         <div class="flex items-start justify-between gap-2 mb-1.5">
           <span class="text-xs font-semibold text-zinc-200 leading-snug group-hover:text-white transition-colors flex-1">${e.name}</span>
-          <span class="shrink-0 text-[7px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}">${meta.label}</span>
+          <span class="shrink-0">${tierBadge(e.confidence_tier, "tint")}</span>
         </div>
         <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-2 flex-wrap">
@@ -979,6 +982,22 @@ const HEIST_THUMBS: Record<string, string> = {
     else renderGta5();
   }
 
+  // ── Shared filter style helpers (from semanticTypes registry) ──────────────
+  // Declared at script top level so every filter handler (game tab, type, tier,
+  // source) can use them — previously these lived inside the game-tab click
+  // callback, so the type filter threw a ReferenceError and never re-rendered.
+  const DB_GAME_COLORS: Record<string,string> = {
+    "gta-6":      "var(--c-title-vi)",
+    "gta-online": "var(--c-title-online)",
+    "gta-5":      "var(--c-title-v)",
+  };
+  function dbFilterActive(colorToken: string): string {
+    return `color:${colorToken};border-color:color-mix(in srgb,${colorToken} 40%,transparent);background:color-mix(in srgb,${colorToken} 12%,transparent)`;
+  }
+  const dbFilterInactive = "color:var(--c-text-5);border-color:var(--c-border-2);background:transparent";
+  // Generic gold active (for type/tier filters without a specific game color)
+  const dbFilterGoldActive = dbFilterActive("var(--c-brand)");
+
   // ── Game tab toggle ───────────────────────────────────────────────────────
   document.querySelectorAll<HTMLButtonElement>(".db-game-tab").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -1015,19 +1034,6 @@ const HEIST_THUMBS: Record<string, string> = {
 
 
       // Tab button styles
-  // ── Shared filter style helpers (from semanticTypes registry) ──────────────
-  const DB_GAME_COLORS: Record<string,string> = {
-    "gta-6":      "var(--c-title-vi)",
-    "gta-online": "var(--c-title-online)",
-    "gta-5":      "var(--c-title-v)",
-  };
-  function dbFilterActive(colorToken: string): string {
-    return `color:${colorToken};border-color:color-mix(in srgb,${colorToken} 40%,transparent);background:color-mix(in srgb,${colorToken} 12%,transparent)`;
-  }
-  const dbFilterInactive = "color:var(--c-text-5);border-color:var(--c-border-2);background:transparent";
-  // Generic gold active (for type/tier filters without a specific game color)
-  const dbFilterGoldActive = dbFilterActive("var(--c-brand)");
-
       document.querySelectorAll<HTMLButtonElement>(".db-game-tab").forEach(b => {
         const active = b.dataset.game === activeGame;
         const c = DB_GAME_COLORS[b.dataset.game ?? ""] ?? "var(--c-brand)";

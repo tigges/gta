@@ -8,7 +8,7 @@ import StockCalculator from "../components/StockCalculator.astro";
 import SocialClubConnector from "../components/SocialClubConnector.astro";
 import GamePill from "../components/GamePill.astro";
 import { Image } from "astro:assets";
-import heroGtaV from "../assets/images/hero-gta-v.jpg";
+import heroGtaV from "../assets/images/hero-gta-v.webp";
 import ChartAssassinationReturns from "../components/charts/ChartAssassinationReturns.astro";
 import ChartDlcPlayerHistory     from "../components/charts/ChartDlcPlayerHistory.astro";
 import ChartMissionEarnings      from "../components/charts/ChartMissionEarnings.astro";
@@ -56,21 +56,19 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
 >
 
   <!-- Page header -->
-  <section class="relative border-b border-border-dim overflow-hidden">
+  <section class="relative border-b border-border-dim overflow-hidden" style="min-height:360px">
     <div class="absolute inset-0">
-      <Image src={heroGtaV} alt="" class="absolute right-0 top-0 h-full w-auto object-cover opacity-12" aria-hidden="true"
-           style="filter:saturate(0.5);max-width:50%"
-           widths={[640, 1080]} sizes="50vw" format="webp" loading="eager" />
-      <div class="absolute inset-0" style="background:linear-gradient(to right,#0a0a0d 40%,transparent 100%)"></div>
-      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,#0a0a0d 100%)"></div>
+      <Image src={heroGtaV} alt="" class="absolute inset-0 w-full h-full object-cover" style="object-position:center 35%" aria-hidden="true"
+           widths={[1280, 1920, 2560]} sizes="100vw" format="webp" loading="eager" />
+      <div class="absolute inset-0" style="background:linear-gradient(to right,#0a0a0d 0%,#0a0a0dcc 35%,#0a0a0d33 75%,transparent 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 55%,#0a0a0d 100%)"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-5">
         <GamePill game="gta-v" size="xs" />
         <span class="text-[10px] font-mono text-zinc-500">2013 · Rockstar Games</span>
       </div>
-      <img src="/assets/logos/gta-v.png" alt="Grand Theft Auto V"
-           class="h-14 sm:h-16 w-auto mb-4 drop-shadow-lg" loading="eager" />
+      <h1 class="sr-only">Grand Theft Auto V</h1>
       <p class="text-zinc-400 text-sm leading-relaxed mb-8 max-w-lg">
         11 years of live signals: Steam players, vehicle benchmarks, story mission earnings,
         assassination stock guide, heist payouts, and GTA Online economics. The complete data blueprint for GTA VI.
