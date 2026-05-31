@@ -9,6 +9,8 @@ import ShareDropdown from "../components/ShareDropdown.astro";
 import ChartTeaserSearchSignal from "../components/charts/ChartTeaserSearchSignal.astro";
 import TeaserBar from "../components/TeaserBar.astro";
 import ChartScreenshotTeaser from "../components/ChartScreenshotTeaser.astro";
+import HudIcon from "../components/HudIcon.astro";
+import { FEATURE_CATEGORY_ICON } from "../config/featureIcons";
 
 import type { TrailersData, Prediction, FeaturesData, TrailerVelocityData, TrailerAnalysisData } from "../types/gta";
 
@@ -331,7 +333,7 @@ const t2TypeCounts = t2Events.reduce((acc: Record<string,number>, e: any) => {
               )}
               <div class="relative px-4 py-4 flex flex-col h-full">
                 <div class="flex items-center gap-2 mb-2">
-                  <span class="text-lg">{cat.icon}</span>
+                  <HudIcon name={(FEATURE_CATEGORY_ICON[cat.id] ?? "intel") as any} size={18} class="text-gta-gold" />
                   <span class="text-xs font-bold text-zinc-200">{cat.label}</span>
                 </div>
                 <div class="flex items-baseline gap-1.5 mb-2.5">

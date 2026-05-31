@@ -1,6 +1,8 @@
 ---
 import Base from "../../layouts/Base.astro";
 import PredictionOrPoll from "../../components/PredictionOrPoll.astro";
+import HudIcon from "../../components/HudIcon.astro";
+import { FEATURE_CATEGORY_ICON } from "../../config/featureIcons";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 
@@ -325,7 +327,7 @@ const CAT_THUMBS: Record<string,string> = {
                 <div class="relative px-5 py-5">
                   <!-- Icon + label -->
                   <div class="flex items-center gap-2 mb-3">
-                    <span class="text-xl">{cat.icon}</span>
+                    <HudIcon name={(FEATURE_CATEGORY_ICON[cat.id] ?? "intel") as any} size={22} class="text-gta-gold" />
                     <span class="text-sm font-bold text-zinc-200">{cat.label}</span>
                   </div>
                   <!-- Stats -->
