@@ -18,6 +18,10 @@ import spotifyData     from "../../../data/franchise/spotify.json";
 const predictions    = (predictionsData.predictions as Prediction[])
   .slice()
   .sort((a, b) => (a.display_order ?? 99) - (b.display_order ?? 99));
+
+// Mixed prediction/poll feed; show the first PRED_INITIAL, fold the rest behind "Show all".
+const predFeed    = feedWithPolls(predictions, 3);
+const PRED_INITIAL = 9;
 const trailersData   = trailersDataRaw as TrailersData;
 const trailers       = trailersData.trailers;
 const heroTrailer    = trailers[1] ?? trailers[0]; // prefer Trailer 2 for hero
@@ -167,15 +171,72 @@ const CAT_THUMBS: Record<string,string> = {
     <section>
       <SectionHeader label="// Economic Predictions & Community Polls" pillHref="/community/polls" pillLabel="All polls →" />
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 items-start">
-        {feedWithPolls(predictions, 3).map(({ prediction: p, mode }) => (
-          <PredictionOrPoll
-            prediction={p}
-            mode={mode}
-            thumbnail={(p as any).thumbnail ?? PRED_THUMBS[p.id] ?? null}
-          />
+        {predFeed.map(({ prediction: p, mode }, i) => (
+          <div class={i >= PRED_INITIAL ? "pred-extra hidden" : ""}>
+            <PredictionOrPoll
+              prediction={p}
+              mode={mode}
+              thumbnail={(p as any).thumbnail ?? PRED_THUMBS[p.id] ?? null}
+            />
+          </div>
         ))}
       </div>
+      {predFeed.length > PRED_INITIAL && (
+        <div class="mt-5 flex justify-center">
+          <button id="show-all-preds" type="button" class="inline-flex items-center gap-2 rounded border border-border-mid px-4 py-2 text-[11px] font-mono uppercase tracking-widest text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-all">
+            Show all {predFeed.length} predictions &amp; polls →
+          </button>
+        </div>
+      )}
     </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         GTA VI CONFIRMED SOUNDTRACK — Trailer Songs
+    ═══════════════════════════════════════════════════════ -->
+    {confirmedSongs.length > 0 && (
+    <section>
+      <SectionHeader label="// Confirmed Soundtrack — Trailer Songs" dotColor="var(--c-growth)" />
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="divide-y divide-border-dim">
+          {confirmedSongs.map((song, i) => {
+            const preview = SONG_PREVIEWS[song.title];
+            return (
+            <div class="px-5 py-4 flex items-center gap-4">
+              {preview ? (
+                <>
+                  <button
+                    class="song-play w-7 h-7 rounded bg-gta-green/10 border border-gta-green/20 flex items-center justify-center shrink-0 hover:bg-gta-green/20 transition-colors"
+                    data-audio={`song-audio-${i}`}
+                    aria-label={`Play 30-second preview of ${song.title}`}
+                    type="button"
+                  >
+                    <span class="song-play-icon text-gta-green text-[11px] leading-none">▶</span>
+                  </button>
+                  <audio id={`song-audio-${i}`} class="song-audio" src={preview} preload="none"></audio>
+                </>
+              ) : (
+                <div class="w-7 h-7 rounded bg-gta-green/10 border border-gta-green/20 flex items-center justify-center shrink-0">
+                  <span class="text-gta-green text-xs">♪</span>
+                </div>
+              )}
+              <div class="flex-1 min-w-0">
+                <div class="text-sm font-semibold text-zinc-200 leading-tight">{song.title}</div>
+                <div class="text-[11px] font-mono text-zinc-500 mt-0.5">{song.artist} · {song.year}{preview ? " · 30s preview" : ""}</div>
+              </div>
+              <div class="shrink-0 text-right">
+                <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">{song.trailer}</span>
+              </div>
+            </div>
+            );
+          })}
+        </div>
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between">
+          <span class="text-[10px] text-zinc-500 font-mono">Source: Spotify Web API · confirmed from official GTA VI trailers</span>
+          <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+        </div>
+      </div>
+    </section>
+    )}
 
     <!-- ═══════════════════════════════════════════════════════
          INCOME PREDICTIONS — GTA VI Online
@@ -209,7 +270,6 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
 
-
     <!-- ═══════════════════════════════════════════════════════
          CONFIRMED CAST
     ═══════════════════════════════════════════════════════ -->
@@ -226,46 +286,6 @@ const CAT_THUMBS: Record<string,string> = {
         <CastCard name="Real Dimez"     role="Supporting"  img="Real_Dimez_01.jpg"     video="Real_Dimez_Video_Clip.mp4"     />
       </div>
     </section>
-
-
-    <!-- ═══════════════════════════════════════════════════════
-         LEONIDA — LOCATIONS
-    ═══════════════════════════════════════════════════════ -->
-    <section>
-      <SectionHeader label="// Leonida — Confirmed Locations" dotColor="var(--c-live)" />
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {([
-          { name: "Vice City",      desc: "Urban hub — streets, nightlife, coast",   img: "Vice_City_04.jpg",                  shots: 9  },
-          { name: "Ambrosia",       desc: "Affluent waterfront district",             img: "Ambrosia_02.jpg",                   shots: 5  },
-          { name: "Grassrivers",    desc: "Wetlands — Leonida Everglades analog",    img: "Grassrivers_02.jpg",                shots: 4  },
-          { name: "Leonida Keys",   desc: "Island chain south of Vice City",          img: "Leonida_Keys_03.jpg",               shots: 5  },
-          { name: "Port Gellhorn",  desc: "Industrial port district",                 img: "Port_Gellhorn_02.jpg",              shots: 5  },
-          { name: "Mount Kalaga",   desc: "National park — mountainous interior",     img: "Mount_Kalaga_National_Park_03.jpg", shots: 6  },
-        ] as const).map(loc => (
-          <div class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-teal/30 transition-all duration-300 cursor-default">
-            <div class="aspect-video overflow-hidden">
-              <img
-                src={`/assets/gta6/locations/${loc.img}`}
-                alt={loc.name}
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-              <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 44%, transparent) 40%, transparent 70%)"></div>
-            </div>
-            <div class="absolute bottom-0 left-0 right-0 px-4 pb-4">
-              <div class="flex items-center gap-2 mb-0.5">
-                <span class="text-[10px] font-mono text-gta-teal border border-gta-teal/20 bg-gta-teal/10 px-1.5 py-0.5 rounded uppercase tracking-widest">Confirmed</span>
-                <span class="text-[10px] font-mono text-zinc-500">{loc.shots} official shots</span>
-              </div>
-              <div class="text-sm font-bold text-white leading-tight">{loc.name}</div>
-              <div class="text-[11px] text-zinc-400 mt-0.5">{loc.desc}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-
 
     <!-- ═══════════════════════════════════════════════════════
          CONFIRMED FEATURE TRACKER
@@ -341,6 +361,42 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
 
+    <!-- ═══════════════════════════════════════════════════════
+         LEONIDA — LOCATIONS
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader label="// Leonida — Confirmed Locations" dotColor="var(--c-live)" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {([
+          { name: "Vice City",      desc: "Urban hub — streets, nightlife, coast",   img: "Vice_City_04.jpg",                  shots: 9  },
+          { name: "Ambrosia",       desc: "Affluent waterfront district",             img: "Ambrosia_02.jpg",                   shots: 5  },
+          { name: "Grassrivers",    desc: "Wetlands — Leonida Everglades analog",    img: "Grassrivers_02.jpg",                shots: 4  },
+          { name: "Leonida Keys",   desc: "Island chain south of Vice City",          img: "Leonida_Keys_03.jpg",               shots: 5  },
+          { name: "Port Gellhorn",  desc: "Industrial port district",                 img: "Port_Gellhorn_02.jpg",              shots: 5  },
+          { name: "Mount Kalaga",   desc: "National park — mountainous interior",     img: "Mount_Kalaga_National_Park_03.jpg", shots: 6  },
+        ] as const).map(loc => (
+          <div class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-teal/30 transition-all duration-300 cursor-default">
+            <div class="aspect-video overflow-hidden">
+              <img
+                src={`/assets/gta6/locations/${loc.img}`}
+                alt={loc.name}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 44%, transparent) 40%, transparent 70%)"></div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 px-4 pb-4">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-[10px] font-mono text-gta-teal border border-gta-teal/20 bg-gta-teal/10 px-1.5 py-0.5 rounded uppercase tracking-widest">Confirmed</span>
+                <span class="text-[10px] font-mono text-zinc-500">{loc.shots} official shots</span>
+              </div>
+              <div class="text-sm font-bold text-white leading-tight">{loc.name}</div>
+              <div class="text-[11px] text-zinc-400 mt-0.5">{loc.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
 
     <!-- ═══════════════════════════════════════════════════════
          GTA VI FAQ
@@ -361,60 +417,17 @@ const CAT_THUMBS: Record<string,string> = {
     </section>
 
 
-    <!-- ═══════════════════════════════════════════════════════
-         GTA VI CONFIRMED SOUNDTRACK — Trailer Songs
-    ═══════════════════════════════════════════════════════ -->
-    {confirmedSongs.length > 0 && (
-    <section>
-      <SectionHeader label="// Confirmed Soundtrack — Trailer Songs" dotColor="var(--c-growth)" />
-      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
-        <div class="divide-y divide-border-dim">
-          {confirmedSongs.map((song, i) => {
-            const preview = SONG_PREVIEWS[song.title];
-            return (
-            <div class="px-5 py-4 flex items-center gap-4">
-              {preview ? (
-                <>
-                  <button
-                    class="song-play w-7 h-7 rounded bg-gta-green/10 border border-gta-green/20 flex items-center justify-center shrink-0 hover:bg-gta-green/20 transition-colors"
-                    data-audio={`song-audio-${i}`}
-                    aria-label={`Play 30-second preview of ${song.title}`}
-                    type="button"
-                  >
-                    <span class="song-play-icon text-gta-green text-[11px] leading-none">▶</span>
-                  </button>
-                  <audio id={`song-audio-${i}`} class="song-audio" src={preview} preload="none"></audio>
-                </>
-              ) : (
-                <div class="w-7 h-7 rounded bg-gta-green/10 border border-gta-green/20 flex items-center justify-center shrink-0">
-                  <span class="text-gta-green text-xs">♪</span>
-                </div>
-              )}
-              <div class="flex-1 min-w-0">
-                <div class="text-sm font-semibold text-zinc-200 leading-tight">{song.title}</div>
-                <div class="text-[11px] font-mono text-zinc-500 mt-0.5">{song.artist} · {song.year}{preview ? " · 30s preview" : ""}</div>
-              </div>
-              <div class="shrink-0 text-right">
-                <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">{song.trailer}</span>
-              </div>
-            </div>
-            );
-          })}
-        </div>
-        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: Spotify Web API · confirmed from official GTA VI trailers</span>
-          <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-        </div>
-      </div>
-    </section>
-    )}
-
-
 
 
   </div>
 
   <script>
+    // Predictions "Show all" — reveal folded cards.
+    document.getElementById("show-all-preds")?.addEventListener("click", (e) => {
+      document.querySelectorAll(".pred-extra").forEach(el => el.classList.remove("hidden"));
+      (e.currentTarget as HTMLElement).style.display = "none";
+    });
+
     // Soundtrack preview playback — native <audio>, one clip at a time.
     document.querySelectorAll<HTMLButtonElement>(".song-play").forEach(btn => {
       const audio = document.getElementById(btn.dataset.audio ?? "") as HTMLAudioElement | null;
