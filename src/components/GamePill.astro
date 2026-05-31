@@ -1,14 +1,16 @@
 ---
 /**
- * GamePill — GTA title version identifier pill.
+ * GamePill — thin wrapper around Badge with surface="opaque".
  *
- * Renders a small pill with the game's identity colour from --c-identity
- * resolved via the game prop. Used top-left on every card across the site.
+ * @deprecated — use <Badge variant={game} surface="opaque" /> directly.
+ * This wrapper exists to keep all existing call sites working during migration.
+ * Remove once all pages have been updated.
  *
  * Usage:
- *   <GamePill game="gta-vi" />
- *   <GamePill game="gta-online" size="xs" />
+ *   <GamePill game="gta-vi" />         → Badge variant="gta-vi" surface="opaque"
+ *   <GamePill game="gta-online" />     → Badge variant="gta-online" surface="opaque"
  */
+import Badge from "./Badge.astro";
 
 interface Props {
   game:
@@ -20,51 +22,12 @@ interface Props {
     | "gta-iv"
     | "gta-iii"
     | "franchise";
-  size?: "xs" | "sm";
+  /** @deprecated — one canonical size only. Accepted but ignored. */
+  size?: string;
   class?: string;
 }
 
-const { game, size = "sm", class: cls = "" } = Astro.props;
-
-const GAME_LABEL: Record<string, string> = {
-  "gta-vi":     "GTA VI",
-  "gta-online": "GTA Online",
-  "gta-v":      "GTA V",
-  "gta-sa":     "GTA SA",
-  "gta-vc":     "GTA VC",
-  "gta-iv":     "GTA IV",
-  "gta-iii":    "GTA III",
-  "franchise":  "Franchise",
-};
-
-// Identity — reads from --c-title-* tokens defined in tokens.css
-// CSS var() with hardcoded fallback for runtime safety
-const GAME_COLOUR: Record<string, string> = {
-  "gta-vi":     "var(--c-title-vi,#ff6b9d)",
-  "gta-online": "var(--c-title-online,#00d4e8)",
-  "gta-v":      "var(--c-title-v,#f59e0b)",
-  "gta-sa":     "var(--c-title-sa,#c0392b)",
-  "gta-vc":     "var(--c-title-vc,#ff2d78)",
-  "gta-iv":     "var(--c-title-iv,#6b6b7e)",
-  "gta-iii":    "var(--c-title-iii,#9898b8)",
-  "franchise":  "#f59e0b",
-};
-
-const label  = GAME_LABEL[game]  ?? game.toUpperCase();
-const colour = GAME_COLOUR[game] ?? "#9898b8";
-
-const sizeClass = size === "xs"
-  ? "text-[10px] px-1.5 py-0.5"
-  : "text-[11px] px-2 py-0.5";
-
-// Dark opaque backing ensures legibility on any surface — card, image, overlay.
-// Identity colour used for text and border ring only; background is near-black.
-const bgStyle = `color:${colour};border-color:${colour}55;background:rgba(10,10,13,0.88)`;
+const { game, class: cls = "" } = Astro.props;
 ---
 
-<span
-  class={`inline-flex self-start items-center font-mono uppercase tracking-widest rounded border shrink-0 whitespace-nowrap ${sizeClass} ${cls}`}
-  style={bgStyle}
->
-  {label}
-</span>
+<Badge variant={game as any} surface="opaque" class={`self-start shrink-0 whitespace-nowrap ${cls}`} />
