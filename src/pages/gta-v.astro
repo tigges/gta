@@ -8,7 +8,7 @@ import StockCalculator from "../components/StockCalculator.astro";
 import SocialClubConnector from "../components/SocialClubConnector.astro";
 import GamePill from "../components/GamePill.astro";
 import { Image } from "astro:assets";
-import heroGtaV from "../assets/images/hero-gta-v.jpg";
+import heroGtaV from "../assets/images/hero-gta-v.webp";
 import ChartAssassinationReturns from "../components/charts/ChartAssassinationReturns.astro";
 import ChartDlcPlayerHistory     from "../components/charts/ChartDlcPlayerHistory.astro";
 import ChartMissionEarnings      from "../components/charts/ChartMissionEarnings.astro";
@@ -59,7 +59,7 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
   <section class="relative border-b border-border-dim overflow-hidden" style="min-height:360px">
     <div class="absolute inset-0">
       <Image src={heroGtaV} alt="" class="absolute inset-0 w-full h-full object-cover" style="object-position:center 35%" aria-hidden="true"
-           widths={[1280, 1920]} sizes="100vw" format="webp" loading="eager" />
+           widths={[1280, 1920, 2560]} sizes="100vw" format="webp" loading="eager" />
       <div class="absolute inset-0" style="background:linear-gradient(to right,#0a0a0d 0%,#0a0a0dcc 35%,#0a0a0d33 75%,transparent 100%)"></div>
       <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 55%,#0a0a0d 100%)"></div>
     </div>
