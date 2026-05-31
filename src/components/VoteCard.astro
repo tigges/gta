@@ -137,7 +137,10 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
       <div class="vc-voted-note hidden">✓ You voted</div>
       {options.map(opt => (
         <div class="vc-result-row" data-option={opt}>
-          <div class="vc-result-label">{opt}</div>
+          <div class="vc-result-label">
+            {opt}
+            <span class="vc-voted-tick hidden">✓</span>
+          </div>
           <div class="vc-result-track">
             <div class="vc-result-bar" data-option={opt} style="width:0%"></div>
           </div>
@@ -145,7 +148,6 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
         </div>
       ))}
       <div class="vc-vote-count"></div>
-
     </div>
   </div>
 
@@ -288,6 +290,13 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
   font-size: 9px; color: var(--c-text-5); text-align: right; margin-top: 4px;
 }
 
+.vc-voted-tick {
+  color: var(--c-live);
+  margin-left: 6px;
+  font-size: 10px;
+}
+.vc-result-row--voted .vc-result-label { color: var(--c-text-2); }
+
 .vc-voted-note {
   font-size: 9px; color: var(--c-growth); letter-spacing: .06em;
   margin-bottom: 4px;
@@ -364,15 +373,26 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
     const storageKey = `vote:${pollId}`;
 
     // Helper: animate result bars from fetched data
-    function showResults(votes: Record<string, number>) {
+    function showResults(votes: Record<string, number>, votedOption?: string) {
       const total = Object.values(votes).reduce((s, v) => s + v, 0);
       options.forEach(opt => {
         const count = votes[opt] ?? 0;
         const pct   = total > 0 ? Math.round((count / total) * 100) : 0;
         const bar   = results.querySelector<HTMLElement>(`.vc-result-bar[data-option="${opt}"]`);
         const pctEl = results.querySelector<HTMLElement>(`.vc-result-pct[data-option="${opt}"]`);
-        if (bar)   bar.style.width   = `${pct}%`;
+        const row   = results.querySelector<HTMLElement>(`.vc-result-row[data-option="${opt}"]`);
+        const tick  = row?.querySelector<HTMLElement>(".vc-voted-tick");
+        const isVoted = votedOption && opt === votedOption;
+        // Voted option gets a minimum visible bar (8px) so the user can always see their choice
+        const displayPct = isVoted && pct === 0 ? 0 : pct;
+        if (bar) {
+          bar.style.width = `${displayPct}%`;
+          if (isVoted) bar.style.minWidth = "12px";
+          else bar.style.minWidth = "";
+        }
         if (pctEl) pctEl.textContent = `${pct}%`;
+        if (tick)  tick.classList.toggle("hidden", !isVoted);
+        if (row)   row.classList.toggle("vc-result-row--voted", !!isVoted);
       });
       const countEl = results.querySelector<HTMLElement>(".vc-vote-count");
       if (countEl) countEl.textContent = `${total.toLocaleString()} vote${total !== 1 ? "s" : ""}`;
@@ -383,10 +403,10 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
     if (storedVote) {
       container.classList.add("hidden");
       votedNote.classList.remove("hidden");
-      // Show placeholder immediately, then replace with real counts
+      // Show placeholder immediately — voted option gets 1 vote, others 0
       const placeholder: Record<string, number> = {};
       options.forEach(o => { placeholder[o] = o === storedVote ? 1 : 0; });
-      showResults(placeholder);
+      showResults(placeholder, storedVote);
       results.classList.remove("hidden");
       updateShareLinks(storedVote, placeholder);
       // Fetch live counts — only replace placeholder if server has real data (total > 0)
@@ -396,7 +416,7 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
           if (data?.votes) {
             const liveTotal = Object.values(data.votes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0);
             if (liveTotal > 0) {
-              showResults(data.votes);
+              showResults(data.votes, storedVote);
               updateShareLinks(storedVote, data.votes);
             }
             // If total === 0 (KV broken/empty), keep the local placeholder — never show all-zero bars
@@ -410,7 +430,7 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
     function showPlaceholder(chosenOption: string) {
       const placeholder: Record<string, number> = {};
       options.forEach(o => { placeholder[o] = o === chosenOption ? 1 : 0; });
-      showResults(placeholder);
+      showResults(placeholder, chosenOption);
       results.classList.remove("hidden");
     }
 
@@ -444,7 +464,7 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
               ? Object.values(liveVotes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0)
               : 0;
             if (liveVotes && liveTotal > 0) {
-              showResults(liveVotes);
+              showResults(liveVotes, option);
               updateShareLinks(option, liveVotes);
             } else {
               // No real data yet — try results endpoint as fallback
@@ -454,7 +474,7 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
                 const t2 = d2?.votes
                   ? Object.values(d2.votes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0)
                   : 0;
-                if (d2?.votes && t2 > 0) { showResults(d2.votes); updateShareLinks(option, d2.votes); }
+                if (d2?.votes && t2 > 0) { showResults(d2.votes, option); updateShareLinks(option, d2.votes); }
                 // If still 0, placeholder remains — never show all-zero bars to the voter
               }
             }
