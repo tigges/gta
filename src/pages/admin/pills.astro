@@ -1,0 +1,252 @@
+---
+/**
+ * /admin/pills — Badge system inventory.
+ * All Badge variants with color tokens, surface, opacity rules, sample routes
+ * and usage context. Also shows FilterPill and ColorLabel clusters.
+ * Icon reference at /admin/icons. Card templates at /admin/cards.
+ */
+import Base from "../../layouts/Base.astro";
+import Badge from "../../components/Badge.astro";
+import FilterPill from "../../components/FilterPill.astro";
+import ColorLabel from "../../components/ColorLabel.astro";
+import type { BadgeSurface } from "../../config/semanticTypes";
+
+type PillKind = "badge" | "local";
+
+interface PillRow {
+  id: string;
+  label: string;
+  kind: PillKind;
+  variant?: string;
+  /** Which surface this badge uses in its primary context */
+  surface: BadgeSurface;
+  /** CSS variable for the pill's identity color */
+  colorToken: string;
+  /** Resolved hex value of the color token */
+  hex: string;
+  /** ✅ Badge + semanticTypes  ⚠️ semanticTypes only  ❌ inline local */
+  central: "✅" | "⚠️" | "❌";
+  sampleUrl: string | null;
+  sampleLabel?: string;
+  usage: string;
+}
+
+interface PillCluster {
+  title: string;
+  note: string;
+  /** Surface used by badges in this cluster */
+  surfaceNote: string;
+  rows: PillRow[];
+}
+
+const pillClusters: PillCluster[] = [
+  {
+    title: "Game identity",
+    note: "Title identity badges. Always rendered surface=opaque over thumbnails.",
+    surfaceNote: "surface: opaque — text 100% · border 33% · bg #0a0a0d fixed",
+    rows: [
+      { id: "gta-vi",     label: "GTA VI",     kind: "badge", variant: "gta-vi",     surface: "opaque", colorToken: "var(--c-title-vi)",     hex: "#ff6b9d", central: "✅", sampleUrl: "/gta-vi",          usage: "Top-left over thumbnail on GTA VI cards and hero rows." },
+      { id: "gta-online", label: "GTA Online", kind: "badge", variant: "gta-online", surface: "opaque", colorToken: "var(--c-title-online)", hex: "#00d4e8", central: "✅", sampleUrl: "/gta-online",      usage: "Top-left over thumbnail on GTA Online hub and chart teasers." },
+      { id: "gta-v",      label: "GTA V",      kind: "badge", variant: "gta-v",      surface: "opaque", colorToken: "var(--c-title-v)",      hex: "#f59e0b", central: "✅", sampleUrl: "/gta-v",           usage: "Top-left over thumbnail on GTA V history cards." },
+      { id: "franchise",  label: "Franchise",  kind: "badge", variant: "franchise",  surface: "opaque", colorToken: "var(--c-brand)",        hex: "#f59e0b", central: "✅", sampleUrl: "/franchise",       usage: "Franchise-wide identity badge and chart taxonomy." },
+      { id: "gta-sa",     label: "GTA SA",     kind: "badge", variant: "gta-sa",     surface: "opaque", colorToken: "var(--c-title-sa)",     hex: "#c0392b", central: "✅", sampleUrl: "/gta-sa/economy",  usage: "Economy page identity badge." },
+      { id: "gta-vc",     label: "GTA VC",     kind: "badge", variant: "gta-vc",     surface: "opaque", colorToken: "var(--c-title-vc)",     hex: "#ff2d78", central: "✅", sampleUrl: "/gta-vc/economy",  usage: "Economy page identity badge." },
+      { id: "gta-iv",     label: "GTA IV",     kind: "badge", variant: "gta-iv",     surface: "opaque", colorToken: "var(--c-title-iv)",     hex: "#8888a8", central: "✅", sampleUrl: "/gta-iv/economy",  usage: "Economy page identity badge." },
+      { id: "gta-iii",    label: "GTA III",    kind: "badge", variant: "gta-iii",    surface: "opaque", colorToken: "var(--c-title-iii)",    hex: "#bcbcd0", central: "✅", sampleUrl: "/gta-iii/economy", usage: "Economy page identity badge." },
+    ],
+  },
+  {
+    title: "Confidence, intelligence & status",
+    note: "Evidence quality and status badges. confirmed/reported/predicted/indexed used on predictions, polls, cast cards. alert for breaking news.",
+    surfaceNote: "surface: opaque over thumbnails · tint in rows/context",
+    rows: [
+      { id: "confirmed", label: "Confirmed", kind: "badge", variant: "confirmed", surface: "opaque", colorToken: "var(--c-live)",   hex: "#0d9488", central: "✅", sampleUrl: "/gta-vi/intel",     usage: "Official/confirmed facts, cast and feature cards. Top-right over thumbnail." },
+      { id: "reported",  label: "Reported",  kind: "badge", variant: "reported",  surface: "opaque", colorToken: "var(--c-brand)",  hex: "#f59e0b", central: "✅", sampleUrl: "/community/polls", usage: "Reported mechanics and externally sourced poll cards." },
+      { id: "predicted", label: "Predicted", kind: "badge", variant: "predicted", surface: "opaque", colorToken: "var(--c-text-2)", hex: "#d4d4d8", central: "✅", sampleUrl: "/community/polls", usage: "Model-derived predictions and speculative polls." },
+      { id: "indexed",   label: "Indexed",   kind: "badge", variant: "indexed",   surface: "tint",   colorToken: "var(--c-text-2)", hex: "#d4d4d8", central: "✅", sampleUrl: "/database",        usage: "Database entity state — same visual as predicted." },
+      { id: "alert",     label: "Alert",     kind: "badge", variant: "alert",     surface: "tint",   colorToken: "var(--c-alert)",  hex: "#ef4444", central: "✅", sampleUrl: "/news",             usage: "Breaking news, risk or delay status." },
+    ],
+  },
+  {
+    title: "Play and activity type",
+    note: "Income source activity taxonomy.",
+    surfaceNote: "surface: tint — text 100% · border 40% · bg 12% (color-mix)",
+    rows: [
+      { id: "active",       label: "Active",       kind: "badge", variant: "active",       surface: "tint", colorToken: "var(--c-play-active)",  hex: "#ef4444", central: "✅", sampleUrl: "/database",                               usage: "Active grind income sources." },
+      { id: "passive",      label: "Passive",      kind: "badge", variant: "passive",      surface: "tint", colorToken: "var(--c-play-passive)", hex: "#22c55e", central: "✅", sampleUrl: "/database",                               usage: "Passive businesses and automated income." },
+      { id: "semi-passive", label: "Semi-passive", kind: "badge", variant: "semi-passive", surface: "tint", colorToken: "var(--c-play-semi)",    hex: "#f59e0b", central: "✅", sampleUrl: "/database",                               usage: "Setup-driven income with periodic collection." },
+      { id: "hybrid",       label: "Hybrid",       kind: "badge", variant: "hybrid",       surface: "tint", colorToken: "var(--c-play-semi)",    hex: "#f59e0b", central: "✅", sampleUrl: "/database",                               usage: "Mixed active/passive loops." },
+      { id: "heist",        label: "Heist",        kind: "badge", variant: "heist",        surface: "tint", colorToken: "var(--c-play-heist)",   hex: "#818cf8", central: "✅", sampleUrl: "/database",                               usage: "Heist-type income sources." },
+      { id: "mission",      label: "Mission",      kind: "badge", variant: "mission",      surface: "tint", colorToken: "var(--c-play-mission)", hex: "#0d9488", central: "✅", sampleUrl: "/database",                               usage: "Mission-type income sources." },
+      { id: "mc",           label: "MC Business",  kind: "local",                          surface: "tint", colorToken: "var(--c-text-4)",       hex: "#9898b8", central: "⚠️", sampleUrl: "/database",                               usage: "Token in semanticTypes.ts; no Badge variant — use ColorLabel." },
+      { id: "ceo",          label: "CEO/VIP",      kind: "local",                          surface: "tint", colorToken: "var(--c-text-4)",       hex: "#9898b8", central: "⚠️", sampleUrl: "/database",                               usage: "Token in semanticTypes.ts; no Badge variant — use ColorLabel." },
+      { id: "contract",     label: "Contract",     kind: "badge", variant: "contract",     surface: "tint", colorToken: "var(--c-live)",         hex: "#0d9488", central: "✅", sampleUrl: "/gta-online/cayo-perico",                 usage: "Contract-style earning loop." },
+      { id: "business",     label: "Business",     kind: "badge", variant: "business",     surface: "tint", colorToken: "var(--c-live)",         hex: "#0d9488", central: "✅", sampleUrl: "/gta-vi/intel#section-income-predictions", usage: "Business income prediction cards." },
+    ],
+  },
+  {
+    title: "Economy flow",
+    note: "Circular economy labels for SED/flow concepts.",
+    surfaceNote: "surface: tint — text 100% · border 40% · bg 12% (color-mix)",
+    rows: [
+      { id: "investment",  label: "Investment",  kind: "badge", variant: "investment",  surface: "tint", colorToken: "var(--c-economy)",       hex: "#818cf8", central: "✅", sampleUrl: "/gta-vi/economy", usage: "Capital spend returning to future income." },
+      { id: "injection",   label: "Injection",   kind: "badge", variant: "injection",   surface: "tint", colorToken: "var(--c-flow-injection)", hex: "#00d4e8", central: "✅", sampleUrl: "/gta-vi/economy", usage: "External money entering the GTA$ loop." },
+      { id: "consumption", label: "Consumption", kind: "badge", variant: "consumption", surface: "tint", colorToken: "var(--c-flow-spending)",  hex: "#f97316", central: "✅", sampleUrl: "/gta-vi/economy", usage: "Non-returning player spend." },
+    ],
+  },
+  {
+    title: "Chart categories",
+    note: "Neutral category badges used in chart teasers and navigation.",
+    surfaceNote: "surface: tint — text 100% · border 40% · bg 12% (color-mix)",
+    rows: [
+      { id: "economy-ig",  label: "IG Economy",  kind: "badge", variant: "economy-ig",  surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/charts?title=gta-online", usage: "In-game economy chart category." },
+      { id: "economy-rl",  label: "RL Economy",  kind: "badge", variant: "economy-rl",  surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/franchise/economics",     usage: "Real-world economy/franchise comparison category." },
+      { id: "community",   label: "Community",   kind: "badge", variant: "community",   surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/community/polls",         usage: "Community signal/poll grouping." },
+      { id: "performance", label: "Performance", kind: "badge", variant: "performance", surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/database",                usage: "Vehicle/performance chart category." },
+      { id: "history",     label: "History",     kind: "badge", variant: "history",     surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/franchise",               usage: "Historical franchise chart category." },
+      { id: "promotions",  label: "Promotions",  kind: "badge", variant: "promotions",  surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/gta-online",              usage: "Weekly event and promotion chart/category context." },
+    ],
+  },
+  {
+    title: "Income tiers",
+    note: "S-to-D payout/meta ranking badges.",
+    surfaceNote: "surface: tint — text 100% · border 40% · bg 12% (color-mix)",
+    rows: [
+      { id: "s-plus", label: "S+", kind: "badge", variant: "s-plus", surface: "tint", colorToken: "var(--c-growth)", hex: "#22c55e", central: "✅", sampleUrl: "/database", usage: "Best-in-class income source tier." },
+      { id: "s-tier", label: "S",  kind: "badge", variant: "s-tier", surface: "tint", colorToken: "var(--c-brand)",  hex: "#f59e0b", central: "✅", sampleUrl: "/database", usage: "Top income source tier." },
+      { id: "a-tier", label: "A",  kind: "badge", variant: "a-tier", surface: "tint", colorToken: "var(--c-live)",   hex: "#0d9488", central: "✅", sampleUrl: "/database", usage: "Strong income source tier." },
+      { id: "b-tier", label: "B",  kind: "badge", variant: "b-tier", surface: "tint", colorToken: "var(--c-economy)",hex: "#818cf8", central: "✅", sampleUrl: "/database", usage: "Mid income source tier." },
+      { id: "c-tier", label: "C",  kind: "badge", variant: "c-tier", surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/database", usage: "Lower income source tier." },
+      { id: "d-tier", label: "D",  kind: "badge", variant: "d-tier", surface: "tint", colorToken: "var(--c-text-5)", hex: "#b4b4cc", central: "✅", sampleUrl: "/database", usage: "Lowest income source tier." },
+    ],
+  },
+];
+---
+
+<Base title="Admin — Badge Inventory" description="GTAVI.AI badge system: Badge, FilterPill, ColorLabel." noindex>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-8">
+    <div>
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">Admin · Design System</div>
+      <h1 class="text-2xl font-bold text-white mb-1">Badge Inventory</h1>
+      <p class="text-sm text-zinc-500 max-w-2xl leading-relaxed">
+        All badge variants with surface, color token and usage context. Three primitives:
+        <code class="text-zinc-300">Badge</code> (informational) ·
+        <code class="text-zinc-300">FilterPill</code> (interactive) ·
+        <code class="text-zinc-300">ColorLabel</code> (inline text).
+        Icons at <a href="/admin/icons" class="text-gta-gold hover:text-zinc-200 transition-colors">/admin/icons</a>.
+        Cards at <a href="/admin/cards" class="text-gta-gold hover:text-zinc-200 transition-colors">/admin/cards</a>.
+      </p>
+    </div>
+
+    {pillClusters.map((cluster) => (
+      <section class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-4 py-3 border-b border-border-dim">
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">{cluster.title}</div>
+          <div class="flex flex-wrap items-center gap-4 mt-1">
+            <p class="text-[11px] text-zinc-500 leading-relaxed">{cluster.note}</p>
+            <span class="text-[10px] font-mono text-zinc-600 border border-border-dim rounded px-1.5 py-0.5 shrink-0" style="background:var(--c-bg-deep)">
+              {cluster.surfaceNote}
+            </span>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-[11px] font-mono">
+            <thead>
+              <tr class="border-b border-border-dim">
+                <th class="px-4 py-2 text-zinc-500 font-normal uppercase tracking-widest">Badge</th>
+                <th class="px-4 py-2 text-zinc-500 font-normal uppercase tracking-widest">Surface</th>
+                <th class="px-4 py-2 text-zinc-500 font-normal uppercase tracking-widest">Central</th>
+                <th class="px-4 py-2 text-zinc-500 font-normal uppercase tracking-widest">Color</th>
+                <th class="px-4 py-2 text-zinc-500 font-normal uppercase tracking-widest">Token</th>
+                <th class="px-4 py-2 text-zinc-500 font-normal uppercase tracking-widest">Sample URL</th>
+                <th class="px-4 py-2 text-zinc-500 font-normal uppercase tracking-widest">Usage</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cluster.rows.map((row) => (
+                <tr class="border-b border-border-dim last:border-b-0">
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    {row.kind === "badge" && row.variant ? (
+                      <Badge variant={row.variant as any} surface={row.surface} />
+                    ) : (
+                      <span class="inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5"
+                        style="color:var(--c-text-4);border-color:var(--c-border-2);background:color-mix(in srgb,var(--c-text-4) 8%,transparent)">
+                        {row.label}
+                      </span>
+                    )}
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <code class="text-zinc-600">{row.surface}</code>
+                  </td>
+                  <td class="px-4 py-3 text-base leading-none">{row.central}</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <div class="flex items-center gap-2">
+                      <span class="inline-block w-4 h-4 rounded-sm border border-white/10 shrink-0" style={`background:${row.colorToken}`} title={row.hex} />
+                      <code class="text-zinc-500 text-[10px]">{row.hex}</code>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <code class="text-zinc-400">{row.colorToken.replace("var(", "").replace(")", "")}</code>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    {row.sampleUrl ? (
+                      <a href={row.sampleUrl} class="text-gta-gold hover:text-zinc-200 transition-colors">{row.sampleUrl}</a>
+                    ) : (
+                      <span class="text-zinc-600">{row.sampleLabel ?? "Not currently rendered"}</span>
+                    )}
+                  </td>
+                  <td class="px-4 py-3 text-zinc-500 min-w-[16rem] leading-relaxed">{row.usage}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))}
+
+    {/* ── FilterPill cluster ── */}
+    <section class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <div class="px-4 py-3 border-b border-border-dim">
+        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">FilterPill — interactive controls</div>
+        <div class="flex flex-wrap items-center gap-4 mt-1">
+          <p class="text-[11px] text-zinc-500 leading-relaxed">Chart filters, tabs, toggles. Never for informational labels. Inactive = neutral. Active = tint surface.</p>
+          <span class="text-[10px] font-mono text-zinc-600 border border-border-dim rounded px-1.5 py-0.5 shrink-0" style="background:var(--c-bg-deep)">FilterPill.astro</span>
+        </div>
+      </div>
+      <div class="px-4 py-4 flex flex-wrap gap-3 items-center">
+        <FilterPill label="All" colorToken="var(--c-text-4)" active={false} />
+        <FilterPill label="GTA VI" colorToken="var(--c-title-vi)" active={true} />
+        <FilterPill label="GTA Online" colorToken="var(--c-title-online)" active={false} />
+        <FilterPill label="GTA V" colorToken="var(--c-title-v)" active={false} />
+        <FilterPill label="Franchise" colorToken="var(--c-brand)" active={false} />
+        <span class="text-[10px] font-mono text-zinc-600 ml-2">← hover inactive pills to see hover state</span>
+      </div>
+    </section>
+
+    {/* ── ColorLabel cluster ── */}
+    <section class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <div class="px-4 py-3 border-b border-border-dim">
+        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">ColorLabel — inline semantic text</div>
+        <div class="flex flex-wrap items-center gap-4 mt-1">
+          <p class="text-[11px] text-zinc-500 leading-relaxed">Text-only. No border, no background. Used inside card body where a Badge would be too heavy. Replaces ad-hoc inline color styles.</p>
+          <span class="text-[10px] font-mono text-zinc-600 border border-border-dim rounded px-1.5 py-0.5 shrink-0" style="background:var(--c-bg-deep)">ColorLabel.astro</span>
+        </div>
+      </div>
+      <div class="px-4 py-4 flex flex-wrap gap-4 items-center text-[11px] font-mono text-zinc-400">
+        <span>Play type:</span>
+        <ColorLabel variant="active" />
+        <ColorLabel variant="passive" />
+        <ColorLabel variant="heist" />
+        <ColorLabel variant="mc" />
+        <ColorLabel variant="ceo" />
+        <span class="ml-4">Confidence:</span>
+        <ColorLabel variant="confirmed" />
+        <ColorLabel variant="reported" />
+        <ColorLabel variant="predicted" />
+        <span class="ml-4">Direct token:</span>
+        <ColorLabel colorToken="var(--c-live)" label="Live data" />
+      </div>
+    </section>
+
+  </div>
+</Base>

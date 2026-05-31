@@ -1,0 +1,103 @@
+---
+/**
+ * /admin/icons — HudIcon inventory.
+ * Visual reference for every icon in the HudIcon component.
+ * Pill reference lives at /admin/pills.
+ */
+import Base from "../../layouts/Base.astro";
+import HudIcon from "../../components/HudIcon.astro";
+
+interface IconEntry {
+  name: string;
+  note: string;
+  group: string;
+}
+
+const icons: IconEntry[] = [
+  // Economy
+  { name: "money",        note: "Income / GTA$",                     group: "Economy" },
+  { name: "dollar",       note: "Dollar sign / GTA$ raw",            group: "Economy" },
+  { name: "shark",        note: "Shark cards",                       group: "Economy" },
+  { name: "shark-card",   note: "Shark Card / premium currency",     group: "Economy" },
+  { name: "subscription", note: "GTA+ subscription",                 group: "Economy" },
+  { name: "injection",    note: "J-injection / external money input", group: "Economy" },
+  { name: "investment",   note: "Investment / return-to-Y",          group: "Economy" },
+  { name: "economy",      note: "Economy circular",                  group: "Economy" },
+  { name: "bank",         note: "Maze Bank / financial institution", group: "Economy" },
+  // Businesses
+  { name: "briefcase",    note: "CEO / businesses",                  group: "Businesses" },
+  { name: "nightclub",    note: "Nightclub business",                group: "Businesses" },
+  { name: "bunker",       note: "Bunker / gunrunning",               group: "Businesses" },
+  { name: "property",     note: "Property / real estate asset",      group: "Businesses" },
+  { name: "passive",      note: "Passive income / stack",            group: "Businesses" },
+  { name: "cycle",        note: "Recurring / business cycle arrow",  group: "Businesses" },
+  // Actions & play
+  { name: "heist",        note: "Heist / crossed tools",             group: "Actions" },
+  { name: "mission",      note: "Mission giver / active earn",       group: "Actions" },
+  { name: "vault",        note: "Heist vault / casino safe",         group: "Actions" },
+  { name: "casino",       note: "Diamond casino / gambling",         group: "Actions" },
+  { name: "buy",          note: "Pre-order / cart",                  group: "Actions" },
+  { name: "ammo",         note: "Ammunition / weapon purchase",      group: "Actions" },
+  { name: "clothing",     note: "Clothing store / Consumption",      group: "Actions" },
+  // Data & navigation
+  { name: "chart",        note: "Economy / charts",                  group: "Data" },
+  { name: "trending",     note: "Trending analytics",                group: "Data" },
+  { name: "database",     note: "Data browser",                      group: "Data" },
+  { name: "intel",        note: "Predictions / targeting",           group: "Data" },
+  { name: "history",      note: "Franchise history",                 group: "Data" },
+  { name: "hub",          note: "Hub page / overview",               group: "Data" },
+  // World & media
+  { name: "map-pin",      note: "Locations",                         group: "World" },
+  { name: "region",       note: "Multi-region / regional economy",   group: "World" },
+  { name: "trailer",      note: "Trailers / film",                   group: "World" },
+  { name: "car",          note: "Vehicles",                          group: "World" },
+  { name: "mobile",       note: "Mobile phone / iFruit / persistence", group: "World" },
+  // Community & news
+  { name: "users",        note: "Characters / cast",                 group: "Community" },
+  { name: "news",         note: "News / feed",                       group: "Community" },
+  { name: "star",         note: "Weekly event / bonus star",         group: "Community" },
+  { name: "tag",          note: "Bonuses / sale",                    group: "Community" },
+  // UI actions
+  { name: "link",         note: "Copy link / chain",                 group: "UI" },
+  { name: "share-x",      note: "X (Twitter) platform",             group: "UI" },
+  { name: "share-reddit", note: "Reddit / Snoo silhouette",          group: "UI" },
+  { name: "share-branch", note: "Share broadcast / more apps",       group: "UI" },
+];
+
+const groups = [...new Set(icons.map((i) => i.group))];
+---
+
+<Base title="Admin — Icon Inventory" description="GTAVI.AI HudIcon visual reference." noindex>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-8">
+    <div>
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">Admin · Design System</div>
+      <h1 class="text-2xl font-bold text-white mb-1">Icon Inventory</h1>
+      <p class="text-sm text-zinc-500 max-w-2xl leading-relaxed">
+        All icons in the <code class="text-zinc-300">HudIcon</code> component, grouped by context.
+        Use the <code class="text-zinc-300">name</code> value directly in <code class="text-zinc-300">&lt;HudIcon name="…" /&gt;</code>.
+        Pill reference lives at <a href="/admin/pills" class="text-gta-gold hover:text-zinc-200 transition-colors">/admin/pills</a>.
+      </p>
+    </div>
+
+    {groups.map((group) => (
+      <section class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-4 py-3 border-b border-border-dim">
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">{group}</div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-px" style="background:var(--c-border-1)">
+          {icons.filter((i) => i.group === group).map((icon) => (
+            <div class="flex items-center gap-3 px-4 py-3" style="background:var(--c-card)">
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded border border-border-dim shrink-0" style="color:var(--c-text-3);background:var(--c-bg-deep)">
+                <HudIcon name={icon.name as any} size={16} />
+              </span>
+              <div class="min-w-0">
+                <code class="text-[11px] text-zinc-200 block truncate">{icon.name}</code>
+                <span class="text-[10px] text-zinc-600 leading-snug block truncate">{icon.note}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</Base>

@@ -1,0 +1,46 @@
+---
+/**
+ * FilterPill.astro — interactive pill-shaped control.
+ *
+ * Used for chart filters, tab selectors and toggles.
+ * Two states: inactive (neutral) and active (color-token tint).
+ * Hover handled in JS via onmouseover/out using FILTER_HOVER_STYLE.
+ *
+ * NOT for informational labels — use Badge for those.
+ *
+ * Usage:
+ *   <FilterPill label="GTA VI" colorToken="var(--c-title-vi)" active={true} />
+ *   <FilterPill label="All" colorToken="var(--c-text-4)" active={false} />
+ */
+import { pillStyle, FILTER_INACTIVE_STYLE, FILTER_HOVER_STYLE } from "../config/semanticTypes";
+
+interface Props {
+  label: string;
+  colorToken: string;
+  active?: boolean;
+  /** Passed through to the button element */
+  class?: string;
+  [key: string]: any;
+}
+
+const { label, colorToken, active = false, class: extraClass = "", ...rest } = Astro.props;
+
+const activeStyle   = pillStyle(colorToken, "tint");
+const inactiveStyle = FILTER_INACTIVE_STYLE;
+const hoverStyle    = FILTER_HOVER_STYLE;
+---
+
+<button
+  type="button"
+  class={`inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5 transition-colors cursor-pointer ${extraClass}`}
+  style={active ? activeStyle : inactiveStyle}
+  data-active={active ? "true" : "false"}
+  data-active-style={activeStyle}
+  data-inactive-style={inactiveStyle}
+  data-hover-style={hoverStyle}
+  onmouseover="if(this.dataset.active!=='true')this.style.cssText=this.dataset.hoverStyle"
+  onmouseout="if(this.dataset.active!=='true')this.style.cssText=this.dataset.inactiveStyle"
+  {...rest}
+>
+  {label}
+</button>

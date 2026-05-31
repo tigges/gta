@@ -273,16 +273,16 @@ All pages must use these canonical components. Never rebuild these patterns inli
 | `SectionHeader.astro` | `label`, `dotColor?`, `pillHref?`, `pillLabel?` | `// SECTION TITLE` header row used on every section. Automatically switches to `justify-between` split variant when pill is present. `label` must include `// ` prefix. |
 | `StatBox.astro` | `value`, `label`, `sub?`, `color?` | Single key-metric card. Used in hero stat strips, Health Monitor, database. |
 | `CardFooter.astro` | `chartId?` or `anchorId+sources+shareText` | Standard `source · GTAVI.AI · Share` footer on all cards and chart sections. |
-| `CrossLinks.astro` | `context` | Site-wide "Related Intelligence" bottom strip. |
+| `CrossLinks.astro` | `context` | "Related Intelligence" tile strip. Default use: one bar at the bottom of every page via `crossLinksContext` prop on `<Base>`. Mid-page use permitted as a section bridge — but never two CrossLinks consecutive, and never both a mid-page and bottom bar without substantial content between them. |
 
 ### Chart teasers / content cards
 
 | Component | Props | Purpose |
 |---|---|---|
-| `ChartBadgeRow.astro` | `game`, `category`, `fullHref?`, `fullLabel?` | `[GamePill] [Category]` header row for all chart teasers. Renders at `text-[9px]`. Full link goes top-right if supplied. |
+| `ChartBadgeRow.astro` | `game`, `category`, `fullHref?`, `fullLabel?` | `[Badge game] [Category]` header row for all chart teasers. Full link goes top-right if supplied. |
 | `ReadItBlock.astro` | `accentColor?`, `showPrefix?` | Left-border annotation block. Slot = paragraph text. "Read it:" prefix rendered automatically. |
-| `GamePill.astro` | `game`, `size?` | Game identity pill. Always `size="xs"` inside cards, `size="sm"` in hero pill row. |
-| `ShareDropdown.astro` | `anchorId`, `shareText`, `size?` | Share button. Always `size="sm"`. Part of every card footer. |
+| `GamePill.astro` | `game` | **Deprecated wrapper** — renders `<Badge variant={game} surface="opaque" />`. Use Badge directly in new code. |
+| `ShareDropdown.astro` | `anchorId`, `shareText`, `size?` | Share button. Part of every card footer. |
 
 ### Section header rules (P5)
 
@@ -327,6 +327,38 @@ D3/JS runtime colours must come from `src/config/colors.ts` named exports (`C_BR
 ### Pill text size rule (P4)
 
 All pill links in section headers and card footers: **`text-[10px]`**. No exceptions.
+
+### Badge / pill primitive system (P1 — no exceptions)
+
+Three primitives. Use the right one for the context.
+
+| Primitive | Component | Use |
+|---|---|---|
+| **Badge** | `Badge.astro` | Informational label. Bordered. Three surfaces (see below). |
+| **FilterPill** | `FilterPill.astro` | Interactive control — chart filter, tab, toggle. Never for labels. |
+| **ColorLabel** | `ColorLabel.astro` | Inline semantic text inside card body. No border, no background — color only. |
+
+**`GamePill` is deprecated** — it is now a thin wrapper around `Badge surface="opaque"`. Use `<Badge variant={game} surface="opaque" />` in new code.
+
+#### Badge surfaces
+
+| Surface | Background | Border | Use when |
+|---|---|---|---|
+| `tint` (default) | 12% token tint | 40% token | Header rows, hero strips, card body context |
+| `opaque` | `#0a0a0d` fixed | 33% token | Over thumbnails — top-left game identity, top-right confidence/tier |
+| `ghost` | Transparent | White 20% | Over complex/varied image surfaces |
+
+#### Badge placement contract
+
+| Context | Surface | Position |
+|---|---|---|
+| Top-left over thumbnail (game identity) | `opaque` | `absolute top-0 left-0` |
+| Top-right over thumbnail (confidence / tier) | `opaque` | `absolute top-0 right-0` |
+| Inline header row (ChartBadgeRow, SectionHeader) | `tint` | Flex inline |
+| Inside card body (play type, region label) | Use `ColorLabel` — not Badge | Inline |
+| Chart filter / tab / toggle | Use `FilterPill` — not Badge | Flex inline |
+
+**One canonical size**: `text-[10px] px-2 py-0.5`. The `size` prop on `Badge` and `GamePill` is deprecated and ignored.
 
 ---
 

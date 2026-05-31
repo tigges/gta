@@ -68,6 +68,30 @@ interface CrossLink {
 
 const ALL_LINKS: Record<string, CrossLink[]> = {
 
+  // GTA VI intel page — bottom strip
+  "vi-intel": [
+    { href: "/database", badge: "Database",
+      label: "Entity database",
+      sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`,
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-live)" },
+    { href: "/charts", badge: "Charts",
+      label: "Signal charts",
+      sub: `Data visualised — franchise-wide`,
+      thumb: "/assets/economy-thumbs/gta-6.png",
+      accent: "var(--c-brand)" },
+    { href: "/news", badge: "News",
+      label: "Latest intelligence",
+      sub: `${newsItems} articles tracked nightly`,
+      thumb: "/assets/gta6/locations/Vice_City_03.jpg",
+      accent: "var(--c-live)" },
+    { href: "/gta-vi/buy", badge: "Pre-order",
+      label: "Pre-order tracker",
+      sub: "Platforms, editions, retailers",
+      thumb: "/assets/gta6/locations/Ambrosia_02.jpg",
+      accent: "var(--c-title-vi)" },
+  ],
+
   // After Signal Predictions on VI Intel
   "vi-intel-predictions": [
     { href: "/charts", badge: "Charts",
@@ -270,11 +294,11 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       sub: "Day-1 income · Shark Card projections · multi-region",
       thumb: "/assets/gta6/locations/Vice_City_03.jpg",
       accent: "var(--c-title-vi)" },
-    { href: "/charts?title=gta-vi", badge: "Charts",
-      label: "GTA VI data charts",
-      sub: "Search trends · CPI pricing · trailer velocity",
-      thumb: "/assets/economy-thumbs/gta-6.png",
-      accent: "var(--c-brand)" },
+    { href: "/gta-vi/trailers", badge: "Trailers",
+      label: "Trailers & analysis",
+      sub: `${trailerCount} trailers · view velocity · entity index`,
+      thumb: `https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg`,
+      accent: "var(--c-title-vi)" },
     { href: "/gta-vi/buy", badge: "Pre-order",
       label: "Pre-order tracker",
       sub: "PS5 · Xbox Series X|S · edition comparison",
@@ -509,12 +533,10 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
 const links: CrossLink[] = ALL_LINKS[context] ?? [];
 
-// Grid class based on link count
+// Grid: always 3-col for 3+ tiles so extras wrap naturally to a second row
 const gridClass = links.length <= 2
   ? "grid-cols-1 sm:grid-cols-2"
-  : links.length === 3
-    ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-    : "grid-cols-1 sm:grid-cols-2";
+  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
 ---
 
 {links.length > 0 && (

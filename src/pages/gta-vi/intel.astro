@@ -1,7 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
 import PredictionCard from "../../components/PredictionCard.astro";
-import CrossLinks from "../../components/CrossLinks.astro";
 import VoteCard from "../../components/VoteCard.astro";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
@@ -25,6 +24,32 @@ const trailersData   = trailersDataRaw as TrailersData;
 const trailers       = trailersData.trailers;
 const heroTrailer    = trailers[1] ?? trailers[0]; // prefer Trailer 2 for hero
 const confirmedSongs = (spotifyData as any).confirmed_songs as { title: string; artist: string; trailer: string; year: number }[];
+const gtaViFaqs = [
+  {
+    question: "Will GTA VI have Shark Cards?",
+    answer: "Rockstar has not published the final GTA VI Online monetisation model, but GTAVI.AI treats Shark Cards or an equivalent GTA$ purchase rail as highly likely because GTA Online has used real-money GTA$ injection for more than a decade.",
+  },
+  {
+    question: "Will GTA VI have GTA+?",
+    answer: "GTA+ has not been formally detailed for GTA VI, but it is already the live subscription layer for GTA Online. The economy model expects GTA+ or a successor membership to influence recurring rewards, discounts, and player retention.",
+  },
+  {
+    question: "Will GTA VI Online have businesses and passive income?",
+    answer: "Businesses and passive income are predicted because GTA Online's long-term economy relies on properties, enterprises, and repeatable payouts. Confirmed GTA VI locations give Rockstar enough regional variety to reuse and expand that structure.",
+  },
+  {
+    question: "Will GTA VI have fuel, regional prices, or a deeper economy?",
+    answer: "Fuel and regional price divergence are predictions, not confirmed features. GTAVI.AI tracks them because Trailer 2 and the Leonida map imply multiple economic zones where Rockstar could vary operating costs and purchasing power.",
+  },
+  {
+    question: "How much will GTA VI cost at launch?",
+    answer: "The current GTAVI.AI launch-price model tracks the industry shift toward premium pricing and assigns confidence based on Rockstar's release history, platform generation, and comparable AAA launches.",
+  },
+  {
+    question: "Are GTAVI.AI predictions official?",
+    answer: "No. GTAVI.AI separates official, reported, and predicted signals. Each card shows confidence, source type, and the basis used so readers can distinguish confirmed Rockstar information from model-derived forecasts.",
+  },
+] as const;
 
 const PRED_THUMBS: Record<string,string> = {
   "pred-release-window":  "/assets/gta6/characters/Lucia_Caminos_05.jpg",
@@ -50,17 +75,17 @@ const CAT_THUMBS: Record<string,string> = {
   title="Predictions"
   description="GTA VI predictions — confidence-scored from 30 years of GTA data. Launch price, income yields, Shark Card mechanics, and what the franchise numbers say about GTA VI's economy."
   ogPage="vi-intel"
-  crossLinksContext="gta-vi-intel"
+  crossLinksContext="vi-intel"
 >
 <script is:inline type="application/ld+json">{JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": predictions.slice(0, 8).map(p => ({
+  "mainEntity": gtaViFaqs.map((faq) => ({
     "@type": "Question",
-    "name": `GTA VI ${p.title}`,
+    "name": faq.question,
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": `${p.value}${p.unit ? " " + p.unit : ""}. ${p.basis} (Confidence: ${p.confidence}%, ${p.confidence_tier}).`
+      "text": faq.answer
     }
   }))
 })}</script>
@@ -188,7 +213,6 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
 
-    <CrossLinks context="vi-intel-predictions" />
 
     <!-- ═══════════════════════════════════════════════════════
          COMMUNITY VOTES
@@ -270,7 +294,6 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
 
-    <CrossLinks context="vi-intel-cast" />
 
     <!-- ═══════════════════════════════════════════════════════
          LEONIDA — LOCATIONS
@@ -294,7 +317,7 @@ const CAT_THUMBS: Record<string,string> = {
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               />
-              <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, rgba(14,14,17,0.44) 40%, transparent 70%)"></div>
+              <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 44%, transparent) 40%, transparent 70%)"></div>
             </div>
             <div class="absolute bottom-0 left-0 right-0 px-4 pb-4">
               <div class="flex items-center gap-2 mb-0.5">
@@ -309,7 +332,6 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
 
-    <CrossLinks context="vi-intel-locations" />
 
 
     <!-- ═══════════════════════════════════════════════════════
@@ -386,7 +408,21 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
 
-    <CrossLinks context="vi-intel-features" />
+
+    <!-- ═══════════════════════════════════════════════════════
+         GTA VI FAQ
+    ═══════════════════════════════════════════════════════ -->
+    <section id="section-vi-faq">
+      <SectionHeader label="// GTA VI FAQ" dotColor="var(--c-brand)" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {gtaViFaqs.map((faq) => (
+          <article class="rounded-xl border border-border-dim p-5" style="background:var(--c-card)">
+            <h2 class="text-sm font-bold text-zinc-200 leading-snug">{faq.question}</h2>
+            <p class="mt-2 text-sm text-zinc-400 leading-relaxed">{faq.answer}</p>
+          </article>
+        ))}
+      </div>
+    </section>
 
 
     <!-- ═══════════════════════════════════════════════════════
@@ -399,8 +435,8 @@ const CAT_THUMBS: Record<string,string> = {
         <div class="divide-y divide-border-dim">
           {confirmedSongs.map((song, i) => (
             <div class="px-5 py-4 flex items-center gap-4">
-              <div class="w-7 h-7 rounded bg-[#1DB954]/10 border border-[#1DB954]/20 flex items-center justify-center shrink-0">
-                <span class="text-[#1DB954] text-xs">♪</span>
+              <div class="w-7 h-7 rounded bg-gta-green/10 border border-gta-green/20 flex items-center justify-center shrink-0">
+                <span class="text-gta-green text-xs">♪</span>
               </div>
               <div class="flex-1 min-w-0">
                 <div class="text-sm font-semibold text-zinc-200 leading-tight">{song.title}</div>

@@ -2,17 +2,19 @@
  * semanticTypes.ts — Central registry for all semantic type definitions.
  *
  * SINGLE SOURCE OF TRUTH for:
- *   Cluster A: game title identities    (feeds GamePill, filter buttons)
- *   Cluster B: confidence/intel tiers  (feeds Badge, tier filter)
- *   Cluster C: play / activity types   (replaces PLAY_COLOR × 6)
- *   Cluster D: geographic regions      (replaces REGION_COLOR × 3)
+ *   Cluster A: game title identities    (feeds Badge surface=opaque, FilterPill)
+ *   Cluster B: confidence/intel tiers  (feeds Badge, FilterPill)
+ *   Cluster C: play / activity types   (feeds Badge, ColorLabel)
+ *   Cluster D: geographic regions      (feeds Badge, ColorLabel)
  *
  * RULE: Every color is a CSS custom property token — never a raw hex.
  *
- * Rendering pattern (shared by pill labels AND filter buttons):
- *   Pill / filter-active  → pillStyle(colorToken)
- *   Filter inactive       → FILTER_INACTIVE_STYLE
+ * Rendering primitives:
+ *   Badge       — bordered pill, informational, three surfaces (tint/opaque/ghost)
+ *   FilterPill  — bordered pill, interactive (inactive/active/hover states)
+ *   ColorLabel  — text-only colored inline label, no border or background
  *
+ * pillStyle(token, surface) returns the full coordinated style string.
  * Note: position on card is NOT defined here — that is the card's concern.
  */
 
@@ -25,8 +27,31 @@ export interface SemanticType {
 
 // ── Utility: generate consistent inline style strings ─────────────────────────
 
-/** Pill label OR active filter button */
-export function pillStyle(colorToken: string): string {
+export type BadgeSurface = "tint" | "opaque" | "ghost";
+
+/**
+ * Returns a coordinated inline style string for color + border + background.
+ *
+ * tint   — coloured tint wash. Default. Used in header rows, hero strips, card body.
+ * opaque — dark fixed bg (#0a0a0d) with coloured ring. Used over thumbnails/images.
+ * ghost  — transparent bg, white-tint border. Used over complex/varied image surfaces.
+ */
+export function pillStyle(colorToken: string, surface: BadgeSurface = "tint"): string {
+  if (surface === "opaque") {
+    return [
+      `color:${colorToken}`,
+      `border-color:${colorToken}55`,
+      `background:rgba(10,10,13,0.88)`,
+    ].join(";");
+  }
+  if (surface === "ghost") {
+    return [
+      `color:${colorToken}`,
+      `border-color:rgba(255,255,255,0.2)`,
+      `background:transparent`,
+    ].join(";");
+  }
+  // tint (default)
   return [
     `color:${colorToken}`,
     `border-color:color-mix(in srgb,${colorToken} 40%,transparent)`,
@@ -34,11 +59,11 @@ export function pillStyle(colorToken: string): string {
   ].join(";");
 }
 
-/** Inactive filter button — same for all types */
+/** Inactive FilterPill — neutral, no color emphasis */
 export const FILTER_INACTIVE_STYLE =
   "color:var(--c-text-5);border-color:var(--c-border-2);background:transparent";
 
-/** Hover style for inactive filter buttons (apply via onmouseover/out) */
+/** Hover style for inactive FilterPill buttons */
 export const FILTER_HOVER_STYLE =
   "color:var(--c-text-2);border-color:var(--c-text-5);background:transparent";
 

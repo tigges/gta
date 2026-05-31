@@ -31,8 +31,6 @@ const pred = (predRaw as any).predictions.find((p: any) => p.id === pollId);
 
 if (!pred) return Astro.redirect("/404");
 
-const SITE_BASE = import.meta.env.SITE ?? "https://gtavi.ai";
-const pollHref  = `${SITE_BASE}/community/polls#vote-${pollId}`;
 const question  = pred.poll_question ?? pred.title;
 ---
 
@@ -40,6 +38,5 @@ const question  = pred.poll_question ?? pred.title;
   <VoteCard
     predictionId={pollId}
     embedMode={true}
-    pollHref={pollHref}
   />
 </EmbedBase>

@@ -9,7 +9,7 @@
  *   Y — Income     → var(--c-income)           teal  (earned, in-game)
  *   C — Consumption → var(--c-flow-spending)   orange (non-returning spend)
  *   I — Investment → var(--c-economy)           indigo (returns to Y)
- *   GTA$ hub       → var(--c-brand)             gold  (franchise currency)
+ *   GTA$ hub       → var(--c-gta-dollar)        green (franchise currency)
  *
  * This is the base SED from which per-title variants will be derived.
  */
@@ -22,17 +22,43 @@ interface Props {
 }
 const { fullEconomyHref, id: anchorId = "eco-model" } = Astro.props;
 const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, income, consumption, investment — how GTA$ flows. GTAVI.AI";
+const sovereignLevers = [
+  "Currency issuer",
+  "Price setter",
+  "Patch law",
+  "Event bonuses",
+  "Payout policy",
+];
+const inflationChannels = [
+  { label: "Vehicle and property prices", detail: "new assets reset player targets" },
+  { label: "Shark Card value drift", detail: "real-money exchange pressure" },
+  { label: "Payout tuning", detail: "mission and business yields rebalance demand" },
+];
 ---
 
 <div class="eco-card">
 
 <div class="eco-wrap">
 
+  <!-- ── SOVEREIGN BAR ───────────────────────────────────────────────── -->
+  <div class="sovereign">
+    <div class="sov-header">
+      <span class="sov-eyebrow">Sovereign</span>
+      <span class="sov-name">Rockstar / Take-Two</span>
+      <span class="sov-detail">Currency issuer · Price setter · Legislature (patch law) · Weekly policy events</span>
+    </div>
+    <div class="lever-row">
+      {sovereignLevers.map((lever) => (
+        <span class="lever">{lever}</span>
+      ))}
+    </div>
+  </div>
+
   <!-- ── ROW 1: INJECTION (full width) ──────────────────────────────── -->
   <div class="inject-row">
     <div class="inject-inner">
       <div class="inject-item">
-        <div class="blip" style="--bc:var(--c-flow-injection)"><HudIcon name="shark-card" size={28} style="color:#fff"/></div>
+        <div class="blip" style="--bc:var(--c-flow-injection)"><HudIcon name="shark-card" size={28} style="color:var(--c-text-0)"/></div>
         <span class="item-label" style="color:var(--c-flow-injection)">Shark Card</span>
       </div>
 
@@ -43,7 +69,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
       </div>
 
       <div class="inject-item">
-        <div class="blip" style="--bc:var(--c-flow-injection)"><HudIcon name="subscription" size={28} style="color:#fff"/></div>
+        <div class="blip" style="--bc:var(--c-flow-injection)"><HudIcon name="subscription" size={28} style="color:var(--c-text-0)"/></div>
         <span class="item-label" style="color:var(--c-flow-injection)">GTA+</span>
       </div>
     </div>
@@ -103,11 +129,11 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
         </div>
         <div class="icon-row">
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-live)"><HudIcon name="mission" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-live)"><HudIcon name="mission" size={30} style="color:var(--c-text-0)"/></div>
             <span class="icon-label">Missions</span>
           </div>
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-growth)"><HudIcon name="passive" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-growth)"><HudIcon name="passive" size={30} style="color:var(--c-text-0)"/></div>
             <span class="icon-label">Passive</span>
           </div>
         </div>
@@ -129,11 +155,11 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
         </div>
         <div class="icon-row">
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-flow-spending)"><HudIcon name="clothing" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-flow-spending)"><HudIcon name="clothing" size={30} style="color:var(--c-text-0)"/></div>
             <span class="icon-label">Clothing</span>
           </div>
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-flow-spending)"><HudIcon name="ammo" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-flow-spending)"><HudIcon name="ammo" size={30} style="color:var(--c-text-0)"/></div>
             <span class="icon-label">Ammo</span>
           </div>
         </div>
@@ -155,17 +181,43 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
         </div>
         <div class="icon-row">
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-economy)"><HudIcon name="property" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-economy)"><HudIcon name="property" size={30} style="color:var(--c-text-0)"/></div>
             <span class="icon-label">Property</span>
           </div>
           <div class="icon-item">
-            <div class="blip-lg" style="--bc:var(--c-economy)"><HudIcon name="briefcase" size={30} style="color:#fff"/></div>
+            <div class="blip-lg" style="--bc:var(--c-economy)"><HudIcon name="briefcase" size={30} style="color:var(--c-text-0)"/></div>
             <span class="icon-label">Business</span>
           </div>
         </div>
       </div>
     </div>
 
+  </div>
+
+  <!-- ── INNOVATION + INFLATION BAR ─────────────────────────────────── -->
+  <div class="eco-meta">
+    <div class="innovation">
+      <div class="innov-header">
+        <span class="innov-star">SED</span>
+        <span class="innov-label">Key GTA Economy Principle</span>
+      </div>
+      <div class="innov-title">GTA$ is a managed currency loop, not a neutral scoreboard</div>
+      <div class="innov-note">Rockstar controls the money supply, prices, payout floors, and event bonuses. Every GTA economy variant sits on top of this base policy layer.</div>
+    </div>
+    <div class="inflation">
+      <div class="inf-header">Inflation Channels</div>
+      <div class="inf-list">
+        {inflationChannels.map((channel) => (
+          <div class="inf-row">
+            <span class="inf-arrow">&uarr;</span>
+            <div>
+              <span class="inf-name">{channel.label}</span>
+              <span class="inf-detail"> — {channel.detail}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 
 </div>
@@ -222,7 +274,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 .inject-title { font-size: clamp(0.85rem,2.5vw,1.3rem); font-weight: 900; line-height: 1; color: var(--c-flow-injection); } /* = box titles */
 /* J definition — no frame, cycle-note style, injection colour */
 .j-flow-note {
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .1em;
@@ -250,7 +302,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 }
 .online-note {
   position: absolute; top: 8px; right: 12px;
-  font-size: 8px; color: var(--c-text-5); opacity: var(--o-secondary);
+  font-size: 9px; color: var(--c-text-5); opacity: var(--o-secondary);
 }
 
 /* ── Row 2: INCOME super-header · Circle · EXPENDITURE super-header ── */
@@ -260,7 +312,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
   align-items: center;
   padding: 8px 0;
   border-bottom: 1px solid var(--c-border-1);
-  background: rgba(0,0,0,0.2);
+  background: color-mix(in srgb, var(--c-bg-deep) 75%, transparent);
 }
 
 /* INCOME super-header — mirrors EXPENDITURE, right-aligned to sit flush with left arrow */
@@ -404,11 +456,11 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
 .box-title { font-size: clamp(0.85rem,2.5vw,1.3rem); font-weight: 900; line-height: 1; }
 .icon-row { display: flex; gap: 12px; }
 .icon-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.icon-label { font-size: 8px; color: var(--c-text-3); text-align: center; }
+.icon-label { font-size: 9px; color: var(--c-text-3); text-align: center; }
 
 /* Cycle note — lives in box-header, pushed to the right */
 .cycle-note {
-  font-size: 8px;
+  font-size: 9px;
   text-transform: uppercase;
   letter-spacing: .1em;
   opacity: var(--o-secondary);
@@ -423,7 +475,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
   justify-content: center;
   width: 28px;
   flex-shrink: 0;
-  background: rgba(0,0,0,.3);
+  background: color-mix(in srgb, var(--c-bg-deep) 82%, transparent);
   border-left: 1px solid var(--c-border-1);
   border-right: 1px solid var(--c-border-1);
 }
@@ -464,6 +516,67 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* ── Sovereign bar ─────────────────────────────────────────────────── */
+.sovereign {
+  padding: 14px 20px 12px;
+  background: color-mix(in srgb, var(--c-brand) 10%, var(--c-bg-deep));
+  border-bottom: 1px dashed var(--c-border-1);
+}
+.sov-header {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  text-align: center; margin-bottom: 10px;
+}
+.sov-eyebrow {
+  font-size: 9px; text-transform: uppercase; letter-spacing: .25em; color: var(--c-brand);
+}
+.sov-name {
+  font-size: clamp(0.9rem, 2vw, 1.1rem); font-weight: 900; color: var(--c-brand); line-height: 1;
+}
+.sov-detail {
+  font-size: 9px; color: var(--c-text-5);
+}
+.lever-row {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 5px;
+}
+.lever {
+  font-size: 9px; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--c-brand);
+  border: 1px solid color-mix(in srgb, var(--c-brand) 35%, transparent);
+  background: color-mix(in srgb, var(--c-brand) 10%, transparent);
+  border-radius: 4px; padding: 2px 7px; white-space: nowrap;
+}
+
+/* ── Innovation + Inflation bar ───────────────────────────────────── */
+.eco-meta {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--c-border-1);
+  background: var(--c-bg-deep);
+}
+.innovation {
+  border: 1px solid var(--c-border-1); border-radius: 8px;
+  padding: 12px 14px; background: var(--c-card);
+  display: flex; flex-direction: column; gap: 5px;
+}
+.innov-header { display: flex; align-items: center; gap: 6px; }
+.innov-star   { font-size: 11px; color: var(--c-brand); letter-spacing: -.02em; font-weight: 700; }
+.innov-label  { font-size: 9px; color: var(--c-text-5); text-transform: uppercase; letter-spacing: .1em; }
+.innov-title  { font-size: 11px; font-weight: 700; color: var(--c-text-2); line-height: 1.3; }
+.innov-note   { font-size: 9px; color: var(--c-text-4); line-height: 1.5; }
+
+.inflation {
+  border: 1px solid color-mix(in srgb, var(--c-alert) 25%, transparent);
+  border-radius: 8px; padding: 12px 14px;
+  background: color-mix(in srgb, var(--c-alert) 6%, var(--c-bg-deep));
+  display: flex; flex-direction: column; gap: 5px;
+}
+.inf-header { font-size: 9px; font-weight: 700; color: var(--c-alert); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 2px; }
+.inf-list   { display: flex; flex-direction: column; gap: 5px; }
+.inf-row    { display: flex; align-items: flex-start; gap: 7px; }
+.inf-arrow  { color: var(--c-alert); font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+.inf-name   { font-size: 11px; font-weight: 700; color: var(--c-text-2); }
+.inf-detail { font-size: 9px; color: var(--c-text-4); }
 
 /* ── Mobile (≤599px) ─────────────────────────────────────────────────── */
 @media (max-width: 599px) {
@@ -507,7 +620,7 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
   .icon-row      { flex-direction: column; gap: 4px; }
   .icon-item     { flex-direction: row; gap: 8px; align-items: center; }
   .blip-lg       { width: 42px; height: 42px; border-width: 2px; }
-  .icon-label    { font-size: 8px; text-align: left; }
+  .icon-label    { font-size: 9px; text-align: left; }
   /* Left borders stay but thinner on mobile */
   .income-box, .consump-box, .invest-box { border-left-width: 2px; }
 
@@ -519,5 +632,8 @@ const shareText = "The GTA economy in one diagram: (J) + Y = C + I. Injection, i
   .divider-plus  { width: 16px; }
   .eq-sign,
   .plus-sign     { font-size: .9rem; }
+  .lever-row     { gap: 4px; }
+  .lever         { font-size: 9px; padding: 2px 5px; }
+  .eco-meta      { grid-template-columns: 1fr; }
 }
 </style>

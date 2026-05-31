@@ -1,0 +1,383 @@
+---
+/**
+ * /admin/cards — Card template inventory.
+ * Visual reference for every card component in the design system.
+ * Each card is rendered with representative hardcoded data.
+ * Clustered by purpose. Pill rules at /admin/pills.
+ */
+import Base from "../../layouts/Base.astro";
+import PredictionCard from "../../components/PredictionCard.astro";
+import VoteCard from "../../components/VoteCard.astro";
+import CastCard from "../../components/CastCard.astro";
+import IncomeCard from "../../components/IncomeCard.astro";
+import ExpenditureCard from "../../components/ExpenditureCard.astro";
+import HeistCard from "../../components/HeistCard.astro";
+import StatBox from "../../components/StatBox.astro";
+import ReadItBlock from "../../components/ReadItBlock.astro";
+
+// Representative HeistCard data (The Big Score — highest payout)
+const bigScore = {
+  id: "the-big-score",
+  title: "The Big Score",
+  chapter: 5,
+  protagonists: ["Michael", "Trevor", "Franklin"],
+  approaches: [
+    {
+      name: "Subtle",
+      total_take: 201600000,
+      player_max_cut: 41664000,
+      crew_cost_pct: 38,
+      optimal_crew: { gunman_1: "Packie McReary (12%)", driver_1: "Taliana Martinez (5%)", hacker: "Rickie Lukens (4%)" },
+      notes: "Armored trucks approach. Requires setup missions.",
+    },
+    {
+      name: "Obvious",
+      total_take: 201600000,
+      player_max_cut: 40824000,
+      crew_cost_pct: 40,
+      notes: "Helicopter extraction. Slightly lower cut.",
+    },
+  ],
+  difficulty: "Hard",
+  replay_value: "High",
+  notes: "Invest proceeds in assassination missions for $1B+ total.",
+  thumbnail: "/assets/gta5/story/the-big-score.jpg",
+};
+
+interface CardEntry {
+  name: string;
+  component: string;
+  sampleUrl: string;
+  note: string;
+}
+
+interface CardCluster {
+  title: string;
+  note: string;
+  cards: CardEntry[];
+}
+
+const clusters: CardCluster[] = [
+  {
+    title: "Intelligence",
+    note: "Cards with thumbnail + pill overlay. Used on intel, polls and character pages.",
+    cards: [
+      { name: "PredictionCard (full)",    component: "PredictionCard",          sampleUrl: "/gta-vi/intel",       note: "Full analysis view. GamePill top-left, tier top-right, confidence bar, basis, share." },
+      { name: "PredictionCard (compact)", component: "PredictionCard compact",  sampleUrl: "/gta-vi",             note: "Teaser mode — thumbnail + title + value + bar only. Links to full." },
+      { name: "VoteCard",                 component: "VoteCard",                sampleUrl: "/community/polls",    note: "Community prediction poll. Options, live vote counts, result bars via Cloudflare KV." },
+      { name: "CastCard",                 component: "CastCard",                sampleUrl: "/gta-vi/intel",       note: "Confirmed character. Inline video toggle on click. GamePill + tier pill over image." },
+    ],
+  },
+  {
+    title: "Income & economy",
+    note: "Cards representing income sources, business investments and currency injections.",
+    cards: [
+      { name: "IncomeCard (full — GTA Online)",   component: "IncomeCard game=gta-online",       sampleUrl: "/gta-online/income/[id]",               note: "Full profile: tier S+→D, earnings bar, setup cost, break-even, tips, bonus history." },
+      { name: "IncomeCard (compact — GTA Online)", component: "IncomeCard compact game=gta-online", sampleUrl: "/database",                           note: "Teaser: thumbnail + name + GTA$/hr + tier bar. Links to full profile." },
+      { name: "IncomeCard (GTA VI prediction)",   component: "IncomeCard game=gta-vi",           sampleUrl: "/gta-vi/intel#section-income-predictions", note: "Prediction mode: confidence tier + bar, analogue, basis, range." },
+      { name: "ExpenditureCard (investment)",     component: "ExpenditureCard variant=investment", sampleUrl: "/gta-online",                         note: "Asset purchase returning Y income. Setup cost, break-even, ROI timeline." },
+      { name: "ExpenditureCard (injection)",      component: "ExpenditureCard variant=injection",  sampleUrl: "/gta-online",                         note: "Real-money GTA$ purchase (Shark Card, GTA+). Rate, value, recurring cost." },
+    ],
+  },
+  {
+    title: "Story & narrative",
+    note: "Cards covering GTA V story missions and heist breakdowns.",
+    cards: [
+      { name: "HeistCard", component: "HeistCard", sampleUrl: "/gta-v", note: "GTA V story heist. Approach tabs, optimal crew, player cut, total take." },
+    ],
+  },
+  {
+    title: "Primitives",
+    note: "Single-purpose display units used in hero strips, health monitors and chart annotation.",
+    cards: [
+      { name: "StatBox",          component: "StatBox",           sampleUrl: "/gta-online",         note: "Single key metric. Value + label + optional sub-label. Color-coded." },
+      { name: "ReadItBlock",      component: "ReadItBlock",       sampleUrl: "/gta-vi/economy",     note: "Left-border annotation. Two modes: inline (flow cards) and framed callout (chart teasers)." },
+    ],
+  },
+];
+---
+
+<Base title="Admin — Card Inventory" description="GTAVI.AI card template visual reference." noindex>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
+
+    <div>
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">Admin · Design System</div>
+      <h1 class="text-2xl font-bold text-white mb-1">Card Inventory</h1>
+      <p class="text-sm text-zinc-500 max-w-2xl leading-relaxed">
+        All card templates, rendered with representative data.
+        Pill placement rules at <a href="/admin/pills" class="text-gta-gold hover:text-zinc-200 transition-colors">/admin/pills</a>.
+        Icon reference at <a href="/admin/icons" class="text-gta-gold hover:text-zinc-200 transition-colors">/admin/icons</a>.
+      </p>
+    </div>
+
+    {clusters.map((cluster) => (
+      <section class="flex flex-col gap-6">
+        <div class="border-b border-border-dim pb-3">
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-0.5">{cluster.title}</div>
+          <p class="text-[11px] text-zinc-600 leading-relaxed">{cluster.note}</p>
+        </div>
+
+        <div class="flex flex-col gap-10">
+
+          {/* ── INTELLIGENCE CLUSTER ── */}
+          {cluster.title === "Intelligence" && (
+            <>
+              {/* PredictionCard full */}
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-baseline gap-4">
+                  <span class="text-[11px] font-mono text-zinc-300">PredictionCard</span>
+                  <span class="text-[10px] font-mono text-zinc-600">full</span>
+                  <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi/intel</a>
+                </div>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[0].note}</p>
+                <div class="max-w-xs">
+                  <PredictionCard
+                    id="admin-sample-pred"
+                    title="GTA VI Is the Cheapest GTA at Launch in Real Terms"
+                    value="$79.99"
+                    unit="USD at launch"
+                    confidence={97}
+                    confidence_tier="confirmed"
+                    basis="Historical CPI-adjusted analysis of all GTA launch prices."
+                    prediction_range={{ low: "$69.99", high: "$79.99" }}
+                    source="CPI analysis"
+                    source_type="predicted"
+                    thumbnail="/assets/gta6/locations/Vice_City_06.jpg"
+                    game="gta-vi"
+                  />
+                </div>
+              </div>
+
+              {/* PredictionCard compact */}
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-baseline gap-4">
+                  <span class="text-[11px] font-mono text-zinc-300">PredictionCard</span>
+                  <span class="text-[10px] font-mono text-zinc-600">compact</span>
+                  <a href="/gta-vi" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi</a>
+                </div>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[1].note}</p>
+                <div class="max-w-xs">
+                  <PredictionCard
+                    id="admin-sample-pred-compact"
+                    title="GTA VI Is the Cheapest GTA at Launch in Real Terms"
+                    value="$79.99"
+                    short_value="$79.99"
+                    confidence={97}
+                    confidence_tier="confirmed"
+                    basis="CPI-adjusted launch price analysis."
+                    source="CPI analysis"
+                    source_type="predicted"
+                    thumbnail="/assets/gta6/locations/Vice_City_06.jpg"
+                    game="gta-vi"
+                    compact={true}
+                    detailHref="/gta-vi/intel#pred-real-price-advantage"
+                  />
+                </div>
+              </div>
+
+              {/* VoteCard */}
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-baseline gap-4">
+                  <span class="text-[11px] font-mono text-zinc-300">VoteCard</span>
+                  <a href="/community/polls" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/community/polls</a>
+                </div>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[2].note}</p>
+                <div class="max-w-xs">
+                  <VoteCard
+                    question="When will GTA VI release?"
+                    options={["Q3 2025", "Q4 2025", "2026", "2027 or later"]}
+                    game="gta-vi"
+                  />
+                </div>
+              </div>
+
+              {/* CastCard */}
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-baseline gap-4">
+                  <span class="text-[11px] font-mono text-zinc-300">CastCard</span>
+                  <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi/intel</a>
+                </div>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[3].note}</p>
+                <div class="max-w-xs">
+                  <CastCard name="Lucia Caminos" role="Protagonist" img="Lucia_Caminos_01.jpg" video="Lucia_Caminos_Video_Clip.mp4" />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── INCOME & ECONOMY CLUSTER ── */}
+          {cluster.title === "Income & economy" && (
+            <>
+              {/* IncomeCard full GTA Online */}
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-baseline gap-4">
+                  <span class="text-[11px] font-mono text-zinc-300">IncomeCard</span>
+                  <span class="text-[10px] font-mono text-zinc-600">full · game=gta-online</span>
+                  <a href="/gta-online/income/cayo-perico-heist" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-online/income/[id]</a>
+                </div>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[0].note}</p>
+                <div class="max-w-xs">
+                  <IncomeCard
+                    id="admin-income-sample"
+                    name="Cayo Perico Heist"
+                    game="gta-online"
+                    category="heist"
+                    tier="S+"
+                    net_profit_per_hr={1550000}
+                    max_profit_per_hr={1900000}
+                    setup_cost_full={25000}
+                    break_even_hrs={0}
+                    play_type="heist"
+                    difficulty={4}
+                    min_players={1}
+                    max_players={4}
+                    solo={true}
+                    tips={["Solo is most efficient — no cut splits.", "Hard mode adds 10% bonus."]}
+                    thumbnail="/assets/gta-online/businesses/cayo-perico.jpg"
+                  />
+                </div>
+              </div>
+
+              {/* IncomeCard compact GTA Online */}
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-baseline gap-4">
+                  <span class="text-[11px] font-mono text-zinc-300">IncomeCard</span>
+                  <span class="text-[10px] font-mono text-zinc-600">compact · game=gta-online</span>
+                  <a href="/database" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/database</a>
+                </div>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[1].note}</p>
+                <div class="max-w-xs">
+                  <IncomeCard
+                    id="admin-income-compact"
+                    name="Cayo Perico Heist"
+                    game="gta-online"
+                    category="heist"
+                    tier="S+"
+                    net_profit_per_hr={1550000}
+                    play_type="heist"
+                    difficulty={4}
+                    solo={true}
+                    compact={true}
+                    href="/gta-online/income/cayo-perico-heist"
+                    thumbnail="/assets/gta-online/businesses/cayo-perico.jpg"
+                  />
+                </div>
+              </div>
+
+              {/* IncomeCard GTA VI prediction */}
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-baseline gap-4">
+                  <span class="text-[11px] font-mono text-zinc-300">IncomeCard</span>
+                  <span class="text-[10px] font-mono text-zinc-600">game=gta-vi</span>
+                  <a href="/gta-vi/intel#section-income-predictions" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi/intel</a>
+                </div>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[2].note}</p>
+                <div class="max-w-xs">
+                  <IncomeCard
+                    id="admin-income-vi"
+                    name="Vice City Heist (Flagship)"
+                    game="gta-vi"
+                    category="heist"
+                    region="vice-city"
+                    confidence_tier="predicted"
+                    confidence_score={72}
+                    predicted_payout_per_run="GTA$2M–GTA$4M"
+                    predicted_gta_per_hr="GTA$1.5M–GTA$3M"
+                    prediction_range={{ low: "GTA$1.5M/hr", high: "GTA$3M/hr" }}
+                    basis="Scaled from Cayo Perico with GTA VI economic multiplier estimates."
+                    analogous_gta_online="cayo-perico-heist"
+                    thumbnail="/assets/gta6/locations/Vice_City_06.jpg"
+                  />
+                </div>
+              </div>
+
+              {/* ExpenditureCard investment */}
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-baseline gap-4">
+                  <span class="text-[11px] font-mono text-zinc-300">ExpenditureCard</span>
+                  <span class="text-[10px] font-mono text-zinc-600">variant=investment</span>
+                  <a href="/gta-online" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-online</a>
+                </div>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[3].note}</p>
+                <div class="max-w-xs">
+                  <ExpenditureCard id="nightclub" />
+                </div>
+              </div>
+
+              {/* ExpenditureCard injection */}
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-baseline gap-4">
+                  <span class="text-[11px] font-mono text-zinc-300">ExpenditureCard</span>
+                  <span class="text-[10px] font-mono text-zinc-600">variant=injection</span>
+                  <a href="/gta-online" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-online</a>
+                </div>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[4].note}</p>
+                <div class="max-w-xs">
+                  <ExpenditureCard id="megalodon" />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── STORY & NARRATIVE CLUSTER ── */}
+          {cluster.title === "Story & narrative" && (
+            <div class="flex flex-col gap-3">
+              <div class="flex flex-wrap items-baseline gap-4">
+                <span class="text-[11px] font-mono text-zinc-300">HeistCard</span>
+                <a href="/gta-v" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-v</a>
+              </div>
+              <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[0].note}</p>
+              <div class="max-w-lg">
+                <HeistCard {...bigScore} />
+              </div>
+            </div>
+          )}
+
+          {/* ── PRIMITIVES CLUSTER ── */}
+          {cluster.title === "Primitives" && (
+            <>
+              {/* StatBox */}
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-baseline gap-4">
+                  <span class="text-[11px] font-mono text-zinc-300">StatBox</span>
+                  <a href="/gta-online" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-online · health monitor · hero strips</a>
+                </div>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[0].note}</p>
+                <div class="flex flex-wrap gap-3">
+                  <StatBox value="207.1M" label="Cayo Perico max take" sub="GTA$" color="var(--c-brand)" />
+                  <StatBox value="S+" label="Tier rank" sub="Best-in-class" color="var(--c-live)" />
+                  <StatBox value="0.3h" label="Break-even" sub="Solo optimal" color="var(--c-gta-dollar)" />
+                </div>
+              </div>
+
+              {/* ReadItBlock */}
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-baseline gap-4">
+                  <span class="text-[11px] font-mono text-zinc-300">ReadItBlock</span>
+                  <a href="/gta-vi/economy" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi/economy · chart teasers</a>
+                </div>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[1].note}</p>
+                <div class="flex flex-col gap-4 max-w-lg">
+                  <div>
+                    <div class="text-[10px] font-mono text-zinc-600 mb-1 uppercase tracking-widest">Inline (default)</div>
+                    <ReadItBlock accentColor="var(--c-brand)">
+                      At S+ tier, Cayo Perico earns more per hour than any other solo activity — even before the hard mode bonus.
+                    </ReadItBlock>
+                  </div>
+                  <div>
+                    <div class="text-[10px] font-mono text-zinc-600 mb-1 uppercase tracking-widest">Framed callout (chart teaser)</div>
+                    <ReadItBlock accentColor="var(--c-brand)" intent="positive" showPrefix={false}>
+                      GTA VI's launch price is 12% cheaper in real terms than GTA V's 2013 price — the most affordable entry in franchise history.
+                    </ReadItBlock>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+        </div>
+      </section>
+    ))}
+
+  </div>
+</Base>

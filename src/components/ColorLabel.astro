@@ -1,0 +1,75 @@
+---
+/**
+ * ColorLabel.astro — text-only semantic colored inline label.
+ *
+ * No border. No background. Just the token color applied to text.
+ * Used inside card body content where a full Badge would be too heavy.
+ *
+ * NOT a pill — use Badge for bordered pills.
+ * NOT interactive — use FilterPill for clickable controls.
+ *
+ * Usage:
+ *   <ColorLabel variant="passive" />
+ *   <ColorLabel variant="heist" label="Heist (modified)" />
+ *   <ColorLabel colorToken="var(--c-live)" label="Live" />
+ */
+import { type BadgeSurface } from "../config/semanticTypes";
+
+interface Props {
+  /** Semantic variant — resolves to a color token. */
+  variant?: string;
+  /** Direct CSS token override — use if variant doesn't cover the case. */
+  colorToken?: string;
+  label?: string;
+  class?: string;
+}
+
+const { variant, colorToken, label, class: extraClass = "" } = Astro.props;
+
+// ── Variant → token lookup (same registry as Badge) ──────────────────────────
+const TOKENS: Record<string, { token: string; defaultLabel: string }> = {
+  "gta-vi":        { token: "var(--c-title-vi)",       defaultLabel: "GTA VI"       },
+  "gta-online":    { token: "var(--c-title-online)",   defaultLabel: "GTA Online"   },
+  "gta-v":         { token: "var(--c-title-v)",        defaultLabel: "GTA V"        },
+  "franchise":     { token: "var(--c-brand)",          defaultLabel: "Franchise"    },
+  "gta-sa":        { token: "var(--c-title-sa)",       defaultLabel: "GTA SA"       },
+  "gta-vc":        { token: "var(--c-title-vc)",       defaultLabel: "GTA VC"       },
+  "gta-iv":        { token: "var(--c-title-iv)",       defaultLabel: "GTA IV"       },
+  "gta-iii":       { token: "var(--c-title-iii)",      defaultLabel: "GTA III"      },
+  "confirmed":     { token: "var(--c-live)",           defaultLabel: "Confirmed"    },
+  "reported":      { token: "var(--c-brand)",          defaultLabel: "Reported"     },
+  "predicted":     { token: "var(--c-text-2)",         defaultLabel: "Predicted"    },
+  "indexed":       { token: "var(--c-text-2)",         defaultLabel: "Indexed"      },
+  "alert":         { token: "var(--c-alert)",          defaultLabel: "Alert"        },
+  "active":        { token: "var(--c-play-active)",    defaultLabel: "Active"       },
+  "passive":       { token: "var(--c-play-passive)",   defaultLabel: "Passive"      },
+  "semi-passive":  { token: "var(--c-play-semi)",      defaultLabel: "Semi-passive" },
+  "hybrid":        { token: "var(--c-play-semi)",      defaultLabel: "Hybrid"       },
+  "heist":         { token: "var(--c-play-heist)",     defaultLabel: "Heist"        },
+  "mission":       { token: "var(--c-play-mission)",   defaultLabel: "Mission"      },
+  "mc":            { token: "var(--c-play-semi)",      defaultLabel: "MC Business"  },
+  "ceo":           { token: "var(--c-live)",           defaultLabel: "CEO/VIP"      },
+  "contract":      { token: "var(--c-live)",           defaultLabel: "Contract"     },
+  "business":      { token: "var(--c-live)",           defaultLabel: "Business"     },
+  "investment":    { token: "var(--c-economy)",        defaultLabel: "Investment"   },
+  "injection":     { token: "var(--c-flow-injection)", defaultLabel: "Injection"    },
+  "consumption":   { token: "var(--c-flow-spending)",  defaultLabel: "Consumption"  },
+  "s-plus":        { token: "var(--c-growth)",         defaultLabel: "S+"           },
+  "s-tier":        { token: "var(--c-brand)",          defaultLabel: "S"            },
+  "a-tier":        { token: "var(--c-live)",           defaultLabel: "A"            },
+  "b-tier":        { token: "var(--c-economy)",        defaultLabel: "B"            },
+  "c-tier":        { token: "var(--c-text-4)",         defaultLabel: "C"            },
+  "d-tier":        { token: "var(--c-text-5)",         defaultLabel: "D"            },
+};
+
+const resolved = variant ? TOKENS[variant] : null;
+const token    = colorToken ?? resolved?.token ?? "var(--c-text-4)";
+const text     = label ?? resolved?.defaultLabel ?? variant ?? "";
+---
+
+<span
+  class={`font-mono text-[10px] uppercase tracking-widest ${extraClass}`}
+  style={`color:${token}`}
+>
+  {text}
+</span>

@@ -26,6 +26,7 @@
  */
 
 import type { PredictionsData } from "../types/gta";
+import Badge from "./Badge.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 import GamePill from "./GamePill.astro";
 import predRaw from "../../data/gta-6/predictions.json";
@@ -38,12 +39,9 @@ interface Props {
   game?:         "gta-vi" | "gta-online" | "franchise";
   /**
    * Embed mode — suppresses ShareDropdown, replaces footer with
-   * a homepage link + "Full poll →" link back to the main polls page.
-   * Pass pollHref to set the "Full poll →" destination.
+   * a homepage link so external embeds drive traffic back to GTAVI.AI.
    */
   embedMode?: boolean;
-  /** Canonical URL for the "Full poll →" link in embed mode. */
-  pollHref?:  string;
 }
 
 const {
@@ -53,7 +51,6 @@ const {
   options:  manualOptions,
   game = "gta-vi",
   embedMode = false,
-  pollHref,
 } = Astro.props;
 
 const predData = predRaw as unknown as PredictionsData;
@@ -63,18 +60,18 @@ let question  = manualQuestion ?? "";
 let options:   string[] = manualOptions ?? ["Yes", "No"];
 let pollId     = manualPollId ?? predictionId ?? "";
 let basis      = "";
-let confidence: number | null = null;
+let confidence_tier: "confirmed" | "reported" | "predicted" = "predicted";
 let thumbnail: string | null = null;
 
 if (predictionId) {
   const pred = predData.predictions.find((p: any) => p.id === predictionId);
   if (pred) {
-    question   = (pred as any).poll_question ?? pred.title;
-    options    = (pred as any).poll_options  ?? ["Yes", "No"];
-    pollId     = predictionId;
-    basis      = pred.basis ?? "";
-    confidence = pred.confidence ?? null;
-    thumbnail  = (pred as any).thumbnail ?? null;
+    question        = (pred as any).poll_question ?? pred.title;
+    options         = (pred as any).poll_options  ?? ["Yes", "No"];
+    pollId          = predictionId;
+    basis           = pred.basis ?? "";
+    confidence_tier = (pred.confidence_tier as any) ?? "predicted";
+    thumbnail       = (pred as any).thumbnail ?? null;
   }
 }
 
@@ -82,36 +79,45 @@ if (!question) throw new Error(`VoteCard: no question resolved for pollId="${pol
 
 const anchorId  = `vote-${pollId}`;
 const shareText = `${question} — Vote on GTAVI.AI and see what the community thinks.`;
+const cardClass = `vc-card ${thumbnail ? "vc-card--with-thumb" : "vc-card--no-thumb"}`;
+const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:none;border-top:none" : "scroll-margin-top:80px";
 ---
 
-<div class="vc-card" id={anchorId} style={embedMode ? "border-radius:0;border-left:none;border-right:none;border-top:none" : "scroll-margin-top:80px"}>
+<div class={cardClass} id={anchorId} style={cardStyle}>
 
   <!-- ── Thumbnail ─────────────────────────────────────────────────────── -->
   {thumbnail && (
     <div class="vc-thumb">
       <img src={thumbnail} alt="" width="400" height="200" loading="lazy" decoding="async" />
       <div class="vc-thumb-overlay"></div>
+      <div class="vc-thumb-meta">
+        <div class="flex items-center gap-1.5">
+          <GamePill game={game} size="xs" />
+          <Badge variant="community" surface="opaque" />
+        </div>
+        <Badge variant={confidence_tier} surface="opaque" />
+      </div>
     </div>
   )}
 
   <!-- ── Header ──────────────────────────────────────────────────────── -->
-  <div class="vc-header">
-    <div class="flex items-center gap-2 flex-wrap">
-      <GamePill game={game} size="xs" />
-      <span class="vc-badge">Community Vote</span>
-      {confidence !== null && (
-        <span class="vc-confidence">{confidence}% confidence</span>
-      )}
+  {!thumbnail && (
+    <div class="vc-header">
+      <div class="flex items-center justify-between gap-2 flex-wrap">
+        <div class="flex items-center gap-1.5">
+          <GamePill game={game} size="xs" />
+          <Badge variant="community" surface="opaque" />
+        </div>
+        <Badge variant={confidence_tier} surface="opaque" />
+      </div>
     </div>
-  </div>
+  )}
 
   <!-- ── Question ────────────────────────────────────────────────────── -->
   <div class="vc-body">
     <div class="vc-question">{question}</div>
 
-    {basis && (
-      <div class="vc-basis">{basis.length > 200 ? basis.slice(0, 200) + "…" : basis}</div>
-    )}
+    {basis && <div class="vc-basis">{basis}</div>}
 
     <!-- Vote options — shown before voting -->
     <div class="vc-options" data-poll-id={pollId} data-options={JSON.stringify(options)} data-question={question}>
@@ -131,7 +137,10 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
       <div class="vc-voted-note hidden">✓ You voted</div>
       {options.map(opt => (
         <div class="vc-result-row" data-option={opt}>
-          <div class="vc-result-label">{opt}</div>
+          <div class="vc-result-label">
+            {opt}
+            <span class="vc-voted-tick hidden">✓</span>
+          </div>
           <div class="vc-result-track">
             <div class="vc-result-bar" data-option={opt} style="width:0%"></div>
           </div>
@@ -139,27 +148,16 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
         </div>
       ))}
       <div class="vc-vote-count"></div>
-
-      <!-- Copy result card — appears after voting -->
-      <button class="vc-copy-card hidden" type="button" aria-label="Copy result card to clipboard">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        <span>Copy result card</span>
-      </button>
     </div>
   </div>
 
   <!-- ── Footer ──────────────────────────────────────────────────────── -->
   <div class="vc-footer">
     {embedMode ? (
-      <>
-        <a href="https://gtavi.ai" target="_blank" rel="noopener noreferrer" class="vc-footer-label">GTAVI.AI ↗</a>
-        {pollHref && (
-          <a href={pollHref} target="_blank" rel="noopener noreferrer" class="vc-embed-link">Full poll →</a>
-        )}
-      </>
+      <a href="https://gtavi.ai" target="_blank" rel="noopener noreferrer" class="vc-home-link">Visit GTAVI.AI →</a>
     ) : (
       <>
-        <span class="vc-footer-label">GTAVI.AI · Community</span>
+        <a href="/" class="vc-footer-label">GTAVI.AI</a>
         <ShareDropdown anchorId={anchorId} shareText={shareText} size="sm" />
       </>
     )}
@@ -185,8 +183,9 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
 /* ── Thumbnail ── */
 .vc-thumb {
   position: relative;
-  aspect-ratio: 16 / 7;
+  aspect-ratio: 16 / 5;
   overflow: hidden;
+  margin-bottom: -22px;
 }
 .vc-thumb img {
   width: 100%; height: 100%;
@@ -199,33 +198,40 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
   position: absolute; inset: 0;
   background: linear-gradient(
     to bottom,
-    transparent 40%,
-    color-mix(in srgb, var(--c-card) 90%, transparent) 100%
+    transparent 18%,
+    color-mix(in srgb, var(--c-card) 96%, transparent) 100%
   );
   pointer-events: none;
 }
-
-.vc-badge {
-  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em;
-  color: var(--c-brand);
-  border: 1px solid color-mix(in srgb, var(--c-brand) 35%, transparent);
-  background: color-mix(in srgb, var(--c-brand) 10%, transparent);
-  border-radius: 4px; padding: 2px 7px;
+.vc-thumb-meta {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 12px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  z-index: 2;
 }
 
-.vc-confidence {
-  font-size: 9px; color: var(--c-text-5); letter-spacing: .06em;
+.vc-body {
+  position: relative;
+  z-index: 1;
+  padding: 28px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-
-.vc-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.vc-card--no-thumb .vc-body { padding-top: 16px; }
 
 .vc-question {
-  font-size: 1rem; font-weight: 700; color: var(--c-text-2); line-height: 1.4;
+  font-size: clamp(1rem, 2vw, 1.15rem); font-weight: 700; color: var(--c-text-2); line-height: 1.35;
   font-family: var(--font-sans, sans-serif);
 }
 
 .vc-basis {
-  font-size: 9px; color: var(--c-text-5); line-height: 1.5;
+  font-size: 10px; color: var(--c-text-5); line-height: 1.55;
 }
 
 /* ── Options ── */
@@ -284,23 +290,17 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
   font-size: 9px; color: var(--c-text-5); text-align: right; margin-top: 4px;
 }
 
+.vc-voted-tick {
+  color: var(--c-live);
+  margin-left: 6px;
+  font-size: 10px;
+}
+.vc-result-row--voted .vc-result-label { color: var(--c-text-2); }
+
 .vc-voted-note {
   font-size: 9px; color: var(--c-growth); letter-spacing: .06em;
   margin-bottom: 4px;
 }
-
-.vc-copy-card {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
-  font-family: var(--font-mono, monospace);
-  color: var(--c-text-5);
-  background: transparent; border: 1px solid var(--c-border-1);
-  border-radius: 4px; padding: 5px 10px; cursor: pointer;
-  transition: color .15s, border-color .15s;
-  margin-top: 4px; align-self: flex-start;
-}
-.vc-copy-card:hover { color: var(--c-brand); border-color: color-mix(in srgb,var(--c-brand) 40%,transparent); }
-.vc-copy-card.copied { color: var(--c-growth); border-color: color-mix(in srgb,var(--c-growth) 40%,transparent); }
 
 .hidden { display: none !important; }
 
@@ -320,15 +320,15 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
 }
 .vc-footer-label:hover { color: var(--c-brand); }
 
-.vc-embed-link {
-  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+.vc-home-link {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
   font-family: var(--font-mono, monospace);
   color: var(--c-brand); text-decoration: none;
   border: 1px solid color-mix(in srgb, var(--c-brand) 35%, transparent);
   border-radius: 4px; padding: 3px 8px;
   transition: background .15s;
 }
-.vc-embed-link:hover { background: color-mix(in srgb, var(--c-brand) 10%, transparent); }
+.vc-home-link:hover { background: color-mix(in srgb, var(--c-brand) 10%, transparent); }
 </style>
 
 <script>
@@ -339,7 +339,6 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
     const card       = container.closest<HTMLElement>(".vc-card")!;
     const results    = card.querySelector<HTMLElement>(".vc-results")!;
     const votedNote  = results.querySelector<HTMLElement>(".vc-voted-note")!;
-    const copyCardBtn = results.querySelector<HTMLButtonElement>(".vc-copy-card")!;
 
     // Build the deep-link URL for this specific poll card
     const pollAnchor = `vote-${pollId}`;
@@ -361,24 +360,6 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
       return `I voted "${chosenOption}" — ${agree} (${total} vote${total !== 1 ? "s" : ""}). ${question} → ${pollUrl}`;
     }
 
-    // Helper: build copy-card text
-    function buildResultCard(votes: Record<string, number>): string {
-      const total = Object.values(votes).reduce((s, v) => s + v, 0);
-      const bars = options.map(opt => {
-        const pct = total > 0 ? Math.round(((votes[opt] ?? 0) / total) * 100) : 0;
-        const bar = "█".repeat(Math.round(pct / 10)) + "░".repeat(10 - Math.round(pct / 10));
-        return `${bar} ${String(pct).padStart(3)}%  ${opt}`;
-      });
-      return [
-        question,
-        "",
-        ...bars,
-        "",
-        `${total} vote${total !== 1 ? "s" : ""} · GTAVI.AI`,
-        pollUrl,
-      ].join("\n");
-    }
-
     // Helper: update share dropdown links with personalised text
     function updateShareLinks(chosenOption: string, votes: Record<string, number>) {
       const shareText = buildShareText(chosenOption, votes);
@@ -389,37 +370,29 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
       card.querySelectorAll<HTMLButtonElement>(".share-native-btn").forEach(el => { el.dataset.text = shareText; });
     }
 
-    // Copy result card button handler
-    copyCardBtn?.addEventListener("click", async () => {
-      const storedVote = localStorage.getItem(`vote:${pollId}`) || options[0];
-      try {
-        const resp = await fetch(`/api/poll/${encodeURIComponent(pollId)}/results`);
-        const data = resp.ok ? await resp.json() : null;
-        const votes = data?.votes ?? { [storedVote]: 1 };
-        await navigator.clipboard.writeText(buildResultCard(votes));
-      } catch {
-        await navigator.clipboard.writeText(`${question}\n\n${pollUrl}`).catch(() => {});
-      }
-      const span = copyCardBtn.querySelector("span");
-      if (span) { span.textContent = "Copied!"; copyCardBtn.classList.add("copied"); }
-      setTimeout(() => {
-        if (span) span.textContent = "Copy result card";
-        copyCardBtn.classList.remove("copied");
-      }, 2500);
-    });
-
     const storageKey = `vote:${pollId}`;
 
     // Helper: animate result bars from fetched data
-    function showResults(votes: Record<string, number>) {
+    function showResults(votes: Record<string, number>, votedOption?: string) {
       const total = Object.values(votes).reduce((s, v) => s + v, 0);
       options.forEach(opt => {
         const count = votes[opt] ?? 0;
         const pct   = total > 0 ? Math.round((count / total) * 100) : 0;
         const bar   = results.querySelector<HTMLElement>(`.vc-result-bar[data-option="${opt}"]`);
         const pctEl = results.querySelector<HTMLElement>(`.vc-result-pct[data-option="${opt}"]`);
-        if (bar)   bar.style.width   = `${pct}%`;
+        const row   = results.querySelector<HTMLElement>(`.vc-result-row[data-option="${opt}"]`);
+        const tick  = row?.querySelector<HTMLElement>(".vc-voted-tick");
+        const isVoted = votedOption && opt === votedOption;
+        // Voted option gets a minimum visible bar (8px) so the user can always see their choice
+        const displayPct = isVoted && pct === 0 ? 0 : pct;
+        if (bar) {
+          bar.style.width = `${displayPct}%`;
+          if (isVoted) bar.style.minWidth = "12px";
+          else bar.style.minWidth = "";
+        }
         if (pctEl) pctEl.textContent = `${pct}%`;
+        if (tick)  tick.classList.toggle("hidden", !isVoted);
+        if (row)   row.classList.toggle("vc-result-row--voted", !!isVoted);
       });
       const countEl = results.querySelector<HTMLElement>(".vc-vote-count");
       if (countEl) countEl.textContent = `${total.toLocaleString()} vote${total !== 1 ? "s" : ""}`;
@@ -430,12 +403,11 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
     if (storedVote) {
       container.classList.add("hidden");
       votedNote.classList.remove("hidden");
-      // Show placeholder immediately, then replace with real counts
+      // Show placeholder immediately — voted option gets 1 vote, others 0
       const placeholder: Record<string, number> = {};
       options.forEach(o => { placeholder[o] = o === storedVote ? 1 : 0; });
-      showResults(placeholder);
+      showResults(placeholder, storedVote);
       results.classList.remove("hidden");
-      copyCardBtn?.classList.remove("hidden");
       updateShareLinks(storedVote, placeholder);
       // Fetch live counts — only replace placeholder if server has real data (total > 0)
       fetch(`/api/poll/${encodeURIComponent(pollId)}/results`)
@@ -444,7 +416,7 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
           if (data?.votes) {
             const liveTotal = Object.values(data.votes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0);
             if (liveTotal > 0) {
-              showResults(data.votes);
+              showResults(data.votes, storedVote);
               updateShareLinks(storedVote, data.votes);
             }
             // If total === 0 (KV broken/empty), keep the local placeholder — never show all-zero bars
@@ -458,7 +430,7 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
     function showPlaceholder(chosenOption: string) {
       const placeholder: Record<string, number> = {};
       options.forEach(o => { placeholder[o] = o === chosenOption ? 1 : 0; });
-      showResults(placeholder);
+      showResults(placeholder, chosenOption);
       results.classList.remove("hidden");
     }
 
@@ -475,7 +447,6 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
         // Show placeholder immediately so the user always sees something
         showPlaceholder(option);
         results.classList.remove("hidden");
-        copyCardBtn?.classList.remove("hidden");
         updateShareLinks(option, { [option]: 1 });
 
         // Then try to get real counts from the API
@@ -493,7 +464,7 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
               ? Object.values(liveVotes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0)
               : 0;
             if (liveVotes && liveTotal > 0) {
-              showResults(liveVotes);
+              showResults(liveVotes, option);
               updateShareLinks(option, liveVotes);
             } else {
               // No real data yet — try results endpoint as fallback
@@ -503,7 +474,7 @@ const shareText = `${question} — Vote on GTAVI.AI and see what the community t
                 const t2 = d2?.votes
                   ? Object.values(d2.votes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0)
                   : 0;
-                if (d2?.votes && t2 > 0) { showResults(d2.votes); updateShareLinks(option, d2.votes); }
+                if (d2?.votes && t2 > 0) { showResults(d2.votes, option); updateShareLinks(option, d2.votes); }
                 // If still 0, placeholder remains — never show all-zero bars to the voter
               }
             }

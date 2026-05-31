@@ -54,13 +54,7 @@ const predicted = pollPreds.filter((p: any) => p.confidence_tier === "predicted"
         <SectionHeader label="// Reported Mechanics · Community Verdict" dotColor="var(--c-live)" />
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {reported.map((p: any) => (
-            <div class="flex flex-col">
-              <VoteCard predictionId={p.id} />
-              <a href={`/community/polls/${p.id}`}
-                class="text-center text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors py-1.5">
-                Full poll →
-              </a>
-            </div>
+            <VoteCard predictionId={p.id} />
           ))}
         </div>
       </section>
@@ -71,13 +65,7 @@ const predicted = pollPreds.filter((p: any) => p.confidence_tier === "predicted"
         <SectionHeader label="// Model Predictions · What do you think?" dotColor="var(--c-brand)" />
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {predicted.map((p: any) => (
-            <div class="flex flex-col">
-              <VoteCard predictionId={p.id} />
-              <a href={`/community/polls/${p.id}`}
-                class="text-center text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors py-1.5">
-                Full poll →
-              </a>
-            </div>
+            <VoteCard predictionId={p.id} />
           ))}
         </div>
       </section>
@@ -88,13 +76,7 @@ const predicted = pollPreds.filter((p: any) => p.confidence_tier === "predicted"
         <SectionHeader label="// Confirmed Facts · Gut-check" dotColor="var(--c-live)" />
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {confirmed.map((p: any) => (
-            <div class="flex flex-col">
-              <VoteCard predictionId={p.id} />
-              <a href={`/community/polls/${p.id}`}
-                class="text-center text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors py-1.5">
-                Full poll →
-              </a>
-            </div>
+            <VoteCard predictionId={p.id} />
           ))}
         </div>
       </section>
