@@ -22,8 +22,8 @@ interface Props {
     // Cluster A — game titles
     | "gta-vi" | "gta-online" | "gta-v" | "franchise"
     | "gta-sa" | "gta-vc" | "gta-iv" | "gta-iii"
-    // Cluster B — confidence / intelligence tiers
-    | "confirmed" | "reported" | "predicted" | "indexed"
+    // Cluster B — confidence / intelligence / status
+    | "confirmed" | "reported" | "predicted" | "indexed" | "alert"
     // Cluster C — play types
     | "active" | "passive" | "semi-passive" | "hybrid" | "heist" | "mission"
     | "contract" | "business"
@@ -32,9 +32,7 @@ interface Props {
     // Chart category (neutral)
     | "economy-ig" | "economy-rl" | "community" | "performance" | "history" | "promotions"
     // Income tier
-    | "s-plus" | "s-tier" | "a-tier" | "b-tier" | "c-tier" | "d-tier"
-    // Status
-    | "official" | "alert" | "projected" | "regression";
+    | "s-plus" | "s-tier" | "a-tier" | "b-tier" | "c-tier" | "d-tier";
   label?: string;
   surface?: BadgeSurface;
   /** @deprecated — one canonical size only. Accepted but ignored. */
@@ -55,11 +53,12 @@ const VARIANTS: Record<string, { token: string; defaultLabel: string }> = {
   "gta-vc":        { token: "var(--c-title-vc)",      defaultLabel: "GTA VC"       },
   "gta-iv":        { token: "var(--c-title-iv)",      defaultLabel: "GTA IV"       },
   "gta-iii":       { token: "var(--c-title-iii)",     defaultLabel: "GTA III"      },
-  // Cluster B — confidence tiers
+  // Cluster B — confidence / intelligence / status
   "confirmed":     { token: "var(--c-live)",          defaultLabel: "Confirmed"    },
-  "reported":      { token: "var(--c-brand)",         defaultLabel: "Reported"     },
-  "predicted":     { token: "var(--c-text-4)",        defaultLabel: "Predicted"    },
-  "indexed":       { token: "var(--c-text-5)",        defaultLabel: "Indexed"      },
+  "reported":      { token: "var(--c-brand)",          defaultLabel: "Reported"     },
+  "predicted":     { token: "var(--c-text-2)",         defaultLabel: "Predicted"    },
+  "indexed":       { token: "var(--c-text-2)",         defaultLabel: "Indexed"      },
+  "alert":         { token: "var(--c-alert)",          defaultLabel: "Alert"        },
   // Cluster C — play types
   "active":        { token: "var(--c-play-active)",   defaultLabel: "Active"       },
   "passive":       { token: "var(--c-play-passive)",  defaultLabel: "Passive"      },
@@ -87,11 +86,6 @@ const VARIANTS: Record<string, { token: string; defaultLabel: string }> = {
   "b-tier":        { token: "var(--c-economy)",       defaultLabel: "B"            },
   "c-tier":        { token: "var(--c-text-4)",        defaultLabel: "C"            },
   "d-tier":        { token: "var(--c-text-5)",        defaultLabel: "D"            },
-  // Status
-  "official":      { token: "var(--c-brand)",         defaultLabel: "Official"     },
-  "alert":         { token: "var(--c-alert)",         defaultLabel: "Alert"        },
-  "projected":     { token: "var(--c-brand)",         defaultLabel: "Projected"    },
-  "regression":    { token: "var(--c-alert)",         defaultLabel: "Regression"   },
 };
 
 const config = VARIANTS[variant] ?? VARIANTS["predicted"]!;

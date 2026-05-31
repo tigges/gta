@@ -56,14 +56,15 @@ const pillClusters: PillCluster[] = [
     ],
   },
   {
-    title: "Confidence and intelligence",
-    note: "Evidence quality badges used on predictions, income cards, polls and cast cards.",
+    title: "Confidence, intelligence & status",
+    note: "Evidence quality and status badges. confirmed/reported/predicted/indexed used on predictions, polls, cast cards. alert for breaking news.",
     surfaceNote: "surface: opaque over thumbnails · tint in rows/context",
     rows: [
       { id: "confirmed", label: "Confirmed", kind: "badge", variant: "confirmed", surface: "opaque", colorToken: "var(--c-live)",   hex: "#0d9488", central: "✅", sampleUrl: "/gta-vi/intel",     usage: "Official/confirmed facts, cast and feature cards. Top-right over thumbnail." },
       { id: "reported",  label: "Reported",  kind: "badge", variant: "reported",  surface: "opaque", colorToken: "var(--c-brand)",  hex: "#f59e0b", central: "✅", sampleUrl: "/community/polls", usage: "Reported mechanics and externally sourced poll cards." },
-      { id: "predicted", label: "Predicted", kind: "badge", variant: "predicted", surface: "opaque", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/community/polls", usage: "Model-derived predictions and speculative polls." },
-      { id: "indexed",   label: "Indexed",   kind: "badge", variant: "indexed",   surface: "tint",   colorToken: "var(--c-text-5)", hex: "#b4b4cc", central: "✅", sampleUrl: "/database",        usage: "Database/indexed entity state; aliases to predicted visual treatment." },
+      { id: "predicted", label: "Predicted", kind: "badge", variant: "predicted", surface: "opaque", colorToken: "var(--c-text-2)", hex: "#d4d4d8", central: "✅", sampleUrl: "/community/polls", usage: "Model-derived predictions and speculative polls." },
+      { id: "indexed",   label: "Indexed",   kind: "badge", variant: "indexed",   surface: "tint",   colorToken: "var(--c-text-2)", hex: "#d4d4d8", central: "✅", sampleUrl: "/database",        usage: "Database entity state — same visual as predicted." },
+      { id: "alert",     label: "Alert",     kind: "badge", variant: "alert",     surface: "tint",   colorToken: "var(--c-alert)",  hex: "#ef4444", central: "✅", sampleUrl: "/news",             usage: "Breaking news, risk or delay status." },
     ],
   },
   {
@@ -117,17 +118,6 @@ const pillClusters: PillCluster[] = [
       { id: "b-tier", label: "B",  kind: "badge", variant: "b-tier", surface: "tint", colorToken: "var(--c-economy)",hex: "#818cf8", central: "✅", sampleUrl: "/database", usage: "Mid income source tier." },
       { id: "c-tier", label: "C",  kind: "badge", variant: "c-tier", surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/database", usage: "Lower income source tier." },
       { id: "d-tier", label: "D",  kind: "badge", variant: "d-tier", surface: "tint", colorToken: "var(--c-text-5)", hex: "#b4b4cc", central: "✅", sampleUrl: "/database", usage: "Lowest income source tier." },
-    ],
-  },
-  {
-    title: "Status",
-    note: "General status badges for official, alert, projected and regression states.",
-    surfaceNote: "surface: tint — text 100% · border 40% · bg 12% (color-mix)",
-    rows: [
-      { id: "official",   label: "Official",   kind: "badge", variant: "official",   surface: "tint", colorToken: "var(--c-brand)",  hex: "#f59e0b", central: "✅", sampleUrl: "/news",           usage: "Official Rockstar/Take-Two/SEC source tags." },
-      { id: "alert",      label: "Alert",      kind: "badge", variant: "alert",      surface: "tint", colorToken: "var(--c-alert)",  hex: "#ef4444", central: "✅", sampleUrl: "/news",           usage: "Breaking or risk/alert status." },
-      { id: "projected",  label: "Projected",  kind: "badge", variant: "projected",  surface: "tint", colorToken: "var(--c-brand)",  hex: "#f59e0b", central: "✅", sampleUrl: "/gta-vi/economy", usage: "Pre-launch projected model state." },
-      { id: "regression", label: "Regression", kind: "badge", variant: "regression", surface: "tint", colorToken: "var(--c-alert)",  hex: "#ef4444", central: "✅", sampleUrl: null, sampleLabel: "Defined; no current page use found", usage: "Negative movement/regression status." },
     ],
   },
 ];
