@@ -3,12 +3,14 @@
  * TeaserBar.astro — homepage "jump straight in" showcase.
  *
  * Bright image-poster tiles that DEEP-LINK to a specific top-value content
- * piece (a real chart, the income cards, the SED economy model, predictions) —
- * landing the user on the content, scroll-anchored, not on a section index.
+ * piece, landing the user on the content (scroll-anchored), not a section index.
  *
- * Distinct from CrossLinks (image-forward posters vs. its text rows) but shares
- * the brand accent-token language. Tokens only — no raw palette colours.
- * Counts computed at build time from live JSON.
+ * Two layouts:
+ *   - chart tiles: chart screenshot in a dedicated top band + text band below,
+ *     so the key chart line is never hidden behind the title.
+ *   - art tiles:  full-bleed art with the text overlaid at the bottom.
+ *
+ * Tokens only — no raw palette. Counts computed at build time from live JSON.
  */
 import predictionsData from "../config/predictions";
 import incomeData from "../../data/gta-6/income-predictions.json";
@@ -18,13 +20,14 @@ const incomeCount = (incomeData as any).income_predictions.length;
 
 interface Tile {
   href: string;
-  kicker: string;     // "GAME · CATEGORY" — gives the title context, kept light
+  kicker: string;     // "GAME · CATEGORY"
   headline: string;
   sub: string;
   img: string;
   accent: string;
   pos?: string;
-  op?: number;        // base image opacity (charts are dark → need more)
+  op?: number;
+  chart?: boolean;    // chart screenshot → top band + text band layout
 }
 
 const tiles: Tile[] = [
@@ -35,8 +38,9 @@ const tiles: Tile[] = [
     sub: "…yet the endgame costs 23× more",
     img: "/assets/charts/shark-card-inflation.png",
     accent: "var(--c-brand)",
-    pos: "center",
-    op: 0.8,
+    pos: "center top",
+    op: 0.95,
+    chart: true,
   },
   {
     href: "/charts#section-income-history-chart",
@@ -45,8 +49,9 @@ const tiles: Tile[] = [
     sub: "Top $/hr through every major patch",
     img: "/assets/charts/income-per-hour-history.png",
     accent: "var(--c-live)",
-    pos: "center",
-    op: 0.8,
+    pos: "center top",
+    op: 0.95,
+    chart: true,
   },
   {
     href: "/gta-vi/income",
@@ -56,7 +61,7 @@ const tiles: Tile[] = [
     img: "/assets/gta6/locations/Ambrosia_02.jpg",
     accent: "var(--c-gta-dollar)",
     pos: "center 40%",
-    op: 0.6,
+    op: 0.75,
   },
   {
     href: "/gta-vi/economy#eco-gta-vi",
@@ -66,7 +71,7 @@ const tiles: Tile[] = [
     img: "/assets/gta6/locations/Vice_City_03.jpg",
     accent: "var(--c-economy)",
     pos: "center 45%",
-    op: 0.6,
+    op: 0.75,
   },
   {
     href: "/gta-vi/intel",
@@ -76,7 +81,7 @@ const tiles: Tile[] = [
     img: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
     accent: "var(--c-title-vi)",
     pos: "center top",
-    op: 0.6,
+    op: 0.78,
   },
 ];
 ---
@@ -90,32 +95,56 @@ const tiles: Tile[] = [
     {tiles.map(t => (
       <a
         href={t.href}
-        class="teaser-tile group relative overflow-hidden rounded-xl border border-border-dim transition-all duration-300"
-        style={`min-height:150px;background:var(--c-card);--accent:${t.accent};--op:${t.op ?? 0.6}`}
+        class="teaser-tile group relative flex flex-col overflow-hidden rounded-xl border border-border-dim transition-all duration-300"
+        style={`min-height:160px;background:var(--c-card);--accent:${t.accent};--op:${t.op ?? 0.7}`}
       >
         <div class="absolute top-0 left-0 right-0 h-px z-20" style={`background:linear-gradient(90deg,${t.accent},transparent 70%)`}></div>
-        <img
-          src={t.img}
-          alt=""
-          class="teaser-img absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
-          style={`object-position:${t.pos ?? "center"}`}
-          loading="lazy"
-          aria-hidden="true"
-        />
-        <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-card) 14%,color-mix(in srgb,var(--c-card) 45%,transparent) 60%,transparent 100%)"></div>
-        <div class="relative p-4 h-full flex flex-col justify-end gap-1">
-          <div class="text-[9px] font-mono uppercase tracking-widest" style={`color:${t.accent}`}>{t.kicker}</div>
-          <div class="text-sm font-bold text-white leading-tight">{t.headline}</div>
-          <div class="text-[10px] font-mono text-zinc-300 leading-snug">{t.sub}</div>
-        </div>
+
+        {t.chart ? (
+          <>
+            <div class="relative overflow-hidden shrink-0" style="height:92px;background:var(--c-bg-deep)">
+              <img
+                src={t.img}
+                alt=""
+                class="teaser-img w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                style={`object-position:${t.pos ?? "center"}`}
+                loading="lazy"
+                aria-hidden="true"
+              />
+              <div class="absolute inset-x-0 bottom-0 h-6" style="background:linear-gradient(to top,var(--c-card),transparent)"></div>
+            </div>
+            <div class="flex flex-col gap-0.5 px-3.5 py-3 flex-1">
+              <div class="text-[9px] font-mono uppercase tracking-widest" style={`color:${t.accent}`}>{t.kicker}</div>
+              <div class="text-sm font-bold text-white leading-tight">{t.headline}</div>
+              <div class="text-[10px] font-mono text-zinc-300 leading-snug">{t.sub}</div>
+            </div>
+          </>
+        ) : (
+          <>
+            <img
+              src={t.img}
+              alt=""
+              class="teaser-img absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+              style={`object-position:${t.pos ?? "center"}`}
+              loading="lazy"
+              aria-hidden="true"
+            />
+            <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-card) 8%,color-mix(in srgb,var(--c-card) 30%,transparent) 55%,transparent 92%)"></div>
+            <div class="relative p-4 mt-auto flex flex-col gap-1">
+              <div class="text-[9px] font-mono uppercase tracking-widest" style={`color:${t.accent}`}>{t.kicker}</div>
+              <div class="text-sm font-bold text-white leading-tight">{t.headline}</div>
+              <div class="text-[10px] font-mono text-zinc-300 leading-snug">{t.sub}</div>
+            </div>
+          </>
+        )}
       </a>
     ))}
   </div>
 </section>
 
 <style>
-  .teaser-img { opacity: var(--op, 0.6); }
-  .teaser-tile:hover .teaser-img { opacity: min(1, calc(var(--op, 0.6) + 0.15)); }
+  .teaser-img { opacity: var(--op, 0.7); }
+  .teaser-tile:hover .teaser-img { opacity: min(1, calc(var(--op, 0.7) + 0.12)); }
   .teaser-tile:hover {
     border-color: color-mix(in srgb, var(--accent) 50%, transparent);
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
