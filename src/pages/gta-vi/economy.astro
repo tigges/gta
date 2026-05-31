@@ -282,8 +282,8 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
             <div class="text-[11px] text-zinc-500 font-mono">Basket cost ÷ top hourly yield. Two calculations: GTA-PPI (VC) and GTA-RPP (VC ÷ Leonida). Auto-populates from launch data.</div>
           </div>
           <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500 shrink-0">
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 rounded-full inline-block" style="background:var(--c-title-vi)"></span>VC PPI</span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 rounded-full inline-block" style="background:var(--c-growth)"></span>Leonida RPP</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 rounded-full inline-block" style="background:var(--c-growth)"></span>Y1 · VC PPI</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 rounded-full inline-block" style="background:color-mix(in srgb,var(--c-growth) 55%,var(--c-bg-deep))"></span>Y2 · Leonida RPP</span>
           </div>
         </div>
         <div class="px-5 py-2 border-t border-b border-border-dim" style="background:var(--c-bg)">
@@ -291,19 +291,19 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
         </div>
         <div class="px-5 py-3 border-t border-border-dim grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">VC GTA-PPI</div>
-            <div class="text-xl font-black" style="color:var(--c-title-vi)">—</div>
+            <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">Y1 · VC GTA-PPI</div>
+            <div class="text-xl font-black" style="color:var(--c-growth)">—</div>
             <div class="text-[10px] font-mono text-zinc-500">populates at launch</div>
           </div>
           <div>
-            <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">LEONIDA GTA-RPP</div>
-            <div class="text-xl font-black" style="color:var(--c-growth)">—</div>
+            <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">Y2 · LEONIDA GTA-RPP</div>
+            <div class="text-xl font-black" style="color:color-mix(in srgb,var(--c-growth) 65%,var(--c-bg-deep))">—</div>
             <div class="text-[10px] font-mono text-zinc-500">populates at launch</div>
           </div>
           <div>
             <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">GTA ONLINE BASELINE</div>
             <div class="text-xl font-black text-zinc-400">{revenueData.years.length > 0 ? "Live" : "—"}</div>
-            <div class="text-[10px] font-mono text-zinc-500">GTA-PPI tracking now at /gta-online/economy</div>
+            <a href="/gta-online/economy#health-monitor" class="text-[10px] font-mono text-gta-teal hover:text-zinc-200 transition-colors underline decoration-dotted underline-offset-2">GTA-PPI live → /gta-online/economy#health-monitor</a>
           </div>
         </div>
         <div class="px-5 py-3 border-t border-border-dim">
