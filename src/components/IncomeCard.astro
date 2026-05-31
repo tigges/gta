@@ -32,7 +32,6 @@ import GamePill from "./GamePill.astro";
 import Badge from "./Badge.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 import { playTypeColor, getRegionType, getConfidenceType, pillStyle } from "../config/semanticTypes";
-import { TIER_STYLES } from "../config/tierStyles";
 
 interface LootTier { loot: string; value: number; frequency?: string; }
 
@@ -211,7 +210,7 @@ const showEnrichment = !compact;
       <!-- Tier / confidence badge top-right -->
       <div class="absolute top-2 right-2 z-20">
         {isGtaVI && confType ? (
-          <Badge variant={confidence_tier} size="xs" />
+          <Badge variant={confidence_tier} surface="opaque" />
         ) : (
           <span class="font-mono font-black text-lg leading-none px-1.5 py-0.5 rounded"
                 style={`color:${tierColor};background:${tierBg};border:1px solid ${tierBorder}`}>
@@ -224,7 +223,7 @@ const showEnrichment = !compact;
     <div class="px-4 pt-3 pb-2 flex items-center justify-between relative z-20">
       <GamePill game={GAME_PILL_MAP[game] as any} size="xs" />
       {isGtaVI && confType ? (
-        <Badge variant={confidence_tier} size="xs" />
+        <Badge variant={confidence_tier} surface="opaque" />
       ) : (
         <span class="font-mono font-black text-2xl leading-none" style={`color:${tierColor}`}>{tier}</span>
       )}
@@ -236,7 +235,7 @@ const showEnrichment = !compact;
 
     <!-- Context row: type · region/solo/difficulty · trailer evidence -->
     <div class="flex items-center gap-1.5 flex-wrap">
-      <Badge variant={playBadgeVariant} size="xs" />
+      <Badge variant={playBadgeVariant} />
       {isGtaVI ? (
         <>
           {(showVc || showLeo) && (

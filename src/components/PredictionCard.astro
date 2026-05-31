@@ -1,6 +1,7 @@
 ---
 import { C_CARD } from "../config/colors";
 import { TIER_STYLES } from "../config/tierStyles";
+import Badge from "./Badge.astro";
 import GamePill from "./GamePill.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 
@@ -83,7 +84,7 @@ const valueFontClass =
       <!-- Pills float over thumbnail -->
       <div class="absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-2.5 z-10">
         <GamePill game={game} size="xs" />
-        <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ${tier.badgeBg}`}>{tier.label}</span>
+        <Badge variant={confidence_tier} surface="opaque" />
       </div>
     </div>
 
@@ -147,7 +148,7 @@ const valueFontClass =
       : "flex items-center justify-between px-4 pt-3 pb-2"
     }>
       <GamePill game={game} size="xs" />
-      <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ${tier.badgeBg}`}>{tier.label}</span>
+        <Badge variant={confidence_tier} surface="opaque" />
     </div>
 
     <div class={`px-4 pb-2 ${thumbnail ? "pt-2" : ""}`}>
