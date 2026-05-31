@@ -273,7 +273,7 @@ All pages must use these canonical components. Never rebuild these patterns inli
 | `SectionHeader.astro` | `label`, `dotColor?`, `pillHref?`, `pillLabel?` | `// SECTION TITLE` header row used on every section. Automatically switches to `justify-between` split variant when pill is present. `label` must include `// ` prefix. |
 | `StatBox.astro` | `value`, `label`, `sub?`, `color?` | Single key-metric card. Used in hero stat strips, Health Monitor, database. |
 | `CardFooter.astro` | `chartId?` or `anchorId+sources+shareText` | Standard `source · GTAVI.AI · Share` footer on all cards and chart sections. |
-| `CrossLinks.astro` | `context` | Site-wide "Related Intelligence" bottom strip. |
+| `CrossLinks.astro` | `context` | "Related Intelligence" tile strip. Default use: one bar at the bottom of every page via `crossLinksContext` prop on `<Base>`. Mid-page use permitted as a section bridge — but never two CrossLinks consecutive, and never both a mid-page and bottom bar without substantial content between them. |
 
 ### Chart teasers / content cards
 
