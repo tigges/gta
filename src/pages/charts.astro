@@ -200,9 +200,12 @@ const chartsInOrder = CHARTS_PAGE_ORDER.map(id => getChart(id)).filter(Boolean) 
   let activeTitle    = "All";
   let activeCategory = "All";
 
-  // Honour ?title= URL param on load
+  // Honour ?title= URL param on load — but ONLY for selectable title pills.
+  // Unknown / non-pill values (e.g. "franchise") fall back to the default
+  // "All" view so the page never lands in a filtered state with no active pill.
+  const SELECTABLE_TITLES = new Set(["All", "gta-vi", "gta-online", "gta-v"]);
   const titleParam = new URLSearchParams(window.location.search).get("title");
-  if (titleParam) activeTitle = titleParam;
+  if (titleParam && SELECTABLE_TITLES.has(titleParam)) activeTitle = titleParam;
 
   // ── Filter active/inactive styling from semanticTypes registry ──────────
   // Active = pillStyle(colorToken); Inactive = muted border + dim text
