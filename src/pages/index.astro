@@ -7,6 +7,7 @@ import SectionHeader from "../components/SectionHeader.astro";
 import NewsletterSignup from "../components/NewsletterSignup.astro";
 import ShareDropdown from "../components/ShareDropdown.astro";
 import ChartTeaserSearchSignal from "../components/charts/ChartTeaserSearchSignal.astro";
+import TeaserBar from "../components/TeaserBar.astro";
 
 import type { TrailersData, Prediction, FeaturesData, TrailerVelocityData, TrailerAnalysisData } from "../types/gta";
 
@@ -286,32 +287,9 @@ const t2TypeCounts = t2Events.reduce((acc: Record<string,number>, e: any) => {
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         SECTION NAV — visual deep links to all major sections
+         TEASER BAR — deep links to top-value content
     ═══════════════════════════════════════════════════════ -->
-    <section>
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Explore the intelligence layer</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        {([
-          { href: "/gta-vi/intel",  label: "VI Intel",   sub: "Cast · locations · predictions", img: "/assets/gta6/characters/Jason_Duval_01.jpg",    accent: "border-gta-gold/30",   badge: "text-gta-gold",   pos: "center top" },
-          { href: "/charts",    label: "Charts",     sub: "D3 analytics · live signals",    img: "/assets/gta6/locations/Vice_City_01.jpg",         accent: "border-indigo-500/30", badge: "text-indigo-300", pos: "center 30%" },
-          { href: "/database",  label: "Database",   sub: "1,715 entities · 665 vehicles",  img: "/assets/gta6/characters/Raul_Bautista_01.jpg",   accent: "border-gta-teal/30",   badge: "text-gta-teal",   pos: "center top" },
-          { href: "/franchise", label: "Franchise",  sub: "30yr history · DLC · sales",     img: "/assets/gta6/locations/Port_Gellhorn_03.jpg",    accent: "border-purple-500/30", badge: "text-purple-300", pos: "center 40%" },
-          { href: "/news",      label: "News",       sub: "Rockstar · community · live",    img: "/assets/gta6/locations/Leonida_Keys_01.jpg",     accent: "border-green-500/30",  badge: "text-green-300",  pos: "center 50%" },
-        ] as const).map(s => (
-          <a href={s.href} class={`group relative overflow-hidden rounded-xl border ${s.accent} hover:brightness-110 transition-all duration-300`} style="min-height:120px;background:var(--c-card)">
-            <img src={s.img} alt="" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-45 transition-opacity duration-500 scale-105 group-hover:scale-110 transition-transform duration-700" style={`object-position:${s.pos}`} loading="lazy" aria-hidden="true" />
-            <div class="absolute inset-0" style="background:linear-gradient(to top,#131316 20%,transparent 80%)"></div>
-            <div class="relative p-4 h-full flex flex-col justify-end">
-              <div class={`text-[10px] font-mono font-bold ${s.badge} mb-0.5 uppercase tracking-widest`}>{s.label}</div>
-              <div class="text-[10px] text-zinc-500 leading-snug">{s.sub}</div>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
+    <TeaserBar />
 
     <!-- ═══════════════════════════════════════════════════════
          FEATURE TRACKER TEASER
