@@ -20,7 +20,7 @@
 import EmbedBase from "../../../../layouts/EmbedBase.astro";
 import PredictionCard from "../../../../components/PredictionCard.astro";
 import type { GetStaticPaths } from "astro";
-import predRaw from "../../../../../data/gta-6/predictions.json";
+import predRaw from "../../../../config/predictions";
 
 export const getStaticPaths: GetStaticPaths = () => {
   return (predRaw as any).predictions.map((p: any) => ({
