@@ -290,40 +290,6 @@ const featuredIncome = incomeList
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════
-         NAVIGATION TILES
-    ═══════════════════════════════════════════════════════ -->
-    <section>
-      <SectionHeader label="// Explore GTA VI" dotColor="var(--c-text-4)" />
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {[
-          { href: "/gta-vi/intel",    label: "Intelligence & Predictions", sub: `${predictions.length} signals · confirmed · reported · predicted`, badge: "Intelligence", thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg" },
-          { href: "/gta-vi/trailers", label: "Trailers & Analysis",        sub: "Trailer 1 & 2 · view velocity · entity index",                    badge: "Analysis",       thumb: `https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg` },
-          { href: "/gta-vi/economy",  label: "Economy & Income",           sub: "Circular model · income sources · Shark Card mechanics",           badge: "Economy",        thumb: "/assets/gta6/locations/Vice_City_03.jpg" },
-          { href: "/gta-vi/buy",      label: "Pre-order Guide",            sub: "PS5 · Xbox Series X|S · edition comparison · retailer watchlist",  badge: "Pre-order",      thumb: "/assets/gta6/locations/Ambrosia_02.jpg" },
-        ].map(tile => (
-          <a href={tile.href}
-             class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-border-mid transition-all"
-             style="background:var(--c-card)">
-            <div class="h-px w-full" style="background:linear-gradient(90deg,var(--c-identity),transparent 60%)"></div>
-            <div class="flex items-center gap-4 p-4">
-              <div class="shrink-0 w-20 h-12 rounded-lg overflow-hidden border border-border-mid">
-                <img src={tile.thumb} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="text-[10px] font-mono text-zinc-500 mb-0.5 uppercase tracking-widest">{tile.badge}</div>
-                <div class="text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors truncate">{tile.label}</div>
-                <div class="text-[11px] font-mono text-zinc-500 leading-snug mt-0.5 line-clamp-1">{tile.sub}</div>
-              </div>
-              <svg class="shrink-0 w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8h10M9 4l4 4-4 4" />
-              </svg>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
-
   </div>
 
 </Base>
