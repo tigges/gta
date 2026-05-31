@@ -1,0 +1,46 @@
+---
+/**
+ * PredictionOrPoll.astro — renders a prediction as EITHER a PredictionCard
+ * (data view) OR a VoteCard (community poll), never both.
+ *
+ * A poll is just a prediction that carries a `poll_question`. This wrapper lets
+ * a single feed mix the two presentations (see feedWithPolls() in
+ * config/predictions.ts) without ever duplicating an id across both forms.
+ *
+ * Usage:
+ *   <PredictionOrPoll prediction={p} mode="prediction" thumbnail={...} />
+ *   <PredictionOrPoll prediction={p} mode="poll" />
+ */
+import PredictionCard from "./PredictionCard.astro";
+import VoteCard from "./VoteCard.astro";
+import type { Prediction } from "../types/gta";
+
+interface Props {
+  prediction: Prediction;
+  mode: "prediction" | "poll";
+  thumbnail?: string | null;
+}
+const { prediction: p, mode, thumbnail = null } = Astro.props;
+---
+
+{mode === "poll" ? (
+  <VoteCard predictionId={p.id} game="gta-vi" />
+) : (
+  <PredictionCard
+    id={p.id}
+    title={p.title}
+    value={p.value}
+    confidence={p.confidence}
+    confidence_tier={p.confidence_tier}
+    basis={p.basis}
+    unit={p.unit}
+    trailer_timestamp={p.trailer_timestamp}
+    prediction_method={p.prediction_method}
+    prediction_range={p.prediction_range}
+    source={p.source}
+    source_type={p.source_type}
+    outcome_verified={p.outcome_verified}
+    outcome_actual={p.outcome_actual}
+    thumbnail={thumbnail ?? (p as any).thumbnail ?? null}
+  />
+)}
