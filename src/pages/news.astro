@@ -98,7 +98,7 @@ const SOURCE_META: Record<string, { color: string; badge: string; tier: string }
   "kotaku-gta":        { color: "text-zinc-300",   badge: "bg-zinc-800 border-zinc-700",              tier: "PRESS"      },
   "eurogamer":         { color: "text-zinc-300",   badge: "bg-zinc-800 border-zinc-700",              tier: "PRESS"      },
   "insider-gaming":    { color: "text-gta-teal",   badge: "bg-gta-teal/10 border-gta-teal/20",       tier: "PRESS"      },
-  "gtaforums-vi":      { color: "text-amber-300",  badge: "bg-amber-900/20 border-amber-600/30",     tier: "COMMUNITY"  },
+  "gtaforums-vi":      { color: "text-gta-bright",  badge: "bg-gta-bright/10 border-gta-bright/25",   tier: "COMMUNITY"  },
   "reddit":            { color: "text-gta-reddit", badge: "bg-gta-reddit/10 border-gta-reddit/20",   tier: "COMMUNITY"  },
 };
 
@@ -312,7 +312,7 @@ const updatedAt = feedData.last_updated;
             {[
               { tier: "OFFICIAL",  color: "text-gta-gold",    badge: "bg-gta-gold/10 border-gta-gold/20",      desc: "Rockstar Games, Take-Two IR, or SEC EDGAR filings. Highest credibility." },
               { tier: "PRESS",     color: "text-gta-gold",   badge: "bg-gta-gold/8 border-gta-gold/25",    desc: "Specialist and mainstream gaming press. Credibility varies by outlet." },
-              { tier: "COMMUNITY", color: "text-amber-300",   badge: "bg-amber-900/20 border-amber-600/30",    desc: "GTAForums megathreads and Reddit r/GTA6 — first-look leaks and discussion." },
+              { tier: "COMMUNITY", color: "text-gta-bright",   badge: "bg-gta-bright/10 border-gta-bright/25",  desc: "GTAForums megathreads and Reddit r/GTA6 — first-look leaks and discussion." },
             ].map(s => (
               <div class="px-4 py-3">
                 <div class="flex items-center gap-2 mb-1">
