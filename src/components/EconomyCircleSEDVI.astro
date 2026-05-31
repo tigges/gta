@@ -59,7 +59,6 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
 
   <!-- ── ROW 1: INJECTION (full width) ─────────────────────────────── -->
   <div class="vi-inject-row">
-    <a class="vi-flow-corner" href="#flow-shark-inject" style="--fb:var(--c-flow-injection)" aria-label="Injection — money flow 4">&#9315;</a>
     <div class="vi-inject-inner">
       <div class="vi-inject-item">
         <div class="vi-blip" style="--bc:var(--c-flow-injection)">
@@ -70,7 +69,10 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
 
       <div class="vi-inject-centre">
         <span class="vi-rockstar-label">Rockstar / Take-Two</span>
-        <span class="vi-inject-title">INJECTION</span>
+        <span class="vi-inject-title-row">
+          <a class="vi-flow-badge" href="#flow-shark-inject" style="--fb:var(--c-flow-injection)" aria-label="Injection — money flow 4">&#9315;</a>
+          <span class="vi-inject-title">INJECTION</span>
+        </span>
         <span class="vi-j-flow-note">J &middot; REAL MONEY &#8594; GTA$</span>
       </div>
 
@@ -225,6 +227,7 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
   <!-- ── ROW 4: Multi-region unity strip ───────────────────────────── -->
   <div class="vi-region-strip">
     <a class="vi-flow-badge" href="#flow-cross-territory" style="--fb:var(--c-economy)" aria-label="Cross-territory carry — money flow 3">&#9314;</a>
+    <span class="vi-region-title">Free Cross-Territory Player Movement</span>
     <div class="vi-region-dots">
       {["Vice City", "Leonida Keys", "Port Gellhorn", "Grassrivers"].map(r => (
         <span class="vi-region-dot">
@@ -330,9 +333,11 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
 .vi-inject-row {
   position: relative;
   border-bottom: 1px solid var(--c-border-1);
+  border-left: 3px solid color-mix(in srgb, var(--c-flow-injection) 55%, transparent);
   background: color-mix(in srgb, var(--c-flow-injection) 5%, transparent);
   padding: 12px 16px 28px;
 }
+.vi-inject-title-row { display: flex; align-items: center; gap: 8px; }
 .vi-inject-inner {
   display: flex;
   align-items: center;
@@ -482,16 +487,16 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
 
 /* ── Flow wayfinding badge — links diagram element → numbered flow ─── */
 .vi-flow-badge {
-  font-family: var(--font-mono, monospace); font-size: 15px; font-weight: 900;
+  font-family: var(--font-mono, monospace); font-size: 18px; font-weight: 900;
   line-height: 1; color: var(--fb, var(--c-text-4)); text-decoration: none; flex-shrink: 0;
 }
 .vi-flow-badge:hover { filter: brightness(1.2); }
-.vi-flow-corner {
-  position: absolute; top: 8px; left: 12px; z-index: 11;
-  font-family: var(--font-mono, monospace); font-size: 15px; font-weight: 900;
-  line-height: 1; color: var(--fb, var(--c-text-4)); text-decoration: none;
+
+/* Flow ③ title on the multi-region strip */
+.vi-region-title {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--c-economy); white-space: nowrap;
 }
-.vi-flow-corner:hover { filter: brightness(1.2); }
 
 /* ── PPI index chip inside the Innovation box (flow 5 — a measure) ─── */
 .vi-ppi-chip {

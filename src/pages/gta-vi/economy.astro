@@ -9,7 +9,6 @@ import Base from "../../layouts/Base.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy     from "../../components/CircularEconomy.astro";
 import EconomyCircleSEDVI  from "../../components/EconomyCircleSEDVI.astro";
-import EconomyFlowGTAVI    from "../../components/EconomyFlowGTAVI.astro";
 import ChartComplexityHtml from "../../components/ChartComplexityHtml.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
@@ -99,167 +98,8 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
          GTA VI SED — SIMPLIFIED ECONOMY DIAGRAM
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// The GTA VI Economy · Simplified · where does the money go?" dotColor="var(--c-gta-dollar)" />
+      <SectionHeader label="// The Full GTA VI Economy Model · Where Does the Money Go?" dotColor="var(--c-gta-dollar)" />
       <EconomyCircleSEDVI fullEconomyHref="/gta-vi/economy#eco-gta-vi" />
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════
-         FULL GTA VI ECONOMY FLOW DIAGRAM (HTML)
-    ═══════════════════════════════════════════════════════ -->
-    <section>
-      <SectionHeader label="// Full GTA VI Economy Model · All Nodes + Flows" dotColor="var(--c-title-vi)" />
-      <EconomyFlowGTAVI />
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════
-         CIRCULAR ECONOMY DIAGRAM (D3)
-    ═══════════════════════════════════════════════════════ -->
-    <section>
-      <SectionHeader label="// Projected Circular Economy · D3 Reference" dotColor="var(--c-title-vi)" />
-      <div class="rounded-xl border border-border-dim p-6" style="background:var(--c-bg)">
-        <CircularEconomy titleId="gta-6" mode="full" />
-        <CardFooter anchorId="eco-gta-vi" sources="Source: GTAVI.AI Economic Model — predicted pre-launch · GTA Online precedent · trailer analysis" shareText="GTA VI predicted economy: Full MMT sovereign with multi-region model. Predicted to surpass GTA Online in complexity at launch. 10 active income predictions tracked." />
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════
-         COMPLEXITY RADAR
-    ═══════════════════════════════════════════════════════ -->
-    <section>
-      <SectionHeader label="// Economic Complexity — Franchise Context" dotColor="var(--c-title-vi)" pillHref="/franchise/economics" pillLabel="All 10 economies →" />
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChartComplexityHtml titleId="gta-6" showAverage={true} />
-        <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
-          <div class="px-5 py-3 border-b border-border-dim">
-            <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Franchise Arc — Complexity Trajectory</div>
-            <div class="text-[10px] font-mono text-zinc-600 mt-0.5">Complexity score / 17 max per title</div>
-          </div>
-          <div class="px-5 py-4 flex flex-col gap-2">
-            {economyData.economies.map((e) => {
-              const pct = Math.round((e.complexity_score / 17) * 100);
-              const isGtaVI = e.title_id === "gta-6";
-              const isRegression = e.regression_era;
-              const color = isGtaVI ? "var(--c-brand)" : isRegression ? "var(--c-alert)" : "var(--c-live)";
-              return (
-                <div class="flex items-center gap-3">
-                  <div class="w-20 shrink-0 text-[11px] font-mono text-zinc-500 text-right">{e.short}</div>
-                  <div class="flex-1 h-2 rounded-full overflow-hidden" style="background:var(--c-border-1)">
-                    <div class="h-full rounded-full transition-all"
-                         style={`width:${pct}%;background:${color};opacity:${isRegression ? 0.5 : 0.75}${e.projected ? ";border-right:2px dashed " + color : ""}`}></div>
-                  </div>
-                  <div class="w-6 text-right text-[11px] font-mono shrink-0" style={`color:${color}`}>{e.complexity_score}</div>
-                </div>
-              );
-            })}
-          </div>
-          <div class="px-5 pb-3 pt-0 text-[11px] font-mono text-zinc-600 leading-relaxed border-t border-border-dim pt-3">
-            {economyData.complexity_chart_note}
-          </div>
-          <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
-            <div class="flex items-center gap-4 text-[11px] font-mono text-zinc-500 flex-wrap">
-              <span class="flex items-center gap-1.5">
-                <div class="w-4 h-1.5 rounded-full shrink-0" style="background:var(--c-live);opacity:0.75"></div>
-                Standard
-              </span>
-              <span class="flex items-center gap-1.5">
-                <div class="w-4 h-1.5 rounded-full shrink-0" style="background:var(--c-alert);opacity:0.5"></div>
-                Regression era
-              </span>
-              <span class="flex items-center gap-1.5">
-                <div class="w-4 h-1.5 rounded-full shrink-0" style="background:var(--c-brand);opacity:0.75"></div>
-                GTA VI
-              </span>
-            </div>
-            <div class="flex items-center gap-2 shrink-0">
-              <span class="text-[10px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
-              <ShareDropdown anchorId="eco-complexity" shareText="GTA VI projected economic complexity: 17/17 — the franchise maximum. Every prior title mapped across 5 dimensions. GTAVI.AI" size="sm" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════
-         THE EUROZONE ANALOGY
-    ═══════════════════════════════════════════════════════ -->
-    <section>
-      <SectionHeader label="// The Eurozone Analogy" dotColor="var(--c-brand)" class="mb-6" />
-      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
-        <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
-          <div class="px-6 py-5">
-            <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-3">GTA VI Model</div>
-            <div class="space-y-2.5">
-              {[
-                { label: "Monetary authority", value: "Rockstar / Take-Two (as ECB)" },
-                { label: "Currency", value: "GTA$ — single non-convertible currency" },
-                { label: "Region 1 (core)", value: "Vice City — urban, dense, high-wage" },
-                { label: "Region 2 (periphery)", value: "Leonida — rural, sparse, low-wage" },
-                { label: "Real-money injection", value: "Shark Cards — cross-region float" },
-                { label: "Inflation mechanism", value: "Nerf-driven + SC ratio + regional divergence" },
-              ].map(r => (
-                <div class="flex items-start gap-3">
-                  <div class="text-[11px] font-mono text-zinc-500 w-36 shrink-0 pt-0.5">{r.label}</div>
-                  <div class="text-[10px] font-mono text-zinc-200">{r.value}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div class="px-6 py-5">
-            <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-3">Eurozone Parallel</div>
-            <div class="space-y-2.5">
-              {[
-                { label: "Monetary authority", value: "European Central Bank" },
-                { label: "Currency", value: "Euro — single shared currency" },
-                { label: "Core", value: "Germany / France — high productivity, high wages" },
-                { label: "Periphery", value: "Greece / Portugal — lower wages, lower costs" },
-                { label: "External capital", value: "Bond markets, Target2 balances" },
-                { label: "Inflation mechanism", value: "ECB rate policy + structural divergence" },
-              ].map(r => (
-                <div class="flex items-start gap-3">
-                  <div class="text-[11px] font-mono text-zinc-500 w-36 shrink-0 pt-0.5">{r.label}</div>
-                  <div class="text-[10px] font-mono text-zinc-200">{r.value}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div class="px-6 py-4 border-t border-border-dim">
-          <p class="text-[11px] font-mono text-zinc-300 leading-relaxed">
-            GTA VI would be the first virtual economy structurally analogous to the Eurozone — one monetary authority,
-            two structurally different regional economies, one currency. If price divergence is real,
-            GTA-RPP (Regional Purchasing Parity) would differ by territory — a new research axis unique to this site.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════
-         GTA-RPP — REGIONAL PURCHASING PARITY
-    ═══════════════════════════════════════════════════════ -->
-    <section>
-      <SectionHeader label="// GTA-RPP — Regional Purchasing Parity" dotColor="var(--c-live)" pillLabel="Day-1 ready · awaiting launch data" class="mb-6" />
-      <div class="rounded-xl border border-gta-teal/20 p-6" style="background:color-mix(in srgb,var(--c-growth) 4%,var(--c-bg))">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
-          {[
-            { label: "Vice City RPP",  value: "—",     sub: "Populates at launch", color: "var(--c-brand)" },
-            { label: "Leonida RPP",    value: "—",     sub: "Populates at launch", color: "var(--c-live)" },
-            { label: "RPP Ratio",      value: "—",     sub: "VC ÷ Leonida", color: "var(--c-growth)" },
-          ].map(s => (
-            <div class="rounded-lg border border-border-mid px-4 py-3 text-center" style="background:var(--c-card)">
-              <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1">{s.label}</div>
-              <div class="text-2xl font-mono font-black" style={`color:${s.color};opacity:var(--o-muted)`}>{s.value}</div>
-              <div class="text-[11px] font-mono text-zinc-500 mt-1">{s.sub}</div>
-            </div>
-          ))}
-        </div>
-        <div class="text-[11px] font-mono text-gta-teal leading-relaxed">
-          <strong class="text-gta-teal">Formula:</strong> GTA-RPP = regional basket cost ÷ regional top hourly yield.
-          The GTA-PPI (currently tracking GTA Online) is the single-market predecessor.
-          GTA-RPP extends this to measure cross-territory purchasing power divergence — if Vice City wages are
-          higher but prices are higher by a larger factor, Leonida players have higher real purchasing power.
-          Computed nightly from confirmed launch-day data. <span class="text-gta-teal">Status: {(gta6Rpp as { status?: string }).status}.</span>
-        </div>
-      </div>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -479,6 +319,159 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
       </div>
 
     </section><!-- /five-flows -->
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         CIRCULAR ECONOMY DIAGRAM (D3)
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader label="// Projected Circular Economy · D3 Reference" dotColor="var(--c-title-vi)" />
+      <div class="rounded-xl border border-border-dim p-6" style="background:var(--c-bg)">
+        <CircularEconomy titleId="gta-6" mode="full" />
+        <CardFooter anchorId="eco-gta-vi" sources="Source: GTAVI.AI Economic Model — predicted pre-launch · GTA Online precedent · trailer analysis" shareText="GTA VI predicted economy: Full MMT sovereign with multi-region model. Predicted to surpass GTA Online in complexity at launch. 10 active income predictions tracked." />
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         COMPLEXITY RADAR
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader label="// Economic Complexity — Franchise Context" dotColor="var(--c-title-vi)" pillHref="/franchise/economics" pillLabel="All 10 economies →" />
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <ChartComplexityHtml titleId="gta-6" showAverage={true} />
+        <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+          <div class="px-5 py-3 border-b border-border-dim">
+            <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Franchise Arc — Complexity Trajectory</div>
+            <div class="text-[10px] font-mono text-zinc-600 mt-0.5">Complexity score / 17 max per title</div>
+          </div>
+          <div class="px-5 py-4 flex flex-col gap-2">
+            {economyData.economies.map((e) => {
+              const pct = Math.round((e.complexity_score / 17) * 100);
+              const isGtaVI = e.title_id === "gta-6";
+              const isRegression = e.regression_era;
+              const color = isGtaVI ? "var(--c-brand)" : isRegression ? "var(--c-alert)" : "var(--c-live)";
+              return (
+                <div class="flex items-center gap-3">
+                  <div class="w-20 shrink-0 text-[11px] font-mono text-zinc-500 text-right">{e.short}</div>
+                  <div class="flex-1 h-2 rounded-full overflow-hidden" style="background:var(--c-border-1)">
+                    <div class="h-full rounded-full transition-all"
+                         style={`width:${pct}%;background:${color};opacity:${isRegression ? 0.5 : 0.75}${e.projected ? ";border-right:2px dashed " + color : ""}`}></div>
+                  </div>
+                  <div class="w-6 text-right text-[11px] font-mono shrink-0" style={`color:${color}`}>{e.complexity_score}</div>
+                </div>
+              );
+            })}
+          </div>
+          <div class="px-5 pb-3 pt-0 text-[11px] font-mono text-zinc-600 leading-relaxed border-t border-border-dim pt-3">
+            {economyData.complexity_chart_note}
+          </div>
+          <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
+            <div class="flex items-center gap-4 text-[11px] font-mono text-zinc-500 flex-wrap">
+              <span class="flex items-center gap-1.5">
+                <div class="w-4 h-1.5 rounded-full shrink-0" style="background:var(--c-live);opacity:0.75"></div>
+                Standard
+              </span>
+              <span class="flex items-center gap-1.5">
+                <div class="w-4 h-1.5 rounded-full shrink-0" style="background:var(--c-alert);opacity:0.5"></div>
+                Regression era
+              </span>
+              <span class="flex items-center gap-1.5">
+                <div class="w-4 h-1.5 rounded-full shrink-0" style="background:var(--c-brand);opacity:0.75"></div>
+                GTA VI
+              </span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[10px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+              <ShareDropdown anchorId="eco-complexity" shareText="GTA VI projected economic complexity: 17/17 — the franchise maximum. Every prior title mapped across 5 dimensions. GTAVI.AI" size="sm" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         THE EUROZONE ANALOGY
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader label="// The Eurozone Analogy" dotColor="var(--c-brand)" class="mb-6" />
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
+          <div class="px-6 py-5">
+            <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-3">GTA VI Model</div>
+            <div class="space-y-2.5">
+              {[
+                { label: "Monetary authority", value: "Rockstar / Take-Two (as ECB)" },
+                { label: "Currency", value: "GTA$ — single non-convertible currency" },
+                { label: "Region 1 (core)", value: "Vice City — urban, dense, high-wage" },
+                { label: "Region 2 (periphery)", value: "Leonida — rural, sparse, low-wage" },
+                { label: "Real-money injection", value: "Shark Cards — cross-region float" },
+                { label: "Inflation mechanism", value: "Nerf-driven + SC ratio + regional divergence" },
+              ].map(r => (
+                <div class="flex items-start gap-3">
+                  <div class="text-[11px] font-mono text-zinc-500 w-36 shrink-0 pt-0.5">{r.label}</div>
+                  <div class="text-[10px] font-mono text-zinc-200">{r.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div class="px-6 py-5">
+            <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-3">Eurozone Parallel</div>
+            <div class="space-y-2.5">
+              {[
+                { label: "Monetary authority", value: "European Central Bank" },
+                { label: "Currency", value: "Euro — single shared currency" },
+                { label: "Core", value: "Germany / France — high productivity, high wages" },
+                { label: "Periphery", value: "Greece / Portugal — lower wages, lower costs" },
+                { label: "External capital", value: "Bond markets, Target2 balances" },
+                { label: "Inflation mechanism", value: "ECB rate policy + structural divergence" },
+              ].map(r => (
+                <div class="flex items-start gap-3">
+                  <div class="text-[11px] font-mono text-zinc-500 w-36 shrink-0 pt-0.5">{r.label}</div>
+                  <div class="text-[10px] font-mono text-zinc-200">{r.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 border-t border-border-dim">
+          <p class="text-[11px] font-mono text-zinc-300 leading-relaxed">
+            GTA VI would be the first virtual economy structurally analogous to the Eurozone — one monetary authority,
+            two structurally different regional economies, one currency. If price divergence is real,
+            GTA-RPP (Regional Purchasing Parity) would differ by territory — a new research axis unique to this site.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         GTA-RPP — REGIONAL PURCHASING PARITY
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader label="// GTA-RPP — Regional Purchasing Parity" dotColor="var(--c-live)" pillLabel="Day-1 ready · awaiting launch data" class="mb-6" />
+      <div class="rounded-xl border border-gta-teal/20 p-6" style="background:color-mix(in srgb,var(--c-growth) 4%,var(--c-bg))">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
+          {[
+            { label: "Vice City RPP",  value: "—",     sub: "Populates at launch", color: "var(--c-brand)" },
+            { label: "Leonida RPP",    value: "—",     sub: "Populates at launch", color: "var(--c-live)" },
+            { label: "RPP Ratio",      value: "—",     sub: "VC ÷ Leonida", color: "var(--c-growth)" },
+          ].map(s => (
+            <div class="rounded-lg border border-border-mid px-4 py-3 text-center" style="background:var(--c-card)">
+              <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1">{s.label}</div>
+              <div class="text-2xl font-mono font-black" style={`color:${s.color};opacity:var(--o-muted)`}>{s.value}</div>
+              <div class="text-[11px] font-mono text-zinc-500 mt-1">{s.sub}</div>
+            </div>
+          ))}
+        </div>
+        <div class="text-[11px] font-mono text-gta-teal leading-relaxed">
+          <strong class="text-gta-teal">Formula:</strong> GTA-RPP = regional basket cost ÷ regional top hourly yield.
+          The GTA-PPI (currently tracking GTA Online) is the single-market predecessor.
+          GTA-RPP extends this to measure cross-territory purchasing power divergence — if Vice City wages are
+          higher but prices are higher by a larger factor, Leonida players have higher real purchasing power.
+          Computed nightly from confirmed launch-day data. <span class="text-gta-teal">Status: {(gta6Rpp as { status?: string }).status}.</span>
+        </div>
+      </div>
+    </section>
+
 
 
     <!-- ═══════════════════════════════════════════════════════
