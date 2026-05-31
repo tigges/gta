@@ -1,7 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
 import PredictionCard from "../../components/PredictionCard.astro";
-import CrossLinks from "../../components/CrossLinks.astro";
 import VoteCard from "../../components/VoteCard.astro";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
@@ -76,7 +75,7 @@ const CAT_THUMBS: Record<string,string> = {
   title="Predictions"
   description="GTA VI predictions — confidence-scored from 30 years of GTA data. Launch price, income yields, Shark Card mechanics, and what the franchise numbers say about GTA VI's economy."
   ogPage="vi-intel"
-  crossLinksContext="gta-vi-intel"
+  crossLinksContext="vi-intel"
 >
 <script is:inline type="application/ld+json">{JSON.stringify({
   "@context": "https://schema.org",
@@ -214,7 +213,6 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
 
-    <CrossLinks context="vi-intel-predictions" />
 
     <!-- ═══════════════════════════════════════════════════════
          COMMUNITY VOTES
@@ -296,7 +294,6 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
 
-    <CrossLinks context="vi-intel-cast" />
 
     <!-- ═══════════════════════════════════════════════════════
          LEONIDA — LOCATIONS
@@ -335,7 +332,6 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
 
-    <CrossLinks context="vi-intel-locations" />
 
 
     <!-- ═══════════════════════════════════════════════════════
@@ -412,7 +408,6 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
 
-    <CrossLinks context="vi-intel-features" />
 
     <!-- ═══════════════════════════════════════════════════════
          GTA VI FAQ
