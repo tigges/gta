@@ -258,6 +258,7 @@ const inflationChannels = [
 .inject-row {
   position: relative;
   border-bottom: 1px solid var(--c-border-1);
+  border-left: 3px solid color-mix(in srgb, var(--c-flow-injection) 55%, transparent);
   background: color-mix(in srgb, var(--c-flow-injection) 5%, transparent);
   padding: 12px 16px 28px; /* bottom padding for J↓ straddling the lower border */
 }
@@ -622,7 +623,7 @@ const inflationChannels = [
   .blip-lg       { width: 42px; height: 42px; border-width: 2px; }
   .icon-label    { font-size: 9px; text-align: left; }
   /* Left borders stay but thinner on mobile */
-  .income-box, .consump-box, .invest-box { border-left-width: 2px; }
+  .inject-row, .income-box, .consump-box, .invest-box { border-left-width: 2px; }
 
   /* Cycle note: drop margin-left:auto so it spans full width below title */
   .cycle-note    { margin-left: 0; width: 100%; letter-spacing: 0; }
