@@ -27,26 +27,44 @@ interface Props {
   href: string;
   linkLabel?: string;
   accent?: string;
-  maxH?: number;        // image max height in px (default 340)
+  maxH?: number;        // image max height in px (default 340), used when `ratio` is unset
+  fit?: "contain" | "cover";   // "cover" + ratio crops to fill the band
+  imgPos?: string;      // object-position when fit="cover" (e.g. "center top")
+  ratio?: string;       // CSS aspect-ratio for the image band (e.g. "1203 / 540"); enables cropping
 }
 const {
   img, kicker, headline, insight, href,
   linkLabel = "Open the live chart",
   accent = "var(--c-brand)",
   maxH = 340,
+  fit = "contain",
+  imgPos = "center",
+  ratio,
 } = Astro.props;
 ---
 
 <div class="cst rounded-xl border border-border-dim overflow-hidden transition-all" style={`background:var(--c-card);--accent:${accent}`}>
   <div class="h-px w-full" style={`background:linear-gradient(90deg,${accent},transparent 60%)`}></div>
   <a href={href} class="group block overflow-hidden" style="background:var(--c-bg-deep)" aria-label={headline}>
-    <img
-      src={img}
-      alt={headline}
-      class="w-full object-contain transition-transform duration-500 group-hover:scale-[1.01]"
-      style={`max-height:${maxH}px`}
-      loading="lazy"
-    />
+    {ratio ? (
+      <div class="w-full overflow-hidden" style={`aspect-ratio:${ratio}`}>
+        <img
+          src={img}
+          alt={headline}
+          class="w-full h-full transition-transform duration-500 group-hover:scale-[1.01]"
+          style={`object-fit:${fit};object-position:${imgPos}`}
+          loading="lazy"
+        />
+      </div>
+    ) : (
+      <img
+        src={img}
+        alt={headline}
+        class="w-full transition-transform duration-500 group-hover:scale-[1.01]"
+        style={`object-fit:${fit};object-position:${imgPos};max-height:${maxH}px`}
+        loading="lazy"
+      />
+    )}
   </a>
   <div class="px-5 py-4 border-t border-border-dim flex items-end justify-between gap-4 flex-wrap">
     <div class="min-w-0">
