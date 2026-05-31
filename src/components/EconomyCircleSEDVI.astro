@@ -59,6 +59,7 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
 
   <!-- ── ROW 1: INJECTION (full width) ─────────────────────────────── -->
   <div class="vi-inject-row">
+    <a class="vi-flow-corner" href="#flow-shark-inject" style="--fb:var(--c-flow-injection)" aria-label="Injection — money flow 4">&#9315;</a>
     <div class="vi-inject-inner">
       <div class="vi-inject-item">
         <div class="vi-blip" style="--bc:var(--c-flow-injection)">
@@ -127,24 +128,28 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
           <span class="vi-box-title" style="color:var(--c-growth)">INCOME</span>
           <span class="vi-cycle-note" style="color:var(--c-growth)">Y grows &#8594; next cycle</span>
         </div>
-        <div class="vi-icon-row">
-          <div class="vi-icon-item">
-            <div class="vi-blip-lg" style="--bc:var(--c-live)">
-              <HudIcon name="mission" size={30} style="color:#fff"/>
-            </div>
-            <span class="vi-icon-label">Missions</span>
-            <span class="vi-icon-sub">all regions</span>
-          </div>
-          <div class="vi-icon-item">
-            <div class="vi-blip-lg" style="--bc:var(--c-growth)">
-              <HudIcon name="passive" size={30} style="color:#fff"/>
-            </div>
-            <span class="vi-icon-label">Passive</span>
-            <span class="vi-icon-sub">businesses</span>
-          </div>
+        <!-- Two regional income streams — one shared GTA$, two wage levels -->
+        <div class="vi-yreg-stack">
+          <a class="vi-yreg" href="#flow-vc-income" aria-label="Y1 Vice City income — money flow 1">
+            <span class="vi-flow-badge" style="--fb:var(--c-growth)">&#9312;</span>
+            <span class="vi-yreg-text">
+              <span class="vi-yreg-name" style="color:var(--c-growth)">Y1 &middot; Vice City</span>
+              <span class="vi-yreg-sub">High-wage urban territory</span>
+            </span>
+            <span class="vi-wage" aria-hidden="true"><span class="vi-wage-fill" style="width:90%"></span></span>
+          </a>
+          <div class="vi-yreg-hr"></div>
+          <a class="vi-yreg" href="#flow-leonida-income" aria-label="Y2 Leonida income — money flow 2">
+            <span class="vi-flow-badge" style="--fb:var(--c-growth)">&#9313;</span>
+            <span class="vi-yreg-text">
+              <span class="vi-yreg-name" style="color:var(--c-growth)">Y2 &middot; Leonida</span>
+              <span class="vi-yreg-sub">Lower-wage rural territory</span>
+            </span>
+            <span class="vi-wage" aria-hidden="true"><span class="vi-wage-fill vi-wage-dim" style="width:55%"></span></span>
+          </a>
         </div>
         <div class="vi-region-tag" style="border-color:color-mix(in srgb,var(--c-growth) 30%,transparent);color:var(--c-growth)">
-          VC high-wage · Leonida lower-wage · RPP tracks the gap
+          &#9656; Earned via missions &middot; passive &middot; heists — RPP tracks the VC&#8596;Leonida gap
         </div>
       </div>
     </div>
@@ -210,7 +215,7 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
           </div>
         </div>
         <div class="vi-region-tag" style="border-color:color-mix(in srgb,var(--c-economy) 30%,transparent);color:var(--c-economy)">
-          VC premium ROI · Leonida lower cost · cross-region arbitrage
+          &#9656; VC premium ROI · Leonida lower cost · cross-region arbitrage
         </div>
       </div>
     </div>
@@ -219,6 +224,7 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
 
   <!-- ── ROW 4: Multi-region unity strip ───────────────────────────── -->
   <div class="vi-region-strip">
+    <a class="vi-flow-badge" href="#flow-cross-territory" style="--fb:var(--c-economy)" aria-label="Cross-territory carry — money flow 3">&#9314;</a>
     <div class="vi-region-dots">
       {["Vice City", "Leonida Keys", "Port Gellhorn", "Grassrivers"].map(r => (
         <span class="vi-region-dot">
@@ -239,6 +245,10 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
       </div>
       <div class="vi-innov-title">Regional purchasing parity — two structural economies, one currency</div>
       <div class="vi-innov-note">One monetary authority (Rockstar as ECB), two structurally different regional economies. If price divergence is real, GTA-RPP differs by region — a research axis unique to this site.</div>
+      <a class="vi-ppi-chip" href="#flow-vi-ppi" aria-label="Regional purchasing-power index — money flow 5">
+        <span class="vi-flow-badge" style="--fb:var(--c-brand)">&#9316;</span>
+        <span class="vi-ppi-chip-text">Measured by <strong>GTA-PPI</strong> (VC) + <strong>GTA-RPP</strong> (VC&#247;Leonida) — purchasing-power index, not a money flow</span>
+      </a>
     </div>
     <div class="vi-inflation">
       <div class="vi-inf-header">↑ Inflation Channels</div>
@@ -421,7 +431,7 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
 
 /* ── Row 3: Y = C + I boxes ──────────────────────────────────────── */
 .vi-box-row { display: flex; align-items: stretch; }
-.vi-box { flex: 1; min-width: 0; position: relative; }
+.vi-box { flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; }
 .vi-income-box  { background: color-mix(in srgb, var(--c-growth) 22%, var(--c-bg-deep)); border-left: 3px solid color-mix(in srgb, var(--c-growth) 55%, transparent); }
 .vi-consump-box { background: color-mix(in srgb, var(--c-flow-spending) 20%, var(--c-bg-deep)); border-left: 3px solid color-mix(in srgb, var(--c-flow-spending) 55%, transparent); }
 .vi-invest-box  { background: color-mix(in srgb, var(--c-economy) 18%, var(--c-bg-deep)); border-left: 3px solid color-mix(in srgb, var(--c-economy) 55%, transparent); }
@@ -431,7 +441,7 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
   font-size: 1.1rem; font-weight: 900; background: var(--c-card);
   padding: 0 4px; z-index: 10; line-height: 1;
 }
-.vi-box-inner { padding: 16px 14px; display: flex; flex-direction: column; gap: 8px; }
+.vi-box-inner { flex: 1; padding: 18px 14px; display: flex; flex-direction: column; gap: 10px; }
 .vi-box-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .vi-box-title { font-size: clamp(0.75rem, 2vw, 1.1rem); font-weight: 900; line-height: 1; }
 .vi-icon-row { display: flex; gap: 12px; }
@@ -440,12 +450,60 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
 .vi-icon-sub   { font-size: 9px; color: var(--c-text-5); text-align: center; }
 .vi-cycle-note { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; opacity: var(--o-secondary); margin-left: auto; text-align: right; }
 
-/* Regional context tag inside each box */
+/* Regional finding tag inside each box — first-class, pinned to box bottom */
 .vi-region-tag {
-  font-size: 9px; font-family: var(--font-mono, monospace);
-  border: 1px solid; border-radius: 4px;
-  padding: 3px 7px; line-height: 1.4; opacity: .7;
+  margin-top: auto;
+  font-size: 11px; font-family: var(--font-mono, monospace);
+  border: 1px solid; border-radius: 5px;
+  padding: 5px 9px; line-height: 1.45;
 }
+
+/* ── Regional income streams (Y1 / Y2) inside the single Y box ─────── */
+.vi-yreg-stack { display: flex; flex-direction: column; }
+.vi-yreg {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 5px; border-radius: 6px;
+  text-decoration: none; transition: background .15s ease;
+}
+.vi-yreg:hover { background: color-mix(in srgb, var(--c-growth) 9%, transparent); }
+.vi-yreg-hr {
+  height: 1px; margin: 1px 5px;
+  background: color-mix(in srgb, var(--c-growth) 18%, var(--c-border-1));
+}
+.vi-yreg-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.vi-yreg-name { font-size: 12px; font-weight: 800; line-height: 1.1; }
+.vi-yreg-sub  { font-size: 10px; color: var(--c-text-4); line-height: 1.2; }
+.vi-wage {
+  width: 48px; height: 6px; border-radius: 3px; flex-shrink: 0; overflow: hidden;
+  background: color-mix(in srgb, var(--c-growth) 12%, var(--c-bg-deep));
+}
+.vi-wage-fill { display: block; height: 100%; border-radius: 3px; background: var(--c-growth); }
+.vi-wage-dim  { background: color-mix(in srgb, var(--c-growth) 55%, var(--c-bg-deep)); }
+
+/* ── Flow wayfinding badge — links diagram element → numbered flow ─── */
+.vi-flow-badge {
+  font-family: var(--font-mono, monospace); font-size: 15px; font-weight: 900;
+  line-height: 1; color: var(--fb, var(--c-text-4)); text-decoration: none; flex-shrink: 0;
+}
+.vi-flow-badge:hover { filter: brightness(1.2); }
+.vi-flow-corner {
+  position: absolute; top: 8px; left: 12px; z-index: 11;
+  font-family: var(--font-mono, monospace); font-size: 15px; font-weight: 900;
+  line-height: 1; color: var(--fb, var(--c-text-4)); text-decoration: none;
+}
+.vi-flow-corner:hover { filter: brightness(1.2); }
+
+/* ── PPI index chip inside the Innovation box (flow 5 — a measure) ─── */
+.vi-ppi-chip {
+  display: flex; align-items: center; gap: 8px; margin-top: 8px;
+  padding: 7px 9px; border-radius: 6px; text-decoration: none;
+  border: 1px solid color-mix(in srgb, var(--c-brand) 28%, transparent);
+  background: color-mix(in srgb, var(--c-brand) 7%, transparent);
+  transition: background .15s ease;
+}
+.vi-ppi-chip:hover { background: color-mix(in srgb, var(--c-brand) 13%, transparent); }
+.vi-ppi-chip-text { font-size: 10px; color: var(--c-text-3); line-height: 1.4; }
+.vi-ppi-chip-text strong { color: var(--c-brand); font-weight: 700; }
 
 .vi-divider-eq, .vi-divider-plus {
   display: flex; align-items: center; justify-content: center;
@@ -578,15 +636,22 @@ const shareText = "GTA VI projected economy: (J) + Y = C + I across multiple reg
   .vi-gta-label     { font-size: 11px; }
   .vi-gta-sub       { display: none; }
   .vi-tri-in, .vi-tri-out { border-top-width: 16px; border-bottom-width: 16px; border-left-width: 20px; }
-  .vi-box-inner     { padding: 10px 8px; gap: 4px; }
-  .vi-icon-row      { flex-direction: column; gap: 4px; }
-  .vi-icon-item     { flex-direction: row; gap: 8px; align-items: center; }
+  /* Stack the three equation boxes vertically so the regional findings
+     stay visible — the equation reads top-to-bottom (Y / = / C / + / I). */
+  .vi-box-row       { flex-direction: column; }
+  .vi-box-inner     { padding: 12px 10px; gap: 8px; }
+  .vi-icon-row      { flex-direction: row; gap: 12px; }
+  .vi-icon-item     { flex-direction: column; gap: 3px; align-items: center; }
   .vi-blip-lg       { width: 40px; height: 40px; }
-  .vi-icon-label    { font-size: 9px; text-align: left; }
+  .vi-icon-label    { font-size: 9px; text-align: center; }
   .vi-icon-sub      { display: none; }
-  .vi-region-tag    { display: none; }
-  .vi-divider-eq, .vi-divider-plus { width: 16px; }
-  .vi-eq-sign, .vi-plus-sign       { font-size: .9rem; }
+  .vi-region-tag    { display: block; margin-top: 8px; }
+  .vi-divider-eq, .vi-divider-plus {
+    width: auto; margin: 6px 0; padding: 3px 0;
+    border-left: none; border-right: none;
+    border-top: 1px solid var(--c-border-1); border-bottom: 1px solid var(--c-border-1);
+  }
+  .vi-eq-sign, .vi-plus-sign       { font-size: 1rem; }
   .vi-region-strip  { gap: 6px; padding: 6px 12px; }
   .vi-region-eq     { margin-left: 0; width: 100%; }
   .vi-online-note   { display: none; }
