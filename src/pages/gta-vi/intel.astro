@@ -22,6 +22,13 @@ const trailersData   = trailersDataRaw as TrailersData;
 const trailers       = trailersData.trailers;
 const heroTrailer    = trailers[1] ?? trailers[0]; // prefer Trailer 2 for hero
 const confirmedSongs = (spotifyData as any).confirmed_songs as { title: string; artist: string; trailer: string; year: number }[];
+
+// 30-second preview clips (trimmed, fade-out) for songs we host audio for.
+// Keyed by exact song title. Full tracks are intentionally not hosted (copyright).
+const SONG_PREVIEWS: Record<string, string> = {
+  "Love Is a Long Road": "/assets/audio/love-is-a-long-road-preview.mp3",
+  "Hot Together":        "/assets/audio/hot-together-preview.mp3",
+};
 const gtaViFaqs = [
   {
     question: "Will GTA VI have Shark Cards?",
@@ -362,20 +369,37 @@ const CAT_THUMBS: Record<string,string> = {
       <SectionHeader label="// Confirmed Soundtrack — Trailer Songs" dotColor="var(--c-growth)" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <div class="divide-y divide-border-dim">
-          {confirmedSongs.map((song, i) => (
+          {confirmedSongs.map((song, i) => {
+            const preview = SONG_PREVIEWS[song.title];
+            return (
             <div class="px-5 py-4 flex items-center gap-4">
-              <div class="w-7 h-7 rounded bg-gta-green/10 border border-gta-green/20 flex items-center justify-center shrink-0">
-                <span class="text-gta-green text-xs">♪</span>
-              </div>
+              {preview ? (
+                <>
+                  <button
+                    class="song-play w-7 h-7 rounded bg-gta-green/10 border border-gta-green/20 flex items-center justify-center shrink-0 hover:bg-gta-green/20 transition-colors"
+                    data-audio={`song-audio-${i}`}
+                    aria-label={`Play 30-second preview of ${song.title}`}
+                    type="button"
+                  >
+                    <span class="song-play-icon text-gta-green text-[11px] leading-none">▶</span>
+                  </button>
+                  <audio id={`song-audio-${i}`} class="song-audio" src={preview} preload="none"></audio>
+                </>
+              ) : (
+                <div class="w-7 h-7 rounded bg-gta-green/10 border border-gta-green/20 flex items-center justify-center shrink-0">
+                  <span class="text-gta-green text-xs">♪</span>
+                </div>
+              )}
               <div class="flex-1 min-w-0">
                 <div class="text-sm font-semibold text-zinc-200 leading-tight">{song.title}</div>
-                <div class="text-[11px] font-mono text-zinc-500 mt-0.5">{song.artist} · {song.year}</div>
+                <div class="text-[11px] font-mono text-zinc-500 mt-0.5">{song.artist} · {song.year}{preview ? " · 30s preview" : ""}</div>
               </div>
               <div class="shrink-0 text-right">
                 <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">{song.trailer}</span>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
         <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between">
           <span class="text-[10px] text-zinc-500 font-mono">Source: Spotify Web API · confirmed from official GTA VI trailers</span>
@@ -389,5 +413,25 @@ const CAT_THUMBS: Record<string,string> = {
 
 
   </div>
+
+  <script>
+    // Soundtrack preview playback — native <audio>, one clip at a time.
+    document.querySelectorAll<HTMLButtonElement>(".song-play").forEach(btn => {
+      const audio = document.getElementById(btn.dataset.audio ?? "") as HTMLAudioElement | null;
+      const icon  = btn.querySelector<HTMLElement>(".song-play-icon");
+      if (!audio || !icon) return;
+      btn.addEventListener("click", () => {
+        const wasPlaying = !audio.paused;
+        document.querySelectorAll<HTMLAudioElement>(".song-audio").forEach(a => a.pause());
+        document.querySelectorAll<HTMLElement>(".song-play-icon").forEach(i => { i.textContent = "▶"; });
+        if (!wasPlaying) {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+          icon.textContent = "⏸";
+        }
+      });
+      audio.addEventListener("ended", () => { icon.textContent = "▶"; });
+    });
+  </script>
 </Base>
 
