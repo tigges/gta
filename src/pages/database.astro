@@ -982,6 +982,22 @@ const HEIST_THUMBS: Record<string, string> = {
     else renderGta5();
   }
 
+  // ── Shared filter style helpers (from semanticTypes registry) ──────────────
+  // Declared at script top level so every filter handler (game tab, type, tier,
+  // source) can use them — previously these lived inside the game-tab click
+  // callback, so the type filter threw a ReferenceError and never re-rendered.
+  const DB_GAME_COLORS: Record<string,string> = {
+    "gta-6":      "var(--c-title-vi)",
+    "gta-online": "var(--c-title-online)",
+    "gta-5":      "var(--c-title-v)",
+  };
+  function dbFilterActive(colorToken: string): string {
+    return `color:${colorToken};border-color:color-mix(in srgb,${colorToken} 40%,transparent);background:color-mix(in srgb,${colorToken} 12%,transparent)`;
+  }
+  const dbFilterInactive = "color:var(--c-text-5);border-color:var(--c-border-2);background:transparent";
+  // Generic gold active (for type/tier filters without a specific game color)
+  const dbFilterGoldActive = dbFilterActive("var(--c-brand)");
+
   // ── Game tab toggle ───────────────────────────────────────────────────────
   document.querySelectorAll<HTMLButtonElement>(".db-game-tab").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -1018,19 +1034,6 @@ const HEIST_THUMBS: Record<string, string> = {
 
 
       // Tab button styles
-  // ── Shared filter style helpers (from semanticTypes registry) ──────────────
-  const DB_GAME_COLORS: Record<string,string> = {
-    "gta-6":      "var(--c-title-vi)",
-    "gta-online": "var(--c-title-online)",
-    "gta-5":      "var(--c-title-v)",
-  };
-  function dbFilterActive(colorToken: string): string {
-    return `color:${colorToken};border-color:color-mix(in srgb,${colorToken} 40%,transparent);background:color-mix(in srgb,${colorToken} 12%,transparent)`;
-  }
-  const dbFilterInactive = "color:var(--c-text-5);border-color:var(--c-border-2);background:transparent";
-  // Generic gold active (for type/tier filters without a specific game color)
-  const dbFilterGoldActive = dbFilterActive("var(--c-brand)");
-
       document.querySelectorAll<HTMLButtonElement>(".db-game-tab").forEach(b => {
         const active = b.dataset.game === activeGame;
         const c = DB_GAME_COLORS[b.dataset.game ?? ""] ?? "var(--c-brand)";
