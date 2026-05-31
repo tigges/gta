@@ -38,8 +38,9 @@ const TOKENS: Record<string, { token: string; defaultLabel: string }> = {
   "gta-iii":       { token: "var(--c-title-iii)",      defaultLabel: "GTA III"      },
   "confirmed":     { token: "var(--c-live)",           defaultLabel: "Confirmed"    },
   "reported":      { token: "var(--c-brand)",          defaultLabel: "Reported"     },
-  "predicted":     { token: "var(--c-text-4)",         defaultLabel: "Predicted"    },
-  "indexed":       { token: "var(--c-text-5)",         defaultLabel: "Indexed"      },
+  "predicted":     { token: "var(--c-text-2)",         defaultLabel: "Predicted"    },
+  "indexed":       { token: "var(--c-text-2)",         defaultLabel: "Indexed"      },
+  "alert":         { token: "var(--c-alert)",          defaultLabel: "Alert"        },
   "active":        { token: "var(--c-play-active)",    defaultLabel: "Active"       },
   "passive":       { token: "var(--c-play-passive)",   defaultLabel: "Passive"      },
   "semi-passive":  { token: "var(--c-play-semi)",      defaultLabel: "Semi-passive" },
@@ -59,10 +60,6 @@ const TOKENS: Record<string, { token: string; defaultLabel: string }> = {
   "b-tier":        { token: "var(--c-economy)",        defaultLabel: "B"            },
   "c-tier":        { token: "var(--c-text-4)",         defaultLabel: "C"            },
   "d-tier":        { token: "var(--c-text-5)",         defaultLabel: "D"            },
-  "official":      { token: "var(--c-brand)",          defaultLabel: "Official"     },
-  "alert":         { token: "var(--c-alert)",          defaultLabel: "Alert"        },
-  "projected":     { token: "var(--c-brand)",          defaultLabel: "Projected"    },
-  "regression":    { token: "var(--c-alert)",          defaultLabel: "Regression"   },
 };
 
 const resolved = variant ? TOKENS[variant] : null;
