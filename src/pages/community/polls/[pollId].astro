@@ -15,7 +15,6 @@
 
 import Base from "../../../layouts/Base.astro";
 import VoteCard from "../../../components/VoteCard.astro";
-import GamePill from "../../../components/GamePill.astro";
 import type { GetStaticPaths } from "astro";
 import type { PredictionsData } from "../../../types/gta";
 import predRaw from "../../../../data/gta-6/predictions.json";
@@ -34,14 +33,10 @@ if (!pred) return Astro.redirect("/404");
 const SITE_BASE  = import.meta.env.SITE ?? "https://gtavi.ai";
 const question   = pred.poll_question as string;
 const basis      = pred.basis as string;
-const confidence = pred.confidence as number;
-const tier       = pred.confidence_tier as string;
 const options    = (pred.poll_options ?? ["Yes", "No"]) as string[];
-const thumb      = pred.thumbnail as string | undefined;
 
 const ogImageUrl  = `${SITE_BASE}/og/poll/${pollId}.png`;
 const embedUrl    = `${SITE_BASE}/community/polls/embed/${pollId}`;
-const pollsUrl    = `${SITE_BASE}/community/polls`;
 const canonicalUrl = `${SITE_BASE}/community/polls/${pollId}`;
 
 // Pre-built social copy for this poll
@@ -50,16 +45,6 @@ const redditTitle  = `${question} — Community Poll`;
 const xIntentUrl   = `https://twitter.com/intent/tweet?text=${encodeURIComponent(xShareText)}`;
 const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(redditTitle)}`;
 
-const TIER_LABEL: Record<string, string> = {
-  confirmed: "Confirmed",
-  reported:  "Reported",
-  predicted: "Predicted",
-};
-const TIER_COLOR: Record<string, string> = {
-  confirmed: "var(--c-live)",
-  reported:  "var(--c-brand)",
-  predicted: "var(--c-text-4)",
-};
 ---
 
 <Base
@@ -78,31 +63,6 @@ const TIER_COLOR: Record<string, string> = {
   </div>
 
   <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-8">
-
-    <!-- ── Hero thumbnail ─────────────────────────────────────────────────── -->
-    {thumb && (
-      <div class="rounded-xl overflow-hidden border border-border-dim relative aspect-[16/6]">
-        <img
-          src={thumb}
-          alt=""
-          width="900"
-          height="337"
-          class="w-full h-full object-cover"
-          loading="eager"
-          decoding="async"
-        />
-        <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 50%,var(--c-bg) 100%)"></div>
-        <!-- Badge overlay -->
-        <div class="absolute bottom-4 left-4 flex items-center gap-2">
-          <GamePill game="gta-vi" size="xs" />
-          <span class="text-[9px] font-mono px-2 py-0.5 rounded border uppercase tracking-widest font-bold"
-            style={`color:${TIER_COLOR[tier]};border-color:color-mix(in srgb,${TIER_COLOR[tier]} 35%,transparent);background:color-mix(in srgb,${TIER_COLOR[tier]} 10%,transparent)`}>
-            {TIER_LABEL[tier]} · {confidence}%
-          </span>
-        </div>
-      </div>
-    )}
-
     <!-- ── Vote card ─────────────────────────────────────────────────────── -->
     <VoteCard predictionId={pollId} />
 
