@@ -48,5 +48,31 @@ const predictions: Prediction[] = raw.predictions.map((p) => {
 
 const predictionsData: PredictionsData = { ...raw, predictions };
 
+// ── Prediction / poll mixing ─────────────────────────────────────────────────
+// A poll is a prediction that carries a `poll_question`. To show a unified feed
+// that mixes the two presentations without ever duplicating an id, we render
+// most items as predictions and promote one poll-eligible item to a poll after
+// every `pollGap` predictions (default 3 → a ~3:1 prediction:poll blend).
+export interface FeedItem {
+  prediction: Prediction;
+  mode: "prediction" | "poll";
+}
+
+export function feedWithPolls(list: Prediction[], pollGap = 3): FeedItem[] {
+  const out: FeedItem[] = [];
+  let sincePoll = 0;
+  for (const p of list) {
+    const eligible = Boolean((p as any).poll_question);
+    if (eligible && sincePoll >= pollGap) {
+      out.push({ prediction: p, mode: "poll" });
+      sincePoll = 0;
+    } else {
+      out.push({ prediction: p, mode: "prediction" });
+      sincePoll++;
+    }
+  }
+  return out;
+}
+
 export { predictions };
 export default predictionsData;

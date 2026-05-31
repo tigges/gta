@@ -1,7 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import PredictionCard from "../../components/PredictionCard.astro";
-import VoteCard from "../../components/VoteCard.astro";
+import PredictionOrPoll from "../../components/PredictionOrPoll.astro";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 
@@ -10,7 +9,7 @@ import IncomeCard from "../../components/IncomeCard.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
 import CastCard from "../../components/CastCard.astro";
 
-import predictionsData from "../../config/predictions";
+import predictionsData, { feedWithPolls } from "../../config/predictions";
 import incomeData from "../../../data/gta-6/income-predictions.json";
 import trailersDataRaw from "../../../data/gta-6/trailers.json";
 import featuresData    from "../../../data/gta-6/features.json";
@@ -159,29 +158,15 @@ const CAT_THUMBS: Record<string,string> = {
          SIGNAL PREDICTIONS
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Economic Predictions" />
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {predictions.map((p) => {
-          return (
-            <PredictionCard
-              id={p.id}
-              title={p.title}
-              value={p.value}
-              confidence={p.confidence}
-              confidence_tier={p.confidence_tier}
-              basis={p.basis}
-              unit={p.unit}
-              trailer_timestamp={p.trailer_timestamp}
-              prediction_method={p.prediction_method}
-              prediction_range={p.prediction_range}
-              source={p.source}
-              source_type={p.source_type}
-              outcome_verified={p.outcome_verified}
-              outcome_actual={p.outcome_actual}
-              thumbnail={(p as any).thumbnail ?? PRED_THUMBS[p.id] ?? null}
-            />
-          );
-        })}
+      <SectionHeader label="// Economic Predictions & Community Polls" pillHref="/community/polls" pillLabel="All polls →" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 items-start">
+        {feedWithPolls(predictions, 3).map(({ prediction: p, mode }) => (
+          <PredictionOrPoll
+            prediction={p}
+            mode={mode}
+            thumbnail={(p as any).thumbnail ?? PRED_THUMBS[p.id] ?? null}
+          />
+        ))}
       </div>
     </section>
 
@@ -189,9 +174,9 @@ const CAT_THUMBS: Record<string,string> = {
          INCOME PREDICTIONS — GTA VI Online
     ═══════════════════════════════════════════════════════ -->
     <section id="section-income-predictions" class="mt-16" style="scroll-margin-top:80px">
-      <SectionHeader label="// GTA VI Online — Predicted Income Sources" dotColor="var(--c-title-vi)" />
+      <SectionHeader label="// GTA VI Online — Predicted Income Sources" dotColor="var(--c-title-vi)" pillHref="/gta-vi/income" pillLabel={`All ${(incomeData as any).income_predictions.length} income sources →`} />
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {(incomeData as any).income_predictions.map((p: any) => (
+        {(incomeData as any).income_predictions.slice(0, 4).map((p: any) => (
           <IncomeCard
             id={p.id}
             name={p.name}
@@ -210,24 +195,10 @@ const CAT_THUMBS: Record<string,string> = {
           />
         ))}
       </div>
-    </section>
-
-
-    <!-- ═══════════════════════════════════════════════════════
-         COMMUNITY VOTES
-    ═══════════════════════════════════════════════════════ -->
-    <section id="section-community-votes">
-      <SectionHeader label="// Community Votes · What do you think?" dotColor="var(--c-brand)" />
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <VoteCard predictionId="pred-rdr2-wanted-stars" />
-        <VoteCard predictionId="pred-rdr2-hunting" />
-        <VoteCard predictionId="pred-rdr2-honour-pricing" />
-        <VoteCard predictionId="pred-rdr2-weapon-carry" />
-        <VoteCard predictionId="pred-rdr2-looting" />
-        <VoteCard predictionId="pred-rdr2-greet-antagonize" />
-        <VoteCard predictionId="pred-rdr2-trader-analogue" />
-        <VoteCard predictionId="pred-rdr2-threat-detection" />
-        <VoteCard predictionId="pred-rdr2-collector-analogue" />
+      <div class="mt-4 flex justify-center">
+        <a href="/gta-vi/income" class="inline-flex items-center gap-2 rounded border border-border-mid px-4 py-2 text-[11px] font-mono uppercase tracking-widest text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-all">
+          Full income model — all {(incomeData as any).income_predictions.length} sources →
+        </a>
       </div>
     </section>
 
