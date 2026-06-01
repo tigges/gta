@@ -46,6 +46,8 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
 
 <script>
   import * as d3 from "d3";
+  import { cc, op } from "../assets/chartColors";
+  import { registerChart, triggerChart } from "../assets/chartInit";
 
   interface Vehicle {
     name: string;
@@ -56,15 +58,17 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
     top_speed_mph: number | null;
   }
 
-  // Colour per broad class (NR variants share the same colour as their base)
+  // Colour per broad class (NR variants share the same colour as their base).
+  // Token-mapped where a category colour exists; the remaining classes keep
+  // their distinct hues (no token yet) — mirrors ChartVehiclePerformance.
   const CLASS_COLORS: Record<string, string> = {
-    Supers:          "#f59e0b",
-    Sports:          "#22c55e",
+    Supers:          cc.bar,
+    Sports:          cc.green,
     "Sports Classics": "#86efac",
-    Muscle:          "#ef4444",
-    Coupes:          "#a78bfa",
+    Muscle:          cc.red,
+    Coupes:          cc.purple,
     Sedans:          "#38bdf8",
-    SUVs:            "#fb923c",
+    SUVs:            cc.orange,
     "Open Wheel":    "#f472b6",
     "Off-Road":      "#a3e635",
     Military:        "#6b7280",
@@ -74,7 +78,7 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
 
   function classColor(cls: string): string {
     const base = cls.replace(/ \(NR\)$/, "");
-    return CLASS_COLORS[base] ?? "#71717a";
+    return CLASS_COLORS[base] ?? cc.text4;
   }
 
   let allVehicles: Vehicle[] = [];
@@ -131,7 +135,7 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
         .attr("height", barH)
         .attr("rx", 3)
         .attr("fill", color)
-        .attr("opacity", 0.85);
+        .attr("opacity", op.secondary);
 
       // Vehicle name label (left)
       svg.append("text")
@@ -139,7 +143,7 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
         .attr("y", y + barH / 2 + 1)
         .attr("text-anchor", "end")
         .attr("dominant-baseline", "middle")
-        .attr("fill", "#d4d4d8")
+        .attr("fill", cc.text2)
         .attr("font-size", "12")
         .attr("font-family", "monospace")
         .text(v.name.length > 18 ? v.name.slice(0, 17) + "…" : v.name);
@@ -166,8 +170,8 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
           .attr("width", 18)
           .attr("height", 16)
           .attr("rx", 2)
-          .attr("fill", "#09090b")
-          .attr("opacity", 0.7);
+          .attr("fill", cc.bgDeep)
+          .attr("opacity", op.secondary);
         svg.append("text")
           .attr("x", x(v.lap_seconds ?? maxLap) + 15)
           .attr("y", y + barH / 2 + 1)
@@ -189,33 +193,45 @@ const baseClasses = [...new Set(rawClasses.map((c) => c.replace(/ \(NR\)$/, ""))
           .attr("fill", color)
           .attr("font-size", "9")
           .attr("font-family", "monospace")
-          .attr("opacity", 0.6)
+          .attr("opacity", op.tertiary)
           .text(`T${v.tier}`);
       }
     });
   }
 
-  {
-    const el = document.getElementById("vehicle-chart");
-    if (el) {
-      allVehicles = JSON.parse(el.dataset.vehicles || "[]");
-      render(allVehicles);
+  function init() {
+    const el = document.getElementById("vehicle-chart") as HTMLElement | null;
+    if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
-      document.querySelectorAll<HTMLButtonElement>(".class-filter").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document.querySelectorAll<HTMLButtonElement>(".class-filter").forEach((b) => {
-            b.dataset.active = "false";
-            b.classList.remove("border-gta-gold", "text-gta-gold", "bg-gta-gold/10");
-            b.classList.add("border-zinc-700", "text-zinc-500");
-          });
-          btn.dataset.active = "true";
-          btn.classList.add("border-gta-gold", "text-gta-gold", "bg-gta-gold/10");
-          btn.classList.remove("border-zinc-700", "text-zinc-500");
-          activeClass = btn.dataset.class!;
-          render(allVehicles);
+    allVehicles = JSON.parse(el.dataset.vehicles || "[]");
+    render(allVehicles);
+
+    document.querySelectorAll<HTMLButtonElement>(".class-filter").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll<HTMLButtonElement>(".class-filter").forEach((b) => {
+          b.dataset.active = "false";
+          b.classList.remove("border-gta-gold", "text-gta-gold", "bg-gta-gold/10");
+          b.classList.add("border-zinc-700", "text-zinc-500");
         });
+        btn.dataset.active = "true";
+        btn.classList.add("border-gta-gold", "text-gta-gold", "bg-gta-gold/10");
+        btn.classList.remove("border-zinc-700", "text-zinc-500");
+        activeClass = btn.dataset.class!;
+        render(allVehicles);
       });
-    }
+    });
   }
 
+  registerChart("vehicle-chart", init);
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("vehicle-chart");
+    if (obsEl) {
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { triggerChart("vehicle-chart"); obs.disconnect(); }
+      }, { rootMargin: "200px" });
+      obs.observe(obsEl);
+    }
+  } else { init(); }
 </script>
