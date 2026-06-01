@@ -22,16 +22,40 @@ import ChartTeaserSearchSignal from "../components/charts/ChartTeaserSearchSigna
 import ChartTeaserCpi from "../components/charts/ChartTeaserCpi.astro";
 import ChartTeaserRevenueSplit from "../components/charts/ChartTeaserRevenueSplit.astro";
 
-import type { TrailersData, Prediction, TrailerVelocityData } from "../types/gta";
+import type { TrailersData, Prediction, TrailerVelocityData, TrailerAnalysisData } from "../types/gta";
 
-import predictionsData from "../config/predictions";
-import steamData       from "../../data/gta-5/meta/steam-players.json";
-import trailersDataRaw from "../../data/gta-6/trailers.json";
-import velocityDataRaw from "../../data/gta-6/trailer-velocity.json";
+import predictionsData    from "../config/predictions";
+import steamData          from "../../data/gta-5/meta/steam-players.json";
+import trailersDataRaw    from "../../data/gta-6/trailers.json";
+import velocityDataRaw    from "../../data/gta-6/trailer-velocity.json";
+import trailerAnalysisRaw from "../../data/gta-6/trailer-analysis.json";
 
-const trailersData = trailersDataRaw as unknown as TrailersData;
-const velocityData = velocityDataRaw as unknown as TrailerVelocityData;
+const trailersData    = trailersDataRaw as unknown as TrailersData;
+const velocityData    = velocityDataRaw as unknown as TrailerVelocityData;
+const trailerAnalysis = trailerAnalysisRaw as unknown as TrailerAnalysisData;
 void trailersData;
+
+// Frame-by-frame entity discovery (Trailer 2) — token-mapped marker colours
+const TYPE_COLOR: Record<string, string> = {
+  vehicle:   "var(--c-brand)",
+  character: "var(--c-live)",
+  location:  "var(--c-title-online)",
+  weapon:    "var(--c-alert)",
+  audio:     "var(--c-chart-purple)",
+  wildlife:  "var(--c-growth)",
+  reveal:    "var(--c-text-1)",
+};
+const t2raw = trailerAnalysis.trailers[1];
+const t2Events = t2raw.events.map(e => ({
+  ...e,
+  pct: +((e.t / t2raw.duration_sec) * 100).toFixed(1),
+  color: TYPE_COLOR[e.type] ?? "var(--c-text-4)",
+  ts: `${Math.floor(e.t / 60)}:${String(e.t % 60).padStart(2, "0")}`,
+}));
+const t2TypeCounts = t2Events.reduce((acc: Record<string, number>, e: any) => {
+  acc[e.type] = (acc[e.type] ?? 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
 
 const trailer2Id = "VQRLujxTm3c";
 const trailer1Id = "QdBZY2fkU-0";
@@ -239,6 +263,67 @@ const keyStats = [
         <ChartTeaserSearchSignal />
         <ChartTeaserCpi />
         <ChartTeaserRevenueSplit />
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         TRAILER 2 — FRAME-BY-FRAME ENTITY DISCOVERY
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <SectionHeader
+        bright
+        label="// Trailer 2 — Frame-by-Frame Entity Discovery"
+        dotColor="var(--c-brand)"
+        pillHref="/charts#section-trailer-discovery-chart"
+        pillLabel="Full analysis →"
+      />
+      <div class="rounded-xl border border-border-mid overflow-hidden" style="background:var(--c-card-raised)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <div class="font-bold text-white text-sm">What Every Second of Trailer 2 Revealed</div>
+            <div class="text-[11px] text-zinc-300 font-mono mt-0.5">Each marker = a new entity confirmed. Colour = type. {t2Events.length} entities across {t2raw.duration_sec}s.</div>
+          </div>
+          <span class="text-[10px] font-mono text-zinc-400 shrink-0">{t2Events.length} entities · {t2raw.duration_sec}s runtime</span>
+        </div>
+
+        <!-- Timeline strip -->
+        <div class="px-5 py-6">
+          <div class="relative h-8 rounded-full" style="background:var(--c-bg);border:1px solid var(--c-border-2)">
+            <div class="absolute inset-y-0 left-0 right-0 rounded-full" style="background:linear-gradient(to right,color-mix(in srgb,var(--c-brand) 14%,transparent) 0%,color-mix(in srgb,var(--c-brand) 4%,transparent) 100%)"></div>
+            {t2Events.map((e: any) => (
+              <div
+                class="absolute top-1/2 w-3 h-3 rounded-full -translate-y-1/2 -translate-x-1/2 border-2 cursor-pointer transition-transform duration-150 hover:scale-150 hover:z-10"
+                style={`left:${e.pct}%;background:${e.color};border-color:var(--c-card-raised)`}
+                title={`${e.entity} (${e.type}) @ ${e.ts}`}
+              ></div>
+            ))}
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-zinc-300">
+              {Math.floor(t2raw.duration_sec / 60)}:{String(t2raw.duration_sec % 60).padStart(2, "0")}
+            </span>
+          </div>
+
+          <!-- Key entity labels -->
+          <div class="relative h-10 mt-1">
+            {t2Events.filter((_: any, i: number) => i % 3 === 0).map((e: any) => (
+              <div class="absolute text-[10px] font-mono whitespace-nowrap" style={`left:${e.pct}%;color:${e.color};transform:translateX(-50%)`}>
+                {e.entity.split(" ")[0]}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="px-5 py-3 border-t border-border-dim flex flex-wrap items-center gap-4 justify-between">
+          <div class="flex flex-wrap gap-3">
+            {Object.entries(t2TypeCounts).map(([type, count]) => (
+              <span class="flex items-center gap-1.5 text-[10px] font-mono text-zinc-300">
+                <span class="w-2 h-2 rounded-full inline-block shrink-0" style={`background:${TYPE_COLOR[type] ?? "var(--c-text-4)"}`}></span>
+                {type} <span class="text-zinc-500">({count as number})</span>
+              </span>
+            ))}
+          </div>
+          <span class="text-[11px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+        </div>
       </div>
     </section>
 
