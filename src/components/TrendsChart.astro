@@ -34,10 +34,13 @@ import ShareDropdown from "./ShareDropdown.astro";
 
 <script>
   import * as d3 from "d3";
+  import { cc, op } from "../assets/chartColors";
+  import { registerChart, triggerChart } from "../assets/chartInit";
 
-  {
-    const el = document.getElementById("trends-chart");
-    if (!el) throw new Error("trends-chart element not found");
+  function init() {
+    const el = document.getElementById("trends-chart") as HTMLElement | null;
+    if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const keywords: { keyword: string; color: string; data: { date: string; value: number }[] }[] =
       JSON.parse(el.dataset.keywords || "[]");
@@ -66,7 +69,7 @@ import ShareDropdown from "./ShareDropdown.astro";
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
       .call((g) => g.select(".domain").remove())
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.grid).attr("stroke-dasharray", "3,3"));
 
     // Lines
     const lineGen = d3.line<{ date: Date; value: number }>()
@@ -91,25 +94,25 @@ import ShareDropdown from "./ShareDropdown.astro";
     svg.append("line")
       .attr("x1", x(trailerDate)).attr("x2", x(trailerDate))
       .attr("y1", 0).attr("y2", H)
-      .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "4,3").attr("opacity", 0.5);
+      .attr("stroke", cc.red).attr("stroke-width", 1).attr("stroke-dasharray", "4,3").attr("opacity", op.tertiary);
     svg.append("text")
       .attr("x", x(trailerDate) - 44).attr("y", 12)
-      .attr("fill", "#ef4444").attr("font-size", "9").attr("font-family", "monospace")
+      .attr("fill", cc.red).attr("font-size", "9").attr("font-family", "monospace")
       .text("VI Trailer");
 
     // Axes
     svg.append("g")
       .attr("transform", `translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
-      .call((g) => g.select(".domain").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll("text").attr("fill", "#71717a").attr("font-size", "11").attr("font-family", "monospace"));
+      .call((g) => g.select(".domain").attr("stroke", cc.border2))
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call((g) => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "11").attr("font-family", "monospace"));
 
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5))
-      .call((g) => g.select(".domain").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll("text").attr("fill", "#71717a").attr("font-size", "11").attr("font-family", "monospace"));
+      .call((g) => g.select(".domain").attr("stroke", cc.border2))
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call((g) => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "11").attr("font-family", "monospace"));
 
     // Toggle buttons
     document.querySelectorAll<HTMLButtonElement>(".trend-toggle").forEach((btn) => {
@@ -123,4 +126,15 @@ import ShareDropdown from "./ShareDropdown.astro";
     });
   }
 
+  registerChart("trends-chart", init);
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("trends-chart");
+    if (obsEl) {
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { triggerChart("trends-chart"); obs.disconnect(); }
+      }, { rootMargin: "200px" });
+      obs.observe(obsEl);
+    }
+  } else { init(); }
 </script>

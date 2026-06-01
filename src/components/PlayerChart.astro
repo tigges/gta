@@ -26,10 +26,13 @@ import ShareDropdown from "./ShareDropdown.astro";
 
 <script>
   import * as d3 from "d3";
+  import { cc, op } from "../assets/chartColors";
+  import { registerChart, triggerChart } from "../assets/chartInit";
 
-  {
-    const el = document.getElementById("player-chart");
-    if (!el) throw new Error("player-chart element not found");
+  function init() {
+    const el = document.getElementById("player-chart") as HTMLElement | null;
+    if (!el) return;
+    if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const raw = JSON.parse(el.dataset.points || "[]");
     const MONTHS: Record<string, number> = {
@@ -61,13 +64,13 @@ import ShareDropdown from "./ShareDropdown.astro";
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(() => ""))
       .call((g) => g.select(".domain").remove())
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.grid).attr("stroke-dasharray", "3,3"));
 
     // Gradient fill
     const defs = svg.append("defs");
     const grad = defs.append("linearGradient").attr("id", "pc-grad").attr("gradientUnits", "userSpaceOnUse").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", H);
-    grad.append("stop").attr("offset", "0%").attr("stop-color", "#f59e0b").attr("stop-opacity", 0.25);
-    grad.append("stop").attr("offset", "100%").attr("stop-color", "#f59e0b").attr("stop-opacity", 0.02);
+    grad.append("stop").attr("offset", "0%").attr("stop-color", cc.bar).attr("stop-opacity", 0.25);
+    grad.append("stop").attr("offset", "100%").attr("stop-color", cc.bar).attr("stop-opacity", 0.02);
 
     // Area
     svg.append("path")
@@ -79,17 +82,17 @@ import ShareDropdown from "./ShareDropdown.astro";
     svg.append("path")
       .datum(data)
       .attr("fill", "none")
-      .attr("stroke", "#f59e0b")
+      .attr("stroke", cc.bar)
       .attr("stroke-width", 1)
       .attr("stroke-dasharray", "4,3")
-      .attr("opacity", 0.4)
+      .attr("opacity", op.muted)
       .attr("d", d3.line<any>().x((d) => x(d.date)).y((d) => y(d.peak)).curve(d3.curveMonotoneX));
 
     // Avg line
     svg.append("path")
       .datum(data)
       .attr("fill", "none")
-      .attr("stroke", "#f59e0b")
+      .attr("stroke", cc.bar)
       .attr("stroke-width", 2)
       .attr("d", d3.line<any>().x((d) => x(d.date)).y((d) => y(d.avg)).curve(d3.curveMonotoneX));
 
@@ -98,26 +101,37 @@ import ShareDropdown from "./ShareDropdown.astro";
     svg.append("line")
       .attr("x1", x(covidDate)).attr("x2", x(covidDate))
       .attr("y1", 0).attr("y2", H)
-      .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "4,3").attr("opacity", 0.6);
+      .attr("stroke", cc.red).attr("stroke-width", 1).attr("stroke-dasharray", "4,3").attr("opacity", op.tertiary);
     svg.append("text")
       .attr("x", x(covidDate) + 4).attr("y", 12)
-      .attr("fill", "#ef4444").attr("font-size", "10").attr("font-family", "monospace")
+      .attr("fill", cc.red).attr("font-size", "10").attr("font-family", "monospace")
       .text("COVID");
 
     // X axis
     svg.append("g")
       .attr("transform", `translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%Y") as any))
-      .call((g) => g.select(".domain").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll("text").attr("fill", "#71717a").attr("font-size", "11").attr("font-family", "monospace"));
+      .call((g) => g.select(".domain").attr("stroke", cc.border2))
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call((g) => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "11").attr("font-family", "monospace"));
 
     // Y axis
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5).tickFormat((d) => `${Math.round(+d / 1000)}k`))
-      .call((g) => g.select(".domain").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#3f3f46"))
-      .call((g) => g.selectAll("text").attr("fill", "#71717a").attr("font-size", "11").attr("font-family", "monospace"));
+      .call((g) => g.select(".domain").attr("stroke", cc.border2))
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call((g) => g.selectAll("text").attr("fill", cc.text6).attr("font-size", "11").attr("font-family", "monospace"));
   }
 
+  registerChart("player-chart", init);
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("player-chart");
+    if (obsEl) {
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { triggerChart("player-chart"); obs.disconnect(); }
+      }, { rootMargin: "200px" });
+      obs.observe(obsEl);
+    }
+  } else { init(); }
 </script>
