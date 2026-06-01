@@ -79,6 +79,8 @@ const homePredictions = (predictionsData.predictions as Prediction[])
   .sort((a: Prediction, b: Prediction) => (a.display_order ?? 99) - (b.display_order ?? 99))
   .slice(0, 4);
 
+const HERO_BG = "/assets/gta6/locations/Leonida_Keys_01.jpg";
+
 const valueProps = [
   {
     icon: "intel",
@@ -86,6 +88,8 @@ const valueProps = [
     body: "Every GTA VI call — launch price, map size, income — rated 0–100 and sourced. No hot takes, just signal.",
     href: "/gta-vi/intel",
     cta: "See the predictions",
+    img: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+    accent: "var(--c-brand)",
   },
   {
     icon: "chart",
@@ -93,6 +97,8 @@ const valueProps = [
     body: "Search hype vs prior launches, real-terms pricing, Take-Two stock and trailer velocity — the numbers, visualised.",
     href: "/charts?title=gta-vi",
     cta: "Open the charts",
+    img: "/assets/gta6/locations/Vice_City_03.jpg",
+    accent: "var(--c-economy)",
   },
   {
     icon: "money",
@@ -100,14 +106,16 @@ const valueProps = [
     body: "In-game and real-world money flows mapped end to end: (J) + Y = C + I. Income yields, Shark Card inflation, spending.",
     href: "/gta-vi/economy",
     cta: "Explore the model",
+    img: "/assets/gta6/locations/Ambrosia_02.jpg",
+    accent: "var(--c-gta-dollar)",
   },
 ];
 
 const keyStats = [
-  { value: "475M+",  label: "Trailer 1 views · 24h record",       source: "YouTube" },
-  { value: `${latestSteam?.avg_players?.toLocaleString() ?? "—"}`, label: "GTA V avg players · last month", source: "SteamCharts" },
-  { value: "225M+",  label: "GTA V copies sold · lifetime",       source: "Take-Two IR" },
-  { value: "Nov 19", label: "GTA VI launch · confirmed",          source: "Rockstar" },
+  { value: "475M+",  label: "Trailer 1 views · 24h record",       source: "YouTube",     accent: "var(--c-brand)" },
+  { value: `${latestSteam?.avg_players?.toLocaleString() ?? "—"}`, label: "GTA V avg players · last month", source: "SteamCharts", accent: "var(--c-live)" },
+  { value: "225M+",  label: "GTA V copies sold · lifetime",       source: "Take-Two IR", accent: "var(--c-growth)" },
+  { value: "Nov 19", label: "GTA VI launch · confirmed",          source: "Rockstar",    accent: "var(--c-economy)" },
 ];
 ---
 
@@ -124,7 +132,15 @@ const keyStats = [
        HERO — text on a solid surface (high contrast), crisp duo visual
   ═══════════════════════════════════════════════════════ -->
   <section class="relative overflow-hidden border-b border-border-dim" style="background:var(--c-bg-deep)">
-    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(70% 90% at 85% 0%, var(--c-hero-bloom), transparent 70%)"></div>
+    <!-- Atmospheric banner background -->
+    <div class="absolute inset-0">
+      <img src={HERO_BG} alt="" aria-hidden="true" class="w-full h-full object-cover" style="object-position:center 32%" loading="eager" />
+      <!-- Left scrim: keeps the headline column high-contrast -->
+      <div class="absolute inset-0" style="background:linear-gradient(to right, var(--c-bg-deep) 0%, color-mix(in srgb,var(--c-bg-deep) 90%,transparent) 34%, color-mix(in srgb,var(--c-bg-deep) 48%,transparent) 64%, color-mix(in srgb,var(--c-bg-deep) 30%,transparent) 100%)"></div>
+      <!-- Vertical grounding: fade into the page top + bottom -->
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom, color-mix(in srgb,var(--c-bg-deep) 55%,transparent) 0%, transparent 26%, transparent 62%, var(--c-bg-deep) 100%)"></div>
+      <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(70% 90% at 85% 0%, var(--c-hero-bloom), transparent 70%)"></div>
+    </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-16 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
 
       <!-- Left: copy -->
@@ -195,12 +211,25 @@ const keyStats = [
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {valueProps.map(v => (
           <a href={v.href}
-             class="group rounded-xl border border-border-mid p-5 flex flex-col transition-all hover:border-gta-gold/50"
-             style="background:var(--c-card-raised)">
-            <HudIcon name={v.icon as any} size={24} class="text-gta-gold mb-3" />
-            <div class="text-base font-bold text-white mb-1.5">{v.title}</div>
-            <p class="text-sm text-zinc-300 leading-relaxed mb-4 flex-1">{v.body}</p>
-            <span class="text-[11px] font-mono text-gta-gold/90 group-hover:text-gta-bright uppercase tracking-widest">{v.cta} →</span>
+             class="group relative overflow-hidden rounded-xl border border-border-mid flex flex-col transition-all"
+             style={`background:var(--c-card-raised);min-height:208px;--accent:${v.accent}`}>
+            <!-- accent top line -->
+            <div class="absolute top-0 left-0 right-0 h-px z-10" style={`background:linear-gradient(90deg, ${v.accent}, transparent 70%)`}></div>
+            <!-- faint themed background -->
+            <div class="absolute inset-0">
+              <img src={v.img} alt="" aria-hidden="true" loading="lazy"
+                   class="w-full h-full object-cover object-top opacity-[0.13] group-hover:opacity-25 group-hover:scale-105 transition-all duration-500" />
+              <div class="absolute inset-0" style="background:linear-gradient(to top, var(--c-card-raised) 32%, color-mix(in srgb,var(--c-card-raised) 62%,transparent) 100%)"></div>
+            </div>
+            <div class="relative p-5 flex flex-col h-full">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-3"
+                   style={`color:${v.accent};background:color-mix(in srgb,${v.accent} 16%,transparent);border:1px solid color-mix(in srgb,${v.accent} 38%,transparent)`}>
+                <HudIcon name={v.icon as any} size={22} />
+              </div>
+              <div class="text-base font-bold text-white mb-1.5">{v.title}</div>
+              <p class="text-sm text-zinc-300 leading-relaxed mb-4 flex-1">{v.body}</p>
+              <span class="text-[11px] font-mono uppercase tracking-widest" style={`color:${v.accent}`}>{v.cta} →</span>
+            </div>
           </a>
         ))}
       </div>
@@ -213,10 +242,14 @@ const keyStats = [
       <SectionHeader bright label="// Live franchise signals" dotColor="var(--c-live)" />
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {keyStats.map(s => (
-          <div class="rounded-xl border border-border-mid px-5 py-4" style="background:var(--c-card-raised)">
-            <div class="text-2xl font-mono font-black text-gta-bright">{s.value}</div>
-            <div class="text-[12px] text-zinc-200 mt-1 leading-snug">{s.label}</div>
-            <div class="text-[10px] font-mono text-zinc-500 mt-1.5">via {s.source}</div>
+          <div class="relative overflow-hidden rounded-xl border border-border-mid px-5 py-4" style="background:var(--c-card-raised)">
+            <div class="absolute top-0 left-0 right-0 h-px" style={`background:linear-gradient(90deg, ${s.accent}, transparent 80%)`}></div>
+            <div class="absolute inset-0 pointer-events-none" style={`background:linear-gradient(135deg, color-mix(in srgb,${s.accent} 10%,transparent) 0%, transparent 55%)`}></div>
+            <div class="relative">
+              <div class="text-2xl font-mono font-black" style={`color:${s.accent}`}>{s.value}</div>
+              <div class="text-[12px] text-zinc-200 mt-1 leading-snug">{s.label}</div>
+              <div class="text-[10px] font-mono text-zinc-500 mt-1.5">via {s.source}</div>
+            </div>
           </div>
         ))}
       </div>
