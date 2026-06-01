@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import satori from "satori";
 import { Resvg } from "@resvg/resvg-js";
+import sharp from "sharp";
 import { readFileSync } from "fs";
 import { join } from "path";
 
@@ -214,6 +215,135 @@ export function getStaticPaths() {
   return Object.keys(PAGES).map((page) => ({ params: { page } }));
 }
 
+// ── Home hero card ───────────────────────────────────────────────────────────
+// Full-bleed Lucia + Jason duo (mirrors the /gta-vi hero) with centred branding,
+// so the share preview reads well as a full banner AND as a square crop (the
+// layout chat apps like WhatsApp fall back to). Exported as a small JPEG.
+const HOME_TAGLINE =
+  "30 years of GTA's in-game and real-world economy — tracked, predicted and visualised. Confidence-scored data on everything GTA VI.";
+
+async function renderHomeHero(): Promise<Response> {
+  const { bold, regular } = getFonts();
+  const luciaUri = imageToDataUri("assets/gta6/characters/Lucia_Caminos_03.jpg");
+  const jasonUri = imageToDataUri("assets/gta6/characters/Jason_Duval_02.jpg");
+
+  const span = (children: string, style: Record<string, unknown>) => ({
+    type: "span",
+    props: { style: { fontFamily: "Inter", ...style }, children },
+  });
+  const box = (style: Record<string, unknown>, children: unknown[]) => ({
+    type: "div",
+    props: { style: { display: "flex", ...style }, children },
+  });
+
+  const svg = await satori(
+    {
+      type: "div",
+      props: {
+        style: {
+          width: "1200px",
+          height: "630px",
+          display: "flex",
+          position: "relative",
+          fontFamily: "Inter",
+          backgroundColor: "#0e0e11",
+          overflow: "hidden",
+        },
+        children: [
+          // Two protagonist halves
+          box(
+            { position: "absolute", top: "0px", left: "0px", width: "1200px", height: "630px" },
+            [
+              box({ width: "600px", height: "630px", overflow: "hidden" }, [
+                { type: "img", props: { src: luciaUri, style: { width: "600px", height: "630px", objectFit: "cover", objectPosition: "top" } } },
+              ]),
+              box({ width: "600px", height: "630px", overflow: "hidden" }, [
+                { type: "img", props: { src: jasonUri, style: { width: "600px", height: "630px", objectFit: "cover", objectPosition: "top" } } },
+              ]),
+            ]
+          ),
+          // Top + bottom darkening for legibility
+          box(
+            {
+              position: "absolute", top: "0px", left: "0px", width: "1200px", height: "630px",
+              background:
+                "linear-gradient(to bottom, rgba(10,10,13,0.78) 0%, rgba(10,10,13,0.12) 24%, rgba(10,10,13,0.12) 44%, rgba(10,10,13,0.74) 76%, rgba(10,10,13,0.97) 100%)",
+            },
+            []
+          ),
+          // Centre seam scrim so centred text stays readable over both faces
+          box(
+            {
+              position: "absolute", top: "0px", left: "0px", width: "1200px", height: "630px",
+              background:
+                "linear-gradient(to right, transparent 0%, rgba(10,10,13,0.42) 36%, rgba(10,10,13,0.55) 50%, rgba(10,10,13,0.42) 64%, transparent 100%)",
+            },
+            []
+          ),
+          // Content
+          box(
+            {
+              position: "absolute", top: "0px", left: "0px", width: "1200px", height: "630px",
+              flexDirection: "column", justifyContent: "space-between", alignItems: "center", padding: "46px 56px",
+            },
+            [
+              // Top ops wordmark
+              box({ alignItems: "center", gap: "10px" }, [
+                box({ alignItems: "baseline" }, [
+                  span("GTA", { fontSize: "20px", fontWeight: 700, color: "#e4e4e7", letterSpacing: "-0.5px" }),
+                  span("VI", { fontSize: "20px", fontWeight: 700, color: "#f59e0b", letterSpacing: "-0.5px" }),
+                  span(".AI", { fontSize: "11px", fontWeight: 400, color: "#a1a1aa", marginLeft: "4px", letterSpacing: "0.1em" }),
+                ]),
+                box({ width: "1px", height: "14px", backgroundColor: "#3f3f46" }, []),
+                span("DATA INTELLIGENCE", { fontSize: "11px", fontWeight: 400, color: "#a1a1aa", letterSpacing: "0.15em", textTransform: "uppercase" }),
+              ]),
+              // Bottom brand block
+              box({ flexDirection: "column", alignItems: "center", gap: "16px" }, [
+                box(
+                  { padding: "5px 12px", borderRadius: "4px", backgroundColor: "rgba(13,148,136,0.18)", border: "1px solid rgba(13,148,136,0.5)" },
+                  [span("GTA VI INTELLIGENCE", { fontSize: "12px", fontWeight: 700, color: "#2dd4bf", letterSpacing: "0.18em", textTransform: "uppercase" })]
+                ),
+                box({ alignItems: "baseline", justifyContent: "center" }, [
+                  span("GTA", { fontSize: "86px", fontWeight: 700, color: "#fafafa", letterSpacing: "-3px" }),
+                  span("VI", { fontSize: "86px", fontWeight: 700, color: "#f59e0b", letterSpacing: "-3px" }),
+                  span(".AI", { fontSize: "40px", fontWeight: 700, color: "#d4d4d8", marginLeft: "8px", letterSpacing: "-1px" }),
+                ]),
+                box(
+                  { fontSize: "22px", fontWeight: 400, color: "#e4e4e7", textAlign: "center", maxWidth: "880px", lineHeight: "1.45", justifyContent: "center" },
+                  [HOME_TAGLINE]
+                ),
+                box({ width: "44px", height: "3px", backgroundColor: "#f59e0b", borderRadius: "2px", marginTop: "2px" }, []),
+                box({ alignItems: "baseline" }, [
+                  span("gtavi.ai", { fontSize: "15px", fontWeight: 400, color: "#a1a1aa", letterSpacing: "0.05em" }),
+                  span(" · GTA VI launch Nov 19, 2026", { fontSize: "13px", fontWeight: 400, color: "#71717a", letterSpacing: "0.05em" }),
+                ]),
+              ]),
+            ]
+          ),
+        ],
+      },
+    },
+    {
+      width: 1200,
+      height: 630,
+      fonts: [
+        { name: "Inter", data: bold, weight: 700, style: "normal" },
+        { name: "Inter", data: regular, weight: 400, style: "normal" },
+      ],
+    }
+  );
+
+  const resvg = new Resvg(svg, { fitTo: { mode: "width", value: 1200 } });
+  const jpgBuffer = await sharp(resvg.render().asPng()).jpeg({ quality: 82, mozjpeg: true }).toBuffer();
+
+  return new Response(jpgBuffer, {
+    headers: {
+      "Content-Type": "image/jpeg",
+      "Cache-Control": "public, max-age=31536000, immutable",
+    },
+  });
+}
+
 // ── OG image renderer ────────────────────────────────────────────────────────
 
 export const GET: APIRoute = async ({ params }) => {
@@ -221,6 +351,10 @@ export const GET: APIRoute = async ({ params }) => {
   const cfg = PAGES[page];
   if (!cfg) {
     return new Response("Not found", { status: 404 });
+  }
+
+  if (page === "home") {
+    return renderHomeHero();
   }
 
   const { bold, regular } = getFonts();
@@ -630,11 +764,11 @@ export const GET: APIRoute = async ({ params }) => {
     fitTo: { mode: "width", value: 1200 },
   });
   const pngData = resvg.render();
-  const pngBuffer = pngData.asPng();
+  const jpgBuffer = await sharp(pngData.asPng()).jpeg({ quality: 82, mozjpeg: true }).toBuffer();
 
-  return new Response(pngBuffer, {
+  return new Response(jpgBuffer, {
     headers: {
-      "Content-Type": "image/png",
+      "Content-Type": "image/jpeg",
       "Cache-Control": "public, max-age=31536000, immutable",
     },
   });
