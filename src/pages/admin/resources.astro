@@ -1,0 +1,127 @@
+---
+import Base from "../../layouts/Base.astro";
+
+// External art/asset sources for sourcing GTA key art, character renders,
+// location stills and DLC artwork (heroes, OG cards, thumbnails, etc.).
+// LICENSING: Rockstar press assets are the safest source. Community archives
+// and fan galleries mirror official art but always verify usage rights /
+// attribution (e.g. Fandom is CC-BY-SA) before shipping an image to production.
+const TYPE_COLORS: Record<string, string> = {
+  Official: "var(--c-live)",
+  Archive:  "var(--c-brand)",
+  Studio:   "var(--c-economy)",
+  Wiki:     "var(--c-text-4)",
+};
+
+const artResources = [
+  {
+    label: "Rockstar Games — GTA VI",
+    host:  "rockstargames.com/VI",
+    url:   "https://www.rockstargames.com/VI",
+    type:  "Official",
+    note:  "Canonical source — official GTA VI key art, screenshots and press drops. Safest licensing.",
+  },
+  {
+    label: "Official Artwork Archive",
+    host:  "igta5.com",
+    url:   "https://www.igta5.com/official-artwork",
+    type:  "Archive",
+    note:  "Curated archive of official Rockstar artwork across the franchise.",
+  },
+  {
+    label: "GTA Online Artworks",
+    host:  "gtabase.com",
+    url:   "https://www.gtabase.com/grand-theft-auto-v/artworks/gta-online/",
+    type:  "Archive",
+    note:  "Official GTA Online DLC artworks in high resolution, organised by update.",
+  },
+  {
+    label: "GTA Artwork & Renders",
+    host:  "anthroxstudio.com",
+    url:   "https://www.anthroxstudio.com/grand-theft-auto",
+    type:  "Studio",
+    note:  "Anthrox Studio renders / wallpapers. High quality — verify usage rights before use.",
+  },
+  {
+    label: "GTA Online Artwork Gallery",
+    host:  "gta.fandom.com",
+    url:   "https://gta.fandom.com/wiki/Grand_Theft_Auto_Online/Artwork",
+    type:  "Wiki",
+    note:  "GTA Wiki gallery — mix of official and community uploads. CC-BY-SA; check attribution.",
+  },
+];
+
+// Where art already lives in the repo, for quick reference when wiring new assets.
+const localPaths = [
+  { path: "public/assets/gta6/artwork/",    note: "GTA VI key art, hero BG/FG, marketing stills" },
+  { path: "public/assets/gta6/characters/", note: "Character renders (Lucia, Jason, Raul, …)" },
+  { path: "public/assets/gta6/locations/",  note: "Location stills (Vice City, Leonida Keys, …)" },
+  { path: "public/assets/gta5/",            note: "GTA V / GTA Online story + DLC art, covers" },
+  { path: "src/pages/og/[page].jpg.ts",     note: "OG share cards — read backgrounds from public/" },
+];
+---
+
+<Base title="Art & Asset Resources" description="GTAVI.AI art and asset source reference" noindex>
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 py-16">
+
+    <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Admin · Resources</div>
+    <h1 class="text-2xl font-bold text-white mb-1">Art &amp; Asset Resources</h1>
+    <p class="text-[11px] font-mono text-zinc-600 mb-3 leading-relaxed">
+      External sources for GTA key art, character renders, location stills and DLC artwork —
+      used for heroes, OG share cards and thumbnails.
+    </p>
+    <div class="rounded-lg border border-border-dim px-4 py-3 mb-10" style="background:var(--c-card)">
+      <p class="text-[10px] font-mono text-zinc-500 leading-relaxed">
+        <span class="text-zinc-300">Licensing:</span> Rockstar press assets are the safest source.
+        Community archives mirror official art but always verify usage rights / attribution
+        (e.g. Fandom is CC-BY-SA) before shipping an image to production.
+      </p>
+    </div>
+
+    <!-- ── External sources ───────────────────────────────────────────── -->
+    <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// External art sources</div>
+    <div class="flex flex-col gap-3">
+      {artResources.map(r => (
+        <a
+          href={r.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group flex items-start gap-4 rounded-xl border border-border-dim hover:border-border-mid px-5 py-4 transition-colors"
+          style="background:var(--c-card)"
+        >
+          <div class="w-1 self-stretch rounded-full shrink-0 mt-0.5" style={`background:${TYPE_COLORS[r.type] ?? "var(--c-text-4)"}`}></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">{r.label}</span>
+              <span
+                class="text-[10px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded border"
+                style={`color:${TYPE_COLORS[r.type] ?? "var(--c-text-4)"};border-color:color-mix(in srgb, ${TYPE_COLORS[r.type] ?? "var(--c-text-4)"} 40%, transparent);background:color-mix(in srgb, ${TYPE_COLORS[r.type] ?? "var(--c-text-4)"} 12%, transparent)`}
+              >{r.type}</span>
+            </div>
+            <div class="text-[11px] font-mono text-zinc-500 leading-snug mb-1">{r.note}</div>
+            <div class="text-[10px] font-mono text-zinc-600">{r.host}</div>
+          </div>
+          <span class="text-zinc-600 group-hover:text-zinc-400 transition-colors text-sm shrink-0 self-center">↗</span>
+        </a>
+      ))}
+    </div>
+
+    <!-- ── Local asset locations ──────────────────────────────────────── -->
+    <div class="mt-10">
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Where art lives in the repo</div>
+      <div class="flex flex-col gap-2">
+        {localPaths.map(p => (
+          <div class="flex items-baseline justify-between gap-4 rounded-lg border border-border-dim px-4 py-3" style="background:var(--c-card)">
+            <code class="text-[11px] font-mono text-zinc-300 shrink-0">{p.path}</code>
+            <span class="text-[10px] font-mono text-zinc-600 text-right leading-snug">{p.note}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-10">
+      <a href="/admin" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors uppercase tracking-widest">← Admin</a>
+    </div>
+
+  </div>
+</Base>
