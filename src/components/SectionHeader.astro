@@ -37,6 +37,9 @@ interface Props {
   pillHref?: string;
   /** Text for the pill link. Required when pillHref is set. */
   pillLabel?: string;
+  /** Higher-contrast label (near-white) + full-opacity dot. Opt-in; default
+   *  keeps the standard muted treatment so existing pages are unaffected. */
+  bright?: boolean;
   /** Extra classes on the outer row (e.g. "mt-4"). Does not override mb-6. */
   class?: string;
 }
@@ -46,18 +49,21 @@ const {
   dotColor,
   pillHref,
   pillLabel,
+  bright = false,
   class: extraClass = "",
 } = Astro.props;
 
-const hasDot  = !!dotColor;
-const hasPill = !!(pillHref && pillLabel);
+const hasDot   = !!dotColor;
+const hasPill  = !!(pillHref && pillLabel);
+const labelCls = bright ? "text-zinc-100" : "text-zinc-400";
+const dotOp    = bright ? "1" : "0.6";
 ---
 
 {hasPill ? (
   <div class={`flex items-center justify-between gap-3 mb-6 ${extraClass}`}>
     <div class="flex items-center gap-3 min-w-0">
-      {hasDot && <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${dotColor};opacity:0.6`}></span>}
-      <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">{label}</span>
+      {hasDot && <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${dotColor};opacity:${dotOp}`}></span>}
+      <span class={`text-[10px] font-mono ${labelCls} tracking-[0.2em] uppercase`}>{label}</span>
       <div class="flex-1 h-px bg-border-dim"></div>
     </div>
     <a
@@ -69,8 +75,8 @@ const hasPill = !!(pillHref && pillLabel);
   </div>
 ) : (
   <div class={`flex items-center gap-3 mb-6 ${extraClass}`}>
-    {hasDot && <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${dotColor};opacity:0.6`}></span>}
-    <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">{label}</span>
+    {hasDot && <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${dotColor};opacity:${dotOp}`}></span>}
+    <span class={`text-[10px] font-mono ${labelCls} tracking-[0.2em] uppercase`}>{label}</span>
     <div class="flex-1 h-px bg-border-dim"></div>
   </div>
 )}
