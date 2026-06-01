@@ -63,15 +63,16 @@ const {
 
 const resolvedOgImage =
   ogImage ??
-  (ogPage ? `${SITE_BASE}/og/${ogPage}.png` : null) ??
+  (ogPage ? `${SITE_BASE}/og/${ogPage}.jpg` : null) ??
   `https://img.youtube.com/vi/VQRLujxTm3c/maxresdefault.jpg`;
 
 // Declare the OG image dimensions/type so chat apps (WhatsApp, iMessage, Slack,
 // Discord…) render the full-width banner preview instead of cropping a small,
-// dark square thumbnail from the centre. Every generated /og/ card is a
-// 1200×630 PNG; the YouTube fallback is a 1280×720 JPG.
+// dark square thumbnail from the centre. Generated /og/ cards are 1200×630
+// (the main page cards are JPEGs, kept well under WhatsApp's ~300KB rich-preview
+// limit); the YouTube fallback is a 1280×720 JPG.
 const ogIsGeneratedCard = resolvedOgImage.includes("/og/");
-const ogImageType = ogIsGeneratedCard ? "image/png" : "image/jpeg";
+const ogImageType = resolvedOgImage.endsWith(".png") ? "image/png" : "image/jpeg";
 const ogImageWidth = ogIsGeneratedCard ? "1200" : "1280";
 const ogImageHeight = ogIsGeneratedCard ? "630" : "720";
 
