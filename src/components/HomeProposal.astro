@@ -1,0 +1,418 @@
+---
+/**
+ * HomeProposal — shared body for the homepage redesign proposals.
+ *
+ * Rendered by /hpnew (heroBg=true → atmospheric Leonida banner behind the hero)
+ * and /hpnew2 (heroBg=false → previous plain hero: solid surface + bloom only).
+ * Everything else is identical so the two routes isolate the hero-background
+ * decision for an A/B comparison.
+ *
+ * Both are noindex drafts. Swap the winner into /index.astro once chosen.
+ */
+import Base from "../layouts/Base.astro";
+import PredictionCard from "./PredictionCard.astro";
+import Countdown from "./Countdown.astro";
+import SectionHeader from "./SectionHeader.astro";
+import TeaserBar from "./TeaserBar.astro";
+import HudIcon from "./HudIcon.astro";
+import ChartTeaserSearchSignal from "./charts/ChartTeaserSearchSignal.astro";
+import ChartTeaserCpi from "./charts/ChartTeaserCpi.astro";
+import ChartTeaserRevenueSplit from "./charts/ChartTeaserRevenueSplit.astro";
+
+import type { TrailersData, Prediction, TrailerVelocityData, TrailerAnalysisData } from "../types/gta";
+
+import predictionsData    from "../config/predictions";
+import steamData          from "../../data/gta-5/meta/steam-players.json";
+import trailersDataRaw    from "../../data/gta-6/trailers.json";
+import velocityDataRaw    from "../../data/gta-6/trailer-velocity.json";
+import trailerAnalysisRaw from "../../data/gta-6/trailer-analysis.json";
+
+interface Props {
+  /** true → atmospheric hero banner background; false → plain hero (solid + bloom). */
+  heroBg?: boolean;
+}
+const { heroBg = true } = Astro.props;
+
+const trailersData    = trailersDataRaw as unknown as TrailersData;
+const velocityData    = velocityDataRaw as unknown as TrailerVelocityData;
+const trailerAnalysis = trailerAnalysisRaw as unknown as TrailerAnalysisData;
+void trailersData;
+
+// Frame-by-frame entity discovery (Trailer 2) — token-mapped marker colours
+const TYPE_COLOR: Record<string, string> = {
+  vehicle:   "var(--c-brand)",
+  character: "var(--c-live)",
+  location:  "var(--c-title-online)",
+  weapon:    "var(--c-alert)",
+  audio:     "var(--c-chart-purple)",
+  wildlife:  "var(--c-growth)",
+  reveal:    "var(--c-text-1)",
+};
+const t2raw = trailerAnalysis.trailers[1];
+const t2Events = t2raw.events.map(e => ({
+  ...e,
+  pct: +((e.t / t2raw.duration_sec) * 100).toFixed(1),
+  color: TYPE_COLOR[e.type] ?? "var(--c-text-4)",
+  ts: `${Math.floor(e.t / 60)}:${String(e.t % 60).padStart(2, "0")}`,
+}));
+const t2TypeCounts = t2Events.reduce((acc: Record<string, number>, e: any) => {
+  acc[e.type] = (acc[e.type] ?? 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
+
+const trailer2Id = "VQRLujxTm3c";
+const trailer1Id = "QdBZY2fkU-0";
+
+const vel2 = velocityData.trailers.find(t => t.youtube_id === trailer2Id);
+const t2Views = (vel2?.snapshots?.at(-1)?.views ?? 0) as number;
+const t2ViewsStr = t2Views > 0
+  ? (t2Views >= 1e6 ? `${Math.floor(t2Views / 1e7) * 10}M+` : `${Math.round(t2Views / 1e3)}k+`)
+  : "159M+";
+
+const latestSteam = steamData.data.at(-1);
+
+const predThumbnails: Record<string, string> = {
+  "pred-release-window":  "/assets/gta6/characters/Lucia_Caminos_01.jpg",
+  "pred-launch-price":    "/assets/gta6/characters/Jason_Duval_02.jpg",
+  "pred-map-size":        "/assets/gta6/locations/Vice_City_01.jpg",
+  "pred-vehicles-launch": "/assets/gta6/locations/Port_Gellhorn_01.jpg",
+};
+const homePredictions = (predictionsData.predictions as Prediction[])
+  .filter((p: Prediction) => (p.pages ?? []).includes("home"))
+  .sort((a: Prediction, b: Prediction) => (a.display_order ?? 99) - (b.display_order ?? 99))
+  .slice(0, 4);
+
+const HERO_BG = "/assets/gta6/locations/Leonida_Keys_01.jpg";
+
+const valueProps = [
+  {
+    icon: "intel",
+    title: "Confidence-scored predictions",
+    body: "Every GTA VI call — launch price, map size, income — rated 0–100 and sourced. No hot takes, just signal.",
+    href: "/gta-vi/intel",
+    cta: "See the predictions",
+    img: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+    accent: "var(--c-brand)",
+  },
+  {
+    icon: "chart",
+    title: "Live data charts",
+    body: "Search hype vs prior launches, real-terms pricing, Take-Two stock and trailer velocity — the numbers, visualised.",
+    href: "/charts?title=gta-vi",
+    cta: "Open the charts",
+    img: "/assets/gta6/locations/Vice_City_03.jpg",
+    accent: "var(--c-economy)",
+  },
+  {
+    icon: "money",
+    title: "The GTA economy, modelled",
+    body: "In-game and real-world money flows mapped end to end: (J) + Y = C + I. Income yields, Shark Card inflation, spending.",
+    href: "/gta-vi/economy",
+    cta: "Explore the model",
+    img: "/assets/gta6/locations/Ambrosia_02.jpg",
+    accent: "var(--c-gta-dollar)",
+  },
+];
+
+const keyStats = [
+  { value: "475M+",  label: "Trailer 1 views · 24h record",       source: "YouTube",     accent: "var(--c-brand)" },
+  { value: `${latestSteam?.avg_players?.toLocaleString() ?? "—"}`, label: "GTA V avg players · last month", source: "SteamCharts", accent: "var(--c-live)" },
+  { value: "225M+",  label: "GTA V copies sold · lifetime",       source: "Take-Two IR", accent: "var(--c-growth)" },
+  { value: "Nov 19", label: "GTA VI launch · confirmed",          source: "Rockstar",    accent: "var(--c-economy)" },
+];
+
+const pageTitle = `GTA VI.AI — Home (new · ${heroBg ? "banner hero" : "plain hero"})`;
+---
+
+<Base
+  titleContext="gta-vi"
+  title={pageTitle}
+  description="Follow the GTA$ — GTA's dual economy tracked, predicted and explained. Income yields, Shark Card inflation, and what the numbers say about GTA VI."
+  ogPage="home"
+  crossLinksContext="home"
+  noindex
+>
+
+  <!-- ═══════════════════════════════════════════════════════
+       HERO — heroBg=true → atmospheric banner; false → plain
+  ═══════════════════════════════════════════════════════ -->
+  <section class="relative overflow-hidden border-b border-border-dim" style="background:var(--c-bg-deep)">
+    {heroBg ? (
+      <div class="absolute inset-0">
+        <img src={HERO_BG} alt="" aria-hidden="true" class="w-full h-full object-cover" style="object-position:center 32%" loading="eager" />
+        <div class="absolute inset-0" style="background:linear-gradient(to right, var(--c-bg-deep) 0%, color-mix(in srgb,var(--c-bg-deep) 90%,transparent) 34%, color-mix(in srgb,var(--c-bg-deep) 48%,transparent) 64%, color-mix(in srgb,var(--c-bg-deep) 30%,transparent) 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to bottom, color-mix(in srgb,var(--c-bg-deep) 55%,transparent) 0%, transparent 26%, transparent 62%, var(--c-bg-deep) 100%)"></div>
+        <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(70% 90% at 85% 0%, var(--c-hero-bloom), transparent 70%)"></div>
+      </div>
+    ) : (
+      <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(70% 90% at 85% 0%, var(--c-hero-bloom), transparent 70%)"></div>
+    )}
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-16 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+
+      <!-- Left: copy -->
+      <div>
+        <div class="inline-flex items-center gap-2 mb-5 border border-gta-gold/30 bg-gta-gold/10 rounded px-2.5 py-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse"></span>
+          <span class="text-[10px] font-mono text-gta-gold uppercase tracking-[0.2em]">Data intelligence · updated nightly</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.04] mb-4">
+          Follow the <span class="text-gta-bright">GTA$</span>.
+        </h1>
+        <p class="text-zinc-300 text-base leading-relaxed mb-7 max-w-md">
+          30 years of GTA's in-game and real-world economy — tracked, predicted
+          and visualised. Confidence-scored data on everything GTA&nbsp;VI.
+        </p>
+        <div class="mb-8">
+          <Countdown variant="hero" />
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href="/gta-vi/intel"
+            class="inline-flex items-center gap-2 bg-gta-gold hover:bg-gta-bright text-black font-mono font-bold text-xs px-5 py-3 rounded transition-colors tracking-wide uppercase">
+            Predictions →
+          </a>
+          <a href="/charts?title=gta-vi"
+            class="inline-flex items-center gap-2 border border-gta-gold/40 hover:border-gta-gold text-gta-gold hover:text-gta-bright font-mono text-xs px-5 py-3 rounded transition-colors tracking-wide uppercase">
+            GTA VI Charts
+          </a>
+          <a href="/gta-vi"
+            class="inline-flex items-center gap-2 border border-border-mid hover:border-zinc-500 text-zinc-200 hover:text-white font-mono text-xs px-5 py-3 rounded transition-colors tracking-wide uppercase">
+            VI Hub
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: crisp protagonist duo -->
+      <div class="relative rounded-2xl overflow-hidden border border-border-mid shadow-2xl shadow-black/60" style="aspect-ratio:16/10">
+        <div class="absolute inset-0 flex">
+          <div class="flex-1 relative overflow-hidden">
+            <img src="/assets/gta6/characters/Lucia_Caminos_03.jpg" alt="Lucia Caminos" class="w-full h-full object-cover object-top" loading="eager" />
+          </div>
+          <div class="flex-1 relative overflow-hidden">
+            <img src="/assets/gta6/characters/Jason_Duval_02.jpg" alt="Jason Duval" class="w-full h-full object-cover object-top" loading="eager" />
+          </div>
+        </div>
+        <div class="absolute inset-x-0 bottom-0 h-1/2" style="background:linear-gradient(to top, var(--c-bg-deep) 4%, transparent 100%)"></div>
+        <div class="absolute top-3 left-3">
+          <span class="text-[10px] font-mono bg-black/55 text-gta-gold border border-gta-gold/30 px-2 py-0.5 rounded uppercase tracking-widest">Grand Theft Auto VI</span>
+        </div>
+        <div class="absolute bottom-3 left-4 right-4 flex items-end justify-between">
+          <div>
+            <div class="text-sm font-bold text-white leading-tight">Lucia &amp; Jason</div>
+            <div class="text-[11px] font-mono text-zinc-300">Leonida · Vice City</div>
+          </div>
+          <span class="text-[11px] font-mono text-zinc-200">Nov 19, 2026</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 flex flex-col gap-16">
+
+    <!-- WHAT WE DO — value props -->
+    <section>
+      <SectionHeader bright label="// What GTAVI.AI does" dotColor="var(--c-brand)" />
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {valueProps.map(v => (
+          <a href={v.href}
+             class="group relative overflow-hidden rounded-xl border border-border-mid flex flex-col transition-all"
+             style={`background:var(--c-card-raised);min-height:208px;--accent:${v.accent}`}>
+            <div class="absolute top-0 left-0 right-0 h-px z-10" style={`background:linear-gradient(90deg, ${v.accent}, transparent 70%)`}></div>
+            <div class="absolute inset-0">
+              <img src={v.img} alt="" aria-hidden="true" loading="lazy"
+                   class="w-full h-full object-cover object-top opacity-[0.13] group-hover:opacity-25 group-hover:scale-105 transition-all duration-500" />
+              <div class="absolute inset-0" style="background:linear-gradient(to top, var(--c-card-raised) 32%, color-mix(in srgb,var(--c-card-raised) 62%,transparent) 100%)"></div>
+            </div>
+            <div class="relative p-5 flex flex-col h-full">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-3"
+                   style={`color:${v.accent};background:color-mix(in srgb,${v.accent} 16%,transparent);border:1px solid color-mix(in srgb,${v.accent} 38%,transparent)`}>
+                <HudIcon name={v.icon as any} size={22} />
+              </div>
+              <div class="text-base font-bold text-white mb-1.5">{v.title}</div>
+              <p class="text-sm text-zinc-300 leading-relaxed mb-4 flex-1">{v.body}</p>
+              <span class="text-[11px] font-mono uppercase tracking-widest" style={`color:${v.accent}`}>{v.cta} →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- KEY SIGNALS — bold live numbers -->
+    <section>
+      <SectionHeader bright label="// Live franchise signals" dotColor="var(--c-live)" />
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {keyStats.map(s => (
+          <div class="relative overflow-hidden rounded-xl border border-border-mid px-5 py-4" style="background:var(--c-card-raised)">
+            <div class="absolute top-0 left-0 right-0 h-px" style={`background:linear-gradient(90deg, ${s.accent}, transparent 80%)`}></div>
+            <div class="absolute inset-0 pointer-events-none" style={`background:linear-gradient(135deg, color-mix(in srgb,${s.accent} 10%,transparent) 0%, transparent 55%)`}></div>
+            <div class="relative">
+              <div class="text-2xl font-mono font-black" style={`color:${s.accent}`}>{s.value}</div>
+              <div class="text-[12px] text-zinc-200 mt-1 leading-snug">{s.label}</div>
+              <div class="text-[10px] font-mono text-zinc-500 mt-1.5">via {s.source}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- PREDICTIONS — top signals -->
+    <section>
+      <SectionHeader bright label="// GTA VI Predictions — confidence-scored" dotColor="var(--c-brand)" pillHref="/gta-vi/intel" pillLabel="Full analysis →" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {homePredictions.map((p: Prediction) => (
+          <PredictionCard
+            id={p.id}
+            title={p.title}
+            value={p.value}
+            confidence={p.confidence}
+            confidence_tier={p.confidence_tier}
+            basis={p.basis}
+            unit={p.unit}
+            trailer_timestamp={p.trailer_timestamp}
+            prediction_method={p.prediction_method}
+            prediction_range={p.prediction_range}
+            source={p.source}
+            source_type={p.source_type}
+            outcome_verified={p.outcome_verified}
+            outcome_actual={p.outcome_actual}
+            thumbnail={(p as any).thumbnail ?? predThumbnails[p.id]}
+            compact={true}
+            game="gta-vi"
+            short_value={(p as any).short_value ?? null}
+            detailHref={`/gta-vi/intel#${p.id}`}
+          />
+        ))}
+      </div>
+    </section>
+
+    <!-- DATA CHARTS — compact real teasers -->
+    <section>
+      <SectionHeader bright label="// The GTA Economy in Data" dotColor="var(--c-economy)" pillHref="/charts?title=gta-vi" pillLabel="All charts →" />
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+        <ChartTeaserSearchSignal />
+        <ChartTeaserCpi />
+        <ChartTeaserRevenueSplit />
+      </div>
+    </section>
+
+    <!-- TRAILER 2 — FRAME-BY-FRAME ENTITY DISCOVERY -->
+    <section>
+      <SectionHeader
+        bright
+        label="// Trailer 2 — Frame-by-Frame Entity Discovery"
+        dotColor="var(--c-brand)"
+        pillHref="/charts#section-trailer-discovery-chart"
+        pillLabel="Full analysis →"
+      />
+      <div class="rounded-xl border border-border-mid overflow-hidden" style="background:var(--c-card-raised)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <div class="font-bold text-white text-sm">What Every Second of Trailer 2 Revealed</div>
+            <div class="text-[11px] text-zinc-300 font-mono mt-0.5">Each marker = a new entity confirmed. Colour = type. {t2Events.length} entities across {t2raw.duration_sec}s.</div>
+          </div>
+          <span class="text-[10px] font-mono text-zinc-400 shrink-0">{t2Events.length} entities · {t2raw.duration_sec}s runtime</span>
+        </div>
+
+        <div class="px-5 py-6">
+          <div class="relative h-8 rounded-full" style="background:var(--c-bg);border:1px solid var(--c-border-2)">
+            <div class="absolute inset-y-0 left-0 right-0 rounded-full" style="background:linear-gradient(to right,color-mix(in srgb,var(--c-brand) 14%,transparent) 0%,color-mix(in srgb,var(--c-brand) 4%,transparent) 100%)"></div>
+            {t2Events.map((e: any) => (
+              <div
+                class="absolute top-1/2 w-3 h-3 rounded-full -translate-y-1/2 -translate-x-1/2 border-2 cursor-pointer transition-transform duration-150 hover:scale-150 hover:z-10"
+                style={`left:${e.pct}%;background:${e.color};border-color:var(--c-card-raised)`}
+                title={`${e.entity} (${e.type}) @ ${e.ts}`}
+              ></div>
+            ))}
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-zinc-300">
+              {Math.floor(t2raw.duration_sec / 60)}:{String(t2raw.duration_sec % 60).padStart(2, "0")}
+            </span>
+          </div>
+
+          <div class="relative h-10 mt-1">
+            {t2Events.filter((_: any, i: number) => i % 3 === 0).map((e: any) => (
+              <div class="absolute text-[10px] font-mono whitespace-nowrap" style={`left:${e.pct}%;color:${e.color};transform:translateX(-50%)`}>
+                {e.entity.split(" ")[0]}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="px-5 py-3 border-t border-border-dim flex flex-wrap items-center gap-4 justify-between">
+          <div class="flex flex-wrap gap-3">
+            {Object.entries(t2TypeCounts).map(([type, count]) => (
+              <span class="flex items-center gap-1.5 text-[10px] font-mono text-zinc-300">
+                <span class="w-2 h-2 rounded-full inline-block shrink-0" style={`background:${TYPE_COLOR[type] ?? "var(--c-text-4)"}`}></span>
+                {type} <span class="text-zinc-500">({count as number})</span>
+              </span>
+            ))}
+          </div>
+          <span class="text-[11px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPLORE — deep-link tiles -->
+    <TeaserBar />
+
+    <!-- OFFICIAL TRAILERS -->
+    <section>
+      <SectionHeader bright label="// Official Footage" dotColor="var(--c-brand)" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {[
+          { id: trailer1Id, title: "Trailer 1", date: "Dec 4, 2023", views: "475M+ views · 24h record" },
+          { id: trailer2Id, title: "Trailer 2", date: "May 6, 2025", views: `${t2ViewsStr} views · 2:47 runtime` },
+        ].map(t => (
+          <a
+            href={`https://www.youtube.com/watch?v=${t.id}`}
+            target="_blank" rel="noopener noreferrer"
+            class="group relative overflow-hidden rounded-xl border border-border-mid hover:border-gta-gold/40 transition-all duration-200"
+          >
+            <div class="relative aspect-video overflow-hidden">
+              <img
+                src={`https://img.youtube.com/vi/${t.id}/maxresdefault.jpg`}
+                alt={`GTA VI ${t.title}`}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0" style="background:linear-gradient(to top, var(--c-bg-deep) 2%, transparent 55%)"></div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-black/60 border border-white/30 flex items-center justify-center group-hover:bg-gta-gold/25 group-hover:border-gta-gold/50 transition-all duration-200">
+                  <span class="text-white text-lg ml-0.5">▶</span>
+                </div>
+              </div>
+              <div class="absolute top-3 left-3">
+                <span class="text-[11px] font-mono bg-black/55 text-gta-gold border border-gta-gold/30 px-2 py-0.5 rounded uppercase tracking-widest">Official</span>
+              </div>
+            </div>
+            <div class="px-4 py-3 flex items-center justify-between" style="background:var(--c-card-raised)">
+              <div>
+                <div class="font-semibold text-white text-sm">Grand Theft Auto VI — {t.title}</div>
+                <div class="text-[11px] text-zinc-400 font-mono mt-0.5">{t.date} · {t.views}</div>
+              </div>
+              <span class="text-zinc-400 group-hover:text-gta-gold transition-colors text-xs font-mono">↗</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- GTA VI BAND — the main event -->
+    <section>
+      <div class="relative rounded-2xl border border-gta-gold/30 overflow-hidden" style="background:var(--c-card-raised)">
+        <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg, var(--c-brand), transparent 70%)"></div>
+        <div class="px-6 sm:px-8 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div>
+            <div class="text-[10px] font-mono text-gta-gold uppercase tracking-[0.2em] mb-2">// The main event</div>
+            <div class="text-2xl sm:text-3xl font-bold text-white leading-tight">Grand Theft Auto VI</div>
+            <div class="text-sm text-zinc-300 mt-1">Leonida · Vice City · launching November 19, 2026</div>
+          </div>
+          <a href="/gta-vi"
+             class="shrink-0 inline-flex items-center gap-2 bg-gta-gold hover:bg-gta-bright text-black font-mono font-bold text-xs px-6 py-3 rounded transition-colors tracking-wide uppercase">
+            GTA VI Intelligence Hub →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Base>
