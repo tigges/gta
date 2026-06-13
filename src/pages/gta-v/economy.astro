@@ -65,7 +65,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
 
     <!-- Circular Economy Diagram -->
     <section>
-      <SectionHeader label="// Circular Economy Model" />
+      <SectionHeader bright label="// Circular Economy Model" />
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 rounded-xl border border-border-dim p-5" style="background:var(--c-bg)">
           <CircularEconomy titleId="gta-5" mode="full" />
@@ -78,8 +78,8 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
     <!-- BAWSAQ Mission Stock Guide -->
     <section>
       <div class="flex items-center gap-3 mb-6">
-        <span class="text-[11px] font-mono bg-purple-900/30 border border-purple-700/40 text-purple-400 px-2 py-0.5 rounded uppercase tracking-widest">Capital Market</span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// BAWSAQ — Assassination Mission Returns</span>
+        <span class="text-[11px] font-mono px-2 py-0.5 rounded uppercase tracking-widest" style="color:var(--c-chart-purple);background:color-mix(in srgb,var(--c-chart-purple) 14%,transparent);border:1px solid color-mix(in srgb,var(--c-chart-purple) 35%,transparent)">Capital Market</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// BAWSAQ — Assassination Mission Returns</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <a href="/gta-online/assassination-guide" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase">Full guide →</a>
       </div>
@@ -121,7 +121,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
 
     <!-- Key Innovation -->
     <section>
-      <SectionHeader label="// Key Innovation" />
+      <SectionHeader bright label="// Key Innovation" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card);border-left:3px solid var(--c-brand)">
         <div class="px-6 py-5">
           <div class="text-[10px] font-mono uppercase tracking-widest mb-2 text-gta-gold">Capital Market Era — {economy.title_name}</div>
@@ -142,7 +142,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
 
     <!-- GTA VI Lineage -->
     <section class="rounded-xl border border-gta-gold/15 px-6 py-5" style="background:var(--c-hero-bloom)">
-      <div class="text-[11px] font-mono text-gta-gold/40 uppercase tracking-widest mb-2">GTA VI Lineage</div>
+      <div class="text-[11px] font-mono text-gta-gold uppercase tracking-widest mb-2">GTA VI Lineage</div>
       <p class="text-[11px] font-mono text-zinc-300 leading-relaxed">{economy.gta_vi_lineage}</p>
     </section>
 
