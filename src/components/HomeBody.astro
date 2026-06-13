@@ -1,13 +1,11 @@
 ---
 /**
- * HomeProposal — shared body for the homepage redesign proposals.
+ * HomeBody — the homepage body (clean redesign, shipped as the live homepage).
  *
- * Rendered by /hpnew (heroBg=true → atmospheric Leonida banner behind the hero)
- * and /hpnew2 (heroBg=false → previous plain hero: solid surface + bloom only).
- * Everything else is identical so the two routes isolate the hero-background
- * decision for an A/B comparison.
- *
- * Both are noindex drafts. Swap the winner into /index.astro once chosen.
+ * Rendered by /index.astro. `heroBg` toggles the atmospheric hero banner
+ * (default false = the chosen plain hero: solid surface + bloom). noindex/title/
+ * description are props so the live home is indexable while archival/preview
+ * copies (e.g. /hpold) can opt into noindex.
  */
 import Base from "../layouts/Base.astro";
 import PredictionCard from "./PredictionCard.astro";
@@ -30,8 +28,17 @@ import trailerAnalysisRaw from "../../data/gta-6/trailer-analysis.json";
 interface Props {
   /** true → atmospheric hero banner background; false → plain hero (solid + bloom). */
   heroBg?: boolean;
+  /** Search-engine noindex (for archival/preview copies). Live home leaves false. */
+  noindex?: boolean;
+  title?: string;
+  description?: string;
 }
-const { heroBg = true } = Astro.props;
+const {
+  heroBg = false,
+  noindex = false,
+  title = "GTA VI.AI",
+  description = "Follow the GTA$ — GTA's dual economy tracked, predicted and explained. Income yields, Shark Card inflation, and what the numbers say about GTA VI.",
+} = Astro.props;
 
 const trailersData    = trailersDataRaw as unknown as TrailersData;
 const velocityData    = velocityDataRaw as unknown as TrailerVelocityData;
@@ -121,17 +128,29 @@ const keyStats = [
   { value: "Nov 19", label: "GTA VI launch · confirmed",          source: "Rockstar",    accent: "var(--c-economy)" },
 ];
 
-const pageTitle = `GTA VI.AI — Home (new · ${heroBg ? "banner hero" : "plain hero"})`;
 ---
 
 <Base
   titleContext="gta-vi"
-  title={pageTitle}
-  description="Follow the GTA$ — GTA's dual economy tracked, predicted and explained. Income yields, Shark Card inflation, and what the numbers say about GTA VI."
+  title={title}
+  description={description}
   ogPage="home"
   crossLinksContext="home"
-  noindex
+  noindex={noindex}
 >
+<script is:inline type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "GTA VI.AI",
+  "alternateName": "GTAVI.AI",
+  "url": "https://gtavi.ai",
+  "description": "Data-driven intelligence across every GTA generation — confidence-scored predictions, franchise analytics, income data, and what the numbers say about GTA VI.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": { "@type": "EntryPoint", "urlTemplate": "https://gtavi.ai/database?q={search_term_string}" },
+    "query-input": "required name=search_term_string"
+  }
+})}</script>
 
   <!-- ═══════════════════════════════════════════════════════
        HERO — heroBg=true → atmospheric banner; false → plain
