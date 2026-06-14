@@ -7,6 +7,7 @@
  */
 import Base from "../../../layouts/Base.astro";
 import ShareDropdown from "../../../components/ShareDropdown.astro";
+import { C_GROWTH, C_BRAND, C_ECONOMY, C_LIVE } from "../../../config/colors";
 import revenueTiersData from "../../../../data/gta-5/economy/revenue-tiers.json";
 import weeklyBonuses    from "../../../../data/gta-5/economy/weekly-bonuses.json";
 import saleFreqData     from "../../../../data/gta-5/economy/sale-frequency.json";
@@ -25,7 +26,7 @@ const COMPONENTS = [
     gph:      1200000,
     setup:    4200000,
     note:     "Primary earner. Always check primary loot — only run for Panther Statue, Pink Diamond, or Bearer Bonds.",
-    color:    "#818cf8",
+    color:    C_ECONOMY,
   },
   {
     id:       "agency-vip-contract",
@@ -34,7 +35,7 @@ const COMPONENTS = [
     gph:      600000,
     setup:    2010000,
     note:     "Dr. Dre contract or Garment Factory missions during the 3hr Cayo cooldown. No resupply needed.",
-    color:    "#f59e0b",
+    color:    C_BRAND,
   },
   {
     id:       "nightclub",
@@ -43,7 +44,7 @@ const COMPONENTS = [
     gph:      120000,
     setup:    6700000,
     note:     "Requires Bunker + Acid Lab + MC businesses linked. Fill to 1000 units then sell large.",
-    color:    "#22c55e",
+    color:    C_GROWTH,
   },
   {
     id:       "bunker",
@@ -52,7 +53,7 @@ const COMPONENTS = [
     gph:      90000,
     setup:    2500000,
     note:     "Paleto Bay bunker is cheapest. Upgrade Equipment + Staff. Sell when full to public lobby.",
-    color:    "#22c55e",
+    color:    C_GROWTH,
   },
   {
     id:       "acid-lab",
@@ -61,7 +62,7 @@ const COMPONENTS = [
     gph:      170000,
     setup:    2950000,
     note:     "Unlocked via First Dose missions (free). Resupply every 2.5hr. Best semi-passive per cost.",
-    color:    "#f59e0b",
+    color:    C_BRAND,
   },
 ];
 
@@ -85,11 +86,11 @@ const bonusFreqs = COMPONENTS.map(comp => ({
 >
   <!-- Breadcrumb -->
   <div class="border-b border-border-dim" style="background:var(--c-bg-deep)">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-[10px] font-mono text-zinc-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-[10px] font-mono text-zinc-500">
       <a href="/gta-online" class="hover:text-zinc-400 transition-colors">GTA Online</a>
-      <span class="text-zinc-800">›</span>
+      <span class="text-zinc-500">›</span>
       <a href="/gta-online/income" class="hover:text-zinc-400 transition-colors">Income Sources</a>
-      <span class="text-zinc-800">›</span>
+      <span class="text-zinc-500">›</span>
       <span class="text-zinc-500">Full Meta Stack</span>
     </div>
   </div>
@@ -97,11 +98,11 @@ const bonusFreqs = COMPONENTS.map(comp => ({
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-8">
 
     <!-- Hero header -->
-    <div class="rounded-xl border border-gta-green/30 overflow-hidden" style="background:linear-gradient(135deg,#0e1a10 0%,#131316 60%)">
+    <div class="rounded-xl border border-gta-green/30 overflow-hidden" style="background:linear-gradient(135deg,color-mix(in srgb,var(--c-growth) 14%,var(--c-card-raised)) 0%,var(--c-card) 60%)">
       <div class="px-6 py-6">
         <div class="flex items-center gap-2 mb-3">
           <span class="text-[11px] font-mono bg-gta-green/40 text-gta-green border border-gta-green/40 px-2 py-0.5 rounded uppercase tracking-widest">S+ Tier</span>
-          <span class="text-[11px] font-mono text-zinc-600 border border-border-mid px-2 py-0.5 rounded uppercase tracking-widest">Stack Strategy · Solo</span>
+          <span class="text-[11px] font-mono text-zinc-500 border border-border-mid px-2 py-0.5 rounded uppercase tracking-widest">Stack Strategy · Solo</span>
         </div>
         <h1 class="text-2xl sm:text-3xl font-bold text-white mb-2">
           GTA Online Full Meta Stack
@@ -113,14 +114,14 @@ const bonusFreqs = COMPONENTS.map(comp => ({
         </p>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { value: "$1.7M/hr", label: "combined ceiling",  color: "#22c55e" },
-            { value: `$${(totalSetup / 1_000_000).toFixed(0)}M`,   label: "total setup cost", color: "#f59e0b" },
-            { value: `${COMPONENTS.length} sources`, label: "running in parallel", color: "#818cf8" },
-            { value: "100% solo",  label: "no lobby needed", color: "#0d9488" },
+            { value: "$1.7M/hr", label: "combined ceiling",  color: C_GROWTH },
+            { value: `$${(totalSetup / 1_000_000).toFixed(0)}M`,   label: "total setup cost", color: C_BRAND },
+            { value: `${COMPONENTS.length} sources`, label: "running in parallel", color: C_ECONOMY },
+            { value: "100% solo",  label: "no lobby needed", color: C_LIVE },
           ].map(s => (
             <div class="rounded-lg border border-border-mid px-3 py-2.5" style="background:var(--c-bg)">
               <div class="text-lg font-mono font-black mb-0.5" style={`color:${s.color}`}>{s.value}</div>
-              <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest">{s.label}</div>
+              <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">{s.label}</div>
             </div>
           ))}
         </div>
@@ -129,7 +130,7 @@ const bonusFreqs = COMPONENTS.map(comp => ({
 
     <!-- Active bonus callout -->
     {activeBonuses.length > 0 && (
-      <div class="rounded-xl border border-gta-green/30 px-5 py-3 flex items-center gap-3 flex-wrap" style="background:rgba(34,197,94,0.05)">
+      <div class="rounded-xl border border-gta-green/30 px-5 py-3 flex items-center gap-3 flex-wrap" style="background:color-mix(in srgb,var(--c-growth) 6%,transparent)">
         <span class="text-lg shrink-0">🔥</span>
         <div>
           <div class="text-xs font-semibold text-gta-green">STACK COMPONENT ON BONUS THIS WEEK</div>
@@ -143,7 +144,7 @@ const bonusFreqs = COMPONENTS.map(comp => ({
     <!-- Component breakdown -->
     <section>
       <div class="flex items-center gap-3 mb-4">
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Stack Components — Run in Parallel</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// Stack Components — Run in Parallel</span>
         <div class="flex-1 h-px bg-border-dim"></div>
       </div>
       <div class="flex flex-col gap-3">
@@ -153,15 +154,15 @@ const bonusFreqs = COMPONENTS.map(comp => ({
           return (
             <a href={`/gta-online/income/${comp.id}`}
                class="group rounded-xl border border-border-dim hover:border-border-mid overflow-hidden transition-all"
-               style="background:var(--c-card)">
+               style="background:var(--c-card-raised)">
               <div class="px-5 py-4 flex items-start gap-4">
                 <div class="shrink-0 w-2 h-2 rounded-full mt-1.5" style={`background:${comp.color}`}></div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2 flex-wrap mb-1">
                     <span class="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">{comp.name}</span>
-                    <span class="text-[10px] font-mono text-zinc-600 border border-border-mid px-1.5 py-0.5 rounded uppercase tracking-widest">{comp.role.split(' — ')[0]}</span>
+                    <span class="text-[10px] font-mono text-zinc-500 border border-border-mid px-1.5 py-0.5 rounded uppercase tracking-widest">{comp.role.split(' — ')[0]}</span>
                   </div>
-                  <div class="text-[10px] font-mono text-zinc-600 mb-2">{comp.role.split(' — ')[1] ?? comp.role}</div>
+                  <div class="text-[10px] font-mono text-zinc-500 mb-2">{comp.role.split(' — ')[1] ?? comp.role}</div>
                   <p class="text-[11px] text-zinc-500 leading-relaxed">{comp.note}</p>
                   {freq && freq.last_bonus_date && (
                     <div class="mt-2 text-[11px] font-mono text-zinc-500">
@@ -184,10 +185,10 @@ const bonusFreqs = COMPONENTS.map(comp => ({
     <!-- Session flow guide -->
     <section>
       <div class="flex items-center gap-3 mb-4">
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Optimal Session Flow</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// Optimal Session Flow</span>
         <div class="flex-1 h-px bg-border-dim"></div>
       </div>
-      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
         <div class="divide-y divide-border-dim">
           {[
             { time: "0:00",  action: "Log in — collect Nightclub + Bunker goods if full, trigger Acid Lab resupply" },
@@ -213,18 +214,18 @@ const bonusFreqs = COMPONENTS.map(comp => ({
     <!-- Setup path -->
     <section>
       <div class="flex items-center gap-3 mb-4">
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Getting Here — The Optimal Setup Path</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// Getting Here — The Optimal Setup Path</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500">total investment: ${(totalSetup / 1_000_000).toFixed(0)}M GTA$</span>
       </div>
-      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
         <div class="divide-y divide-border-dim">
           {starterPath.map((step: any) => (
             <div class="px-5 py-3 flex items-center gap-4">
               <div class="shrink-0 w-5 h-5 rounded-full bg-gta-gold/15 border border-gta-gold/30 flex items-center justify-center text-[11px] font-mono font-bold text-gta-gold">{step.step}</div>
               <div class="flex-1">
                 <div class="text-[11px] font-mono text-zinc-300">{step.action}</div>
-                <div class="text-[11px] font-mono text-zinc-600 mt-0.5">Unlocks: {step.unlocks}</div>
+                <div class="text-[11px] font-mono text-zinc-500 mt-0.5">Unlocks: {step.unlocks}</div>
               </div>
               <div class="shrink-0 text-right">
                 <div class="text-[11px] font-mono font-bold text-zinc-400">
@@ -249,7 +250,7 @@ const bonusFreqs = COMPONENTS.map(comp => ({
       </a>
       <div class="ml-auto">
         <div class="flex items-center gap-2 shrink-0">
-          <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+          <span class="text-[11px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
           <ShareDropdown anchorId="full-meta-stack" shareText="GTA Online full meta stack: Cayo Perico + Agency contracts + passives = $1.7M+/hr solo. The optimal 2024 income strategy." size="sm" />
         </div>
       </div>
