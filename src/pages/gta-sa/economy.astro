@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
-import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
+import ChartComplexityHtml from "../../components/ChartComplexityHtml.astro";
 import GamePill from "../../components/GamePill.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
@@ -47,7 +47,7 @@ const activeDims = Object.entries(dims).filter(([, v]) => (v as number) > 0);
           </div>
           <CardFooter anchorId={ecoModel.anchorId} sources="Source: curated · GTA Fandom Wiki · franchise economic analysis" shareText={ecoModel.shareText} />
         </div>
-        <ChartComplexityRadar titleId="gta-sa" size={260} />
+        <ChartComplexityHtml titleId="gta-sa" showAverage={true} />
       </div>
     </section>
 

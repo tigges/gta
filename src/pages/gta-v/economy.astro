@@ -6,7 +6,7 @@
 import Base from "../../layouts/Base.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
-import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
+import ChartComplexityHtml from "../../components/ChartComplexityHtml.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import GamePill from "../../components/GamePill.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
@@ -77,7 +77,7 @@ const bestCut    = bigScore?.approaches?.[0]?.player_max_cut ?? 41600000;
           <CircularEconomy titleId="gta-5" mode="full" />
           <CardFooter anchorId="eco-gta-v" sources="Source: curated · GTA Fandom Wiki · franchise economic analysis" shareText="GTA V's economy: capital market model — missions, stock assassinations, heists. The $2B strategy is the most sophisticated single-player money system in GTA history." />
         </div>
-        <ChartComplexityRadar titleId="gta-5" size={260} />
+        <ChartComplexityHtml titleId="gta-5" showAverage={true} />
       </div>
     </section>
 
