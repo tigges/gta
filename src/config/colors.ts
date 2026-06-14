@@ -35,7 +35,7 @@ export const C_EXPENDITURE  = C_BRAND;   // C+I expenditure = gold
 // ── Confidence tier constants ────────────────────────────────────────────
 export const C_TIER_CONFIRMED = "#34d399";  // emerald-400
 export const C_TIER_REPORTED  = C_BRAND;    // gold
-export const C_TIER_PREDICTED = "#9898b8";  // = C_TEXT_4
+export const C_TIER_PREDICTED = "#d4d4d8";  // = C_TEXT_2 — near-white; matches --c-tier-predicted in tokens.css
 
 // ── Play type constants ──────────────────────────────────────────────────
 export const C_PLAY_PASSIVE = C_GROWTH;   // green
