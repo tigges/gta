@@ -128,7 +128,7 @@ const featuredIncome = incomeList
           { value: `${confirmedRegions}`,                               label: "confirmed regions",    sub: "Leonida map" },
           { value: `${totalEntities}`,                                  label: "entities discovered",  sub: "frame-by-frame" },
         ].map(s => (
-          <div class="rounded-xl border border-border-dim px-4 py-3" style="background:var(--c-card)">
+          <div class="rounded-xl border border-border-dim px-4 py-3" style="background:var(--c-card-raised)">
             <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
             <div class="text-[11px] text-zinc-400 mt-0.5">{s.label}</div>
             <div class="text-[10px] font-mono text-zinc-600">{s.sub}</div>
@@ -144,7 +144,7 @@ const featuredIncome = incomeList
          LAYER 1: SIGNAL PREDICTIONS — 3-page carousel, 4 per page
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Signal Intelligence" pillHref="/gta-vi/intel" pillLabel={`All ${predictions.length} predictions →`} />
+      <SectionHeader bright label="// Signal Intelligence" pillHref="/gta-vi/intel" pillLabel={`All ${predictions.length} predictions →`} />
 
       <!-- Carousel viewport: overflow-hidden clips pages 2 and 3 -->
       <div id="pred-viewport" class="overflow-hidden">
@@ -210,7 +210,7 @@ const featuredIncome = incomeList
          LAYER 2: CHARTS — static CSS teasers
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Data Charts" pillHref="/charts?title=gta-vi" pillLabel="All GTA VI charts →" />
+      <SectionHeader bright label="// Data Charts" pillHref="/charts?title=gta-vi" pillLabel="All GTA VI charts →" />
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <ChartTeaserCpi />
         <ChartTeaserRevenueSplit />
@@ -222,7 +222,7 @@ const featuredIncome = incomeList
          LAYER 3: ECONOMY — diagram + income + expenditure
     ═══════════════════════════════════════════════════════ -->
     <section id="economy" style="scroll-margin-top:72px">
-      <SectionHeader label="// The Circular GTA Economy · Simplified · where does the money go?" pillHref="/gta-vi/economy#eco-gta-vi" pillLabel="Full model →" />
+      <SectionHeader bright label="// The Circular GTA Economy · Simplified · where does the money go?" pillHref="/gta-vi/economy#eco-gta-vi" pillLabel="Full model →" />
 
       <!-- Simplified Economy Diagram (SED) — canonical base model -->
       <div class="mb-6">
