@@ -11,7 +11,6 @@ import ShareDropdown from "../../components/ShareDropdown.astro";
 import CardFooter from "../../components/CardFooter.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
 import CircularEconomy from "../../components/CircularEconomy.astro";
-import ChartComplexityRadar from "../../components/ChartComplexityRadar.astro";
 import ChartPreviewCard from "../../components/charts/ChartPreviewCard.astro";
 import Ledger from "../../components/Ledger.astro";
 import type { LedgerEntry } from "../../components/Ledger.astro";
@@ -95,7 +94,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
          COMPLEXITY ARC CHART
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Economic Complexity — Full Franchise Timeline 1997–2026" />
+      <SectionHeader bright label="// Economic Complexity — Full Franchise Timeline 1997–2026" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
         <div class="px-5 py-4 border-b border-border-dim">
           <div class="font-semibold text-zinc-200 text-sm mb-0.5">Economic Complexity — Full Franchise Arc</div>
@@ -118,7 +117,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
          OVERVIEW TABLE
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// All Economies — Overview" />
+      <SectionHeader bright label="// All Economies — Overview" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD}`}>
         <div class="overflow-x-auto">
           <table class="w-full text-xs font-mono" style="min-width:700px">
@@ -201,7 +200,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
       <div class="rounded-xl border border-red-900/30 overflow-hidden" style="background:rgba(127,29,29,0.06)">
         <div class="px-6 py-5">
           <div class="flex items-center gap-2 mb-3">
-            <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">HD Universe 2008</span>
+            <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">HD Universe 2008</span>
           </div>
           <div class="font-semibold text-red-300 text-base mb-2">
             GTA IV: The Most Important Dip in Franchise History
@@ -220,7 +219,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
          ECONOMY BROWSER — expandable per-title diagrams
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Economy Browser — Expand to View Circular Flow" />
+      <SectionHeader bright label="// Economy Browser — Expand to View Circular Flow" />
       <div class="flex flex-col gap-2">
         {economies.map((e: any) => {
           const pageUrl = ECONOMY_PAGES[e.title_id];
@@ -250,7 +249,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
     <section>
       <div class="rounded-xl border border-gta-gold/20 overflow-hidden" style="background:linear-gradient(135deg,#0e1500 0%,#0e0e11 70%)">
         <div class="px-6 py-6">
-          <div class="text-[11px] font-mono text-gta-gold/40 uppercase tracking-widest mb-3">The Arc Ends Here</div>
+          <div class="text-[11px] font-mono text-gta-gold uppercase tracking-widest mb-3">The Arc Ends Here</div>
           <div class="font-semibold text-gta-gold text-base mb-2">
             GTA VI — The Multi-Region Currency Union
           </div>
