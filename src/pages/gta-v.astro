@@ -60,8 +60,8 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
     <div class="absolute inset-0">
       <Image src={heroGtaV} alt="" class="absolute inset-0 w-full h-full object-cover" style="object-position:center 35%" aria-hidden="true"
            widths={[1280, 1920, 2560]} sizes="100vw" format="webp" loading="eager" />
-      <div class="absolute inset-0" style="background:linear-gradient(to right,#0a0a0d 0%,#0a0a0dcc 35%,#0a0a0d33 75%,transparent 100%)"></div>
-      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 55%,#0a0a0d 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg-deep) 0%,var(--c-bg-deep)cc 35%,var(--c-bg-deep)33 75%,transparent 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 55%,var(--c-bg-deep) 100%)"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div class="flex items-center gap-2 mb-5">
@@ -82,7 +82,7 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
           { value: `${heists.length}`, label: "story heists",  sub: "full take breakdown" },
           { value: String(totalMonths), label: "months live data", sub: `Steam ${steamData.data[0].year}–${latestSteam?.year}` },
         ].map(s => (
-          <div class="rounded-xl border border-border-dim px-4 py-3" style="background:var(--c-card)">
+          <div class="rounded-xl border border-border-dim px-4 py-3" style="background:var(--c-card-raised)">
             <div class="text-xl font-mono font-bold text-gta-bright">{s.value}</div>
             <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug">{s.label}</div>
             <div class="text-[10px] font-mono text-zinc-500 mt-0.5">{s.sub}</div>
@@ -99,7 +99,7 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
       <div class="flex items-center gap-3 mb-6">
         <GamePill game="gta-v" size="xs" />
         <span class={CATEGORY_BADGE_CLASSES}>Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Steam — Player History</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// Steam — Player History</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500 shrink-0">PC concurrent · monthly</span>
       </div>
@@ -111,7 +111,7 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
       <div class="flex items-center gap-3 mb-6">
         <GamePill game="gta-v" size="xs" />
         <span class={CATEGORY_BADGE_CLASSES}>Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Google Trends — Search Interest</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// Google Trends — Search Interest</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500 shrink-0">{totalTrendPts} data points · worldwide</span>
       </div>
@@ -123,7 +123,7 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
       <div class="flex items-center gap-3 mb-6">
         <GamePill game="gta-v" size="xs" />
         <span class={CATEGORY_BADGE_CLASSES}>Performance</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Broughy1322 — Vehicle Benchmarks</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// Broughy1322 — Vehicle Benchmarks</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500 shrink-0">{totalVehicles} vehicles · 25 classes</span>
       </div>
@@ -137,7 +137,7 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
       <div class="flex items-center gap-3 mb-6">
         <GamePill game="gta-v" size="xs" />
         <span class={CATEGORY_BADGE_CLASSES}>Economy-IG</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mode Stock Market Calculator</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// Story Mode Stock Market Calculator</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500 shrink-0">$2B+ visual playthrough</span>
       </div>
@@ -151,7 +151,7 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
       <div class="flex items-center gap-3 mb-6">
         <GamePill game="gta-v" size="xs" />
         <span class={CATEGORY_BADGE_CLASSES}>Economy-IG</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Mission Earnings — Full Arc</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// Story Mission Earnings — Full Arc</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500 shrink-0">{payingMissions.length} paying missions · {stockMissions.length} stock missions</span>
       </div>
@@ -165,7 +165,7 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
       <div class="flex items-center gap-3 mb-6">
         <GamePill game="gta-v" size="xs" />
         <span class={CATEGORY_BADGE_CLASSES}>Economy-IG</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Story Heists — Take Breakdown</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// Story Heists — Take Breakdown</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500 shrink-0">{heists.length} heists · max ${((bigScore?.approaches?.[0]?.player_max_cut ?? 0) / 1_000_000).toFixed(1)}M player cut</span>
       </div>
@@ -194,7 +194,7 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
       <div class="flex items-center gap-3 mb-6">
         <GamePill game="gta-v" size="xs" />
         <span class={CATEGORY_BADGE_CLASSES}>Community</span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// Your Stats vs Community</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// Your Stats vs Community</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <span class="text-[10px] font-mono text-zinc-500 shrink-0">Rockstar Social Club · Phase 1</span>
       </div>
@@ -223,7 +223,7 @@ const bigScore       = heists.find((h: any) => h.id === "the-big-score");
     <section>
       <div class="flex items-center gap-3 mb-4">
         <GamePill game="gta-v" size="xs" />
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// More GTA V Charts</span>
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// More GTA V Charts</span>
         <div class="flex-1 h-px bg-border-dim"></div>
         <a href="/charts?title=gta-v" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 transition-colors tracking-widest uppercase shrink-0">All charts →</a>
       </div>
