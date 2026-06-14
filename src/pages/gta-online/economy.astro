@@ -121,8 +121,9 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
   <section class="relative border-b border-border-dim overflow-hidden">
     <div class="absolute inset-0">
       <img src="/assets/gta5/dlc/diamond-casino-heist.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 30%" aria-hidden="true" />
-      <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg-deep) 0%,color-mix(in srgb,var(--c-bg-deep) 80%,transparent) 55%,color-mix(in srgb,var(--c-bg-deep) 53%,transparent) 100%)"></div>
-      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,var(--c-bg-deep) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to right, var(--c-bg-deep) 0%, color-mix(in srgb,var(--c-bg-deep) 88%,transparent) 40%, color-mix(in srgb,var(--c-bg-deep) 52%,transparent) 72%, color-mix(in srgb,var(--c-bg-deep) 34%,transparent) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom, color-mix(in srgb,var(--c-bg-deep) 42%,transparent) 0%, transparent 28%, transparent 58%, var(--c-bg-deep) 100%)"></div>
+      <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(70% 90% at 85% 0%, var(--c-hero-bloom), transparent 70%)"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div class="flex items-start justify-between flex-wrap gap-6">
@@ -161,7 +162,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
   ══════════════════════════════════════════════════════════ -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
     <SectionHeader bright label="// Economic Framework · Key Departures" dotColor="var(--c-economy)" class="mb-4" />
-    <div class="rounded-xl border border-border-dim overflow-hidden flex flex-col gap-0" style="background:var(--c-card)">
+    <div class="rounded-xl border border-border-dim overflow-hidden flex flex-col gap-0" style="background:var(--c-card-raised)">
       <!-- Key Innovation -->
       <div class="px-5 py-4">
         <div class="text-[10px] font-mono text-gta-indigo uppercase tracking-widest mb-1.5">Key GTA Online Economy Innovation ★★★★</div>
@@ -223,7 +224,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
         <!-- Flow ① — Hourly GTA$ Yield (Wages) -->
-        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="wages" data-actors="businesses,players" style="background:var(--c-card)">
+        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="wages" data-actors="businesses,players" style="background:var(--c-card-raised)">
           <div class="px-5 py-4">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-gta-gold uppercase tracking-[0.2em] flex items-center gap-1.5">
@@ -262,7 +263,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
 
         <!-- Flow ② — Spending Distribution -->
-        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="spending" data-actors="players,businesses" style="background:var(--c-card)">
+        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="spending" data-actors="players,businesses" style="background:var(--c-card-raised)">
           <div class="px-5 py-4">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-zinc-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
@@ -302,7 +303,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
 
         <!-- Flow ③ — Savings -->
-        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="savings" data-actors="players,mazebank" style="background:var(--c-card)">
+        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="savings" data-actors="players,mazebank" style="background:var(--c-card-raised)">
           <div class="px-5 py-4">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-gta-green/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
@@ -341,7 +342,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
 
         <!-- Flow ④ — Shark Card Injections -->
-        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="sharkcards" data-actors="mazebank,players" style="background:var(--c-card)">
+        <div class="rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="sharkcards" data-actors="mazebank,players" style="background:var(--c-card-raised)">
           <div class="px-5 py-4">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono text-blue-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
@@ -382,7 +383,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       </div><!-- /2-col grid -->
 
       <!-- Flow ⑤ — Passive Income Stack (full width) -->
-      <div class="mt-5 rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="investment" data-actors="players,businesses" style="background:var(--c-card)">
+      <div class="mt-5 rounded-xl border border-border-dim overflow-hidden flow-card" data-flow="investment" data-actors="players,businesses" style="background:var(--c-card-raised)">
         <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="flex items-center justify-between mb-2 gap-4">
@@ -460,7 +461,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       </div>
 
       <!-- GTA-PPI chart -->
-      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card-raised)">
         <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="text-lg font-bold text-white">GTA-PPI — Purchasing Power Index</div>
@@ -483,7 +484,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       </div>
 
       <!-- Composite health monitor (multi-line) -->
-      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
         <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="text-lg font-bold text-white">Circular Flow Health Monitor</div>
@@ -520,7 +521,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
     <section id="price-basket" style="scroll-margin-top:80px">
       <SectionHeader bright label="// GTA Price Basket · Real purchasing power" dotColor="var(--c-brand)" />
 
-      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card-raised)">
         <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between gap-4">
           <div>
             <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-1">// GTA-CPI BASKET</div>
@@ -587,7 +588,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
       </div>
 
       <!-- Price stability note -->
-      <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card)">
+      <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card-raised)">
         <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.2em] mb-3">// KEY INSIGHT — PRICE STABILITY</div>
         <p class="text-[12px] text-zinc-400 leading-relaxed mb-3">
           GTA Online nominal prices are remarkably stable. The Zentorno has cost $725,000 since 2013. The Buzzard has cost $1,750,000 since 2014. Rockstar has never raised the price of an existing vehicle or property.
@@ -599,7 +600,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
 
 
       <!-- Data confidence standards (moved from Sources tab) -->
-      <div class="rounded-xl border border-border-dim p-5 mt-4" style="background:var(--c-card)">
+      <div class="rounded-xl border border-border-dim p-5 mt-4" style="background:var(--c-card-raised)">
         <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em] mb-3">// DATA CONFIDENCE STANDARDS</div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
@@ -615,7 +616,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
         </div>
       </div>
 
-      <div class="rounded-xl border border-border-dim px-5 py-3 mt-4 flex items-center justify-between" style="background:var(--c-card)">
+      <div class="rounded-xl border border-border-dim px-5 py-3 mt-4 flex items-center justify-between" style="background:var(--c-card-raised)">
         <span class="text-[10px] font-mono text-zinc-500">Data: community research · GTABase.com · GTA Fandom Wiki · item-catalogue.json</span>
         <div class="flex items-center gap-2 shrink-0">
           <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
@@ -659,7 +660,7 @@ const passiveTotal  = passiveSeries.at(-1)?.total ?? 0;
           { flow:"⑤", label:"Passive Stack", color:"var(--c-chart-purple)", desc:"GTA VI Online passive business $/hr stack. Populated as businesses are confirmed post-launch.", ready:false },
           { flow:"⊕", label:"GTA VI PPI",    color:"var(--c-chart-bar)",    desc:"Purchasing power index — basket cost ÷ top yield. Auto-computes once wage data is available.", ready:true  },
         ].map(f => (
-          <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
+          <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card-raised)">
             <div class="flex items-center justify-between mb-2">
               <div class="flex items-center gap-2">
                 <span class="font-mono font-black text-lg" style={`color:${f.color}`}>{f.flow}</span>
