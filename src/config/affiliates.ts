@@ -22,6 +22,19 @@ export const AFFILIATE_IDS = {
   amazon_jp:  "",             // Amazon.co.jp — join: affiliate.amazon.co.jp
   amazon_br:  "",             // Amazon.com.br — join: associados.amazon.com.br
   amazon_au:  "",             // Amazon.com.au — join: affiliate-program.amazon.com.au
+  amazon_ca:  "",             // Amazon.ca    — join: associates.amazon.ca
+  amazon_it:  "",             // Amazon.it    — join: programma-affiliazione.amazon.it
+  amazon_es:  "",             // Amazon.es    — join: afiliados.amazon.es
+  amazon_nl:  "",             // Amazon.nl    — join: partner.amazon.nl
+  amazon_mx:  "",             // Amazon.com.mx — join: afiliados.amazon.com.mx
+  amazon_in:  "",             // Amazon.in    — join: affiliate-program.amazon.in
+  amazon_se:  "",             // Amazon.se    — join: partner.amazon.se
+  amazon_pl:  "",             // Amazon.pl    — join: partner.amazon.pl
+  amazon_tr:  "",             // Amazon.com.tr — join: gelir-ortakligi.amazon.com.tr
+  amazon_sa:  "",             // Amazon.sa    — join: affiliate-program.amazon.sa
+  amazon_ae:  "",             // Amazon.ae    — join: affiliate-program.amazon.ae
+  amazon_be:  "",             // Amazon.com.be — join: partenaires.amazon.com.be
+  amazon_za:  "",             // Amazon.co.za — join: affiliate-program.amazon.co.za
 
   // ── Future programmes (add IDs once approved) ─────────────────────────
   // impact_playstation: "",  // via impact.com
@@ -64,6 +77,19 @@ export const AMAZON_TAG_MAP: Record<string, string> = {
   "www.amazon.co.jp":  AFFILIATE_IDS.amazon_jp,
   "www.amazon.com.br": AFFILIATE_IDS.amazon_br,
   "www.amazon.com.au": AFFILIATE_IDS.amazon_au,
+  "www.amazon.ca":     AFFILIATE_IDS.amazon_ca,
+  "www.amazon.it":     AFFILIATE_IDS.amazon_it,
+  "www.amazon.es":     AFFILIATE_IDS.amazon_es,
+  "www.amazon.nl":     AFFILIATE_IDS.amazon_nl,
+  "www.amazon.com.mx": AFFILIATE_IDS.amazon_mx,
+  "www.amazon.in":     AFFILIATE_IDS.amazon_in,
+  "www.amazon.se":     AFFILIATE_IDS.amazon_se,
+  "www.amazon.pl":     AFFILIATE_IDS.amazon_pl,
+  "www.amazon.com.tr": AFFILIATE_IDS.amazon_tr,
+  "www.amazon.sa":     AFFILIATE_IDS.amazon_sa,
+  "www.amazon.ae":     AFFILIATE_IDS.amazon_ae,
+  "www.amazon.com.be": AFFILIATE_IDS.amazon_be,
+  "www.amazon.co.za":  AFFILIATE_IDS.amazon_za,
 };
 
 /** Apply the correct affiliate tag to any Amazon URL automatically. */
