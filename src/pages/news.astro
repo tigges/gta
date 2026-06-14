@@ -173,9 +173,9 @@ const updatedAt = feedData.last_updated;
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl">
         {[
           { value: `${allItems.length}`,          label: "items tracked",   sub: "ranked by tier",  accent: "var(--c-brand)" },
-          { value: `${redditItems.length}`,       label: "community posts", sub: "r/GTA6 · nightly", accent: "var(--c-reddit)" },
+          { value: `${redditItems.length}`,       label: "community posts", sub: "r/GTA6 · nightly", accent: "var(--c-growth)" },
           { value: `${feedData.sources.length}`,  label: "RSS sources",     sub: "+ r/GTA6 feed",   accent: "var(--c-live)" },
-          { value: new Date(updatedAt).toLocaleDateString("en-GB", { day:"numeric", month:"short" }), label: "last updated", sub: "auto · nightly", accent: "var(--c-economy)" },
+          { value: new Date(updatedAt).toLocaleDateString("en-GB", { day:"numeric", month:"short" }), label: "last updated", sub: "auto · nightly", accent: "var(--c-live)" },
         ].map(s => (
           <div class="relative overflow-hidden rounded-xl border border-border-mid px-4 py-3" style="background:var(--c-card-raised)">
             <div class="absolute top-0 left-0 right-0 h-px" style={`background:linear-gradient(90deg, ${s.accent}, transparent 80%)`}></div>
