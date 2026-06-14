@@ -51,7 +51,7 @@ const predicted = pollPreds.filter((p: any) => p.confidence_tier === "predicted"
 
     {reported.length > 0 && (
       <section>
-        <SectionHeader label="// Reported Mechanics · Community Verdict" dotColor="var(--c-live)" />
+        <SectionHeader bright label="// Reported Mechanics · Community Verdict" dotColor="var(--c-live)" />
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {reported.map((p: any) => (
             <VoteCard predictionId={p.id} />
@@ -62,7 +62,7 @@ const predicted = pollPreds.filter((p: any) => p.confidence_tier === "predicted"
 
     {predicted.length > 0 && (
       <section>
-        <SectionHeader label="// Model Predictions · What do you think?" dotColor="var(--c-brand)" />
+        <SectionHeader bright label="// Model Predictions · What do you think?" dotColor="var(--c-brand)" />
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {predicted.map((p: any) => (
             <VoteCard predictionId={p.id} />
@@ -73,7 +73,7 @@ const predicted = pollPreds.filter((p: any) => p.confidence_tier === "predicted"
 
     {confirmed.length > 0 && (
       <section>
-        <SectionHeader label="// Confirmed Facts · Gut-check" dotColor="var(--c-live)" />
+        <SectionHeader bright label="// Confirmed Facts · Gut-check" dotColor="var(--c-live)" />
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {confirmed.map((p: any) => (
             <VoteCard predictionId={p.id} />
