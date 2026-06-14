@@ -22,6 +22,14 @@ export const AFFILIATE_IDS = {
   amazon_jp:  "",             // Amazon.co.jp — join: affiliate.amazon.co.jp
   amazon_br:  "",             // Amazon.com.br — join: associados.amazon.com.br
   amazon_au:  "",             // Amazon.com.au — join: affiliate-program.amazon.com.au
+  amazon_ca:  "",             // Amazon.ca    — join: associates.amazon.ca
+  amazon_it:  "",             // Amazon.it    — join: programma-affiliazione.amazon.it
+  amazon_es:  "",             // Amazon.es    — join: afiliados.amazon.es
+  amazon_nl:  "",             // Amazon.nl    — join: partner.amazon.nl
+  amazon_mx:  "",             // Amazon.com.mx — join: afiliados.amazon.com.mx
+  amazon_in:  "",             // Amazon.in    — join: affiliate-program.amazon.in
+  amazon_se:  "",             // Amazon.se    — join: partner.amazon.se
+  amazon_pl:  "",             // Amazon.pl    — join: partner.amazon.pl
 
   // ── Future programmes (add IDs once approved) ─────────────────────────
   // impact_playstation: "",  // via impact.com
@@ -64,6 +72,14 @@ export const AMAZON_TAG_MAP: Record<string, string> = {
   "www.amazon.co.jp":  AFFILIATE_IDS.amazon_jp,
   "www.amazon.com.br": AFFILIATE_IDS.amazon_br,
   "www.amazon.com.au": AFFILIATE_IDS.amazon_au,
+  "www.amazon.ca":     AFFILIATE_IDS.amazon_ca,
+  "www.amazon.it":     AFFILIATE_IDS.amazon_it,
+  "www.amazon.es":     AFFILIATE_IDS.amazon_es,
+  "www.amazon.nl":     AFFILIATE_IDS.amazon_nl,
+  "www.amazon.com.mx": AFFILIATE_IDS.amazon_mx,
+  "www.amazon.in":     AFFILIATE_IDS.amazon_in,
+  "www.amazon.se":     AFFILIATE_IDS.amazon_se,
+  "www.amazon.pl":     AFFILIATE_IDS.amazon_pl,
 };
 
 /** Apply the correct affiliate tag to any Amazon URL automatically. */
