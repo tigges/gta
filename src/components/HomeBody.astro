@@ -9,6 +9,7 @@
  */
 import Base from "../layouts/Base.astro";
 import PredictionCard from "./PredictionCard.astro";
+import Badge from "./Badge.astro";
 import Countdown from "./Countdown.astro";
 import SectionHeader from "./SectionHeader.astro";
 import TeaserBar from "./TeaserBar.astro";
@@ -108,7 +109,7 @@ const valueProps = [
     href: "/charts?title=gta-vi",
     cta: "Open the charts",
     img: "/assets/gta6/artwork/grand-theft-auto-vi-screenshot-02-en-06may25.webp",
-    accent: "var(--c-economy)",
+    accent: "var(--c-live)",
   },
   {
     icon: "money",
@@ -125,7 +126,7 @@ const keyStats = [
   { value: "475M+",  label: "Trailer 1 views · 24h record",       source: "YouTube",     accent: "var(--c-brand)" },
   { value: `${latestSteam?.avg_players?.toLocaleString() ?? "—"}`, label: "GTA V avg players · last month", source: "SteamCharts", accent: "var(--c-live)" },
   { value: "225M+",  label: "GTA V copies sold · lifetime",       source: "Take-Two IR", accent: "var(--c-growth)" },
-  { value: "Nov 19", label: "GTA VI launch · confirmed",          source: "Rockstar",    accent: "var(--c-economy)" },
+  { value: "Nov 19", label: "GTA VI launch · confirmed",          source: "Rockstar",    accent: "var(--c-live)" },
 ];
 
 ---
@@ -212,7 +213,7 @@ const keyStats = [
         </div>
         <div class="absolute inset-x-0 bottom-0 h-1/2" style="background:linear-gradient(to top, var(--c-bg-deep) 4%, transparent 100%)"></div>
         <div class="absolute top-3 left-3">
-          <span class="text-[10px] font-mono bg-black/55 text-gta-gold border border-gta-gold/30 px-2 py-0.5 rounded uppercase tracking-widest">Grand Theft Auto VI</span>
+          <Badge variant="gta-vi" surface="opaque" label="Grand Theft Auto VI" />
         </div>
         <div class="absolute bottom-3 left-4 right-4 flex items-end justify-between">
           <div>
