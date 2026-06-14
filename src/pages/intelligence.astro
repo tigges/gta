@@ -20,11 +20,11 @@ import HudIcon from "../components/HudIcon.astro";
   <section class="relative border-b border-border-dim overflow-hidden" style="min-height:320px;display:flex;align-items:flex-end">
     <div class="absolute inset-0">
       <img src="/assets/gta6/locations/Vice_City_03.jpg" alt="" class="w-full h-full object-cover" style="object-position:center 40%" aria-hidden="true" />
-      <div class="absolute inset-0" style="background:linear-gradient(to right,#0a0a0d 0%,#0a0a0dcc 60%,#0a0a0d88 100%)"></div>
-      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,#0a0a0d 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg-deep) 0%,color-mix(in srgb,var(--c-bg-deep) 80%,transparent) 60%,color-mix(in srgb,var(--c-bg-deep) 53%,transparent) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 0%,var(--c-bg-deep) 100%)"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-12 pt-16 w-full">
-      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-3">// Mission & Methodology</div>
+      <div class="text-[10px] font-mono text-gta-gold uppercase tracking-[0.2em] mb-3">// Mission &amp; Methodology</div>
       <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">Follow the GTA$</h1>
       <p class="text-zinc-400 text-sm max-w-xl leading-relaxed">
         GTAVI.AI bridges two economies: the GTA$ system inside the game,
@@ -38,12 +38,12 @@ import HudIcon from "../components/HudIcon.astro";
 
     <!-- ── The dual economy ─────────────────────────────────────── -->
     <section>
-      <SectionHeader label="// The Dual Economy" dotColor="var(--c-brand)" />
+      <SectionHeader bright label="// The Dual Economy" dotColor="var(--c-brand)" />
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- In-game economy -->
-        <div class="rounded-xl border overflow-hidden" style="background:var(--c-card);border-color:var(--c-income,#0d9488);border-color:rgba(13,148,136,0.3)">
+        <div class="rounded-xl border overflow-hidden" style="background:var(--c-card-raised);border-color:color-mix(in srgb,var(--c-income) 30%,transparent)">
           <div class="px-6 py-5 border-b border-border-dim">
             <div class="flex items-center gap-3 mb-2">
               <HudIcon name="economy" size={18} class="text-gta-teal" />
@@ -63,7 +63,7 @@ import HudIcon from "../components/HudIcon.astro";
                 <HudIcon name={item.icon as any} size={14} class="text-gta-teal mt-0.5 shrink-0" />
                 <div>
                   <span class="text-[11px] font-mono text-zinc-300">{item.label}</span>
-                  <span class="text-[11px] text-zinc-600"> — {item.desc}</span>
+                  <span class="text-[11px] text-zinc-500"> — {item.desc}</span>
                 </div>
               </div>
             ))}
@@ -71,7 +71,7 @@ import HudIcon from "../components/HudIcon.astro";
         </div>
 
         <!-- Real-world economy -->
-        <div class="rounded-xl border overflow-hidden" style="background:var(--c-card);border-color:rgba(245,158,11,0.3)">
+        <div class="rounded-xl border overflow-hidden" style="background:var(--c-card-raised);border-color:color-mix(in srgb,var(--c-brand) 30%,transparent)">
           <div class="px-6 py-5 border-b border-border-dim">
             <div class="flex items-center gap-3 mb-2">
               <HudIcon name="investment" size={18} class="text-gta-gold" />
@@ -91,7 +91,7 @@ import HudIcon from "../components/HudIcon.astro";
                 <HudIcon name={item.icon as any} size={14} class="text-gta-gold mt-0.5 shrink-0" />
                 <div>
                   <span class="text-[11px] font-mono text-zinc-300">{item.label}</span>
-                  <span class="text-[11px] text-zinc-600"> — {item.desc}</span>
+                  <span class="text-[11px] text-zinc-500"> — {item.desc}</span>
                 </div>
               </div>
             ))}
@@ -103,7 +103,7 @@ import HudIcon from "../components/HudIcon.astro";
 
     <!-- ── The intelligence layer ────────────────────────────────── -->
     <section>
-      <SectionHeader label="// The Intelligence Layer" dotColor="var(--c-brand)" />
+      <SectionHeader bright label="// The Intelligence Layer" dotColor="var(--c-brand)" />
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
@@ -140,7 +140,7 @@ import HudIcon from "../components/HudIcon.astro";
             color: "var(--c-alert)",
           },
         ].map(item => (
-          <a href={item.href} class="group rounded-xl border border-border-dim hover:border-border-mid transition-all flex flex-col overflow-hidden" style="background:var(--c-card)">
+          <a href={item.href} class="group rounded-xl border border-border-dim hover:border-border-mid transition-all flex flex-col overflow-hidden" style="background:var(--c-card-raised)">
             <div class="h-0.5 w-full" style={`background:linear-gradient(90deg,${item.color},transparent)`}></div>
             <div class="flex-1 px-5 py-4 flex flex-col gap-3">
               <div class="flex items-center gap-2">
@@ -157,9 +157,9 @@ import HudIcon from "../components/HudIcon.astro";
 
     <!-- ── Methodology ────────────────────────────────────────────── -->
     <section>
-      <SectionHeader label="// Methodology & Signal Standards" />
+      <SectionHeader bright label="// Methodology & Signal Standards" />
 
-      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
         <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
           {[
             {
@@ -180,14 +180,14 @@ import HudIcon from "../components/HudIcon.astro";
               <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">{m.label}</div>
               <p class="text-[11px] text-zinc-500 leading-relaxed">{m.body}</p>
               {m.link && (
-                <a href={m.link.href} class="mt-3 inline-block text-[10px] font-mono text-gta-gold/60 hover:text-gta-gold transition-colors tracking-widest">{m.link.text}</a>
+                <a href={m.link.href} class="mt-3 inline-block text-[10px] font-mono text-gta-gold hover:text-gta-gold transition-colors tracking-widest">{m.link.text}</a>
               )}
             </div>
           ))}
         </div>
         <div class="px-6 py-3 border-t border-border-dim flex items-center justify-between">
-          <span class="text-[10px] text-zinc-700 font-mono">Data refreshed nightly · 03:00 UTC</span>
-          <span class="text-[10px] font-mono text-zinc-700 tracking-widest">GTAVI.AI</span>
+          <span class="text-[10px] text-zinc-500 font-mono">Data refreshed nightly · 03:00 UTC</span>
+          <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
         </div>
       </div>
     </section>

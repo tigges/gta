@@ -171,7 +171,7 @@ const CAT_THUMBS: Record<string,string> = {
          SIGNAL PREDICTIONS
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Economic Predictions & Community Polls" pillHref="/community/polls" pillLabel="All polls →" />
+      <SectionHeader bright label="// Economic Predictions & Community Polls" pillHref="/community/polls" pillLabel="All polls →" />
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 items-start">
         {predFeed.map(({ prediction: p, mode }, i) => (
           <div class={i >= PRED_INITIAL ? "pred-extra hidden" : ""}>
@@ -197,8 +197,8 @@ const CAT_THUMBS: Record<string,string> = {
     ═══════════════════════════════════════════════════════ -->
     {confirmedSongs.length > 0 && (
     <section>
-      <SectionHeader label="// Confirmed Soundtrack — Trailer Songs" dotColor="var(--c-growth)" />
-      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <SectionHeader bright label="// Confirmed Soundtrack — Trailer Songs" dotColor="var(--c-growth)" />
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
         <div class="divide-y divide-border-dim">
           {confirmedSongs.map((song, i) => {
             const preview = SONG_PREVIEWS[song.title];
@@ -234,7 +234,7 @@ const CAT_THUMBS: Record<string,string> = {
         </div>
         <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between">
           <span class="text-[10px] text-zinc-500 font-mono">Source: Spotify Web API · confirmed from official GTA VI trailers</span>
-          <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+          <span class="text-[11px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
         </div>
       </div>
     </section>
@@ -244,7 +244,7 @@ const CAT_THUMBS: Record<string,string> = {
          INCOME PREDICTIONS — GTA VI Online
     ═══════════════════════════════════════════════════════ -->
     <section id="section-income-predictions" class="mt-16" style="scroll-margin-top:80px">
-      <SectionHeader label="// GTA VI Online — Predicted Income Sources" dotColor="var(--c-title-vi)" pillHref="/gta-vi/income" pillLabel={`All ${(incomeData as any).income_predictions.length} income sources →`} />
+      <SectionHeader bright label="// GTA VI Online — Predicted Income Sources" dotColor="var(--c-title-vi)" pillHref="/gta-vi/income" pillLabel={`All ${(incomeData as any).income_predictions.length} income sources →`} />
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {(incomeData as any).income_predictions.slice(0, 4).map((p: any) => (
           <IncomeCard
@@ -276,7 +276,7 @@ const CAT_THUMBS: Record<string,string> = {
          CONFIRMED CAST
     ═══════════════════════════════════════════════════════ -->
     <section id="section-cast" style="scroll-margin-top:80px">
-      <SectionHeader label="// Confirmed Cast" />
+      <SectionHeader bright label="// Confirmed Cast" />
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <CastCard name="Lucia Caminos"  role="Protagonist" img="Lucia_Caminos_01.jpg"  video="Lucia_Caminos_Video_Clip.mp4"  />
         <CastCard name="Jason Duval"    role="Protagonist" img="Jason_Duval_01.jpg"    video="Jason_Duval_Video_Clip.mp4"    />
@@ -293,8 +293,8 @@ const CAT_THUMBS: Record<string,string> = {
          CONFIRMED FEATURE TRACKER
     ═══════════════════════════════════════════════════════ -->
     <section id="section-feature-tracker" style="scroll-margin-top:80px">
-      <SectionHeader label="// GTA VI Confirmed Feature Tracker" dotColor="var(--c-live)" />
-      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <SectionHeader bright label="// GTA VI Confirmed Feature Tracker" dotColor="var(--c-live)" />
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
         <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="font-semibold text-zinc-200 text-sm">
@@ -333,10 +333,10 @@ const CAT_THUMBS: Record<string,string> = {
                   <!-- Stats -->
                   <div class="flex items-baseline gap-1.5 mb-3">
                     <span class="text-2xl font-mono font-bold text-gta-gold">{cat.confirmed}</span>
-                    <span class="text-[10px] font-mono text-zinc-600">confirmed</span>
+                    <span class="text-[10px] font-mono text-zinc-500">confirmed</span>
                     <span class="text-zinc-500 mx-1">·</span>
                     <span class="text-base font-mono text-zinc-400">{cat.reported}</span>
-                    <span class="text-[10px] font-mono text-zinc-600">reported</span>
+                    <span class="text-[10px] font-mono text-zinc-500">reported</span>
                   </div>
                   <!-- Progress bar -->
                   <div class="h-1.5 rounded-full overflow-hidden flex" style="background:var(--c-border-1)">
@@ -349,7 +349,7 @@ const CAT_THUMBS: Record<string,string> = {
                     <span class="text-[11px] font-mono text-zinc-500">/ {cat.target}</span>
                   </div>
                   {cat.notes && (
-                    <p class="text-[10px] text-zinc-600 mt-2 leading-snug">{cat.notes}</p>
+                    <p class="text-[10px] text-zinc-500 mt-2 leading-snug">{cat.notes}</p>
                   )}
                 </div>
               </div>
@@ -358,7 +358,7 @@ const CAT_THUMBS: Record<string,string> = {
         </div>
         <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
           <span class="text-[10px] text-zinc-500 font-mono">Sources: {featuresData.source}</span>
-          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="feature-tracker" shareText={`GTA VI Feature Tracker: ${featuresData.categories.reduce((s, c) => s + c.confirmed + c.reported, 0)} entries tracked — vehicles, characters, locations, weapons and more confirmed so far.`} size="sm" /></div>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="feature-tracker" shareText={`GTA VI Feature Tracker: ${featuresData.categories.reduce((s, c) => s + c.confirmed + c.reported, 0)} entries tracked — vehicles, characters, locations, weapons and more confirmed so far.`} size="sm" /></div>
         </div>
       </div>
     </section>
@@ -367,7 +367,7 @@ const CAT_THUMBS: Record<string,string> = {
          LEONIDA — LOCATIONS
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Leonida — Confirmed Locations" dotColor="var(--c-live)" />
+      <SectionHeader bright label="// Leonida — Confirmed Locations" dotColor="var(--c-live)" />
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {([
           { name: "Vice City",      desc: "Urban hub — streets, nightlife, coast",   img: "Vice_City_04.jpg",                  shots: 9  },
@@ -404,10 +404,10 @@ const CAT_THUMBS: Record<string,string> = {
          GTA VI FAQ
     ═══════════════════════════════════════════════════════ -->
     <section id="section-vi-faq">
-      <SectionHeader label="// GTA VI FAQ" dotColor="var(--c-brand)" />
+      <SectionHeader bright label="// GTA VI FAQ" dotColor="var(--c-brand)" />
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         {gtaViFaqs.map((faq) => (
-          <details class="group rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+          <details class="group rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
             <summary class="flex items-center justify-between gap-3 px-5 py-4 cursor-pointer list-none marker:content-none [&::-webkit-details-marker]:hidden">
               <h2 class="text-sm font-bold text-zinc-200 leading-snug">{faq.question}</h2>
               <span class="text-zinc-500 text-xs font-mono shrink-0 transition-transform duration-150 group-open:rotate-180">&#9662;</span>

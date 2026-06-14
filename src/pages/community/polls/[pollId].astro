@@ -55,7 +55,7 @@ const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(can
 >
   <!-- ── Breadcrumb ──────────────────────────────────────────────────────── -->
   <div class="border-b border-border-dim" style="background:var(--c-bg-deep)">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-[10px] font-mono text-zinc-600">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-[10px] font-mono text-zinc-500">
       <a href="/community/polls" class="hover:text-zinc-300 transition-colors">Community Polls</a>
       <span>/</span>
       <span class="text-zinc-400 truncate">{question}</span>
@@ -67,7 +67,7 @@ const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(can
     <VoteCard predictionId={pollId} />
 
     <!-- ── Share bar ─────────────────────────────────────────────────────── -->
-    <div class="rounded-xl border border-border-dim p-4 flex flex-col gap-3" style="background:var(--c-card)">
+    <div class="rounded-xl border border-border-dim p-4 flex flex-col gap-3" style="background:var(--c-card-raised)">
       <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Share this poll</div>
       <div class="flex flex-wrap gap-2">
         <a
@@ -103,7 +103,7 @@ const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(can
       </div>
       <!-- Embed snippet -->
       <details class="group">
-        <summary class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 cursor-pointer transition-colors select-none">
+        <summary class="text-[10px] font-mono text-zinc-500 hover:text-zinc-400 cursor-pointer transition-colors select-none">
           Embed this poll on your site ▸
         </summary>
         <pre class="mt-2 rounded-lg px-3 py-2.5 text-[10px] font-mono text-zinc-400 overflow-x-auto leading-relaxed" style="background:var(--c-bg-deep);border:1px solid var(--c-border-1)">&lt;iframe
@@ -118,15 +118,15 @@ const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(can
 
     <!-- ── Scenario range ─────────────────────────────────────────────────── -->
     {pred.prediction_range && (
-      <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card)">
+      <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card-raised)">
         <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Scenario range</div>
         <div class="flex gap-6 flex-wrap">
           <div>
-            <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Low scenario</div>
+            <div class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Low scenario</div>
             <div class="text-[11px] font-mono text-zinc-300">{pred.prediction_range.low}</div>
           </div>
           <div>
-            <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mb-1">High scenario</div>
+            <div class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1">High scenario</div>
             <div class="text-[11px] font-mono text-zinc-300">{pred.prediction_range.high}</div>
           </div>
         </div>
@@ -134,7 +134,7 @@ const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(can
     )}
 
     <!-- ── Back nav ──────────────────────────────────────────────────────── -->
-    <div class="flex items-center justify-between text-[11px] font-mono text-zinc-600">
+    <div class="flex items-center justify-between text-[11px] font-mono text-zinc-500">
       <a href="/community/polls" class="hover:text-zinc-200 transition-colors">← All polls</a>
       <a href="/gta-vi/intel" class="hover:text-zinc-200 transition-colors">Full predictions →</a>
     </div>
