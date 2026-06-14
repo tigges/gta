@@ -59,33 +59,43 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
   crossLinksContext="gta-online-economy"
 >
 
-  <!-- Hero header -->
-  <section class="relative border-b border-border-dim overflow-hidden" style="min-height:260px">
-    <div class="absolute inset-0" style="background:radial-gradient(ellipse at 70% 50%, var(--c-hero-bloom) 0%, transparent 65%), var(--c-bg-deep)"></div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
+  <!-- Hero header — image banner -->
+  <section class="relative border-b border-border-dim overflow-hidden" style="background:var(--c-bg-deep)">
+    <div class="absolute inset-0">
+      <img src="/assets/gta6/artwork/grand-theft-auto-vi-screenshot-02-en-06may25.webp" alt="" aria-hidden="true"
+           class="w-full h-full object-cover" style="object-position:center 42%" loading="eager" />
+      <div class="absolute inset-0" style="background:linear-gradient(to right, var(--c-bg-deep) 0%, color-mix(in srgb,var(--c-bg-deep) 88%,transparent) 38%, color-mix(in srgb,var(--c-bg-deep) 50%,transparent) 70%, color-mix(in srgb,var(--c-bg-deep) 32%,transparent) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom, color-mix(in srgb,var(--c-bg-deep) 42%,transparent) 0%, transparent 28%, transparent 58%, var(--c-bg-deep) 100%)"></div>
+      <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(70% 90% at 85% 0%, var(--c-hero-bloom), transparent 70%)"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-14">
       <div class="flex items-center gap-2 mb-4">
         <GamePill game="gta-vi" size="xs" />
-        <span class="text-[11px] font-mono bg-gta-gold/20 border border-gta-gold/30 text-gta-gold/80 px-2 py-0.5 rounded uppercase tracking-widest">Projected</span>
+        <span class="text-[11px] font-mono px-2 py-0.5 rounded uppercase tracking-widest" style="color:var(--c-tier-predicted);border:1px solid color-mix(in srgb,var(--c-tier-predicted) 35%,transparent);background:color-mix(in srgb,var(--c-tier-predicted) 10%,transparent)">Projected</span>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">
+      <h1 class="text-3xl sm:text-5xl font-bold text-white mb-3 leading-[1.05]">
         GTA VI Economy
       </h1>
-      <p class="text-zinc-300 text-sm leading-relaxed mb-6 max-w-xl">
+      <p class="text-zinc-300 text-base leading-relaxed mb-7 max-w-xl">
         The most structurally sophisticated virtual economy ever designed.
         Multiple regions, one currency — a <strong class="text-gta-gold">multi-region currency union</strong>
         analogous to the Eurozone. Everything we know and predict, sourced from the franchise arc.
       </p>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
         {[
-          { value: "17",        label: "complexity score",        sub: "franchise maximum" },
-          { value: "2",         label: "economic territories",    sub: "Vice City · Leonida" },
-          { value: `${econPreds.length}`,  label: "economic predictions",   sub: "model-derived" },
-          { value: `${Math.round(totalViews / 1e6)}M`, label: "trailer views · combined", sub: "live · YouTube API" },
+          { value: "17",        label: "complexity score",        sub: "franchise maximum",       accent: "var(--c-brand)" },
+          { value: "2",         label: "economic territories",    sub: "Vice City · Leonida",     accent: "var(--c-title-vi)" },
+          { value: `${econPreds.length}`,  label: "economic predictions",   sub: "model-derived",  accent: "var(--c-live)" },
+          { value: `${Math.round(totalViews / 1e6)}M`, label: "trailer views · combined", sub: "live · YouTube API", accent: "var(--c-economy)" },
         ].map(s => (
-          <div class="rounded-xl border border-border-dim px-4 py-3" style="background:var(--c-card)">
-            <div class="text-xl font-mono font-black text-gta-gold">{s.value}</div>
-            <div class="text-[11px] text-zinc-500 mt-0.5 leading-snug">{s.label}</div>
-            <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{s.sub}</div>
+          <div class="relative overflow-hidden rounded-xl border border-border-mid px-4 py-3" style="background:var(--c-card-raised)">
+            <div class="absolute top-0 left-0 right-0 h-px" style={`background:linear-gradient(90deg, ${s.accent}, transparent 80%)`}></div>
+            <div class="absolute inset-0 pointer-events-none" style={`background:linear-gradient(135deg, color-mix(in srgb,${s.accent} 10%,transparent) 0%, transparent 55%)`}></div>
+            <div class="relative">
+              <div class="text-xl font-mono font-black" style={`color:${s.accent}`}>{s.value}</div>
+              <div class="text-[11px] text-zinc-300 mt-0.5 leading-snug">{s.label}</div>
+              <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{s.sub}</div>
+            </div>
           </div>
         ))}
       </div>
@@ -98,7 +108,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
          GTA VI SED — SIMPLIFIED ECONOMY DIAGRAM
     ═══════════════════════════════════════════════════════ -->
     <section id="eco-gta-vi" style="scroll-margin-top:80px">
-      <SectionHeader label="// The Full GTA VI Economy Model · Where Does the Money Go?" dotColor="var(--c-gta-dollar)" />
+      <SectionHeader bright label="// The Full GTA VI Economy Model · Where Does the Money Go?" dotColor="var(--c-gta-dollar)" />
       <EconomyCircleSEDVI fullEconomyHref="/gta-vi/economy#eco-gta-vi" />
     </section>
 
@@ -106,12 +116,12 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
          FIVE FLOWS — PROJECTED
     ═══════════════════════════════════════════════════════ -->
     <section id="five-flows" style="scroll-margin-top:80px">
-      <SectionHeader label="// Money Flows — Multi-Region Projection" dotColor="var(--c-title-vi)" pillHref="/gta-online/economy" pillLabel="GTA Online live model →" />
+      <SectionHeader bright label="// Money Flows — Multi-Region Projection" dotColor="var(--c-title-vi)" pillHref="/gta-online/economy" pillLabel="GTA Online live model →" />
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
         <!-- Flow ① — VC Income -->
-        <div id="flow-vc-income" class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card);scroll-margin-top:80px">
+        <div id="flow-vc-income" class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised);scroll-margin-top:80px">
           <div class="px-5 py-4">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono uppercase tracking-[0.2em] flex items-center gap-1.5" style="color:color-mix(in srgb,var(--c-growth) 60%,transparent)">
@@ -120,37 +130,37 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
               <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-growth) 40%,transparent);background:color-mix(in srgb,var(--c-growth) 12%,transparent);color:var(--c-growth)">Y · INCOME</span>
             </div>
             <div class="text-lg font-bold text-white">Vice City Hourly Yield</div>
-            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Top-tier activity $/hr in Vice City. The in-game "real wage" — urban, high-density territory.</div>
+            <div class="text-[11px] text-zinc-400 font-mono mt-0.5">Top-tier activity $/hr in Vice City. The in-game "real wage" — urban, high-density territory.</div>
           </div>
           <div class="px-5 py-2 border-t border-b border-border-dim" style="background:var(--c-bg)">
-            <span class="text-[10px] font-mono text-zinc-600">Projected above GTA Online 2022 meta — Vice City is the premium territory</span>
+            <span class="text-[10px] font-mono text-zinc-400">Projected above GTA Online 2022 meta — Vice City is the premium territory</span>
           </div>
           <div class="px-5 py-3 border-t border-border-dim grid grid-cols-2 gap-4">
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">DAY-1 ESTIMATE</div>
               <div class="text-2xl font-black" style="color:var(--c-growth)">—</div>
-              <div class="text-[10px] font-mono text-zinc-500">awaiting launch data</div>
+              <div class="text-[10px] font-mono text-zinc-400">awaiting launch data</div>
             </div>
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">GTA ONLINE BASELINE</div>
               <div class="text-2xl font-black text-zinc-400">{Math.round((onlineEconomy?.complexity_score ?? 0) > 0 ? 1700 : 0) > 0 ? "$1,700K/hr" : "—"}</div>
-              <div class="text-[10px] font-mono text-zinc-500">current GTA Online meta</div>
+              <div class="text-[10px] font-mono text-zinc-400">current GTA Online meta</div>
             </div>
           </div>
           <div class="px-5 pb-3">
             <ReadItBlock accentColor="var(--c-growth)">Vice City wages are projected to launch above the GTA Online 2022 Cayo Perico meta ($1.7M/hr) — Rockstar needs to hook new players immediately. Historical precedent: every new Online launch resets the wage ceiling upward. GTA-RPP will measure whether VC prices rise proportionally.</ReadItBlock>
           </div>
           <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5">
-            <span class="text-[10px] font-mono text-zinc-600">Monitoring · populates at launch</span>
+            <span class="text-[10px] font-mono text-zinc-400">Monitoring · populates at launch</span>
             <div class="flex items-center gap-2 shrink-0">
-              <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+              <span class="text-[10px] font-mono text-zinc-400 tracking-widest">GTAVI.AI</span>
               <ShareDropdown anchorId="flow-vc-income" shareText="GTA VI Vice City income: projected to launch above GTA Online's $1.7M/hr meta. Multi-region RPP model tracking on GTAVI.AI." size="sm" />
             </div>
           </div>
         </div>
 
         <!-- Flow ② — Leonida Income -->
-        <div id="flow-leonida-income" class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card);scroll-margin-top:80px">
+        <div id="flow-leonida-income" class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised);scroll-margin-top:80px">
           <div class="px-5 py-4">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono uppercase tracking-[0.2em] flex items-center gap-1.5" style="color:color-mix(in srgb,var(--c-growth) 60%,transparent)">
@@ -159,37 +169,37 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
               <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-growth) 40%,transparent);background:color-mix(in srgb,var(--c-growth) 12%,transparent);color:var(--c-growth)">Y · INCOME</span>
             </div>
             <div class="text-lg font-bold text-white">Leonida Hourly Yield</div>
-            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Rural-territory wages — lower baseline predicted vs Vice City (Eurozone periphery model).</div>
+            <div class="text-[11px] text-zinc-400 font-mono mt-0.5">Rural-territory wages — lower baseline predicted vs Vice City (Eurozone periphery model).</div>
           </div>
           <div class="px-5 py-2 border-t border-b border-border-dim" style="background:var(--c-bg)">
-            <span class="text-[10px] font-mono text-zinc-600">RPP divergence predicted — Leonida costs lower; real purchasing power may exceed VC despite lower wages</span>
+            <span class="text-[10px] font-mono text-zinc-400">RPP divergence predicted — Leonida costs lower; real purchasing power may exceed VC despite lower wages</span>
           </div>
           <div class="px-5 py-3 border-t border-border-dim grid grid-cols-2 gap-4">
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">DAY-1 ESTIMATE</div>
               <div class="text-2xl font-black" style="color:var(--c-growth)">—</div>
-              <div class="text-[10px] font-mono text-zinc-500">awaiting launch data</div>
+              <div class="text-[10px] font-mono text-zinc-400">awaiting launch data</div>
             </div>
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">GTA-RPP STATUS</div>
               <div class="text-2xl font-black text-zinc-400">{(gta6Rpp as any).status ?? "pending"}</div>
-              <div class="text-[10px] font-mono text-zinc-500">regional parity index</div>
+              <div class="text-[10px] font-mono text-zinc-400">regional parity index</div>
             </div>
           </div>
           <div class="px-5 pb-3">
             <ReadItBlock accentColor="var(--c-growth)">In the Eurozone model, peripheral economies (Greece, Portugal) have lower nominal wages but often better real purchasing power once prices are adjusted. Leonida is predicted to follow this pattern — lower $/hr, but lower costs for property and businesses. The GTA-RPP index will quantify the divergence from day one.</ReadItBlock>
           </div>
           <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5">
-            <a href="/gta-vi/economy#eco-gta-vi" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full model →</a>
+            <a href="/gta-vi/economy#eco-gta-vi" class="text-[10px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors tracking-widest uppercase">Full model →</a>
             <div class="flex items-center gap-2 shrink-0">
-              <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+              <span class="text-[10px] font-mono text-zinc-400 tracking-widest">GTAVI.AI</span>
               <ShareDropdown anchorId="flow-leonida-income" shareText="GTA VI Leonida income: lower wages than Vice City predicted, but higher real purchasing power. Eurozone model applied to GTA VI. GTAVI.AI" size="sm" />
             </div>
           </div>
         </div>
 
         <!-- Flow ③ — Cross-territory -->
-        <div id="flow-cross-territory" class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card);scroll-margin-top:80px">
+        <div id="flow-cross-territory" class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised);scroll-margin-top:80px">
           <div class="px-5 py-4">
             <div class="flex items-center justify-between mb-2">
               <div class="text-[11px] font-mono uppercase tracking-[0.2em] flex items-center gap-1.5" style="color:color-mix(in srgb,var(--c-economy) 60%,transparent)">
@@ -198,69 +208,69 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
               <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-economy) 40%,transparent);background:color-mix(in srgb,var(--c-economy) 12%,transparent);color:var(--c-economy)">CROSS-TERRITORY</span>
             </div>
             <div class="text-lg font-bold text-white">Regional Currency Carry</div>
-            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">GTA$ flow across the territorial boundary — a new flow unique to GTA VI's dual model.</div>
+            <div class="text-[11px] text-zinc-400 font-mono mt-0.5">GTA$ flow across the territorial boundary — a new flow unique to GTA VI's dual model.</div>
           </div>
           <div class="px-5 py-2 border-t border-b border-border-dim" style="background:var(--c-bg)">
-            <span class="text-[10px] font-mono text-zinc-600">New flow — no GTA Online precedent · monitoring from launch · qualitative model only</span>
+            <span class="text-[10px] font-mono text-zinc-400">New flow — no GTA Online precedent · monitoring from launch · qualitative model only</span>
           </div>
           <div class="px-5 py-3 border-t border-border-dim grid grid-cols-2 gap-4">
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">FLOW TYPE</div>
               <div class="text-xl font-black" style="color:var(--c-economy)">Bidirectional</div>
-              <div class="text-[10px] font-mono text-zinc-500">players spend across regions</div>
+              <div class="text-[10px] font-mono text-zinc-400">players spend across regions</div>
             </div>
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">PRECEDENT</div>
-              <div class="text-xl font-black text-zinc-500">None</div>
-              <div class="text-[10px] font-mono text-zinc-500">first multi-region GTA</div>
+              <div class="text-xl font-black text-zinc-400">None</div>
+              <div class="text-[10px] font-mono text-zinc-400">first multi-region GTA</div>
             </div>
           </div>
           <div class="px-5 pb-3">
             <ReadItBlock accentColor="var(--c-economy)">Whether players can freely carry GTA$ between Vice City and Leonida — or face regional spending restrictions — determines whether this is a true currency union or two parallel economies. Trailer evidence shows travel between regions. GTAVI.AI will track cross-territory transaction patterns from day one.</ReadItBlock>
           </div>
           <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5">
-            <span class="text-[10px] font-mono text-zinc-600">New metric — tracked from launch</span>
+            <span class="text-[10px] font-mono text-zinc-400">New metric — tracked from launch</span>
             <div class="flex items-center gap-2 shrink-0">
-              <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+              <span class="text-[10px] font-mono text-zinc-400 tracking-widest">GTAVI.AI</span>
               <ShareDropdown anchorId="flow-cross-territory" shareText="GTA VI has no GTA Online precedent for cross-territory money flow. First multi-region GTA — tracking from launch. GTAVI.AI" size="sm" />
             </div>
           </div>
         </div>
 
         <!-- Flow ④ — Shark Card Injection -->
-        <div id="flow-shark-inject" class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card);scroll-margin-top:80px">
+        <div id="flow-shark-inject" class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised);scroll-margin-top:80px">
           <div class="px-5 py-4">
             <div class="flex items-center justify-between mb-2">
-              <div class="text-[11px] font-mono text-blue-400/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
+              <div class="text-[11px] font-mono uppercase tracking-[0.2em] flex items-center gap-1.5" style="color:color-mix(in srgb,var(--c-title-online) 70%,transparent)">
                 <span class="font-mono font-black text-[18px] mr-1.5 leading-none" style="color:var(--c-title-online)">④</span>ROCKSTAR → PLAYERS
               </div>
               <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest" style="border-color:color-mix(in srgb,var(--c-title-online) 40%,transparent);background:color-mix(in srgb,var(--c-title-online) 12%,transparent);color:var(--c-title-online)">J · INJECTION</span>
             </div>
             <div class="text-lg font-bold text-white">Shark Card Projections</div>
-            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Take-Two recurrent consumer spending — live from SEC EDGAR filings. GTA VI Shark Card proxy.</div>
+            <div class="text-[11px] text-zinc-400 font-mono mt-0.5">Take-Two recurrent consumer spending — live from SEC EDGAR filings. GTA VI Shark Card proxy.</div>
           </div>
           <div class="px-5 py-2 border-t border-b border-border-dim" style="background:var(--c-bg)">
-            <span class="text-[10px] font-mono text-zinc-600">GTA Online peak $1.62B (FY2022) · GTA VI launch year DFC projection: $3.2B total revenue</span>
+            <span class="text-[10px] font-mono text-zinc-400">GTA Online peak $1.62B (FY2022) · GTA VI launch year DFC projection: $3.2B total revenue</span>
           </div>
           <div class="px-5 py-3 border-t border-border-dim grid grid-cols-2 gap-4">
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">GTA ONLINE PEAK</div>
               <div class="text-2xl font-black" style="color:var(--c-title-online)">${peakRevYear?.recurrent_bn}B</div>
-              <div class="text-[10px] font-mono text-zinc-500">{peakRevYear?.fy} recurrent spending</div>
+              <div class="text-[10px] font-mono text-zinc-400">{peakRevYear?.fy} recurrent spending</div>
             </div>
             <div>
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">VI YEAR PROJECTION</div>
               <div class="text-2xl font-black" style="color:var(--c-title-online)">${vi6Projection?.recurrent_bn ?? "—"}B</div>
-              <div class="text-[10px] font-mono text-zinc-500">{vi6Projection?.is_prediction ? "DFC projection · 2026" : "live · EDGAR"}</div>
+              <div class="text-[10px] font-mono text-zinc-400">{vi6Projection?.is_prediction ? "DFC projection · 2026" : "live · EDGAR"}</div>
             </div>
           </div>
           <div class="px-5 pb-3">
             <ReadItBlock accentColor="var(--c-title-online)">GTA VI Shark Cards operate on the same exogenous injection model as GTA Online — real money enters the GTA$ economy, bypassing the circular flow. The Eurozone analogy: like IMF capital inflows into periphery economies. With two territories and likely region-specific pricing, Shark Card economics become more complex than any prior GTA.</ReadItBlock>
           </div>
           <div class="px-4 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5">
-            <a href="/charts?title=gta-online#section-eco-sharkcards" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">GTA Online history →</a>
+            <a href="/charts?title=gta-online#section-eco-sharkcards" class="text-[10px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors tracking-widest uppercase">GTA Online history →</a>
             <div class="flex items-center gap-2 shrink-0">
-              <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+              <span class="text-[10px] font-mono text-zinc-400 tracking-widest">GTAVI.AI</span>
               <ShareDropdown anchorId="flow-shark-inject" shareText="GTA VI Shark Card projection: Take-Two recurrent peak was $1.62B in FY2022. GTA VI multi-region pricing expected to push this higher. GTAVI.AI" size="sm" />
             </div>
           </div>
@@ -269,7 +279,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
       </div><!-- /2-col grid -->
 
       <!-- Flow ⑤ — GTA VI PPI (full width) -->
-      <div id="flow-vi-ppi" class="mt-5 rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card);scroll-margin-top:80px">
+      <div id="flow-vi-ppi" class="mt-5 rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised);scroll-margin-top:80px">
         <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
           <div>
             <div class="flex items-center justify-between mb-2 gap-4">
@@ -279,26 +289,26 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
               <span class="text-[11px] font-mono border border-gta-gold/30 bg-gta-gold/10 text-gta-gold px-2 py-0.5 rounded uppercase tracking-widest">Day-1 Ready</span>
             </div>
             <div class="text-lg font-bold text-white">GTA VI PPI — Regional Purchasing Power</div>
-            <div class="text-[11px] text-zinc-500 font-mono">Basket cost ÷ top hourly yield. Two calculations: GTA-PPI (VC) and GTA-RPP (VC ÷ Leonida). Auto-populates from launch data.</div>
+            <div class="text-[11px] text-zinc-400 font-mono">Basket cost ÷ top hourly yield. Two calculations: GTA-PPI (VC) and GTA-RPP (VC ÷ Leonida). Auto-populates from launch data.</div>
           </div>
-          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500 shrink-0">
+          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-400 shrink-0">
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 rounded-full inline-block" style="background:var(--c-growth)"></span>Y1 · VC PPI</span>
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 rounded-full inline-block" style="background:color-mix(in srgb,var(--c-growth) 55%,var(--c-bg-deep))"></span>Y2 · Leonida RPP</span>
           </div>
         </div>
         <div class="px-5 py-2 border-t border-b border-border-dim" style="background:var(--c-bg)">
-          <span class="text-[10px] font-mono text-zinc-600">GTA Online GTA-PPI framework transfers directly — scraper live · schema ready · data populates at launch</span>
+          <span class="text-[10px] font-mono text-zinc-400">GTA Online GTA-PPI framework transfers directly — scraper live · schema ready · data populates at launch</span>
         </div>
         <div class="px-5 py-3 border-t border-border-dim grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">Y1 · VC GTA-PPI</div>
             <div class="text-xl font-black" style="color:var(--c-growth)">—</div>
-            <div class="text-[10px] font-mono text-zinc-500">populates at launch</div>
+            <div class="text-[10px] font-mono text-zinc-400">populates at launch</div>
           </div>
           <div>
             <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">Y2 · LEONIDA GTA-RPP</div>
             <div class="text-xl font-black" style="color:color-mix(in srgb,var(--c-growth) 65%,var(--c-bg-deep))">—</div>
-            <div class="text-[10px] font-mono text-zinc-500">populates at launch</div>
+            <div class="text-[10px] font-mono text-zinc-400">populates at launch</div>
           </div>
           <div>
             <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-0.5">GTA ONLINE BASELINE</div>
@@ -310,9 +320,9 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
           <ReadItBlock accentColor="var(--c-brand)">The GTA-PPI framework built for GTA Online transfers directly: basket cost ÷ top hourly yield. For GTA VI, GTAVI.AI runs two parallel calculations — one per territory. The RPP ratio (VC÷Leonida) is the new research axis: does the game's multi-region design create measurable purchasing power divergence, or do Rockstar equalise it through pricing?</ReadItBlock>
         </div>
         <div class="px-5 pb-3 flex items-center justify-between border-t border-border-dim pt-2.5">
-          <a href="/gta-online/economy#health-monitor" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors tracking-widest uppercase">GTA Online PPI live →</a>
+          <a href="/gta-online/economy#health-monitor" class="text-[10px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors tracking-widest uppercase">GTA Online PPI live →</a>
           <div class="flex items-center gap-2 shrink-0">
-            <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+            <span class="text-[10px] font-mono text-zinc-400 tracking-widest">GTAVI.AI</span>
             <ShareDropdown anchorId="flow-vi-ppi" shareText="GTA VI PPI tracking: GTAVI.AI will run two calculations from launch — VC purchasing power and Leonida RPP. Framework live on GTA Online now." size="sm" />
           </div>
         </div>
@@ -325,7 +335,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
          CIRCULAR ECONOMY DIAGRAM (D3)
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Projected Circular Economy · D3 Reference" dotColor="var(--c-title-vi)" />
+      <SectionHeader bright label="// Projected Circular Economy · D3 Reference" dotColor="var(--c-title-vi)" />
       <div class="rounded-xl border border-border-dim p-6" style="background:var(--c-bg)">
         <CircularEconomy titleId="gta-6" mode="full" />
         <CardFooter anchorId="eco-gta-vi" sources="Source: GTAVI.AI Economic Model — predicted pre-launch · GTA Online precedent · trailer analysis" shareText="GTA VI predicted economy: Full MMT sovereign with multi-region model. Predicted to surpass GTA Online in complexity at launch. 10 active income predictions tracked." />
@@ -336,13 +346,13 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
          COMPLEXITY RADAR
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Economic Complexity — Franchise Context" dotColor="var(--c-title-vi)" pillHref="/franchise/economics" pillLabel="All 10 economies →" />
+      <SectionHeader bright label="// Economic Complexity — Franchise Context" dotColor="var(--c-title-vi)" pillHref="/franchise/economics" pillLabel="All 10 economies →" />
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ChartComplexityHtml titleId="gta-6" showAverage={true} />
-        <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
           <div class="px-5 py-3 border-b border-border-dim">
-            <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Franchise Arc — Complexity Trajectory</div>
-            <div class="text-[10px] font-mono text-zinc-600 mt-0.5">Complexity score / 17 max per title</div>
+            <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest">Franchise Arc — Complexity Trajectory</div>
+            <div class="text-[10px] font-mono text-zinc-400 mt-0.5">Complexity score / 17 max per title</div>
           </div>
           <div class="px-5 py-4 flex flex-col gap-2">
             {economyData.economies.map((e) => {
@@ -352,7 +362,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
               const color = isGtaVI ? "var(--c-brand)" : isRegression ? "var(--c-alert)" : "var(--c-live)";
               return (
                 <div class="flex items-center gap-3">
-                  <div class="w-20 shrink-0 text-[11px] font-mono text-zinc-500 text-right">{e.short}</div>
+                  <div class="w-20 shrink-0 text-[11px] font-mono text-zinc-400 text-right">{e.short}</div>
                   <div class="flex-1 h-2 rounded-full overflow-hidden" style="background:var(--c-border-1)">
                     <div class="h-full rounded-full transition-all"
                          style={`width:${pct}%;background:${color};opacity:${isRegression ? 0.5 : 0.75}${e.projected ? ";border-right:2px dashed " + color : ""}`}></div>
@@ -362,11 +372,11 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
               );
             })}
           </div>
-          <div class="px-5 pb-3 pt-0 text-[11px] font-mono text-zinc-600 leading-relaxed border-t border-border-dim pt-3">
+          <div class="px-5 pb-3 pt-0 text-[11px] font-mono text-zinc-400 leading-relaxed border-t border-border-dim pt-3">
             {economyData.complexity_chart_note}
           </div>
           <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
-            <div class="flex items-center gap-4 text-[11px] font-mono text-zinc-500 flex-wrap">
+            <div class="flex items-center gap-4 text-[11px] font-mono text-zinc-400 flex-wrap">
               <span class="flex items-center gap-1.5">
                 <div class="w-4 h-1.5 rounded-full shrink-0" style="background:var(--c-live);opacity:0.75"></div>
                 Standard
@@ -381,7 +391,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
               </span>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <span class="text-[10px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+              <span class="text-[10px] font-mono text-zinc-400 tracking-widest">GTAVI.AI</span>
               <ShareDropdown anchorId="eco-complexity" shareText="GTA VI projected economic complexity: 17/17 — the franchise maximum. Every prior title mapped across 5 dimensions. GTAVI.AI" size="sm" />
             </div>
           </div>
@@ -393,8 +403,8 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
          THE EUROZONE ANALOGY
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// The Eurozone Analogy" dotColor="var(--c-brand)" class="mb-6" />
-      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <SectionHeader bright label="// The Eurozone Analogy" dotColor="var(--c-brand)" class="mb-6" />
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
         <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
           <div class="px-6 py-5">
             <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-3">GTA VI Model</div>
@@ -408,7 +418,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
                 { label: "Inflation mechanism", value: "Nerf-driven + SC ratio + regional divergence" },
               ].map(r => (
                 <div class="flex items-start gap-3">
-                  <div class="text-[11px] font-mono text-zinc-500 w-36 shrink-0 pt-0.5">{r.label}</div>
+                  <div class="text-[11px] font-mono text-zinc-400 w-36 shrink-0 pt-0.5">{r.label}</div>
                   <div class="text-[10px] font-mono text-zinc-200">{r.value}</div>
                 </div>
               ))}
@@ -426,7 +436,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
                 { label: "Inflation mechanism", value: "ECB rate policy + structural divergence" },
               ].map(r => (
                 <div class="flex items-start gap-3">
-                  <div class="text-[11px] font-mono text-zinc-500 w-36 shrink-0 pt-0.5">{r.label}</div>
+                  <div class="text-[11px] font-mono text-zinc-400 w-36 shrink-0 pt-0.5">{r.label}</div>
                   <div class="text-[10px] font-mono text-zinc-200">{r.value}</div>
                 </div>
               ))}
@@ -447,7 +457,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
          GTA-RPP — REGIONAL PURCHASING PARITY
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// GTA-RPP — Regional Purchasing Parity" dotColor="var(--c-live)" pillLabel="Day-1 ready · awaiting launch data" class="mb-6" />
+      <SectionHeader bright label="// GTA-RPP — Regional Purchasing Parity" dotColor="var(--c-live)" pillLabel="Day-1 ready · awaiting launch data" class="mb-6" />
       <div class="rounded-xl border border-gta-teal/20 p-6" style="background:color-mix(in srgb,var(--c-growth) 4%,var(--c-bg))">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
           {[
@@ -455,10 +465,10 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
             { label: "Leonida RPP",    value: "—",     sub: "Populates at launch", color: "var(--c-live)" },
             { label: "RPP Ratio",      value: "—",     sub: "VC ÷ Leonida", color: "var(--c-growth)" },
           ].map(s => (
-            <div class="rounded-lg border border-border-mid px-4 py-3 text-center" style="background:var(--c-card)">
+            <div class="rounded-lg border border-border-mid px-4 py-3 text-center" style="background:var(--c-card-raised)">
               <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1">{s.label}</div>
               <div class="text-2xl font-mono font-black" style={`color:${s.color};opacity:var(--o-muted)`}>{s.value}</div>
-              <div class="text-[11px] font-mono text-zinc-500 mt-1">{s.sub}</div>
+              <div class="text-[11px] font-mono text-zinc-400 mt-1">{s.sub}</div>
             </div>
           ))}
         </div>
@@ -478,13 +488,13 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
          ECONOMIC PREDICTIONS
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Economic Structure Predictions" dotColor="var(--c-title-vi)" />
+      <SectionHeader bright label="// Economic Structure Predictions" dotColor="var(--c-title-vi)" />
       <div class="flex flex-col gap-3">
         {econPreds.map((pred: any) => {
           const tierColor = pred.confidence_tier === "reported" ? "var(--c-growth)" : pred.confidence_tier === "confirmed" ? "var(--c-live)" : "var(--c-brand)";
           const tierLabel = pred.confidence_tier === "reported" ? "Reported" : pred.confidence_tier === "confirmed" ? "Confirmed" : "Predicted";
           return (
-            <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+            <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
               <div class="px-5 py-4 flex items-start gap-4">
                 <div class="shrink-0 flex flex-col items-center gap-1 pt-0.5">
                   <div class="text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
@@ -499,7 +509,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
                     {pred.basis}
                   </div>
                   {pred.prediction_range && (
-                    <div class="flex items-center gap-3 text-[11px] font-mono text-zinc-500">
+                    <div class="flex items-center gap-3 text-[11px] font-mono text-zinc-400">
                       <span>Low: {pred.prediction_range.low}</span>
                       <span>·</span>
                       <span>High: {pred.prediction_range.high}</span>
@@ -517,13 +527,13 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
          GTA ONLINE → GTA VI LINEAGE
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Economic Lineage — The Arc Ends Here" dotColor="var(--c-title-vi)" />
-      <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card)">
-        <p class="text-[11px] font-mono text-zinc-500 leading-relaxed mb-4">
+      <SectionHeader bright label="// Economic Lineage — The Arc Ends Here" dotColor="var(--c-title-vi)" />
+      <div class="rounded-xl border border-border-dim p-5" style="background:var(--c-card-raised)">
+        <p class="text-[11px] font-mono text-zinc-400 leading-relaxed mb-4">
           {economy?.summary}
         </p>
         <div class="rounded-lg border border-gta-gold/15 px-4 py-3" style="background:var(--c-hero-bloom)">
-          <div class="text-[10px] font-mono text-gta-gold/40 uppercase tracking-widest mb-1">GTA Online → GTA VI</div>
+          <div class="text-[10px] font-mono text-gta-gold uppercase tracking-widest mb-1">GTA Online → GTA VI</div>
           <p class="text-[11px] font-mono text-zinc-400 leading-relaxed">{economy?.gta_vi_lineage}</p>
         </div>
       </div>
@@ -542,7 +552,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
       </a>
       <div class="ml-auto">
         <div class="flex items-center gap-2 shrink-0">
-          <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
+          <span class="text-[11px] font-mono text-zinc-400 tracking-widest">GTAVI.AI</span>
           <ShareDropdown anchorId="economy" shareText="GTA VI economy analysis: multi-region currency union (Vice City + Leonida) — the Eurozone analogy applied to the most complex virtual economy ever designed." size="sm" />
         </div>
       </div>
