@@ -67,8 +67,9 @@ const BONUS_LABEL: Record<string, string> = {
     <div class="absolute inset-0">
       <img src="/assets/gta6/locations/Vice_City_03.jpg" alt=""
            class="w-full h-full object-cover" style="object-position:center 30%" aria-hidden="true" loading="eager" />
-      <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg) 0%,rgba(14,14,17,0.8) 55%,rgba(14,14,17,0.35) 100%)"></div>
-      <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 30%,var(--c-bg) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to right, var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 88%,transparent) 40%, color-mix(in srgb,var(--c-bg) 52%,transparent) 72%, color-mix(in srgb,var(--c-bg) 34%,transparent) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom, color-mix(in srgb,var(--c-bg) 42%,transparent) 0%, transparent 28%, transparent 58%, var(--c-bg) 100%)"></div>
+      <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(70% 90% at 85% 0%, var(--c-hero-bloom), transparent 70%)"></div>
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-20 w-full">
       <div class="flex items-end justify-between flex-wrap gap-6">
@@ -77,7 +78,7 @@ const BONUS_LABEL: Record<string, string> = {
             <GamePill game="gta-online" size="sm" />
             <span class="text-[11px] font-mono text-zinc-500 border border-border-mid px-2 py-0.5 rounded uppercase tracking-widest">Live since 2013</span>
           </div>
-          <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">GTA Online</h1>
+          <h1 class="text-3xl sm:text-5xl font-bold text-white mb-2 leading-[1.05]">GTA Online</h1>
           <p class="text-zinc-400 text-sm leading-relaxed mb-5 max-w-sm">
             12 years of the live-service economy — income sources ranked, Shark Card inflation tracked, weekly bonuses monitored. Follow the GTA$.
           </p>
@@ -134,7 +135,7 @@ const BONUS_LABEL: Record<string, string> = {
          CHART TEASERS — 2 top + 1 full-width below
     ══════════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// Key Charts" pillHref="/charts?title=gta-online" pillLabel="All GTA Online charts →" />
+      <SectionHeader bright label="// Key Charts" pillHref="/charts?title=gta-online" pillLabel="All GTA Online charts →" />
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ChartTeaserOnlineMetaCeiling />
         <ChartTeaserOnlineSharkCard />
@@ -145,7 +146,7 @@ const BONUS_LABEL: Record<string, string> = {
          ECONOMY — Circular Flow Model
     ══════════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// The GTA Online Economy · Simplified" dotColor="var(--c-title-online)" pillHref="/gta-online/economy" pillLabel="Full model →" />
+      <SectionHeader bright label="// The GTA Online Economy · Simplified" dotColor="var(--c-title-online)" pillHref="/gta-online/economy" pillLabel="Full model →" />
       <EconomyCircleSEDOnline fullEconomyHref="/gta-online/economy" />
     </section>
 
@@ -235,7 +236,7 @@ const BONUS_LABEL: Record<string, string> = {
          Only inline D3 chart on a hub page — extracted from /gta-online/income
     ══════════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader label="// $/hr Meta History — How the Top Earner Changed" dotColor="var(--c-economy)" pillHref="/charts?title=gta-online" pillLabel="All GTA Online charts →" />
+      <SectionHeader bright label="// $/hr Meta History — How the Top Earner Changed" dotColor="var(--c-economy)" pillHref="/charts?title=gta-online" pillLabel="All GTA Online charts →" />
       <ChartMetaShift />
     </section>
 
