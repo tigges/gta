@@ -10,8 +10,31 @@ import weeklyBonuses    from "../../../data/gta-5/economy/weekly-bonuses.json";
 const bizProfiles  = (businessProfiles as any).businesses as any[];
 const bonuses      = (weeklyBonuses as any).bonuses as any[];
 const weekStart    = (weeklyBonuses as any).week_start as string;
+
+// Staging-only tool. Production (main) builds render a noindex stub that
+// redirects to /gta-v — the calculator is parked on staging for now.
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING_BUILD = CF_BRANCH !== "" && CF_BRANCH !== "main";
 ---
 
+{!IS_STAGING_BUILD && (
+<Base
+  titleContext="gta-v"
+  title="GTA Online Income Calculator"
+  description="GTA Online income calculator — in preview."
+  ogPage="gta-v"
+  noindex={true}
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-24 text-center">
+    <h1 class="text-2xl font-bold text-white mb-3">Income Calculator</h1>
+    <p class="text-zinc-400 mb-6">This tool is currently in preview. Redirecting to GTA V economics…</p>
+    <a href="/gta-v" class="text-[11px] font-mono text-gta-gold border border-gta-gold/30 px-4 py-2 rounded uppercase tracking-widest">← GTA V Economics</a>
+  </div>
+  <script is:inline>location.replace("/gta-v");</script>
+</Base>
+)}
+
+{IS_STAGING_BUILD && (
 <Base
   titleContext="gta-v"
   title="GTA Online Income Calculator — Personalised Money Method Guide"
@@ -60,3 +83,4 @@ const weekStart    = (weeklyBonuses as any).week_start as string;
 
   </div>
 </Base>
+)}

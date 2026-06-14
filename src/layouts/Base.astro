@@ -106,7 +106,7 @@ const navGroups: NavGroup[] = [
   {
     href: "/gta-vi",
     label: "GTA VI",
-    activePaths: ["/gta-vi", "/gta-vi/intel", "/gta-vi/trailers", "/gta-vi/economy", "/gta-vi/buy"],
+    activePaths: ["/gta-vi", "/gta-vi/intel", "/gta-vi/economy", "/gta-vi/buy"],
     identityColor: "var(--c-title-vi)",
     dropdown: [
       { href: "/gta-vi",          iconName: "intel",   label: "GTA VI",         sub: "Hub · predictions · charts · economy · overview" },
@@ -150,9 +150,9 @@ const navGroups: NavGroup[] = [
     dropdown: null,
   },
   {
-    href: "/franchise",
+    href: "/franchise/history",
     label: "Franchise",
-    activePaths: ["/franchise", "/franchise/economics", "/franchise/history", "/franchise/charts", "/gta-iii", "/gta-vc", "/gta-sa", "/gta-iv"],
+    activePaths: ["/franchise/economics", "/franchise/history", "/gta-iii", "/gta-vc", "/gta-sa", "/gta-iv"],
     identityColor: "var(--c-brand)",
     dropdown: [
       { href: "/franchise/history",   iconName: "history",  label: "History & Sales",  sub: "30 years · 8 titles · sales · Metacritic" },
@@ -437,8 +437,8 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
           <div class="flex items-center gap-3">
             <span class="text-[10px] font-mono text-zinc-700 uppercase tracking-widest shrink-0">All titles</span>
             {([
-              { id: "gta-1",  year: "1997", href: "/franchise" },
-              { id: "gta-2",  year: "1999", href: "/franchise" },
+              { id: "gta-1",  year: "1997", href: "/gta-1-2/economy" },
+              { id: "gta-2",  year: "1999", href: "/gta-1-2/economy" },
               { id: "gta-3",  year: "2001", href: "/gta-iii/economy" },
               { id: "gta-vc", year: "2002", href: "/gta-vc/economy" },
               { id: "gta-sa", year: "2004", href: "/gta-sa/economy" },
