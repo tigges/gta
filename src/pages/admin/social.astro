@@ -8,6 +8,30 @@ import Base from "../../layouts/Base.astro";
 import predRaw from "../../../data/gta-6/predictions.json";
 
 const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
+
+// Week-based poll rotation — same logic as n8n pipeline intended
+const now = new Date();
+const startOfYear = new Date(now.getFullYear(), 0, 1);
+const weekOfYear = Math.floor((now.getTime() - startOfYear.getTime()) / (7 * 24 * 60 * 60 * 1000));
+const featuredPoll = polls.length > 0 ? polls[weekOfYear % polls.length] as any : null;
+const featuredPollUrl = featuredPoll ? `https://gtavi.ai/community/polls/${featuredPoll.id}` : "";
+const todayStr = now.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
+// Pre-formatted copy — paste directly into each channel
+const xTweet = featuredPoll
+  ? `${featuredPoll.poll_question}\n\nOur model puts ${featuredPoll.confidence}% confidence on this. Where does the community stand?\n\n↓ Vote below 👇`
+  : "";
+const xReply = featuredPollUrl;
+const rdTitle = featuredPoll
+  ? `${featuredPoll.poll_question} — GTA VI data model says ${featuredPoll.confidence}% [Community Poll]`
+  : "";
+const rdBody = featuredPoll
+  ? `GTAVI.AI's prediction model puts ${featuredPoll.confidence}% confidence (tier: ${featuredPoll.confidence_tier}) on this.\n\nBasis: ${(featuredPoll.basis ?? "").slice(0, 300)}...\n\n🗳️ Vote: ${featuredPollUrl}\n📊 All GTA VI predictions: https://gtavi.ai/gta-vi/intel\n\n*Community-driven intelligence — not affiliated with Rockstar Games.*`
+  : "";
+const discordMsg = featuredPoll
+  ? `📊 **This week's community poll**\n\n**${featuredPoll.poll_question}**\nModel confidence: ${featuredPoll.confidence}% (${featuredPoll.confidence_tier})\n\n🗳️ Vote: ${featuredPollUrl}`
+  : "";
+
 // Staging-only gate — this page must never render on production
 const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
 const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
@@ -22,6 +46,184 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
       <h1 class="text-2xl font-bold text-white mb-1">Social &amp; Growth Strategy</h1>
       <p class="text-sm text-zinc-500">Poll distribution · n8n automation · SEO · affiliate programme · traffic playbook. Not visible to public users.</p>
     </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         AUTOMATION STATUS BAR
+    ═══════════════════════════════════════════════════════ -->
+    <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <div class="px-4 py-2.5 border-b border-border-dim flex items-center gap-2">
+        <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Automation Status — {todayStr}</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
+        {([
+          {
+            label:  "Discord nightly digest",
+            time:   "03:00 UTC · every night",
+            status: "running",
+            note:   "post_discord_digest.py via CI",
+          },
+          {
+            label:  "Resend weekly email",
+            time:   "Tue 10:00 UTC · CI cron",
+            status: "check",
+            note:   "Needs RESEND_API_KEY in repo secrets",
+          },
+          {
+            label:  "n8n main pipeline",
+            time:   "Mon 08:00 UTC · cron",
+            status: "broken",
+            note:   "NOT SET UP: 8 unset credentials + missing /api/predictions-feed endpoint",
+          },
+          {
+            label:  "n8n preorder blast",
+            time:   "Manual — Nov 2026",
+            status: "inactive",
+            note:   "Keep inactive until pre-orders go live",
+          },
+        ] as const).map((item) => (
+          <div class="px-4 py-3">
+            <div class={`text-[10px] font-mono mb-1.5 uppercase tracking-widest font-semibold ${
+              item.status === "running"  ? "text-gta-green" :
+              item.status === "broken"  ? "text-gta-vi-coral" :
+              item.status === "check"   ? "text-gta-gold" :
+              "text-zinc-600"
+            }`}>
+              {item.status === "running"  ? "● running" :
+               item.status === "broken"  ? "✕ not configured" :
+               item.status === "check"   ? "? verify key" :
+               "○ inactive"}
+            </div>
+            <div class="text-[11px] font-semibold text-zinc-300 mb-0.5">{item.label}</div>
+            <div class="text-[10px] font-mono text-zinc-600 mb-1">{item.time}</div>
+            <div class="text-[10px] text-zinc-700 leading-relaxed">{item.note}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         PUBLISH THIS WEEK — manual runbook
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-green/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// 00 — Publish This Week</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+        <span class="text-[10px] font-mono text-zinc-600">Week {weekOfYear} · {polls.length} polls in rotation</span>
+      </div>
+
+      {featuredPoll ? (
+        <>
+          <!-- Featured poll hero -->
+          <div class="rounded-xl border border-gta-green/20 p-5 mb-5" style="background:color-mix(in srgb,var(--c-gta-dollar) 4%,var(--c-card))">
+            <div class="flex items-start gap-4">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-[10px] font-mono text-gta-green/70 uppercase tracking-widest">Featured poll</span>
+                  <span class="text-[10px] font-mono border border-gta-green/30 text-gta-green px-1.5 py-0.5 rounded">{featuredPoll.confidence}% confidence · {featuredPoll.confidence_tier}</span>
+                </div>
+                <p class="text-[15px] font-semibold text-white leading-snug mb-2">{featuredPoll.poll_question}</p>
+                <p class="text-[11px] text-zinc-500 leading-relaxed line-clamp-2">{featuredPoll.basis}</p>
+              </div>
+              <a
+                href={featuredPollUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="shrink-0 text-[10px] font-mono text-gta-green/60 hover:text-gta-green border border-gta-green/20 hover:border-gta-green/40 rounded px-2.5 py-1.5 transition-colors"
+              >
+                View poll ↗
+              </a>
+            </div>
+          </div>
+
+          <!-- Ready-to-paste copy -->
+          <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+            <div class="px-4 py-2.5 border-b border-border-dim flex items-center justify-between">
+              <span class="text-[11px] font-semibold text-zinc-300">Ready-to-paste copy — click to copy</span>
+              <span class="text-[10px] font-mono text-zinc-600">id: {featuredPoll.id}</span>
+            </div>
+            <div class="divide-y divide-border-dim/40">
+              {([
+                {
+                  ch:    "𝕏 Tweet body",
+                  note:  "Post as tweet. Add VoteCard screenshot as image. Drop poll URL as first reply (avoids link reach penalty).",
+                  text:  xTweet,
+                  color: "var(--c-chart-bar)",
+                },
+                {
+                  ch:    "𝕏 First reply (URL only)",
+                  note:  "Reply to your own tweet immediately after posting.",
+                  text:  xReply,
+                  color: "var(--c-chart-bar)",
+                },
+                {
+                  ch:    "Reddit title",
+                  note:  "Post to r/GTA6. Thursday 18:00–21:00 UTC is peak window — hold if today is Mon–Wed.",
+                  text:  rdTitle,
+                  color: "var(--c-flow-spending)",
+                },
+                {
+                  ch:    "Reddit body",
+                  note:  "Paste as post body. Edit freely — the basis text is a starting point.",
+                  text:  rdBody,
+                  color: "var(--c-flow-spending)",
+                },
+                {
+                  ch:    "Discord message",
+                  note:  "Paste into #polls or #community. Ping @everyone only if confidence ≥75%.",
+                  text:  discordMsg,
+                  color: "var(--c-economy)",
+                },
+              ] as const).map((row) => (
+                <div class="px-4 py-3.5">
+                  <div class="flex items-start gap-3">
+                    <div class="shrink-0 w-36">
+                      <div class="text-[10px] font-mono font-semibold mb-0.5" style={`color:${row.color}`}>{row.ch}</div>
+                      <div class="text-[9px] text-zinc-700 leading-relaxed">{row.note}</div>
+                    </div>
+                    <button
+                      class="copy-text-btn flex-1 text-left text-[11px] font-mono text-zinc-400 hover:text-zinc-200 rounded px-3 py-2 transition-colors whitespace-pre-wrap leading-relaxed"
+                      style="background:var(--c-bg-deep)"
+                      data-text={row.text}
+                    >
+                      {row.text}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Manual checklist -->
+          <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+            <div class="px-4 py-2.5 border-b border-border-dim">
+              <span class="text-[11px] font-semibold text-zinc-300">This Tuesday — manual checklist</span>
+            </div>
+            <div class="divide-y divide-border-dim/40">
+              {([
+                { time: "Auto · 03:00 UTC", ch: "Discord nightly digest", action: "Already fired automatically via CI. Nothing to do.", done: true },
+                { time: "Auto · 10:00 UTC", ch: "Resend weekly email",    action: "Fires automatically via GitHub Actions weekly-digest.yml — verify RESEND_API_KEY is set in repo secrets.", done: false },
+                { time: "09:00–10:00 UTC",  ch: "X / Twitter",            action: "Post tweet body above. Attach VoteCard screenshot. Reply immediately with poll URL.", done: false },
+                { time: "Anytime",          ch: "Instagram",               action: "Screenshot the VoteCard. Caption = poll question + 'vote in bio link'.", done: false },
+                { time: "Hold until Thurs", ch: "Reddit r/GTA6",           action: "Thursday 18:00–21:00 UTC is peak. Use the Reddit title + body copy above.", done: false },
+                { time: "Hold until Thurs", ch: "GTAForums",               action: "Post in GTA VI General Discussion. Lead with prediction context, link to /gta-vi/intel.", done: false },
+              ] as const).map((step) => (
+                <div class="flex items-start gap-4 px-4 py-3">
+                  <span class="text-[10px] font-mono text-zinc-600 shrink-0 w-28 mt-0.5">{step.time}</span>
+                  <span class={`text-[10px] font-mono shrink-0 mt-0.5 ${step.done ? "text-gta-green/70" : "text-zinc-500"}`}>{step.done ? "✓ auto" : "manual"}</span>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-[11px] font-semibold text-zinc-300 mb-0.5">{step.ch}</div>
+                    <div class="text-[11px] text-zinc-500 leading-relaxed">{step.action}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      ) : (
+        <p class="text-[13px] text-zinc-500">No polls with poll_question found in predictions.json.</p>
+      )}
+    </section>
 
     <!-- ═══════════════════════════════════════════════════════
          SECTION 1 — POLL EMBED DISTRIBUTION
@@ -221,14 +423,28 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         SECTION 2 — n8n AUTOMATION PIPELINE
+         SECTION 2 — n8n AUTOMATION PIPELINE (not configured)
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-5">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-teal/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// 02 — n8n Automation Pipeline</span>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-zinc-700 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// 02 — n8n Automation Pipeline</span>
         <div class="flex-1 h-px bg-border-dim"></div>
-        <a href="https://tigges.app.n8n.cloud/" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-gta-teal/60 hover:text-gta-teal transition-colors">n8n Cloud ↗</a>
+        <a href="https://tigges.app.n8n.cloud/" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors">n8n Cloud ↗</a>
+      </div>
+
+      <!-- Status banner -->
+      <div class="rounded-xl border border-gta-vi-coral/30 px-4 py-3 mb-5 flex items-start gap-3" style="background:color-mix(in srgb,var(--c-gta-vi-coral) 6%,var(--c-card))">
+        <span class="text-gta-vi-coral text-[13px] mt-0.5 shrink-0">✕</span>
+        <div>
+          <div class="text-[11px] font-semibold text-gta-vi-coral mb-1">Not configured — skip for now</div>
+          <div class="text-[11px] text-zinc-500 leading-relaxed space-y-0.5">
+            <p>All 8 credentials still contain <code class="text-zinc-400 bg-zinc-800 px-1 rounded text-[10px]">REPLACE_*</code> placeholders — zero live credentials set.</p>
+            <p>Main pipeline calls <code class="text-zinc-400 bg-zinc-800 px-1 rounded text-[10px]">GET /api/predictions-feed</code> which does not exist — workflow fails on step 2.</p>
+            <p>Both workflows are <code class="text-zinc-400 bg-zinc-800 px-1 rounded text-[10px]">active: false</code> — never been imported or activated on n8n Cloud.</p>
+            <p class="text-zinc-600 mt-1">Estimated cost to make this work: Publer + Beehiiv + Anthropic + n8n Cloud subscriptions. Recommend manual publishing (Section 00) until traffic justifies it.</p>
+          </div>
+        </div>
       </div>
 
       <!-- Setup checklist -->
