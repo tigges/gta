@@ -6,6 +6,7 @@
  */
 import Base from "../../layouts/Base.astro";
 import GamePill from "../../components/GamePill.astro";
+import { zapLink, AFFILIATE_IDS } from "../../config/affiliates";
 import SectionHeader from "../../components/SectionHeader.astro";
 import EconomyCircleSEDOnline from "../../components/EconomyCircleSEDOnline.astro";
 import IncomeCard from "../../components/IncomeCard.astro";
@@ -282,6 +283,38 @@ const BONUS_LABEL: Record<string, string> = {
     <section>
       <SectionHeader bright label="// $/hr Meta History — How the Top Earner Changed" dotColor="var(--c-economy)" pillHref="/charts?title=gta-online" pillLabel="All GTA Online charts →" />
       <ChartMetaShift />
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ZAP-HOSTING — FiveM / GTA-RP server affiliate tile
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="rounded-xl border overflow-hidden" style="background:var(--c-card);border-color:var(--c-border-1)">
+        <div class="px-5 py-4 flex items-start gap-4">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 text-lg" style="background:#1a2a1a">🖥️</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap mb-1">
+              <span class="font-semibold text-zinc-100 text-sm">Host Your Own GTA-RP / FiveM Server</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded border text-gta-teal border-gta-teal/30" style="background:color-mix(in srgb,var(--c-live) 8%,transparent)">ZAP-Hosting</span>
+            </div>
+            <p class="text-[11px] text-zinc-500 font-mono leading-relaxed mb-3">
+              Run your own GTA roleplay server from a few dollars/month. ZAP-Hosting is the most popular FiveM host — instant setup, 24/7 support, scales with your community.
+            </p>
+            <div class="flex items-center gap-3 flex-wrap">
+              <a href={zapLink()} target="_blank" rel="noopener noreferrer"
+                class="text-[11px] font-mono px-4 py-2 rounded border border-gta-teal/30 text-gta-teal hover:bg-gta-teal/10 transition-colors uppercase tracking-widest">
+                Rent a Server →
+              </a>
+              <span class="text-[10px] font-mono text-zinc-600">
+                Use code <span class="text-zinc-400">{AFFILIATE_IDS.zap_hosting}</span> for 20% off
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="px-5 py-2 border-t flex items-center justify-between" style="background:var(--c-bg);border-color:var(--c-border-1)">
+          <span class="text-[10px] font-mono text-zinc-600">Affiliate disclosure: we earn a commission if you sign up via this link, at no extra cost to you.</span>
+        </div>
+      </div>
     </section>
 
   </div>
