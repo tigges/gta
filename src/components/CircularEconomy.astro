@@ -143,7 +143,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
         <span class="text-[11px] font-mono text-zinc-600">· Deliberate Regression</span>
       )}
       {isProjected && (
-        <span class="text-[11px] font-mono text-zinc-600">· Projected</span>
+        <span class="text-[11px] font-mono text-zinc-600">· Predicted</span>
       )}
     </div>
   )}
@@ -152,7 +152,7 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       <GamePill game={gamePillId as any} size="xs" />
       <span class="text-[10px] font-mono text-zinc-600">{economy.era_label}</span>
       {isProjected && (
-        <span class="text-[10px] font-mono text-zinc-600">· Projected</span>
+        <span class="text-[10px] font-mono text-zinc-600">· Predicted</span>
       )}
     </div>
   )}
