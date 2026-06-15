@@ -40,6 +40,9 @@ export const AFFILIATE_IDS = {
   // impact_playstation: "",  // via impact.com
   // impact_xbox:        "",  // via impact.com
   // rakuten_game_uk:    "",  // GAME.co.uk via Rakuten Advertising
+
+  // ── FiveM / GTA-RP hosting ────────────────────────────────────────────
+  zap_hosting: "tigges-a-4754",  // ZAP-Hosting — active. 50% order commission + 10% renewal
 } as const;
 
 /**
@@ -91,6 +94,12 @@ export const AMAZON_TAG_MAP: Record<string, string> = {
   "www.amazon.com.be": AFFILIATE_IDS.amazon_be,
   "www.amazon.co.za":  AFFILIATE_IDS.amazon_za,
 };
+
+/** Build a ZAP-Hosting affiliate URL with the coupon code embedded. */
+export function zapLink(path: string = ""): string {
+  const base = `https://zap-hosting.com${path || "/en/gameserver/fivem-server/"}`;
+  return `${base}?aff=${AFFILIATE_IDS.zap_hosting}`;
+}
 
 /** Apply the correct affiliate tag to any Amazon URL automatically. */
 export function tagAmazonUrl(url: string): string {
