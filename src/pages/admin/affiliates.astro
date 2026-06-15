@@ -1,0 +1,292 @@
+---
+import Base from "../../layouts/Base.astro";
+import { AFFILIATE_IDS } from "../../config/affiliates";
+
+const amazon = [
+  { key: "amazon_us",  flag: "🇺🇸", market: "United States",  store: "amazon.com",    signup: "https://affiliate-program.amazon.com" },
+  { key: "amazon_uk",  flag: "🇬🇧", market: "United Kingdom",  store: "amazon.co.uk",  signup: "https://affiliate-program.amazon.co.uk" },
+  { key: "amazon_ca",  flag: "🇨🇦", market: "Canada",          store: "amazon.ca",     signup: "https://associates.amazon.ca" },
+  { key: "amazon_de",  flag: "🇩🇪", market: "Germany / Austria", store: "amazon.de",   signup: "https://partnernet.amazon.de" },
+  { key: "amazon_fr",  flag: "🇫🇷", market: "France",          store: "amazon.fr",     signup: "https://partenaires.amazon.fr" },
+  { key: "amazon_it",  flag: "🇮🇹", market: "Italy",           store: "amazon.it",     signup: "https://programma-affiliazione.amazon.it" },
+  { key: "amazon_es",  flag: "🇪🇸", market: "Spain / Portugal",store: "amazon.es",     signup: "https://afiliados.amazon.es" },
+  { key: "amazon_nl",  flag: "🇳🇱", market: "Netherlands",     store: "amazon.nl",     signup: "https://partner.amazon.nl" },
+  { key: "amazon_se",  flag: "🇸🇪", market: "Sweden",          store: "amazon.se",     signup: "https://partner.amazon.se" },
+  { key: "amazon_pl",  flag: "🇵🇱", market: "Poland",          store: "amazon.pl",     signup: "https://partner.amazon.pl" },
+  { key: "amazon_be",  flag: "🇧🇪", market: "Belgium",         store: "amazon.com.be", signup: "https://partenaires.amazon.com.be" },
+  { key: "amazon_jp",  flag: "🇯🇵", market: "Japan",           store: "amazon.co.jp",  signup: "https://affiliate.amazon.co.jp" },
+  { key: "amazon_au",  flag: "🇦🇺", market: "Australia",       store: "amazon.com.au", signup: "https://affiliate-program.amazon.com.au" },
+  { key: "amazon_ca",  flag: "🇨🇦", market: "Canada",          store: "amazon.ca",     signup: "https://associates.amazon.ca" },
+  { key: "amazon_in",  flag: "🇮🇳", market: "India",           store: "amazon.in",     signup: "https://affiliate-program.amazon.in" },
+  { key: "amazon_br",  flag: "🇧🇷", market: "Brazil",          store: "amazon.com.br", signup: "https://associados.amazon.com.br" },
+  { key: "amazon_mx",  flag: "🇲🇽", market: "Mexico",          store: "amazon.com.mx", signup: "https://afiliados.amazon.com.mx" },
+  { key: "amazon_tr",  flag: "🇹🇷", market: "Turkey",          store: "amazon.com.tr", signup: "https://gelir-ortakligi.amazon.com.tr" },
+  { key: "amazon_sa",  flag: "🇸🇦", market: "Saudi Arabia",    store: "amazon.sa",     signup: "https://affiliate-program.amazon.sa" },
+  { key: "amazon_ae",  flag: "🇦🇪", market: "UAE",             store: "amazon.ae",     signup: "https://affiliate-program.amazon.ae" },
+  { key: "amazon_za",  flag: "🇿🇦", market: "South Africa",    store: "amazon.co.za",  signup: "https://affiliate-program.amazon.co.za" },
+] as const;
+
+const other = [
+  {
+    name: "NordVPN",
+    network: "Nord Affiliate",
+    commission: "$30–60 per sale",
+    cookie: "30 days",
+    status: "pending",
+    signup: "https://nordvpn.com/affiliate/",
+    id: "",
+    notes: "Submitted — awaiting approval (2–4 days)",
+  },
+  {
+    name: "Green Man Gaming",
+    network: "Impact.com",
+    commission: "2–5% per sale, 10% bundles",
+    cookie: "30 days",
+    status: "pending",
+    signup: "https://www.greenmangaming.com/affiliates/",
+    id: "",
+    notes: "In review on Impact.com",
+  },
+  {
+    name: "PlayStation Direct",
+    network: "Partnerize",
+    commission: "Variable by category",
+    cookie: "30 days",
+    status: "pending",
+    signup: "https://direct.playstation.com/en-us/playstation-affiliate-programme",
+    id: "",
+    notes: "Apply via Partnerize → Campaigns → PlayStation Direct",
+  },
+  {
+    name: "PlayStation Plus",
+    network: "Impact.com",
+    commission: "$5 per new signup",
+    cookie: "30 days",
+    status: "pending",
+    signup: "https://impact.com",
+    id: "",
+    notes: "Find in Impact.com Marketplace once GMG is approved",
+  },
+  {
+    name: "ZAP-Hosting (FiveM)",
+    network: "ZAP-Hosting",
+    commission: "Recurring %",
+    cookie: "—",
+    status: "pending",
+    signup: "https://zap-hosting.com/en/affiliate/",
+    id: "",
+    notes: "Check Affiliate tab in ZAP account for link",
+  },
+  {
+    name: "Skimlinks",
+    network: "Skimlinks",
+    commission: "~75% of affiliate rate across 48k merchants",
+    cookie: "Per merchant",
+    status: "todo",
+    signup: "https://www.skimlinks.com",
+    id: "",
+    notes: "One JS snippet → auto-tags Amazon all countries + PlayStation + 48k others",
+  },
+  {
+    name: "Amazon Associates Japan",
+    network: "Amazon",
+    commission: "~1–3%",
+    cookie: "24 hours",
+    status: "todo",
+    signup: "https://affiliate.amazon.co.jp",
+    id: "",
+    notes: "Top-5 GTA market globally",
+  },
+  {
+    name: "Amazon Associates Australia",
+    network: "Amazon",
+    commission: "~1–3%",
+    cookie: "24 hours",
+    status: "todo",
+    signup: "https://affiliate-program.amazon.com.au",
+    id: "",
+    notes: "",
+  },
+] as const;
+
+type AffiliateKey = keyof typeof AFFILIATE_IDS;
+
+function getTag(key: string): string {
+  return (AFFILIATE_IDS as Record<string, string>)[key] ?? "";
+}
+
+// Deduplicate amazon rows by key
+const amazonUnique = amazon.filter((r, i, arr) => arr.findIndex(x => x.key === r.key) === i);
+// Staging-only gate — this page must never render on production
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
+if (!IS_STAGING) { return Astro.redirect("/404"); }
+---
+
+<Base
+  title="Affiliate Dashboard — Admin"
+  description="Internal affiliate programme tracker for gtavi.ai"
+  noindex={true}
+  titleContext="gta-v"
+  ogPage="gta-v"
+  crossLinksContext="gta-v"
+>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+
+    <div class="mb-8">
+      <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Staging only · not indexed</div>
+      <h1 class="text-2xl font-bold text-zinc-100 mb-2">Affiliate Dashboard</h1>
+      <p class="text-[13px] text-zinc-500 font-mono">All affiliate programmes, IDs, statuses and sign-up links. Add IDs to <code class="text-zinc-300">src/config/affiliates.ts</code>.</p>
+    </div>
+
+    <!-- ── Amazon Associates ───────────────────────────────────────── -->
+    <section class="mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+        <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">// Amazon Associates — {amazonUnique.filter(r => getTag(r.key)).length} / {amazonUnique.length} tagged</span>
+      </div>
+
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <table class="w-full text-[11px] font-mono">
+          <thead>
+            <tr class="border-b border-border-dim text-zinc-500">
+              <th class="text-left px-4 py-2.5">Market</th>
+              <th class="text-left px-4 py-2.5">Store</th>
+              <th class="text-left px-4 py-2.5">Associate ID</th>
+              <th class="text-left px-4 py-2.5">Status</th>
+              <th class="text-left px-4 py-2.5">Sign-up</th>
+            </tr>
+          </thead>
+          <tbody>
+            {amazonUnique.map(row => {
+              const tag = getTag(row.key);
+              return (
+                <tr class="border-b border-border-dim last:border-0 hover:bg-white/[0.02]">
+                  <td class="px-4 py-2.5 text-zinc-200">{row.flag} {row.market}</td>
+                  <td class="px-4 py-2.5 text-zinc-500">{row.store}</td>
+                  <td class="px-4 py-2.5">
+                    {tag
+                      ? <span class="text-gta-teal">{tag}</span>
+                      : <span class="text-zinc-600">—</span>
+                    }
+                  </td>
+                  <td class="px-4 py-2.5">
+                    {tag
+                      ? <span class="text-[10px] px-1.5 py-0.5 rounded border border-gta-teal/30 text-gta-teal">Active</span>
+                      : <span class="text-[10px] px-1.5 py-0.5 rounded border border-zinc-700 text-zinc-500">Untagged</span>
+                    }
+                  </td>
+                  <td class="px-4 py-2.5">
+                    {!tag && (
+                      <a href={row.signup} target="_blank" rel="noopener noreferrer"
+                        class="text-amber-400 hover:text-amber-300 transition-colors">
+                        Sign up →
+                      </a>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── Other Programmes ───────────────────────────────────────── -->
+    <section class="mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+        <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">// Other Programmes</span>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        {other.map(prog => (
+          <div class="rounded-xl border border-border-dim px-5 py-4 flex items-start gap-4" style="background:var(--c-card)">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-zinc-100 font-semibold text-sm">{prog.name}</span>
+                <span class="text-[10px] font-mono text-zinc-600">{prog.network}</span>
+                {prog.status === "pending" && (
+                  <span class="text-[10px] px-1.5 py-0.5 rounded border border-amber-400/30 text-amber-400 font-mono">In Review</span>
+                )}
+                {prog.status === "todo" && (
+                  <span class="text-[10px] px-1.5 py-0.5 rounded border border-zinc-700 text-zinc-500 font-mono">To Do</span>
+                )}
+                {prog.status === "active" && (
+                  <span class="text-[10px] px-1.5 py-0.5 rounded border border-gta-teal/30 text-gta-teal font-mono">Active</span>
+                )}
+              </div>
+              <div class="flex items-center gap-4 text-[11px] text-zinc-500 font-mono">
+                <span>Commission: <span class="text-zinc-300">{prog.commission}</span></span>
+                <span>Cookie: <span class="text-zinc-300">{prog.cookie}</span></span>
+              </div>
+              {prog.notes && (
+                <div class="text-[10px] text-zinc-600 font-mono mt-1">{prog.notes}</div>
+              )}
+            </div>
+            <a href={prog.signup} target="_blank" rel="noopener noreferrer"
+              class="shrink-0 text-[10px] font-mono px-3 py-1.5 rounded border border-amber-400/30 text-amber-400 hover:bg-amber-400/10 transition-colors uppercase tracking-widest whitespace-nowrap">
+              {prog.status === "active" ? "Dashboard →" : "Sign up →"}
+            </a>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ── Non-Amazon alternatives ────────────────────────────────── -->
+    <section class="mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+        <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">// No-Amazon Markets — Alternative Networks</span>
+      </div>
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <table class="w-full text-[11px] font-mono">
+          <thead>
+            <tr class="border-b border-border-dim text-zinc-500">
+              <th class="text-left px-4 py-2.5">Market</th>
+              <th class="text-left px-4 py-2.5">Programme</th>
+              <th class="text-left px-4 py-2.5">Sign-up</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { flag: "🇰🇷", market: "South Korea",    name: "Coupang Partners",          url: "https://partners.coupang.com" },
+              { flag: "🇦🇷", market: "Argentina",       name: "Mercado Libre Afiliados",   url: "https://www.mercadolibre.com.ar/afiliados" },
+              { flag: "🇿🇦", market: "South Africa",    name: "Admarula (Takealot)",        url: "https://www.admarula.com" },
+              { flag: "🇹🇷", market: "Turkey (alt)",    name: "Hepsiburada",               url: "https://www.hepsiburada.com/ortaklik-programi" },
+              { flag: "🇨🇭", market: "Switzerland",     name: "No open programme",         url: "" },
+              { flag: "🇹🇼", market: "Taiwan",          name: "No open programme",         url: "" },
+            ].map(r => (
+              <tr class="border-b border-border-dim last:border-0 hover:bg-white/[0.02]">
+                <td class="px-4 py-2.5 text-zinc-200">{r.flag} {r.market}</td>
+                <td class="px-4 py-2.5 text-zinc-400">{r.name}</td>
+                <td class="px-4 py-2.5">
+                  {r.url
+                    ? <a href={r.url} target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:text-amber-300 transition-colors">Sign up →</a>
+                    : <span class="text-zinc-600">Convenience links only</span>
+                  }
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── Wire-in instructions ───────────────────────────────────── -->
+    <section>
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+        <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">// How to add a new tag</span>
+      </div>
+      <div class="rounded-xl border border-border-dim px-5 py-4 text-[11px] font-mono text-zinc-400 leading-relaxed" style="background:var(--c-card)">
+        <div class="text-zinc-200 mb-2">1. Get your Associate/Affiliate ID from the programme dashboard</div>
+        <div class="mb-2">2. Open <span class="text-zinc-200">src/config/affiliates.ts</span></div>
+        <div class="mb-2">3. Set the value: <span class="text-gta-teal">amazon_de: "your-tag-here"</span></div>
+        <div class="mb-2">4. Rebuild + deploy — all links on the buy page auto-tag via <span class="text-zinc-200">tagAmazonUrl()</span></div>
+        <div class="text-zinc-600 mt-3">Non-Amazon programmes (NordVPN, ZAP, PlayStation) need a component update on the relevant page. Tell the agent the ID and target page.</div>
+      </div>
+    </section>
+
+  </div>
+</Base>

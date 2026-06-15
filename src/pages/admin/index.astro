@@ -28,13 +28,6 @@ const tools = [
     color: "var(--c-brand)",
   },
   {
-    href:  "/admin/proposals",
-    label: "Prediction Proposals",
-    sub:   "Review nightly auto-update proposals · accept or reject · copy patch",
-    icon:  "intel",
-    color: "var(--c-live)",
-  },
-  {
     href:  "/admin/charts",
     label: "Chart Ranks",
     sub:   "Reorder charts page order · filter by game · copy JSON patch",
@@ -91,6 +84,10 @@ const tools = [
     color: "var(--c-brand)",
   },
 ];
+// Staging-only gate — this page must never render on production
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
+if (!IS_STAGING) { return Astro.redirect("/404"); }
 ---
 
 <Base title="Admin" description="GTAVI.AI admin tools" noindex>

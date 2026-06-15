@@ -65,6 +65,10 @@ const icons: IconEntry[] = [
 ];
 
 const groups = [...new Set(icons.map((i) => i.group))];
+// Staging-only gate — this page must never render on production
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
+if (!IS_STAGING) { return Astro.redirect("/404"); }
 ---
 
 <Base title="Admin — Icon Inventory" description="GTAVI.AI HudIcon visual reference." noindex>
