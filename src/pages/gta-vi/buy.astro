@@ -510,16 +510,22 @@ const COUNTRIES: Country[] = [
     <section>
       <SectionHeader bright label="// Where to Buy" />
 
-      <!-- Country selector strip -->
-      <div class="flex items-center gap-2 mb-5 overflow-x-auto pb-1 scrollbar-none">
-        <span class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest shrink-0 mr-1">Region:</span>
-        {COUNTRIES.map((c, i) => (
-          <button
-            class="country-btn shrink-0 text-[11px] font-mono border rounded px-2.5 py-1.5 transition-all"
-            class:list={[i === 0 ? "border-gta-gold/40 bg-gta-gold/8 text-gta-gold" : "border-border-mid text-zinc-500 hover:text-zinc-200 hover:border-zinc-500"]}
-            data-locale={c.localePrefix}
-          >{c.flag} {c.short}</button>
-        ))}
+      <!-- Country selector -->
+      <div class="flex items-center gap-3 mb-4 flex-wrap">
+        <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Region</span>
+        <div class="relative">
+          <select
+            id="region-select"
+            aria-label="Select your region"
+            class="appearance-none text-[11px] font-mono text-zinc-200 border border-border-mid rounded pl-3 pr-9 py-1.5 cursor-pointer hover:border-zinc-500 focus:border-gta-gold/50 focus:outline-none transition-colors"
+            style="background:var(--c-card-raised)"
+          >
+            {COUNTRIES.map((c) => (
+              <option value={c.localePrefix} style="background:var(--c-card-raised);color:var(--c-text-2)">{c.flag} {c.name} · {c.currency}</option>
+            ))}
+          </select>
+          <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 text-[9px]">▼</span>
+        </div>
       </div>
 
       <!-- Active country label -->
@@ -783,23 +789,14 @@ const COUNTRIES: Country[] = [
     document.querySelectorAll('.country-stores').forEach(el => {
       el.classList.toggle('hidden', el.dataset.locale !== localePrefix);
     });
-    // Buttons
-    document.querySelectorAll('.country-btn').forEach(btn => {
-      const active = btn.dataset.locale === localePrefix;
-      btn.classList.toggle('border-gta-gold/40', active);
-      btn.classList.toggle('bg-gta-gold/8', active);
-      btn.classList.toggle('text-gta-gold', active);
-      btn.classList.toggle('border-border-mid', !active);
-      btn.classList.toggle('text-zinc-500', !active);
-    });
+    // Sync dropdown selection
+    const sel = document.getElementById('region-select');
+    if (sel && sel.value !== localePrefix) sel.value = localePrefix;
     // Country label
     const country = COUNTRIES.find(c => c.localePrefix === localePrefix);
     const label = document.getElementById('country-label');
     if (country && label) {
-      label.innerHTML = `${country.flag} Showing stores for <strong style="color:#a1a1aa">${country.name}</strong> · Prices in <strong style="color:#a1a1aa">${country.currency}</strong> · <span style="color:#3f3f46">Detected via browser locale · <button id="change-region" style="color:#f59e0b;cursor:pointer;background:none;border:none;font:inherit">Change</button></span>`;
-      document.getElementById('change-region')?.addEventListener('click', () => {
-        document.querySelector('.country-btn')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      });
+      label.innerHTML = `${country.flag} Showing stores for <strong style="color:var(--c-text-3)">${country.name}</strong> · Prices in <strong style="color:var(--c-text-3)">${country.currency}</strong> · <span style="color:var(--c-text-5)">auto-detected from your browser</span>`;
     }
     // Edition prices: show local currency estimate
     const rate = country?.rate ?? 1;
@@ -819,9 +816,9 @@ const COUNTRIES: Country[] = [
 
   setCountry(detectedLocale);
 
-  // ── Manual country buttons ─────────────────────────────────────────────
-  document.querySelectorAll('.country-btn').forEach(btn => {
-    btn.addEventListener('click', () => setCountry(btn.dataset.locale));
+  // ── Manual region dropdown ─────────────────────────────────────────────
+  document.getElementById('region-select')?.addEventListener('change', (e) => {
+    setCountry(e.target.value);
   });
 })();
 </script>
