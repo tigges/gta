@@ -108,7 +108,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
         </div>
         <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
           <span class="text-[11px] font-mono text-zinc-500 leading-relaxed max-w-2xl">{chartNote}</span>
-          <ShareDropdown anchorId="economics" shareText="GTA franchise economic complexity: from score counter (1) to Full MMT sovereign (17). Every title's economy visualised. GTAVI.AI." size="sm" />
+          <ShareDropdown anchorId="economics" shareText="GTA franchise economic complexity: from score counter (1) to Full MMT sovereign (20). Every title's economy visualised. GTAVI.AI." size="sm" />
         </div>
       </div>
     </section>
@@ -229,7 +229,7 @@ const maxComplexity = Math.max(...economies.map((e: any) => e.complexity_score))
             <ChartPreviewCard
               cardId={`econ-${e.title_id}`}
               title={`${e.short} — ${e.economy_type}`}
-              description={`${e.real_world_analogue} · Complexity ${e.complexity_score}/17${e.key_innovation ? " · " + e.key_innovation : ""}`}
+              description={`${e.real_world_analogue} · Complexity ${e.complexity_score}/20${e.key_innovation ? " · " + e.key_innovation : ""}`}
               category={e.era_label}
               deepLink={pageUrl ?? "/franchise/economics"}
               thumbUrl={cover}

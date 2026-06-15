@@ -9,6 +9,7 @@
 import type { EconomyModel, EconomyModelsData, EconomyNode, EconomyFlow, ColorToken, FlowAnimationToken } from "../types/gta";
 import economyData from "../../data/franchise/economy-models.json";
 import GamePill from "./GamePill.astro";
+import Badge from "./Badge.astro";
 
 interface Props {
   titleId: string;
@@ -142,18 +143,14 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       {isRegression && (
         <span class="text-[11px] font-mono text-zinc-600">· Deliberate Regression</span>
       )}
-      {isProjected && (
-        <span class="text-[11px] font-mono text-zinc-600">· Predicted</span>
-      )}
+      {isProjected && <Badge variant="predicted" surface="opaque" />}
     </div>
   )}
   {isCompact && (
     <div class="flex items-center gap-2 mb-2 flex-wrap">
       <GamePill game={gamePillId as any} size="xs" />
       <span class="text-[10px] font-mono text-zinc-600">{economy.era_label}</span>
-      {isProjected && (
-        <span class="text-[10px] font-mono text-zinc-600">· Predicted</span>
-      )}
+      {isProjected && <Badge variant="predicted" surface="opaque" />}
     </div>
   )}
 

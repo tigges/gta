@@ -43,8 +43,12 @@ const AXES = [
 
 const MAX_SCORE = 4;
 const scores = (economy as any).dimension_scores as Record<string, number>;
-const complexityScore = (economy as any).complexity_score as number;
 const isProjected = (economy as any).projected === true;
+
+// Composite = sum of the five dimension ratings (0–4 each) → 0–20 scale.
+// Derived from the bars shown below so the headline always reconciles.
+const dimTotal = AXES.reduce((s, ax) => s + (scores[ax.key] ?? 0), 0);
+const dimMax   = AXES.length * MAX_SCORE;
 
 // Franchise averages per axis — computed at build time
 const avgScores = Object.fromEntries(
@@ -65,13 +69,13 @@ const barColor = isProjected ? "var(--c-brand)" : "var(--c-live)";
     <div>
       <div class="font-semibold text-zinc-200 text-sm flex items-center gap-2">
         Economic Complexity
-        {isProjected && <Badge variant="predicted" />}
+        {isProjected && <Badge variant="predicted" surface="opaque" />}
       </div>
       <div class="text-[10px] font-mono text-zinc-400 mt-0.5">5 dimensions · franchise baseline comparison</div>
     </div>
     <div class="text-right">
-      <div class="text-2xl font-mono font-black" style={`color:${barColor}`}>{complexityScore}</div>
-      <div class="text-[11px] font-mono text-zinc-500">/ 17 max</div>
+      <div class="text-2xl font-mono font-black" style={`color:${barColor}`}>{dimTotal}</div>
+      <div class="text-[11px] font-mono text-zinc-500">/ {dimMax} max</div>
     </div>
   </div>
 
@@ -154,7 +158,7 @@ const barColor = isProjected ? "var(--c-brand)" : "var(--c-live)";
       <span class="text-[11px] font-mono text-zinc-600 tracking-widest">GTAVI.AI</span>
       <ShareDropdown
         anchorId={`complexity-html-${titleId}`}
-        shareText={`GTA ${(economy as any).short ?? (economy as any).title_name} economic complexity: ${complexityScore}/17 across 5 dimensions — circular flow, capital market, passive income, inflation, and sovereign complexity. GTAVI.AI`}
+        shareText={`GTA ${(economy as any).short ?? (economy as any).title_name} economic complexity: ${dimTotal}/${dimMax} across 5 dimensions — circular flow, capital market, passive income, inflation, and sovereign complexity. GTAVI.AI`}
         size="sm"
       />
     </div>
