@@ -1,0 +1,232 @@
+---
+import Base from "../../layouts/Base.astro";
+
+// Hard 404 gate — this page must never render on production
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
+if (!IS_STAGING) {
+  return Astro.redirect("/404");
+}
+
+// ── Scraper registry ──────────────────────────────────────────────────────────
+// cadence: "nightly" = stale if >26h; "manual" = informational only
+const SCRAPERS = [
+  // GTA V
+  { name: "Steam Players",         file: "data/gta-5/meta/steam-players.json",          cadence: "nightly" },
+  { name: "Vehicle Performance",   file: "data/gta-5/vehicles/performance.json",         cadence: "nightly" },
+  { name: "Search Trends (GTA V)", file: "data/gta-5/trends/search-interest.json",       cadence: "nightly" },
+  { name: "SteamDB",               file: "data/gta-5/meta/steamdb.json",                 cadence: "manual"  },
+  // GTA VI
+  { name: "Trailers",              file: "data/gta-6/trailers.json",                     cadence: "nightly" },
+  { name: "Trailer Velocity",      file: "data/gta-6/trailer-velocity.json",             cadence: "nightly" },
+  { name: "Search Trends (GTA VI)",file: "data/gta-6/trends/search-interest.json",       cadence: "nightly" },
+  { name: "Leonida Intel",         file: "data/gta-6/entities/leonida-intel.json",        cadence: "nightly" },
+  // Franchise
+  { name: "TTWO Stock",            file: "data/franchise/ttwo-stock.json",               cadence: "nightly" },
+  { name: "Franchise Sales",       file: "data/franchise/sales.json",                    cadence: "nightly" },
+  { name: "IGDB",                  file: "data/franchise/igdb.json",                     cadence: "nightly" },
+  { name: "Spotify",               file: "data/franchise/spotify.json",                  cadence: "nightly" },
+  { name: "Entertainment Comps",   file: "data/franchise/entertainment-comps.json",      cadence: "nightly" },
+  { name: "Metacritic",            file: "data/franchise/metacritic.json",               cadence: "manual"  },
+  { name: "VGChartz",              file: "data/franchise/vgchartz.json",                 cadence: "manual"  },
+  // Community & News
+  { name: "Reddit",                file: "data/community/reddit.json",                   cadence: "nightly" },
+  { name: "Newswire",              file: "data/feeds/newswire.json",                     cadence: "nightly" },
+  { name: "Conference News",       file: "data/feeds/conference-news.json",              cadence: "nightly" },
+  { name: "Pre-order Listings",    file: "data/feeds/preorder-listings.json",            cadence: "nightly" },
+];
+
+import fs from "node:fs";
+import path from "node:path";
+
+const STALE_HOURS = 26;
+const now = new Date();
+
+function readLastUpdated(filePath: string): string | null {
+  try {
+    const abs = path.resolve(filePath);
+    const raw = fs.readFileSync(abs, "utf-8");
+    const data = JSON.parse(raw);
+    return data.last_updated ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function hoursSince(iso: string): number {
+  return (now.getTime() - new Date(iso).getTime()) / 36e5;
+}
+
+function fmtAge(hours: number): string {
+  if (hours < 1)  return `${Math.round(hours * 60)}m ago`;
+  if (hours < 48) return `${Math.round(hours)}h ago`;
+  return `${Math.round(hours / 24)}d ago`;
+}
+
+const scraperRows = SCRAPERS.map(s => {
+  const iso = readLastUpdated(s.file);
+  const hours = iso ? hoursSince(iso) : null;
+  const stale = s.cadence === "nightly" && (hours === null || hours > STALE_HOURS);
+  const status = iso === null ? "missing" : stale ? "stale" : "ok";
+  return { ...s, iso, hours, status };
+});
+
+const okCount    = scraperRows.filter(r => r.status === "ok").length;
+const staleCount = scraperRows.filter(r => r.status === "stale").length;
+const manualCount = scraperRows.filter(r => r.cadence === "manual").length;
+
+// ── Link health ───────────────────────────────────────────────────────────────
+let linkHealth: { last_updated?: string; checked?: number; results?: Array<{ url: string; status: number | null; ok: boolean; label: string }> } = {};
+try {
+  const raw = fs.readFileSync(path.resolve("data/feeds/link-health.json"), "utf-8");
+  linkHealth = JSON.parse(raw);
+} catch {
+  // not yet generated
+}
+const linkResults = linkHealth.results ?? [];
+const linkOk = linkResults.filter(r => r.ok).length;
+const linkFail = linkResults.filter(r => !r.ok).length;
+---
+
+<Base
+  title="Data Health — Admin"
+  description="Scraper status and link health dashboard for gtavi.ai"
+  noindex={true}
+  titleContext="gta-v"
+  ogPage="gta-v"
+  crossLinksContext="gta-v"
+>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+
+    <div class="mb-8">
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Staging only · not indexed · auto-refreshes on nightly build</div>
+      <h1 class="text-2xl font-bold text-zinc-100 mb-1">Data Health</h1>
+      <p class="text-[13px] text-zinc-500 font-mono">Scraper freshness + outbound link status. Stale = nightly source not updated in {STALE_HOURS}h.</p>
+    </div>
+
+    <!-- Summary strip -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+      {[
+        { value: okCount,     label: "Scrapers healthy", color: "text-gta-teal" },
+        { value: staleCount,  label: "Scrapers stale",   color: staleCount > 0 ? "text-red-400" : "text-zinc-500" },
+        { value: linkOk,      label: "Links OK",         color: "text-gta-teal" },
+        { value: linkFail,    label: "Links failing",    color: linkFail > 0 ? "text-red-400" : "text-zinc-500" },
+      ].map(s => (
+        <div class="rounded-xl border border-border-dim px-4 py-3" style="background:var(--c-card-raised)">
+          <div class={`text-2xl font-mono font-bold ${s.color}`}>{s.value}</div>
+          <div class="text-[10px] font-mono text-zinc-500 mt-0.5">{s.label}</div>
+        </div>
+      ))}
+    </div>
+
+    <!-- ── Scrapers ───────────────────────────────────────────────────────── -->
+    <section class="mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+        <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">// Scrapers — {scraperRows.filter(r => r.cadence === "nightly").length} nightly · {manualCount} manual</span>
+      </div>
+
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <table class="w-full text-[11px] font-mono">
+          <thead>
+            <tr class="border-b border-border-dim text-zinc-500 text-[10px]">
+              <th class="text-left px-4 py-2.5">Source</th>
+              <th class="text-left px-4 py-2.5">File</th>
+              <th class="text-left px-4 py-2.5">Last updated</th>
+              <th class="text-left px-4 py-2.5">Age</th>
+              <th class="text-left px-4 py-2.5">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {scraperRows.map(row => (
+              <tr class="border-b border-border-dim last:border-0 hover:bg-white/[0.02]">
+                <td class="px-4 py-2 text-zinc-200">{row.name}</td>
+                <td class="px-4 py-2 text-zinc-600">{row.file.replace("data/", "")}</td>
+                <td class="px-4 py-2 text-zinc-400">
+                  {row.iso ? row.iso.slice(0, 16).replace("T", " ") : <span class="text-zinc-600">—</span>}
+                </td>
+                <td class="px-4 py-2 text-zinc-400">
+                  {row.hours !== null ? fmtAge(row.hours) : <span class="text-zinc-600">—</span>}
+                </td>
+                <td class="px-4 py-2">
+                  {row.status === "ok"      && <span class="text-[10px] px-1.5 py-0.5 rounded border border-gta-teal/30 text-gta-teal">OK</span>}
+                  {row.status === "stale"   && <span class="text-[10px] px-1.5 py-0.5 rounded border border-red-500/30 text-red-400">Stale</span>}
+                  {row.status === "missing" && <span class="text-[10px] px-1.5 py-0.5 rounded border border-zinc-700 text-zinc-500">Missing</span>}
+                  {row.cadence === "manual" && row.status !== "missing" && <span class="text-[10px] px-1.5 py-0.5 rounded border border-zinc-700 text-zinc-500 ml-1">Manual</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── Link Health ────────────────────────────────────────────────────── -->
+    <section class="mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+        <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">
+          // Link Health
+          {linkHealth.last_updated
+            ? `— checked ${fmtAge(hoursSince(linkHealth.last_updated))}`
+            : "— not yet generated (run fetch_link_health.py)"
+          }
+        </span>
+      </div>
+
+      {linkResults.length === 0 ? (
+        <div class="rounded-xl border border-border-dim px-5 py-8 text-center text-[11px] font-mono text-zinc-600" style="background:var(--c-card)">
+          No link health data yet. Add <span class="text-zinc-400">fetch_link_health.py</span> to nightly CI or run it manually.
+        </div>
+      ) : (
+        <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+          <table class="w-full text-[11px] font-mono">
+            <thead>
+              <tr class="border-b border-border-dim text-zinc-500 text-[10px]">
+                <th class="text-left px-4 py-2.5">Label</th>
+                <th class="text-left px-4 py-2.5">URL</th>
+                <th class="text-left px-4 py-2.5">HTTP</th>
+                <th class="text-left px-4 py-2.5">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {linkResults.map((r) => (
+                <tr class="border-b border-border-dim last:border-0 hover:bg-white/[0.02]">
+                  <td class="px-4 py-2 text-zinc-300">{r.label}</td>
+                  <td class="px-4 py-2 text-zinc-600 max-w-xs truncate">
+                    <a href={r.url} target="_blank" rel="noopener noreferrer" class="hover:text-zinc-400 transition-colors">{r.url}</a>
+                  </td>
+                  <td class="px-4 py-2 text-zinc-400">{r.status ?? "—"}</td>
+                  <td class="px-4 py-2">
+                    {r.ok
+                      ? <span class="text-[10px] px-1.5 py-0.5 rounded border border-gta-teal/30 text-gta-teal">OK</span>
+                      : <span class="text-[10px] px-1.5 py-0.5 rounded border border-red-500/30 text-red-400">FAIL</span>
+                    }
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+
+    <!-- ── Quick links ────────────────────────────────────────────────────── -->
+    <section>
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+        <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">// Admin Pages</span>
+      </div>
+      <div class="flex gap-3">
+        <a href="/admin/affiliates" class="text-[10px] font-mono px-3 py-1.5 rounded border border-border-mid text-zinc-400 hover:text-zinc-200 transition-colors">
+          /admin/affiliates →
+        </a>
+        <a href="https://github.com/tigges/gta/actions" target="_blank" rel="noopener noreferrer"
+          class="text-[10px] font-mono px-3 py-1.5 rounded border border-border-mid text-zinc-400 hover:text-zinc-200 transition-colors">
+          GitHub Actions →
+        </a>
+      </div>
+    </section>
+
+  </div>
+</Base>
