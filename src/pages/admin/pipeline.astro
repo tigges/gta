@@ -7,6 +7,10 @@
 import Base from "../../layouts/Base.astro";
 import EconomyMultiRegion from "../../components/EconomyMultiRegion.astro";
 import EconomyFlowGTAVI from "../../components/EconomyFlowGTAVI.astro";
+// Staging-only gate — this page must never render on production
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
+if (!IS_STAGING) { return Astro.redirect("/404"); }
 ---
 
 <Base title="Admin — Content Pipeline" description="GTAVI.AI scraper pipeline status and GTA VI data readiness." noindex>

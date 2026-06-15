@@ -34,6 +34,10 @@ const publicPages = pages
   .filter(p => !p.file.includes("/admin/") && !p.file.includes("/og/") && !p.file.includes("/income/"))
   .map(p => p.file.replace(/.*\/src\/pages/, "").replace(/\.astro$/, "").replace(/\/index$/, "/") || "/")
   .sort();
+// Staging-only gate — this page must never render on production
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
+if (!IS_STAGING) { return Astro.redirect("/404"); }
 ---
 
 <Base title="Admin — Site Structure" description="GTAVI.AI site structure, design system reference and live inventory." noindex>

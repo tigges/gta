@@ -61,6 +61,10 @@ function tierColor(tier: string): string {
   if (tier === "reported")  return "text-gta-gold";
   return "text-zinc-500";
 }
+// Staging-only gate — this page must never render on production
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
+if (!IS_STAGING) { return Astro.redirect("/404"); }
 ---
 
 <Base title="Prediction Proposals" titleContext="gta-vi" noindex>

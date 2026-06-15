@@ -59,6 +59,10 @@ const localPaths = [
   { path: "public/assets/gta5/",            note: "GTA V / GTA Online story + DLC art, covers" },
   { path: "src/pages/og/[page].jpg.ts",     note: "OG share cards — read backgrounds from public/" },
 ];
+// Staging-only gate — this page must never render on production
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
+if (!IS_STAGING) { return Astro.redirect("/404"); }
 ---
 
 <Base title="Art & Asset Resources" description="GTAVI.AI art and asset source reference" noindex>
