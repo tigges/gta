@@ -327,12 +327,11 @@ def run_updates(updater: PredictionUpdater) -> None:
             new_value = f"${confirmed_price:.2f}"
             updater.update("pred-launch-price", "value", p["value"], new_value,
                            "preorder-listings.json → consensus live price")
-            # If price confirmed from live listings, confidence can go up
+            # If price confirmed from live listings, confidence can go up — auto-apply
             if p["confidence"] < 92 and p["confidence_tier"] == "reported":
-                updater.propose("pred-launch-price", "confidence",
-                                p["confidence"], 92,
-                                "Multiple live retailer listings confirm price — confidence increase warranted",
-                                confidence_delta=+10)
+                updater.update("pred-launch-price", "confidence",
+                               p["confidence"], 92,
+                               "Multiple live retailer listings confirm price — auto-raised confidence")
 
     # ── 3. pred-real-price-advantage: recalculate from CPI data ──────────────
     price = confirmed_price or 79.99  # use confirmed price or current known value
@@ -359,12 +358,12 @@ def run_updates(updater: PredictionUpdater) -> None:
             # Update basis with current savings %
             pct_cheaper = round((most_exp_real - price) / most_exp_real * 100, 1)
             new_basis_snippet = f"GTA VI's confirmed ${price:.2f} launch price is {pct_cheaper}% cheaper in real 2026 terms than {title_name} (${most_exp_real:.2f}) in 2026 dollars.".strip()
-            # Only update basis if the numbers have changed noticeably
+            # Update basis with current savings % — auto-apply (pure CPI computation)
             if str(pct_cheaper) not in p.get("basis", ""):
-                updater.propose("pred-real-price-advantage", "basis",
-                                p.get("basis", "")[:60] + "...",
-                                new_basis_snippet,
-                                f"CPI recalculation: {pct_cheaper}% cheaper than {title_name}")
+                updater.update("pred-real-price-advantage", "basis",
+                               p.get("basis"),
+                               new_basis_snippet,
+                               f"CPI recalculation: {pct_cheaper}% cheaper than {title_name}")
 
     # ── 4. pred-vehicles-launch: update indexed count ─────────────────────────
     vehicle_count = load_vehicle_count()
@@ -380,12 +379,11 @@ def run_updates(updater: PredictionUpdater) -> None:
                                p.get("prediction_inputs"), new_inputs,
                                f"gta-6/entities/vehicles.json → count={vehicle_count}")
 
-            # If vehicle count has grown significantly, propose confidence update
+            # If vehicle count has grown significantly, auto-raise confidence
             if vehicle_count > 300 and p["confidence"] < 70:
-                updater.propose("pred-vehicles-launch", "confidence",
-                                p["confidence"], 70,
-                                f"{vehicle_count} vehicles now indexed (was 268) — higher sample improves confidence",
-                                confidence_delta=+8)
+                updater.update("pred-vehicles-launch", "confidence",
+                               p["confidence"], 70,
+                               f"{vehicle_count} vehicles indexed — higher sample auto-raises confidence")
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
