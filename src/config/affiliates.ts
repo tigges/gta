@@ -17,7 +17,7 @@ export const AFFILIATE_IDS = {
   // ── Amazon Associates ──────────────────────────────────────────────────
   amazon_us:  "gtaviai-20",   // Amazon.com   — active
   amazon_uk:  "gtaviai-21",   // Amazon.co.uk — active
-  amazon_de:  "",             // Amazon.de    — join: affiliate-program.amazon.de
+  amazon_de:  "gtaviai0e-21",         // Amazon.de    — active (covers AT)
   amazon_fr:  "",             // Amazon.fr    — join: partenaires.amazon.fr
   amazon_jp:  "",             // Amazon.co.jp — join: affiliate.amazon.co.jp
   amazon_br:  "",             // Amazon.com.br — join: associados.amazon.com.br
