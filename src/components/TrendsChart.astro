@@ -35,9 +35,9 @@ import ShareDropdown from "./ShareDropdown.astro";
 <script>
   import * as d3 from "d3";
 
-  {
+  (function () {
     const el = document.getElementById("trends-chart");
-    if (!el) throw new Error("trends-chart element not found");
+    if (!el) return; // chart not on this page — skip without aborting the shared hoisted bundle
 
     const keywords: { keyword: string; color: string; data: { date: string; value: number }[] }[] =
       JSON.parse(el.dataset.keywords || "[]");
@@ -121,6 +121,6 @@ import ShareDropdown from "./ShareDropdown.astro";
         paths[kw]?.attr("opacity", active ? 0 : 0.9);
       });
     });
-  }
+  })();
 
 </script>
