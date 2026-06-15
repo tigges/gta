@@ -35,6 +35,13 @@ const topIncome = allBiz
   .sort((a: any, b: any) => b.net_profit_per_hr - a.net_profit_per_hr)
   .slice(0, 2);
 
+// Count of ranked income methods — drives the income-register teaser stat.
+const incomeCount = allBiz.filter((b: any) => b.net_profit_per_hr > 0).length;
+const topEarnerHr = topIncome[0]?.net_profit_per_hr ?? null;
+const topEarnerStr = topEarnerHr
+  ? (topEarnerHr >= 1_000_000 ? `$${(topEarnerHr / 1_000_000).toFixed(1)}M/hr` : `$${Math.round(topEarnerHr / 1000)}k/hr`)
+  : null;
+
 const BIZ_THUMB: Record<string, string> = {
   "cayo-perico":          "/assets/gta5/dlc/cayo-perico.jpg",
   "diamond-casino-heist": "/assets/gta5/dlc/diamond-casino-heist.jpg",
@@ -129,6 +136,43 @@ const BONUS_LABEL: Record<string, string> = {
     ══════════════════════════════════════════════════════════ -->
     <section id="section-bonuses" style="scroll-margin-top:80px">
       <BonusCardsTeaser />
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         INCOME REGISTER TEASER — promote the ranked income database
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <a href="/database?game=gta-online"
+         class="group block rounded-xl border border-gta-green/25 overflow-hidden relative transition-all hover:border-gta-green/50"
+         style="background:linear-gradient(135deg,color-mix(in srgb,var(--c-growth) 9%,var(--c-card-raised)) 0%,var(--c-card) 60%)">
+        <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,var(--c-growth),transparent 60%)"></div>
+        <div class="px-6 py-5 flex items-center gap-5 flex-wrap sm:flex-nowrap">
+          <!-- Thumbnail -->
+          <div class="shrink-0 w-16 h-16 rounded-xl overflow-hidden border border-gta-green/20">
+            <img src="/assets/gta5/dlc/cayo-perico.jpg" alt="" aria-hidden="true"
+                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </div>
+          <!-- Copy -->
+          <div class="min-w-0 flex-1">
+            <div class="text-[10px] font-mono uppercase tracking-widest mb-0.5" style="color:var(--c-growth)">Income Register · ranked S→D</div>
+            <div class="text-base sm:text-lg font-bold text-zinc-100 leading-tight">Every GTA Online money method, ranked by $/hr</div>
+            <div class="text-[11px] font-mono text-zinc-500 mt-1">
+              Net $/hr · ROI · setup cost · break-even · solo vs group{topEarnerStr ? ` · top earner ~${topEarnerStr}` : ""}
+            </div>
+          </div>
+          <!-- Stat + CTA -->
+          <div class="flex items-center gap-5 shrink-0">
+            <div class="hidden sm:block text-right">
+              <div class="text-2xl font-mono font-black leading-none" style="color:var(--c-growth)">{incomeCount}+</div>
+              <div class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest mt-1">methods ranked</div>
+            </div>
+            <span class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-mono font-bold text-sm transition-all group-hover:brightness-110"
+                  style="background:var(--c-growth);color:var(--c-bg)">
+              Browse income →
+            </span>
+          </div>
+        </div>
+      </a>
     </section>
 
     <!-- ══════════════════════════════════════════════════════════
