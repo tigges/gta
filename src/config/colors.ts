@@ -18,6 +18,7 @@ export const C_LIVE         = "#0d9488";   // teal    — confirmed / live
 export const C_ALERT        = "#ef4444";   // red     — nerf / danger / regression
 export const C_GROWTH       = "#22c55e";   // green   — positive / passive income
 export const C_ECONOMY      = "#818cf8";   // indigo  — capital / complexity
+export const C_ROCKSTAR     = "#003087";   // Rockstar Social Club brand navy
 
 // ── Title identity (nav dot · section dot · border-left only) ─────────────
 export const C_TITLE_VI       = "#ff6b9d";  // GTA VI pink-coral (gradient start)
