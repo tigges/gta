@@ -19,6 +19,7 @@
 
 import type { EconomyModel } from "../types/gta";
 import ShareDropdown from "./ShareDropdown.astro";
+import Badge from "./Badge.astro";
 import economyData from "../../data/franchise/economy-models.json";
 
 interface Props {
@@ -64,12 +65,7 @@ const barColor = isProjected ? "var(--c-brand)" : "var(--c-live)";
     <div>
       <div class="font-semibold text-zinc-200 text-sm flex items-center gap-2">
         Economic Complexity
-        {isProjected && (
-          <span class="text-[11px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest"
-                style="color:var(--c-brand);border-color:color-mix(in srgb,var(--c-brand) 35%,transparent);background:color-mix(in srgb,var(--c-brand) 10%,transparent)">
-            Projected
-          </span>
-        )}
+        {isProjected && <Badge variant="predicted" />}
       </div>
       <div class="text-[10px] font-mono text-zinc-400 mt-0.5">5 dimensions · franchise baseline comparison</div>
     </div>
