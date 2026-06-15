@@ -23,8 +23,8 @@ export const AFFILIATE_IDS = {
   amazon_br:  "",             // Amazon.com.br — join: associados.amazon.com.br
   amazon_au:  "",             // Amazon.com.au — join: affiliate-program.amazon.com.au
   amazon_ca:  "gtaviai02-20",         // Amazon.ca    — active
-  amazon_it:  "",             // Amazon.it    — join: programma-affiliazione.amazon.it
-  amazon_es:  "",             // Amazon.es    — join: afiliados.amazon.es
+  amazon_it:  "gtaviai07-21",         // Amazon.it    — active
+  amazon_es:  "gtaviai00-21",         // Amazon.es    — active (covers PT)
   amazon_nl:  "",             // Amazon.nl    — join: partner.amazon.nl
   amazon_mx:  "",             // Amazon.com.mx — join: afiliados.amazon.com.mx
   amazon_in:  "",             // Amazon.in    — join: affiliate-program.amazon.in
