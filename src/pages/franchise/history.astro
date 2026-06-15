@@ -75,74 +75,6 @@ const COVERS: Record<string, string> = {
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-10">
 
-    <!-- Metacritic scores table -->
-    {scores.length > 0 && (
-      <section>
-        <div class="flex items-center gap-3 mb-5">
-          <GamePill game="franchise" size="xs" />
-          <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">Critic & User Scores</span>
-          <div class="flex-1 h-px bg-border-dim"></div>
-        </div>
-        <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD_RAISED}`}>
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs font-mono">
-              <thead>
-                <tr class="border-b border-border-dim">
-                  <th class="text-left px-5 py-3 text-zinc-500 font-normal">Title</th>
-                  <th class="text-right px-3 py-3 text-zinc-500 font-normal">Year</th>
-                  <th class="text-right px-3 py-3 text-zinc-500 font-normal">Metacritic</th>
-                  <th class="text-right px-5 py-3 text-zinc-500 font-normal">User Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {scores.filter((t: any) => t.critic_score).sort((a: any, b: any) => b.year - a.year).map((t: any) => (
-                  <tr class="border-b border-border-dim/50 hover:bg-white/[0.02] transition-colors">
-                    <td class="px-5 py-3">
-                      <div class="flex items-center gap-3">
-                        {COVERS[t.id] && (
-                          <img src={COVERS[t.id]} alt={t.short}
-                               class="w-8 h-11 object-cover rounded border border-border-mid shrink-0"
-                               loading="lazy" />
-                        )}
-                        <div>
-                          <div class="font-semibold text-zinc-200">{t.short ?? t.id}</div>
-                          <div class="text-[10px] font-mono text-zinc-500">{t.platform ?? ""}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="px-3 py-3 text-right text-zinc-500">{t.year}</td>
-                    <td class="px-3 py-3 text-right">
-                      <span class="font-bold text-sm" style={`color:${t.critic_score >= 95 ? C_GROWTH : t.critic_score >= 85 ? C_BRAND : C_LIVE}`}>
-                        {t.critic_score}
-                      </span>
-                    </td>
-                    <td class="px-5 py-3 text-right text-zinc-500">{t.user_score ?? "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
-            <span class="text-[10px] text-zinc-500 font-mono">Source: Metacritic.com · scores as at last review</span>
-            <div class="flex items-center gap-2 shrink-0">
-              <span class="text-[11px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
-              <ShareDropdown anchorId="metacritic-scores" shareText="GTA franchise Metacritic scores: GTA SA 95, GTA IV 98, GTA V 97. The critical arc of 25 years of Grand Theft Auto." size="sm" />
-            </div>
-          </div>
-        </div>
-      </section>
-    )}
-
-    <!-- Release timeline -->
-    <section id="metacritic-scores">
-      <div class="flex items-center gap-3 mb-5">
-        <GamePill game="franchise" size="xs" />
-        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">Release Timeline</span>
-        <div class="flex-1 h-px bg-border-dim"></div>
-      </div>
-      <ReleaseTimeline releases={releases} />
-    </section>
-
     <!-- VGChartz regional breakdown -->
     {vgTitles.length > 0 && (
     <section>
@@ -216,6 +148,74 @@ const COVERS: Record<string, string> = {
         </div>
       </div>
     </section>
+    )}
+
+    <!-- Release timeline -->
+    <section id="metacritic-scores">
+      <div class="flex items-center gap-3 mb-5">
+        <GamePill game="franchise" size="xs" />
+        <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">Release Timeline</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
+      <ReleaseTimeline releases={releases} />
+    </section>
+
+    <!-- Metacritic scores table -->
+    {scores.length > 0 && (
+      <section>
+        <div class="flex items-center gap-3 mb-5">
+          <GamePill game="franchise" size="xs" />
+          <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">Critic & User Scores</span>
+          <div class="flex-1 h-px bg-border-dim"></div>
+        </div>
+        <div class="rounded-xl border border-border-dim overflow-hidden" style={`background:${C_CARD_RAISED}`}>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="border-b border-border-dim">
+                  <th class="text-left px-5 py-3 text-zinc-500 font-normal">Title</th>
+                  <th class="text-right px-3 py-3 text-zinc-500 font-normal">Year</th>
+                  <th class="text-right px-3 py-3 text-zinc-500 font-normal">Metacritic</th>
+                  <th class="text-right px-5 py-3 text-zinc-500 font-normal">User Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {scores.filter((t: any) => t.critic_score).sort((a: any, b: any) => b.year - a.year).map((t: any) => (
+                  <tr class="border-b border-border-dim/50 hover:bg-white/[0.02] transition-colors">
+                    <td class="px-5 py-3">
+                      <div class="flex items-center gap-3">
+                        {COVERS[t.id] && (
+                          <img src={COVERS[t.id]} alt={t.short}
+                               class="w-8 h-11 object-cover rounded border border-border-mid shrink-0"
+                               loading="lazy" />
+                        )}
+                        <div>
+                          <div class="font-semibold text-zinc-200">{t.short ?? t.id}</div>
+                          <div class="text-[10px] font-mono text-zinc-500">{t.platform ?? ""}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-3 py-3 text-right text-zinc-500">{t.year}</td>
+                    <td class="px-3 py-3 text-right">
+                      <span class="font-bold text-sm" style={`color:${t.critic_score >= 95 ? C_GROWTH : t.critic_score >= 85 ? C_BRAND : C_LIVE}`}>
+                        {t.critic_score}
+                      </span>
+                    </td>
+                    <td class="px-5 py-3 text-right text-zinc-500">{t.user_score ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
+            <span class="text-[10px] text-zinc-500 font-mono">Source: Metacritic.com · scores as at last review</span>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[11px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+              <ShareDropdown anchorId="metacritic-scores" shareText="GTA franchise Metacritic scores: GTA SA 95, GTA IV 98, GTA V 97. The critical arc of 25 years of Grand Theft Auto." size="sm" />
+            </div>
+          </div>
+        </div>
+      </section>
     )}
 
     <!-- ═══════════════════════════════════════════════════════
