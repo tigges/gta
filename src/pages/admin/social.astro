@@ -8,6 +8,10 @@ import Base from "../../layouts/Base.astro";
 import predRaw from "../../../data/gta-6/predictions.json";
 
 const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
+// Staging-only gate — this page must never render on production
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
+if (!IS_STAGING) { return Astro.redirect("/404"); }
 ---
 
 <Base title="Admin — Social & Growth Strategy" description="GTAVI.AI social media strategy, n8n pipeline, SEO, affiliate and traffic playbook." noindex>

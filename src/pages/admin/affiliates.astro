@@ -117,6 +117,10 @@ function getTag(key: string): string {
 
 // Deduplicate amazon rows by key
 const amazonUnique = amazon.filter((r, i, arr) => arr.findIndex(x => x.key === r.key) === i);
+// Staging-only gate — this page must never render on production
+const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
+const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
+if (!IS_STAGING) { return Astro.redirect("/404"); }
 ---
 
 <Base
