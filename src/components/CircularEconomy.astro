@@ -138,19 +138,20 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
   {/* ── Title row: GamePill + era context (plain text, no pill) ───── */}
   {!isCompact && (
     <div class="flex items-center gap-2 mb-3 flex-wrap">
+      {/* Pills grouped first (GamePill + tier), then era title — never split. */}
       <GamePill game={gamePillId as any} size="xs" />
+      {isProjected && <Badge variant="predicted" surface="opaque" />}
       <span class="text-[11px] font-mono text-zinc-500">{economy.era_label}</span>
       {isRegression && (
         <span class="text-[11px] font-mono text-zinc-600">· Deliberate Regression</span>
       )}
-      {isProjected && <Badge variant="predicted" surface="opaque" />}
     </div>
   )}
   {isCompact && (
     <div class="flex items-center gap-2 mb-2 flex-wrap">
       <GamePill game={gamePillId as any} size="xs" />
-      <span class="text-[10px] font-mono text-zinc-600">{economy.era_label}</span>
       {isProjected && <Badge variant="predicted" surface="opaque" />}
+      <span class="text-[10px] font-mono text-zinc-600">{economy.era_label}</span>
     </div>
   )}
 
@@ -478,10 +479,12 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       const dx = tCx - fCx, dy = tCy - fCy;
       if (Math.abs(dx) >= Math.abs(dy)) {
         const fd = dx > 0 ? "right" : "left", td = dx > 0 ? "left" : "right";
-        return { from: getEdgePt(fromEl, fd, 0), to: getEdgePt(toEl, td, offset) };
+        // Offset BOTH endpoints along the shared edge so parallel arrows ride
+        // their own lane instead of stacking on one attachment point.
+        return { from: getEdgePt(fromEl, fd, offset), to: getEdgePt(toEl, td, offset) };
       }
       const fd = dy > 0 ? "bottom" : "top", td = dy > 0 ? "top" : "bottom";
-      return { from: getEdgePt(fromEl, fd, offset), to: getEdgePt(toEl, td, 0) };
+      return { from: getEdgePt(fromEl, fd, offset), to: getEdgePt(toEl, td, offset) };
     }
 
     // Pre-count how many flows share each node-pair (for curvature decisions)
@@ -501,7 +504,13 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       const pass    = pairCount[pairKey] ?? 0;
       pairCount[pairKey] = pass + 1;
 
-      const edges  = bestEdges(fromEl, toEl, pass * 6);
+      const count      = totalPairFlows[pairKey] ?? 1;
+      const isParallel = count > 1;
+      // Symmetric lane index so flows sharing a node pair split evenly around
+      // the centre line: 2 flows -> -0.5,+0.5 ; 3 -> -1,0,+1.
+      const lane = pass - (count - 1) / 2;
+
+      const edges  = bestEdges(fromEl, toEl, lane * 12);
       const p1 = edges.from, p2 = edges.to;
       const hex    = FLOW_HEX[flow.color_token] ?? "#71717a";
       const isDashed = flow.projected || !flow.active;
@@ -509,14 +518,20 @@ const markerColors = [...new Set(flows.map((f: any) => f.color_token as string))
       const midX = (p1.x + p2.x) / 2, midY = (p1.y + p2.y) / 2;
       const dx   = p2.x - p1.x,       dy   = p2.y - p1.y;
 
-      // Curvature: high when multiple flows share the same node pair so
-      // arrows arc clearly above/below each other. First arrow curves one
-      // direction (curveDir +1), second the opposite (-1) — "one up, one down".
+      // Bow in a FIXED screen axis (independent of each flow's direction) so
+      // two flows on the same pair always split one bent to the top, one to
+      // the bottom (side-by-side boxes) — or one each side (stacked boxes) —
+      // and never run across each other.
       const isMulti    = grid.dataset.template === "multi-stream";
-      const isParallel = (totalPairFlows[pairKey] ?? 1) > 1;
-      const curve    = isParallel ? 0.48 : isMulti ? 0.22 : 0.18;
-      const curveDir = pass % 2 === 0 ? 1 : -1;
-      const cx = midX - dy * curve * curveDir, cy = midY + dx * curve * curveDir;
+      const horizontal = Math.abs(dx) >= Math.abs(dy);
+      const span       = horizontal ? Math.abs(dx) : Math.abs(dy);
+      const bowDir     = isParallel ? (lane > 0 ? 1 : lane < 0 ? -1 : 0)
+                                    : (isMulti ? 1 : 0);
+      const bowMag     = isParallel ? (0.30 + 0.18 * Math.abs(lane))
+                                    : (isMulti ? 0.16 : 0);
+      const off = span * bowMag * bowDir;
+      const cx = horizontal ? midX : midX + off;
+      const cy = horizontal ? midY + off : midY;
 
       // Determine animation from flow type
       const animCfg  = FLOW_ANIM[flow.type] ?? { dir: "forward", duration_s: 1.5 };
