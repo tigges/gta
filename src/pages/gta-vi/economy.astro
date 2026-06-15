@@ -72,7 +72,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-14">
       <div class="flex items-center gap-2 mb-4">
         <GamePill game="gta-vi" size="xs" />
-        <Badge variant="predicted" />
+        <Badge variant="predicted" surface="opaque" />
       </div>
       <h1 class="text-3xl sm:text-5xl font-bold text-white mb-3 leading-[1.05]">
         GTA VI Economy
@@ -353,11 +353,11 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
         <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
           <div class="px-5 py-3 border-b border-border-dim">
             <div class="text-[11px] font-mono text-zinc-400 uppercase tracking-widest">Franchise Arc — Complexity Trajectory</div>
-            <div class="text-[10px] font-mono text-zinc-400 mt-0.5">Complexity score / 17 max per title</div>
+            <div class="text-[10px] font-mono text-zinc-400 mt-0.5">Complexity score / 20 max per title</div>
           </div>
           <div class="px-5 py-4 flex flex-col gap-2">
             {economyData.economies.map((e) => {
-              const pct = Math.round((e.complexity_score / 17) * 100);
+              const pct = Math.round((e.complexity_score / 20) * 100);
               const isGtaVI = e.title_id === "gta-6";
               const isRegression = e.regression_era;
               const color = isGtaVI ? "var(--c-brand)" : isRegression ? "var(--c-alert)" : "var(--c-live)";
@@ -393,7 +393,7 @@ const vi6Projection = revYears.find((y: any) => y.calendar_year === 2026);
             </div>
             <div class="flex items-center gap-2 shrink-0">
               <span class="text-[10px] font-mono text-zinc-400 tracking-widest">GTAVI.AI</span>
-              <ShareDropdown anchorId="eco-complexity" shareText="GTA VI projected economic complexity: 17/17 — the franchise maximum. Every prior title mapped across 5 dimensions. GTAVI.AI" size="sm" />
+              <ShareDropdown anchorId="eco-complexity" shareText="GTA VI projected economic complexity: 20/20 — the franchise maximum. Every prior title mapped across 5 dimensions. GTAVI.AI" size="sm" />
             </div>
           </div>
         </div>
