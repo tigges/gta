@@ -38,12 +38,15 @@ const options    = (pred.poll_options ?? ["Yes", "No"]) as string[];
 const ogImageUrl  = `${SITE_BASE}/og/poll/${pollId}.png`;
 const embedUrl    = `${SITE_BASE}/community/polls/embed/${pollId}`;
 const canonicalUrl = `${SITE_BASE}/community/polls/${pollId}`;
+// Anchor URL scrolls directly to the vote widget — used in all share copy so
+// X/Twitter unfurls the card and users land on the vote section immediately.
+const voteUrl      = `${canonicalUrl}#vote-${pollId}`;
 
 // Pre-built social copy for this poll
-const xShareText   = `${question}\n\nVote on GTAVI.AI 👇\n${canonicalUrl}`;
+const xShareText   = `${question}\n\nVote on GTAVI.AI 👇\n${voteUrl}`;
 const redditTitle  = `${question} — Community Poll`;
 const xIntentUrl   = `https://twitter.com/intent/tweet?text=${encodeURIComponent(xShareText)}`;
-const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(redditTitle)}`;
+const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(voteUrl)}&title=${encodeURIComponent(redditTitle)}`;
 
 ---
 
@@ -64,7 +67,9 @@ const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(can
 
   <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-8">
     <!-- ── Vote card ─────────────────────────────────────────────────────── -->
-    <VoteCard predictionId={pollId} />
+    <div id={`vote-${pollId}`}>
+      <VoteCard predictionId={pollId} />
+    </div>
 
     <!-- ── Share bar ─────────────────────────────────────────────────────── -->
     <div class="rounded-xl border border-border-dim p-4 flex flex-col gap-3" style="background:var(--c-card-raised)">
@@ -94,7 +99,7 @@ const redditUrl    = `https://www.reddit.com/submit?url=${encodeURIComponent(can
         </a>
         <button
           id="copy-link-btn"
-          data-url={canonicalUrl}
+          data-url={voteUrl}
           class="flex items-center gap-1.5 text-[11px] font-mono font-bold px-3 py-1.5 rounded-lg border transition-all"
           style="border-color:color-mix(in srgb,var(--c-text-4) 25%,transparent);color:var(--c-text-3);cursor:pointer;background:transparent"
         >

@@ -1,27 +1,456 @@
 ---
 /**
  * /admin/social — Social, Growth & Monetisation Strategy
- * Full playbook: poll distribution, n8n automation, SEO, affiliate, traffic.
+ * Full playbook: poll distribution, Resend email stack, SEO, affiliate, traffic.
  * Internal admin tool — unlisted from public nav.
  */
 import Base from "../../layouts/Base.astro";
 import predRaw from "../../../data/gta-6/predictions.json";
 
 const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
+
+// Week-based poll rotation — advances every Monday
+const now = new Date();
+const startOfYear = new Date(now.getFullYear(), 0, 1);
+const weekOfYear = Math.floor((now.getTime() - startOfYear.getTime()) / (7 * 24 * 60 * 60 * 1000));
+const featuredPoll = polls.length > 0 ? polls[weekOfYear % polls.length] as any : null;
+// Always use #vote-{id} anchor so X unfurls the poll card and users land on
+// the vote widget rather than the page hero.
+const featuredPollUrl = featuredPoll
+  ? `https://gtavi.ai/community/polls/${featuredPoll.id}#vote-${featuredPoll.id}`
+  : "";
+const todayStr = now.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
+// Pre-formatted copy — paste directly into each channel
+// X: single block with URL inline (matches X card unfurl format that works)
+const xTweet = featuredPoll
+  ? `${featuredPoll.poll_question}\n\nVote on GTAVI.AI 👇\n${featuredPollUrl}`
+  : "";
+const rdTitle = featuredPoll
+  ? `${featuredPoll.poll_question} — GTA VI data model says ${featuredPoll.confidence}% [Community Poll]`
+  : "";
+const rdBody = featuredPoll
+  ? `GTAVI.AI's prediction model puts ${featuredPoll.confidence}% confidence (tier: ${featuredPoll.confidence_tier}) on this.\n\nBasis: ${(featuredPoll.basis ?? "").slice(0, 300)}...\n\n🗳️ Vote: ${featuredPollUrl}\n📊 All GTA VI predictions: https://gtavi.ai/gta-vi/intel\n\n*Community-driven intelligence — not affiliated with Rockstar Games.*`
+  : "";
+const discordMsg = featuredPoll
+  ? `📊 **This week's community poll**\n\n**${featuredPoll.poll_question}**\nModel confidence: ${featuredPoll.confidence}% (${featuredPoll.confidence_tier})\n\n🗳️ Vote: ${featuredPollUrl}`
+  : "";
+const gtaForumsTitle = featuredPoll
+  ? `${featuredPoll.poll_question} — What does the data say? [Poll + analysis]`
+  : "";
+const gtaForumsBody = featuredPoll
+  ? `Hey all,\n\nRunning a community poll this week on a GTA VI prediction from GTAVI.AI's model:\n\n**${featuredPoll.poll_question}**\n\nModel confidence: **${featuredPoll.confidence}%** (tier: ${featuredPoll.confidence_tier})\n\nBasis: ${(featuredPoll.basis ?? "").slice(0, 400)}\n\nCast your vote and see where the community lands:\n🗳️ ${featuredPollUrl}\n\nAll GTA VI predictions + data: https://gtavi.ai/gta-vi/intel\n\n---\n*GTAVI.AI is an independent fan data project — not affiliated with Rockstar Games.*`
+  : "";
+
 // Staging-only gate — this page must never render on production
 const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
 const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
 if (!IS_STAGING) { return Astro.redirect("/404"); }
 ---
 
-<Base title="Admin — Social & Growth Strategy" description="GTAVI.AI social media strategy, n8n pipeline, SEO, affiliate and traffic playbook." noindex>
+<Base title="Admin — Social & Growth Strategy" description="GTAVI.AI social media strategy, Resend email stack, SEO, affiliate and traffic playbook." noindex>
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
 
     <div>
       <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Admin · Internal</div>
       <h1 class="text-2xl font-bold text-white mb-1">Social &amp; Growth Strategy</h1>
-      <p class="text-sm text-zinc-500">Poll distribution · n8n automation · SEO · affiliate programme · traffic playbook. Not visible to public users.</p>
+      <p class="text-sm text-zinc-500">Poll distribution · Resend email stack · SEO · affiliate programme · traffic playbook. Not visible to public users.</p>
     </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         STRATEGY OVERVIEW
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// Strategy Overview</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+      </div>
+
+      <!-- Flywheel -->
+      <div class="rounded-xl border border-border-dim p-5 mb-5" style="background:var(--c-card)">
+        <div class="text-[11px] font-semibold text-zinc-300 mb-3">Content flywheel — one poll drives the whole week</div>
+        <div class="flex items-center gap-2 flex-wrap text-[11px] font-mono mb-4">
+          {([
+            { label: "Poll rotates Monday",      note: "week-based, auto",          color: "var(--c-brand)" },
+            { label: "→" },
+            { label: "Copy generated in §00",    note: "X · Reddit · GTAForums",   color: "var(--c-chart-bar)" },
+            { label: "→" },
+            { label: "Schedule in Publer",       note: "Monday · X + Instagram",   color: "var(--c-gta-vi-coral)" },
+            { label: "→" },
+            { label: "Auto-fires Tuesday",       note: "Publer · Resend · Discord", color: "var(--c-live)" },
+            { label: "→" },
+            { label: "Traffic → site",           note: "polls + intel",             color: "var(--c-gta-dollar)" },
+            { label: "→" },
+            { label: "Subscribers grow",         note: "→ next week's audience",    color: "var(--c-brand)" },
+          ] as const).map((s: any) =>
+            s.label === "→"
+              ? <span class="text-zinc-700 shrink-0">→</span>
+              : (
+                <div class="rounded border border-border-dim px-2.5 py-1.5 shrink-0" style="background:var(--c-bg-deep)">
+                  <div style={`color:${s.color}`}>{s.label}</div>
+                  <div class="text-[9px] text-zinc-700 mt-0.5">{s.note}</div>
+                </div>
+              )
+          )}
+        </div>
+        <p class="text-[11px] text-zinc-600 leading-relaxed">
+          Each week a single poll is featured. All channel copy (X, Reddit, GTAForums, Discord) is pre-generated in §00 — zero creative work needed. On Monday, paste the X tweet and IG screenshot into Publer and schedule both for Tuesday 09:00 UTC. Everything else fires automatically (Resend digest, Discord nightly). Reddit and GTAForums are the only live-paste channels (Thursday).
+        </p>
+      </div>
+
+      <!-- Weekly calendar -->
+      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+        <div class="px-4 py-2.5 border-b border-border-dim">
+          <span class="text-[11px] font-semibold text-zinc-300">Weekly publishing calendar</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-[11px] font-mono">
+            <thead>
+              <tr class="border-b border-border-dim">
+                <th class="text-left px-4 py-2 text-zinc-600 font-normal w-24">Day</th>
+                <th class="text-left px-4 py-2 text-zinc-600 font-normal">Action</th>
+                <th class="text-left px-4 py-2 text-zinc-600 font-normal w-28">Channel</th>
+                <th class="text-left px-4 py-2 text-zinc-600 font-normal w-20">Mode</th>
+              </tr>
+            </thead>
+            <tbody>
+              {([
+                { day: "Monday",    action: "Featured poll rotates — §00 copy ready. Open Publer: paste X tweet + schedule Tue 09:00. Upload IG screenshot + caption + schedule Tue 09:00. Done in ~5 min.", ch: "Publer prep",    time: "manual · ~5 min" },
+                { day: "Tuesday",   action: "X tweet auto-fires via Publer at 09:00 UTC",                             ch: "X / Twitter",   time: "auto · Publer" },
+                { day: "Tuesday",   action: "Instagram post auto-fires via Publer at 09:00 UTC",                      ch: "Instagram",     time: "auto · Publer" },
+                { day: "Tuesday",   action: "Resend weekly digest sends to all subscribers (top news + predictions)", ch: "Email",         time: "auto · 10:00 UTC" },
+                { day: "Daily",     action: "Discord nightly intel digest fires automatically",                       ch: "Discord",       time: "auto · 03:00 UTC" },
+                { day: "Thursday",  action: "Reddit r/GTA6 — paste title + body from §00. Peak window 18–21 UTC",    ch: "Reddit",        time: "manual · 18:00 UTC" },
+                { day: "Thu–Sun",   action: "GTAForums GTA VI General Discussion — paste title + body from §00",      ch: "GTAForums",     time: "manual" },
+                { day: "On trailer","action": "YouTube video description embed link + community post comment",         ch: "YouTube",       time: "manual · on event" },
+              ] as const).map((r: any, i: number) => (
+                <tr class={`border-b border-border-dim/40 hover:bg-white/[0.02] transition-colors ${r.day === "Tuesday" || r.day === "Thursday" ? "bg-white/[0.01]" : ""}`}>
+                  <td class="px-4 py-2.5 text-zinc-400 font-semibold">{r.day}</td>
+                  <td class="px-4 py-2.5 text-zinc-500">{r.action}</td>
+                  <td class="px-4 py-2.5 text-zinc-400">{r.ch}</td>
+                  <td class="px-4 py-2.5">
+                    <span class={`text-[9px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${r.time.startsWith("auto") ? "border-gta-green/30 text-gta-green/70" : "border-zinc-700 text-zinc-600"}`}>
+                      {r.time.startsWith("auto") ? "auto" : "manual"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- What's automated vs manual -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="rounded-xl border border-gta-green/20 p-4" style="background:color-mix(in srgb,var(--c-gta-dollar) 4%,var(--c-card))">
+          <div class="text-[11px] font-semibold text-gta-green mb-3">● Fires automatically — nothing to do on publish day</div>
+          <ul class="space-y-2">
+            {([
+              { label: "X / Twitter",              detail: "Tuesday 09:00 UTC — pre-scheduled Monday in Publer" },
+              { label: "Instagram",                detail: "Tuesday 09:00 UTC — pre-scheduled Monday in Publer" },
+              { label: "Resend weekly digest",      detail: "Tuesday 10:00 UTC via GitHub Actions" },
+              { label: "Discord nightly digest",   detail: "03:00 UTC daily via CI — post_discord_digest.py" },
+              { label: "Newsletter signup",         detail: "/api/subscribe → Resend Audience (Cloudflare)" },
+              { label: "Data refresh",              detail: "Nightly scrapers commit fresh JSON to main" },
+              { label: "Poll rotation",             detail: "New featured poll every Monday (week-number based)" },
+              { label: "§00 copy generation",       detail: "X, Reddit, GTAForums, Discord copy auto-builds from poll" },
+            ] as const).map((item: any) => (
+              <li class="flex gap-2 text-[11px]">
+                <span class="text-gta-green/50 shrink-0 mt-0.5">✓</span>
+                <span><span class="text-zinc-300">{item.label}</span><span class="text-zinc-600"> — {item.detail}</span></span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
+          <div class="text-[11px] font-semibold text-zinc-400 mb-3">○ Manual — your two sessions per week</div>
+          <ul class="space-y-2">
+            {([
+              { label: "Monday ~5 min",  detail: "Publer: paste X tweet from §00 + schedule Tue 09:00. Upload IG screenshot + caption + schedule Tue 09:00." },
+              { label: "Thursday 18:00", detail: "Reddit r/GTA6 — paste §00 title + body at peak window" },
+              { label: "Thu–Sun",        detail: "GTAForums — paste §00 GTAForums title + body" },
+              { label: "On trailer",     detail: "YouTube — embed link in description + community post" },
+              { label: "Nov 2026",       detail: "Launch blast — trigger weekly-digest.yml via workflow_dispatch" },
+            ] as const).map((item: any) => (
+              <li class="flex gap-2 text-[11px]">
+                <span class="text-zinc-700 shrink-0 mt-0.5">→</span>
+                <span><span class="text-zinc-300">{item.label}</span><span class="text-zinc-600"> — {item.detail}</span></span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         AUTOMATION STATUS BAR
+    ═══════════════════════════════════════════════════════ -->
+    <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <div class="px-4 py-2.5 border-b border-border-dim flex items-center gap-2">
+        <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Automation Status — {todayStr}</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
+        {([
+          {
+            label:  "Publer · X + Instagram",
+            time:   "Tue 09:00 UTC · scheduled Monday",
+            status: "running",
+            note:   "publer.com — schedule X tweet + Instagram post every Monday in ~5 min",
+          },
+          {
+            label:  "Discord nightly digest",
+            time:   "03:00 UTC · every night",
+            status: "running",
+            note:   "post_discord_digest.py via CI — DISCORD_WEBHOOK_URL needed",
+          },
+          {
+            label:  "Resend weekly digest",
+            time:   "Tue 10:00 UTC · GitHub Actions",
+            status: "running",
+            note:   "weekly-digest.yml — RESEND_API_KEY + RESEND_AUDIENCE_ID set in repo secrets ✓",
+          },
+          {
+            label:  "Newsletter signup",
+            time:   "On form submit · Cloudflare",
+            status: "running",
+            note:   "/api/subscribe → Resend Audience — RESEND_API_KEY + RESEND_AUDIENCE_ID set in CF Pages ✓",
+          },
+          {
+            label:  "Launch blast (manual)",
+            time:   "workflow_dispatch — Nov 2026",
+            status: "inactive",
+            note:   "Trigger weekly-digest.yml via GitHub → Actions → Run workflow when ready",
+          },
+        ] as const).map((item) => (
+          <div class="px-4 py-3">
+            <div class={`text-[10px] font-mono mb-1.5 uppercase tracking-widest font-semibold ${
+              item.status === "running"  ? "text-gta-green" :
+              item.status === "broken"  ? "text-gta-vi-coral" :
+              item.status === "check"   ? "text-gta-gold" :
+              "text-zinc-600"
+            }`}>
+              {item.status === "running"  ? "● running" :
+               item.status === "broken"  ? "✕ not configured" :
+               item.status === "check"   ? "? verify key" :
+               "○ inactive"}
+            </div>
+            <div class="text-[11px] font-semibold text-zinc-300 mb-0.5">{item.label}</div>
+            <div class="text-[10px] font-mono text-zinc-600 mb-1">{item.time}</div>
+            <div class="text-[10px] text-zinc-700 leading-relaxed">{item.note}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         PUBLISH THIS WEEK — manual runbook
+    ═══════════════════════════════════════════════════════ -->
+    <section>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-green/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// 00 — Publish This Week</span>
+        <div class="flex-1 h-px bg-border-dim"></div>
+        <span class="text-[10px] font-mono text-zinc-600">Week {weekOfYear} · {polls.length} polls in rotation</span>
+      </div>
+
+      {featuredPoll ? (
+        <>
+          <!-- Featured poll hero -->
+          <div class="rounded-xl border border-gta-green/20 p-5 mb-5" style="background:color-mix(in srgb,var(--c-gta-dollar) 4%,var(--c-card))">
+            <div class="flex items-start gap-4">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-[10px] font-mono text-gta-green/70 uppercase tracking-widest">Featured poll</span>
+                  <span class="text-[10px] font-mono border border-gta-green/30 text-gta-green px-1.5 py-0.5 rounded">{featuredPoll.confidence}% confidence · {featuredPoll.confidence_tier}</span>
+                </div>
+                <p class="text-[15px] font-semibold text-white leading-snug mb-2">{featuredPoll.poll_question}</p>
+                <p class="text-[11px] text-zinc-500 leading-relaxed line-clamp-2">{featuredPoll.basis}</p>
+              </div>
+              <a
+                href={featuredPollUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="shrink-0 text-[10px] font-mono text-gta-green/60 hover:text-gta-green border border-gta-green/20 hover:border-gta-green/40 rounded px-2.5 py-1.5 transition-colors"
+              >
+                View poll ↗
+              </a>
+            </div>
+          </div>
+
+          <!-- Ready-to-paste copy -->
+          <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+            <div class="px-4 py-2.5 border-b border-border-dim flex items-center justify-between">
+              <span class="text-[11px] font-semibold text-zinc-300">Ready-to-paste copy — click to copy</span>
+              <span class="text-[10px] font-mono text-zinc-600">id: {featuredPoll.id}</span>
+            </div>
+            <div class="divide-y divide-border-dim/40">
+              {([
+                {
+                  ch:    "𝕏 Tweet (full — paste as-is)",
+                  note:  "Paste this entire block as the tweet body. URL inline triggers the poll card unfurl. Attach a VoteCard screenshot as image for extra reach.",
+                  text:  xTweet,
+                  color: "var(--c-chart-bar)",
+                },
+                {
+                  ch:    "Reddit title",
+                  note:  "Post to r/GTA6. Thursday 18:00–21:00 UTC is peak window — hold if today is Mon–Wed.",
+                  text:  rdTitle,
+                  color: "var(--c-flow-spending)",
+                },
+                {
+                  ch:    "Reddit body",
+                  note:  "Paste as post body. Edit freely — the basis text is a starting point.",
+                  text:  rdBody,
+                  color: "var(--c-flow-spending)",
+                },
+                {
+                  ch:    "Discord message",
+                  note:  "Paste into #polls or #community. Ping @everyone only if confidence ≥75%.",
+                  text:  discordMsg,
+                  color: "var(--c-economy)",
+                },
+                {
+                  ch:    "GTAForums title",
+                  note:  "Post in GTA VI → General Discussion. Thursday–Sunday gets best traction on GTAForums.",
+                  text:  gtaForumsTitle,
+                  color: "var(--c-brand)",
+                },
+                {
+                  ch:    "GTAForums body",
+                  note:  "Paste as thread body. Edit the basis text freely — forums reward longer analysis posts.",
+                  text:  gtaForumsBody,
+                  color: "var(--c-brand)",
+                },
+              ] as const).map((row) => (
+                <div class="px-4 py-3.5">
+                  <div class="flex items-start gap-3">
+                    <div class="shrink-0 w-36">
+                      <div class="text-[10px] font-mono font-semibold mb-0.5" style={`color:${row.color}`}>{row.ch}</div>
+                      <div class="text-[9px] text-zinc-700 leading-relaxed">{row.note}</div>
+                    </div>
+                    <button
+                      class="copy-text-btn flex-1 text-left text-[11px] font-mono text-zinc-400 hover:text-zinc-200 rounded px-3 py-2 transition-colors whitespace-pre-wrap leading-relaxed"
+                      style="background:var(--c-bg-deep)"
+                      data-text={row.text}
+                    >
+                      {row.text}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Publer scheduling block -->
+          <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+            <div class="px-4 py-2.5 border-b border-border-dim flex items-center justify-between">
+              <span class="text-[11px] font-semibold text-zinc-300">Publer — schedule X + Instagram (do this Monday)</span>
+              <a href="https://publer.com" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors">publer.com ↗</a>
+            </div>
+            <div class="divide-y divide-border-dim/40">
+              {([
+                {
+                  step: "1 · X tweet",
+                  ch: "X / Twitter",
+                  color: "var(--c-chart-bar)",
+                  instruction: "In Publer → Create post → select X account. Paste the full 𝕏 tweet block from above. Attach a VoteCard screenshot as image (optional but boosts reach). Schedule: Tuesday 09:00 UTC.",
+                },
+                {
+                  step: "2 · Instagram",
+                  ch: "Instagram",
+                  color: "var(--c-gta-vi-coral)",
+                  instruction: "In Publer → Create post → select Instagram account. Upload the IG screenshot (open /ig/ page on phone, screenshot). Paste the caption from the Instagram block below. Schedule: Tuesday 09:00 UTC.",
+                },
+              ] as const).map((row: any) => (
+                <div class="px-4 py-3.5 flex items-start gap-3">
+                  <div class="shrink-0 w-32">
+                    <div class="text-[10px] font-mono font-semibold mb-0.5" style={`color:${row.color}`}>{row.step}</div>
+                    <div class="text-[9px] text-zinc-700">{row.ch}</div>
+                  </div>
+                  <p class="text-[11px] text-zinc-500 leading-relaxed flex-1">{row.instruction}</p>
+                </div>
+              ))}
+            </div>
+            <div class="px-4 py-2.5 border-t border-border-dim">
+              <span class="text-[10px] font-mono text-zinc-700">Total Monday prep time: ~5 minutes. Both channels fire automatically on Tuesday.</span>
+            </div>
+          </div>
+
+          <!-- Instagram screenshot block -->
+          <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+            <div class="px-4 py-2.5 border-b border-border-dim flex items-center justify-between">
+              <span class="text-[11px] font-semibold text-zinc-300">Instagram — screenshot this page on your phone</span>
+              <span class="text-[10px] font-mono text-zinc-600">430 × portrait · 4:5 ready</span>
+            </div>
+            <div class="px-4 py-4 flex flex-col gap-3">
+              <p class="text-[11px] text-zinc-500 leading-relaxed">
+                Open the link below on your <strong class="text-zinc-400">phone</strong>. The page is sized exactly for Instagram — screenshot it, upload directly. No crop needed.
+              </p>
+              <div class="flex items-center gap-3 flex-wrap">
+                <a
+                  href={`/community/polls/ig/${featuredPoll.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-[11px] font-mono px-3 py-1.5 rounded border border-gta-vi-coral/30 text-gta-vi-coral hover:bg-gta-vi-coral/10 transition-colors"
+                >
+                  Open IG page →
+                </a>
+                <button
+                  class="copy-text-btn text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors"
+                  data-text={`https://gtavi.ai/community/polls/ig/${featuredPoll.id}`}
+                >
+                  Copy URL
+                </button>
+              </div>
+              <div class="rounded border border-border-dim px-3 py-2.5 text-[11px] font-mono" style="background:var(--c-bg-deep)">
+                <div class="text-[10px] text-zinc-600 uppercase tracking-widest mb-1.5">Caption to paste</div>
+                <div class="text-zinc-400 whitespace-pre-wrap leading-relaxed">{featuredPoll.poll_question}{"\n\nVote on GTAVI.AI 👇 link in bio\n\n#GTA6 #GTAVI #GrandTheftAuto6 #GTA #Rockstar"}</div>
+                <button
+                  class="copy-text-btn mt-2 text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors"
+                  data-text={`${featuredPoll.poll_question}\n\nVote on GTAVI.AI 👇 link in bio\n\n#GTA6 #GTAVI #GrandTheftAuto6 #GTA #Rockstar`}
+                >
+                  Copy caption
+                </button>
+              </div>
+              <p class="text-[10px] text-zinc-700 leading-relaxed">
+                For Stories: same screenshot → add Poll sticker with same question → "Vote on GTAVI.AI" as sticker label.
+                All poll IG pages: <code class="text-zinc-600">gtavi.ai/community/polls/ig/[pollId]</code>
+              </p>
+            </div>
+          </div>
+
+          <!-- Manual checklist -->
+          <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+            <div class="px-4 py-2.5 border-b border-border-dim">
+              <span class="text-[11px] font-semibold text-zinc-300">This Tuesday — manual checklist</span>
+            </div>
+            <div class="divide-y divide-border-dim/40">
+              {([
+                { time: "Mon · 5 min",      ch: "Publer prep",             action: "Paste X tweet into Publer → schedule Tue 09:00. Upload IG screenshot + caption → schedule Tue 09:00. That's it for the week.", done: false },
+                { time: "Auto · 09:00 UTC", ch: "X / Twitter",            action: "Fires automatically via Publer. Nothing to do.", done: true },
+                { time: "Auto · 09:00 UTC", ch: "Instagram",               action: "Fires automatically via Publer. Nothing to do.", done: true },
+                { time: "Auto · 10:00 UTC", ch: "Resend weekly email",    action: "Fires automatically via GitHub Actions weekly-digest.yml. Check Actions tab after 10:00 UTC.", done: true },
+                { time: "Auto · 03:00 UTC", ch: "Discord nightly digest", action: "Already fired automatically via CI. Nothing to do.", done: true },
+                { time: "Hold until Thurs", ch: "Reddit r/GTA6",           action: "Thursday 18:00–21:00 UTC is peak. Use the Reddit title + body copy above.", done: false },
+                { time: "Hold until Thurs", ch: "GTAForums",               action: "Post in GTA VI → General Discussion. Use GTAForums title + body from §00 copy panel above. Forums reward longer posts — expand the basis text freely.", done: false },
+              ] as const).map((step) => (
+                <div class="flex items-start gap-4 px-4 py-3">
+                  <span class="text-[10px] font-mono text-zinc-600 shrink-0 w-28 mt-0.5">{step.time}</span>
+                  <span class={`text-[10px] font-mono shrink-0 mt-0.5 ${step.done ? "text-gta-green/70" : "text-zinc-500"}`}>{step.done ? "✓ auto" : "manual"}</span>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-[11px] font-semibold text-zinc-300 mb-0.5">{step.ch}</div>
+                    <div class="text-[11px] text-zinc-500 leading-relaxed">{step.action}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      ) : (
+        <p class="text-[13px] text-zinc-500">No polls with poll_question found in predictions.json.</p>
+      )}
+    </section>
 
     <!-- ═══════════════════════════════════════════════════════
          SECTION 1 — POLL EMBED DISTRIBUTION
@@ -41,7 +470,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
         </div>
         <div class="divide-y divide-border-dim/40 max-h-[500px] overflow-y-auto">
           {polls.map((p: any) => {
-            const pollUrl = `https://gtavi.ai/community/polls/${p.id}`;
+            const pollUrl = `https://gtavi.ai/community/polls/${p.id}#vote-${p.id}`;
             const xText   = `${p.poll_question}\n\nVote on GTAVI.AI 👇\n${pollUrl}`;
             const rdTitle = `${p.poll_question} — Community Poll [GTAVI.AI]`;
             const rdBody  = `GTAVI.AI model prediction (${p.confidence}% confidence, ${p.confidence_tier}):\n\n${p.basis?.slice(0,200)}…\n\nVote: ${pollUrl}`;
@@ -164,7 +593,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             posts: [
               "Quote the poll question as the tweet body — no extra copy needed",
               "Attach screenshot of the VoteCard (thumbnail visible) as an image",
-              "Drop the embed URL in first reply to maximise reach without link penalty",
+              "Include the poll URL inline in the tweet — X unfurls the poll card automatically with #vote-{id} anchor.",
               "Cadence: 1 poll tweet per Tuesday (ties to weekly digest day)",
             ],
           },
@@ -180,14 +609,14 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             ],
           },
           {
-            ch: "Beehiiv Newsletter",
+            ch: "Resend Email Digest",
             color: "var(--c-gta-dollar)",
             icon: "✉",
             posts: [
-              "Embed 2 polls per newsletter issue (Beehiiv supports iframes)",
-              "Place after main article, before sponsor block",
-              "Use thumbnail polls for visual break — GTA VI location images pop",
-              "CTA below embed: 'See all community predictions → gtavi.ai/gta-vi/intel'",
+              "Digest fires automatically every Tuesday 10:00 UTC via GitHub Actions",
+              "Embed poll URL + copy in the digest body manually if featuring a specific poll",
+              "CTA at bottom: 'See all community predictions → gtavi.ai/gta-vi/intel'",
+              "Affiliate disclosure footer on every send — legally required",
             ],
           },
           {
@@ -195,9 +624,9 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             color: "var(--c-gta-vi-coral)",
             icon: "▶",
             posts: [
-              "Screenshot VoteCard with thumbnail — strong visual content",
-              "Caption: punchy poll question + 'vote in bio link'",
-              "Stories: use poll sticker with same question as VoteCard",
+              "Use /community/polls/ig/[pollId] — pre-sized 430px portrait page, screenshot on phone, upload directly. No crop needed.",
+              "Caption: poll question + 'Vote on GTAVI.AI 👇 link in bio' + #GTA6 #GTAVI #GrandTheftAuto6",
+              "Stories: same screenshot → add Poll sticker with same question as VoteCard",
               "Repost result cards after 48h for engagement loop",
             ],
           },
@@ -221,134 +650,105 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         SECTION 2 — n8n AUTOMATION PIPELINE
+         SECTION 2 — EMAIL STACK (Resend)
     ═══════════════════════════════════════════════════════ -->
     <section>
       <div class="flex items-center gap-3 mb-5">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-teal/60 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// 02 — n8n Automation Pipeline</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// 02 — Email Stack</span>
         <div class="flex-1 h-px bg-border-dim"></div>
-        <a href="https://tigges.app.n8n.cloud/" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-gta-teal/60 hover:text-gta-teal transition-colors">n8n Cloud ↗</a>
+        <a href="https://resend.com" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors">resend.com ↗</a>
       </div>
 
-      <!-- Setup checklist -->
+      <!-- Flow diagram -->
       <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
-        <div class="px-4 py-3 border-b border-border-dim">
-          <span class="text-[11px] font-semibold text-zinc-300">Setup Checklist — Credentials Required</span>
+        <div class="px-4 py-2.5 border-b border-border-dim">
+          <span class="text-[11px] font-semibold text-zinc-300">Subscription → send flow</span>
+        </div>
+        <div class="px-4 py-4">
+          <div class="flex items-center gap-2 flex-wrap text-[11px] font-mono">
+            {([
+              { label: "Site signup form",       note: "NewsletterSignup.astro",            color: "var(--c-text-4)" },
+              { label: "→" },
+              { label: "POST /api/subscribe",    note: "Cloudflare Pages Function",         color: "var(--c-brand)" },
+              { label: "→" },
+              { label: "Resend Audience",        note: "RESEND_AUDIENCE_ID",                color: "var(--c-gta-dollar)" },
+              { label: "→" },
+              { label: "weekly-digest.yml",      note: "Tuesday 10:00 UTC · GitHub Actions", color: "var(--c-live)" },
+              { label: "→" },
+              { label: "post_weekly_digest_resend.py", note: "HTML email to all contacts", color: "var(--c-gta-vi-coral)" },
+            ] as const).map((step: any) =>
+              step.label === "→"
+                ? <span class="text-zinc-700 shrink-0">→</span>
+                : (
+                  <div class="rounded border border-border-dim px-2.5 py-1.5 shrink-0" style="background:var(--c-bg-deep)">
+                    <div style={`color:${step.color}`}>{step.label}</div>
+                    <div class="text-[9px] text-zinc-700 mt-0.5">{step.note}</div>
+                  </div>
+                )
+            )}
+          </div>
+        </div>
+      </div>
+
+      <!-- Secrets needed -->
+      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+        <div class="px-4 py-2.5 border-b border-border-dim flex items-center justify-between">
+          <span class="text-[11px] font-semibold text-zinc-300">Secrets — all confirmed set ✓</span>
+          <span class="text-[10px] font-mono text-gta-green/70">● both locations active</span>
         </div>
         <div class="divide-y divide-border-dim/40">
-          {[
-            { cred: "ANTHROPIC_API_KEY",       used: "Claude content generation",              status: "required" },
-            { cred: "PUBLER_TOKEN",             used: "Auto-posting to X, Instagram, Reddit",  status: "required" },
-            { cred: "PUBLER_PROFILE_ID_X",      used: "X (Twitter) account ID",               status: "required" },
-            { cred: "PUBLER_PROFILE_ID_IG",     used: "Instagram account ID",                 status: "required" },
-            { cred: "PUBLER_PROFILE_ID_REDDIT", used: "Reddit account ID",                    status: "required" },
-            { cred: "DISCORD_WEBHOOK_URL",      used: "Discord community digest",             status: "optional" },
-            { cred: "BEEHIIV_API_KEY",          used: "Weekly email newsletter publish",      status: "required" },
-            { cred: "BEEHIIV_PUBLICATION_ID",   used: "Newsletter publication target",        status: "required" },
-          ].map(r => (
-            <div class="flex items-center gap-4 px-4 py-2.5">
-              <code class="text-[11px] font-mono text-gta-gold/80 min-w-0 flex-shrink-0 w-64">{r.cred}</code>
-              <span class="text-[11px] text-zinc-500 flex-1">{r.used}</span>
-              <span class={`text-[10px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest shrink-0 ${r.status === 'required' ? 'border-gta-vi-coral/40 bg-gta-vi-coral/10 text-gta-vi-coral' : 'border-zinc-700 bg-zinc-800 text-zinc-500'}`}>
-                {r.status}
-              </span>
+          {([
+            {
+              key:   "RESEND_API_KEY",
+              where: ["GitHub repo secrets", "Cloudflare Pages env vars"],
+              used:  "Weekly digest send (CI) + /api/subscribe function",
+            },
+            {
+              key:   "RESEND_AUDIENCE_ID",
+              where: ["GitHub repo secrets", "Cloudflare Pages env vars"],
+              used:  "Audience UUID — get from resend.com → Audiences",
+            },
+            {
+              key:   "DISCORD_WEBHOOK_URL",
+              where: ["GitHub repo secrets"],
+              used:  "Nightly Discord digest — optional, skips gracefully if unset",
+            },
+          ] as const).map(r => (
+            <div class="flex items-start gap-4 px-4 py-3">
+              <code class="text-[11px] font-mono text-gta-gold/80 shrink-0 w-52">{r.key}</code>
+              <div class="flex-1 min-w-0">
+                <div class="text-[11px] text-zinc-400 mb-1">{r.used}</div>
+                <div class="flex gap-1.5 flex-wrap">
+                  {r.where.map((w: string) => (
+                    <span class="text-[9px] font-mono border border-zinc-700 text-zinc-600 px-1.5 py-0.5 rounded">{w}</span>
+                  ))}
+                </div>
+              </div>
             </div>
           ))}
         </div>
-        <div class="px-4 py-2.5 border-t border-border-dim text-[10px] font-mono text-zinc-600">
-          Add all credentials at: <a href="https://tigges.app.n8n.cloud/" target="_blank" rel="noopener noreferrer" class="text-zinc-500 hover:text-zinc-300 transition-colors">tigges.app.n8n.cloud → Credentials</a>
+      </div>
+
+      <!-- Email content breakdown -->
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-4 py-2.5 border-b border-border-dim">
+          <span class="text-[11px] font-semibold text-zinc-300">What the weekly digest contains</span>
+          <span class="text-[10px] font-mono text-zinc-600 ml-3">scrapers/post_weekly_digest_resend.py</span>
         </div>
-      </div>
-
-      <!-- Two workflows — now with repo file references -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-        {[
-          {
-            title: "Main Weekly Pipeline",
-            file: "n8n/main-pipeline.json",
-            trigger: "Monday 08:00 UTC (cron)",
-            color: "var(--c-brand)",
-            steps: [
-              "Fetches featured poll from GTAVI.AI predictions",
-              "Claude generates X / Reddit / Discord copy variants",
-              "Publer schedules X, Instagram, Reddit posts simultaneously",
-              "Beehiiv creates newsletter draft (review before sending)",
-              "Discord webhook posts weekly digest embed",
-            ],
-          },
-          {
-            title: "Pre-order Launch Blast",
-            file: "n8n/preorder-blast.json",
-            trigger: "Manual trigger — activate when pre-orders go live (Nov 2026)",
-            color: "var(--c-gta-vi-coral)",
-            steps: [
-              "One-shot blast to all channels simultaneously",
-              "Publer posts X + Instagram + Reddit in one call",
-              "Beehiiv sends launch email immediately (status: confirmed)",
-              "Discord posts rich embed with best-price affiliate links",
-              "Replace all REPLACE_* placeholders before activating",
-            ],
-          },
-        ].map(wf => (
-          <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="w-2 h-2 rounded-full shrink-0" style={`background:${wf.color}`}></span>
-              <span class="text-[12px] font-semibold text-zinc-200">{wf.title}</span>
+        <div class="grid grid-cols-1 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
+          {([
+            { section: "Top news",        detail: "5 items from feeds/newswire.json", source: "newswire.json" },
+            { section: "Top predictions", detail: "3 by confidence + poll cards",     source: "predictions.json" },
+            { section: "Stock watch",     detail: "Weekly TTWO price change",          source: "ttwo-stock.json" },
+            { section: "Trailer views",   detail: "Combined trailer velocity",         source: "trailer-velocity.json" },
+          ] as const).map(s => (
+            <div class="px-4 py-3">
+              <div class="text-[11px] font-semibold text-zinc-300 mb-0.5">{s.section}</div>
+              <div class="text-[11px] text-zinc-500 mb-1">{s.detail}</div>
+              <code class="text-[10px] font-mono text-zinc-700">{s.source}</code>
             </div>
-            <p class="text-[10px] font-mono text-zinc-600 mb-3">{wf.trigger}</p>
-            <div class="flex items-center gap-2 mb-3">
-              <code class="flex-1 text-[10px] font-mono text-zinc-500 border border-border-dim rounded px-2 py-1 truncate" style="background:var(--c-bg-deep)">{wf.file}</code>
-              <span class="text-[10px] font-mono text-zinc-600">in repo</span>
-            </div>
-            <ul class="space-y-1.5">
-              {wf.steps.map((s: string) => (
-                <li class="flex gap-2 text-[11px] text-zinc-500 leading-relaxed">
-                  <span class="text-zinc-700 shrink-0 mt-0.5">→</span>
-                  <span>{s}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      <!-- Import instructions -->
-      <div class="rounded-xl border border-gta-teal/20 p-4 mb-5" style="background:color-mix(in srgb,var(--c-live) 5%,var(--c-card))">
-        <div class="text-[11px] font-semibold text-gta-teal/80 mb-3">Import to n8n Cloud — Step by Step</div>
-        <ol class="space-y-1.5">
-          {[
-            "Go to tigges.app.n8n.cloud → Workflows → Add Workflow → Import from file",
-            "Import n8n/main-pipeline.json first, then n8n/preorder-blast.json",
-            "In each workflow, find every node marked REPLACE_* and fill in your credentials",
-            "Add credentials: Anthropic API key, Publer token, Beehiiv API key (n8n Credentials tab)",
-            "Test main-pipeline manually: click Execute Workflow, check each node's output",
-            "Activate the main-pipeline cron when satisfied with test output",
-            "Keep preorder-blast inactive — activate only when GTA VI pre-orders go live",
-          ].map((step, i) => (
-            <li class="flex gap-3 text-[11px] text-zinc-500 leading-relaxed">
-              <span class="text-[10px] font-mono text-gta-teal/60 shrink-0 w-4 mt-0.5">{i + 1}.</span>
-              <span>{step}</span>
-            </li>
           ))}
-        </ol>
-      </div>
-
-      <!-- Poll integration in n8n -->
-      <div class="rounded-xl border border-gta-gold/20 p-4" style="background:color-mix(in srgb,var(--c-gta-dollar) 5%,var(--c-card))">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-[10px] font-mono text-gta-gold uppercase tracking-widest font-bold">Poll cards in the n8n pipeline</span>
-        </div>
-        <div class="text-[12px] text-zinc-400 leading-relaxed space-y-2">
-          <p>Add this step after the Publer scheduling node in the main pipeline to auto-promote polls alongside each weekly content drop:</p>
-          <ol class="list-decimal list-inside space-y-1 text-[11px] text-zinc-500 ml-2">
-            <li>HTTP Request → <code class="text-zinc-400 bg-zinc-800 px-1 rounded">GET https://gtavi.ai/community/polls</code> — fetches current poll list</li>
-            <li>Pick the poll whose <code class="text-zinc-400 bg-zinc-800 px-1 rounded">id</code> matches the week's featured prediction</li>
-            <li>Build embed snippet: <code class="text-zinc-400 bg-zinc-800 px-1 rounded">/community/polls/embed/&#123;&#123;pollId&#125;&#125;</code></li>
-            <li>Append embed to Beehiiv body + share URL to Discord digest</li>
-            <li>Screenshot the VoteCard thumbnail and attach to Publer X/Instagram post as image</li>
-          </ol>
-          <p class="text-[11px] text-zinc-600 mt-2">Each poll card includes a pre-built <strong class="text-zinc-500">share text</strong> and deep-link anchor — use those directly in your Publer payloads to avoid duplicate copy generation.</p>
         </div>
       </div>
     </section>
@@ -436,8 +836,18 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
         {[
           {
-            tier: "Priority — Apply Now",
+            tier: "Active — live on site",
             color: "var(--c-live)",
+            partners: [
+              { name: "Amazon Associates", rate: "1–3%", note: "US/UK/CA/DE/FR/ES/IT/AU tags wired in affiliates.ts. /buy page physical copy links.", url: "https://affiliate-program.amazon.com" },
+              { name: "NordVPN", rate: "40% CPS", note: "Offer ID 15. Tiles live on /gta-vi/buy + /gta-online. nordLink() in affiliates.ts.", url: "https://affiliates.nordvpn.com" },
+              { name: "ZAP-Hosting", rate: "50% + 10% renewal", note: "FiveM server affiliate. Tile live on /gta-online.", url: "https://zap-hosting.com" },
+              { name: "FlexOffers", rate: "varies", note: "Site verified (fo-verify meta tag live). Wire specific offers once approved.", url: "https://www.flexoffers.com" },
+            ],
+          },
+          {
+            tier: "Priority — Apply Now",
+            color: "var(--c-brand)",
             partners: [
               { name: "CDKeys", rate: "5–8%", note: "Best margin on digital codes. GTA VI key will be a top seller. Apply 3–6 months before launch.", url: "https://www.cdkeys.com/affiliates" },
               { name: "Eneba", rate: "5–8%", note: "EU-strong digital marketplace. Strong for GTA VI pre-orders in UK/DE/FR markets.", url: "https://www.eneba.com/affiliate" },
@@ -446,11 +856,11 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
           },
           {
             tier: "Activate at Launch",
-            color: "var(--c-brand)",
+            color: "var(--c-economy)",
             partners: [
-              { name: "Amazon Associates", rate: "1–3%", note: "Lower rate but highest trust signal. Use for /buy page physical copy links. Replace REPLACE_GTA6_AMAZON_US in n8n preorder blast.", url: "https://affiliate-program.amazon.com" },
               { name: "Shark Card affiliate (T2)", rate: "TBC", note: "No public programme yet. Monitor Take-Two IR announcements — they ran one for GTA Online 2013–2014.", url: "https://ir.take2games.com" },
               { name: "GreenMan Gaming", rate: "5%", note: "PC-first audience. Good for long-tail GTA franchise catalogue sales.", url: "https://www.greenmangaming.com/affiliates" },
+              { name: "PlayStation Direct", rate: "TBC", note: "Partnerize — pending approval. Wire PS5 pre-order links on /buy when approved.", url: "https://www.partnerize.com" },
             ],
           },
         ].map(block => (
@@ -481,7 +891,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
           {[
             { where: "/buy page (primary)", when: "Live now", desc: "Central conversion page. Add CDKeys + Eneba links as 'Best price' options above Amazon. A/B test button copy: 'Best price' vs 'Pre-order now'." },
             { where: "Inline CTAs on /gta-vi/intel", when: "Launch", desc: "Below 'Launch Price $79.99' prediction card — 'Pre-order from $X → CDKeys'. Contextual placement converts at 3–5× vs footer links." },
-            { where: "Newsletter footer (Beehiiv)", when: "Weekly", desc: "Standard affiliate disclosure + 'Support GTAVI.AI: use our CDKeys link'. Low friction, high trust — newsletter subscribers are buyers." },
+            { where: "Resend email digest footer", when: "Weekly · auto", desc: "Affiliate disclosure + 'Support GTAVI.AI: use our CDKeys link'. Low friction, high trust — newsletter subscribers are buyers." },
           ].map(pl => (
             <div>
               <div class="text-[11px] font-semibold text-zinc-400 mb-1">{pl.where}</div>
@@ -518,13 +928,13 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             <tbody>
               {[
                 { ch: "Organic Search (Google)", vol: "★★★★★", content: "Prediction pages · intel hub · economy explainers", cadence: "Evergreen", status: "active" },
-                { ch: "Reddit r/GTA6", vol: "★★★★☆", content: "Poll embeds · community vote results · weekly data drops", cadence: "Weekly Thurs", status: "pending" },
-                { ch: "X / Twitter", vol: "★★★☆☆", content: "Poll VoteCard screenshots · prediction updates", cadence: "2× weekly", status: "pending" },
-                { ch: "GTAForums", vol: "★★★★☆", content: "Poll threads · data analysis posts · economy discussions", cadence: "Weekly", status: "pending" },
-                { ch: "Beehiiv Newsletter", vol: "★★★☆☆", content: "Weekly intel digest · top polls · affiliate CTAs", cadence: "Tuesday 10:00 UTC", status: "configured" },
+                { ch: "Reddit r/GTA6", vol: "★★★★☆", content: "Poll embeds · community vote results · weekly data drops", cadence: "Weekly Thurs · manual", status: "ready" },
+                { ch: "X / Twitter", vol: "★★★☆☆", content: "Poll VoteCard screenshots · prediction updates", cadence: "Tue 09:00 · Publer", status: "active" },
+                { ch: "GTAForums", vol: "★★★★☆", content: "Poll threads · data analysis posts · economy discussions", cadence: "Weekly Thu–Sun · manual", status: "ready" },
+                { ch: "Resend Email Digest", vol: "★★★☆☆", content: "Weekly intel digest · top predictions · affiliate CTAs", cadence: "Tue 10:00 UTC · auto", status: "active" },
                 { ch: "YouTube (embed)", vol: "★★★☆☆", content: "Data chart embeds on GTA YouTube videos via descriptions", cadence: "On new trailer", status: "pending" },
-                { ch: "Discord communities", vol: "★★☆☆☆", content: "Bot digest · poll embeds · data alerts", cadence: "Weekly + alerts", status: "configured" },
-                { ch: "Instagram / TikTok", vol: "★★★☆☆", content: "VoteCard screenshots · economy diagram shorts", cadence: "3× weekly", status: "pending" },
+                { ch: "Discord communities", vol: "★★☆☆☆", content: "Bot digest · poll embeds · data alerts", cadence: "Daily 03:00 UTC · auto", status: "active" },
+                { ch: "Instagram / TikTok", vol: "★★★☆☆", content: "VoteCard /ig/ screenshot · poll caption · Stories sticker", cadence: "Tue 09:00 · Publer", status: "active" },
               ].map(r => (
                 <tr class="border-b border-border-dim/40 hover:bg-white/[0.02] transition-colors">
                   <td class="px-4 py-2.5 text-zinc-300">{r.ch}</td>
@@ -532,8 +942,8 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
                   <td class="px-4 py-2.5 text-zinc-500">{r.content}</td>
                   <td class="px-4 py-2.5 text-zinc-500">{r.cadence}</td>
                   <td class="px-4 py-2.5">
-                    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${r.status === 'active' ? 'border-gta-green/40 bg-gta-green/20 text-gta-green' : r.status === 'configured' ? 'border-gta-gold/30 bg-gta-gold/10 text-gta-gold' : 'border-zinc-700 bg-zinc-800 text-zinc-500'}`}>
-                      {r.status}
+                    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${r.status === 'active' ? 'border-gta-green/40 bg-gta-green/20 text-gta-green' : r.status === 'ready' ? 'border-blue-500/30 bg-blue-500/10 text-blue-400' : r.status === 'configured' ? 'border-gta-gold/30 bg-gta-gold/10 text-gta-gold' : 'border-zinc-700 bg-zinc-800 text-zinc-500'}`}>
+                      {r.status === 'ready' ? 'ready to post' : r.status}
                     </span>
                   </td>
                 </tr>
@@ -548,9 +958,9 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
         <div class="text-[11px] font-semibold text-gta-vi-coral mb-3">Launch Surge Plan — November 2026</div>
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-[11px] text-zinc-500">
           {[
-            { t: "T-72h", a: "Activate pre-order blast (n8n manual trigger). Switch /buy page to live affiliate links. Alert newsletter list." },
+            { t: "T-72h", a: "Switch /buy page to live affiliate links. Send one-off Resend email to all subscribers via workflow_dispatch on weekly-digest.yml. Post to X + Reddit." },
             { t: "Launch day", a: "Publish Day-1 income benchmarks within 6h of server-up. First community poll results posted. Discord and Reddit simultaneous." },
-            { t: "Week 1", a: "Daily data drops: economy flows, mission payouts, GTA-PPI computation. 1 n8n digest per day vs weekly cadence. Affiliate CTAs on every page." },
+            { t: "Week 1", a: "Daily data drops: economy flows, mission payouts, GTA-PPI computation. Trigger weekly-digest.yml daily via workflow_dispatch. Affiliate CTAs on every page." },
             { t: "Month 1", a: "Weekly digest returns to normal cadence. Focus on economy chart rankings, first DLC predictions. Transition to evergreen SEO content." },
           ].map(step => (
             <div>
