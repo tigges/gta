@@ -1,7 +1,7 @@
 ---
 /**
  * /admin/social — Social, Growth & Monetisation Strategy
- * Full playbook: poll distribution, n8n automation, SEO, affiliate, traffic.
+ * Full playbook: poll distribution, Resend email stack, SEO, affiliate, traffic.
  * Internal admin tool — unlisted from public nav.
  */
 import Base from "../../layouts/Base.astro";
@@ -9,7 +9,7 @@ import predRaw from "../../../data/gta-6/predictions.json";
 
 const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
 
-// Week-based poll rotation — same logic as n8n pipeline intended
+// Week-based poll rotation — advances every Monday
 const now = new Date();
 const startOfYear = new Date(now.getFullYear(), 0, 1);
 const weekOfYear = Math.floor((now.getTime() - startOfYear.getTime()) / (7 * 24 * 60 * 60 * 1000));
@@ -42,13 +42,13 @@ const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
 if (!IS_STAGING) { return Astro.redirect("/404"); }
 ---
 
-<Base title="Admin — Social & Growth Strategy" description="GTAVI.AI social media strategy, n8n pipeline, SEO, affiliate and traffic playbook." noindex>
+<Base title="Admin — Social & Growth Strategy" description="GTAVI.AI social media strategy, Resend email stack, SEO, affiliate and traffic playbook." noindex>
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-12">
 
     <div>
       <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.2em] mb-2">// Admin · Internal</div>
       <h1 class="text-2xl font-bold text-white mb-1">Social &amp; Growth Strategy</h1>
-      <p class="text-sm text-zinc-500">Poll distribution · n8n automation · SEO · affiliate programme · traffic playbook. Not visible to public users.</p>
+      <p class="text-sm text-zinc-500">Poll distribution · Resend email stack · SEO · affiliate programme · traffic playbook. Not visible to public users.</p>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -64,25 +64,25 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             label:  "Discord nightly digest",
             time:   "03:00 UTC · every night",
             status: "running",
-            note:   "post_discord_digest.py via CI",
+            note:   "post_discord_digest.py via CI — DISCORD_WEBHOOK_URL needed",
           },
           {
-            label:  "Resend weekly email",
-            time:   "Tue 10:00 UTC · CI cron",
+            label:  "Resend weekly digest",
+            time:   "Tue 10:00 UTC · GitHub Actions",
             status: "check",
-            note:   "Needs RESEND_API_KEY in repo secrets",
+            note:   "weekly-digest.yml — needs RESEND_API_KEY + RESEND_AUDIENCE_ID in repo secrets",
           },
           {
-            label:  "n8n main pipeline",
-            time:   "Mon 08:00 UTC · cron",
-            status: "broken",
-            note:   "NOT SET UP: 8 unset credentials + missing /api/predictions-feed endpoint",
+            label:  "Newsletter signup",
+            time:   "On form submit · Cloudflare",
+            status: "check",
+            note:   "/api/subscribe → Resend Audience — needs same keys in CF Pages env vars",
           },
           {
-            label:  "n8n preorder blast",
-            time:   "Manual — Nov 2026",
+            label:  "Launch blast (manual)",
+            time:   "workflow_dispatch — Nov 2026",
             status: "inactive",
-            note:   "Keep inactive until pre-orders go live",
+            note:   "Trigger weekly-digest.yml via GitHub → Actions → Run workflow when ready",
           },
         ] as const).map((item) => (
           <div class="px-4 py-3">
@@ -380,14 +380,14 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             ],
           },
           {
-            ch: "Beehiiv Newsletter",
+            ch: "Resend Email Digest",
             color: "var(--c-gta-dollar)",
             icon: "✉",
             posts: [
-              "Embed 2 polls per newsletter issue (Beehiiv supports iframes)",
-              "Place after main article, before sponsor block",
-              "Use thumbnail polls for visual break — GTA VI location images pop",
-              "CTA below embed: 'See all community predictions → gtavi.ai/gta-vi/intel'",
+              "Digest fires automatically every Tuesday 10:00 UTC via GitHub Actions",
+              "Embed poll URL + copy in the digest body manually if featuring a specific poll",
+              "CTA at bottom: 'See all community predictions → gtavi.ai/gta-vi/intel'",
+              "Affiliate disclosure footer on every send — legally required",
             ],
           },
           {
@@ -421,148 +421,104 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         SECTION 2 — n8n AUTOMATION PIPELINE (not configured)
+         SECTION 2 — EMAIL STACK (Resend)
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <div class="flex items-center gap-3 mb-4">
-        <span class="w-1.5 h-1.5 rounded-full bg-zinc-700 shrink-0"></span>
-        <span class="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">// 02 — n8n Automation Pipeline</span>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+        <span class="text-[10px] font-mono text-zinc-400 tracking-[0.2em] uppercase">// 02 — Email Stack</span>
         <div class="flex-1 h-px bg-border-dim"></div>
-        <a href="https://tigges.app.n8n.cloud/" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors">n8n Cloud ↗</a>
+        <a href="https://resend.com" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors">resend.com ↗</a>
       </div>
 
-      <!-- Status banner -->
-      <div class="rounded-xl border border-gta-vi-coral/30 px-4 py-3 mb-5 flex items-start gap-3" style="background:color-mix(in srgb,var(--c-gta-vi-coral) 6%,var(--c-card))">
-        <span class="text-gta-vi-coral text-[13px] mt-0.5 shrink-0">✕</span>
-        <div>
-          <div class="text-[11px] font-semibold text-gta-vi-coral mb-1">Not configured — skip for now</div>
-          <div class="text-[11px] text-zinc-500 leading-relaxed space-y-0.5">
-            <p>All 8 credentials still contain <code class="text-zinc-400 bg-zinc-800 px-1 rounded text-[10px]">REPLACE_*</code> placeholders — zero live credentials set.</p>
-            <p>Main pipeline calls <code class="text-zinc-400 bg-zinc-800 px-1 rounded text-[10px]">GET /api/predictions-feed</code> which does not exist — workflow fails on step 2.</p>
-            <p>Both workflows are <code class="text-zinc-400 bg-zinc-800 px-1 rounded text-[10px]">active: false</code> — never been imported or activated on n8n Cloud.</p>
-            <p class="text-zinc-600 mt-1">Estimated cost to make this work: Publer + Beehiiv + Anthropic + n8n Cloud subscriptions. Recommend manual publishing (Section 00) until traffic justifies it.</p>
+      <!-- Flow diagram -->
+      <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+        <div class="px-4 py-2.5 border-b border-border-dim">
+          <span class="text-[11px] font-semibold text-zinc-300">Subscription → send flow</span>
+        </div>
+        <div class="px-4 py-4">
+          <div class="flex items-center gap-2 flex-wrap text-[11px] font-mono">
+            {([
+              { label: "Site signup form",       note: "NewsletterSignup.astro",            color: "var(--c-text-4)" },
+              { label: "→" },
+              { label: "POST /api/subscribe",    note: "Cloudflare Pages Function",         color: "var(--c-brand)" },
+              { label: "→" },
+              { label: "Resend Audience",        note: "RESEND_AUDIENCE_ID",                color: "var(--c-gta-dollar)" },
+              { label: "→" },
+              { label: "weekly-digest.yml",      note: "Tuesday 10:00 UTC · GitHub Actions", color: "var(--c-live)" },
+              { label: "→" },
+              { label: "post_weekly_digest_resend.py", note: "HTML email to all contacts", color: "var(--c-gta-vi-coral)" },
+            ] as const).map((step: any) =>
+              step.label === "→"
+                ? <span class="text-zinc-700 shrink-0">→</span>
+                : (
+                  <div class="rounded border border-border-dim px-2.5 py-1.5 shrink-0" style="background:var(--c-bg-deep)">
+                    <div style={`color:${step.color}`}>{step.label}</div>
+                    <div class="text-[9px] text-zinc-700 mt-0.5">{step.note}</div>
+                  </div>
+                )
+            )}
           </div>
         </div>
       </div>
 
-      <!-- Setup checklist -->
+      <!-- Secrets needed -->
       <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
-        <div class="px-4 py-3 border-b border-border-dim">
-          <span class="text-[11px] font-semibold text-zinc-300">Setup Checklist — Credentials Required</span>
+        <div class="px-4 py-2.5 border-b border-border-dim">
+          <span class="text-[11px] font-semibold text-zinc-300">Secrets required — set in both places</span>
         </div>
         <div class="divide-y divide-border-dim/40">
-          {[
-            { cred: "ANTHROPIC_API_KEY",       used: "Claude content generation",              status: "required" },
-            { cred: "PUBLER_TOKEN",             used: "Auto-posting to X, Instagram, Reddit",  status: "required" },
-            { cred: "PUBLER_PROFILE_ID_X",      used: "X (Twitter) account ID",               status: "required" },
-            { cred: "PUBLER_PROFILE_ID_IG",     used: "Instagram account ID",                 status: "required" },
-            { cred: "PUBLER_PROFILE_ID_REDDIT", used: "Reddit account ID",                    status: "required" },
-            { cred: "DISCORD_WEBHOOK_URL",      used: "Discord community digest",             status: "optional" },
-            { cred: "BEEHIIV_API_KEY",          used: "Weekly email newsletter publish",      status: "required" },
-            { cred: "BEEHIIV_PUBLICATION_ID",   used: "Newsletter publication target",        status: "required" },
-          ].map(r => (
-            <div class="flex items-center gap-4 px-4 py-2.5">
-              <code class="text-[11px] font-mono text-gta-gold/80 min-w-0 flex-shrink-0 w-64">{r.cred}</code>
-              <span class="text-[11px] text-zinc-500 flex-1">{r.used}</span>
-              <span class={`text-[10px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest shrink-0 ${r.status === 'required' ? 'border-gta-vi-coral/40 bg-gta-vi-coral/10 text-gta-vi-coral' : 'border-zinc-700 bg-zinc-800 text-zinc-500'}`}>
-                {r.status}
-              </span>
+          {([
+            {
+              key:   "RESEND_API_KEY",
+              where: ["GitHub repo secrets", "Cloudflare Pages env vars"],
+              used:  "Weekly digest send (CI) + /api/subscribe function",
+            },
+            {
+              key:   "RESEND_AUDIENCE_ID",
+              where: ["GitHub repo secrets", "Cloudflare Pages env vars"],
+              used:  "Audience UUID — get from resend.com → Audiences",
+            },
+            {
+              key:   "DISCORD_WEBHOOK_URL",
+              where: ["GitHub repo secrets"],
+              used:  "Nightly Discord digest — optional, skips gracefully if unset",
+            },
+          ] as const).map(r => (
+            <div class="flex items-start gap-4 px-4 py-3">
+              <code class="text-[11px] font-mono text-gta-gold/80 shrink-0 w-52">{r.key}</code>
+              <div class="flex-1 min-w-0">
+                <div class="text-[11px] text-zinc-400 mb-1">{r.used}</div>
+                <div class="flex gap-1.5 flex-wrap">
+                  {r.where.map((w: string) => (
+                    <span class="text-[9px] font-mono border border-zinc-700 text-zinc-600 px-1.5 py-0.5 rounded">{w}</span>
+                  ))}
+                </div>
+              </div>
             </div>
           ))}
         </div>
-        <div class="px-4 py-2.5 border-t border-border-dim text-[10px] font-mono text-zinc-600">
-          Add all credentials at: <a href="https://tigges.app.n8n.cloud/" target="_blank" rel="noopener noreferrer" class="text-zinc-500 hover:text-zinc-300 transition-colors">tigges.app.n8n.cloud → Credentials</a>
+      </div>
+
+      <!-- Email content breakdown -->
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+        <div class="px-4 py-2.5 border-b border-border-dim">
+          <span class="text-[11px] font-semibold text-zinc-300">What the weekly digest contains</span>
+          <span class="text-[10px] font-mono text-zinc-600 ml-3">scrapers/post_weekly_digest_resend.py</span>
         </div>
-      </div>
-
-      <!-- Two workflows — now with repo file references -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-        {[
-          {
-            title: "Main Weekly Pipeline",
-            file: "n8n/main-pipeline.json",
-            trigger: "Monday 08:00 UTC (cron)",
-            color: "var(--c-brand)",
-            steps: [
-              "Fetches featured poll from GTAVI.AI predictions",
-              "Claude generates X / Reddit / Discord copy variants",
-              "Publer schedules X, Instagram, Reddit posts simultaneously",
-              "Beehiiv creates newsletter draft (review before sending)",
-              "Discord webhook posts weekly digest embed",
-            ],
-          },
-          {
-            title: "Pre-order Launch Blast",
-            file: "n8n/preorder-blast.json",
-            trigger: "Manual trigger — activate when pre-orders go live (Nov 2026)",
-            color: "var(--c-gta-vi-coral)",
-            steps: [
-              "One-shot blast to all channels simultaneously",
-              "Publer posts X + Instagram + Reddit in one call",
-              "Beehiiv sends launch email immediately (status: confirmed)",
-              "Discord posts rich embed with best-price affiliate links",
-              "Replace all REPLACE_* placeholders before activating",
-            ],
-          },
-        ].map(wf => (
-          <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="w-2 h-2 rounded-full shrink-0" style={`background:${wf.color}`}></span>
-              <span class="text-[12px] font-semibold text-zinc-200">{wf.title}</span>
+        <div class="grid grid-cols-1 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
+          {([
+            { section: "Top news",        detail: "5 items from feeds/newswire.json", source: "newswire.json" },
+            { section: "Top predictions", detail: "3 by confidence + poll cards",     source: "predictions.json" },
+            { section: "Stock watch",     detail: "Weekly TTWO price change",          source: "ttwo-stock.json" },
+            { section: "Trailer views",   detail: "Combined trailer velocity",         source: "trailer-velocity.json" },
+          ] as const).map(s => (
+            <div class="px-4 py-3">
+              <div class="text-[11px] font-semibold text-zinc-300 mb-0.5">{s.section}</div>
+              <div class="text-[11px] text-zinc-500 mb-1">{s.detail}</div>
+              <code class="text-[10px] font-mono text-zinc-700">{s.source}</code>
             </div>
-            <p class="text-[10px] font-mono text-zinc-600 mb-3">{wf.trigger}</p>
-            <div class="flex items-center gap-2 mb-3">
-              <code class="flex-1 text-[10px] font-mono text-zinc-500 border border-border-dim rounded px-2 py-1 truncate" style="background:var(--c-bg-deep)">{wf.file}</code>
-              <span class="text-[10px] font-mono text-zinc-600">in repo</span>
-            </div>
-            <ul class="space-y-1.5">
-              {wf.steps.map((s: string) => (
-                <li class="flex gap-2 text-[11px] text-zinc-500 leading-relaxed">
-                  <span class="text-zinc-700 shrink-0 mt-0.5">→</span>
-                  <span>{s}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      <!-- Import instructions -->
-      <div class="rounded-xl border border-gta-teal/20 p-4 mb-5" style="background:color-mix(in srgb,var(--c-live) 5%,var(--c-card))">
-        <div class="text-[11px] font-semibold text-gta-teal/80 mb-3">Import to n8n Cloud — Step by Step</div>
-        <ol class="space-y-1.5">
-          {[
-            "Go to tigges.app.n8n.cloud → Workflows → Add Workflow → Import from file",
-            "Import n8n/main-pipeline.json first, then n8n/preorder-blast.json",
-            "In each workflow, find every node marked REPLACE_* and fill in your credentials",
-            "Add credentials: Anthropic API key, Publer token, Beehiiv API key (n8n Credentials tab)",
-            "Test main-pipeline manually: click Execute Workflow, check each node's output",
-            "Activate the main-pipeline cron when satisfied with test output",
-            "Keep preorder-blast inactive — activate only when GTA VI pre-orders go live",
-          ].map((step, i) => (
-            <li class="flex gap-3 text-[11px] text-zinc-500 leading-relaxed">
-              <span class="text-[10px] font-mono text-gta-teal/60 shrink-0 w-4 mt-0.5">{i + 1}.</span>
-              <span>{step}</span>
-            </li>
           ))}
-        </ol>
-      </div>
-
-      <!-- Poll integration in n8n -->
-      <div class="rounded-xl border border-gta-gold/20 p-4" style="background:color-mix(in srgb,var(--c-gta-dollar) 5%,var(--c-card))">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-[10px] font-mono text-gta-gold uppercase tracking-widest font-bold">Poll cards in the n8n pipeline</span>
-        </div>
-        <div class="text-[12px] text-zinc-400 leading-relaxed space-y-2">
-          <p>Add this step after the Publer scheduling node in the main pipeline to auto-promote polls alongside each weekly content drop:</p>
-          <ol class="list-decimal list-inside space-y-1 text-[11px] text-zinc-500 ml-2">
-            <li>HTTP Request → <code class="text-zinc-400 bg-zinc-800 px-1 rounded">GET https://gtavi.ai/community/polls</code> — fetches current poll list</li>
-            <li>Pick the poll whose <code class="text-zinc-400 bg-zinc-800 px-1 rounded">id</code> matches the week's featured prediction</li>
-            <li>Build embed snippet: <code class="text-zinc-400 bg-zinc-800 px-1 rounded">/community/polls/embed/&#123;&#123;pollId&#125;&#125;</code></li>
-            <li>Append embed to Beehiiv body + share URL to Discord digest</li>
-            <li>Screenshot the VoteCard thumbnail and attach to Publer X/Instagram post as image</li>
-          </ol>
-          <p class="text-[11px] text-zinc-600 mt-2">Each poll card includes a pre-built <strong class="text-zinc-500">share text</strong> and deep-link anchor — use those directly in your Publer payloads to avoid duplicate copy generation.</p>
         </div>
       </div>
     </section>
@@ -662,7 +618,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             tier: "Activate at Launch",
             color: "var(--c-brand)",
             partners: [
-              { name: "Amazon Associates", rate: "1–3%", note: "Lower rate but highest trust signal. Use for /buy page physical copy links. Replace REPLACE_GTA6_AMAZON_US in n8n preorder blast.", url: "https://affiliate-program.amazon.com" },
+              { name: "Amazon Associates", rate: "1–3%", note: "Lower rate but highest trust signal. Use for /buy page physical copy links. US/UK/CA/DE/FR/ES/IT tags already wired in affiliates.ts.", url: "https://affiliate-program.amazon.com" },
               { name: "Shark Card affiliate (T2)", rate: "TBC", note: "No public programme yet. Monitor Take-Two IR announcements — they ran one for GTA Online 2013–2014.", url: "https://ir.take2games.com" },
               { name: "GreenMan Gaming", rate: "5%", note: "PC-first audience. Good for long-tail GTA franchise catalogue sales.", url: "https://www.greenmangaming.com/affiliates" },
             ],
@@ -695,7 +651,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
           {[
             { where: "/buy page (primary)", when: "Live now", desc: "Central conversion page. Add CDKeys + Eneba links as 'Best price' options above Amazon. A/B test button copy: 'Best price' vs 'Pre-order now'." },
             { where: "Inline CTAs on /gta-vi/intel", when: "Launch", desc: "Below 'Launch Price $79.99' prediction card — 'Pre-order from $X → CDKeys'. Contextual placement converts at 3–5× vs footer links." },
-            { where: "Newsletter footer (Beehiiv)", when: "Weekly", desc: "Standard affiliate disclosure + 'Support GTAVI.AI: use our CDKeys link'. Low friction, high trust — newsletter subscribers are buyers." },
+            { where: "Resend email digest footer", when: "Weekly · auto", desc: "Affiliate disclosure + 'Support GTAVI.AI: use our CDKeys link'. Low friction, high trust — newsletter subscribers are buyers." },
           ].map(pl => (
             <div>
               <div class="text-[11px] font-semibold text-zinc-400 mb-1">{pl.where}</div>
@@ -735,7 +691,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
                 { ch: "Reddit r/GTA6", vol: "★★★★☆", content: "Poll embeds · community vote results · weekly data drops", cadence: "Weekly Thurs", status: "pending" },
                 { ch: "X / Twitter", vol: "★★★☆☆", content: "Poll VoteCard screenshots · prediction updates", cadence: "2× weekly", status: "pending" },
                 { ch: "GTAForums", vol: "★★★★☆", content: "Poll threads · data analysis posts · economy discussions", cadence: "Weekly", status: "pending" },
-                { ch: "Beehiiv Newsletter", vol: "★★★☆☆", content: "Weekly intel digest · top polls · affiliate CTAs", cadence: "Tuesday 10:00 UTC", status: "configured" },
+                { ch: "Resend Email Digest", vol: "★★★☆☆", content: "Weekly intel digest · top predictions · affiliate CTAs", cadence: "Tuesday 10:00 UTC · auto", status: "configured" },
                 { ch: "YouTube (embed)", vol: "★★★☆☆", content: "Data chart embeds on GTA YouTube videos via descriptions", cadence: "On new trailer", status: "pending" },
                 { ch: "Discord communities", vol: "★★☆☆☆", content: "Bot digest · poll embeds · data alerts", cadence: "Weekly + alerts", status: "configured" },
                 { ch: "Instagram / TikTok", vol: "★★★☆☆", content: "VoteCard screenshots · economy diagram shorts", cadence: "3× weekly", status: "pending" },
@@ -762,9 +718,9 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
         <div class="text-[11px] font-semibold text-gta-vi-coral mb-3">Launch Surge Plan — November 2026</div>
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-[11px] text-zinc-500">
           {[
-            { t: "T-72h", a: "Activate pre-order blast (n8n manual trigger). Switch /buy page to live affiliate links. Alert newsletter list." },
+            { t: "T-72h", a: "Switch /buy page to live affiliate links. Send one-off Resend email to all subscribers via workflow_dispatch on weekly-digest.yml. Post to X + Reddit." },
             { t: "Launch day", a: "Publish Day-1 income benchmarks within 6h of server-up. First community poll results posted. Discord and Reddit simultaneous." },
-            { t: "Week 1", a: "Daily data drops: economy flows, mission payouts, GTA-PPI computation. 1 n8n digest per day vs weekly cadence. Affiliate CTAs on every page." },
+            { t: "Week 1", a: "Daily data drops: economy flows, mission payouts, GTA-PPI computation. Trigger weekly-digest.yml daily via workflow_dispatch. Affiliate CTAs on every page." },
             { t: "Month 1", a: "Weekly digest returns to normal cadence. Focus on economy chart rankings, first DLC predictions. Transition to evergreen SEO content." },
           ].map(step => (
             <div>
