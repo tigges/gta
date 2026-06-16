@@ -6,8 +6,8 @@ When a listing goes live (price, editions, availability), this is
 typically the first public confirmation before any official announcement.
 
 Sources:
-  - PlayStation Store (US) — ps.store/search
-  - Xbox Store (US) — xbox.com/search
+  - PlayStation Store (US) — store.playstation.com
+  - Xbox Store (US) — Microsoft Catalog API (bigId: 9nl3wwnzlzzn)
   - Amazon US — amazon.com/s?k=grand+theft+auto+6
   - Best Buy US — bestbuy.com/site/searchpage.jsp
   - GameStop US — gamestop.com/search
@@ -16,7 +16,7 @@ Output: data/feeds/preorder-listings.json
   status: "not_live" | "wishlist" | "pre_order" | "available"
   Each retailer tracked independently with its current state.
 
-No API key required — HTML scrape only.
+No API key required. Xbox uses the public Microsoft Catalog API.
 """
 
 import re
@@ -163,11 +163,93 @@ def check_psstore() -> dict:
         return {"retailer": "PlayStation Store", "status": "error", "error": str(e)[:100]}
 
 
+# ── Xbox Store ─────────────────────────────────────────────────────────────
+
+# Confirmed Xbox Store product ID for Grand Theft Auto VI.
+# Source: xbox.com/en-US/games/store/grand-theft-auto-vi/9nl3wwnzlzzn
+XBOX_GTA6_PRODUCT_ID = "9nl3wwnzlzzn"
+XBOX_CATALOG_URL = (
+    f"https://displaycatalog.mp.microsoft.com/v7.0/products"
+    f"?bigIds={XBOX_GTA6_PRODUCT_ID}&market=US&languages=en-us"
+    f"&MS-CV=DGU1mcuYo0WMMp+F.1"
+)
+XBOX_STORE_URL = f"https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/{XBOX_GTA6_PRODUCT_ID}"
+
+
+def check_xbox_store() -> dict:
+    """
+    Xbox Store via Microsoft Catalog API.
+
+    Uses the public displaycatalog endpoint — no auth required.
+    Status logic:
+      pre_order  — product has a Fulfill action AND a non-zero list price
+      wishlist   — product exists in catalog, Fulfill available, price = 0
+      not_live   — product not found or catalog error
+    """
+    try:
+        resp = requests.get(XBOX_CATALOG_URL, timeout=15)
+        if not resp.ok:
+            return {
+                "retailer": "Xbox Store",
+                "status": "unknown",
+                "note": f"Catalog API HTTP {resp.status_code}",
+                "url": XBOX_STORE_URL,
+            }
+
+        products = resp.json().get("Products", [])
+        if not products:
+            return {"retailer": "Xbox Store", "status": "not_live", "url": XBOX_STORE_URL}
+
+        prod = products[0]
+        title_props = (prod.get("LocalizedProperties") or [{}])[0]
+        found_title = title_props.get("ProductTitle", "")
+
+        can_fulfill = False
+        has_price   = False
+        price_str   = None
+
+        for sku_avail in prod.get("DisplaySkuAvailabilities", []):
+            for avail in sku_avail.get("Availabilities", []):
+                actions = avail.get("Actions", [])
+                if "Fulfill" in actions:
+                    can_fulfill = True
+                    price = (
+                        avail.get("OrderManagementData", {})
+                        .get("Price", {})
+                    )
+                    list_price = price.get("ListPrice") or 0.0
+                    if list_price and list_price > 0:
+                        has_price = True
+                        price_str = f"${list_price:.2f}"
+
+        if can_fulfill and has_price:
+            result = {"retailer": "Xbox Store", "status": "pre_order", "url": XBOX_STORE_URL}
+            if found_title:
+                result["found_title"] = found_title[:80]
+            if price_str:
+                result["price"] = price_str
+            return result
+
+        if can_fulfill or found_title:
+            return {
+                "retailer": "Xbox Store",
+                "status": "wishlist",
+                "url": XBOX_STORE_URL,
+                "found_title": found_title[:80] if found_title else None,
+                "note": "Listed in catalog — price not yet set",
+            }
+
+        return {"retailer": "Xbox Store", "status": "not_live", "url": XBOX_STORE_URL}
+
+    except Exception as e:
+        return {"retailer": "Xbox Store", "status": "error", "error": str(e)[:120], "url": XBOX_STORE_URL}
+
+
 def main() -> None:
     print("Checking GTA VI retailer listings...")
 
     listings = []
-    for check_fn in [check_amazon, check_bestbuy, check_gamestop, check_psstore]:
+    for check_fn in [check_psstore, check_xbox_store, check_amazon, check_bestbuy, check_gamestop]:
         result = check_fn()
         status = result.get("status", "unknown")
         icon = "🟢" if status == "pre_order" else "🟡" if status == "wishlist" else "⚪" if status == "not_live" else "🔴"
