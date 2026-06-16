@@ -14,14 +14,18 @@ const now = new Date();
 const startOfYear = new Date(now.getFullYear(), 0, 1);
 const weekOfYear = Math.floor((now.getTime() - startOfYear.getTime()) / (7 * 24 * 60 * 60 * 1000));
 const featuredPoll = polls.length > 0 ? polls[weekOfYear % polls.length] as any : null;
-const featuredPollUrl = featuredPoll ? `https://gtavi.ai/community/polls/${featuredPoll.id}` : "";
+// Always use #vote-{id} anchor so X unfurls the poll card and users land on
+// the vote widget rather than the page hero.
+const featuredPollUrl = featuredPoll
+  ? `https://gtavi.ai/community/polls/${featuredPoll.id}#vote-${featuredPoll.id}`
+  : "";
 const todayStr = now.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 
 // Pre-formatted copy — paste directly into each channel
+// X: single block with URL inline (matches X card unfurl format that works)
 const xTweet = featuredPoll
-  ? `${featuredPoll.poll_question}\n\nOur model puts ${featuredPoll.confidence}% confidence on this. Where does the community stand?\n\n↓ Vote below 👇`
+  ? `${featuredPoll.poll_question}\n\nVote on GTAVI.AI 👇\n${featuredPollUrl}`
   : "";
-const xReply = featuredPollUrl;
 const rdTitle = featuredPoll
   ? `${featuredPoll.poll_question} — GTA VI data model says ${featuredPoll.confidence}% [Community Poll]`
   : "";
@@ -145,15 +149,9 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             <div class="divide-y divide-border-dim/40">
               {([
                 {
-                  ch:    "𝕏 Tweet body",
-                  note:  "Post as tweet. Add VoteCard screenshot as image. Drop poll URL as first reply (avoids link reach penalty).",
+                  ch:    "𝕏 Tweet (full — paste as-is)",
+                  note:  "Paste this entire block as the tweet body. URL inline triggers the poll card unfurl. Attach a VoteCard screenshot as image for extra reach.",
                   text:  xTweet,
-                  color: "var(--c-chart-bar)",
-                },
-                {
-                  ch:    "𝕏 First reply (URL only)",
-                  note:  "Reply to your own tweet immediately after posting.",
-                  text:  xReply,
                   color: "var(--c-chart-bar)",
                 },
                 {
@@ -203,7 +201,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
               {([
                 { time: "Auto · 03:00 UTC", ch: "Discord nightly digest", action: "Already fired automatically via CI. Nothing to do.", done: true },
                 { time: "Auto · 10:00 UTC", ch: "Resend weekly email",    action: "Fires automatically via GitHub Actions weekly-digest.yml — verify RESEND_API_KEY is set in repo secrets.", done: false },
-                { time: "09:00–10:00 UTC",  ch: "X / Twitter",            action: "Post tweet body above. Attach VoteCard screenshot. Reply immediately with poll URL.", done: false },
+                { time: "09:00–10:00 UTC",  ch: "X / Twitter",            action: "Paste the full 𝕏 tweet block above (URL inline). Optionally attach a VoteCard screenshot for extra reach.", done: false },
                 { time: "Anytime",          ch: "Instagram",               action: "Screenshot the VoteCard. Caption = poll question + 'vote in bio link'.", done: false },
                 { time: "Hold until Thurs", ch: "Reddit r/GTA6",           action: "Thursday 18:00–21:00 UTC is peak. Use the Reddit title + body copy above.", done: false },
                 { time: "Hold until Thurs", ch: "GTAForums",               action: "Post in GTA VI General Discussion. Lead with prediction context, link to /gta-vi/intel.", done: false },
@@ -243,7 +241,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
         </div>
         <div class="divide-y divide-border-dim/40 max-h-[500px] overflow-y-auto">
           {polls.map((p: any) => {
-            const pollUrl = `https://gtavi.ai/community/polls/${p.id}`;
+            const pollUrl = `https://gtavi.ai/community/polls/${p.id}#vote-${p.id}`;
             const xText   = `${p.poll_question}\n\nVote on GTAVI.AI 👇\n${pollUrl}`;
             const rdTitle = `${p.poll_question} — Community Poll [GTAVI.AI]`;
             const rdBody  = `GTAVI.AI model prediction (${p.confidence}% confidence, ${p.confidence_tier}):\n\n${p.basis?.slice(0,200)}…\n\nVote: ${pollUrl}`;
@@ -366,7 +364,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             posts: [
               "Quote the poll question as the tweet body — no extra copy needed",
               "Attach screenshot of the VoteCard (thumbnail visible) as an image",
-              "Drop the embed URL in first reply to maximise reach without link penalty",
+              "Include the poll URL inline in the tweet — X unfurls the poll card automatically with #vote-{id} anchor.",
               "Cadence: 1 poll tweet per Tuesday (ties to weekly digest day)",
             ],
           },
