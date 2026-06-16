@@ -81,8 +81,8 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
           {
             label:  "Newsletter signup",
             time:   "On form submit · Cloudflare",
-            status: "check",
-            note:   "/api/subscribe → Resend Audience — verify same keys are in CF Pages → Settings → Env Vars",
+            status: "running",
+            note:   "/api/subscribe → Resend Audience — RESEND_API_KEY + RESEND_AUDIENCE_ID set in CF Pages ✓",
           },
           {
             label:  "Launch blast (manual)",
