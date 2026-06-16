@@ -6,7 +6,7 @@
  */
 import Base from "../../layouts/Base.astro";
 import GamePill from "../../components/GamePill.astro";
-import { zapLink, AFFILIATE_IDS } from "../../config/affiliates";
+import { zapLink, nordLink, AFFILIATE_IDS } from "../../config/affiliates";
 import SectionHeader from "../../components/SectionHeader.astro";
 import EconomyCircleSEDOnline from "../../components/EconomyCircleSEDOnline.astro";
 import IncomeCard from "../../components/IncomeCard.astro";
@@ -313,6 +313,36 @@ const BONUS_LABEL: Record<string, string> = {
         </div>
         <div class="px-5 py-2 border-t flex items-center justify-between" style="background:var(--c-bg);border-color:var(--c-border-1)">
           <span class="text-[10px] font-mono text-zinc-600">Affiliate disclosure: we earn a commission if you sign up via this link, at no extra cost to you.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         NORDVPN — protect your IP in GTA Online lobbies
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="rounded-xl border overflow-hidden" style="background:var(--c-card);border-color:var(--c-border-1)">
+        <div class="px-5 py-4 flex items-start gap-4">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 text-lg" style="background:#0a1628">🛡️</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap mb-1">
+              <span class="font-semibold text-zinc-100 text-sm">Hide Your IP in GTA Online Lobbies</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded border text-blue-400 border-blue-500/30" style="background:color-mix(in srgb,#4687FF 8%,transparent)">NordVPN</span>
+            </div>
+            <p class="text-[11px] text-zinc-500 font-mono leading-relaxed mb-3">
+              GTA Online exposes your real IP to everyone in the lobby — the root cause of DDoS and boot attacks. A VPN routes your traffic through a secure server so other players never see your actual IP address.
+            </p>
+            <div class="flex items-center gap-3 flex-wrap">
+              <a href={nordLink()} target="_blank" rel="noopener noreferrer sponsored"
+                class="text-[11px] font-mono px-4 py-2 rounded border border-blue-500/30 text-blue-400 hover:bg-blue-500/10 transition-colors uppercase tracking-widest">
+                Get NordVPN →
+              </a>
+              <span class="text-[10px] font-mono text-zinc-600">Best deal on 2-year plan</span>
+            </div>
+          </div>
+        </div>
+        <div class="px-5 py-2 border-t flex items-center justify-between" style="background:var(--c-bg);border-color:var(--c-border-1)">
+          <span class="text-[10px] font-mono text-zinc-600">Affiliate disclosure: we earn a commission if you subscribe via this link, at no extra cost to you.</span>
         </div>
       </div>
     </section>

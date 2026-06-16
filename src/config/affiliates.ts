@@ -36,6 +36,9 @@ export const AFFILIATE_IDS = {
   amazon_be:  "",             // Amazon.com.be — join: partenaires.amazon.com.be
   amazon_za:  "",             // Amazon.co.za — join: affiliate-program.amazon.co.za
 
+  // ── VPN ────────────────────────────────────────────────────────────────
+  nord_vpn: "150614",  // NordVPN via NordPartners — active
+
   // ── Future programmes (add IDs once approved) ─────────────────────────
   // impact_playstation: "",  // via impact.com
   // impact_xbox:        "",  // via impact.com
@@ -99,6 +102,17 @@ export const AMAZON_TAG_MAP: Record<string, string> = {
 export function zapLink(path: string = ""): string {
   const base = `https://zap-hosting.com${path || "/en/gameserver/fivem-server/"}`;
   return `${base}?aff=${AFFILIATE_IDS.zap_hosting}`;
+}
+
+/**
+ * Build a NordVPN affiliate tracking URL.
+ * offerId 15 = 2-year plan (highest commission, best value for users).
+ * Falls back to nordvpn.com if ID is not configured.
+ */
+export function nordLink(offerId: number = 15): string {
+  const id = AFFILIATE_IDS.nord_vpn;
+  if (!id) return "https://nordvpn.com/";
+  return `https://go.nordvpn.net/aff_c?offer_id=${offerId}&aff_id=${id}`;
 }
 
 /** Apply the correct affiliate tag to any Amazon URL automatically. */
