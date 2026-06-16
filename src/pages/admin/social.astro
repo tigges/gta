@@ -35,6 +35,12 @@ const rdBody = featuredPoll
 const discordMsg = featuredPoll
   ? `📊 **This week's community poll**\n\n**${featuredPoll.poll_question}**\nModel confidence: ${featuredPoll.confidence}% (${featuredPoll.confidence_tier})\n\n🗳️ Vote: ${featuredPollUrl}`
   : "";
+const gtaForumsTitle = featuredPoll
+  ? `${featuredPoll.poll_question} — What does the data say? [Poll + analysis]`
+  : "";
+const gtaForumsBody = featuredPoll
+  ? `Hey all,\n\nRunning a community poll this week on a GTA VI prediction from GTAVI.AI's model:\n\n**${featuredPoll.poll_question}**\n\nModel confidence: **${featuredPoll.confidence}%** (tier: ${featuredPoll.confidence_tier})\n\nBasis: ${(featuredPoll.basis ?? "").slice(0, 400)}\n\nCast your vote and see where the community lands:\n🗳️ ${featuredPollUrl}\n\nAll GTA VI predictions + data: https://gtavi.ai/gta-vi/intel\n\n---\n*GTAVI.AI is an independent fan data project — not affiliated with Rockstar Games.*`
+  : "";
 
 // Staging-only gate — this page must never render on production
 const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
@@ -69,14 +75,14 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
           {
             label:  "Resend weekly digest",
             time:   "Tue 10:00 UTC · GitHub Actions",
-            status: "check",
-            note:   "weekly-digest.yml — needs RESEND_API_KEY + RESEND_AUDIENCE_ID in repo secrets",
+            status: "running",
+            note:   "weekly-digest.yml — RESEND_API_KEY + RESEND_AUDIENCE_ID set in repo secrets ✓",
           },
           {
             label:  "Newsletter signup",
             time:   "On form submit · Cloudflare",
             status: "check",
-            note:   "/api/subscribe → Resend Audience — needs same keys in CF Pages env vars",
+            note:   "/api/subscribe → Resend Audience — verify same keys are in CF Pages → Settings → Env Vars",
           },
           {
             label:  "Launch blast (manual)",
@@ -172,6 +178,18 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
                   text:  discordMsg,
                   color: "var(--c-economy)",
                 },
+                {
+                  ch:    "GTAForums title",
+                  note:  "Post in GTA VI → General Discussion. Thursday–Sunday gets best traction on GTAForums.",
+                  text:  gtaForumsTitle,
+                  color: "var(--c-brand)",
+                },
+                {
+                  ch:    "GTAForums body",
+                  note:  "Paste as thread body. Edit the basis text freely — forums reward longer analysis posts.",
+                  text:  gtaForumsBody,
+                  color: "var(--c-brand)",
+                },
               ] as const).map((row) => (
                 <div class="px-4 py-3.5">
                   <div class="flex items-start gap-3">
@@ -200,7 +218,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             <div class="divide-y divide-border-dim/40">
               {([
                 { time: "Auto · 03:00 UTC", ch: "Discord nightly digest", action: "Already fired automatically via CI. Nothing to do.", done: true },
-                { time: "Auto · 10:00 UTC", ch: "Resend weekly email",    action: "Fires automatically via GitHub Actions weekly-digest.yml — verify RESEND_API_KEY is set in repo secrets.", done: false },
+                { time: "Auto · 10:00 UTC", ch: "Resend weekly email",    action: "Fires automatically via GitHub Actions weekly-digest.yml. Keys configured — check Actions tab after 10:00 UTC to confirm send.", done: true },
                 { time: "09:00–10:00 UTC",  ch: "X / Twitter",            action: "Paste the full 𝕏 tweet block above (URL inline). Optionally attach a VoteCard screenshot for extra reach.", done: false },
                 { time: "Anytime",          ch: "Instagram",               action: "Screenshot the VoteCard. Caption = poll question + 'vote in bio link'.", done: false },
                 { time: "Hold until Thurs", ch: "Reddit r/GTA6",           action: "Thursday 18:00–21:00 UTC is peak. Use the Reddit title + body copy above.", done: false },
@@ -606,8 +624,18 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
         {[
           {
-            tier: "Priority — Apply Now",
+            tier: "Active — live on site",
             color: "var(--c-live)",
+            partners: [
+              { name: "Amazon Associates", rate: "1–3%", note: "US/UK/CA/DE/FR/ES/IT/AU tags wired in affiliates.ts. /buy page physical copy links.", url: "https://affiliate-program.amazon.com" },
+              { name: "NordVPN", rate: "40% CPS", note: "Offer ID 15. Tiles live on /gta-vi/buy + /gta-online. nordLink() in affiliates.ts.", url: "https://affiliates.nordvpn.com" },
+              { name: "ZAP-Hosting", rate: "50% + 10% renewal", note: "FiveM server affiliate. Tile live on /gta-online.", url: "https://zap-hosting.com" },
+              { name: "FlexOffers", rate: "varies", note: "Site verified (fo-verify meta tag live). Wire specific offers once approved.", url: "https://www.flexoffers.com" },
+            ],
+          },
+          {
+            tier: "Priority — Apply Now",
+            color: "var(--c-brand)",
             partners: [
               { name: "CDKeys", rate: "5–8%", note: "Best margin on digital codes. GTA VI key will be a top seller. Apply 3–6 months before launch.", url: "https://www.cdkeys.com/affiliates" },
               { name: "Eneba", rate: "5–8%", note: "EU-strong digital marketplace. Strong for GTA VI pre-orders in UK/DE/FR markets.", url: "https://www.eneba.com/affiliate" },
@@ -616,11 +644,11 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
           },
           {
             tier: "Activate at Launch",
-            color: "var(--c-brand)",
+            color: "var(--c-economy)",
             partners: [
-              { name: "Amazon Associates", rate: "1–3%", note: "Lower rate but highest trust signal. Use for /buy page physical copy links. US/UK/CA/DE/FR/ES/IT tags already wired in affiliates.ts.", url: "https://affiliate-program.amazon.com" },
               { name: "Shark Card affiliate (T2)", rate: "TBC", note: "No public programme yet. Monitor Take-Two IR announcements — they ran one for GTA Online 2013–2014.", url: "https://ir.take2games.com" },
               { name: "GreenMan Gaming", rate: "5%", note: "PC-first audience. Good for long-tail GTA franchise catalogue sales.", url: "https://www.greenmangaming.com/affiliates" },
+              { name: "PlayStation Direct", rate: "TBC", note: "Partnerize — pending approval. Wire PS5 pre-order links on /buy when approved.", url: "https://www.partnerize.com" },
             ],
           },
         ].map(block => (
