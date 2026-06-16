@@ -335,6 +335,49 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             </div>
           </div>
 
+          <!-- Instagram screenshot block -->
+          <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+            <div class="px-4 py-2.5 border-b border-border-dim flex items-center justify-between">
+              <span class="text-[11px] font-semibold text-zinc-300">Instagram — screenshot this page on your phone</span>
+              <span class="text-[10px] font-mono text-zinc-600">430 × portrait · 4:5 ready</span>
+            </div>
+            <div class="px-4 py-4 flex flex-col gap-3">
+              <p class="text-[11px] text-zinc-500 leading-relaxed">
+                Open the link below on your <strong class="text-zinc-400">phone</strong>. The page is sized exactly for Instagram — screenshot it, upload directly. No crop needed.
+              </p>
+              <div class="flex items-center gap-3 flex-wrap">
+                <a
+                  href={`/community/polls/ig/${featuredPoll.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-[11px] font-mono px-3 py-1.5 rounded border border-gta-vi-coral/30 text-gta-vi-coral hover:bg-gta-vi-coral/10 transition-colors"
+                >
+                  Open IG page →
+                </a>
+                <button
+                  class="copy-text-btn text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors"
+                  data-text={`https://gtavi.ai/community/polls/ig/${featuredPoll.id}`}
+                >
+                  Copy URL
+                </button>
+              </div>
+              <div class="rounded border border-border-dim px-3 py-2.5 text-[11px] font-mono" style="background:var(--c-bg-deep)">
+                <div class="text-[10px] text-zinc-600 uppercase tracking-widest mb-1.5">Caption to paste</div>
+                <div class="text-zinc-400 whitespace-pre-wrap leading-relaxed">{featuredPoll.poll_question}{"\n\nVote on GTAVI.AI 👇 link in bio\n\n#GTA6 #GTAVI #GrandTheftAuto6 #GTA #Rockstar"}</div>
+                <button
+                  class="copy-text-btn mt-2 text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors"
+                  data-text={`${featuredPoll.poll_question}\n\nVote on GTAVI.AI 👇 link in bio\n\n#GTA6 #GTAVI #GrandTheftAuto6 #GTA #Rockstar`}
+                >
+                  Copy caption
+                </button>
+              </div>
+              <p class="text-[10px] text-zinc-700 leading-relaxed">
+                For Stories: same screenshot → add Poll sticker with same question → "Vote on GTAVI.AI" as sticker label.
+                All poll IG pages: <code class="text-zinc-600">gtavi.ai/community/polls/ig/[pollId]</code>
+              </p>
+            </div>
+          </div>
+
           <!-- Manual checklist -->
           <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
             <div class="px-4 py-2.5 border-b border-border-dim">
@@ -345,7 +388,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
                 { time: "Auto · 03:00 UTC", ch: "Discord nightly digest", action: "Already fired automatically via CI. Nothing to do.", done: true },
                 { time: "Auto · 10:00 UTC", ch: "Resend weekly email",    action: "Fires automatically via GitHub Actions weekly-digest.yml. Keys configured — check Actions tab after 10:00 UTC to confirm send.", done: true },
                 { time: "09:00–10:00 UTC",  ch: "X / Twitter",            action: "Paste the full 𝕏 tweet block above (URL inline). Optionally attach a VoteCard screenshot for extra reach.", done: false },
-                { time: "Anytime",          ch: "Instagram",               action: "Screenshot the VoteCard. Caption = poll question + 'vote in bio link'.", done: false },
+                { time: "Anytime",          ch: "Instagram",               action: "Open the IG screenshot page below → screenshot on phone → upload. Caption = poll question + 'Vote on GTAVI.AI 👇 link in bio'.", done: false },
                 { time: "Hold until Thurs", ch: "Reddit r/GTA6",           action: "Thursday 18:00–21:00 UTC is peak. Use the Reddit title + body copy above.", done: false },
                 { time: "Hold until Thurs", ch: "GTAForums",               action: "Post in GTA VI → General Discussion. Use GTAForums title + body from §00 copy panel above. Forums reward longer posts — expand the basis text freely.", done: false },
               ] as const).map((step) => (
@@ -538,9 +581,9 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             color: "var(--c-gta-vi-coral)",
             icon: "▶",
             posts: [
-              "Screenshot VoteCard with thumbnail — strong visual content",
-              "Caption: punchy poll question + 'vote in bio link'",
-              "Stories: use poll sticker with same question as VoteCard",
+              "Use /community/polls/ig/[pollId] — pre-sized 430px portrait page, screenshot on phone, upload directly. No crop needed.",
+              "Caption: poll question + 'Vote on GTAVI.AI 👇 link in bio' + #GTA6 #GTAVI #GrandTheftAuto6",
+              "Stories: same screenshot → add Poll sticker with same question as VoteCard",
               "Repost result cards after 48h for engagement loop",
             ],
           },

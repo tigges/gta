@@ -1,0 +1,149 @@
+---
+/**
+ * /community/polls/ig/[pollId] — Instagram-optimised VoteCard screenshot page.
+ *
+ * Renders a single VoteCard at 430 × 720 px — a clean 4:5 portrait crop
+ * that matches Instagram's preferred feed format (1080 × 1350 at 2× retina).
+ *
+ * How to use:
+ *   1. Open this URL on your phone (or Chrome DevTools → iPhone 14 Pro)
+ *   2. Screenshot the page
+ *   3. Upload directly to Instagram — no crop needed
+ *
+ * Design:
+ *   - Forced 430 px viewport (iPhone 14 equivalent)
+ *   - Deep-dark GTAVI.AI background
+ *   - VoteCard centred with comfortable padding
+ *   - Top brand bar  ·  Bottom URL watermark
+ *   - No nav, no footer, noindex
+ */
+
+import VoteCard from "../../../../components/VoteCard.astro";
+import type { GetStaticPaths } from "astro";
+import predRaw from "../../../../../data/gta-6/predictions.json";
+import "../../../../styles/tokens.css";
+
+export const getStaticPaths: GetStaticPaths = () => {
+  const polls = (predRaw as any).predictions.filter((p: any) => p.poll_question);
+  return polls.map((p: any) => ({ params: { pollId: p.id } }));
+};
+
+const { pollId } = Astro.params;
+const pred = (predRaw as any).predictions.find((p: any) => p.id === pollId);
+
+if (!pred) return Astro.redirect("/404");
+
+const question = pred.poll_question ?? pred.title;
+const pollUrl  = `https://gtavi.ai/community/polls/${pollId}#vote-${pollId}`;
+---
+
+<!doctype html>
+<html lang="en" style="color-scheme:dark">
+<head>
+  <meta charset="utf-8" />
+  <!-- Force 430 px viewport — matches iPhone 14 / standard mobile width -->
+  <meta name="viewport" content="width=430,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>{question} — GTAVI.AI</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style is:global>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 430px;
+      min-height: 720px;
+      background: var(--c-bg-deep);
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    /* ── Brand bar ── */
+    .ig-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px 10px;
+      flex-shrink: 0;
+    }
+    .ig-logo {
+      font-family: var(--font-mono, monospace);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--c-text-3);
+    }
+    .ig-logo span { color: var(--c-brand); }
+    .ig-tag {
+      font-family: var(--font-mono, monospace);
+      font-size: 10px;
+      color: var(--c-text-5);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Card wrapper ── */
+    .ig-card-wrap {
+      flex: 1;
+      padding: 6px 14px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* ── Bottom strip ── */
+    .ig-footer {
+      padding: 10px 18px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--c-border-1);
+      flex-shrink: 0;
+    }
+    .ig-footer-url {
+      font-family: var(--font-mono, monospace);
+      font-size: 10px;
+      color: var(--c-text-5);
+      letter-spacing: 0.05em;
+    }
+    .ig-footer-cta {
+      font-family: var(--font-mono, monospace);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--c-brand);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Top brand bar ── -->
+  <div class="ig-topbar">
+    <div class="ig-logo">GTAVI<span>.</span>AI</div>
+    <div class="ig-tag">GTA VI Intelligence</div>
+  </div>
+
+  <!-- ── VoteCard ── -->
+  <div class="ig-card-wrap">
+    <VoteCard predictionId={pollId} embedMode={true} />
+  </div>
+
+  <!-- ── Bottom strip ── -->
+  <div class="ig-footer">
+    <span class="ig-footer-url">gtavi.ai/community/polls/{pollId}</span>
+    <span class="ig-footer-cta">Vote →</span>
+  </div>
+
+</body>
+</html>
