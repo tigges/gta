@@ -72,17 +72,17 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
         <div class="text-[11px] font-semibold text-zinc-300 mb-3">Content flywheel — one poll drives the whole week</div>
         <div class="flex items-center gap-2 flex-wrap text-[11px] font-mono mb-4">
           {([
-            { label: "Poll rotates Monday",     note: "week-based, auto",        color: "var(--c-brand)" },
+            { label: "Poll rotates Monday",      note: "week-based, auto",          color: "var(--c-brand)" },
             { label: "→" },
-            { label: "Copy generated in §00",   note: "X · Reddit · GTAForums",  color: "var(--c-chart-bar)" },
+            { label: "Copy generated in §00",    note: "X · Reddit · GTAForums",   color: "var(--c-chart-bar)" },
             { label: "→" },
-            { label: "Publish Tue–Thu",          note: "manual paste",            color: "var(--c-live)" },
+            { label: "Schedule in Publer",       note: "Monday · X + Instagram",   color: "var(--c-gta-vi-coral)" },
             { label: "→" },
-            { label: "Traffic → site",          note: "polls + intel",           color: "var(--c-gta-dollar)" },
+            { label: "Auto-fires Tuesday",       note: "Publer · Resend · Discord", color: "var(--c-live)" },
             { label: "→" },
-            { label: "Email digest fires Tue",  note: "auto · Resend",           color: "var(--c-gta-vi-coral)" },
+            { label: "Traffic → site",           note: "polls + intel",             color: "var(--c-gta-dollar)" },
             { label: "→" },
-            { label: "Subscribers grow",        note: "→ next week's audience",  color: "var(--c-brand)" },
+            { label: "Subscribers grow",         note: "→ next week's audience",    color: "var(--c-brand)" },
           ] as const).map((s: any) =>
             s.label === "→"
               ? <span class="text-zinc-700 shrink-0">→</span>
@@ -95,7 +95,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
           )}
         </div>
         <p class="text-[11px] text-zinc-600 leading-relaxed">
-          Each week a single poll is featured. All channel copy (X, Reddit, GTAForums, Discord) is pre-generated in §00 — zero creative work needed. The email digest fires automatically on Tuesday. Instagram is the only channel requiring original asset creation (VoteCard screenshot).
+          Each week a single poll is featured. All channel copy (X, Reddit, GTAForums, Discord) is pre-generated in §00 — zero creative work needed. On Monday, paste the X tweet and IG screenshot into Publer and schedule both for Tuesday 09:00 UTC. Everything else fires automatically (Resend digest, Discord nightly). Reddit and GTAForums are the only live-paste channels (Thursday).
         </p>
       </div>
 
@@ -116,14 +116,14 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             </thead>
             <tbody>
               {([
-                { day: "Monday",    action: "Featured poll rotates — new §00 copy ready",                          ch: "—",                time: "auto" },
-                { day: "Tuesday",   action: "Resend weekly digest sends to all subscribers (top news + predictions)", ch: "Email",          time: "auto · 10:00 UTC" },
-                { day: "Tuesday",   action: "Post X tweet — paste from §00 (URL inline, attach VoteCard screenshot)", ch: "X / Twitter",   time: "manual · 09:00 UTC" },
-                { day: "Tuesday",   action: "Instagram post — VoteCard screenshot, poll question caption, bio link",  ch: "Instagram",      time: "manual · anytime" },
-                { day: "Daily",     action: "Discord nightly intel digest fires automatically",                      ch: "Discord",         time: "auto · 03:00 UTC" },
-                { day: "Thursday",  action: "Reddit r/GTA6 — paste title + body from §00. Peak window 18–21 UTC",    ch: "Reddit",         time: "manual · 18:00 UTC" },
-                { day: "Thu–Sun",   action: "GTAForums GTA VI General Discussion — paste title + body from §00",     ch: "GTAForums",      time: "manual" },
-                { day: "On trailer","action": "YouTube video description embed link + community post comment",        ch: "YouTube",        time: "manual · on event" },
+                { day: "Monday",    action: "Featured poll rotates — §00 copy ready. Open Publer: paste X tweet + schedule Tue 09:00. Upload IG screenshot + caption + schedule Tue 09:00. Done in ~5 min.", ch: "Publer prep",    time: "manual · ~5 min" },
+                { day: "Tuesday",   action: "X tweet auto-fires via Publer at 09:00 UTC",                             ch: "X / Twitter",   time: "auto · Publer" },
+                { day: "Tuesday",   action: "Instagram post auto-fires via Publer at 09:00 UTC",                      ch: "Instagram",     time: "auto · Publer" },
+                { day: "Tuesday",   action: "Resend weekly digest sends to all subscribers (top news + predictions)", ch: "Email",         time: "auto · 10:00 UTC" },
+                { day: "Daily",     action: "Discord nightly intel digest fires automatically",                       ch: "Discord",       time: "auto · 03:00 UTC" },
+                { day: "Thursday",  action: "Reddit r/GTA6 — paste title + body from §00. Peak window 18–21 UTC",    ch: "Reddit",        time: "manual · 18:00 UTC" },
+                { day: "Thu–Sun",   action: "GTAForums GTA VI General Discussion — paste title + body from §00",      ch: "GTAForums",     time: "manual" },
+                { day: "On trailer","action": "YouTube video description embed link + community post comment",         ch: "YouTube",       time: "manual · on event" },
               ] as const).map((r: any, i: number) => (
                 <tr class={`border-b border-border-dim/40 hover:bg-white/[0.02] transition-colors ${r.day === "Tuesday" || r.day === "Thursday" ? "bg-white/[0.01]" : ""}`}>
                   <td class="px-4 py-2.5 text-zinc-400 font-semibold">{r.day}</td>
@@ -144,11 +144,13 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
       <!-- What's automated vs manual -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="rounded-xl border border-gta-green/20 p-4" style="background:color-mix(in srgb,var(--c-gta-dollar) 4%,var(--c-card))">
-          <div class="text-[11px] font-semibold text-gta-green mb-3">● Fully automated — nothing to do</div>
+          <div class="text-[11px] font-semibold text-gta-green mb-3">● Fires automatically — nothing to do on publish day</div>
           <ul class="space-y-2">
             {([
-              { label: "Discord nightly digest",   detail: "03:00 UTC daily via CI — post_discord_digest.py" },
+              { label: "X / Twitter",              detail: "Tuesday 09:00 UTC — pre-scheduled Monday in Publer" },
+              { label: "Instagram",                detail: "Tuesday 09:00 UTC — pre-scheduled Monday in Publer" },
               { label: "Resend weekly digest",      detail: "Tuesday 10:00 UTC via GitHub Actions" },
+              { label: "Discord nightly digest",   detail: "03:00 UTC daily via CI — post_discord_digest.py" },
               { label: "Newsletter signup",         detail: "/api/subscribe → Resend Audience (Cloudflare)" },
               { label: "Data refresh",              detail: "Nightly scrapers commit fresh JSON to main" },
               { label: "Poll rotation",             detail: "New featured poll every Monday (week-number based)" },
@@ -162,15 +164,14 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
           </ul>
         </div>
         <div class="rounded-xl border border-border-dim p-4" style="background:var(--c-card)">
-          <div class="text-[11px] font-semibold text-zinc-400 mb-3">○ Manual — your weekly actions</div>
+          <div class="text-[11px] font-semibold text-zinc-400 mb-3">○ Manual — your two sessions per week</div>
           <ul class="space-y-2">
             {([
-              { label: "X / Twitter",   detail: "Tuesday — paste §00 tweet, attach VoteCard screenshot" },
-              { label: "Instagram",     detail: "Tuesday — screenshot VoteCard, caption + bio link" },
-              { label: "Reddit r/GTA6", detail: "Thursday 18–21 UTC — paste §00 title + body" },
-              { label: "GTAForums",     detail: "Thu–Sun — paste §00 GTAForums title + body" },
-              { label: "YouTube",       detail: "On new trailer/reveal — embed link in description" },
-              { label: "Email blasts",  detail: "Nov 2026 launch — trigger workflow_dispatch manually" },
+              { label: "Monday ~5 min",  detail: "Publer: paste X tweet from §00 + schedule Tue 09:00. Upload IG screenshot + caption + schedule Tue 09:00." },
+              { label: "Thursday 18:00", detail: "Reddit r/GTA6 — paste §00 title + body at peak window" },
+              { label: "Thu–Sun",        detail: "GTAForums — paste §00 GTAForums title + body" },
+              { label: "On trailer",     detail: "YouTube — embed link in description + community post" },
+              { label: "Nov 2026",       detail: "Launch blast — trigger weekly-digest.yml via workflow_dispatch" },
             ] as const).map((item: any) => (
               <li class="flex gap-2 text-[11px]">
                 <span class="text-zinc-700 shrink-0 mt-0.5">→</span>
@@ -189,8 +190,14 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
       <div class="px-4 py-2.5 border-b border-border-dim flex items-center gap-2">
         <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Automation Status — {todayStr}</span>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
         {([
+          {
+            label:  "Publer · X + Instagram",
+            time:   "Tue 09:00 UTC · scheduled Monday",
+            status: "running",
+            note:   "publer.com — schedule X tweet + Instagram post every Monday in ~5 min",
+          },
           {
             label:  "Discord nightly digest",
             time:   "03:00 UTC · every night",
@@ -335,6 +342,41 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             </div>
           </div>
 
+          <!-- Publer scheduling block -->
+          <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
+            <div class="px-4 py-2.5 border-b border-border-dim flex items-center justify-between">
+              <span class="text-[11px] font-semibold text-zinc-300">Publer — schedule X + Instagram (do this Monday)</span>
+              <a href="https://publer.com" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-300 transition-colors">publer.com ↗</a>
+            </div>
+            <div class="divide-y divide-border-dim/40">
+              {([
+                {
+                  step: "1 · X tweet",
+                  ch: "X / Twitter",
+                  color: "var(--c-chart-bar)",
+                  instruction: "In Publer → Create post → select X account. Paste the full 𝕏 tweet block from above. Attach a VoteCard screenshot as image (optional but boosts reach). Schedule: Tuesday 09:00 UTC.",
+                },
+                {
+                  step: "2 · Instagram",
+                  ch: "Instagram",
+                  color: "var(--c-gta-vi-coral)",
+                  instruction: "In Publer → Create post → select Instagram account. Upload the IG screenshot (open /ig/ page on phone, screenshot). Paste the caption from the Instagram block below. Schedule: Tuesday 09:00 UTC.",
+                },
+              ] as const).map((row: any) => (
+                <div class="px-4 py-3.5 flex items-start gap-3">
+                  <div class="shrink-0 w-32">
+                    <div class="text-[10px] font-mono font-semibold mb-0.5" style={`color:${row.color}`}>{row.step}</div>
+                    <div class="text-[9px] text-zinc-700">{row.ch}</div>
+                  </div>
+                  <p class="text-[11px] text-zinc-500 leading-relaxed flex-1">{row.instruction}</p>
+                </div>
+              ))}
+            </div>
+            <div class="px-4 py-2.5 border-t border-border-dim">
+              <span class="text-[10px] font-mono text-zinc-700">Total Monday prep time: ~5 minutes. Both channels fire automatically on Tuesday.</span>
+            </div>
+          </div>
+
           <!-- Instagram screenshot block -->
           <div class="rounded-xl border border-border-dim overflow-hidden mb-5" style="background:var(--c-card)">
             <div class="px-4 py-2.5 border-b border-border-dim flex items-center justify-between">
@@ -385,10 +427,11 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             </div>
             <div class="divide-y divide-border-dim/40">
               {([
+                { time: "Mon · 5 min",      ch: "Publer prep",             action: "Paste X tweet into Publer → schedule Tue 09:00. Upload IG screenshot + caption → schedule Tue 09:00. That's it for the week.", done: false },
+                { time: "Auto · 09:00 UTC", ch: "X / Twitter",            action: "Fires automatically via Publer. Nothing to do.", done: true },
+                { time: "Auto · 09:00 UTC", ch: "Instagram",               action: "Fires automatically via Publer. Nothing to do.", done: true },
+                { time: "Auto · 10:00 UTC", ch: "Resend weekly email",    action: "Fires automatically via GitHub Actions weekly-digest.yml. Check Actions tab after 10:00 UTC.", done: true },
                 { time: "Auto · 03:00 UTC", ch: "Discord nightly digest", action: "Already fired automatically via CI. Nothing to do.", done: true },
-                { time: "Auto · 10:00 UTC", ch: "Resend weekly email",    action: "Fires automatically via GitHub Actions weekly-digest.yml. Keys configured — check Actions tab after 10:00 UTC to confirm send.", done: true },
-                { time: "09:00–10:00 UTC",  ch: "X / Twitter",            action: "Paste the full 𝕏 tweet block above (URL inline). Optionally attach a VoteCard screenshot for extra reach.", done: false },
-                { time: "Anytime",          ch: "Instagram",               action: "Open the IG screenshot page below → screenshot on phone → upload. Caption = poll question + 'Vote on GTAVI.AI 👇 link in bio'.", done: false },
                 { time: "Hold until Thurs", ch: "Reddit r/GTA6",           action: "Thursday 18:00–21:00 UTC is peak. Use the Reddit title + body copy above.", done: false },
                 { time: "Hold until Thurs", ch: "GTAForums",               action: "Post in GTA VI → General Discussion. Use GTAForums title + body from §00 copy panel above. Forums reward longer posts — expand the basis text freely.", done: false },
               ] as const).map((step) => (
@@ -885,13 +928,13 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             <tbody>
               {[
                 { ch: "Organic Search (Google)", vol: "★★★★★", content: "Prediction pages · intel hub · economy explainers", cadence: "Evergreen", status: "active" },
-                { ch: "Reddit r/GTA6", vol: "★★★★☆", content: "Poll embeds · community vote results · weekly data drops", cadence: "Weekly Thurs", status: "ready" },
-                { ch: "X / Twitter", vol: "★★★☆☆", content: "Poll VoteCard screenshots · prediction updates", cadence: "Weekly Tue", status: "active" },
-                { ch: "GTAForums", vol: "★★★★☆", content: "Poll threads · data analysis posts · economy discussions", cadence: "Weekly Thu–Sun", status: "ready" },
-                { ch: "Resend Email Digest", vol: "★★★☆☆", content: "Weekly intel digest · top predictions · affiliate CTAs", cadence: "Tuesday 10:00 UTC · auto", status: "active" },
+                { ch: "Reddit r/GTA6", vol: "★★★★☆", content: "Poll embeds · community vote results · weekly data drops", cadence: "Weekly Thurs · manual", status: "ready" },
+                { ch: "X / Twitter", vol: "★★★☆☆", content: "Poll VoteCard screenshots · prediction updates", cadence: "Tue 09:00 · Publer", status: "active" },
+                { ch: "GTAForums", vol: "★★★★☆", content: "Poll threads · data analysis posts · economy discussions", cadence: "Weekly Thu–Sun · manual", status: "ready" },
+                { ch: "Resend Email Digest", vol: "★★★☆☆", content: "Weekly intel digest · top predictions · affiliate CTAs", cadence: "Tue 10:00 UTC · auto", status: "active" },
                 { ch: "YouTube (embed)", vol: "★★★☆☆", content: "Data chart embeds on GTA YouTube videos via descriptions", cadence: "On new trailer", status: "pending" },
                 { ch: "Discord communities", vol: "★★☆☆☆", content: "Bot digest · poll embeds · data alerts", cadence: "Daily 03:00 UTC · auto", status: "active" },
-                { ch: "Instagram / TikTok", vol: "★★★☆☆", content: "VoteCard screenshots · economy diagram shorts", cadence: "Weekly Tue", status: "ready" },
+                { ch: "Instagram / TikTok", vol: "★★★☆☆", content: "VoteCard /ig/ screenshot · poll caption · Stories sticker", cadence: "Tue 09:00 · Publer", status: "active" },
               ].map(r => (
                 <tr class="border-b border-border-dim/40 hover:bg-white/[0.02] transition-colors">
                   <td class="px-4 py-2.5 text-zinc-300">{r.ch}</td>
