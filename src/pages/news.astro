@@ -1,121 +1,30 @@
 ---
 import Base from "../layouts/Base.astro";
 import NewsletterSignup from "../components/NewsletterSignup.astro";
+import SectionHeader from "../components/SectionHeader.astro";
 import feedData from "../../data/feeds/newswire.json";
 import redditData from "../../data/community/reddit.json";
+import preorderData from "../../data/feeds/preorder-listings.json";
+import stockData from "../../data/franchise/ttwo-stock.json";
+import velocityData from "../../data/gta-6/trailer-velocity.json";
 
-const pressItems = feedData.items as any[];
-const redditPosts = (redditData.recent_posts as any[]) ?? [];
+// ── Raw items ──────────────────────────────────────────────────────────────
+const pressItems    = feedData.items as any[];
+const redditPosts   = (redditData.recent_posts as any[]) ?? [];
+const breakingAlert = (feedData as any).breaking_alert ?? null;
+const preorder      = preorderData as any;
+const stockPrices   = (stockData as any).prices ?? [];
+const latestStock   = stockPrices[stockPrices.length - 1] ?? null;
 
-// Keyword → thumbnail mapping for article cards
-function getArticleThumb(title: string): string | null {
-  const t = title.toLowerCase();
-  if (t.includes("lucia"))                                return "/assets/gta6/characters/Lucia_Caminos_02.jpg";
-  if (t.includes("jason"))                                return "/assets/gta6/characters/Jason_Duval_02.jpg";
-  if (t.includes("boobie") || t.includes(" ike"))         return "/assets/gta6/characters/Boobie_Ike_01.jpg";
-  if (t.includes("raul") || t.includes("bautista"))       return "/assets/gta6/characters/Raul_Bautista_01.jpg";
-  if (t.includes("brian heder"))                          return "/assets/gta6/characters/Brian_Heder_01.jpg";
-  if (t.includes("cal hampton"))                          return "/assets/gta6/characters/Cal_Hampton_01.jpg";
-  if (t.includes("real dimez"))                           return "/assets/gta6/characters/Real_Dimez_01.jpg";
-  if (t.includes("vice city"))                            return "/assets/gta6/locations/Vice_City_02.jpg";
-  if (t.includes("leonida keys"))                         return "/assets/gta6/locations/Leonida_Keys_01.jpg";
-  if (t.includes("port gellhorn"))                        return "/assets/gta6/locations/Port_Gellhorn_01.jpg";
-  if (t.includes("ambrosia"))                             return "/assets/gta6/locations/Ambrosia_01.jpg";
-  if (t.includes("grassriver"))                           return "/assets/gta6/locations/Grassrivers_01.jpg";
-  if (t.includes("mount kalaga") || t.includes("kalaga")) return "/assets/gta6/locations/Mount_Kalaga_National_Park_01.jpg";
-  if (t.includes("trailer") || t.includes("reveal") || t.includes("footage"))
-    return "https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg";
-  if (t.includes("preorder") || t.includes("pre-order") || t.includes("best buy") || t.includes("release date"))
-    return "/assets/gta6/locations/Vice_City_05.jpg";
-  if (t.includes("map") || t.includes("leonida") || t.includes("region") || t.includes("yanis"))
-    return "/assets/gta6/locations/Leonida_Keys_03.jpg";
-  if (t.includes("online") || t.includes("shark") || t.includes("gta+"))
-    return "/assets/gta6/locations/Port_Gellhorn_01.jpg";
-  if (t.includes("take-two") || t.includes("take two") || t.includes("rockstar") || t.includes("earnings"))
-    return "/assets/gta6/locations/Vice_City_09.jpg";
-  if (t.includes("delay") || t.includes("pushed") || t.includes("launch"))
-    return "/assets/gta6/locations/Ambrosia_03.jpg";
-  return null;
-}
+// ── Trailer totals ─────────────────────────────────────────────────────────
+const trailers = (velocityData as any).trailers ?? [];
+const totalViews = trailers.reduce((acc: number, t: any) => {
+  const snaps = t.snapshots ?? [];
+  const latest = snaps[snaps.length - 1];
+  return acc + (latest?.views ?? 0);
+}, 0);
 
-// Normalise Reddit posts into the same shape as press items
-const redditItems = redditPosts.map((p: any) => ({
-  title:        p.title,
-  url:          p.url,
-  source_id:    "reddit",
-  source_name:  "Reddit r/GTA6",
-  published_at: p.date ? `${p.date}T00:00:00Z` : null,
-  summary:      null,
-}));
-
-// Split into signal news (official + press + community) and weekly bonus posts
-// Sort order: Rockstar Newswire (official, first) → Press (newest-first)
-//             → SEC EDGAR (official-reference, capped at 5, after press)
-//             → Community (newest-first)
-// EDGAR filings are high-credibility but reference documents, not breaking news —
-// they sit below press items so real game coverage isn't buried.
-function dateMs(item: any): number {
-  return item.published_at ? new Date(item.published_at).getTime() : 0;
-}
-const TIER_ORDER: Record<string, number> = { official: 0, press: 1, community: 2 };
-
-function sortKey(item: any): [number, number, number] {
-  const src = item.source_id ?? "";
-  // Newswire = official-0, EDGAR = below press, everything else by tier
-  if (src === "rockstar-newswire") return [0, 0, -dateMs(item)];
-  if (src === "sec-edgar")         return [2, 0, -dateMs(item)]; // treat EDGAR as lower than press
-  const tier = TIER_ORDER[item.tier ?? "press"] ?? 1;
-  return [tier, 0, -dateMs(item)];
-}
-
-const edgarItems = pressItems.filter((i: any) => i.source_id === "sec-edgar").slice(0, 5);
-const nonEdgar   = pressItems.filter((i: any) => i.source_id !== "sec-edgar");
-
-const signalItems = [...nonEdgar, ...edgarItems, ...redditItems]
-  .filter(i => !isWeeklyBonus(i))
-  .sort((a, b) => {
-    const ka = sortKey(a), kb = sortKey(b);
-    for (let i = 0; i < ka.length; i++) {
-      if (ka[i] !== kb[i]) return ka[i] - kb[i];
-    }
-    return 0;
-  });
-
-const bonusItems = pressItems
-  .filter(isWeeklyBonus)
-  .sort((a, b) => dateMs(b) - dateMs(a))
-  .slice(0, 4);
-
-// Legacy alias for remaining template references
-const allItems = signalItems;
-
-// Source config
-const SOURCE_META: Record<string, { color: string; badge: string; tier: string }> = {
-  "rockstar-newswire": { color: "text-gta-gold",   badge: "bg-gta-gold/10 border-gta-gold/20",       tier: "OFFICIAL"   },
-  "sec-edgar":         { color: "text-gta-gold",   badge: "bg-gta-gold/10 border-gta-gold/20",       tier: "OFFICIAL"   },
-  "rockstar-intel":    { color: "text-gta-gold",   badge: "bg-gta-gold/8 border-gta-gold/25",        tier: "PRESS"      },
-  "kotaku":            { color: "text-zinc-300",   badge: "bg-zinc-800 border-zinc-700",              tier: "PRESS"      },
-  "kotaku-gta":        { color: "text-zinc-300",   badge: "bg-zinc-800 border-zinc-700",              tier: "PRESS"      },
-  "eurogamer":         { color: "text-zinc-300",   badge: "bg-zinc-800 border-zinc-700",              tier: "PRESS"      },
-  "insider-gaming":    { color: "text-gta-teal",   badge: "bg-gta-teal/10 border-gta-teal/20",       tier: "PRESS"      },
-  "gtaforums-vi":      { color: "text-gta-bright",  badge: "bg-gta-bright/10 border-gta-bright/25",   tier: "COMMUNITY"  },
-  "reddit":            { color: "text-gta-reddit", badge: "bg-gta-reddit/10 border-gta-reddit/20",   tier: "COMMUNITY"  },
-};
-
-// Weekly bonus posts from Newswire — these have their own dedicated page,
-// so we separate them into a smaller "promotions" strip rather than
-// letting them dominate the main news feed.
-function isWeeklyBonus(item: any): boolean {
-  const t = (item.title ?? "").toLowerCase();
-  return t.includes("this week in gta") || t.includes("gta online: bonuses")
-    || t.includes("weekly update") || t.includes("bonus gta$")
-    || t.includes("bonus and sale");
-}
-
-function sourceMeta(id: string) {
-  return SOURCE_META[id] ?? { color: "text-zinc-400", badge: "bg-zinc-800/50 border-zinc-700", tier: "PRESS" };
-}
-
+// ── Helpers ────────────────────────────────────────────────────────────────
 function relativeTime(iso: string | null): string {
   if (!iso) return "";
   const diff = Date.now() - new Date(iso).getTime();
@@ -125,234 +34,529 @@ function relativeTime(iso: string | null): string {
   if (hours < 24)  return `${hours}h ago`;
   if (days === 1)  return "yesterday";
   if (days < 7)    return `${days}d ago`;
+  if (days < 30)   return `${Math.floor(days/7)}w ago`;
   return new Date(iso).toLocaleDateString("en-GB", { day:"numeric", month:"short" });
 }
 
 function stripHtml(text: string | null | undefined): string {
   if (!text) return "";
-  return text.replace(/<[^>]+>/g, "").replace(/&[a-z#0-9]+;/gi, c => {
-    const map: Record<string,string> = { "&amp;":"&","&lt;":"<","&gt;":">","&quot;":'"',"&#39;":"'","&#8217;":"'","&#8216;":"'","&#8220;":'"',"&#8221;":'"',"&nbsp;":" " };
+  return text.replace(/<[^>]+>/g, "").replace(/&[a-z#0-9]+;/gi, (c: string) => {
+    const map: Record<string,string> = {
+      "&amp;":"&","&lt;":"<","&gt;":">","&quot;":'"',"&#39;":"'",
+      "&#8217;":"'","&#8216;":"'","&#8220;":'"',"&#8221;":'"',"&nbsp;":" ",
+    };
     return map[c] ?? c;
   }).replace(/\s{2,}/g, " ").trim();
 }
 
-// Group by source for the breakdown
-const bySource = pressItems.reduce<Record<string, number>>((acc, i) => {
-  acc[i.source_name] = (acc[i.source_name] ?? 0) + 1;
-  return acc;
-}, {});
+function isWeeklyBonus(item: any): boolean {
+  const t = (item.title ?? "").toLowerCase();
+  return t.includes("this week in gta") || t.includes("gta online: bonuses")
+    || t.includes("weekly update") || t.includes("bonus gta$")
+    || t.includes("bonus and sale");
+}
 
-const totalSources = Object.keys(bySource).length + 1; // +1 for Reddit
-const updatedAt = feedData.last_updated;
+function formatM(n: number): string {
+  if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`;
+  if (n >= 1_000_000)     return `${(n / 1_000_000).toFixed(0)}M`;
+  if (n >= 1_000)         return `${(n / 1_000).toFixed(0)}k`;
+  return `${n}`;
+}
+
+function getArticleThumb(title: string): string | null {
+  const t = title.toLowerCase();
+  if (t.includes("cover art") || t.includes("box art"))                    return "/assets/gta6/locations/Vice_City_09.jpg";
+  if (t.includes("lucia"))                                                  return "/assets/gta6/characters/Lucia_Caminos_02.jpg";
+  if (t.includes("jason"))                                                  return "/assets/gta6/characters/Jason_Duval_02.jpg";
+  if (t.includes("boobie") || t.includes(" ike"))                           return "/assets/gta6/characters/Boobie_Ike_01.jpg";
+  if (t.includes("vice city"))                                              return "/assets/gta6/locations/Vice_City_02.jpg";
+  if (t.includes("leonida keys"))                                           return "/assets/gta6/locations/Leonida_Keys_01.jpg";
+  if (t.includes("trailer") || t.includes("reveal") || t.includes("footage"))
+    return "https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg";
+  if (t.includes("preorder") || t.includes("pre-order") || t.includes("pre_order") || t.includes("best buy"))
+    return "/assets/gta6/locations/Vice_City_05.jpg";
+  if (t.includes("map") || t.includes("leonida") || t.includes("region"))  return "/assets/gta6/locations/Leonida_Keys_03.jpg";
+  if (t.includes("online") || t.includes("shark") || t.includes("gta+"))   return "/assets/gta6/locations/Port_Gellhorn_01.jpg";
+  if (t.includes("take-two") || t.includes("rockstar") || t.includes("earnings"))
+    return "/assets/gta6/locations/Vice_City_09.jpg";
+  if (t.includes("delay") || t.includes("pushed") || t.includes("launch")) return "/assets/gta6/locations/Ambrosia_03.jpg";
+  return null;
+}
+
+// ── Source meta ────────────────────────────────────────────────────────────
+type SourceMeta = { color: string; badge: string; label: string; dot: string };
+const SOURCE_META: Record<string, SourceMeta> = {
+  "rockstar-games":   { color: "text-gta-gold",    badge: "bg-gta-gold/10 border-gta-gold/30",          label: "Official",       dot: "bg-gta-gold" },
+  "rockstar-newswire":{ color: "text-gta-gold",    badge: "bg-gta-gold/10 border-gta-gold/30",          label: "Rockstar",       dot: "bg-gta-gold" },
+  "sec-edgar":        { color: "text-gta-gold",    badge: "bg-gta-gold/10 border-gta-gold/20",          label: "Official",       dot: "bg-gta-gold" },
+  "rockstar-intel":   { color: "text-amber-300",   badge: "bg-amber-400/10 border-amber-400/25",        label: "Rockstar Intel", dot: "bg-amber-400" },
+  "ign":              { color: "text-red-400",      badge: "bg-red-500/10 border-red-500/25",             label: "IGN",            dot: "bg-red-400" },
+  "insider-gaming":   { color: "text-gta-teal",    badge: "bg-gta-teal/10 border-gta-teal/20",          label: "Insider Gaming", dot: "bg-gta-teal" },
+  "push-square":      { color: "text-blue-400",    badge: "bg-blue-500/10 border-blue-500/25",           label: "Push Square",    dot: "bg-blue-400" },
+  "kotaku":           { color: "text-zinc-300",    badge: "bg-zinc-800 border-zinc-700",                 label: "Kotaku",         dot: "bg-zinc-500" },
+  "kotaku-gta":       { color: "text-zinc-300",    badge: "bg-zinc-800 border-zinc-700",                 label: "Kotaku",         dot: "bg-zinc-500" },
+  "eurogamer":        { color: "text-zinc-300",    badge: "bg-zinc-800 border-zinc-700",                 label: "Eurogamer",      dot: "bg-zinc-500" },
+  "destructoid":      { color: "text-zinc-300",    badge: "bg-zinc-800 border-zinc-700",                 label: "Destructoid",    dot: "bg-zinc-500" },
+  "screen-rant":      { color: "text-zinc-300",    badge: "bg-zinc-800 border-zinc-700",                 label: "Screen Rant",    dot: "bg-zinc-500" },
+  "variety-gaming":   { color: "text-purple-400",  badge: "bg-purple-500/10 border-purple-500/25",       label: "Variety",        dot: "bg-purple-400" },
+  "the-game-business":{ color: "text-zinc-400",    badge: "bg-zinc-800/50 border-zinc-700",              label: "The Game Business", dot: "bg-zinc-600" },
+  "bloomberg-tech":   { color: "text-zinc-400",    badge: "bg-zinc-800/50 border-zinc-700",              label: "Bloomberg",      dot: "bg-zinc-600" },
+  "gtaforums-vi":     { color: "text-orange-400",  badge: "bg-orange-500/10 border-orange-500/25",       label: "GTAForums",      dot: "bg-orange-400" },
+  "reddit":           { color: "text-orange-400",  badge: "bg-orange-500/10 border-orange-500/25",       label: "Reddit r/GTA6",  dot: "bg-orange-400" },
+};
+function sourceMeta(id: string): SourceMeta {
+  return SOURCE_META[id] ?? { color: "text-zinc-400", badge: "bg-zinc-800/50 border-zinc-700", label: id, dot: "bg-zinc-500" };
+}
+
+// ── Sort + split ───────────────────────────────────────────────────────────
+function dateMs(item: any): number {
+  return item.published_at ? new Date(item.published_at).getTime() : 0;
+}
+
+// Tier order: official > press > community
+const TIER_ORDER: Record<string, number> = { official: 0, press: 1, community: 2 };
+function sortKey(item: any): [number, number] {
+  const src = item.source_id ?? "";
+  if (src === "rockstar-games" || src === "rockstar-newswire") return [0, -dateMs(item)];
+  if (src === "sec-edgar") return [2, -dateMs(item)];
+  const tier = TIER_ORDER[item.tier ?? "press"] ?? 1;
+  return [tier, -dateMs(item)];
+}
+
+const edgarItems  = pressItems.filter((i: any) => i.source_id === "sec-edgar").slice(0, 5);
+const nonEdgar    = pressItems.filter((i: any) => i.source_id !== "sec-edgar" && !isWeeklyBonus(i));
+const bonusItems  = pressItems.filter(isWeeklyBonus).sort((a: any, b: any) => dateMs(b) - dateMs(a)).slice(0, 4);
+
+const redditItems = redditPosts.map((p: any) => ({
+  title:        p.title,
+  url:          p.url,
+  source_id:    "reddit",
+  source_name:  "Reddit r/GTA6",
+  tier:         "community",
+  published_at: p.date ? `${p.date}T00:00:00Z` : null,
+  summary:      null,
+}));
+
+const allSignal = [...nonEdgar, ...edgarItems]
+  .sort((a: any, b: any) => {
+    const [ta, sa] = sortKey(a), [tb, sb] = sortKey(b);
+    return ta !== tb ? ta - tb : sa - sb;
+  });
+
+// Official items only
+const officialItems = allSignal.filter((i: any) =>
+  i.tier === "official" || i.source_id === "rockstar-games" || i.source_id === "rockstar-newswire" || i.source_id === "sec-edgar"
+);
+// Press items
+const pressSignal = allSignal.filter((i: any) =>
+  i.tier === "press" && i.source_id !== "sec-edgar"
+);
+
+// Pre-order countdown
+const preorderDate = preorder.pre_order_date ? new Date(preorder.pre_order_date) : null;
+const daysToPreorder = preorderDate
+  ? Math.max(0, Math.ceil((preorderDate.getTime() - Date.now()) / 86_400_000))
+  : null;
+
+const updatedAt  = feedData.last_updated;
+const totalCount = allSignal.length + redditItems.length;
+const sourceCount = new Set(allSignal.map((i: any) => i.source_id)).size + 1;
 ---
 
 <Base
   titleContext="news"
-  title="News"
-  description="GTA VI news feed — Rockstar announcements, earnings calls, pricing signals and economy developments. Updated nightly."
+  title="News — GTA VI"
+  description={`GTA VI intelligence feed — cover art revealed, pre-orders open June 25. ${totalCount} items across ${sourceCount} sources. Rockstar announcements, press coverage, community signal.`}
   ogPage="news"
   crossLinksContext="news"
 >
 
-  <!-- Header — bold image banner -->
+  <!-- ══ BREAKING ALERT ══════════════════════════════════════════════════ -->
+  {breakingAlert?.active && (
+    <div id="breaking-banner" class="border-b border-gta-vi-coral/30" style="background:color-mix(in srgb,var(--c-gta-vi-coral) 8%,var(--c-bg-deep))">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3 min-w-0 flex-1">
+          <span class="text-[10px] font-mono font-black text-gta-vi-coral uppercase tracking-widest shrink-0 animate-pulse">● Breaking</span>
+          <span class="text-[13px] font-semibold text-white truncate">{breakingAlert.headline}</span>
+          <span class="hidden sm:block text-[11px] text-zinc-400 shrink-0">{breakingAlert.sub}</span>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          {daysToPreorder !== null && daysToPreorder >= 0 && (
+            <span class="text-[10px] font-mono font-black text-gta-vi-coral bg-gta-vi-coral/15 border border-gta-vi-coral/30 px-2.5 py-1 rounded-full">
+              {daysToPreorder === 0 ? "Pre-orders LIVE" : `Pre-orders in ${daysToPreorder}d`}
+            </span>
+          )}
+          <button id="dismiss-banner" class="text-zinc-600 hover:text-zinc-300 transition-colors text-lg leading-none" aria-label="Dismiss">×</button>
+        </div>
+      </div>
+    </div>
+  )}
+
+  <!-- ══ HERO ════════════════════════════════════════════════════════════ -->
   <section class="relative border-b border-border-dim overflow-hidden" style="background:var(--c-bg-deep)">
     <div class="absolute inset-0">
       <img src="/assets/gta6/locations/Vice_City_03.jpg" alt="" aria-hidden="true"
            class="w-full h-full object-cover" style="object-position:center 38%" loading="eager" />
-      <div class="absolute inset-0" style="background:linear-gradient(to right, var(--c-bg-deep) 0%, color-mix(in srgb,var(--c-bg-deep) 88%,transparent) 40%, color-mix(in srgb,var(--c-bg-deep) 52%,transparent) 72%, color-mix(in srgb,var(--c-bg-deep) 34%,transparent) 100%)"></div>
-      <div class="absolute inset-0" style="background:linear-gradient(to bottom, color-mix(in srgb,var(--c-bg-deep) 42%,transparent) 0%, transparent 30%, transparent 58%, var(--c-bg-deep) 100%)"></div>
-      <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(70% 90% at 85% 0%, var(--c-hero-bloom), transparent 70%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to right, var(--c-bg-deep) 0%, color-mix(in srgb,var(--c-bg-deep) 88%,transparent) 40%, color-mix(in srgb,var(--c-bg-deep) 52%,transparent) 72%, color-mix(in srgb,var(--c-bg-deep) 30%,transparent) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom, color-mix(in srgb,var(--c-bg-deep) 40%,transparent) 0%, transparent 30%, transparent 55%, var(--c-bg-deep) 100%)"></div>
     </div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-14">
-      <div class="text-[10px] font-mono text-gta-gold uppercase tracking-[0.2em] mb-2">// Intelligence Feed</div>
-      <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3 leading-[1.05]">News</h1>
-      <p class="text-zinc-300 text-base leading-relaxed mb-7 max-w-lg">
-        GTA VI press coverage + community signal aggregated from {totalSources} sources.
-        Ranked by credibility, tagged by tier. Updated nightly.
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      <div class="text-[10px] font-mono text-gta-vi-coral uppercase tracking-[0.2em] mb-2">// Intelligence Feed · v2</div>
+      <h1 class="text-4xl sm:text-5xl font-bold text-white mb-2 leading-[1.05]">GTA VI News</h1>
+      <p class="text-zinc-400 text-sm leading-relaxed max-w-lg mb-6">
+        {totalCount} items across {sourceCount} sources — Rockstar, press, and community signal consolidated in one view.
       </p>
+
+      <!-- Signal strip -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl">
-        {[
-          { value: `${allItems.length}`,          label: "items tracked",   sub: "ranked by tier",  accent: "var(--c-brand)" },
-          { value: `${redditItems.length}`,       label: "community posts", sub: "r/GTA6 · nightly", accent: "var(--c-growth)" },
-          { value: `${feedData.sources.length}`,  label: "RSS sources",     sub: "+ r/GTA6 feed",   accent: "var(--c-live)" },
-          { value: new Date(updatedAt).toLocaleDateString("en-GB", { day:"numeric", month:"short" }), label: "last updated", sub: "auto · nightly", accent: "var(--c-live)" },
-        ].map(s => (
-          <div class="relative overflow-hidden rounded-xl border border-border-mid px-4 py-3" style="background:var(--c-card-raised)">
-            <div class="absolute top-0 left-0 right-0 h-px" style={`background:linear-gradient(90deg, ${s.accent}, transparent 80%)`}></div>
-            <div class="absolute inset-0 pointer-events-none" style={`background:linear-gradient(135deg, color-mix(in srgb,${s.accent} 10%,transparent) 0%, transparent 55%)`}></div>
-            <div class="relative">
-              <div class="text-xl font-mono font-black" style={`color:${s.accent}`}>{s.value}</div>
-              <div class="text-[11px] text-zinc-300 mt-0.5 leading-snug">{s.label}</div>
-              <div class="text-[10px] font-mono text-zinc-500 mt-0.5">{s.sub}</div>
+        {/* Pre-order status */}
+        <div class="rounded-xl border overflow-hidden px-4 py-3 relative"
+             style="background:color-mix(in srgb,var(--c-gta-vi-coral) 6%,var(--c-card-raised));border-color:color-mix(in srgb,var(--c-gta-vi-coral) 30%,transparent)">
+          <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,var(--c-gta-vi-coral),transparent 80%)"></div>
+          <div class="text-[11px] font-mono text-zinc-500 mb-0.5">Pre-orders</div>
+          {daysToPreorder !== null ? (
+            <div class="text-[15px] font-mono font-black text-gta-vi-coral leading-none">
+              {daysToPreorder === 0 ? "LIVE" : `June 25`}
             </div>
+          ) : (
+            <div class="text-[15px] font-mono font-black text-zinc-400 leading-none">TBC</div>
+          )}
+          <div class="text-[10px] font-mono text-zinc-600 mt-0.5">
+            {daysToPreorder !== null && daysToPreorder > 0 ? `in ${daysToPreorder} days` : "official announcement"}
           </div>
-        ))}
+        </div>
+
+        {/* TTWO stock */}
+        {latestStock && (
+          <div class="rounded-xl border border-border-mid overflow-hidden px-4 py-3 relative" style="background:var(--c-card-raised)">
+            <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,var(--c-brand),transparent 80%)"></div>
+            <div class="text-[11px] font-mono text-zinc-500 mb-0.5">TTWO</div>
+            <div class="text-[15px] font-mono font-black text-white leading-none">${latestStock.close.toFixed(2)}</div>
+            <div class="text-[10px] font-mono text-zinc-600 mt-0.5">{latestStock.date} · NASDAQ</div>
+          </div>
+        )}
+
+        {/* Trailer views */}
+        {totalViews > 0 && (
+          <div class="rounded-xl border border-border-mid overflow-hidden px-4 py-3 relative" style="background:var(--c-card-raised)">
+            <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,var(--c-live),transparent 80%)"></div>
+            <div class="text-[11px] font-mono text-zinc-500 mb-0.5">Trailer views</div>
+            <div class="text-[15px] font-mono font-black text-gta-teal leading-none">{formatM(totalViews)}</div>
+            <div class="text-[10px] font-mono text-zinc-600 mt-0.5">T1 + T2 combined</div>
+          </div>
+        )}
+
+        {/* Sources */}
+        <div class="rounded-xl border border-border-mid overflow-hidden px-4 py-3 relative" style="background:var(--c-card-raised)">
+          <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,var(--c-economy),transparent 80%)"></div>
+          <div class="text-[11px] font-mono text-zinc-500 mb-0.5">Sources</div>
+          <div class="text-[15px] font-mono font-black text-white leading-none">{sourceCount}</div>
+          <div class="text-[10px] font-mono text-zinc-600 mt-0.5">updated {relativeTime(updatedAt)}</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10" style="background:var(--c-bg)">
+  <!-- ══ MAIN CONTENT ═════════════════════════════════════════════════════ -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-      <!-- Main feed -->
-      <div class="lg:col-span-2 flex flex-col gap-3">
-        <div class="flex items-center gap-3 mb-2">
-          <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-brand)"></span>
-          <span class="text-[10px] font-mono text-zinc-100 tracking-[0.2em] uppercase">// Latest Intel</span>
-          <div class="flex-1 h-px bg-border-dim"></div>
-          <span class="text-[10px] font-mono text-zinc-400">newest first</span>
+      <!-- ── Left: main feed ─────────────────────────────────────────── -->
+      <div class="lg:col-span-2 flex flex-col gap-6">
+
+        <!-- Filter tabs -->
+        <div class="flex items-center gap-1 flex-wrap" id="news-filter-bar">
+          {([
+            { id: "all",       label: `All (${allSignal.length + redditItems.length})` },
+            { id: "official",  label: `Official (${officialItems.length})` },
+            { id: "press",     label: `Press (${pressSignal.length})` },
+            { id: "community", label: `Community (${redditItems.length})` },
+            { id: "bonuses",   label: `Bonuses (${bonusItems.length})` },
+          ] as const).map((tab: any) => (
+            <button
+              class="news-filter-tab text-[11px] font-mono px-3 py-1.5 rounded-lg border transition-all"
+              data-tab={tab.id}
+              style={tab.id === "all"
+                ? "background:var(--c-brand);border-color:var(--c-brand);color:#fff"
+                : "background:var(--c-card);border-color:var(--c-border-1);color:var(--c-text-4)"}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        {allItems.map((item) => {
-          const meta  = sourceMeta(item.source_id);
+        <!-- BREAKING: featured official story (top slot) -->
+        {officialItems[0] && (() => {
+          const item = officialItems[0];
+          const meta = sourceMeta(item.source_id);
           const thumb = (item as any).img_url ?? getArticleThumb(item.title ?? "");
           return (
-            <a
-              href={item.url}
-              target="_blank" rel="noopener noreferrer"
-              class="group rounded-xl border border-border-mid hover:border-gta-gold/30 overflow-hidden flex items-stretch transition-all"
-              style="background:var(--c-card-raised)"
-            >
-              <!-- Thumbnail (if matched) -->
-              {thumb && (
-                <div class="shrink-0 w-20 sm:w-24 overflow-hidden relative">
-                  <img
-                    src={thumb}
-                    alt=""
-                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                    aria-hidden="true"
-                  />
-                  <div class="absolute inset-0" style="background:linear-gradient(to right,transparent 60%,var(--c-card-raised) 100%)"></div>
-                </div>
-              )}
-
-              <div class={`flex items-start gap-3 p-4 flex-1 min-w-0 ${!thumb ? "" : ""}`}>
-                <!-- Tier badge -->
-                <div class="shrink-0 mt-0.5">
-                  <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}`}>
-                    {meta.tier}
-                  </span>
-                </div>
-                <div class="min-w-0 flex-1">
-                  <div class={`text-sm leading-snug mb-1 group-hover:text-white transition-colors ${meta.color}`}>
-                    {item.title}
+            <div data-tier="official" class="news-item">
+              <a href={item.url} target="_blank" rel="noopener noreferrer"
+                 class="group block rounded-2xl border overflow-hidden transition-all hover:border-gta-vi-coral/40"
+                 style="background:var(--c-card-raised);border-color:color-mix(in srgb,var(--c-gta-vi-coral) 25%,var(--c-border-1))">
+                {/* Thumbnail hero */}
+                {thumb && (
+                  <div class="relative overflow-hidden" style="aspect-ratio:16/5">
+                    <img src={thumb} alt="" aria-hidden="true"
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                    <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 30%, var(--c-card-raised) 100%)"></div>
+                    <div class="absolute top-3 left-3">
+                      <span class="text-[10px] font-mono font-black text-gta-vi-coral bg-gta-vi-coral/20 border border-gta-vi-coral/40 px-2 py-1 rounded animate-pulse uppercase tracking-widest">● Breaking</span>
+                    </div>
                   </div>
-                  {item.summary && (
-                    <p class="text-[11px] text-zinc-400 leading-relaxed line-clamp-2 mb-2">
-                      {stripHtml(item.summary)}
-                    </p>
-                  )}
-                  <div class="flex items-center gap-2 flex-wrap">
-                    <span class="text-[10px] font-mono text-zinc-500">{item.source_name}</span>
-                    {item.published_at && (
-                      <>
-                        <span class="text-zinc-600">·</span>
-                        <span class="text-[10px] font-mono text-zinc-400">{relativeTime(item.published_at)}</span>
-                      </>
-                    )}
-                    <span class="text-zinc-600">·</span>
-                    <span class="text-[10px] font-mono text-zinc-500 group-hover:text-gta-gold transition-colors">↗</span>
+                )}
+                <div class="p-5">
+                  <div class="flex items-center gap-2 mb-2 flex-wrap">
+                    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}`}>{meta.label}</span>
+                    {item.published_at && <span class="text-[10px] font-mono text-zinc-500">{relativeTime(item.published_at)}</span>}
                   </div>
+                  <h2 class="text-lg font-bold text-white leading-snug mb-2 group-hover:text-gta-vi-coral transition-colors">{item.title}</h2>
+                  {item.summary && <p class="text-[12px] text-zinc-400 leading-relaxed line-clamp-3">{stripHtml(item.summary)}</p>}
                 </div>
-              </div>
-            </a>
+              </a>
+            </div>
           );
-        })}
+        })()}
+
+        <!-- Press feed: remaining official + all press ──────────────── -->
+        <div class="flex flex-col gap-2.5" id="news-feed-list">
+          {[...officialItems.slice(1), ...pressSignal].map((item: any) => {
+            const meta  = sourceMeta(item.source_id);
+            const thumb = (item as any).img_url ?? getArticleThumb(item.title ?? "");
+            const tier  = item.tier === "official" || item.source_id === "rockstar-games" || item.source_id === "rockstar-newswire" ? "official" : "press";
+            return (
+              <a href={item.url} target="_blank" rel="noopener noreferrer"
+                 data-tier={tier}
+                 class="news-item group rounded-xl border border-border-dim hover:border-zinc-600 overflow-hidden flex items-stretch transition-all"
+                 style="background:var(--c-card-raised)">
+                {thumb && (
+                  <div class="shrink-0 w-20 sm:w-24 overflow-hidden relative">
+                    <img src={thumb} alt="" aria-hidden="true"
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                    <div class="absolute inset-0" style="background:linear-gradient(to right,transparent 60%,var(--c-card-raised) 100%)"></div>
+                  </div>
+                )}
+                <div class="flex items-start gap-3 p-3.5 flex-1 min-w-0">
+                  <div class="shrink-0 mt-0.5">
+                    <span class={`inline-block w-1.5 h-1.5 rounded-full ${meta.dot} mt-1`}></span>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="text-[13px] font-semibold leading-snug mb-1 group-hover:text-white transition-colors text-zinc-200">
+                      {item.title}
+                    </div>
+                    {item.summary && (
+                      <p class="text-[11px] text-zinc-500 leading-relaxed line-clamp-1 mb-1.5">
+                        {stripHtml(item.summary)}
+                      </p>
+                    )}
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class={`text-[10px] font-mono ${meta.color}`}>{meta.label}</span>
+                      {item.published_at && (
+                        <>
+                          <span class="text-zinc-700">·</span>
+                          <span class="text-[10px] font-mono text-zinc-500">{relativeTime(item.published_at)}</span>
+                        </>
+                      )}
+                      <span class="text-zinc-700">·</span>
+                      <span class="text-[10px] font-mono text-zinc-600 group-hover:text-zinc-400 transition-colors">↗</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+
+          <!-- Community posts ──────────────────────────────────────── -->
+          {redditItems.length > 0 && (
+            <div data-tier="community" class="news-item pt-2">
+              <SectionHeader bright label="// r/GTA6 Community Signal" dotColor="var(--c-flow-spending)" />
+              <div class="flex flex-col gap-2 mt-3">
+                {redditItems.slice(0, 8).map((p: any) => {
+                  const meta = sourceMeta("reddit");
+                  return (
+                    <a href={p.url} target="_blank" rel="noopener noreferrer"
+                       data-tier="community"
+                       class="news-item group rounded-xl border border-border-dim hover:border-orange-500/30 overflow-hidden flex items-center gap-3 px-3.5 py-3 transition-all"
+                       style="background:var(--c-card-raised)">
+                      <span class="w-1.5 h-1.5 rounded-full bg-orange-400 shrink-0"></span>
+                      <span class="text-[12px] text-zinc-300 group-hover:text-white transition-colors leading-snug flex-1 min-w-0 line-clamp-1">{p.title}</span>
+                      {p.published_at && (
+                        <span class="text-[10px] font-mono text-zinc-600 shrink-0">{relativeTime(p.published_at)}</span>
+                      )}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <!-- Weekly bonuses ───────────────────────────────────────── -->
+          {bonusItems.length > 0 && (
+            <div data-tier="bonuses" class="news-item hidden pt-2">
+              <SectionHeader bright label="// GTA Online Weekly Bonuses" dotColor="var(--c-gta-dollar)" />
+              <div class="flex flex-col gap-2 mt-3">
+                {bonusItems.map((item: any) => {
+                  const meta = sourceMeta(item.source_id);
+                  return (
+                    <a href={item.url} target="_blank" rel="noopener noreferrer"
+                       class="group rounded-xl border border-border-dim hover:border-gta-gold/30 flex items-center gap-3 px-3.5 py-3 transition-all"
+                       style="background:var(--c-card-raised)">
+                      <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+                      <span class="text-[12px] text-zinc-300 group-hover:text-gta-gold transition-colors leading-snug flex-1 min-w-0 line-clamp-1">{item.title}</span>
+                      {item.published_at && (
+                        <span class="text-[10px] font-mono text-zinc-600 shrink-0">{relativeTime(item.published_at)}</span>
+                      )}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
       </div>
 
-      <!-- Sidebar: source info + stats -->
+      <!-- ── Right: sidebar ──────────────────────────────────────────── -->
       <div class="flex flex-col gap-4">
 
-        <!-- Reddit community signal -->
-        <div class="rounded-xl border border-gta-reddit/25 overflow-hidden" style="background:var(--c-card-raised)">
-          <div class="px-4 py-3 border-b border-gta-reddit/25 flex items-center justify-between">
-            <div class="text-[10px] font-mono text-gta-reddit uppercase tracking-[0.2em]">// r/GTA6 Community Signal</div>
-            <span class="w-1.5 h-1.5 rounded-full bg-gta-reddit animate-pulse"></span>
+        <!-- Pre-order status card -->
+        <div class="rounded-xl border overflow-hidden" style="background:var(--c-card-raised);border-color:color-mix(in srgb,var(--c-gta-vi-coral) 30%,var(--c-border-1))">
+          <div class="px-4 py-2.5 border-b flex items-center justify-between" style="border-color:color-mix(in srgb,var(--c-gta-vi-coral) 20%,var(--c-border-1));background:color-mix(in srgb,var(--c-gta-vi-coral) 6%,var(--c-card-raised))">
+            <span class="text-[10px] font-mono text-gta-vi-coral uppercase tracking-widest font-semibold">Pre-order Status</span>
+            <span class="text-[9px] font-mono text-zinc-600">updated {relativeTime(preorder.last_updated)}</span>
           </div>
-          <div class="px-4 py-3">
-            <p class="text-[11px] text-zinc-400 leading-relaxed mb-3">
-              Top posts from r/GTA6 — {redditItems.length} posts tracked nightly.
-            </p>
-            <div class="flex flex-col gap-1.5">
-              {redditItems.slice(0, 5).map((p: any) => (
-                <a
-                  href={p.url}
-                  target="_blank" rel="noopener noreferrer"
-                  class="text-[11px] text-zinc-300 hover:text-gta-reddit transition-colors leading-snug truncate"
-                  title={p.title}
-                >
-                  ↗ {p.title}
-                </a>
-              ))}
-            </div>
+          <div class="divide-y divide-border-dim/50">
+            {preorder.listings?.map((l: any) => {
+              const isAnnounced = l.status === "pre_order_announced";
+              const isWishlist  = l.status === "wishlist";
+              const isLive      = l.status === "pre_order";
+              return (
+                <div class="flex items-center justify-between px-4 py-2.5">
+                  <span class="text-[11px] text-zinc-300">{l.retailer}</span>
+                  <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${
+                    isLive ? "text-gta-green border-gta-green/30 bg-gta-green/10" :
+                    isAnnounced ? "text-gta-vi-coral border-gta-vi-coral/30 bg-gta-vi-coral/10" :
+                    isWishlist ? "text-gta-gold border-gta-gold/30 bg-gta-gold/10" :
+                    "text-zinc-600 border-zinc-700 bg-transparent"
+                  }`}>
+                    {isLive ? "live" : isAnnounced ? "Jun 25" : isWishlist ? "wishlist" : l.status.replace("_"," ")}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          <div class="px-4 py-2.5 border-t border-border-dim/50">
+            <a href="/gta-vi/buy" class="text-[10px] font-mono text-gta-vi-coral/70 hover:text-gta-vi-coral transition-colors">Where to pre-order → /buy</a>
           </div>
         </div>
 
-        <!-- Source reliability key -->
-        <div class="rounded-xl border border-border-mid overflow-hidden" style="background:var(--c-card-raised)">
-          <div class="px-4 py-3 border-b border-border-dim">
-            <div class="text-[10px] font-mono text-zinc-100 uppercase tracking-[0.2em]">// Source Tiers</div>
+        <!-- Source legend -->
+        <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
+          <div class="px-4 py-2.5 border-b border-border-dim">
+            <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">Source Tiers</span>
           </div>
-          <div class="divide-y divide-border-dim">
-            {[
-              { tier: "OFFICIAL",  color: "text-gta-gold",    badge: "bg-gta-gold/10 border-gta-gold/20",      desc: "Rockstar Games, Take-Two IR, or SEC EDGAR filings. Highest credibility." },
-              { tier: "PRESS",     color: "text-gta-gold",   badge: "bg-gta-gold/8 border-gta-gold/25",    desc: "Specialist and mainstream gaming press. Credibility varies by outlet." },
-              { tier: "COMMUNITY", color: "text-gta-bright",   badge: "bg-gta-bright/10 border-gta-bright/25",  desc: "GTAForums megathreads and Reddit r/GTA6 — first-look leaks and discussion." },
-            ].map(s => (
-              <div class="px-4 py-3">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${s.badge} ${s.color}`}>{s.tier}</span>
+          <div class="divide-y divide-border-dim/50">
+            {([
+              { tier: "Official",   color: "text-gta-gold",   dot: "bg-gta-gold",    desc: "Rockstar Games, Take-Two IR, SEC EDGAR" },
+              { tier: "Press",      color: "text-zinc-300",   dot: "bg-zinc-500",    desc: "IGN, Insider Gaming, Eurogamer, Push Square, Kotaku…" },
+              { tier: "Community",  color: "text-orange-400", dot: "bg-orange-400",  desc: "Reddit r/GTA6, GTAForums megathreads" },
+            ] as const).map((s: any) => (
+              <div class="flex items-start gap-3 px-4 py-3">
+                <span class={`w-1.5 h-1.5 rounded-full ${s.dot} mt-1 shrink-0`}></span>
+                <div>
+                  <span class={`text-[11px] font-semibold ${s.color}`}>{s.tier}</span>
+                  <p class="text-[10px] text-zinc-600 mt-0.5 leading-relaxed">{s.desc}</p>
                 </div>
-                <p class="text-[11px] text-zinc-400 leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <!-- Active sources -->
-        <div class="rounded-xl border border-border-mid overflow-hidden" style="background:var(--c-card-raised)">
-          <div class="px-4 py-3 border-b border-border-dim">
-            <div class="text-[10px] font-mono text-zinc-100 uppercase tracking-[0.2em]">// Active Sources</div>
+        <!-- Active sources count -->
+        <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
+          <div class="px-4 py-2.5 border-b border-border-dim">
+            <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">Active Sources · {sourceCount}</span>
           </div>
-          <div class="divide-y divide-border-dim">
+          <div class="divide-y divide-border-dim/50">
             {([
-              { name: "Rockstar Intel",  items: bySource["Rockstar Intel"] ?? 0,  status: "live" as const },
-              { name: "Kotaku",          items: bySource["Kotaku"] ?? 0,          status: "live" as const },
-              { name: "Eurogamer",       items: bySource["Eurogamer"] ?? 0,       status: "live" as const },
-              { name: "Insider Gaming",  items: bySource["Insider Gaming"] ?? 0,  status: "live" as const },
-              { name: "Reddit r/GTA6",   items: redditItems.length,               status: "live" as const },
-              { name: "GTAForums",       items: 0,                                status: "soon" as const },
-            ] as const).map(s => (
-              <div class="px-4 py-2.5 flex items-center justify-between">
+              { name: "Rockstar Games",   dot: "bg-gta-gold",   count: officialItems.filter((i:any) => i.source_id === "rockstar-games" || i.source_id === "rockstar-newswire").length },
+              { name: "Rockstar Intel",   dot: "bg-amber-400",  count: pressSignal.filter((i:any) => i.source_id === "rockstar-intel").length },
+              { name: "IGN",              dot: "bg-red-400",    count: pressSignal.filter((i:any) => i.source_id === "ign").length },
+              { name: "Insider Gaming",   dot: "bg-gta-teal",   count: pressSignal.filter((i:any) => i.source_id === "insider-gaming").length },
+              { name: "Push Square",      dot: "bg-blue-400",   count: pressSignal.filter((i:any) => i.source_id === "push-square").length },
+              { name: "Eurogamer",        dot: "bg-zinc-500",   count: pressSignal.filter((i:any) => i.source_id === "eurogamer").length },
+              { name: "Kotaku",           dot: "bg-zinc-500",   count: pressSignal.filter((i:any) => i.source_id === "kotaku" || i.source_id === "kotaku-gta").length },
+              { name: "Reddit r/GTA6",    dot: "bg-orange-400", count: redditItems.length },
+            ] as const).filter((s:any) => s.count > 0).map((s: any) => (
+              <div class="flex items-center justify-between px-4 py-2">
                 <div class="flex items-center gap-2">
-                  <span class={`w-1.5 h-1.5 rounded-full ${s.status === "live" ? (s.name === "Reddit r/GTA6" ? "bg-gta-reddit" : "bg-gta-teal") : "bg-zinc-700"}`}></span>
+                  <span class={`w-1.5 h-1.5 rounded-full ${s.dot}`}></span>
                   <span class="text-[11px] font-mono text-zinc-300">{s.name}</span>
                 </div>
-                <span class={`text-[10px] font-mono ${s.status === "live" ? "text-zinc-500" : "text-zinc-600"}`}>
-                  {s.status === "live" ? `${s.items} items` : "soon"}
-                </span>
+                <span class="text-[10px] font-mono text-zinc-600">{s.count}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <!-- Newsletter CTA -->
+        <!-- Newsletter -->
         <NewsletterSignup variant="compact" />
 
-        <!-- Methodology note -->
-        <div class="rounded-xl border border-border-mid p-4" style="background:var(--c-card-raised)">
-          <div class="text-[10px] font-mono text-zinc-100 uppercase tracking-[0.2em] mb-2">// Note</div>
-          <p class="text-[11px] text-zinc-400 leading-relaxed">
-            GTA VI.AI aggregates public RSS feeds and the Reddit r/GTA6 RSS. All articles link to their original source.
-            Not affiliated with any outlet or community listed.
-          </p>
-        </div>
-      </div>
+        <!-- Note -->
+        <p class="text-[10px] font-mono text-zinc-700 leading-relaxed px-1">
+          GTAVI.AI aggregates public RSS feeds and the Reddit r/GTA6 RSS. All articles link to their original source. Not affiliated with any outlet or community listed.
+        </p>
 
+      </div>
     </div>
   </div>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
-  </div>
 </Base>
+
+<script>
+  // Breaking banner dismiss
+  document.getElementById("dismiss-banner")?.addEventListener("click", () => {
+    document.getElementById("breaking-banner")?.remove();
+  });
+
+  // Filter tabs
+  const tabs = document.querySelectorAll<HTMLButtonElement>(".news-filter-tab");
+  const items = document.querySelectorAll<HTMLElement>(".news-item");
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      const selected = tab.dataset.tab ?? "all";
+
+      // Style tabs
+      tabs.forEach(t => {
+        const isActive = t.dataset.tab === selected;
+        t.style.background    = isActive ? "var(--c-brand)" : "var(--c-card)";
+        t.style.borderColor   = isActive ? "var(--c-brand)" : "var(--c-border-1)";
+        t.style.color         = isActive ? "#fff" : "var(--c-text-4)";
+      });
+
+      // Show/hide items
+      if (selected === "all") {
+        items.forEach(el => {
+          el.style.display = "";
+          el.classList.remove("hidden");
+        });
+        return;
+      }
+
+      items.forEach(el => {
+        const tier = el.dataset.tier;
+        const show = tier === selected;
+        if (el.tagName === "A" || el.tagName === "DIV") {
+          if (show) {
+            el.style.display = "";
+            el.classList.remove("hidden");
+          } else {
+            el.style.display = "none";
+          }
+        }
+      });
+    });
+  });
+</script>
