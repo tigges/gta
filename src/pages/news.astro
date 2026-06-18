@@ -113,19 +113,12 @@ function dateMs(item: any): number {
   return item.published_at ? new Date(item.published_at).getTime() : 0;
 }
 
-// Tier order: official > press > community
-const TIER_ORDER: Record<string, number> = { official: 0, press: 1, community: 2 };
-function sortKey(item: any): [number, number] {
+function itemTier(item: any): "official" | "press" | "community" | "bonuses" {
   const src = item.source_id ?? "";
-  if (src === "rockstar-games" || src === "rockstar-newswire") return [0, -dateMs(item)];
-  if (src === "sec-edgar") return [2, -dateMs(item)];
-  const tier = TIER_ORDER[item.tier ?? "press"] ?? 1;
-  return [tier, -dateMs(item)];
+  if (src === "rockstar-games" || src === "rockstar-newswire" || src === "sec-edgar" || item.tier === "official") return "official";
+  if (item.tier === "community" || src === "reddit" || src === "gtaforums-vi") return "community";
+  return "press";
 }
-
-const edgarItems  = pressItems.filter((i: any) => i.source_id === "sec-edgar").slice(0, 5);
-const nonEdgar    = pressItems.filter((i: any) => i.source_id !== "sec-edgar" && !isWeeklyBonus(i));
-const bonusItems  = pressItems.filter(isWeeklyBonus).sort((a: any, b: any) => dateMs(b) - dateMs(a)).slice(0, 4);
 
 const redditItems = redditPosts.map((p: any) => ({
   title:        p.title,
@@ -137,20 +130,23 @@ const redditItems = redditPosts.map((p: any) => ({
   summary:      null,
 }));
 
-const allSignal = [...nonEdgar, ...edgarItems]
-  .sort((a: any, b: any) => {
-    const [ta, sa] = sortKey(a), [tb, sb] = sortKey(b);
-    return ta !== tb ? ta - tb : sa - sb;
-  });
+const bonusItems = pressItems
+  .filter(isWeeklyBonus)
+  .sort((a: any, b: any) => dateMs(b) - dateMs(a))
+  .slice(0, 6)
+  .map((i: any) => ({ ...i, _tier: "bonuses" }));
 
-// Official items only
-const officialItems = allSignal.filter((i: any) =>
-  i.tier === "official" || i.source_id === "rockstar-games" || i.source_id === "rockstar-newswire" || i.source_id === "sec-edgar"
-);
-// Press items
-const pressSignal = allSignal.filter((i: any) =>
-  i.tier === "press" && i.source_id !== "sec-edgar"
-);
+// Single chronological list — newest first — all non-bonus items
+const allSignal = [
+  ...pressItems.filter((i: any) => !isWeeklyBonus(i)),
+  ...redditItems,
+]
+  .sort((a: any, b: any) => dateMs(b) - dateMs(a));
+
+// For filter counts
+const officialItems = allSignal.filter((i: any) => itemTier(i) === "official");
+const pressSignal   = allSignal.filter((i: any) => itemTier(i) === "press");
+const communityAll  = allSignal.filter((i: any) => itemTier(i) === "community");
 
 // Pre-order countdown
 const preorderDate = preorder.pre_order_date ? new Date(preorder.pre_order_date) : null;
@@ -267,10 +263,10 @@ const sourceCount = new Set(allSignal.map((i: any) => i.source_id)).size + 1;
         <!-- Filter tabs -->
         <div class="flex items-center gap-1 flex-wrap" id="news-filter-bar">
           {([
-            { id: "all",       label: `All (${allSignal.length + redditItems.length})` },
+            { id: "all",       label: `All (${allSignal.length})` },
             { id: "official",  label: `Official (${officialItems.length})` },
             { id: "press",     label: `Press (${pressSignal.length})` },
-            { id: "community", label: `Community (${redditItems.length})` },
+            { id: "community", label: `Community (${communityAll.length})` },
             { id: "bonuses",   label: `Bonuses (${bonusItems.length})` },
           ] as const).map((tab: any) => (
             <button
@@ -285,46 +281,44 @@ const sourceCount = new Set(allSignal.map((i: any) => i.source_id)).size + 1;
           ))}
         </div>
 
-        <!-- BREAKING: featured official story (top slot) -->
+        <!-- BREAKING: featured top story (most recent official item) -->
         {officialItems[0] && (() => {
           const item = officialItems[0];
-          const meta = sourceMeta(item.source_id);
+          const meta  = sourceMeta(item.source_id);
           const thumb = (item as any).img_url ?? getArticleThumb(item.title ?? "");
           return (
-            <div data-tier="official" class="news-item">
-              <a href={item.url} target="_blank" rel="noopener noreferrer"
-                 class="group block rounded-2xl border overflow-hidden transition-all hover:border-gta-vi-coral/40"
-                 style="background:var(--c-card-raised);border-color:color-mix(in srgb,var(--c-gta-vi-coral) 25%,var(--c-border-1))">
-                {/* Thumbnail hero */}
-                {thumb && (
-                  <div class="relative overflow-hidden" style="aspect-ratio:16/5">
-                    <img src={thumb} alt="" aria-hidden="true"
-                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-                    <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 30%, var(--c-card-raised) 100%)"></div>
-                    <div class="absolute top-3 left-3">
-                      <span class="text-[10px] font-mono font-black text-gta-vi-coral bg-gta-vi-coral/20 border border-gta-vi-coral/40 px-2 py-1 rounded animate-pulse uppercase tracking-widest">● Breaking</span>
-                    </div>
+            <a href={item.url} target="_blank" rel="noopener noreferrer"
+               data-tier="official"
+               class="news-item group block rounded-2xl border overflow-hidden transition-all hover:border-gta-vi-coral/40"
+               style="background:var(--c-card-raised);border-color:color-mix(in srgb,var(--c-gta-vi-coral) 25%,var(--c-border-1))">
+              {thumb && (
+                <div class="relative overflow-hidden" style="aspect-ratio:16/5">
+                  <img src={thumb} alt="" aria-hidden="true"
+                       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                  <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 30%, var(--c-card-raised) 100%)"></div>
+                  <div class="absolute top-3 left-3">
+                    <span class="text-[10px] font-mono font-black text-gta-vi-coral bg-gta-vi-coral/20 border border-gta-vi-coral/40 px-2 py-1 rounded animate-pulse uppercase tracking-widest">● Breaking</span>
                   </div>
-                )}
-                <div class="p-5">
-                  <div class="flex items-center gap-2 mb-2 flex-wrap">
-                    <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}`}>{meta.label}</span>
-                    {item.published_at && <span class="text-[10px] font-mono text-zinc-500">{relativeTime(item.published_at)}</span>}
-                  </div>
-                  <h2 class="text-lg font-bold text-white leading-snug mb-2 group-hover:text-gta-vi-coral transition-colors">{item.title}</h2>
-                  {item.summary && <p class="text-[12px] text-zinc-400 leading-relaxed line-clamp-3">{stripHtml(item.summary)}</p>}
                 </div>
-              </a>
-            </div>
+              )}
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-2 flex-wrap">
+                  <span class={`text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${meta.badge} ${meta.color}`}>{meta.label}</span>
+                  {item.published_at && <span class="text-[10px] font-mono text-zinc-500">{relativeTime(item.published_at)}</span>}
+                </div>
+                <h2 class="text-lg font-bold text-white leading-snug mb-2 group-hover:text-gta-vi-coral transition-colors">{item.title}</h2>
+                {item.summary && <p class="text-[12px] text-zinc-400 leading-relaxed line-clamp-3">{stripHtml(item.summary)}</p>}
+              </div>
+            </a>
           );
         })()}
 
-        <!-- Press feed: remaining official + all press ──────────────── -->
-        <div class="flex flex-col gap-2.5" id="news-feed-list">
-          {[...officialItems.slice(1), ...pressSignal].map((item: any) => {
+        <!-- Unified chronological feed — newest first, all tiers -->
+        <div class="flex flex-col gap-2" id="news-feed-list">
+          {allSignal.slice(1).map((item: any) => {
+            const tier  = itemTier(item);
             const meta  = sourceMeta(item.source_id);
             const thumb = (item as any).img_url ?? getArticleThumb(item.title ?? "");
-            const tier  = item.tier === "official" || item.source_id === "rockstar-games" || item.source_id === "rockstar-newswire" ? "official" : "press";
             return (
               <a href={item.url} target="_blank" rel="noopener noreferrer"
                  data-tier={tier}
@@ -338,9 +332,7 @@ const sourceCount = new Set(allSignal.map((i: any) => i.source_id)).size + 1;
                   </div>
                 )}
                 <div class="flex items-start gap-3 p-3.5 flex-1 min-w-0">
-                  <div class="shrink-0 mt-0.5">
-                    <span class={`inline-block w-1.5 h-1.5 rounded-full ${meta.dot} mt-1`}></span>
-                  </div>
+                  <span class={`w-1.5 h-1.5 rounded-full ${meta.dot} shrink-0 mt-1.5`}></span>
                   <div class="min-w-0 flex-1">
                     <div class="text-[13px] font-semibold leading-snug mb-1 group-hover:text-white transition-colors text-zinc-200">
                       {item.title}
@@ -367,52 +359,25 @@ const sourceCount = new Set(allSignal.map((i: any) => i.source_id)).size + 1;
             );
           })}
 
-          <!-- Community posts ──────────────────────────────────────── -->
-          {redditItems.length > 0 && (
-            <div data-tier="community" class="news-item pt-2">
-              <SectionHeader bright label="// r/GTA6 Community Signal" dotColor="var(--c-flow-spending)" />
-              <div class="flex flex-col gap-2 mt-3">
-                {redditItems.slice(0, 8).map((p: any) => {
-                  const meta = sourceMeta("reddit");
-                  return (
-                    <a href={p.url} target="_blank" rel="noopener noreferrer"
-                       data-tier="community"
-                       class="news-item group rounded-xl border border-border-dim hover:border-orange-500/30 overflow-hidden flex items-center gap-3 px-3.5 py-3 transition-all"
-                       style="background:var(--c-card-raised)">
-                      <span class="w-1.5 h-1.5 rounded-full bg-orange-400 shrink-0"></span>
-                      <span class="text-[12px] text-zinc-300 group-hover:text-white transition-colors leading-snug flex-1 min-w-0 line-clamp-1">{p.title}</span>
-                      {p.published_at && (
-                        <span class="text-[10px] font-mono text-zinc-600 shrink-0">{relativeTime(p.published_at)}</span>
-                      )}
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          <!-- Weekly bonuses ───────────────────────────────────────── -->
-          {bonusItems.length > 0 && (
-            <div data-tier="bonuses" class="news-item hidden pt-2">
-              <SectionHeader bright label="// GTA Online Weekly Bonuses" dotColor="var(--c-gta-dollar)" />
-              <div class="flex flex-col gap-2 mt-3">
-                {bonusItems.map((item: any) => {
-                  const meta = sourceMeta(item.source_id);
-                  return (
-                    <a href={item.url} target="_blank" rel="noopener noreferrer"
-                       class="group rounded-xl border border-border-dim hover:border-gta-gold/30 flex items-center gap-3 px-3.5 py-3 transition-all"
-                       style="background:var(--c-card-raised)">
-                      <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
-                      <span class="text-[12px] text-zinc-300 group-hover:text-gta-gold transition-colors leading-snug flex-1 min-w-0 line-clamp-1">{item.title}</span>
-                      {item.published_at && (
-                        <span class="text-[10px] font-mono text-zinc-600 shrink-0">{relativeTime(item.published_at)}</span>
-                      )}
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+          <!-- Bonuses — hidden by default, shown when filter = bonuses -->
+          {bonusItems.map((item: any) => {
+            const meta = sourceMeta(item.source_id);
+            return (
+              <a href={item.url} target="_blank" rel="noopener noreferrer"
+                 data-tier="bonuses"
+                 class="news-item hidden group rounded-xl border border-border-dim hover:border-gta-gold/30 flex items-center gap-3 px-3.5 py-3 transition-all"
+                 style="background:var(--c-card-raised)">
+                <span class="w-1.5 h-1.5 rounded-full bg-gta-gold/60 shrink-0"></span>
+                <div class="min-w-0 flex-1">
+                  <div class="text-[12px] text-zinc-300 group-hover:text-gta-gold transition-colors leading-snug line-clamp-1">{item.title}</div>
+                  <div class="flex items-center gap-2 mt-0.5">
+                    <span class="text-[10px] font-mono text-zinc-600">{meta.label}</span>
+                    {item.published_at && <><span class="text-zinc-700">·</span><span class="text-[10px] font-mono text-zinc-600">{relativeTime(item.published_at)}</span></>}
+                  </div>
+                </div>
+              </a>
+            );
+          })}
         </div>
 
       </div>
@@ -487,7 +452,7 @@ const sourceCount = new Set(allSignal.map((i: any) => i.source_id)).size + 1;
               { name: "Push Square",      dot: "bg-blue-400",   count: pressSignal.filter((i:any) => i.source_id === "push-square").length },
               { name: "Eurogamer",        dot: "bg-zinc-500",   count: pressSignal.filter((i:any) => i.source_id === "eurogamer").length },
               { name: "Kotaku",           dot: "bg-zinc-500",   count: pressSignal.filter((i:any) => i.source_id === "kotaku" || i.source_id === "kotaku-gta").length },
-              { name: "Reddit r/GTA6",    dot: "bg-orange-400", count: redditItems.length },
+              { name: "Reddit r/GTA6",    dot: "bg-orange-400", count: communityAll.length },
             ] as const).filter((s:any) => s.count > 0).map((s: any) => (
               <div class="flex items-center justify-between px-4 py-2">
                 <div class="flex items-center gap-2">
@@ -521,42 +486,41 @@ const sourceCount = new Set(allSignal.map((i: any) => i.source_id)).size + 1;
   });
 
   // Filter tabs
-  const tabs = document.querySelectorAll<HTMLButtonElement>(".news-filter-tab");
+  const tabs  = document.querySelectorAll<HTMLButtonElement>(".news-filter-tab");
   const items = document.querySelectorAll<HTMLElement>(".news-item");
 
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      const selected = tab.dataset.tab ?? "all";
+  function applyFilter(selected: string) {
+    // Style tabs
+    tabs.forEach(t => {
+      const active = t.dataset.tab === selected;
+      t.style.background  = active ? "var(--c-brand)" : "var(--c-card)";
+      t.style.borderColor = active ? "var(--c-brand)" : "var(--c-border-1)";
+      t.style.color       = active ? "#fff" : "var(--c-text-4)";
+    });
 
-      // Style tabs
-      tabs.forEach(t => {
-        const isActive = t.dataset.tab === selected;
-        t.style.background    = isActive ? "var(--c-brand)" : "var(--c-card)";
-        t.style.borderColor   = isActive ? "var(--c-brand)" : "var(--c-border-1)";
-        t.style.color         = isActive ? "#fff" : "var(--c-text-4)";
-      });
+    items.forEach(el => {
+      const tier = el.dataset.tier ?? "";
+      let show: boolean;
 
-      // Show/hide items
       if (selected === "all") {
-        items.forEach(el => {
-          el.style.display = "";
-          el.classList.remove("hidden");
-        });
-        return;
+        // "all" = everything except bonuses (bonuses stay in their own tab)
+        show = tier !== "bonuses";
+      } else {
+        show = tier === selected;
       }
 
-      items.forEach(el => {
-        const tier = el.dataset.tier;
-        const show = tier === selected;
-        if (el.tagName === "A" || el.tagName === "DIV") {
-          if (show) {
-            el.style.display = "";
-            el.classList.remove("hidden");
-          } else {
-            el.style.display = "none";
-          }
-        }
-      });
+      if (show) {
+        el.classList.remove("hidden");
+        el.style.display = "";
+      } else {
+        el.classList.add("hidden");
+        el.style.display = "none";
+      }
     });
-  });
+  }
+
+  tabs.forEach(tab => tab.addEventListener("click", () => applyFilter(tab.dataset.tab ?? "all")));
+
+  // Default state
+  applyFilter("all");
 </script>
