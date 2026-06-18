@@ -102,6 +102,38 @@ SOURCES = [
         "tier": "press",
         "filter_gta": True,
     },
+    # IGN — major gaming outlet, strong GTA VI coverage
+    {
+        "id": "ign",
+        "name": "IGN",
+        "url": "https://feeds.feedburner.com/ign/games-all",
+        "tier": "press",
+        "filter_gta": True,
+    },
+    # Push Square — PS5-focused, strong GTA VI + pre-order coverage
+    {
+        "id": "push-square",
+        "name": "Push Square",
+        "url": "https://www.pushsquare.com/feeds/latest",
+        "tier": "press",
+        "filter_gta": True,
+    },
+    # Destructoid — gaming news, covered box art + pre-order announcement
+    {
+        "id": "destructoid",
+        "name": "Destructoid",
+        "url": "https://www.destructoid.com/feed/",
+        "tier": "press",
+        "filter_gta": True,
+    },
+    # Screen Rant — entertainment + gaming, GTA VI cover/trailer coverage
+    {
+        "id": "screen-rant",
+        "name": "Screen Rant",
+        "url": "https://screenrant.com/feed/",
+        "tier": "press",
+        "filter_gta": True,
+    },
 ]
 
 # SEC EDGAR Atom feed for Take-Two Interactive 8-K filings
