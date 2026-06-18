@@ -281,24 +281,27 @@ const sourceCount = new Set(allSignal.map((i: any) => i.source_id)).size + 1;
           ))}
         </div>
 
-        <!-- BREAKING: featured top story (most recent official item) -->
-        {officialItems[0] && (() => {
-          const item = officialItems[0];
+        <!-- BREAKING: featured top story — always the newest item -->
+        {allSignal[0] && (() => {
+          const item = allSignal[0];
           const meta  = sourceMeta(item.source_id);
+          const isOfficial = itemTier(item) === "official";
           const thumb = (item as any).img_url ?? getArticleThumb(item.title ?? "");
           return (
             <a href={item.url} target="_blank" rel="noopener noreferrer"
-               data-tier="official"
-               class="news-item group block rounded-2xl border overflow-hidden transition-all hover:border-gta-vi-coral/40"
-               style="background:var(--c-card-raised);border-color:color-mix(in srgb,var(--c-gta-vi-coral) 25%,var(--c-border-1))">
+               data-tier={itemTier(item)}
+               class={`news-item group block rounded-2xl border overflow-hidden transition-all ${isOfficial ? "hover:border-gta-vi-coral/40" : "hover:border-zinc-600"}`}
+               style={`background:var(--c-card-raised);border-color:${isOfficial ? "color-mix(in srgb,var(--c-gta-vi-coral) 25%,var(--c-border-1))" : "var(--c-border-1)"}`}>
               {thumb && (
                 <div class="relative overflow-hidden" style="aspect-ratio:16/5">
                   <img src={thumb} alt="" aria-hidden="true"
                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
                   <div class="absolute inset-0" style="background:linear-gradient(to bottom, transparent 30%, var(--c-card-raised) 100%)"></div>
-                  <div class="absolute top-3 left-3">
-                    <span class="text-[10px] font-mono font-black text-gta-vi-coral bg-gta-vi-coral/20 border border-gta-vi-coral/40 px-2 py-1 rounded animate-pulse uppercase tracking-widest">● Breaking</span>
-                  </div>
+                  {itemTier(item) === "official" && (
+                    <div class="absolute top-3 left-3">
+                      <span class="text-[10px] font-mono font-black text-gta-vi-coral bg-gta-vi-coral/20 border border-gta-vi-coral/40 px-2 py-1 rounded animate-pulse uppercase tracking-widest">● Breaking</span>
+                    </div>
+                  )}
                 </div>
               )}
               <div class="p-5">
