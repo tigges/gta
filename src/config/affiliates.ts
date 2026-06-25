@@ -54,8 +54,16 @@ export const AFFILIATE_IDS = {
  * Use pre-shortened amzn.to URLs — the affiliate tag is already embedded.
  */
 export const PRODUCT_LINKS = {
-  /** GTA V – PlayStation 5 (US, Amazon, gtaviai-20) */
+  // ── GTA V ──────────────────────────────────────────────────────────────
+  /** GTA V – PlayStation 5, US (Amazon, gtaviai-20) */
   gta5_ps5_us:   "https://amzn.to/4vanPHp",
+
+  /** GTA V – PlayStation 4, Italy (Amazon IT, gtaviai07-21) */
+  gta5_ps4_it:   "https://amzn.to/4y7uSTJ",
+  // Add more as received:
+  // gta5_ps5_uk:  "",
+  // gta5_ps4_de:  "",
+  // gta5_xbox_us: "",
 } as const;
 
 /**
