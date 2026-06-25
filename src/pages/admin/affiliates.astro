@@ -52,10 +52,10 @@ const other = [
     network: "Impact.com",
     commission: "2–5% per sale, 10% bundles",
     cookie: "30 days",
-    status: "pending",
+    status: "denied",
     signup: "https://www.greenmangaming.com/affiliates/",
     id: "",
-    notes: "In review on Impact.com",
+    notes: "Application denied Jun 2026.",
   },
   {
     name: "PlayStation Direct",
@@ -75,7 +75,7 @@ const other = [
     status: "pending",
     signup: "https://impact.com",
     id: "",
-    notes: "Find in Impact.com Marketplace once GMG is approved",
+    notes: "Find in Impact.com Marketplace",
   },
   {
     name: "ZAP-Hosting (FiveM)",
@@ -86,6 +86,16 @@ const other = [
     signup: "https://zap-hosting.com/en/affiliate/",
     id: "",
     notes: "Check Affiliate tab in ZAP account for link",
+  },
+  {
+    name: "FlexOffers",
+    network: "FlexOffers",
+    commission: "Varies",
+    cookie: "Varies",
+    status: "denied",
+    signup: "https://www.flexoffers.com",
+    id: "",
+    notes: "Application denied Jun 2026. Site verification tag (fo-verify) removed from Base.astro.",
   },
   {
     name: "Skimlinks",
@@ -219,11 +229,14 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
                 {prog.status === "pending" && (
                   <span class="text-[10px] px-1.5 py-0.5 rounded border border-amber-400/30 text-amber-400 font-mono">In Review</span>
                 )}
+                {prog.status === "denied" && (
+                  <span class="text-[10px] px-1.5 py-0.5 rounded border border-red-500/30 text-red-400 font-mono">Denied</span>
+                )}
                 {prog.status === "todo" && (
                   <span class="text-[10px] px-1.5 py-0.5 rounded border border-zinc-700 text-zinc-500 font-mono">To Do</span>
                 )}
                 {prog.status === "active" && (
-                  <span class="text-[10px] px-1.5 py-0.5 rounded border border-gta-teal/30 text-gta-teal font-mono">Active</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded border border-tier-confirmed/30 text-tier-confirmed font-mono">Active</span>
                 )}
               </div>
               <div class="flex items-center gap-4 text-[11px] text-zinc-500 font-mono">
