@@ -107,36 +107,6 @@ export const GTAVI_STOREFRONTS: Record<string, { ps5: string; xbox: string }> = 
 /** Rockstar Games Store — single global product page. */
 export const ROCKSTAR_STORE_URL = "https://www.rockstargames.com/VI";
 
-/**
- * Locale-aware Amazon search URL for GTA VI.
- * Returns a tagged URL when the matching market has an Associates ID.
- * Returns an untagged URL otherwise (Skimlinks fills the gap globally).
- */
-export const GTAVI_AMAZON: Record<string, string> = {
-  "en-US": "https://www.amazon.com/s?k=Grand+Theft+Auto+VI",
-  "en-GB": "https://www.amazon.co.uk/s?k=Grand+Theft+Auto+VI",
-  "en-CA": "https://www.amazon.ca/s?k=Grand+Theft+Auto+VI",
-  "en-AU": "https://www.amazon.com.au/s?k=Grand+Theft+Auto+VI",
-  "en-IN": "https://www.amazon.in/s?k=Grand+Theft+Auto+VI",
-  "en-ZA": "https://www.amazon.co.za/s?k=Grand+Theft+Auto+VI",
-  "de":    "https://www.amazon.de/s?k=Grand+Theft+Auto+VI",
-  "de-AT": "https://www.amazon.de/s?k=Grand+Theft+Auto+VI",
-  "fr":    "https://www.amazon.fr/s?k=Grand+Theft+Auto+VI",
-  "fr-BE": "https://www.amazon.com.be/s?k=Grand+Theft+Auto+VI",
-  "it":    "https://www.amazon.it/s?k=Grand+Theft+Auto+VI",
-  "es":    "https://www.amazon.es/s?k=Grand+Theft+Auto+VI",
-  "es-MX": "https://www.amazon.com.mx/s?k=Grand+Theft+Auto+VI",
-  "nl":    "https://www.amazon.nl/s?k=Grand+Theft+Auto+VI",
-  "pt":    "https://www.amazon.com.br/s?k=Grand+Theft+Auto+VI",
-  "pt-PT": "https://www.amazon.es/s?k=Grand+Theft+Auto+VI",
-  "ja":    "https://www.amazon.co.jp/s?k=Grand+Theft+Auto+VI",
-  "pl":    "https://www.amazon.pl/s?k=Grand+Theft+Auto+VI",
-  "sv":    "https://www.amazon.se/s?k=Grand+Theft+Auto+VI",
-  "tr":    "https://www.amazon.com.tr/s?k=Grand+Theft+Auto+VI",
-  "ar-SA": "https://www.amazon.sa/s?k=Grand+Theft+Auto+VI",
-  "ar-AE": "https://www.amazon.ae/s?k=Grand+Theft+Auto+VI",
-};
-
 /** Append an Amazon affiliate tag to a URL if an ID is configured. */
 export function amazonLink(url: string, tag: string): string {
   if (!tag) return url;           // no tag → return clean URL (still functional)
@@ -199,3 +169,44 @@ export function tagAmazonUrl(url: string): string {
     return url;
   }
 }
+
+/**
+ * Locale-aware Amazon search URL for GTA VI.
+ *
+ * Each entry is PRE-TAGGED at the source so that even if client JS fails
+ * to run (and the static HTML is the final user link), the affiliate
+ * attribution survives. Markets without a direct Associates ID stay
+ * untagged here and are monetised via Skimlinks at click time.
+ *
+ * Defined AFTER `tagAmazonUrl` so the IIFE's reference to `AMAZON_TAG_MAP`
+ * is out of TDZ at module-eval time.
+ */
+export const GTAVI_AMAZON: Record<string, string> = (() => {
+  const base: Record<string, string> = {
+    "en-US": "https://www.amazon.com/s?k=Grand+Theft+Auto+VI",
+    "en-GB": "https://www.amazon.co.uk/s?k=Grand+Theft+Auto+VI",
+    "en-CA": "https://www.amazon.ca/s?k=Grand+Theft+Auto+VI",
+    "en-AU": "https://www.amazon.com.au/s?k=Grand+Theft+Auto+VI",
+    "en-IN": "https://www.amazon.in/s?k=Grand+Theft+Auto+VI",
+    "en-ZA": "https://www.amazon.co.za/s?k=Grand+Theft+Auto+VI",
+    "de":    "https://www.amazon.de/s?k=Grand+Theft+Auto+VI",
+    "de-AT": "https://www.amazon.de/s?k=Grand+Theft+Auto+VI",
+    "fr":    "https://www.amazon.fr/s?k=Grand+Theft+Auto+VI",
+    "fr-BE": "https://www.amazon.com.be/s?k=Grand+Theft+Auto+VI",
+    "it":    "https://www.amazon.it/s?k=Grand+Theft+Auto+VI",
+    "es":    "https://www.amazon.es/s?k=Grand+Theft+Auto+VI",
+    "es-MX": "https://www.amazon.com.mx/s?k=Grand+Theft+Auto+VI",
+    "nl":    "https://www.amazon.nl/s?k=Grand+Theft+Auto+VI",
+    "pt":    "https://www.amazon.com.br/s?k=Grand+Theft+Auto+VI",
+    "pt-PT": "https://www.amazon.es/s?k=Grand+Theft+Auto+VI",
+    "ja":    "https://www.amazon.co.jp/s?k=Grand+Theft+Auto+VI",
+    "pl":    "https://www.amazon.pl/s?k=Grand+Theft+Auto+VI",
+    "sv":    "https://www.amazon.se/s?k=Grand+Theft+Auto+VI",
+    "tr":    "https://www.amazon.com.tr/s?k=Grand+Theft+Auto+VI",
+    "ar-SA": "https://www.amazon.sa/s?k=Grand+Theft+Auto+VI",
+    "ar-AE": "https://www.amazon.ae/s?k=Grand+Theft+Auto+VI",
+  };
+  const tagged: Record<string, string> = {};
+  for (const [k, v] of Object.entries(base)) tagged[k] = tagAmazonUrl(v);
+  return tagged;
+})();

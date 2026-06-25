@@ -812,7 +812,16 @@ const COUNTRIES: Country[] = [
   </div>
 </Base>
 
-<script define:vars={{ COUNTRIES, GTAVI_STOREFRONTS, GTAVI_AMAZON, AMAZON_TAG_MAP }}>
+<script define:vars={{
+  // Only the metadata fields used by the script — stripping `stores`
+  // (which contains untagged Amazon URLs) keeps the wire HTML clean
+  // and ensures every Amazon URL on the page is tagged at the source.
+  COUNTRIES: COUNTRIES.map(({ localePrefix, flag, name, currency, rate, symbol }) =>
+    ({ localePrefix, flag, name, currency, rate, symbol })),
+  GTAVI_STOREFRONTS,
+  GTAVI_AMAZON,
+  AMAZON_TAG_MAP,
+}}>
 (function() {
   // ── Locale-aware buy CTAs on Edition cards ────────────────────────────
   // Apply the matching Amazon Associates tag if we have one for that store.
