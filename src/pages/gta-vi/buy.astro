@@ -36,46 +36,44 @@ const PLATFORMS = [
 ] as const;
 
 // ── Editions ──────────────────────────────────────────────────────────────
+// Confirmed by Rockstar Newswire and Take-Two Interactive on June 25, 2026.
+// Source: https://www.rockstargames.com/newswire/article/517oa135328155/grand-theft-auto-vi-pre-orders-begin-on-june-25
+// Rockstar shipped only TWO editions — Standard and Ultimate. Physical SKUs
+// are a download code in a box (no disc), shipping Nov 12 to support pre-load.
 const EDITIONS = [
   {
-    id: "standard", name: "Standard Edition", price_usd: 79.99, confirmed: false,
-    tier: "SPECULATIVE", tier_color: "text-zinc-400", tier_bg: "bg-zinc-800/60 border-zinc-700",
+    id: "standard", name: "Standard Edition", price_usd: 79.99, confirmed: true,
+    tier: "CONFIRMED", tier_color: "text-gta-teal", tier_bg: "bg-gta-teal/10 border-gta-teal/25",
     platforms: ["PS5","Xbox"], highlight: false,
-    includes: ["Base game — Grand Theft Auto VI", "Access to GTA Online successor at launch"],
-    preorder_bonus: ["Speculated: small GTA Online cash bonus (GTA V precedent)"],
-    basis: "Industry standard entry-point. Consistent with GTA V adjusted for 2026 pricing.",
+    includes: [
+      "Grand Theft Auto VI — single-player experience at launch",
+      "Digital pre-load opens November 12, 2026 · launch November 19, 2026",
+      "Physical version ships November 12 — code-in-box only (no disc)",
+    ],
+    preorder_bonus: [
+      "Vintage Vice City Pack — pre-orders + purchases before November 20, 2026",
+      "1 free month of GTA+ — digital pre-orders only",
+    ],
+    basis: "Confirmed by Rockstar Newswire on June 25, 2026 (US$79.99 / £69.99 / €79.99 / ¥9,800).",
   },
   {
-    id: "special", name: "Special Edition", price_usd: 89.99, confirmed: false,
-    tier: "SPECULATIVE", tier_color: "text-zinc-400", tier_bg: "bg-zinc-800/60 border-zinc-700",
-    platforms: ["PS5","Xbox"], highlight: false,
-    includes: ["Base game", "Speculated: Story Mode cash bonus", "Speculated: exclusive weapon skin set", "Speculated: exclusive outfit for Lucia or Jason"],
-    preorder_bonus: ["Speculated: early-access cosmetic weapon or vehicle"],
-    basis: "Mirrors RDR2 Special Edition. Standard premium $10 step.",
-  },
-  {
-    id: "digital-deluxe", name: "Digital Deluxe", price_usd: 99.99, confirmed: false,
-    tier: "SPECULATIVE", tier_color: "text-gta-gold", tier_bg: "bg-gta-gold/8 border-gta-gold/25",
-    platforms: ["PS5","Xbox","PC"], highlight: true,
-    includes: ["Base game", "Speculated: Story Mode bonus cash + weapons package", "Speculated: GTA Online successor starter pack", "Speculated: digital soundtrack sampler", "Speculated: digital artbook"],
-    preorder_bonus: ["Speculated: early access to one GTA Online activity"],
-    basis: "Digital-only premium tier. $20 step over Standard, mirrors RDR2 Digital Deluxe.",
-  },
-  {
-    id: "ultimate", name: "Ultimate Edition", price_usd: 109.99, confirmed: false,
-    tier: "SPECULATIVE", tier_color: "text-gta-gold", tier_bg: "bg-gta-gold/8 border-gta-gold/25",
-    platforms: ["PS5","Xbox","PC"], highlight: false,
-    includes: ["Base game", "Speculated: full Story Mode bonus package", "Speculated: GTA Online successor premium starter pack", "Speculated: exclusive vehicle set (2–3 cars)", "Speculated: outfit set — both protagonists"],
-    preorder_bonus: ["Speculated: top-tier pre-order bundle"],
-    basis: "Top digital tier. Mirrors RDR2 Ultimate. Primarily for Online launch-week players.",
-  },
-  {
-    id: "collectors", name: "Collector's Box", price_usd: 149.99, confirmed: false,
-    tier: "SPECULATIVE", tier_color: "text-zinc-400", tier_bg: "bg-zinc-800/60 border-zinc-700",
-    platforms: ["PS5","Xbox"], highlight: false, physical: true,
-    includes: ["Physical collector's box (no game disc — per RDR2 precedent)", "Speculated: Leonida state map (physical print)", "Speculated: Vice City challenge coin", "Speculated: enamel pin set", "Speculated: lithograph art print set"],
-    preorder_bonus: ["Limited allocation — early pre-order recommended"],
-    basis: "Follows exact RDR2 Collector's Box format. Physical-only, limited run.",
+    id: "ultimate", name: "Ultimate Edition", price_usd: 99.99, confirmed: true,
+    tier: "CONFIRMED", tier_color: "text-gta-gold", tier_bg: "bg-gta-gold/10 border-gta-gold/30",
+    platforms: ["PS5","Xbox"], highlight: true,
+    includes: [
+      "Everything in the Standard Edition",
+      "Vehicles — '95 Grotti Cheetah · '67 Vapid Dominator Buggy + garage · Shitzu Squalo speedboat · Dinka Enduro · Crest Kayak · Ganado Retro Build",
+      "Weapons — Hawk & Little Morgan revolvers (his/hers) · personalized Girardi ES9 + Klose K17 pistols",
+      "Apparel — Vice City Style outfits + tattoos · Goodtime Gear · 50+ Electric Fang tattoos",
+      "Exclusive shops — Stock 305 · Sara's Unisex Salon · Rideout Customs · One-Eyed Willie's mod shops · PTT Youngin$ compound",
+      "Classic Car Collection commission missions for Wyman",
+      "Bonus content unlocks progressively across story chapters",
+    ],
+    preorder_bonus: [
+      "Vintage Vice City Pack — pre-orders + purchases before November 20, 2026",
+      "1 free month of GTA+ — digital pre-orders only",
+    ],
+    basis: "Confirmed by Rockstar Newswire on June 25, 2026 (US$99.99 / £89.99 / €99.99 / ¥12,280). Bonuses are 'threaded across all aspects of Jason and Lucia's story, with new items uncovered behind each chapter.'",
   },
 ] as const;
 
@@ -96,10 +94,10 @@ const COUNTRIES: Country[] = [
     locale: "en-US", localePrefix: "en-US", flag: "🇺🇸", short: "US", name: "United States",
     currency: "USD", symbol: "$", rate: 1.0,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-us/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
-      { name: "Amazon",            initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.com/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
-      { name: "Best Buy",          initials: "BB", logoBg: "#003B8E", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.bestbuy.com/site/searchpage.jsp?st=grand+theft+auto+vi", color: "text-yellow-300", border: "border-yellow-400/20", status: "Pre-orders imminent" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-us/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
+      { name: "Amazon",            initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.com/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
+      { name: "Best Buy",          initials: "BB", logoBg: "#003B8E", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.bestbuy.com/site/searchpage.jsp?st=grand+theft+auto+vi", color: "text-yellow-300", border: "border-yellow-400/20", status: "Pre-orders live" },
       { name: "GameStop",          initials: "GS", logoBg: "#1C1B1B", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.gamestop.com/search/#q=grand%20theft%20auto%20vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
       { name: "Walmart",           initials: "W",  logoBg: "#0071CE", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.walmart.com/search?q=grand+theft+auto+vi", color: "text-blue-300", border: "border-blue-400/20", status: "Check for listings" },
     ],
@@ -108,10 +106,10 @@ const COUNTRIES: Country[] = [
     locale: "en-GB", localePrefix: "en-GB", flag: "🇬🇧", short: "UK", name: "United Kingdom",
     currency: "GBP", symbol: "£", rate: 0.79,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-gb/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-GB/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
-      { name: "GAME",              initials: "G",  logoBg: "#00673A", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.game.co.uk/search?q=grand+theft+auto+vi", color: "text-gta-teal", border: "border-emerald-500/20", status: "Pre-orders imminent" },
-      { name: "Amazon UK",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.co.uk/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-gb/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-GB/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
+      { name: "GAME",              initials: "G",  logoBg: "#00673A", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.game.co.uk/search?q=grand+theft+auto+vi", color: "text-gta-teal", border: "border-emerald-500/20", status: "Pre-orders live" },
+      { name: "Amazon UK",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.co.uk/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
       { name: "Argos",             initials: "Ar", logoBg: "#C41230", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.argos.co.uk/search/grand-theft-auto-vi/", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
       { name: "ShopTo",            initials: "ST", logoBg: "#333333", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.shopto.net/video-games/PS5/search/grand+theft+auto+vi", color: "text-zinc-300", border: "border-zinc-600/20", status: "Check for listings" },
     ],
@@ -120,8 +118,8 @@ const COUNTRIES: Country[] = [
     locale: "de-DE", localePrefix: "de", flag: "🇩🇪", short: "DE", name: "Germany",
     currency: "EUR", symbol: "€", rate: 0.92,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Offiziell", platform: "PS5", url: "https://www.playstation.com/de-de/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wunschliste aktiv" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Offiziell", platform: "Xbox", url: "https://www.xbox.com/de-DE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wunschliste aktiv" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Offiziell", platform: "PS5", url: "https://www.playstation.com/de-de/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Vorbestellungen live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Offiziell", platform: "Xbox", url: "https://www.xbox.com/de-DE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Vorbestellungen live" },
       { name: "MediaMarkt",        initials: "MM", logoBg: "#CC0000", type: "Physisch · Händler", platform: "PS5 · Xbox", url: "https://www.mediamarkt.de/search.html?query=Grand+Theft+Auto+VI", color: "text-red-400", border: "border-red-500/20", status: "Demnächst" },
       { name: "Amazon.de",         initials: "a",  logoBg: "#131921", type: "Physisch · Händler", platform: "PS5 · Xbox", url: "https://www.amazon.de/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Demnächst" },
       { name: "Saturn",            initials: "Sa", logoBg: "#CC0000", type: "Physisch · Händler", platform: "PS5 · Xbox", url: "https://www.saturn.de/search.html?query=Grand+Theft+Auto+VI", color: "text-red-300", border: "border-red-400/20", status: "Überprüfen" },
@@ -131,8 +129,8 @@ const COUNTRIES: Country[] = [
     locale: "fr-FR", localePrefix: "fr", flag: "🇫🇷", short: "FR", name: "France",
     currency: "EUR", symbol: "€", rate: 0.92,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Numérique · Officiel", platform: "PS5", url: "https://www.playstation.com/fr-fr/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Liste de souhaits" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Numérique · Officiel", platform: "Xbox", url: "https://www.xbox.com/fr-FR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Liste de souhaits" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Numérique · Officiel", platform: "PS5", url: "https://www.playstation.com/fr-fr/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Précommandes live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Numérique · Officiel", platform: "Xbox", url: "https://www.xbox.com/fr-FR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Précommandes live" },
       { name: "Fnac",              initials: "fn", logoBg: "#E5A000", type: "Physique · Revendeur", platform: "PS5 · Xbox", url: "https://www.fnac.com/SearchResult/ResultList.aspx?Search=Grand+Theft+Auto+VI", color: "text-yellow-400", border: "border-yellow-500/20", status: "Bientôt" },
       { name: "Amazon.fr",         initials: "a",  logoBg: "#131921", type: "Physique · Revendeur", platform: "PS5 · Xbox", url: "https://www.amazon.fr/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Bientôt" },
       { name: "Cdiscount",         initials: "CD", logoBg: "#E3001B", type: "Physique · Revendeur", platform: "PS5 · Xbox", url: "https://www.cdiscount.com/search/10/grand+theft+auto+vi.html", color: "text-red-400", border: "border-red-500/20", status: "Vérifier" },
@@ -142,8 +140,8 @@ const COUNTRIES: Country[] = [
     locale: "pt-BR", localePrefix: "pt", flag: "🇧🇷", short: "BR", name: "Brazil",
     currency: "BRL", symbol: "R$", rate: 5.25,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Oficial", platform: "PS5", url: "https://www.playstation.com/pt-br/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Lista de desejos" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Oficial", platform: "Xbox", url: "https://www.xbox.com/pt-BR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Lista de desejos" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Oficial", platform: "PS5", url: "https://www.playstation.com/pt-br/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pré-encomendas ativas" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Oficial", platform: "Xbox", url: "https://www.xbox.com/pt-BR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pré-encomendas ativas" },
       { name: "Amazon Brasil",     initials: "a",  logoBg: "#131921", type: "Físico · Varejista", platform: "PS5 · Xbox", url: "https://www.amazon.com.br/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Em breve" },
       { name: "Nuuvem",            initials: "Nu", logoBg: "#6B21A8", type: "Digital · Varejista", platform: "PS5 · Xbox", url: "https://www.nuuvem.com/catalog/search/q/grand+theft+auto+vi", color: "text-purple-400", border: "border-purple-500/20", status: "Em breve" },
       { name: "Kabum",             initials: "KB", logoBg: "#FF6600", type: "Físico · Varejista", platform: "PS5 · Xbox", url: "https://www.kabum.com.br/busca/grand-theft-auto-vi", color: "text-orange-300", border: "border-orange-400/20", status: "Verificar" },
@@ -153,8 +151,8 @@ const COUNTRIES: Country[] = [
     locale: "ja-JP", localePrefix: "ja", flag: "🇯🇵", short: "JP", name: "Japan",
     currency: "JPY", symbol: "¥", rate: 155,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "デジタル · 公式", platform: "PS5", url: "https://www.playstation.com/ja-jp/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "ウィッシュリスト" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "デジタル · 公式", platform: "Xbox", url: "https://www.xbox.com/ja-JP/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "ウィッシュリスト" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "デジタル · 公式", platform: "PS5", url: "https://www.playstation.com/ja-jp/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "予約受付中" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "デジタル · 公式", platform: "Xbox", url: "https://www.xbox.com/ja-JP/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "予約受付中" },
       { name: "Amazon.co.jp",      initials: "a",  logoBg: "#131921", type: "フィジカル", platform: "PS5 · Xbox", url: "https://www.amazon.co.jp/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "近日公開" },
       { name: "Yodobashi",         initials: "Yo", logoBg: "#C8000A", type: "フィジカル", platform: "PS5 · Xbox", url: "https://www.yodobashi.com/?void=true&words=Grand+Theft+Auto+VI", color: "text-red-400", border: "border-red-500/20", status: "近日公開" },
       { name: "Tsukumo",           initials: "Ts", logoBg: "#0073BB", type: "フィジカル · PC", platform: "PC", url: "https://www.tsukumo.co.jp/search/?keyword=Grand+Theft+Auto+VI", color: "text-blue-300", border: "border-blue-400/20", status: "確認" },
@@ -164,8 +162,8 @@ const COUNTRIES: Country[] = [
     locale: "en-AU", localePrefix: "en-AU", flag: "🇦🇺", short: "AU", name: "Australia",
     currency: "AUD", symbol: "A$", rate: 1.55,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-au/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-AU/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-au/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-AU/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
       { name: "JB Hi-Fi",          initials: "JB", logoBg: "#D91E18", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.jbhifi.com.au/search?q=Grand+Theft+Auto+VI", color: "text-red-400", border: "border-red-500/20", status: "Coming soon" },
       { name: "EB Games",          initials: "EB", logoBg: "#E31837", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.ebgames.com.au/Search?query=Grand+Theft+Auto+VI", color: "text-red-300", border: "border-red-400/20", status: "Coming soon" },
       { name: "Amazon AU",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.com.au/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Check listings" },
@@ -175,7 +173,7 @@ const COUNTRIES: Country[] = [
     locale: "zh-CN", localePrefix: "zh", flag: "🇨🇳", short: "CN", name: "China",
     currency: "CNY", symbol: "¥", rate: 7.25,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "数字 · 官方", platform: "PS5", url: "https://www.playstation.com/zh-hans-cn/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "愿望单", note: "Availability subject to local certification" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "数字 · 官方", platform: "PS5", url: "https://www.playstation.com/zh-hans-cn/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "预订开放中", note: "Availability subject to local certification" },
       { name: "JD.com",            initials: "JD", logoBg: "#CC0000", type: "实体 · 零售商", platform: "PS5 · Xbox", url: "https://search.jd.com/Search?keyword=Grand+Theft+Auto+VI", color: "text-red-400", border: "border-red-500/20", status: "关注发售", note: "Availability subject to local certification" },
       { name: "Tmall",             initials: "TM", logoBg: "#FF6A00", type: "实体 · 零售商", platform: "PS5 · Xbox", url: "https://list.tmall.com/search_product.htm?q=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "关注发售" },
     ],
@@ -184,9 +182,9 @@ const COUNTRIES: Country[] = [
     locale: "en-CA", localePrefix: "en-CA", flag: "🇨🇦", short: "CA", name: "Canada",
     currency: "CAD", symbol: "C$", rate: 1.38,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-ca/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-CA/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
-      { name: "Amazon.ca",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.ca/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-ca/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-CA/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
+      { name: "Amazon.ca",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.ca/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
       { name: "Best Buy CA",       initials: "BB", logoBg: "#003B8E", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.bestbuy.ca/en-ca/search?search=grand+theft+auto+vi", color: "text-yellow-300", border: "border-yellow-400/20", status: "Check for listings" },
       { name: "EB Games",          initials: "EB", logoBg: "#E31837", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.ebgames.ca/SearchResult/QuickSearch?q=grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
     ],
@@ -195,8 +193,8 @@ const COUNTRIES: Country[] = [
     locale: "it-IT", localePrefix: "it", flag: "🇮🇹", short: "IT", name: "Italy",
     currency: "EUR", symbol: "€", rate: 0.92,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digitale · Ufficiale", platform: "PS5", url: "https://www.playstation.com/it-it/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Lista desideri" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digitale · Ufficiale", platform: "Xbox", url: "https://www.xbox.com/it-IT/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Lista desideri" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digitale · Ufficiale", platform: "PS5", url: "https://www.playstation.com/it-it/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Preordini attivi" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digitale · Ufficiale", platform: "Xbox", url: "https://www.xbox.com/it-IT/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Preordini attivi" },
       { name: "Amazon.it",         initials: "a",  logoBg: "#131921", type: "Fisico · Rivenditore", platform: "PS5 · Xbox", url: "https://www.amazon.it/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Presto" },
       { name: "GameStop IT",       initials: "GS", logoBg: "#1C1B1B", type: "Fisico · Rivenditore", platform: "PS5 · Xbox", url: "https://www.gamestop.it/SearchResult/QuickSearch?q=grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Verifica" },
       { name: "MediaWorld",        initials: "MW", logoBg: "#E2001A", type: "Fisico · Rivenditore", platform: "PS5 · Xbox", url: "https://www.mediaworld.it/it/search.html?query=Grand+Theft+Auto+VI", color: "text-red-300", border: "border-red-400/20", status: "Verifica" },
@@ -206,8 +204,8 @@ const COUNTRIES: Country[] = [
     locale: "es-ES", localePrefix: "es", flag: "🇪🇸", short: "ES", name: "Spain",
     currency: "EUR", symbol: "€", rate: 0.92,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Oficial", platform: "PS5", url: "https://www.playstation.com/es-es/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Lista de deseos" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Oficial", platform: "Xbox", url: "https://www.xbox.com/es-ES/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Lista de deseos" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Oficial", platform: "PS5", url: "https://www.playstation.com/es-es/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Reservas activas" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Oficial", platform: "Xbox", url: "https://www.xbox.com/es-ES/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Reservas activas" },
       { name: "Amazon.es",         initials: "a",  logoBg: "#131921", type: "Físico · Minorista", platform: "PS5 · Xbox", url: "https://www.amazon.es/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Próximamente" },
       { name: "El Corte Inglés",   initials: "CI", logoBg: "#007A33", type: "Físico · Minorista", platform: "PS5 · Xbox", url: "https://www.elcorteingles.es/search/?s=grand+theft+auto+vi", color: "text-gta-teal", border: "border-emerald-500/20", status: "Comprobar" },
       { name: "GAME ES",           initials: "G",  logoBg: "#E2231A", type: "Físico · Minorista", platform: "PS5 · Xbox", url: "https://www.game.es/buscar/grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Comprobar" },
@@ -217,8 +215,8 @@ const COUNTRIES: Country[] = [
     locale: "nl-NL", localePrefix: "nl", flag: "🇳🇱", short: "NL", name: "Netherlands",
     currency: "EUR", symbol: "€", rate: 0.92,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digitaal · Officieel", platform: "PS5", url: "https://www.playstation.com/nl-nl/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Verlanglijst" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digitaal · Officieel", platform: "Xbox", url: "https://www.xbox.com/nl-NL/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Verlanglijst" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digitaal · Officieel", platform: "PS5", url: "https://www.playstation.com/nl-nl/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders beschikbaar" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digitaal · Officieel", platform: "Xbox", url: "https://www.xbox.com/nl-NL/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders beschikbaar" },
       { name: "Amazon.nl",         initials: "a",  logoBg: "#131921", type: "Fysiek · Verkoper", platform: "PS5 · Xbox", url: "https://www.amazon.nl/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Binnenkort" },
       { name: "Bol.com",           initials: "Bo", logoBg: "#0000A4", type: "Fysiek · Verkoper", platform: "PS5 · Xbox", url: "https://www.bol.com/nl/nl/s/?searchtext=grand+theft+auto+vi", color: "text-blue-300", border: "border-blue-400/20", status: "Controleren" },
       { name: "Coolblue",          initials: "CB", logoBg: "#0090E3", type: "Fysiek · Verkoper", platform: "PS5 · Xbox", url: "https://www.coolblue.nl/zoeken?query=grand+theft+auto+vi", color: "text-blue-300", border: "border-blue-400/20", status: "Controleren" },
@@ -228,8 +226,8 @@ const COUNTRIES: Country[] = [
     locale: "es-MX", localePrefix: "es-MX", flag: "🇲🇽", short: "MX", name: "Mexico",
     currency: "MXN", symbol: "$", rate: 18.5,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Oficial", platform: "PS5", url: "https://www.playstation.com/es-mx/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Lista de deseos" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Oficial", platform: "Xbox", url: "https://www.xbox.com/es-MX/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Lista de deseos" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Oficial", platform: "PS5", url: "https://www.playstation.com/es-mx/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Reservas activas" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Oficial", platform: "Xbox", url: "https://www.xbox.com/es-MX/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Reservas activas" },
       { name: "Amazon México",     initials: "a",  logoBg: "#131921", type: "Físico · Minorista", platform: "PS5 · Xbox", url: "https://www.amazon.com.mx/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Próximamente" },
       { name: "Liverpool",         initials: "Lv", logoBg: "#E10098", type: "Físico · Minorista", platform: "PS5 · Xbox", url: "https://www.liverpool.com.mx/tienda/?s=grand+theft+auto+vi", color: "text-red-300", border: "border-red-400/20", status: "Comprobar" },
       { name: "Mercado Libre",     initials: "ML", logoBg: "#FFE600", type: "Físico · Minorista", platform: "PS5 · Xbox", url: "https://listado.mercadolibre.com.mx/grand-theft-auto-vi", color: "text-yellow-300", border: "border-yellow-400/20", status: "Comprobar" },
@@ -239,8 +237,8 @@ const COUNTRIES: Country[] = [
     locale: "en-IN", localePrefix: "en-IN", flag: "🇮🇳", short: "IN", name: "India",
     currency: "INR", symbol: "₹", rate: 84,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-in/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-IN/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-in/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-IN/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
       { name: "Amazon.in",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.in/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Coming soon" },
       { name: "Flipkart",          initials: "Fk", logoBg: "#2874F0", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.flipkart.com/search?q=grand+theft+auto+vi", color: "text-blue-300", border: "border-blue-400/20", status: "Check for listings" },
       { name: "Games The Shop",    initials: "GT", logoBg: "#111111", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.gamestheshop.com/catalogsearch/result/?q=grand+theft+auto+vi", color: "text-zinc-300", border: "border-zinc-600/20", status: "Check for listings" },
@@ -250,8 +248,8 @@ const COUNTRIES: Country[] = [
     locale: "ko-KR", localePrefix: "ko", flag: "🇰🇷", short: "KR", name: "South Korea",
     currency: "KRW", symbol: "₩", rate: 1380,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/ko-kr/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/ko-KR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/ko-kr/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/ko-KR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
       { name: "Coupang",           initials: "Cp", logoBg: "#C8102E", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.coupang.com/np/search?q=grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
       { name: "Gmarket",           initials: "Gm", logoBg: "#1BA94C", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://browse.gmarket.co.kr/search?keyword=grand+theft+auto+vi", color: "text-gta-teal", border: "border-emerald-500/20", status: "Check for listings" },
       { name: "11Street",          initials: "11", logoBg: "#F43142", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://search.11st.co.kr/Search.tmall?kwd=grand+theft+auto+vi", color: "text-red-300", border: "border-red-400/20", status: "Check for listings" },
@@ -261,9 +259,9 @@ const COUNTRIES: Country[] = [
     locale: "pl-PL", localePrefix: "pl", flag: "🇵🇱", short: "PL", name: "Poland",
     currency: "PLN", symbol: "zł", rate: 4.0,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/pl-pl/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/pl-PL/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
-      { name: "Amazon.pl",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.pl/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/pl-pl/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/pl-PL/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
+      { name: "Amazon.pl",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.pl/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
       { name: "Media Expert",      initials: "ME", logoBg: "#E30613", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.mediaexpert.pl/search?query%5Bquerystring%5D=grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
       { name: "Allegro",           initials: "Al", logoBg: "#FF5A00", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://allegro.pl/listing?string=grand+theft+auto+vi", color: "text-orange-300", border: "border-orange-400/20", status: "Check for listings" },
       { name: "x-kom",             initials: "xk", logoBg: "#C20E1A", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.x-kom.pl/szukaj?q=grand+theft+auto+vi", color: "text-red-300", border: "border-red-400/20", status: "Check for listings" },
@@ -273,9 +271,9 @@ const COUNTRIES: Country[] = [
     locale: "sv-SE", localePrefix: "sv", flag: "🇸🇪", short: "SE", name: "Sweden",
     currency: "SEK", symbol: "kr", rate: 10.6,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/sv-se/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/sv-SE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
-      { name: "Amazon.se",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.se/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/sv-se/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/sv-SE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
+      { name: "Amazon.se",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.se/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
       { name: "Webhallen",         initials: "Wh", logoBg: "#E4002B", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.webhallen.com/se/search?searchString=grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
       { name: "Elgiganten",        initials: "El", logoBg: "#009639", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.elgiganten.se/search?SearchTerm=grand+theft+auto+vi", color: "text-gta-teal", border: "border-emerald-500/20", status: "Check for listings" },
     ],
@@ -284,9 +282,9 @@ const COUNTRIES: Country[] = [
     locale: "tr-TR", localePrefix: "tr", flag: "🇹🇷", short: "TR", name: "Turkey",
     currency: "TRY", symbol: "₺", rate: 34,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/tr-tr/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/tr-TR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
-      { name: "Amazon.com.tr",     initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.com.tr/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/tr-tr/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/tr-TR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
+      { name: "Amazon.com.tr",     initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.com.tr/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
       { name: "Hepsiburada",       initials: "Hb", logoBg: "#FF6000", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.hepsiburada.com/ara?q=grand+theft+auto+vi", color: "text-orange-300", border: "border-orange-400/20", status: "Check for listings" },
       { name: "Trendyol",          initials: "Ty", logoBg: "#F27A1A", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.trendyol.com/sr?q=grand+theft+auto+vi", color: "text-orange-400", border: "border-orange-500/20", status: "Check for listings" },
     ],
@@ -296,8 +294,8 @@ const COUNTRIES: Country[] = [
     currency: "SAR", symbol: "SR", rate: 3.75,
     stores: [
       { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://store.playstation.com/en-sa/search/Grand%20Theft%20Auto%20VI", color: "text-blue-400", border: "border-blue-500/20", status: "Search store", note: "GTA VI page localizing for the region" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/ar-SA/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
-      { name: "Amazon.sa",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.sa/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/ar-SA/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
+      { name: "Amazon.sa",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.sa/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
       { name: "Jarir",             initials: "Jr", logoBg: "#E4002B", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.jarir.com/sa-en/catalogsearch/result?q=grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
     ],
   },
@@ -306,8 +304,8 @@ const COUNTRIES: Country[] = [
     currency: "AED", symbol: "AED", rate: 3.67,
     stores: [
       { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://store.playstation.com/en-ae/search/Grand%20Theft%20Auto%20VI", color: "text-blue-400", border: "border-blue-500/20", status: "Search store", note: "GTA VI page localizing for the region" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/ar-AE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
-      { name: "Amazon.ae",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.ae/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/ar-AE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
+      { name: "Amazon.ae",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.ae/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
       { name: "Sharaf DG",         initials: "SD", logoBg: "#ED1C24", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://uae.sharafdg.com/?s=grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
     ],
   },
@@ -315,8 +313,8 @@ const COUNTRIES: Country[] = [
     locale: "de-CH", localePrefix: "de-CH", flag: "🇨🇭", short: "CH", name: "Switzerland",
     currency: "CHF", symbol: "CHF", rate: 0.88,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/de-ch/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/de-CH/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/de-ch/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/de-CH/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
       { name: "Digitec",           initials: "Dg", logoBg: "#007BC4", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.digitec.ch/en/search?q=grand+theft+auto+vi", color: "text-blue-300", border: "border-blue-400/20", status: "Check for listings" },
       { name: "MediaMarkt CH",     initials: "MM", logoBg: "#DF0000", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.mediamarkt.ch/de/search.html?query=grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
       { name: "microspot",         initials: "ms", logoBg: "#E2001A", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.microspot.ch/de/search?q=grand+theft+auto+vi", color: "text-red-300", border: "border-red-400/20", status: "Check for listings" },
@@ -326,9 +324,9 @@ const COUNTRIES: Country[] = [
     locale: "de-AT", localePrefix: "de-AT", flag: "🇦🇹", short: "AT", name: "Austria",
     currency: "EUR", symbol: "€", rate: 0.92,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/de-at/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/de-AT/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
-      { name: "Amazon.de",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.de/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/de-at/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/de-AT/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
+      { name: "Amazon.de",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.de/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
       { name: "MediaMarkt AT",     initials: "MM", logoBg: "#DF0000", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.mediamarkt.at/de/search.html?query=grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
     ],
   },
@@ -336,9 +334,9 @@ const COUNTRIES: Country[] = [
     locale: "fr-BE", localePrefix: "fr-BE", flag: "🇧🇪", short: "BE", name: "Belgium",
     currency: "EUR", symbol: "€", rate: 0.92,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/fr-be/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/fr-BE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
-      { name: "Amazon.com.be",     initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.com.be/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/fr-be/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/fr-BE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
+      { name: "Amazon.com.be",     initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.com.be/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
       { name: "Bol.com",           initials: "Bo", logoBg: "#0000A4", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.bol.com/be/nl/s/?searchtext=grand+theft+auto+vi", color: "text-blue-300", border: "border-blue-400/20", status: "Check for listings" },
       { name: "Coolblue BE",       initials: "CB", logoBg: "#0090E3", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.coolblue.be/nl/zoeken?query=grand+theft+auto+vi", color: "text-blue-300", border: "border-blue-400/20", status: "Check for listings" },
     ],
@@ -347,19 +345,19 @@ const COUNTRIES: Country[] = [
     locale: "pt-PT", localePrefix: "pt-PT", flag: "🇵🇹", short: "PT", name: "Portugal",
     currency: "EUR", symbol: "€", rate: 0.92,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/pt-pt/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/pt-PT/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/pt-pt/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/pt-PT/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
       { name: "Fnac PT",           initials: "fn", logoBg: "#E5A000", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.fnac.pt/SearchResult/ResultList.aspx?Search=grand+theft+auto+vi", color: "text-yellow-400", border: "border-yellow-500/20", status: "Check for listings" },
       { name: "Worten",            initials: "Wo", logoBg: "#E2001A", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.worten.pt/search?query=grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
-      { name: "Amazon.es",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.es/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "Amazon.es",         initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.es/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
     ],
   },
   {
     locale: "es-AR", localePrefix: "es-AR", flag: "🇦🇷", short: "AR", name: "Argentina",
     currency: "ARS", symbol: "$", rate: 1180,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/es-ar/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/es-AR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/es-ar/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/es-AR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
       { name: "Mercado Libre",     initials: "ML", logoBg: "#FFE600", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://listado.mercadolibre.com.ar/grand-theft-auto-vi", color: "text-yellow-300", border: "border-yellow-400/20", status: "Check for listings" },
     ],
   },
@@ -367,18 +365,18 @@ const COUNTRIES: Country[] = [
     locale: "en-ZA", localePrefix: "en-ZA", flag: "🇿🇦", short: "ZA", name: "South Africa",
     currency: "ZAR", symbol: "R", rate: 18.5,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-za/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-ZA/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-za/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-ZA/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
       { name: "Takealot",          initials: "Tk", logoBg: "#0AA1DD", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.takealot.com/all?qsearch=grand+theft+auto+vi", color: "text-blue-300", border: "border-blue-400/20", status: "Check for listings" },
-      { name: "Amazon.co.za",      initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.co.za/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders imminent" },
+      { name: "Amazon.co.za",      initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.co.za/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
     ],
   },
   {
     locale: "zh-TW", localePrefix: "zh-TW", flag: "🇹🇼", short: "TW", name: "Taiwan",
     currency: "TWD", symbol: "NT$", rate: 32,
     stores: [
-      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/zh-hant-tw/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Wishlist live" },
-      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/zh-TW/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Wishlist live" },
+      { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/zh-hant-tw/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
+      { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/zh-TW/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
       { name: "PChome",            initials: "PC", logoBg: "#E60012", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://ecshweb.pchome.com.tw/search/v3.3/?q=grand+theft+auto+vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
       { name: "momo",              initials: "mo", logoBg: "#E5007D", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.momoshop.com.tw/search/searchShop.jsp?keyword=grand+theft+auto+vi", color: "text-purple-400", border: "border-purple-500/20", status: "Check for listings" },
     ],
@@ -389,7 +387,7 @@ const COUNTRIES: Country[] = [
 <Base
   titleContext="gta-vi"
   title="Buy"
-  description="GTA VI launch editions, platform availability, and where to pre-order — PS5, Xbox Series X, and PC. Confirmed platforms, speculative edition breakdown based on Rockstar precedent."
+  description="GTA VI pre-orders are LIVE — confirmed Standard ($79.99) and Ultimate ($99.99) Editions, Vintage Vice City Pack pre-order bonus, regional pricing, and where to buy across PS5 and Xbox Series X|S."
   ogPage="buy"
   crossLinksContext="buy"
 >
@@ -422,7 +420,8 @@ const COUNTRIES: Country[] = [
         Grand Theft Auto VI
       </h1>
       <div class="flex items-center justify-center gap-3 mb-6 flex-wrap">
-        <span class="text-[10px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-2.5 py-1 rounded uppercase tracking-widest">Confirmed · Nov 19 2026</span>
+        <span class="text-[10px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/30 px-2.5 py-1 rounded uppercase tracking-widest animate-pulse">🟢 Pre-orders LIVE</span>
+        <span class="text-[10px] font-mono bg-gta-teal/10 text-gta-teal border border-gta-teal/20 px-2.5 py-1 rounded uppercase tracking-widest">Launch · Nov 19 2026</span>
         <span class="text-[10px] font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2.5 py-1 rounded uppercase tracking-widest">PS5 · Xbox Series X|S</span>
         <span class="text-[10px] font-mono bg-zinc-800/60 text-zinc-500 border border-zinc-700 px-2.5 py-1 rounded uppercase tracking-widest">PC · TBC</span>
       </div>
@@ -533,13 +532,13 @@ const COUNTRIES: Country[] = [
         🇺🇸 Showing stores for United States · Prices in USD · <span class="text-zinc-500">Detected via browser locale</span>
       </div>
 
-      <!-- Status alert -->
-      <div class="rounded-xl border border-gta-teal/20 bg-gta-teal/5 px-5 py-4 mb-5 flex items-start gap-3">
-        <span class="w-1.5 h-1.5 rounded-full bg-gta-teal mt-1.5 shrink-0 animate-pulse"></span>
+      <!-- Status alert — pre-orders LIVE as of June 25, 2026 -->
+      <div class="rounded-xl border border-gta-gold/30 px-5 py-4 mb-5 flex items-start gap-3" style="background:color-mix(in srgb,var(--c-brand) 8%,transparent)">
+        <span class="w-1.5 h-1.5 rounded-full bg-gta-gold mt-1.5 shrink-0 animate-pulse"></span>
         <div>
-          <div class="text-[11px] font-semibold text-gta-teal mb-0.5">Wishlist live on PS5 &amp; Xbox — pre-orders expected soon</div>
-          <p class="text-[11px] text-zinc-500 leading-relaxed">
-            GTA VI is now catalogued on both PlayStation Store and Xbox Store as a wishlist title (price TBC). Physical pre-orders at retail have not opened. Official pricing and edition confirmation expected alongside Trailer 3.
+          <div class="text-[11px] font-semibold text-gta-gold mb-0.5">🟢 Pre-orders LIVE — Standard $79.99 · Ultimate $99.99</div>
+          <p class="text-[11px] text-zinc-400 leading-relaxed">
+            Rockstar Games opened pre-orders at midnight local time on June 25, 2026, on PlayStation Store, Microsoft Store, the Rockstar Games Store, and global retailers. Two confirmed editions, with a single free pre-order bonus — the <strong class="text-gta-gold">Vintage Vice City Pack</strong> — for any pre-order or purchase before November 20, 2026. Physical copies ship November 12 as a download code in a box (no disc) to support pre-load. Launch is November 19, 2026, on PS5 and Xbox Series X|S.
           </p>
         </div>
       </div>
@@ -591,16 +590,19 @@ const COUNTRIES: Country[] = [
     ══════════════════════════════════════════════════════ -->
     <section>
       <SectionHeader bright label="// Edition Breakdown" class="mb-3" />
-      <!-- Speculative notice -->
-      <div class="rounded-xl border border-zinc-700/40 bg-zinc-800/20 px-5 py-3 mb-6 flex items-start gap-3">
-        <span class="text-zinc-500 font-mono text-xs mt-0.5 shrink-0">⚠</span>
-        <p class="text-[11px] text-zinc-500 leading-relaxed">
-          Rockstar has not announced editions, prices, or pre-order bonuses. The breakdown below is modelled on <strong class="text-zinc-400">RDR2 (2018)</strong> and <strong class="text-zinc-400">GTA V</strong> release precedent.
-          Every edition is labelled <span class="text-zinc-400 font-mono uppercase tracking-widest text-[11px]">Speculative</span> until Rockstar confirms.
+      <!-- Confirmed notice — Rockstar shipped only Standard + Ultimate -->
+      <div class="rounded-xl border border-gta-teal/25 px-5 py-3 mb-6 flex items-start gap-3" style="background:color-mix(in srgb,var(--c-live) 6%,transparent)">
+        <span class="text-gta-teal font-mono text-xs mt-0.5 shrink-0">✓</span>
+        <p class="text-[11px] text-zinc-400 leading-relaxed">
+          Confirmed by <strong class="text-zinc-200">Rockstar Newswire</strong> on June 25, 2026.
+          Rockstar shipped just <strong class="text-zinc-200">two editions</strong> — no Special, Digital Deluxe, or Collector's Box. Both editions are PS5 and Xbox Series X|S only; physical copies are a code in a box (no disc).
+          <a href="https://www.rockstargames.com/newswire/article/517oa135328155/grand-theft-auto-vi-pre-orders-begin-on-june-25"
+             target="_blank" rel="noopener noreferrer"
+             class="text-gta-teal hover:underline">Source ↗</a>
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {EDITIONS.map((ed) => (
           <div class={`rounded-xl border overflow-hidden flex flex-col transition-all ${ed.highlight ? "border-gta-gold/30 shadow-lg shadow-gta-gold/5" : "border-border-dim"}`}
             style="background:var(--c-card-raised)"
@@ -624,7 +626,7 @@ const COUNTRIES: Country[] = [
                 <span class="edition-price-usd">${ed.price_usd.toFixed(2)}</span>
               </div>
               <div class="edition-price-local hidden text-sm font-mono text-zinc-500 mb-0.5"></div>
-              <div class="text-[10px] font-mono text-zinc-500 mb-4">USD · <span class="edition-price-note">not announced</span></div>
+              <div class="text-[10px] font-mono text-zinc-500 mb-4">USD · <span class="edition-price-note">confirmed by Rockstar</span></div>
 
               <!-- Platforms -->
               <div class="flex items-center gap-1.5 mb-4 flex-wrap">
@@ -828,19 +830,43 @@ const COUNTRIES: Country[] = [
     if (country && label) {
       label.innerHTML = `${country.flag} Showing stores for <strong style="color:var(--c-text-3)">${country.name}</strong> · Prices in <strong style="color:var(--c-text-3)">${country.currency}</strong> · <span style="color:var(--c-text-5)">auto-detected from your browser</span>`;
     }
-    // Edition prices: show local currency estimate
+    // Edition prices: prefer Rockstar's confirmed regional pricing, fall back
+    // to FX-converted estimate for regions Rockstar has not separately listed.
+    const CONFIRMED = {
+      'en-GB':   { 79.99: '£69.99 GBP',   99.99: '£89.99 GBP'   },
+      'de':      { 79.99: '€79.99 EUR',   99.99: '€99.99 EUR'   },
+      'fr':      { 79.99: '€79.99 EUR',   99.99: '€99.99 EUR'   },
+      'it':      { 79.99: '€79.99 EUR',   99.99: '€99.99 EUR'   },
+      'es':      { 79.99: '€79.99 EUR',   99.99: '€99.99 EUR'   },
+      'nl':      { 79.99: '€79.99 EUR',   99.99: '€99.99 EUR'   },
+      'pt-PT':   { 79.99: '€79.99 EUR',   99.99: '€99.99 EUR'   },
+      'de-AT':   { 79.99: '€79.99 EUR',   99.99: '€99.99 EUR'   },
+      'fr-BE':   { 79.99: '€79.99 EUR',   99.99: '€99.99 EUR'   },
+      'ja':      { 79.99: '¥9,800 JPY',   99.99: '¥12,280 JPY'  },
+    };
     const rate = country?.rate ?? 1;
     const symbol = country?.symbol ?? '$';
     document.querySelectorAll('[data-price-usd]').forEach(card => {
       const usd = parseFloat(card.dataset.priceUsd ?? '0');
-      const local = (usd * rate).toFixed(0);
       const priceEl = card.querySelector('.edition-price-local');
       const noteEl = card.querySelector('.edition-price-note');
-      if (priceEl && rate !== 1) {
-        priceEl.textContent = `~${symbol}${local} ${country?.currency}`;
-        priceEl.classList.remove('hidden');
+      const confirmedLocal = CONFIRMED[localePrefix]?.[usd];
+      if (confirmedLocal) {
+        if (priceEl) {
+          priceEl.textContent = confirmedLocal;
+          priceEl.classList.remove('hidden');
+        }
+        if (noteEl) noteEl.textContent = 'confirmed regional price';
+      } else if (rate !== 1) {
+        const local = (usd * rate).toFixed(0);
+        if (priceEl) {
+          priceEl.textContent = `~${symbol}${local} ${country?.currency}`;
+          priceEl.classList.remove('hidden');
+        }
+        if (noteEl) noteEl.textContent = 'converted estimate · check storefront';
+      } else {
+        if (noteEl) noteEl.textContent = 'confirmed by Rockstar';
       }
-      if (noteEl && rate !== 1) noteEl.textContent = 'not announced · converted estimate';
     });
   }
 
