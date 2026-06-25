@@ -82,9 +82,9 @@ export const PRODUCT_LINKS = {
  */
 export const GTAVI_AMAZON_DIRECT: Record<string, { ps5: string; xbox: string }> = {
   "en-US": { ps5: "https://amzn.to/4oYu1An",  xbox: "https://amzn.to/4vwccuP"  },
+  "en-GB": { ps5: "https://amzn.to/4f1ERlI",  xbox: "https://amzn.to/4oLcWcZ"  },
   "fr":    { ps5: "https://amzn.to/44uyu4h",   xbox: "https://amzn.to/4v1E2hI"  },
   // Add more as you receive the amzn.to links:
-  // "en-GB": { ps5: "https://amzn.to/...", xbox: "https://amzn.to/..." },
   // "de":    { ps5: "https://amzn.to/...", xbox: "https://amzn.to/..." },
   // "en-CA": { ps5: "https://amzn.to/...", xbox: "https://amzn.to/..." },
   // "it":    { ps5: "https://amzn.to/...", xbox: "https://amzn.to/..." },
