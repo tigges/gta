@@ -57,10 +57,11 @@ export const PRODUCT_LINKS = {
   /** GTA V – PlayStation 5 (US, Amazon, gtaviai-20) */
   gta5_ps5_us:   "https://amzn.to/4vanPHp",
 
-  // Add more as you generate them from Associates Central:
-  // gta5_xbox_us:  "",
-  // gta5_ps5_uk:   "",
-  // gta5_xbox_uk:  "",
+  /** GTA VI – PlayStation 5 (US, Amazon, tag embedded in amzn.to) */
+  gtavi_ps5_us:  "https://amzn.to/4oYu1An",
+
+  /** GTA VI – Xbox Series X|S (US, Amazon, tag embedded in amzn.to) */
+  gtavi_xbox_us: "https://amzn.to/4vwccuP",
 } as const;
 
 /**
