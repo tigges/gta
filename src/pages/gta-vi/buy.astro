@@ -3,7 +3,7 @@ import Base from "../../layouts/Base.astro";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
 import Badge from "../../components/Badge.astro";
-import { tagAmazonUrl, PRODUCT_LINKS, nordLink, nordPassLink, GTAVI_STOREFRONTS, ROCKSTAR_STORE_URL, GTAVI_AMAZON, AMAZON_TAG_MAP } from "../../config/affiliates";
+import { tagAmazonUrl, PRODUCT_LINKS, nordLink, nordPassLink, GTAVI_STOREFRONTS, ROCKSTAR_STORE_URL, GTAVI_AMAZON, GTAVI_AMAZON_DIRECT, AMAZON_TAG_MAP } from "../../config/affiliates";
 import SectionHeader from "../../components/SectionHeader.astro";
 
 // Default storefront URLs rendered server-side (en-US). Client JS rewrites
@@ -12,9 +12,9 @@ import SectionHeader from "../../components/SectionHeader.astro";
 const DEFAULT_LOCALE     = "en-US";
 const defaultPS5         = GTAVI_STOREFRONTS[DEFAULT_LOCALE].ps5;
 const defaultXbox        = GTAVI_STOREFRONTS[DEFAULT_LOCALE].xbox;
-// US gets direct product pages (higher conversion); other locales get search URLs.
-const defaultAmazonPS5   = PRODUCT_LINKS.gtavi_ps5_us;
-const defaultAmazonXbox  = PRODUCT_LINKS.gtavi_xbox_us;
+// Direct product links take priority; fall back to tagged search URL.
+const defaultAmazonPS5   = GTAVI_AMAZON_DIRECT[DEFAULT_LOCALE]?.ps5  ?? tagAmazonUrl(GTAVI_AMAZON[DEFAULT_LOCALE]);
+const defaultAmazonXbox  = GTAVI_AMAZON_DIRECT[DEFAULT_LOCALE]?.xbox ?? tagAmazonUrl(GTAVI_AMAZON[DEFAULT_LOCALE]);
 
 const LAUNCH_DATE = "2026-11-19";
 const LAUNCH_DISPLAY = "November 19, 2026";
@@ -510,47 +510,54 @@ const COUNTRIES: Country[] = [
                 </ul>
               </div>
 
-              <!-- Pre-order CTAs — locale-aware. Client JS rewrites hrefs on country change. -->
+              <!-- Pre-order CTAs: Amazon first (direct revenue) → Console stores → Rockstar -->
               <div class="mb-4">
                 <div class="text-[11px] font-mono text-zinc-600 uppercase tracking-widest mb-2">Pre-order now</div>
-                <div class="grid grid-cols-2 gap-1.5">
-                  <a href={defaultPS5}
-                     target="_blank" rel="noopener noreferrer sponsored"
-                     data-buy-ps5
-                     class={`text-[11px] font-mono px-3 py-2 rounded border text-center transition-colors text-blue-400 border-blue-500/30 ${ed.highlight ? "hover:bg-blue-500/15 hover:border-blue-400/60" : "hover:bg-blue-500/10"}`}
-                     style="background:color-mix(in srgb,#4687FF 6%,transparent)">
-                    PlayStation Store →
-                  </a>
-                  <a href={defaultXbox}
-                     target="_blank" rel="noopener noreferrer sponsored"
-                     data-buy-xbox
-                     class={`text-[11px] font-mono px-3 py-2 rounded border text-center transition-colors text-gta-green border-gta-green/30 ${ed.highlight ? "hover:bg-gta-green/15 hover:border-gta-green/60" : "hover:bg-gta-green/10"}`}
-                     style="background:color-mix(in srgb,#22c55e 6%,transparent)">
-                    Xbox Store →
-                  </a>
-                  <a href={ROCKSTAR_STORE_URL}
-                     target="_blank" rel="noopener noreferrer sponsored"
-                     data-buy-rockstar
-                     class={`text-[11px] font-mono px-3 py-2 rounded border text-center transition-colors text-gta-gold border-gta-gold/30 ${ed.highlight ? "hover:bg-gta-gold/15 hover:border-gta-gold/60" : "hover:bg-gta-gold/10"}`}
-                     style="background:color-mix(in srgb,var(--c-brand) 6%,transparent)">
-                    Rockstar Store →
-                  </a>
-                  <!-- Amazon: direct product page (US) · search URL for other locales -->
+
+                <!-- Row 1: Amazon direct (highest affiliate priority) -->
+                <div class="grid grid-cols-2 gap-1.5 mb-1.5">
                   <a href={defaultAmazonPS5}
                      target="_blank" rel="noopener noreferrer sponsored"
                      data-buy-amazon-ps5
-                     class={`text-[11px] font-mono px-3 py-2 rounded border text-center transition-colors text-orange-400 border-orange-500/30 ${ed.highlight ? "hover:bg-orange-500/15 hover:border-orange-400/60" : "hover:bg-orange-500/10"}`}
-                     style="background:color-mix(in srgb,#f97316 6%,transparent)">
+                     class={`text-[11px] font-mono px-3 py-2 rounded border text-center transition-colors text-orange-400 border-orange-500/40 ${ed.highlight ? "hover:bg-orange-500/15" : "hover:bg-orange-500/10"}`}
+                     style="background:color-mix(in srgb,#f97316 8%,transparent)">
                     Amazon PS5 →
                   </a>
                   <a href={defaultAmazonXbox}
                      target="_blank" rel="noopener noreferrer sponsored"
                      data-buy-amazon-xbox
-                     class={`text-[11px] font-mono px-3 py-2 rounded border text-center transition-colors text-orange-400 border-orange-500/30 ${ed.highlight ? "hover:bg-orange-500/15 hover:border-orange-400/60" : "hover:bg-orange-500/10"}`}
-                     style="background:color-mix(in srgb,#f97316 6%,transparent)">
+                     class={`text-[11px] font-mono px-3 py-2 rounded border text-center transition-colors text-orange-400 border-orange-500/40 ${ed.highlight ? "hover:bg-orange-500/15" : "hover:bg-orange-500/10"}`}
+                     style="background:color-mix(in srgb,#f97316 8%,transparent)">
                     Amazon Xbox →
                   </a>
                 </div>
+
+                <!-- Row 2: Console digital stores -->
+                <div class="grid grid-cols-2 gap-1.5 mb-1.5">
+                  <a href={defaultPS5}
+                     target="_blank" rel="noopener noreferrer sponsored"
+                     data-buy-ps5
+                     class="text-[11px] font-mono px-3 py-2 rounded border text-center transition-colors text-blue-400 border-blue-500/30 hover:bg-blue-500/10"
+                     style="background:color-mix(in srgb,#4687FF 5%,transparent)">
+                    PlayStation Store →
+                  </a>
+                  <a href={defaultXbox}
+                     target="_blank" rel="noopener noreferrer sponsored"
+                     data-buy-xbox
+                     class="text-[11px] font-mono px-3 py-2 rounded border text-center transition-colors text-gta-green border-gta-green/30 hover:bg-gta-green/10"
+                     style="background:color-mix(in srgb,#22c55e 5%,transparent)">
+                    Xbox Store →
+                  </a>
+                </div>
+
+                <!-- Row 3: Rockstar direct (no affiliate revenue — tertiary) -->
+                <a href={ROCKSTAR_STORE_URL}
+                   target="_blank" rel="noopener noreferrer sponsored"
+                   data-buy-rockstar
+                   class="block w-full text-[10px] font-mono py-1.5 text-center transition-colors text-zinc-500 hover:text-zinc-300 border border-border-dim hover:border-zinc-600 rounded">
+                  Rockstar Games Store →
+                </a>
+
                 <div class="text-[9px] font-mono text-zinc-700 mt-1.5 leading-snug">
                   Affiliate links · we may earn a small commission at no cost to you.
                 </div>
@@ -862,11 +869,11 @@ const COUNTRIES: Country[] = [
     ({ localePrefix, flag, name, currency, rate, symbol })),
   GTAVI_STOREFRONTS,
   GTAVI_AMAZON,
+  GTAVI_AMAZON_DIRECT,
   AMAZON_TAG_MAP,
 }}>
 (function() {
   // ── Locale-aware buy CTAs on Edition cards ────────────────────────────
-  // Apply the matching Amazon Associates tag if we have one for that store.
   function tagAmazon(url) {
     try {
       const u = new URL(url);
@@ -875,22 +882,18 @@ const COUNTRIES: Country[] = [
       return u.toString();
     } catch { return url; }
   }
-  // Direct product link constants (US only — amzn.to tags already embedded).
-  const DIRECT_PS5_US  = "https://amzn.to/4oYu1An";
-  const DIRECT_XBOX_US = "https://amzn.to/4vwccuP";
 
   function updateEditionCTAs(localePrefix) {
-    const stores = GTAVI_STOREFRONTS[localePrefix] ?? GTAVI_STOREFRONTS['en-US'];
-    const amazon = GTAVI_AMAZON[localePrefix] ?? GTAVI_AMAZON['en-US'];
+    const stores  = GTAVI_STOREFRONTS[localePrefix]    ?? GTAVI_STOREFRONTS['en-US'];
+    const direct  = GTAVI_AMAZON_DIRECT[localePrefix];
+    const search  = GTAVI_AMAZON[localePrefix] ?? GTAVI_AMAZON['en-US'];
     document.querySelectorAll('[data-buy-ps5]').forEach(el => { el.href = stores.ps5; });
     document.querySelectorAll('[data-buy-xbox]').forEach(el => { el.href = stores.xbox; });
-    // For US use direct product pages; for other locales use the locale search URL.
-    const isUS = localePrefix === 'en-US';
     document.querySelectorAll('[data-buy-amazon-ps5]').forEach(el => {
-      el.href = isUS ? DIRECT_PS5_US : tagAmazon(amazon);
+      el.href = direct?.ps5 ?? tagAmazon(search);
     });
     document.querySelectorAll('[data-buy-amazon-xbox]').forEach(el => {
-      el.href = isUS ? DIRECT_XBOX_US : tagAmazon(amazon);
+      el.href = direct?.xbox ?? tagAmazon(search);
     });
     // Rockstar Store URL is global — no rewrite needed.
   }
