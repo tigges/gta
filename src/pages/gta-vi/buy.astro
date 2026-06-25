@@ -9,10 +9,12 @@ import SectionHeader from "../../components/SectionHeader.astro";
 // Default storefront URLs rendered server-side (en-US). Client JS rewrites
 // each [data-buy-*] anchor on locale change so visitors get their region's
 // PlayStation Store / Xbox Store / Amazon product page.
-const DEFAULT_LOCALE = "en-US";
-const defaultPS5  = GTAVI_STOREFRONTS[DEFAULT_LOCALE].ps5;
-const defaultXbox = GTAVI_STOREFRONTS[DEFAULT_LOCALE].xbox;
-const defaultAmazonUrl = tagAmazonUrl(GTAVI_AMAZON[DEFAULT_LOCALE]);
+const DEFAULT_LOCALE     = "en-US";
+const defaultPS5         = GTAVI_STOREFRONTS[DEFAULT_LOCALE].ps5;
+const defaultXbox        = GTAVI_STOREFRONTS[DEFAULT_LOCALE].xbox;
+// US gets direct product pages (higher conversion); other locales get search URLs.
+const defaultAmazonPS5   = PRODUCT_LINKS.gtavi_ps5_us;
+const defaultAmazonXbox  = PRODUCT_LINKS.gtavi_xbox_us;
 
 const LAUNCH_DATE = "2026-11-19";
 const LAUNCH_DISPLAY = "November 19, 2026";
@@ -103,7 +105,7 @@ const COUNTRIES: Country[] = [
     stores: [
       { name: "PlayStation Store", initials: "PS", logoBg: "#003087", type: "Digital · Official", platform: "PS5", url: "https://www.playstation.com/en-us/games/grand-theft-auto-vi/", color: "text-blue-400", border: "border-blue-500/20", status: "Pre-orders live" },
       { name: "Xbox Store",        initials: "XB", logoBg: "#107C10", type: "Digital · Official", platform: "Xbox", url: "https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9nl3wwnzlzzn", color: "text-green-400", border: "border-green-500/20", status: "Pre-orders live" },
-      { name: "Amazon",            initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.amazon.com/s?k=Grand+Theft+Auto+VI", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
+      { name: "Amazon",            initials: "a",  logoBg: "#131921", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://amzn.to/4oYu1An", color: "text-orange-400", border: "border-orange-500/20", status: "Pre-orders live" },
       { name: "Best Buy",          initials: "BB", logoBg: "#003B8E", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.bestbuy.com/site/searchpage.jsp?st=grand+theft+auto+vi", color: "text-yellow-300", border: "border-yellow-400/20", status: "Pre-orders live" },
       { name: "GameStop",          initials: "GS", logoBg: "#1C1B1B", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.gamestop.com/search/#q=grand%20theft%20auto%20vi", color: "text-red-400", border: "border-red-500/20", status: "Check for listings" },
       { name: "Walmart",           initials: "W",  logoBg: "#0071CE", type: "Physical · Retailer", platform: "PS5 · Xbox", url: "https://www.walmart.com/search?q=grand+theft+auto+vi", color: "text-blue-300", border: "border-blue-400/20", status: "Check for listings" },
@@ -533,12 +535,20 @@ const COUNTRIES: Country[] = [
                      style="background:color-mix(in srgb,var(--c-brand) 6%,transparent)">
                     Rockstar Store →
                   </a>
-                  <a href={defaultAmazonUrl}
+                  <!-- Amazon: direct product page (US) · search URL for other locales -->
+                  <a href={defaultAmazonPS5}
                      target="_blank" rel="noopener noreferrer sponsored"
-                     data-buy-amazon
+                     data-buy-amazon-ps5
                      class={`text-[11px] font-mono px-3 py-2 rounded border text-center transition-colors text-orange-400 border-orange-500/30 ${ed.highlight ? "hover:bg-orange-500/15 hover:border-orange-400/60" : "hover:bg-orange-500/10"}`}
                      style="background:color-mix(in srgb,#f97316 6%,transparent)">
-                    Amazon →
+                    Amazon PS5 →
+                  </a>
+                  <a href={defaultAmazonXbox}
+                     target="_blank" rel="noopener noreferrer sponsored"
+                     data-buy-amazon-xbox
+                     class={`text-[11px] font-mono px-3 py-2 rounded border text-center transition-colors text-orange-400 border-orange-500/30 ${ed.highlight ? "hover:bg-orange-500/15 hover:border-orange-400/60" : "hover:bg-orange-500/10"}`}
+                     style="background:color-mix(in srgb,#f97316 6%,transparent)">
+                    Amazon Xbox →
                   </a>
                 </div>
                 <div class="text-[9px] font-mono text-zinc-700 mt-1.5 leading-snug">
@@ -832,12 +842,23 @@ const COUNTRIES: Country[] = [
       return u.toString();
     } catch { return url; }
   }
+  // Direct product link constants (US only — amzn.to tags already embedded).
+  const DIRECT_PS5_US  = "https://amzn.to/4oYu1An";
+  const DIRECT_XBOX_US = "https://amzn.to/4vwccuP";
+
   function updateEditionCTAs(localePrefix) {
     const stores = GTAVI_STOREFRONTS[localePrefix] ?? GTAVI_STOREFRONTS['en-US'];
     const amazon = GTAVI_AMAZON[localePrefix] ?? GTAVI_AMAZON['en-US'];
     document.querySelectorAll('[data-buy-ps5]').forEach(el => { el.href = stores.ps5; });
     document.querySelectorAll('[data-buy-xbox]').forEach(el => { el.href = stores.xbox; });
-    document.querySelectorAll('[data-buy-amazon]').forEach(el => { el.href = tagAmazon(amazon); });
+    // For US use direct product pages; for other locales use the locale search URL.
+    const isUS = localePrefix === 'en-US';
+    document.querySelectorAll('[data-buy-amazon-ps5]').forEach(el => {
+      el.href = isUS ? DIRECT_PS5_US : tagAmazon(amazon);
+    });
+    document.querySelectorAll('[data-buy-amazon-xbox]').forEach(el => {
+      el.href = isUS ? DIRECT_XBOX_US : tagAmazon(amazon);
+    });
     // Rockstar Store URL is global — no rewrite needed.
   }
   // ── Detect locale and match to a country ──────────────────────────────
