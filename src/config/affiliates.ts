@@ -52,18 +52,36 @@ export const AFFILIATE_IDS = {
 /**
  * Specific product affiliate links.
  * Use pre-shortened amzn.to URLs — the affiliate tag is already embedded.
- * Add UK/DE/etc. variants as separate keys when available.
  */
 export const PRODUCT_LINKS = {
   /** GTA V – PlayStation 5 (US, Amazon, gtaviai-20) */
   gta5_ps5_us:   "https://amzn.to/4vanPHp",
-
-  /** GTA VI – PlayStation 5 (US, Amazon, tag embedded in amzn.to) */
-  gtavi_ps5_us:  "https://amzn.to/4oYu1An",
-
-  /** GTA VI – Xbox Series X|S (US, Amazon, tag embedded in amzn.to) */
-  gtavi_xbox_us: "https://amzn.to/4vwccuP",
 } as const;
+
+/**
+ * GTA VI direct Amazon product links per locale.
+ *
+ * Each entry has separate PS5 and Xbox amzn.to short links — the affiliate
+ * tag is pre-embedded in the short URL, so no ?tag= parameter is needed.
+ *
+ * ADDING A NEW MARKET: add one entry below. The locale key must match
+ * a key in GTAVI_STOREFRONTS. The buy page JS picks the direct link when
+ * the visitor's locale matches; all other locales fall back to the tagged
+ * search URL from GTAVI_AMAZON.
+ *
+ * Markets with direct links earn the full Associates commission.
+ * Markets without fall back to GTAVI_AMAZON (tagged search URL) or Skimlinks.
+ */
+export const GTAVI_AMAZON_DIRECT: Record<string, { ps5: string; xbox: string }> = {
+  "en-US": { ps5: "https://amzn.to/4oYu1An",  xbox: "https://amzn.to/4vwccuP"  },
+  "fr":    { ps5: "https://amzn.to/44uyu4h",   xbox: "https://amzn.to/4v1E2hI"  },
+  // Add more as you receive the amzn.to links:
+  // "en-GB": { ps5: "https://amzn.to/...", xbox: "https://amzn.to/..." },
+  // "de":    { ps5: "https://amzn.to/...", xbox: "https://amzn.to/..." },
+  // "en-CA": { ps5: "https://amzn.to/...", xbox: "https://amzn.to/..." },
+  // "it":    { ps5: "https://amzn.to/...", xbox: "https://amzn.to/..." },
+  // "es":    { ps5: "https://amzn.to/...", xbox: "https://amzn.to/..." },
+};
 
 /**
  * GTA VI digital storefronts — direct product URLs by locale.
