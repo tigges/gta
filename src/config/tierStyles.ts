@@ -17,20 +17,20 @@ export interface TierStyle {
 export const TIER_STYLES: Record<"confirmed" | "reported" | "predicted", TierStyle> = {
   confirmed: {
     label:  "CONFIRMED",
-    color:  "text-gta-teal",
-    bar:    "bg-gta-teal",
-    border: "border-l-gta-teal",
+    color:  "text-tier-confirmed",
+    bar:    "bg-tier-confirmed",
+    border: "border-l-tier-confirmed",
   },
   reported: {
     label:  "REPORTED",
-    color:  "text-gta-gold",
-    bar:    "bg-gta-gold",
-    border: "border-l-gta-gold",
+    color:  "text-tier-reported",
+    bar:    "bg-tier-reported",
+    border: "border-l-tier-reported",
   },
   predicted: {
     label:  "PREDICTED",
-    color:  "text-zinc-300",
-    bar:    "bg-zinc-400",
-    border: "border-l-zinc-500",
+    color:  "text-tier-predicted",
+    bar:    "bg-tier-predicted",
+    border: "border-l-tier-predicted",
   },
 };

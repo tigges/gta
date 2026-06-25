@@ -4,6 +4,15 @@ export default {
   theme: {
     extend: {
       colors: {
+        // ── Confidence tier pills (canonical) ────────────────────────────
+        // These map the CSS tier tokens to Tailwind utilities so that
+        // tierStyles.ts, PredictionCard, IncomeCard, and buy.astro all
+        // reference the same --c-tier-* values. Never use gta-teal/gta-gold
+        // as stand-ins for tier pills — always use these named utilities.
+        'tier-confirmed':  'var(--c-tier-confirmed)',  // emerald-400 #34d399
+        'tier-reported':   'var(--c-tier-reported)',   // gold (=brand)
+        'tier-predicted':  'var(--c-tier-predicted)',  // near-white text-2
+
         // ── Functional accents (site-wide) ────────────────────────────────
         'gta-gold':    'var(--c-brand)',
         'gta-bright':  'var(--c-brand-bright)',

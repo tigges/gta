@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import Countdown from "../../components/Countdown.astro";
 import ShareDropdown from "../../components/ShareDropdown.astro";
+import Badge from "../../components/Badge.astro";
 import { tagAmazonUrl, PRODUCT_LINKS, nordLink, GTAVI_STOREFRONTS, ROCKSTAR_STORE_URL, GTAVI_AMAZON, AMAZON_TAG_MAP } from "../../config/affiliates";
 import SectionHeader from "../../components/SectionHeader.astro";
 
@@ -50,8 +51,7 @@ const PLATFORMS = [
 // are a download code in a box (no disc), shipping Nov 12 to support pre-load.
 const EDITIONS = [
   {
-    id: "standard", name: "Standard Edition", price_usd: 79.99, confirmed: true,
-    tier: "CONFIRMED", tier_color: "text-gta-teal", tier_bg: "bg-gta-teal/10 border-gta-teal/25",
+    id: "standard", name: "Standard Edition", price_usd: 79.99,
     platforms: ["PS5","Xbox"], highlight: false,
     includes: [
       "Grand Theft Auto VI — single-player experience at launch",
@@ -65,8 +65,7 @@ const EDITIONS = [
     basis: "Confirmed by Rockstar Newswire on June 25, 2026 (US$79.99 / £69.99 / €79.99 / ¥9,800).",
   },
   {
-    id: "ultimate", name: "Ultimate Edition", price_usd: 99.99, confirmed: true,
-    tier: "CONFIRMED", tier_color: "text-gta-gold", tier_bg: "bg-gta-gold/10 border-gta-gold/30",
+    id: "ultimate", name: "Ultimate Edition", price_usd: 99.99,
     platforms: ["PS5","Xbox"], highlight: true,
     includes: [
       "Everything in the Standard Edition",
@@ -474,7 +473,7 @@ const COUNTRIES: Country[] = [
             <div class="px-5 pt-5 pb-4 flex-1">
               <div class="flex items-start justify-between gap-2 mb-1">
                 <div class="text-sm font-bold text-zinc-200 leading-snug">{ed.name}</div>
-                <span class={`shrink-0 text-[10px] font-mono border px-1.5 py-0.5 rounded uppercase tracking-widest ${ed.tier_bg} ${ed.tier_color}`}>{ed.tier}</span>
+                <Badge variant="confirmed" />
               </div>
 
               <!-- Price -->

@@ -97,9 +97,9 @@ export function getGameType(id: string): SemanticType {
 // "indexed" (DB entities) is an alias for "predicted" — same visual treatment.
 
 export const CONFIDENCE_TYPES: SemanticType[] = [
-  { id: "confirmed",  label: "Confirmed",  colorToken: "var(--c-live)"   },
-  { id: "reported",   label: "Reported",   colorToken: "var(--c-brand)"  },
-  { id: "predicted",  label: "Predicted",  colorToken: "var(--c-text-4)" },
+  { id: "confirmed",  label: "Confirmed",  colorToken: "var(--c-tier-confirmed)" },
+  { id: "reported",   label: "Reported",   colorToken: "var(--c-tier-reported)"  },
+  { id: "predicted",  label: "Predicted",  colorToken: "var(--c-tier-predicted)" },
   { id: "indexed",    label: "Indexed",    colorToken: "var(--c-text-5)" },
 ];
 
