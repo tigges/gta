@@ -60,9 +60,16 @@ export const PRODUCT_LINKS = {
 
   /** GTA V – PlayStation 4, Italy (Amazon IT, gtaviai07-21) */
   gta5_ps4_it:   "https://amzn.to/4y7uSTJ",
+
+  /** GTA V – PlayStation 5, Germany (Amazon DE, gtaviai0e-21) */
+  gta5_ps5_de:   "https://amzn.to/4eEjB45",
+
+  /** GTA V – Xbox Series X, Germany (Amazon DE, gtaviai0e-21) */
+  gta5_xbox_de:  "https://amzn.to/44zP0jq",
+
   // Add more as received:
   // gta5_ps5_uk:  "",
-  // gta5_ps4_de:  "",
+  // gta5_ps5_fr:  "",
   // gta5_xbox_us: "",
 } as const;
 
