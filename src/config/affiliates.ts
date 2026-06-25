@@ -63,6 +63,80 @@ export const PRODUCT_LINKS = {
   // gta5_xbox_uk:  "",
 } as const;
 
+/**
+ * GTA VI digital storefronts — direct product URLs by locale.
+ *
+ * These are official Rockstar / PlayStation / Xbox storefronts; no affiliate
+ * tag is appended (the platform programmes — PS Direct via Partnerize,
+ * Xbox via Microsoft Affiliate — are still pending). Skimlinks (loaded
+ * globally in Base.astro) auto-monetises any commerce link until those
+ * direct programmes are wired.
+ *
+ * Confirmed Xbox product ID for GTA VI is 9nl3wwnzlzzn.
+ */
+export const GTAVI_STOREFRONTS: Record<string, { ps5: string; xbox: string }> = {
+  "en-US": { ps5: "https://www.playstation.com/en-us/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "en-GB": { ps5: "https://www.playstation.com/en-gb/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/en-GB/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "en-CA": { ps5: "https://www.playstation.com/en-ca/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/en-CA/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "en-AU": { ps5: "https://www.playstation.com/en-au/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/en-AU/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "en-IN": { ps5: "https://www.playstation.com/en-in/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/en-IN/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "en-ZA": { ps5: "https://www.playstation.com/en-za/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/en-ZA/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "de":    { ps5: "https://www.playstation.com/de-de/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/de-DE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "de-AT": { ps5: "https://www.playstation.com/de-at/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/de-AT/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "de-CH": { ps5: "https://www.playstation.com/de-ch/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/de-CH/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "fr":    { ps5: "https://www.playstation.com/fr-fr/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/fr-FR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "fr-BE": { ps5: "https://www.playstation.com/fr-be/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/fr-BE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "it":    { ps5: "https://www.playstation.com/it-it/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/it-IT/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "es":    { ps5: "https://www.playstation.com/es-es/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/es-ES/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "es-MX": { ps5: "https://www.playstation.com/es-mx/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/es-MX/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "es-AR": { ps5: "https://www.playstation.com/es-ar/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/es-AR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "nl":    { ps5: "https://www.playstation.com/nl-nl/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/nl-NL/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "pt":    { ps5: "https://www.playstation.com/pt-br/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/pt-BR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "pt-PT": { ps5: "https://www.playstation.com/pt-pt/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/pt-PT/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "ja":    { ps5: "https://www.playstation.com/ja-jp/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/ja-JP/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "ko":    { ps5: "https://www.playstation.com/ko-kr/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/ko-KR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "zh":    { ps5: "https://www.playstation.com/zh-hans-cn/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/zh-CN/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "zh-TW": { ps5: "https://www.playstation.com/zh-hant-tw/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/zh-TW/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "pl":    { ps5: "https://www.playstation.com/pl-pl/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/pl-PL/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "sv":    { ps5: "https://www.playstation.com/sv-se/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/sv-SE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "tr":    { ps5: "https://www.playstation.com/tr-tr/games/grand-theft-auto-vi/", xbox: "https://www.xbox.com/tr-TR/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "ar-SA": { ps5: "https://store.playstation.com/en-sa/search/Grand%20Theft%20Auto%20VI",  xbox: "https://www.xbox.com/ar-SA/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+  "ar-AE": { ps5: "https://store.playstation.com/en-ae/search/Grand%20Theft%20Auto%20VI",  xbox: "https://www.xbox.com/ar-AE/games/store/grand-theft-auto-vi/9nl3wwnzlzzn" },
+};
+
+/** Rockstar Games Store — single global product page. */
+export const ROCKSTAR_STORE_URL = "https://www.rockstargames.com/VI";
+
+/**
+ * Locale-aware Amazon search URL for GTA VI.
+ * Returns a tagged URL when the matching market has an Associates ID.
+ * Returns an untagged URL otherwise (Skimlinks fills the gap globally).
+ */
+export const GTAVI_AMAZON: Record<string, string> = {
+  "en-US": "https://www.amazon.com/s?k=Grand+Theft+Auto+VI",
+  "en-GB": "https://www.amazon.co.uk/s?k=Grand+Theft+Auto+VI",
+  "en-CA": "https://www.amazon.ca/s?k=Grand+Theft+Auto+VI",
+  "en-AU": "https://www.amazon.com.au/s?k=Grand+Theft+Auto+VI",
+  "en-IN": "https://www.amazon.in/s?k=Grand+Theft+Auto+VI",
+  "en-ZA": "https://www.amazon.co.za/s?k=Grand+Theft+Auto+VI",
+  "de":    "https://www.amazon.de/s?k=Grand+Theft+Auto+VI",
+  "de-AT": "https://www.amazon.de/s?k=Grand+Theft+Auto+VI",
+  "fr":    "https://www.amazon.fr/s?k=Grand+Theft+Auto+VI",
+  "fr-BE": "https://www.amazon.com.be/s?k=Grand+Theft+Auto+VI",
+  "it":    "https://www.amazon.it/s?k=Grand+Theft+Auto+VI",
+  "es":    "https://www.amazon.es/s?k=Grand+Theft+Auto+VI",
+  "es-MX": "https://www.amazon.com.mx/s?k=Grand+Theft+Auto+VI",
+  "nl":    "https://www.amazon.nl/s?k=Grand+Theft+Auto+VI",
+  "pt":    "https://www.amazon.com.br/s?k=Grand+Theft+Auto+VI",
+  "pt-PT": "https://www.amazon.es/s?k=Grand+Theft+Auto+VI",
+  "ja":    "https://www.amazon.co.jp/s?k=Grand+Theft+Auto+VI",
+  "pl":    "https://www.amazon.pl/s?k=Grand+Theft+Auto+VI",
+  "sv":    "https://www.amazon.se/s?k=Grand+Theft+Auto+VI",
+  "tr":    "https://www.amazon.com.tr/s?k=Grand+Theft+Auto+VI",
+  "ar-SA": "https://www.amazon.sa/s?k=Grand+Theft+Auto+VI",
+  "ar-AE": "https://www.amazon.ae/s?k=Grand+Theft+Auto+VI",
+};
+
 /** Append an Amazon affiliate tag to a URL if an ID is configured. */
 export function amazonLink(url: string, tag: string): string {
   if (!tag) return url;           // no tag → return clean URL (still functional)
