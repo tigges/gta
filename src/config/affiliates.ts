@@ -37,7 +37,8 @@ export const AFFILIATE_IDS = {
   amazon_za:  "",             // Amazon.co.za — join: affiliate-program.amazon.co.za
 
   // ── VPN ────────────────────────────────────────────────────────────────
-  nord_vpn: "150614",  // NordVPN via NordPartners — active
+  nord_vpn:  "150614",  // NordVPN via NordPartners — active
+  nord_pass: "150614",  // NordPass via NordPartners — same aff_id, different offer
 
   // ── Future programmes (add IDs once approved) ─────────────────────────
   // impact_playstation: "",  // via impact.com
@@ -151,13 +152,24 @@ export function zapLink(path: string = ""): string {
 
 /**
  * Build a NordVPN affiliate tracking URL.
- * offerId 15 = 2-year plan (highest commission, best value for users).
+ * offer_id=15, url_id=902 (specific landing page for best conversion).
  * Falls back to nordvpn.com if ID is not configured.
  */
-export function nordLink(offerId: number = 15): string {
+export function nordLink(): string {
   const id = AFFILIATE_IDS.nord_vpn;
   if (!id) return "https://nordvpn.com/";
-  return `https://go.nordvpn.net/aff_c?offer_id=${offerId}&aff_id=${id}`;
+  return `https://go.nordvpn.net/aff_c?offer_id=15&aff_id=${id}&url_id=902`;
+}
+
+/**
+ * Build a NordPass affiliate tracking URL.
+ * offer_id=488, url_id=9356 — NordPass password manager.
+ * Falls back to nordpass.com if ID is not configured.
+ */
+export function nordPassLink(): string {
+  const id = AFFILIATE_IDS.nord_pass;
+  if (!id) return "https://nordpass.com/";
+  return `https://go.nordpass.io/aff_c?offer_id=488&aff_id=${id}&url_id=9356`;
 }
 
 /** Apply the correct affiliate tag to any Amazon URL automatically. */

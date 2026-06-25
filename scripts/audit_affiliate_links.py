@@ -90,10 +90,24 @@ def audit():
             elif host == "go.nordvpn.net":
                 stats["nord_total"] += 1
                 aff_id = (qs.get("aff_id") or [""])[0]
-                if aff_id == NORD_AFF_ID:
+                url_id = (qs.get("url_id") or [""])[0]
+                if aff_id == NORD_AFF_ID and url_id == "902":
                     stats["nord_ok"] += 1
+                elif aff_id == NORD_AFF_ID:
+                    failures.append((str(rel), url, f"NordVPN aff_id OK but url_id='{url_id}' (expected '902')"))
                 else:
                     failures.append((str(rel), url, f"NordVPN aff_id mismatch: got '{aff_id}', want '{NORD_AFF_ID}'"))
+
+            elif host == "go.nordpass.io":
+                stats["nordpass_total"] += 1
+                aff_id = (qs.get("aff_id") or [""])[0]
+                url_id = (qs.get("url_id") or [""])[0]
+                if aff_id == NORD_AFF_ID and url_id == "9356":
+                    stats["nordpass_ok"] += 1
+                elif aff_id == NORD_AFF_ID:
+                    failures.append((str(rel), url, f"NordPass aff_id OK but url_id='{url_id}' (expected '9356')"))
+                else:
+                    failures.append((str(rel), url, f"NordPass aff_id mismatch: got '{aff_id}', want '{NORD_AFF_ID}'"))
 
             elif host == "zap-hosting.com":
                 stats["zap_total"] += 1
@@ -121,8 +135,9 @@ def audit():
         print(f"  {flag} {host:<22}  total={total:<4}  tagged={ok}  skimlinks={skim}{marker}")
     print()
     print("─── Other Programmes ────────────────────────────────────────")
-    print(f"  NordVPN (go.nordvpn.net): total={stats.get('nord_total', 0)}, ok={stats.get('nord_ok', 0)}")
-    print(f"  ZAP-Hosting:              total={stats.get('zap_total', 0)}, ok={stats.get('zap_ok', 0)}")
+    print(f"  NordVPN  (go.nordvpn.net):  total={stats.get('nord_total', 0)}, ok={stats.get('nord_ok', 0)}")
+    print(f"  NordPass (go.nordpass.io):  total={stats.get('nordpass_total', 0)}, ok={stats.get('nordpass_ok', 0)}")
+    print(f"  ZAP-Hosting:               total={stats.get('zap_total', 0)}, ok={stats.get('zap_ok', 0)}")
     print()
     if failures:
         print(f"─── ✗ {len(failures)} FAILURES ──────────────────────────────────────")
