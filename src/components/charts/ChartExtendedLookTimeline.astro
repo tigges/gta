@@ -47,7 +47,7 @@ const SECTIONS = [
       class="group relative overflow-hidden rounded-lg border border-border-mid hover:border-gta-gold/30 transition-all shrink-0">
       <img src="https://img.youtube.com/vi/tJbzMqJGH4k/mqdefault.jpg"
         alt="GTA VI: An Extended Look" class="w-36 h-20 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
-      <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 50%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%,transparent 50%)"></div>
       <div class="absolute bottom-1 left-2">
         <span class="text-[10px] font-mono text-gta-gold">EL · Aug 27</span>
       </div>
@@ -80,6 +80,7 @@ const SECTIONS = [
 
 <script>
   import { cc, op } from "../../assets/chartColors";
+  import { EL_LAYOUT, layoutSectionLabels } from "../../assets/elTimelineLayout";
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
 
@@ -94,18 +95,16 @@ const SECTIONS = [
 
     const TYPE_COLORS: Record<string, string> = {
       vehicle:   cc.bar,
-      character: cc.green,
-      location:  "#38bdf8",
-      wildlife:  "#a3e635",
+      character: cc.live,
+      location:  cc.online,
+      wildlife:  cc.green,
       weapon:    cc.red,
       audio:     cc.purple,
-      reveal:    cc.text0,
+      reveal:    cc.text1,
     };
 
     const W = el.clientWidth - 10;
-    const STRIP_H   = 36;   // height of the coloured density strip
-    const LABEL_H   = 100;  // height reserved for labels below strip
-    const SECTION_H = STRIP_H + LABEL_H + 32; // total per section (includes header)
+    const STRIP_H = 36;
 
     sections.forEach((sec: any) => {
       const secEvents = events.filter(
@@ -136,19 +135,21 @@ const SECTIONS = [
         return;
       }
 
-      const totalH = STRIP_H + LABEL_H + 4;
+      const plotW = W - 10;
+      const packed = layoutSectionLabels(secEvents, sec.tStart, sec.tEnd, plotW);
+      const totalH = STRIP_H + packed.labelAreaH + EL_LAYOUT.axisH;
       const svg = d3.select(wrap)
         .append("svg")
         .attr("width", "100%")
         .attr("viewBox", `0 0 ${W} ${totalH}`)
         .attr("overflow", "visible");
 
-      const x = d3.scaleLinear().domain([sec.tStart, sec.tEnd]).range([0, W - 10]);
+      const x = d3.scaleLinear().domain([sec.tStart, sec.tEnd]).range([0, plotW]);
 
       // Background strip
       svg.append("rect")
         .attr("x", 0).attr("y", 0)
-        .attr("width", W - 10).attr("height", STRIP_H)
+        .attr("width", plotW).attr("height", STRIP_H)
         .attr("rx", 4)
         .attr("fill", cc.cardRaised);
 
@@ -169,59 +170,47 @@ const SECTIONS = [
           .attr("opacity", 0.06 + (c / maxCount) * 0.22);
       });
 
-      // Entity markers + staggered labels
-      // Sort by time, then assign label row (0, 1, 2...) greedily to avoid overlap
-      const sortedEvs = [...secEvents].sort((a: any, b: any) => a.t - b.t);
-      const ROW_H = 16; // px per label row below strip
-      const MAX_ROWS = Math.floor(LABEL_H / ROW_H);
-      const rowNextX: number[] = new Array(MAX_ROWS).fill(0); // track rightmost label end per row
-
-      sortedEvs.forEach((ev: any) => {
-        const ex = x(ev.t);
+      packed.placements.forEach((p) => {
+        const ev = secEvents.find((e: any) => e.t === p.t && e.entity === p.entity) ?? p;
         const color = TYPE_COLORS[ev.type] ?? cc.text4;
+        const ex = p.pinX;
+        const labelY = STRIP_H + EL_LAYOUT.labelPadTop + p.row * EL_LAYOUT.rowH;
+        const textY = labelY + EL_LAYOUT.rowH - 6;
 
-        // Tick line
         svg.append("line")
           .attr("x1", ex).attr("x2", ex)
           .attr("y1", 0).attr("y2", STRIP_H)
           .attr("stroke", color).attr("stroke-width", 1)
           .attr("opacity", op.secondary);
 
-        // Dot on strip
         svg.append("circle")
           .attr("cx", ex).attr("cy", STRIP_H / 2)
           .attr("r", 4)
           .attr("fill", color)
           .attr("stroke", cc.bg).attr("stroke-width", 1.5);
 
-        // Label: find first row where it fits
-        const labelWidth = Math.max(60, ev.entity.length * 5.5 + 8);
-        let row = rowNextX.findIndex((rx: number) => rx <= ex - 4);
-        if (row === -1) row = 0; // fallback: overlap last row rather than drop
-
-        const labelY = STRIP_H + 8 + row * ROW_H;
-        rowNextX[row] = ex + labelWidth;
-
-        // Leader line from dot down to label
+        // Leader: pin → label row, then a short jog if the text shifted
         svg.append("line")
           .attr("x1", ex).attr("x2", ex)
-          .attr("y1", STRIP_H + 2).attr("y2", labelY - 2)
+          .attr("y1", STRIP_H + 2).attr("y2", textY - 8)
           .attr("stroke", color).attr("stroke-width", 0.5)
-          .attr("opacity", 0.25);
-
-        // Label text
-        const shortName = ev.entity.length > 28
-          ? ev.entity.slice(0, 26) + "…"
-          : ev.entity;
-        const ts = `${Math.floor(ev.t / 60)}:${String(ev.t % 60).padStart(2, "0")}`;
+          .attr("opacity", 0.28);
+        if (Math.abs(p.labelX - ex) > 6) {
+          const jogX = p.labelX < ex ? p.labelX + p.labelW : p.labelX;
+          svg.append("line")
+            .attr("x1", ex).attr("x2", jogX)
+            .attr("y1", textY - 8).attr("y2", textY - 8)
+            .attr("stroke", color).attr("stroke-width", 0.5)
+            .attr("opacity", 0.28);
+        }
 
         svg.append("text")
-          .attr("x", ex + 3)
-          .attr("y", labelY + ROW_H - 4)
+          .attr("x", p.labelX)
+          .attr("y", textY)
           .attr("fill", color)
           .attr("font-size", "9")
-          .attr("font-family", "JetBrains Mono, Fira Code, monospace")
-          .text(`${shortName} (${ts})`);
+          .attr("font-family", "ui-monospace, SFMono-Regular, Menlo, monospace")
+          .text(p.text);
       });
 
       // Time axis
