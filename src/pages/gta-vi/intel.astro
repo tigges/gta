@@ -15,7 +15,7 @@ import predictionsData, { feedWithPolls } from "../../config/predictions";
 import incomeData from "../../../data/gta-6/income-predictions.json";
 import trailersDataRaw from "../../../data/gta-6/trailers.json";
 import featuresData    from "../../../data/gta-6/features.json";
-import spotifyData     from "../../../data/franchise/spotify.json";
+import soundtrackData  from "../../../data/gta-6/soundtrack.json";
 
 const predictions    = (predictionsData.predictions as Prediction[])
   .slice()
@@ -26,8 +26,13 @@ const predFeed    = feedWithPolls(predictions, 3);
 const PRED_INITIAL = 9;
 const trailersData   = trailersDataRaw as TrailersData;
 const trailers       = trailersData.trailers;
-const heroTrailer    = trailers[1] ?? trailers[0]; // prefer Trailer 2 for hero
-const confirmedSongs = (spotifyData as any).confirmed_songs as { title: string; artist: string; trailer: string; year: number }[];
+const heroTrailer    = trailers.find((t) => (t as any).youtube_id === "tJbzMqJGH4k") ?? trailers[trailers.length - 1] ?? trailers[0];
+const confirmedSongs = ((soundtrackData as any).tracks ?? []).map((t: any) => ({
+  title: t.title as string,
+  artist: t.artist as string,
+  trailer: t.source as string,
+  year: t.year as number,
+}));
 
 // 30-second preview clips (trimmed, fade-out) for songs we host audio for.
 // Keyed by exact song title. Full tracks are intentionally not hosted (copyright).
@@ -50,7 +55,7 @@ const gtaViFaqs = [
   },
   {
     question: "Will GTA VI have fuel, regional prices, or a deeper economy?",
-    answer: "Fuel and regional price divergence are predictions, not confirmed features. GTAVI.AI tracks them because Trailer 2 and the Leonida map imply multiple economic zones where Rockstar could vary operating costs and purchasing power.",
+    answer: "Fuel and regional price divergence are still predictions. The Extended Look and IGN preview do confirm that money matters more: store robberies trade speed against take, specialised fences convert loot, WAINK prices cars before you steal them, and some story beats may gate on raised cash.",
   },
   {
     question: "How much will GTA VI cost at launch?",
@@ -197,13 +202,17 @@ const CAT_THUMBS: Record<string,string> = {
     ═══════════════════════════════════════════════════════ -->
     {confirmedSongs.length > 0 && (
     <section>
-      <SectionHeader bright label="// Confirmed Soundtrack — Trailer Songs" dotColor="var(--c-growth)" />
+      <SectionHeader bright label="// Confirmed Soundtrack — Trailers + Extended Look" dotColor="var(--c-growth)" />
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
-        <div class="divide-y divide-border-dim">
+        <div class="grid grid-cols-1 md:grid-cols-2">
           {confirmedSongs.map((song, i) => {
             const preview = SONG_PREVIEWS[song.title];
+            const sourceBadge = song.trailer === "Extended Look" ? "EL"
+              : song.trailer === "Trailer 1" ? "T1"
+              : song.trailer === "Trailer 2" ? "T2"
+              : song.trailer;
             return (
-            <div class="px-5 py-4 flex items-center gap-4">
+            <div class="px-5 py-3 flex items-center gap-3 border-b border-border-dim">
               {preview ? (
                 <>
                   <button
@@ -226,14 +235,14 @@ const CAT_THUMBS: Record<string,string> = {
                 <div class="text-[11px] font-mono text-zinc-500 mt-0.5">{song.artist} · {song.year}{preview ? " · 30s preview" : ""}</div>
               </div>
               <div class="shrink-0 text-right">
-                <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">{song.trailer}</span>
+                <span class="text-[10px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">{sourceBadge}</span>
               </div>
             </div>
             );
           })}
         </div>
         <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between">
-          <span class="text-[10px] text-zinc-500 font-mono">Source: Spotify Web API · confirmed from official GTA VI trailers</span>
+          <span class="text-[10px] text-zinc-500 font-mono">Source: official trailers + Extended Look · {confirmedSongs.length} confirmed tracks</span>
           <span class="text-[11px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
         </div>
       </div>

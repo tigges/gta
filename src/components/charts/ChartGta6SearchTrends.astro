@@ -17,18 +17,24 @@ const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", 
 <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
   <!-- Header: trailer thumbnails + keyword toggles -->
   <div class="flex border-b border-border-dim">
-    {trailers.slice(0, 2).map((t: any, i: number) => (
+    {trailers.slice(0, 3).map((t: any) => {
+      const badge = t.youtube_id === "tJbzMqJGH4k" ? "EL"
+        : t.youtube_id === "VQRLujxTm3c" ? "T2"
+        : t.youtube_id === "QdBZY2fkU-0" ? "T1"
+        : "VID";
+      return (
       <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
          class="relative overflow-hidden group shrink-0" style="width:140px">
         <img src={`https://img.youtube.com/vi/${t.youtube_id}/mqdefault.jpg`}
              alt={t.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
              style="height:80px" loading="lazy" />
-        <div class="absolute inset-0" style="background:linear-gradient(to right,transparent 50%,#131316 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to right,transparent 50%,var(--c-card) 100%)"></div>
         <div class="absolute bottom-1.5 left-2">
-          <span class="text-[10px] font-mono text-gta-gold uppercase tracking-widest">T{i + 1}</span>
+          <span class="text-[10px] font-mono text-gta-gold uppercase tracking-widest">{badge}</span>
         </div>
       </a>
-    ))}
+      );
+    })}
     <div class="flex-1 px-5 py-4 flex items-start justify-between flex-wrap gap-3">
       <div>
         <div class="font-semibold text-zinc-200 text-sm mb-0.5">GTA VI Search Interest Over Time</div>
@@ -57,14 +63,14 @@ const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", 
   <CardFooter
     chartId="gta6-search-trends-chart"
     sources={`Source: Google Trends via pytrends · updated ${updatedAt}`}
-    shareText="GTA VI search interest is at an all-time high and still climbing. T1 (Dec 2023) and T2 (May 2025) peaks visible in worldwide data."
+    shareText="GTA VI search interest is at an all-time high and still climbing. T1, T2, and the Aug 2026 Extended Look sit on the same worldwide Trends series."
   />
 </div>
 
 <script>
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
-  import { op } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   function init() {
     const el = document.getElementById("gta6-search-trends-chart") as HTMLElement | null;
@@ -97,7 +103,7 @@ const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", 
     svg.append("g")
       .call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(() => ""))
       .call((g) => g.select(".domain").remove())
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.grid).attr("stroke-dasharray", "3,3"));
 
     const lineGen = d3.line<{ date: Date; value: number }>()
       .x((d) => x(d.date)).y((d) => y(d.value)).curve(d3.curveMonotoneX);
@@ -109,30 +115,31 @@ const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", 
         .attr("stroke-width", 1.5).attr("opacity", op.primary).attr("d", lineGen as any);
     });
 
-    // Trailer annotations
+    // Official footage annotations — T1, T2, Extended Look
     [
       { date: new Date("2023-12-04"), label: "T1" },
       { date: new Date("2025-05-06"), label: "T2" },
+      { date: new Date("2026-08-27"), label: "EL" },
     ].forEach(({ date, label }) => {
       svg.append("line")
         .attr("x1", x(date)).attr("x2", x(date)).attr("y1", 0).attr("y2", H)
-        .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "3,3")
+        .attr("stroke", cc.alert).attr("stroke-width", 1).attr("stroke-dasharray", "3,3")
         .attr("opacity", op.tertiary);
       svg.append("text")
         .attr("x", x(date) + 4).attr("y", 10)
-        .attr("fill", "#ef4444").attr("font-size", "9").attr("font-family", "monospace").text(label);
+        .attr("fill", cc.alert).attr("font-size", "9").attr("font-family", "monospace").text(label);
     });
 
     // Axes
     svg.append("g").attr("transform", `translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat(d3.timeFormat("%Y") as any))
-      .call((g) => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call((g) => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
+      .call((g) => g.select(".domain").attr("stroke", cc.border2))
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call((g) => g.selectAll("text").attr("fill", cc.text5).attr("font-size", "10").attr("font-family", "monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(4))
-      .call((g) => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call((g) => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
+      .call((g) => g.select(".domain").attr("stroke", cc.border2))
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call((g) => g.selectAll("text").attr("fill", cc.text5).attr("font-size", "10").attr("font-family", "monospace"));
 
     // Keyword toggle buttons
     document.querySelectorAll<HTMLButtonElement>(".gta6-search-toggle").forEach((btn) => {

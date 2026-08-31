@@ -31,7 +31,7 @@ import CardFooter from "../CardFooter.astro";
                     alt={t.title}
                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div class="absolute inset-0" style="background:linear-gradient(to right, transparent 60%, #131316 100%)"></div>
+                  <div class="absolute inset-0" style="background:linear-gradient(to right, transparent 60%, var(--c-card) 100%)"></div>
                   <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <div class="w-8 h-8 rounded-full bg-black/60 border border-gta-gold/30 flex items-center justify-center">
                       <span class="text-white text-sm ml-0.5">▶</span>
@@ -41,7 +41,10 @@ import CardFooter from "../CardFooter.astro";
                 <!-- Stats -->
                 <div class="px-5 py-5 flex-1">
                   <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-2">
-                    {i === 0 ? "Trailer 1 · Dec 4 2023" : "Trailer 2 · May 6 2025"}
+                    {t.youtube_id === "QdBZY2fkU-0" ? "Trailer 1 · Dec 4 2023"
+                      : t.youtube_id === "VQRLujxTm3c" ? "Trailer 2 · May 6 2025"
+                      : t.youtube_id === "tJbzMqJGH4k" ? "Extended Look · Aug 27 2026"
+                      : t.title}
                   </div>
                   <div class="text-3xl font-bold font-mono text-gta-bright mb-0.5">
                     {(views / 1_000_000).toFixed(1)}M
@@ -49,12 +52,13 @@ import CardFooter from "../CardFooter.astro";
                   <div class="text-[11px] text-zinc-500 font-mono mb-3">views</div>
                   <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-600">
                     <span>👍 {(likes / 1_000_000).toFixed(2)}M</span>
-                    {i === 0 && <span class="text-gta-teal">24h record</span>}
+                    {t.youtube_id === "QdBZY2fkU-0" && <span class="text-gta-teal">24h record</span>}
+                    {t.youtube_id === "tJbzMqJGH4k" && <span class="text-gta-gold">Netflix premiere</span>}
                   </div>
                 </div>
               </div>
             );
           })}
         </div>
-        <CardFooter chartId="trailer-velocity" sources={`Source: YouTube Data API · polled ${new Date(velocityData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}`} shareText="GTA VI Trailer 1 holds the 24-hour YouTube record. 279M views, 161M for Trailer 2. The hype is unlike anything in gaming." />
+        <CardFooter chartId="trailer-velocity" sources={`Source: YouTube Data API · polled ${new Date(velocityData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}`} shareText="GTA VI Trailer 1 still holds the 24-hour YouTube record. Trailer 2 and the Aug 27 Extended Look now sit beside it on GTAVI.AI." />
       </div>

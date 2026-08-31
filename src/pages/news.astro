@@ -91,6 +91,7 @@ const SOURCE_META: Record<string, SourceMeta> = {
   "sec-edgar":        { color: "text-gta-gold",    badge: "bg-gta-gold/10 border-gta-gold/20",          label: "Official",       dot: "bg-gta-gold" },
   "rockstar-intel":   { color: "text-amber-300",   badge: "bg-amber-400/10 border-amber-400/25",        label: "Rockstar Intel", dot: "bg-amber-400" },
   "ign":              { color: "text-red-400",      badge: "bg-red-500/10 border-red-500/25",             label: "IGN",            dot: "bg-red-400" },
+  "gamesradar":       { color: "text-red-300",      badge: "bg-red-500/10 border-red-500/20",             label: "GamesRadar+",    dot: "bg-red-300" },
   "insider-gaming":   { color: "text-gta-teal",    badge: "bg-gta-teal/10 border-gta-teal/20",          label: "Insider Gaming", dot: "bg-gta-teal" },
   "push-square":      { color: "text-blue-400",    badge: "bg-blue-500/10 border-blue-500/25",           label: "Push Square",    dot: "bg-blue-400" },
   "kotaku":           { color: "text-zinc-300",    badge: "bg-zinc-800 border-zinc-700",                 label: "Kotaku",         dot: "bg-zinc-500" },
@@ -238,7 +239,7 @@ const sourceCount = new Set(allSignal.map((i: any) => i.source_id)).size + 1;
             <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,var(--c-live),transparent 80%)"></div>
             <div class="text-[11px] font-mono text-zinc-500 mb-0.5">Trailer views</div>
             <div class="text-[15px] font-mono font-black text-gta-teal leading-none">{formatM(totalViews)}</div>
-            <div class="text-[10px] font-mono text-zinc-600 mt-0.5">T1 + T2 combined</div>
+            <div class="text-[10px] font-mono text-zinc-600 mt-0.5">T1 + T2 + EL</div>
           </div>
         )}
 

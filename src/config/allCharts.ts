@@ -163,7 +163,7 @@ export const ALL_CHARTS: ChartMeta[] = [
     label:     "GTA VI Trailer View Velocity",
     meta:      null, // no right-side element for this chart
     sources:   "Source: YouTube Data API · polled nightly",
-    shareText: "GTA VI Trailer 1 holds the 24-hour YouTube record. 179M views and counting. The hype is unlike anything in gaming.",
+    shareText: "GTA VI Trailer 1 still holds the 24-hour YouTube record. Trailer 2 and the Aug 27 Extended Look now sit beside it on GTAVI.AI.",
     pages:     ["charts", "gta-vi"],
   },
 
@@ -176,7 +176,7 @@ export const ALL_CHARTS: ChartMeta[] = [
     label:     "GTA VI Search Signal — Google Trends 2020–2026",
     meta:      null,  // dynamic: total data points in chart
     sources:   "Source: Google Trends via pytrends · worldwide · 0–100 scale",
-    shareText: "GTA VI search interest is at an all-time high and still climbing. T1 (Dec 2023) and T2 (May 2025) peaks visible in worldwide data.",
+    shareText: "GTA VI search interest is at an all-time high and still climbing. T1, T2, and the Aug 2026 Extended Look sit on the same worldwide Trends series.",
     pages:     ["charts", "gta-vi"],
   },
 
@@ -188,8 +188,8 @@ export const ALL_CHARTS: ChartMeta[] = [
     badge:     "Community",
     label:     "Trailer Discovery Density — What Every Second Revealed",
     meta:      null,
-    sources:   "Source: GTAVI.AI frame-by-frame analysis · official Rockstar trailers",
-    shareText: "GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis across all official releases.",
+    sources:   "Source: GTAVI.AI frame-by-frame analysis · official Rockstar trailers + Extended Look",
+    shareText: "GTA VI Extended Look confirms 52 entities in 27 minutes — more than T1 and T2 combined. Frame-by-frame entity density analysis on GTAVI.AI.",
     pages:     ["charts", "gta-vi"],
   },
 
@@ -831,7 +831,7 @@ export const CHARTS_PAGE_ORDER: string[] = [
  */
 export const HUB_CONFIG = {
   "gta-vi": {
-    featured: ["trailer-velocity", "delay-timeline-chart", "region-heatmap", "trailer-discovery-chart"],
+    featured: ["el-timeline-chart", "trailer-velocity", "delay-timeline-chart", "trailer-discovery-chart"],
     preview:  ["prelaunch-comparison-chart", "community-chart"],
   },
   "gta-online": {
