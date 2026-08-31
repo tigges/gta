@@ -48,7 +48,7 @@ import CardFooter from "../CardFooter.astro";
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
 
-    const events: {date:string;event:string;type:string;source:string;source_type:string;implied_window?:string;confirmed_date?:string}[] =
+    const events: {date:string;event:string;type:string;source:string;source_type:string;implied_window?:string;confirmed_date?:string;youtube_id?:string}[] =
       JSON.parse(el.dataset.events || "[]");
     const launchDate = new Date(el.dataset.launch || "2026-11-19");
 
@@ -147,7 +147,9 @@ import CardFooter from "../CardFooter.astro";
         leak:           "Data Breach",
         date_set:       ev.implied_window ? `Target: ${ev.implied_window}` : "Date Hinted",
         delay:          "DELAYED →2026",
-        trailer:        i < 4 ? "Trailer 1" : "Trailer 2",
+        trailer:        ev.youtube_id === "tJbzMqJGH4k" ? "Extended Look"
+                          : ev.youtube_id === "VQRLujxTm3c" ? "Trailer 2"
+                          : "Trailer 1",
         date_confirmed: i < 8 ? "Nov 19 (earnings)" : "Nov 19 (official)",
       };
       const label = shortLabel[ev.type] ?? ev.type;

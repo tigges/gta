@@ -34,8 +34,8 @@ import CardFooter from "../CardFooter.astro";
 
     const regions: any[] = JSON.parse(el.dataset.regions || "[]");
 
-    const COLS = ["official_statements","press_kit_images","trailer_1_appearances","trailer_2_appearances","community_mapping"];
-    const COL_LABELS = ["Official","Press Kit","Trailer 1","Trailer 2","Community"];
+    const COLS = ["official_statements","press_kit_images","trailer_1_appearances","trailer_2_appearances","extended_look_appearances","community_mapping"];
+    const COL_LABELS = ["Official","Press Kit","T1","T2","EL","Community"];
     const maxVal = Math.max(...regions.flatMap(r => COLS.map(c => r.evidence[c] ?? 0)));
 
     const REGION_THUMBS: Record<string,string> = {
@@ -63,7 +63,7 @@ import CardFooter from "../CardFooter.astro";
             const thumb = REGION_THUMBS[r.name];
             const nameCell = thumb
               ? `<div class="flex items-center gap-2.5">
-                   <img src="${thumb}" alt="${r.name}" style="width:48px;height:30px;object-fit:cover;border-radius:3px;border:1px solid #2a2a31;flex-shrink:0" loading="lazy" />
+                   <img src="${thumb}" alt="${r.name}" style="width:48px;height:30px;object-fit:cover;border-radius:3px;border:1px solid var(--c-border-2);flex-shrink:0" loading="lazy" />
                    <span>${r.name}</span>
                  </div>`
               : r.name;

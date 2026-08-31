@@ -20,11 +20,13 @@ const samples6 = all6.filter((_: any, i: number) => i % step === 0).slice(-SAMPL
 const samples5 = all5.filter((_: any, i: number) => i % step === 0).slice(-SAMPLES);
 const max6 = Math.max(...samples6.map((d: any) => d.value), 1);
 
-// Find T1 and T2 approximate positions
+// Find T1, T2, and Extended Look approximate positions
 const T1_DATE = "2023-12-04";
 const T2_DATE = "2025-05-06";
+const EL_DATE = "2026-08-27";
 const t1Idx = samples6.findIndex((d: any) => d.date >= T1_DATE.slice(0,7));
 const t2Idx = samples6.findIndex((d: any) => d.date >= T2_DATE.slice(0,7));
+const elIdx = samples6.findIndex((d: any) => d.date >= EL_DATE.slice(0,7));
 
 const BAR_MAX_H = 56; // px
 const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" });
@@ -35,7 +37,7 @@ const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString(
   <div class="px-5 py-4 border-b border-border-dim">
     <ChartBadgeRow game="gta-vi" category="Search Trends" fullHref="/charts?title=gta-vi#section-prelaunch-comparison-chart" fullLabel="Full chart →" />
     <div class="font-semibold text-zinc-200 text-sm mb-0.5">
-      GTA VI Search Interest — Two Trailer Spikes, Trend Still Rising
+      GTA VI Search Interest — T1, T2, Extended Look; Trend Still Rising
     </div>
     <div class="text-[11px] text-zinc-500 font-mono">
       Google Trends · worldwide · 0–100 scale · GTA 6 vs GTA V
@@ -61,6 +63,14 @@ const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString(
                 style="color:var(--c-alert)">T2</span>
         </div>
       )}
+      <!-- Extended Look marker line -->
+      {elIdx >= 0 && (
+        <div class="absolute top-0 bottom-8 w-px"
+             style={`left:${Math.round((elIdx / (SAMPLES - 1)) * 100)}%;background:var(--c-brand);opacity:0.55`}>
+          <span class="absolute -top-1 left-2 text-[9px] font-mono whitespace-nowrap"
+                style="color:var(--c-brand)">EL</span>
+        </div>
+      )}
 
       <!-- GTA V bars (faint, background) -->
       <div class="absolute bottom-8 left-0 right-0 flex items-end gap-px" style={`height:${BAR_MAX_H}px`}>
@@ -79,9 +89,10 @@ const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString(
           const h = Math.max(1, Math.round((d.value / max6) * BAR_MAX_H));
           const isT1 = t1Idx >= 0 && Math.abs(samples6.indexOf(d) - t1Idx) < 2;
           const isT2 = t2Idx >= 0 && Math.abs(samples6.indexOf(d) - t2Idx) < 2;
+          const isEL = elIdx >= 0 && Math.abs(samples6.indexOf(d) - elIdx) < 2;
           return (
             <div class="flex-1 rounded-sm transition-all duration-300"
-                 style={`height:${h}px;background:${isT1 || isT2 ? "var(--c-alert)" : "var(--c-brand)"};opacity:${isT1 || isT2 ? "0.9" : "0.7"}`}></div>
+                 style={`height:${h}px;background:${isT1 || isT2 || isEL ? "var(--c-alert)" : "var(--c-brand)"};opacity:${isT1 || isT2 || isEL ? "0.9" : "0.7"}`}></div>
           );
         })}
       </div>
@@ -108,7 +119,7 @@ const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString(
     </span>
     <span class="flex items-center gap-1">
       <span class="w-2.5 h-1.5 rounded-sm inline-block" style="background:var(--c-alert);opacity:0.7"></span>
-      Trailer spike
+      Trailer / EL spike
     </span>
   </div>
 
@@ -128,7 +139,7 @@ const updatedAt = new Date((trendsData as any).last_updated).toLocaleDateString(
     <span class="text-[10px] text-zinc-600 font-mono">Source: Google Trends via pytrends · updated {updatedAt}</span>
     <div class="flex items-center gap-2 shrink-0">
       <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
-      <ShareDropdown anchorId="section-gta6-search-trends-chart" shareText="GTA VI search interest peaked at Trailer 1 and again at Trailer 2 — the sustained signal since 2023 is unlike any prior GTA reveal. GTAVI.AI" size="sm" />
+      <ShareDropdown anchorId="section-gta6-search-trends-chart" shareText="GTA VI search interest peaked at Trailer 1, Trailer 2, and the Aug 2026 Extended Look — the sustained signal since 2023 is unlike any prior GTA reveal. GTAVI.AI" size="sm" />
     </div>
   </div>
 </div>

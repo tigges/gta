@@ -39,12 +39,14 @@ const regionsData    = regionsDataRaw as any;
 // Hero stats
 const t1 = velocityData.trailers?.find((t: any) => t.youtube_id === "QdBZY2fkU-0");
 const t2 = velocityData.trailers?.find((t: any) => t.youtube_id === "VQRLujxTm3c");
+const el = velocityData.trailers?.find((t: any) => t.youtube_id === "tJbzMqJGH4k");
 const t1Views = (t1?.snapshots?.at(-1)?.views ?? 0) as number;
 const t2Views = (t2?.snapshots?.at(-1)?.views ?? 0) as number;
-const totalViews = t1Views + t2Views;
+const elViews = (el?.snapshots?.at(-1)?.views ?? 0) as number;
+const totalViews = t1Views + t2Views + elViews;
 const confirmedRegions = regionsData.regions?.filter((r: any) => r.confirmed)?.length ?? 0;
-const totalEntities = (trailerAnalysis.trailers?.[0]?.total_entities ?? 0) + (trailerAnalysis.trailers?.[1]?.total_entities ?? 0);
-const heroTrailer = trailers[1] ?? trailers[0];
+const totalEntities = (trailerAnalysis.trailers as any[] ?? []).reduce((n: number, t: any) => n + (t.total_entities ?? 0), 0);
+const heroTrailer = trailers.find((t: any) => t.youtube_id === "tJbzMqJGH4k") ?? trailers[trailers.length - 1] ?? trailers[0];
 
 const formatViews = (n: number) =>
   n >= 1e9 ? `${(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${(n / 1e6).toFixed(0)}M` : n.toString();
@@ -124,7 +126,7 @@ const featuredIncome = incomeList
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8 max-w-2xl">
         {[
           { value: `${hubPredictions.length}`,                          label: "predictions",          sub: "confidence-scored" },
-          { value: totalViews > 0 ? formatViews(totalViews) : "200M+",  label: "trailer views",        sub: "T1 + T2 combined" },
+          { value: totalViews > 0 ? formatViews(totalViews) : "200M+",  label: "official views",       sub: "T1 + T2 + EL" },
           { value: `${confirmedRegions}`,                               label: "confirmed regions",    sub: "Leonida map" },
           { value: `${totalEntities}`,                                  label: "entities discovered",  sub: "frame-by-frame" },
         ].map(s => (

@@ -17,18 +17,24 @@ const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", 
 <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
   <!-- Header: trailer thumbnails + keyword toggles -->
   <div class="flex border-b border-border-dim">
-    {trailers.slice(0, 2).map((t: any, i: number) => (
+    {trailers.slice(0, 3).map((t: any) => {
+      const badge = t.youtube_id === "tJbzMqJGH4k" ? "EL"
+        : t.youtube_id === "VQRLujxTm3c" ? "T2"
+        : t.youtube_id === "QdBZY2fkU-0" ? "T1"
+        : "VID";
+      return (
       <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
          class="relative overflow-hidden group shrink-0" style="width:140px">
         <img src={`https://img.youtube.com/vi/${t.youtube_id}/mqdefault.jpg`}
              alt={t.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
              style="height:80px" loading="lazy" />
-        <div class="absolute inset-0" style="background:linear-gradient(to right,transparent 50%,#131316 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to right,transparent 50%,var(--c-card) 100%)"></div>
         <div class="absolute bottom-1.5 left-2">
-          <span class="text-[10px] font-mono text-gta-gold uppercase tracking-widest">T{i + 1}</span>
+          <span class="text-[10px] font-mono text-gta-gold uppercase tracking-widest">{badge}</span>
         </div>
       </a>
-    ))}
+      );
+    })}
     <div class="flex-1 px-5 py-4 flex items-start justify-between flex-wrap gap-3">
       <div>
         <div class="font-semibold text-zinc-200 text-sm mb-0.5">GTA VI Search Interest Over Time</div>
@@ -57,7 +63,7 @@ const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", 
   <CardFooter
     chartId="gta6-search-trends-chart"
     sources={`Source: Google Trends via pytrends · updated ${updatedAt}`}
-    shareText="GTA VI search interest is at an all-time high and still climbing. T1 (Dec 2023) and T2 (May 2025) peaks visible in worldwide data."
+    shareText="GTA VI search interest is at an all-time high and still climbing. T1, T2, and the Aug 2026 Extended Look sit on the same worldwide Trends series."
   />
 </div>
 
