@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-31T09:41:06Z",
+  "last_updated": "2026-08-31T12:00:00Z",
   "schema_version": "1.0",
   "note": "GTA VI income source predictions. All figures are predicted/reported unless marked confirmed. Payout figures are post-launch estimates based on GTA Online precedent and economic modelling. Source: GTAVI.AI Economic Model Analysis.",
   "income_predictions": [
@@ -208,20 +208,20 @@
       "name": "Leonida Hunting and Trapping",
       "category": "passive",
       "region": "leonida",
-      "confidence_tier": "reported",
-      "confidence_score": 68,
+      "confidence_tier": "confirmed",
+      "confidence_score": 88,
       "thumbnail": "/assets/gta6/locations/Grassrivers_03.jpg",
-      "trailer_evidence": null,
+      "trailer_evidence": "EL — hunting / wildlife study in Grassrivers and Mount Kalaga",
       "predicted_payout_per_run": "GTA$200–GTA$2,000 per animal (quality-dependent)",
       "predicted_gta_per_hr": "GTA$15,000–GTA$45,000/hr ambient",
       "analogous_gta_online": null,
-      "basis": "RDR2 hunting yielded RDR$0.25–$9.00 per animal scaled by pelt quality. Applying the GTA Online income inflation factor (~3,000x RDR2 rates) gives GTA$750–$27,000 per perfect pelt. Hunting is a zero-risk ambient income source — lower ceiling than missions but always available. GTA VI's Leonida setting (swamps, national parks, Everglades analogue) provides strong geographic basis for a full hunting economy.",
+      "basis": "Hunting is confirmed as a playable activity in the Extended Look (alongside fishing, kayaking, scuba). IGN adds that animals can be studied and new species are tracked. Payouts are still modelled from RDR2 hunting (RDR$0.25–$9.00 per animal × GTA income inflation). Zero-risk ambient income — lower ceiling than missions, always available in Grassrivers / Mount Kalaga.",
       "prediction_range": {
         "low": "GTA$15,000/hr (casual)",
         "high": "GTA$45,000/hr (optimised perfect-pelt route)"
       },
-      "source": "RDR2 hunting.json income model + GTA VI world geography analysis",
-      "source_type": "predicted"
+      "source": "GTA VI: An Extended Look + IGN preview · RDR2 hunting.json payout model",
+      "source_type": "official"
     },
     {
       "id": "vi-bounty-contracts",
@@ -381,6 +381,66 @@
       "prediction_range": {
         "low": "GTA$300,000/hr (low-security street cars)",
         "high": "GTA$900,000/hr (high-value tracked, optimal route + Pay n' Spray)"
+      }
+    },
+    {
+      "id": "vi-store-robberies",
+      "name": "Street-Level Store Robberies",
+      "category": "mission",
+      "region": "both",
+      "confidence_tier": "confirmed",
+      "confidence_score": 96,
+      "thumbnail": "/assets/gta6/locations/Vice_City_05.jpg",
+      "trailer_evidence": "EL — gas station and waffle restaurant robberies",
+      "predicted_payout_per_run": "GTA$8,000–GTA$80,000 per job (speed vs combination)",
+      "predicted_gta_per_hr": "GTA$120,000–GTA$350,000/hr (short-loop circuit)",
+      "analogous_gta_online": "daily-objectives",
+      "basis": "Extended Look shows Jason and Lucia robbing a gas station and a waffle restaurant with split roles. IGN confirms a speed-vs-profit tradeoff (blow the safe vs crack the combination) and police staging at the front door. Repeatable ambient income below heist scale — the everyday cash loop that can feed story money-gates.",
+      "source": "GTA VI: An Extended Look + IGN Rockstar North preview (Aug 27, 2026)",
+      "source_type": "official",
+      "prediction_range": {
+        "low": "GTA$8,000 per rushed job",
+        "high": "GTA$80,000 per clean, slow take"
+      }
+    },
+    {
+      "id": "vi-fences",
+      "name": "Specialised Fences — Goods and Vehicles",
+      "category": "business",
+      "region": "both",
+      "confidence_tier": "confirmed",
+      "confidence_score": 94,
+      "thumbnail": "/assets/gta6/locations/Port_Gellhorn_02.jpg",
+      "trailer_evidence": "EL / IGN — Pay n' Spray plus separate valuables and vehicle fences",
+      "predicted_payout_per_run": "Haircut on stolen goods — 40–70% of scanned value",
+      "predicted_gta_per_hr": null,
+      "analogous_gta_online": "vehicle-warehouse",
+      "basis": "IGN: stolen items go to specialised fences — different contacts for valuables vs vehicles. Pay n' Spray is a confirmed sale / launder destination for stolen cars. Damage reduces sale value. This is the conversion layer between WAINK theft / store robberies and spendable GTA$.",
+      "source": "GTA VI: An Extended Look + IGN Rockstar North preview (Aug 27, 2026)",
+      "source_type": "official",
+      "prediction_range": {
+        "low": "40% of scanned WAINK value",
+        "high": "70% on undamaged, untracked goods"
+      }
+    },
+    {
+      "id": "vi-security-detail",
+      "name": "Celebrity Security / Gala Contracts",
+      "category": "mission",
+      "region": "vice-city",
+      "confidence_tier": "confirmed",
+      "confidence_score": 90,
+      "thumbnail": "/assets/gta6/locations/Vice_City_04.jpg",
+      "trailer_evidence": "EL — Jason and Lucia run security at a corporate gala that turns hostage",
+      "predicted_payout_per_run": "GTA$150,000–GTA$600,000 per contract",
+      "predicted_gta_per_hr": null,
+      "analogous_gta_online": "security-contracts",
+      "basis": "Extended Look's third mission chapter is a high-end event: Jason and Lucia on a celebrity security detail that collapses into a Die Hard-style hostage sequence. Distinct from street robberies and heists — a contact-mission tier that pays for presence and combat, not loot extraction. Analogous to GTA Online VIP / security work.",
+      "source": "GTA VI: An Extended Look (Aug 27, 2026)",
+      "source_type": "official",
+      "prediction_range": {
+        "low": "GTA$150,000 (detail goes loud early)",
+        "high": "GTA$600,000 (clean extract + bonus objectives)"
       }
     }
   ]

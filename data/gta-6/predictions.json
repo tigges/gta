@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-31T09:40:21Z",
+  "last_updated": "2026-08-31T12:00:00Z",
   "note": "All predictions are community-derived. Not affiliated with Rockstar Games or Take-Two Interactive.",
   "schema_version": "2.0",
   "predictions": [
@@ -628,28 +628,28 @@
     {
       "id": "pred-rdr2-hunting",
       "title": "Wildlife Hunting as an Income Source",
-      "value": "Hunting system yields GTA$ via pelts and resources",
+      "value": "Hunting confirmed — pelt/resource payouts still modelled",
       "unit": null,
       "thumbnail": "/assets/gta6/locations/Grassrivers_03.jpg",
-      "confidence": 68,
-      "confidence_tier": "reported",
-      "basis": "Multiple community sources report a deep hunting and tracking system modelled on RDR2 in the Grassrivers/Leonida rural regions. RDR2's Trapper/Butcher income model provides the direct precedent. Trailer 1 shows wildlife prominently in Grassrivers.",
-      "trailer_timestamp": "T1 — wildlife visible in Grassrivers",
+      "confidence": 88,
+      "confidence_tier": "confirmed",
+      "basis": "Hunting is now a confirmed side activity — shown in the Extended Look alongside fishing, kayaking, and scuba in Grassrivers / Mount Kalaga. IGN's Rockstar North preview adds that animals can be studied and newly discovered species are tracked. Income from pelts/resources is still modelled from RDR2's Trapper/Butcher, not officially priced.",
+      "trailer_timestamp": "EL — hunting / wildlife study shown in Leonida rural sequences",
       "prediction_method": "rdr2-precedent",
       "prediction_inputs": [
         "data/rdr2/economy/hunting.json",
         "data/rdr2/mechanics/index.json — wildlife-hunting",
-        "T1 Grassrivers trailer analysis"
+        "gta-6/trailer-analysis.json — Extended Look wildlife + hunting"
       ],
       "prediction_range": {
-        "low": "Basic ambient income — GTA$15,000–25,000/hr",
+        "low": "Side activity only — no sellable pelts",
         "high": "Full wildlife economy with rare specimen premiums — GTA$40,000+/hr"
       },
       "outcome_verified": false,
-      "outcome_actual": null,
-      "outcome_date": null,
-      "source": "Community reports · RDR2 precedent · GTAVI.AI trailer analysis",
-      "source_type": "reported",
+      "outcome_actual": "PARTIAL — hunting confirmed as a playable activity. Pelt/resource income still unpriced.",
+      "outcome_date": "2026-08-27",
+      "source": "GTA VI: An Extended Look + IGN Rockstar North preview (Aug 27, 2026)",
+      "source_type": "official",
       "poll_question": "Hunting for real GTA$ — is Rockstar doing it?",
       "poll_options": [
         "Yes — full RDR2-style system",
@@ -670,7 +670,7 @@
       "thumbnail": "/assets/gta6/characters/Lucia_Caminos_05.jpg",
       "confidence": 60,
       "confidence_tier": "reported",
-      "basis": "RDR2's honour system modified shop prices by up to 25%. Community reports suggest GTA VI introduces a relationship/reputation mechanic between Lucia and Jason, potentially extending to NPC commercial interactions. If prices vary by reputation, the GTA-RPP model gains a new axis.",
+      "basis": "Criminal Profile is now confirmed (hidden professional-vs-sloppy meter, not a good/evil bar). RDR2 honour modified shop prices by up to 25%. Rockstar has not said Criminal Profile changes shop prices — IGN describes world reactivity, story outcomes, and a possible permanent chaos floor. Pricing impact remains the open economic question.",
       "trailer_timestamp": null,
       "prediction_method": "rdr2-precedent",
       "prediction_inputs": [
@@ -702,28 +702,28 @@
     {
       "id": "pred-rdr2-weapon-carry",
       "title": "Limited Weapon Inventory with Vehicle Storage",
-      "value": "Carry limit enforced — larger weapons stored in vehicle",
+      "value": "Trunk storage confirmed — hard carry limit still open",
       "unit": null,
       "thumbnail": "/assets/gta6/characters/Jason_Duval_03.jpg",
-      "confidence": 65,
-      "confidence_tier": "reported",
-      "basis": "RDR2 limited Arthur to 2 long guns + 4 sidearms with horse storage. Community reports confirm this mechanic transfers to GTA VI with vehicle storage replacing horse. Economically: vehicle storage upgrades become a new C (Consumption) spending category.",
-      "trailer_timestamp": null,
+      "confidence": 82,
+      "confidence_tier": "confirmed",
+      "basis": "IGN's Rockstar North preview confirms vehicle trunks store weapons and spare outfits — used both to prep robberies and to change appearance mid-chase. This is the RDR2 horse-storage analogue. A hard on-foot carry cap (2 long guns) is still unconfirmed; the Extended Look shows a familiar weapon wheel, not a stripped inventory.",
+      "trailer_timestamp": "EL — trunk clothes / weapon storage mentioned in preview coverage",
       "prediction_method": "rdr2-precedent",
       "prediction_inputs": [
         "data/rdr2/mechanics/index.json — limited-weapon-inventory",
-        "GTA V/Online unlimited inventory precedent (regression)",
-        "Vehicle upgrade spending model"
+        "IGN Rockstar North preview — trunk weapons + outfits",
+        "GTA V/Online unlimited inventory precedent"
       ],
       "prediction_range": {
-        "low": "Soft limit — mild encouragement to store in vehicle",
+        "low": "Trunk storage only — no hard on-foot cap",
         "high": "Hard limit — 2–4 weapon carry max, mandatory vehicle storage for long guns"
       },
       "outcome_verified": false,
-      "outcome_actual": null,
-      "outcome_date": null,
-      "source": "Community reports · RDR2 inventory system analysis",
-      "source_type": "reported",
+      "outcome_actual": "PARTIAL — trunk weapon and outfit storage confirmed. Hard carry limit not shown.",
+      "outcome_date": "2026-08-27",
+      "source": "GTA VI: An Extended Look + IGN Rockstar North preview (Aug 27, 2026)",
+      "source_type": "official",
       "poll_question": "Hard weapon carry limit in GTA VI — deal or dealbreaker?",
       "poll_options": [
         "Yes — hard carry limit",
@@ -776,27 +776,28 @@
     {
       "id": "pred-rdr2-greet-antagonize",
       "title": "Context-sensitive NPC interactions affect mission access and pricing",
-      "value": "NPC interaction system confirmed",
+      "value": "Greet / Taunt / Defuse / Provoke confirmed",
       "unit": null,
       "thumbnail": "/assets/gta6/characters/Lucia_Caminos_03.jpg",
-      "confidence": 65,
-      "confidence_tier": "reported",
-      "basis": "RDR2's greet/antagonize system (hold/tap near NPCs) gave Arthur honour points that unlocked dialogue branches and changed shop prices. Community sources report a direct analogue in GTA VI tied to Lucia and Jason's reputation in different regions. Economically, this creates a dynamic pricing layer over the base GTA$ system — the first time franchise pricing has been protagonist-behaviour-dependent.",
-      "trailer_timestamp": null,
+      "confidence": 92,
+      "confidence_tier": "confirmed",
+      "basis": "Confirmed in the Extended Look and IGN preview. Holstered weapon → Greet or Taunt. Tense situations add Defuse or Provoke. NPCs respond differently; some confront you for following or eavesdropping. The Extended Look also shows Pet / Scold / Study on a dog. Shop-price effects remain unconfirmed — Criminal Profile tracks professional vs sloppy crime, not a simple honour discount.",
+      "trailer_timestamp": "EL — contextual NPC prompts; dog Pet/Scold/Study",
       "prediction_method": "RDR2 mechanic transfer analysis — greet/antagonize → reputation → pricing",
       "prediction_inputs": [
         "data/rdr2/mechanics/index.json → greet-antagonize",
-        "data/rdr2/economy/shop-prices.json → honour_price_modifier"
+        "IGN Rockstar North preview — Greet/Taunt/Defuse/Provoke",
+        "gta-6/trailer-analysis.json — Extended Look NPC prompts"
       ],
       "prediction_range": {
-        "low": "Minor dialogue variation only",
+        "low": "Dialogue and ambient reaction only",
         "high": "Full pricing tier system (±20%)"
       },
       "outcome_verified": false,
-      "outcome_actual": null,
-      "outcome_date": null,
-      "source": "Community insider reports + RDR2 mechanic precedent",
-      "source_type": "reported",
+      "outcome_actual": "PARTIAL — contextual NPC prompts confirmed. Shop-price coupling still unverified.",
+      "outcome_date": "2026-08-27",
+      "source": "GTA VI: An Extended Look + IGN Rockstar North preview (Aug 27, 2026)",
+      "source_type": "official",
       "poll_question": "Be kind, pay less. Is GTA VI going there?",
       "poll_options": [
         "Yes — full pricing tiers",
@@ -848,26 +849,28 @@
     {
       "id": "pred-rdr2-threat-detection",
       "title": "Eagle Eye threat detection mechanic carries forward into GTA VI",
-      "value": "Enhanced perception mode predicted",
+      "value": "Focus system confirmed — highlights opportunities in the world",
       "unit": null,
       "thumbnail": "/assets/gta6/locations/Mount_Kalaga_National_Park_03.jpg",
-      "confidence": 62,
-      "confidence_tier": "reported",
-      "basis": "RDR2's Eagle Eye (hold R3) highlighted threats, tracks, herbs and collectibles in the environment. GTA V had a limited heightened sense (special ability). Community sources report GTA VI introduces a sustained threat-detection mode for both protagonists — spotting ambushes, tracking targets, and identifying loot containers. Economically, this reduces time-cost of ambient income (looting, hunting) and changes the risk/reward calculation for wanted-level missions.",
-      "trailer_timestamp": null,
-      "prediction_method": "RDR2 mechanic transfer analysis — Eagle Eye → GTA VI threat detection",
+      "confidence": 94,
+      "confidence_tier": "confirmed",
+      "basis": "IGN's Rockstar North preview confirms a Focus system that draws attention to useful objects and opportunities while exploring. Combined with Extended Look slow-mo aiming that highlights kill / incapacitation points, this is the RDR2 Eagle Eye analogue — perception, not a full tracking overlay. Rockstar is not marking every encounter on the map; Focus is how ambient events surface.",
+      "trailer_timestamp": "EL — slow-mo highlight on enemies; IGN Focus system",
+      "prediction_method": "RDR2 mechanic transfer analysis — Eagle Eye → GTA VI Focus",
       "prediction_inputs": [
-        "data/rdr2/mechanics/index.json → threat-detection"
+        "data/rdr2/mechanics/index.json → threat-detection",
+        "IGN Rockstar North preview — Focus system",
+        "gta-6/trailer-analysis.json — Bullet Time / highlight"
       ],
       "prediction_range": {
-        "low": "Passive highlight only (like GTA V)",
+        "low": "Combat highlight only (slow-mo hit points)",
         "high": "Full Eagle Eye clone with tracking and loot detection"
       },
-      "outcome_verified": false,
-      "outcome_actual": null,
-      "outcome_date": null,
-      "source": "Community insider reports + RDR2 Eagle Eye mechanic precedent",
-      "source_type": "reported",
+      "outcome_verified": true,
+      "outcome_actual": "CONFIRMED as Focus — highlights objects and opportunities. Not a named Eagle Eye clone; no full tracking overlay shown.",
+      "outcome_date": "2026-08-27",
+      "source": "GTA VI: An Extended Look + IGN Rockstar North preview (Aug 27, 2026)",
+      "source_type": "official",
       "poll_question": "Eagle Eye in GTA VI — does RDR2's best trick survive?",
       "poll_options": [
         "Yes — full mechanic",
@@ -1079,6 +1082,182 @@
       "pages": [
         "gta-vi"
       ]
+    },
+    {
+      "id": "pred-slow-mo-combat",
+      "title": "Slow-Motion Aiming Returns as a Combat Tool",
+      "value": "Bullet-time aim with highlighted kill / incapacitate points",
+      "unit": null,
+      "thumbnail": "/assets/gta6/characters/Jason_Duval_03.jpg",
+      "confidence": 100,
+      "confidence_tier": "confirmed",
+      "basis": "Extended Look shows Jason activating slow-motion aiming during shootouts, with potential kill or incapacitation points highlighted on enemies. Lucia's close-quarters fight uses contextual prompts (including a stiletto-heel stab). Vehicle combat is equally prominent — firing from moving cars at pursuing police. This is a designed gunfight layer, not a hidden cheat.",
+      "trailer_timestamp": "EL — ~10:20 Jason bullet time; Lucia heel / one-hand shotgun later",
+      "prediction_method": null,
+      "prediction_inputs": [],
+      "prediction_range": {
+        "low": "Jason-only special ability",
+        "high": "Both protagonists, with unique contextual finishers"
+      },
+      "outcome_verified": true,
+      "outcome_actual": "Confirmed on-screen in the Extended Look. Highlight-point slow-mo + contextual melee finishers.",
+      "outcome_date": "2026-08-27",
+      "source": "GTA VI: An Extended Look (Rockstar/Netflix, Aug 27, 2026)",
+      "source_type": "official",
+      "display_order": 7,
+      "pages": [
+        "gta-vi",
+        "home"
+      ],
+      "short_value": "Slow-mo aim"
+    },
+    {
+      "id": "pred-story-money-gates",
+      "title": "Story Progression Can Gate on Raised Cash",
+      "value": "Players may need to earn a target amount before some story beats",
+      "unit": null,
+      "thumbnail": "/assets/gta6/locations/Vice_City_02.jpg",
+      "confidence": 86,
+      "confidence_tier": "reported",
+      "basis": "IGN's Rockstar North preview reports Rockstar wants money to matter for progression — players may occasionally need to raise a set amount before advancing. Major cash sources named: steal-and-sell cars (WAINK), store robberies, and larger bank jobs. Combined with the confirmed speed-vs-profit robbery tradeoff, this is the first GTA story loop that can send you back into the open world to fund the next chapter.",
+      "trailer_timestamp": null,
+      "prediction_method": "preview-report",
+      "prediction_inputs": [
+        "IGN Rockstar North preview — money progression",
+        "pred-waink-car-theft",
+        "pred-robbery-speed-vs-profit"
+      ],
+      "prediction_range": {
+        "low": "Optional grind — story continues on a minimum take",
+        "high": "Hard cash gates on multiple chapters"
+      },
+      "outcome_verified": false,
+      "outcome_actual": null,
+      "outcome_date": null,
+      "source": "IGN Rockstar North preview (Rob Nelson, Aug 2026)",
+      "source_type": "reported",
+      "display_order": 8,
+      "pages": [
+        "gta-vi",
+        "home"
+      ],
+      "short_value": "Cash-gated story",
+      "poll_question": "Should GTA VI lock story missions behind earning cash?",
+      "poll_options": [
+        "Yes — money should matter",
+        "Only a couple of gates",
+        "No — never block the story"
+      ]
+    },
+    {
+      "id": "pred-robbery-speed-vs-profit",
+      "title": "Store Robberies Trade Speed Against Take",
+      "value": "Blow the safe fast and lose valuables, or crack it and risk the cops",
+      "unit": null,
+      "thumbnail": "/assets/gta6/locations/Vice_City_05.jpg",
+      "confidence": 96,
+      "confidence_tier": "confirmed",
+      "basis": "Extended Look shows gas-station and waffle-restaurant robberies with split roles (one works the register / safe, the other covers). IGN adds the explicit tradeoff: blow a safe quickly and damage some of the take, or spend time on the combination and recover more while police close in. Officers may wait outside, making rear exits matter. Stolen goods go to specialised fences — valuables vs vehicles.",
+      "trailer_timestamp": "EL — gas station + waffle restaurant robberies",
+      "prediction_method": null,
+      "prediction_inputs": [],
+      "prediction_range": {
+        "low": "Flavour only — payout variance under 20%",
+        "high": "Meaningful skill ceiling — 2–3× take on a clean, slow job"
+      },
+      "outcome_verified": true,
+      "outcome_actual": "Confirmed: speed-vs-profit robberies, specialised fences, police staging outside.",
+      "outcome_date": "2026-08-27",
+      "source": "GTA VI: An Extended Look + IGN Rockstar North preview (Aug 27, 2026)",
+      "source_type": "official",
+      "display_order": 8,
+      "pages": [
+        "gta-vi",
+        "home"
+      ],
+      "short_value": "Speed vs take"
+    },
+    {
+      "id": "pred-body-simulation",
+      "title": "Bodies Respond to Food, Exercise, Sleep, and Time on the Run",
+      "value": "Weight, muscle, and fatigue are visible on Jason and Lucia",
+      "unit": null,
+      "thumbnail": "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      "confidence": 100,
+      "confidence_tier": "confirmed",
+      "basis": "Extended Look shows safehouse life (fridge, drinks, TV, getting dressed) plus weightlifting, swimming, and hanging out. IGN confirms the simulation layer: exercise builds and tones muscle, food changes body weight, long stretches away from bed (multi-day chases or drinking sessions) leave visible signs on faces and bodies. Hair can be shortened at home; new styles need a barber or salon.",
+      "trailer_timestamp": "EL — safehouse fridge / TV / getting ready; gym and swim activities",
+      "prediction_method": null,
+      "prediction_inputs": [],
+      "prediction_range": {
+        "low": "Cosmetic only",
+        "high": "Gameplay effects (stamina, intimidation, clothing fit)"
+      },
+      "outcome_verified": true,
+      "outcome_actual": "Confirmed: food, exercise, sleep, and time-on-the-run change appearance. Gameplay stat coupling not stated.",
+      "outcome_date": "2026-08-27",
+      "source": "GTA VI: An Extended Look + IGN Rockstar North preview (Aug 27, 2026)",
+      "source_type": "official",
+      "display_order": 9,
+      "pages": [
+        "gta-vi"
+      ],
+      "short_value": "Body sim"
+    },
+    {
+      "id": "pred-side-activities",
+      "title": "Leonida Is Built Around Non-Story Activities",
+      "value": "18+ confirmed activities — from scuba and hunting to Ryde Me and Snapmatic",
+      "unit": "activities",
+      "thumbnail": "/assets/gta6/locations/Leonida_Keys_01.jpg",
+      "confidence": 100,
+      "confidence_tier": "confirmed",
+      "basis": "Extended Look shows basketball, pool, weightlifting, swimming, scuba, kayaking, fishing, hunting, base jumping, parachuting, shooting-range practice, street/dirt racing, jet skis, fanboats, and electric scooters, plus bars and clubs. IGN adds mini golf, a zoo visit, Ryde Me (ride-hailing so you are not always the driver), and Snapmatic — Jason and Lucia do not publicly upload photos because a digital trail is a bad idea for wanted criminals.",
+      "trailer_timestamp": "EL — activity montage across Vice City and Leonida",
+      "prediction_method": null,
+      "prediction_inputs": [],
+      "prediction_range": {
+        "low": "18 activities shown",
+        "high": "200+ indexed community target"
+      },
+      "outcome_verified": true,
+      "outcome_actual": "Confirmed on-screen plus IGN: 18+ distinct activities. Full launch list still unpublished.",
+      "outcome_date": "2026-08-27",
+      "source": "GTA VI: An Extended Look + IGN Rockstar North preview (Aug 27, 2026)",
+      "source_type": "official",
+      "display_order": 7,
+      "pages": [
+        "gta-vi",
+        "home"
+      ],
+      "short_value": "18+ activities"
+    },
+    {
+      "id": "pred-chapter-structure",
+      "title": "Story Uses RDR2-Style Chapters and Accumulating Choices",
+      "value": "Chapters + major/minor choices designed for replay",
+      "unit": null,
+      "thumbnail": "/assets/gta6/characters/Jason_Duval_06.jpg",
+      "confidence": 97,
+      "confidence_tier": "confirmed",
+      "basis": "Preview coverage and the Extended Look confirm RDR2-style chapters. IGN: major decisions have immediate effects; smaller choices accumulate. Missions show multiple escape routes and a live choice of who drives vs who shoots. Rockstar designed the story for repeat playthroughs rather than one complete variation per run. Pairs with the ~80-hour Rob Nelson playthrough figure (main story plus some optional narrative goals — not a pure main-path length).",
+      "trailer_timestamp": "EL — three distinct mission chapters + open-world bridges",
+      "prediction_method": null,
+      "prediction_inputs": [],
+      "prediction_range": {
+        "low": "Cosmetic branches only",
+        "high": "Chapter outcomes lock later missions"
+      },
+      "outcome_verified": true,
+      "outcome_actual": "Confirmed: chapter structure, accumulating choices, multi-route missions. Full branch map unpublished.",
+      "outcome_date": "2026-08-27",
+      "source": "GTA VI: An Extended Look + IGN / NYT preview coverage (Aug 27, 2026)",
+      "source_type": "official",
+      "display_order": 6,
+      "pages": [
+        "gta-vi"
+      ],
+      "short_value": "Chapter story"
     }
   ]
 }
