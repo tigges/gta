@@ -19,7 +19,7 @@ import CardFooter from "../CardFooter.astro";
               GTA VI: From Announcement to Launch — Every Date Shift
             </div>
             <div class="text-[11px] text-zinc-500 font-mono mt-0.5">
-              Promised "2025" → delayed Feb 2025 → confirmed Nov 19, 2026. Source-tagged per event.
+              Promised "2025" → delayed Feb 2025 → confirmed Nov 19, 2026 · Extended Look Aug 27. Source-tagged per event.
             </div>
           </div>
           <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500 flex-wrap">
@@ -33,7 +33,7 @@ import CardFooter from "../CardFooter.astro";
           data-events={JSON.stringify(delayData.timeline)}
           data-launch={delayData.confirmed_launch}
         ></div>
-        <CardFooter chartId="delay-timeline-chart" sources="Sources: SEC EDGAR Take-Two 8-K filings · Rockstar Games official announcements" shareText="GTA VI has been delayed twice. The full timeline — and what it signals for the Nov 19, 2026 release date." />
+        <CardFooter chartId="delay-timeline-chart" sources="Sources: SEC EDGAR Take-Two 8-K filings · Rockstar Games official announcements" shareText="GTA VI: one delay, official Nov 19 2026 date, then the Aug 27 Extended Look. Full announcement-to-launch timeline on GTAVI.AI." />
       </div>
 
 <script>
@@ -48,7 +48,7 @@ import CardFooter from "../CardFooter.astro";
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
 
-    const events: {date:string;event:string;type:string;source:string;source_type:string;implied_window?:string;confirmed_date?:string;youtube_id?:string}[] =
+    const events: {date:string;event:string;type:string;source:string;source_type:string;short_label?:string;implied_window?:string;confirmed_date?:string;youtube_id?:string}[] =
       JSON.parse(el.dataset.events || "[]");
     const launchDate = new Date(el.dataset.launch || "2026-11-19");
 
@@ -140,8 +140,9 @@ import CardFooter from "../CardFooter.astro";
         .attr("fill", ev.type === "delay" || ev.type === "date_confirmed" || ev.type === "trailer" ? fill : cc.card)
         .attr("stroke",color).attr("stroke-width",ev.type === "delay" ? 2 : 1.5);
 
-      // Short event label (2-3 words)
-      const shortLabel: Record<string,string> = {
+      // Short event label — prefer data short_label so new footage (EL) does not
+      // depend on youtube_id / index heuristics.
+      const fallbackLabel: Record<string,string> = {
         milestone:      "GTA V Launch",
         development:    "Dev Confirmed",
         leak:           "Data Breach",
@@ -150,24 +151,27 @@ import CardFooter from "../CardFooter.astro";
         trailer:        ev.youtube_id === "tJbzMqJGH4k" ? "Extended Look"
                           : ev.youtube_id === "VQRLujxTm3c" ? "Trailer 2"
                           : "Trailer 1",
-        date_confirmed: i < 8 ? "Nov 19 (earnings)" : "Nov 19 (official)",
+        date_confirmed: ev.date.startsWith("2026-02") ? "Nov 19 (earnings)" : "Nov 19 (official)",
       };
-      const label = shortLabel[ev.type] ?? ev.type;
+      const label = ev.short_label || fallbackLabel[ev.type] || ev.type;
+      const nearLaunch = Math.abs(new Date(ev.date).getTime() - launchDate.getTime()) < 1000 * 60 * 60 * 24 * 100;
+      const labelAnchor = nearLaunch && !above ? "end" : "middle";
+      const labelX = nearLaunch && !above ? ex - 4 : ex;
 
       svg.append("text")
-        .attr("x",ex).attr("y",labelY)
-        .attr("text-anchor","middle")
+        .attr("x",labelX).attr("y",labelY)
+        .attr("text-anchor",labelAnchor)
         .attr("fill", ev.type === "delay" ? cc.red : ev.type === "date_confirmed" ? cc.teal : ev.type === "trailer" ? cc.bar : cc.text4)
-        .attr("font-size",ev.type === "delay" ? "11" : "9")
+        .attr("font-size",ev.type === "delay" || ev.type === "trailer" ? "11" : "9")
         .attr("font-family","monospace")
-        .attr("font-weight", ev.type === "delay" || ev.type === "date_confirmed" ? "700" : "400")
+        .attr("font-weight", ev.type === "delay" || ev.type === "date_confirmed" || ev.type === "trailer" ? "700" : "400")
         .text(label);
 
       // Date below label
       svg.append("text")
-        .attr("x",ex).attr("y",above ? MID - 40 : MID + 84)
-        .attr("text-anchor","middle")
-        .attr("fill",cc.text7).attr("font-size","8").attr("font-family","monospace")
+        .attr("x",labelX).attr("y",above ? MID - 40 : MID + 84)
+        .attr("text-anchor",labelAnchor)
+        .attr("fill",cc.text5).attr("font-size","9").attr("font-family","monospace")
         .text(ev.date.slice(0,7));
     });
 

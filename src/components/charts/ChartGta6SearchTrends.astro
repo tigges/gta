@@ -70,7 +70,7 @@ const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", 
 <script>
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
-  import { op } from "../../assets/chartColors";
+  import { cc, op } from "../../assets/chartColors";
 
   function init() {
     const el = document.getElementById("gta6-search-trends-chart") as HTMLElement | null;
@@ -103,7 +103,7 @@ const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", 
     svg.append("g")
       .call(d3.axisLeft(y).ticks(4).tickSize(-W).tickFormat(() => ""))
       .call((g) => g.select(".domain").remove())
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#1e1e23").attr("stroke-dasharray", "3,3"));
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.grid).attr("stroke-dasharray", "3,3"));
 
     const lineGen = d3.line<{ date: Date; value: number }>()
       .x((d) => x(d.date)).y((d) => y(d.value)).curve(d3.curveMonotoneX);
@@ -115,30 +115,31 @@ const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", 
         .attr("stroke-width", 1.5).attr("opacity", op.primary).attr("d", lineGen as any);
     });
 
-    // Trailer annotations
+    // Official footage annotations — T1, T2, Extended Look
     [
       { date: new Date("2023-12-04"), label: "T1" },
       { date: new Date("2025-05-06"), label: "T2" },
+      { date: new Date("2026-08-27"), label: "EL" },
     ].forEach(({ date, label }) => {
       svg.append("line")
         .attr("x1", x(date)).attr("x2", x(date)).attr("y1", 0).attr("y2", H)
-        .attr("stroke", "#ef4444").attr("stroke-width", 1).attr("stroke-dasharray", "3,3")
+        .attr("stroke", cc.alert).attr("stroke-width", 1).attr("stroke-dasharray", "3,3")
         .attr("opacity", op.tertiary);
       svg.append("text")
         .attr("x", x(date) + 4).attr("y", 10)
-        .attr("fill", "#ef4444").attr("font-size", "9").attr("font-family", "monospace").text(label);
+        .attr("fill", cc.alert).attr("font-size", "9").attr("font-family", "monospace").text(label);
     });
 
     // Axes
     svg.append("g").attr("transform", `translate(0,${H})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat(d3.timeFormat("%Y") as any))
-      .call((g) => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call((g) => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
+      .call((g) => g.select(".domain").attr("stroke", cc.border2))
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call((g) => g.selectAll("text").attr("fill", cc.text5).attr("font-size", "10").attr("font-family", "monospace"));
     svg.append("g").call(d3.axisLeft(y).ticks(4))
-      .call((g) => g.select(".domain").attr("stroke", "#2a2a31"))
-      .call((g) => g.selectAll(".tick line").attr("stroke", "#2a2a31"))
-      .call((g) => g.selectAll("text").attr("fill", "#52525b").attr("font-size", "10").attr("font-family", "monospace"));
+      .call((g) => g.select(".domain").attr("stroke", cc.border2))
+      .call((g) => g.selectAll(".tick line").attr("stroke", cc.border2))
+      .call((g) => g.selectAll("text").attr("fill", cc.text5).attr("font-size", "10").attr("font-family", "monospace"));
 
     // Keyword toggle buttons
     document.querySelectorAll<HTMLButtonElement>(".gta6-search-toggle").forEach((btn) => {

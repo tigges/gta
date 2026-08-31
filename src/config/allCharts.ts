@@ -188,7 +188,7 @@ export const ALL_CHARTS: ChartMeta[] = [
     badge:     "Community",
     label:     "Trailer Discovery Density — What Every Second Revealed",
     meta:      null,
-    sources:   "Source: GTAVI.AI frame-by-frame analysis · official Rockstar trailers",
+    sources:   "Source: GTAVI.AI frame-by-frame analysis · official Rockstar trailers + Extended Look",
     shareText: "GTA VI Extended Look confirms 52 entities in 27 minutes — more than T1 and T2 combined. Frame-by-frame entity density analysis on GTAVI.AI.",
     pages:     ["charts", "gta-vi"],
   },

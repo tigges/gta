@@ -50,7 +50,7 @@ const t2Views = t2?.snapshots?.at(-1)?.views ?? 0;
 // Static metas live in allCharts.ts. Dynamic ones (computed from data files)
 // are overridden here via the ChartSection meta prop.
 const DYNAMIC_METAS: Record<string, string> = {
-  "trailer-discovery-chart":    `${trailerAnalysis.trailers[0].total_entities + trailerAnalysis.trailers[1].total_entities} entities discovered`,
+  "trailer-discovery-chart":    `${trailerAnalysis.trailers.reduce((sum: number, t: { total_entities?: number }) => sum + (t.total_entities ?? 0), 0)} entities discovered`,
   "delay-timeline-chart":       `${delayData.total_delays} delay · ${delayData.timeline.length} events`,
   "region-heatmap":             `${regionsData.regions.filter((r: any) => r.confirmed).length} confirmed regions`,
   "competitors-chart":          `${competitorData.games.length} titles compared`,
