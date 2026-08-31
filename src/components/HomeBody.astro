@@ -386,14 +386,14 @@ const keyStats = [
       <SectionHeader bright label="// Official Footage" dotColor="var(--c-brand)" />
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {[
-          { id: extLookId,  title: "An Extended Look", date: "Aug 27, 2026", views: `${elViewsStr} views · 26:49 · Netflix premiere`, badge: "Extended Look", highlight: true },
-          { id: trailer2Id, title: "Trailer 2",         date: "May 6, 2025",  views: `${t2ViewsStr} views · 2:47 runtime`,               badge: "Trailer 2",     highlight: false },
-          { id: trailer1Id, title: "Trailer 1",         date: "Dec 4, 2023",  views: "475M+ views · 24h record",                          badge: "Trailer 1",     highlight: false },
+          { id: extLookId,  title: "An Extended Look", date: "Aug 27, 2026", views: `${elViewsStr} views · 26:49 · Netflix premiere`, badge: "Extended Look" },
+          { id: trailer2Id, title: "Trailer 2",         date: "May 6, 2025",  views: `${t2ViewsStr} views · 2:47 runtime`,               badge: "Trailer 2" },
+          { id: trailer1Id, title: "Trailer 1",         date: "Dec 4, 2023",  views: "475M+ views · 24h record",                          badge: "Trailer 1" },
         ].map(t => (
           <a
             href={`https://www.youtube.com/watch?v=${t.id}`}
             target="_blank" rel="noopener noreferrer"
-            class={`group relative overflow-hidden rounded-xl border transition-all duration-200 ${t.highlight ? "border-gta-gold/30 hover:border-gta-gold/60 sm:col-span-2 lg:col-span-1" : "border-border-mid hover:border-gta-gold/40"}`}
+            class="group relative overflow-hidden rounded-xl transition-all duration-200"
           >
             <div class="relative aspect-video overflow-hidden">
               <img
@@ -404,12 +404,12 @@ const keyStats = [
               />
               <div class="absolute inset-0" style="background:linear-gradient(to top, var(--c-bg-deep) 2%, transparent 55%)"></div>
               <div class="absolute inset-0 flex items-center justify-center">
-                <div class={`w-12 h-12 rounded-full bg-black/60 flex items-center justify-center group-hover:bg-gta-gold/25 transition-all duration-200 ${t.highlight ? "border border-gta-gold/40" : "border border-white/30 group-hover:border-gta-gold/50"}`}>
+                <div class="w-12 h-12 rounded-full bg-black/60 flex items-center justify-center group-hover:bg-gta-gold/25 transition-all duration-200 border border-white/20 group-hover:border-gta-gold/50">
                   <span class="text-white text-lg ml-0.5">▶</span>
                 </div>
               </div>
               <div class="absolute top-3 left-3">
-                <span class={`text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest ${t.highlight ? "bg-gta-gold/20 text-gta-gold border-gta-gold/40" : "bg-black/55 text-gta-gold border-gta-gold/30"}`}>
+                <span class="text-[11px] font-mono border px-2 py-0.5 rounded uppercase tracking-widest bg-black/55 text-gta-gold border-gta-gold/30">
                   {t.badge}
                 </span>
               </div>
@@ -423,8 +423,6 @@ const keyStats = [
             </div>
           </a>
         ))}
-      </div>
-    </section>
       </div>
     </section>
 
