@@ -96,6 +96,7 @@ export interface ChartMeta {
 import ChartTrailerVelocity      from "../components/charts/ChartTrailerVelocity.astro";
 import ChartGta6SearchTrends   from "../components/charts/ChartGta6SearchTrends.astro";
 import ChartTrailerDiscovery     from "../components/charts/ChartTrailerDiscovery.astro";
+import ChartExtendedLookTimeline from "../components/charts/ChartExtendedLookTimeline.astro";
 import ChartDelayTimeline        from "../components/charts/ChartDelayTimeline.astro";
 import ChartRegionHeatmap        from "../components/charts/ChartRegionHeatmap.astro";
 import ChartCommunity            from "../components/charts/ChartCommunity.astro";
@@ -186,10 +187,24 @@ export const ALL_CHARTS: ChartMeta[] = [
     category:  "Community",
     badge:     "Community",
     label:     "Trailer Discovery Density — What Every Second Revealed",
-    meta:      null, // dynamic: total_entities from trailer-analysis.json
+    meta:      null,
     sources:   "Source: GTAVI.AI frame-by-frame analysis · official Rockstar trailers",
-    shareText: "GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis across both trailers.",
+    shareText: "GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis across all official releases.",
     pages:     ["charts", "gta-vi"],
+  },
+
+  {
+    id:        "el-timeline-chart",
+    component: ChartExtendedLookTimeline,
+    game:      "gta-vi",
+    category:  "Community",
+    badge:     "Community",
+    label:     "Extended Look — Chapter-by-Chapter Entity Timeline",
+    meta:      "52 entities · 6 chapters · 26m 49s",
+    sources:   "Source: GTAVI.AI frame-by-frame analysis · GTA VI: An Extended Look (Aug 27, 2026)",
+    shareText: "52 entities confirmed in GTA VI's 27-minute Extended Look — mapped chapter by chapter. Analysis on GTAVI.AI.",
+    pages:     ["charts", "gta-vi"],
+    weight:    95,
   },
 
   {
@@ -760,6 +775,7 @@ export function getChartsForPage(page: PageSlug): ChartMeta[] {
 export const CHARTS_PAGE_ORDER: string[] = [
   // GTA VI
   "trailer-discovery-chart",
+  "el-timeline-chart",
   "delay-timeline-chart",
   "region-heatmap",
   "community-chart",
