@@ -1,0 +1,270 @@
+---
+/**
+ * ChartExtendedLookTimeline
+ *
+ * Dedicated, full-width timeline for the GTA VI Extended Look.
+ * Splits the 1,609-second video into mission/section chapters so
+ * entity labels have room to breathe instead of being crammed into
+ * a single narrow strip.
+ *
+ * Sections:
+ *   MISSION 1   — Venture Apartments drug lab      0 – 190s
+ *   OPEN WORLD  — City/state exploration           190 – 540s
+ *   MISSION 2   — Highway chase / Raul Bautista    540 – 760s
+ *   OPEN WORLD  — Keys, missions, activities       760 – 1060s
+ *   MISSION 3   — Corporate gala Die Hard          1060 – 1400s
+ *   REVEALS     — Developer data + map confirmation 1400 – 1609s
+ */
+import trailerAnalysis from "../../../data/gta-6/trailer-analysis.json";
+import CardFooter from "../CardFooter.astro";
+
+const extLook = (trailerAnalysis.trailers as any[]).find(
+  (t) => t.youtube_id === "tJbzMqJGH4k"
+);
+
+const SECTIONS = [
+  { id: "m1",     label: "Mission 1 — Venture Apartments",   tStart: 0,    tEnd: 190,  color: "var(--c-alert)" },
+  { id: "ow1",    label: "Open World — Vice City & Leonida",  tStart: 190,  tEnd: 540,  color: "var(--c-live)" },
+  { id: "m2",     label: "Mission 2 — Highway Chase",         tStart: 540,  tEnd: 760,  color: "var(--c-alert)" },
+  { id: "ow2",    label: "Open World — Keys & Activities",    tStart: 760,  tEnd: 1060, color: "var(--c-live)" },
+  { id: "m3",     label: "Mission 3 — Corporate Gala",        tStart: 1060, tEnd: 1400, color: "var(--c-alert)" },
+  { id: "rev",    label: "Developer Reveals",                 tStart: 1400, tEnd: 1609, color: "var(--c-economy)" },
+];
+---
+
+<div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+  <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between gap-5 flex-wrap">
+    <div class="flex-1 min-w-0">
+      <div class="font-semibold text-zinc-200 text-sm mb-0.5">
+        GTA VI: An Extended Look — Chapter-by-Chapter Entity Timeline
+      </div>
+      <div class="text-[11px] text-zinc-500 font-mono">
+        52 entities confirmed across 26m 49s · segmented by mission and open-world chapters
+      </div>
+    </div>
+    <!-- EL thumbnail link -->
+    <a href="https://www.youtube.com/watch?v=tJbzMqJGH4k" target="_blank" rel="noopener noreferrer"
+      class="group relative overflow-hidden rounded-lg border border-border-mid hover:border-gta-gold/30 transition-all shrink-0">
+      <img src="https://img.youtube.com/vi/tJbzMqJGH4k/mqdefault.jpg"
+        alt="GTA VI: An Extended Look" class="w-36 h-20 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+      <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 50%)"></div>
+      <div class="absolute bottom-1 left-2">
+        <span class="text-[10px] font-mono text-gta-gold">EL · Aug 27</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Section legend -->
+  <div class="px-5 pt-3 pb-1 flex flex-wrap gap-x-5 gap-y-1 border-b border-border-dim">
+    {SECTIONS.map(s => (
+      <span class="flex items-center gap-1.5 text-[10px] font-mono text-zinc-500">
+        <span class="w-2 h-2 rounded-sm shrink-0" style={`background:${s.color};opacity:0.8`}></span>
+        {s.label}
+      </span>
+    ))}
+  </div>
+
+  <!-- Per-section timelines -->
+  <div id="el-timeline-chart" class="w-full px-5 py-4"
+    data-events={JSON.stringify(extLook?.events ?? [])}
+    data-sections={JSON.stringify(SECTIONS)}
+    data-duration={extLook?.duration_sec ?? 1609}
+  ></div>
+
+  <CardFooter
+    chartId="el-timeline-chart"
+    sources="Source: GTAVI.AI frame-by-frame analysis · GTA VI: An Extended Look (Aug 27, 2026)"
+    shareText="52 entities confirmed in GTA VI's 27-minute Extended Look — mapped chapter by chapter. Analysis on GTAVI.AI."
+  />
+</div>
+
+<script>
+  import { cc, op } from "../../assets/chartColors";
+  import * as d3 from "d3";
+  import { registerChart, triggerChart } from "../../assets/chartInit";
+
+  function init() {
+    const el = document.getElementById("el-timeline-chart") as HTMLElement | null;
+    if (!el || el.clientWidth === 0) { requestAnimationFrame(init); return; }
+    if (el.dataset.rendered) return;
+    el.dataset.rendered = "1";
+
+    const events: any[]   = JSON.parse(el.dataset.events   || "[]");
+    const sections: any[] = JSON.parse(el.dataset.sections || "[]");
+
+    const TYPE_COLORS: Record<string, string> = {
+      vehicle:   cc.bar,
+      character: cc.green,
+      location:  "#38bdf8",
+      wildlife:  "#a3e635",
+      weapon:    cc.red,
+      audio:     cc.purple,
+      reveal:    cc.text0,
+    };
+
+    const W = el.clientWidth - 10;
+    const STRIP_H   = 36;   // height of the coloured density strip
+    const LABEL_H   = 100;  // height reserved for labels below strip
+    const SECTION_H = STRIP_H + LABEL_H + 32; // total per section (includes header)
+
+    sections.forEach((sec: any) => {
+      const secEvents = events.filter(
+        (e: any) => e.t >= sec.tStart && e.t < sec.tEnd
+      );
+      const dur = sec.tEnd - sec.tStart;
+
+      // Section container
+      const wrap = document.createElement("div");
+      wrap.style.marginBottom = "20px";
+      el.appendChild(wrap);
+
+      // Section header
+      const hdr = document.createElement("div");
+      hdr.className = "flex items-center gap-2 mb-2";
+      hdr.innerHTML = `
+        <span class="inline-block w-2 h-4 rounded-sm shrink-0" style="background:${sec.color};opacity:0.85"></span>
+        <span class="text-[11px] font-mono uppercase tracking-widest" style="color:${sec.color}">${sec.label}</span>
+        <span class="text-[10px] font-mono text-zinc-600 ml-1">${secEvents.length} entities · ${Math.floor(sec.tStart/60)}:${String(sec.tStart%60).padStart(2,'0')} – ${Math.floor(sec.tEnd/60)}:${String(sec.tEnd%60).padStart(2,'0')}</span>
+      `;
+      wrap.appendChild(hdr);
+
+      if (secEvents.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "text-[10px] font-mono text-zinc-700 italic pl-4 mb-2";
+        empty.textContent = "No entities in this section.";
+        wrap.appendChild(empty);
+        return;
+      }
+
+      const totalH = STRIP_H + LABEL_H + 4;
+      const svg = d3.select(wrap)
+        .append("svg")
+        .attr("width", "100%")
+        .attr("viewBox", `0 0 ${W} ${totalH}`)
+        .attr("overflow", "visible");
+
+      const x = d3.scaleLinear().domain([sec.tStart, sec.tEnd]).range([0, W - 10]);
+
+      // Background strip
+      svg.append("rect")
+        .attr("x", 0).attr("y", 0)
+        .attr("width", W - 10).attr("height", STRIP_H)
+        .attr("rx", 4)
+        .attr("fill", cc.cardRaised);
+
+      // Density heatmap (8-second buckets)
+      const buckets = Math.ceil(dur / 8);
+      const counts = new Array(buckets).fill(0);
+      secEvents.forEach((ev: any) => { counts[Math.min(Math.floor((ev.t - sec.tStart) / 8), buckets - 1)]++; });
+      const maxCount = Math.max(...counts, 1);
+      counts.forEach((c: number, i: number) => {
+        if (c === 0) return;
+        const bx = x(sec.tStart + i * 8);
+        const bw = x(sec.tStart + 8) - x(sec.tStart);
+        svg.append("rect")
+          .attr("x", bx).attr("y", 0)
+          .attr("width", bw).attr("height", STRIP_H)
+          .attr("rx", 2)
+          .attr("fill", sec.color)
+          .attr("opacity", 0.06 + (c / maxCount) * 0.22);
+      });
+
+      // Entity markers + staggered labels
+      // Sort by time, then assign label row (0, 1, 2...) greedily to avoid overlap
+      const sortedEvs = [...secEvents].sort((a: any, b: any) => a.t - b.t);
+      const ROW_H = 16; // px per label row below strip
+      const MAX_ROWS = Math.floor(LABEL_H / ROW_H);
+      const rowNextX: number[] = new Array(MAX_ROWS).fill(0); // track rightmost label end per row
+
+      sortedEvs.forEach((ev: any) => {
+        const ex = x(ev.t);
+        const color = TYPE_COLORS[ev.type] ?? cc.text4;
+
+        // Tick line
+        svg.append("line")
+          .attr("x1", ex).attr("x2", ex)
+          .attr("y1", 0).attr("y2", STRIP_H)
+          .attr("stroke", color).attr("stroke-width", 1)
+          .attr("opacity", op.secondary);
+
+        // Dot on strip
+        svg.append("circle")
+          .attr("cx", ex).attr("cy", STRIP_H / 2)
+          .attr("r", 4)
+          .attr("fill", color)
+          .attr("stroke", cc.bg).attr("stroke-width", 1.5);
+
+        // Label: find first row where it fits
+        const labelWidth = Math.max(60, ev.entity.length * 5.5 + 8);
+        let row = rowNextX.findIndex((rx: number) => rx <= ex - 4);
+        if (row === -1) row = 0; // fallback: overlap last row rather than drop
+
+        const labelY = STRIP_H + 8 + row * ROW_H;
+        rowNextX[row] = ex + labelWidth;
+
+        // Leader line from dot down to label
+        svg.append("line")
+          .attr("x1", ex).attr("x2", ex)
+          .attr("y1", STRIP_H + 2).attr("y2", labelY - 2)
+          .attr("stroke", color).attr("stroke-width", 0.5)
+          .attr("opacity", 0.25);
+
+        // Label text
+        const shortName = ev.entity.length > 28
+          ? ev.entity.slice(0, 26) + "…"
+          : ev.entity;
+        const ts = `${Math.floor(ev.t / 60)}:${String(ev.t % 60).padStart(2, "0")}`;
+
+        svg.append("text")
+          .attr("x", ex + 3)
+          .attr("y", labelY + ROW_H - 4)
+          .attr("fill", color)
+          .attr("font-size", "9")
+          .attr("font-family", "JetBrains Mono, Fira Code, monospace")
+          .text(`${shortName} (${ts})`);
+      });
+
+      // Time axis
+      const tickCount = Math.min(5, Math.ceil(dur / 30));
+      const ticks = d3.ticks(sec.tStart, sec.tEnd, tickCount);
+      ticks.forEach((t: number) => {
+        const tx = x(t);
+        const tSec = Math.round(t);
+        svg.append("text")
+          .attr("x", tx).attr("y", totalH - 2)
+          .attr("text-anchor", "middle")
+          .attr("fill", cc.text7)
+          .attr("font-size", "9")
+          .attr("font-family", "monospace")
+          .text(`${Math.floor(tSec / 60)}:${String(tSec % 60).padStart(2, "0")}`);
+      });
+    });
+
+    // Entity type legend
+    const legendDiv = document.createElement("div");
+    legendDiv.className = "flex flex-wrap gap-x-4 gap-y-1 mt-3 pt-3 border-t border-border-dim";
+    legendDiv.style.borderColor = cc.border1;
+    Object.entries(TYPE_COLORS).forEach(([type, color]) => {
+      const span = document.createElement("span");
+      span.className = "text-[10px] font-mono text-zinc-500 flex items-center gap-1.5";
+      span.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color}"></span>${type}`;
+      legendDiv.appendChild(span);
+    });
+    el.appendChild(legendDiv);
+  }
+
+  registerChart("el-timeline-chart", init);
+
+  if ("IntersectionObserver" in window) {
+    const obsEl = document.getElementById("el-timeline-chart");
+    if (obsEl) {
+      const obs = new IntersectionObserver(
+        (entries) => { if (entries[0].isIntersecting) { triggerChart("el-timeline-chart"); obs.disconnect(); } },
+        { rootMargin: "200px" }
+      );
+      obs.observe(obsEl);
+    }
+  } else {
+    init();
+  }
+</script>
