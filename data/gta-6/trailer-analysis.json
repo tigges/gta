@@ -1,5 +1,5 @@
 {
-  "source": "Frame-by-frame analysis of official Rockstar trailers",
+  "source": "Frame-by-frame analysis of official Rockstar trailers and Extended Look",
   "note": "Timestamps approximate. Entity type: vehicle/character/location/wildlife/weapon/audio/reveal",
   "trailers": [
     {
@@ -10,23 +10,125 @@
       "duration_sec": 91,
       "total_entities": 18,
       "events": [
-        { "t": 0,  "type": "location",   "entity": "Leonida wetlands",     "confidence": "confirmed", "note": "Opening aerial shot establishes setting" },
-        { "t": 8,  "type": "character",  "entity": "Unknown character",    "confidence": "reported",  "note": "First human figure, unidentified" },
-        { "t": 14, "type": "location",   "entity": "Vice City environs",   "confidence": "confirmed", "note": "Suburban Vice City area visible" },
-        { "t": 22, "type": "location",   "entity": "Vice City skyline",    "confidence": "confirmed", "note": "First clear Vice City skyline reveal" },
-        { "t": 28, "type": "vehicle",    "entity": "Motorcycle",           "confidence": "reported",  "note": "First vehicle seen in trailer" },
-        { "t": 32, "type": "character",  "entity": "Lucia Caminos",        "confidence": "confirmed", "note": "Prison reveal — first protagonist confirmed" },
-        { "t": 38, "type": "location",   "entity": "Vice Beach",           "confidence": "confirmed", "note": "Neon beach strip visible, Ocean Drive reference" },
-        { "t": 45, "type": "character",  "entity": "Jason Duval",          "confidence": "confirmed", "note": "Second protagonist revealed" },
-        { "t": 50, "type": "location",   "entity": "Port Gellhorn area",   "confidence": "reported",  "note": "Industrial coastal region first glimpse" },
-        { "t": 56, "type": "vehicle",    "entity": "Supercar (unID)",      "confidence": "reported",  "note": "High-speed chase sequence" },
-        { "t": 62, "type": "location",   "entity": "Leonida Keys",         "confidence": "confirmed", "note": "Keys / swamp area visible" },
-        { "t": 68, "type": "character",  "entity": "Cal Hampton",          "confidence": "confirmed", "note": "Supporting character first seen" },
-        { "t": 72, "type": "vehicle",    "entity": "Multiple supercars",   "confidence": "reported",  "note": "Race sequence showing vehicle variety" },
-        { "t": 78, "type": "audio",      "entity": "Vice City FM radio",   "confidence": "confirmed", "note": "Radio station audio heard" },
-        { "t": 82, "type": "reveal",     "entity": "GTA VI logo",          "confidence": "confirmed", "note": "Title card appears" },
-        { "t": 87, "type": "reveal",     "entity": "Coming 2025",          "confidence": "confirmed", "note": "Original release window promise" },
-        { "t": 88, "type": "audio",      "entity": "Love Is a Long Road",  "confidence": "confirmed", "note": "Tom Petty — confirmed soundtrack song" }
+        {
+          "t": 0,
+          "type": "location",
+          "entity": "Leonida wetlands",
+          "confidence": "confirmed",
+          "note": "Opening aerial shot establishes setting"
+        },
+        {
+          "t": 8,
+          "type": "character",
+          "entity": "Unknown character",
+          "confidence": "reported",
+          "note": "First human figure, unidentified"
+        },
+        {
+          "t": 14,
+          "type": "location",
+          "entity": "Vice City environs",
+          "confidence": "confirmed",
+          "note": "Suburban Vice City area visible"
+        },
+        {
+          "t": 22,
+          "type": "location",
+          "entity": "Vice City skyline",
+          "confidence": "confirmed",
+          "note": "First clear Vice City skyline reveal"
+        },
+        {
+          "t": 28,
+          "type": "vehicle",
+          "entity": "Motorcycle",
+          "confidence": "reported",
+          "note": "First vehicle seen in trailer"
+        },
+        {
+          "t": 32,
+          "type": "character",
+          "entity": "Lucia Caminos",
+          "confidence": "confirmed",
+          "note": "Prison reveal — first protagonist confirmed"
+        },
+        {
+          "t": 38,
+          "type": "location",
+          "entity": "Vice Beach",
+          "confidence": "confirmed",
+          "note": "Neon beach strip visible, Ocean Drive reference"
+        },
+        {
+          "t": 45,
+          "type": "character",
+          "entity": "Jason Duval",
+          "confidence": "confirmed",
+          "note": "Second protagonist revealed"
+        },
+        {
+          "t": 50,
+          "type": "location",
+          "entity": "Port Gellhorn area",
+          "confidence": "reported",
+          "note": "Industrial coastal region first glimpse"
+        },
+        {
+          "t": 56,
+          "type": "vehicle",
+          "entity": "Supercar (unID)",
+          "confidence": "reported",
+          "note": "High-speed chase sequence"
+        },
+        {
+          "t": 62,
+          "type": "location",
+          "entity": "Leonida Keys",
+          "confidence": "confirmed",
+          "note": "Keys / swamp area visible"
+        },
+        {
+          "t": 68,
+          "type": "character",
+          "entity": "Cal Hampton",
+          "confidence": "confirmed",
+          "note": "Supporting character first seen"
+        },
+        {
+          "t": 72,
+          "type": "vehicle",
+          "entity": "Multiple supercars",
+          "confidence": "reported",
+          "note": "Race sequence showing vehicle variety"
+        },
+        {
+          "t": 78,
+          "type": "audio",
+          "entity": "Vice City FM radio",
+          "confidence": "confirmed",
+          "note": "Radio station audio heard"
+        },
+        {
+          "t": 82,
+          "type": "reveal",
+          "entity": "GTA VI logo",
+          "confidence": "confirmed",
+          "note": "Title card appears"
+        },
+        {
+          "t": 87,
+          "type": "reveal",
+          "entity": "Coming 2025",
+          "confidence": "confirmed",
+          "note": "Original release window promise"
+        },
+        {
+          "t": 88,
+          "type": "audio",
+          "entity": "Love Is a Long Road",
+          "confidence": "confirmed",
+          "note": "Tom Petty — confirmed soundtrack song"
+        }
       ]
     },
     {
@@ -37,30 +139,548 @@
       "duration_sec": 167,
       "total_entities": 34,
       "events": [
-        { "t": 0,   "type": "character",  "entity": "Jason Duval",            "confidence": "confirmed", "note": "Jason driving, opens trailer" },
-        { "t": 12,  "type": "location",   "entity": "Vice City downtown",     "confidence": "confirmed", "note": "Dense urban area, clear Vice City" },
-        { "t": 22,  "type": "vehicle",    "entity": "Pegassi Infernus",       "confidence": "confirmed", "note": "Clearly visible badge and design" },
-        { "t": 35,  "type": "location",   "entity": "Port Gellhorn",          "confidence": "confirmed", "note": "Port Gellhorn sign visible" },
-        { "t": 44,  "type": "character",  "entity": "Lucia Caminos",          "confidence": "confirmed", "note": "At marina, with Jason" },
-        { "t": 52,  "type": "location",   "entity": "Port Gellhorn Marina",   "confidence": "confirmed", "note": "Business/location confirmed official" },
-        { "t": 60,  "type": "wildlife",   "entity": "American Alligator",     "confidence": "confirmed", "note": "Clear close-up shot" },
-        { "t": 70,  "type": "wildlife",   "entity": "Hammerhead Shark",       "confidence": "confirmed", "note": "Underwater sequence" },
-        { "t": 76,  "type": "character",  "entity": "Cal Hampton",            "confidence": "confirmed", "note": "Closeup, confirmed supporting cast" },
-        { "t": 84,  "type": "location",   "entity": "Malibu Club",            "confidence": "confirmed", "note": "Neon sign clearly readable" },
-        { "t": 90,  "type": "character",  "entity": "Boobie Ike",             "confidence": "confirmed", "note": "Character introduced" },
-        { "t": 96,  "type": "weapon",     "entity": "Assault Rifle",          "confidence": "confirmed", "note": "Jason wielding, clear model" },
-        { "t": 103, "type": "weapon",     "entity": "Combat Pistol",          "confidence": "confirmed", "note": "Lucia armed, visible model" },
-        { "t": 110, "type": "vehicle",    "entity": "Principe Deveste Eight", "confidence": "confirmed", "note": "Badging visible in chase scene" },
-        { "t": 118, "type": "wildlife",   "entity": "Florida Panther",        "confidence": "confirmed", "note": "Jungle scene" },
-        { "t": 122, "type": "location",   "entity": "Ambrosia coastline",     "confidence": "reported",  "note": "Luxury coastal area matching Ambrosia description" },
-        { "t": 128, "type": "audio",      "entity": "Emotion 98.3",           "confidence": "confirmed", "note": "Radio station visible on screen" },
-        { "t": 133, "type": "vehicle",    "entity": "Benefactor Schafter",    "confidence": "confirmed", "note": "Luxury sedan, badge clear" },
-        { "t": 139, "type": "character",  "entity": "Dre'Quan Priest",        "confidence": "confirmed", "note": "Named character, press kit confirmed" },
-        { "t": 144, "type": "character",  "entity": "Real Dimez",             "confidence": "confirmed", "note": "Named character, press kit confirmed" },
-        { "t": 150, "type": "location",   "entity": "Mount Kalaga",           "confidence": "confirmed", "note": "Volcanic landscape, matches Kalaga" },
-        { "t": 156, "type": "audio",      "entity": "Vice City FM",           "confidence": "confirmed", "note": "Station identified on screen" },
-        { "t": 160, "type": "reveal",     "entity": "November 2026",          "confidence": "confirmed", "note": "Launch window revealed" },
-        { "t": 163, "type": "audio",      "entity": "Hot Together",           "confidence": "confirmed", "note": "The Pointer Sisters — confirmed song" }
+        {
+          "t": 0,
+          "type": "character",
+          "entity": "Jason Duval",
+          "confidence": "confirmed",
+          "note": "Jason driving, opens trailer"
+        },
+        {
+          "t": 12,
+          "type": "location",
+          "entity": "Vice City downtown",
+          "confidence": "confirmed",
+          "note": "Dense urban area, clear Vice City"
+        },
+        {
+          "t": 22,
+          "type": "vehicle",
+          "entity": "Pegassi Infernus",
+          "confidence": "confirmed",
+          "note": "Clearly visible badge and design"
+        },
+        {
+          "t": 35,
+          "type": "location",
+          "entity": "Port Gellhorn",
+          "confidence": "confirmed",
+          "note": "Port Gellhorn sign visible"
+        },
+        {
+          "t": 44,
+          "type": "character",
+          "entity": "Lucia Caminos",
+          "confidence": "confirmed",
+          "note": "At marina, with Jason"
+        },
+        {
+          "t": 52,
+          "type": "location",
+          "entity": "Port Gellhorn Marina",
+          "confidence": "confirmed",
+          "note": "Business/location confirmed official"
+        },
+        {
+          "t": 60,
+          "type": "wildlife",
+          "entity": "American Alligator",
+          "confidence": "confirmed",
+          "note": "Clear close-up shot"
+        },
+        {
+          "t": 70,
+          "type": "wildlife",
+          "entity": "Hammerhead Shark",
+          "confidence": "confirmed",
+          "note": "Underwater sequence"
+        },
+        {
+          "t": 76,
+          "type": "character",
+          "entity": "Cal Hampton",
+          "confidence": "confirmed",
+          "note": "Closeup, confirmed supporting cast"
+        },
+        {
+          "t": 84,
+          "type": "location",
+          "entity": "Malibu Club",
+          "confidence": "confirmed",
+          "note": "Neon sign clearly readable"
+        },
+        {
+          "t": 90,
+          "type": "character",
+          "entity": "Boobie Ike",
+          "confidence": "confirmed",
+          "note": "Character introduced"
+        },
+        {
+          "t": 96,
+          "type": "weapon",
+          "entity": "Assault Rifle",
+          "confidence": "confirmed",
+          "note": "Jason wielding, clear model"
+        },
+        {
+          "t": 103,
+          "type": "weapon",
+          "entity": "Combat Pistol",
+          "confidence": "confirmed",
+          "note": "Lucia armed, visible model"
+        },
+        {
+          "t": 110,
+          "type": "vehicle",
+          "entity": "Principe Deveste Eight",
+          "confidence": "confirmed",
+          "note": "Badging visible in chase scene"
+        },
+        {
+          "t": 118,
+          "type": "wildlife",
+          "entity": "Florida Panther",
+          "confidence": "confirmed",
+          "note": "Jungle scene"
+        },
+        {
+          "t": 122,
+          "type": "location",
+          "entity": "Ambrosia coastline",
+          "confidence": "reported",
+          "note": "Luxury coastal area matching Ambrosia description"
+        },
+        {
+          "t": 128,
+          "type": "audio",
+          "entity": "Emotion 98.3",
+          "confidence": "confirmed",
+          "note": "Radio station visible on screen"
+        },
+        {
+          "t": 133,
+          "type": "vehicle",
+          "entity": "Benefactor Schafter",
+          "confidence": "confirmed",
+          "note": "Luxury sedan, badge clear"
+        },
+        {
+          "t": 139,
+          "type": "character",
+          "entity": "Dre'Quan Priest",
+          "confidence": "confirmed",
+          "note": "Named character, press kit confirmed"
+        },
+        {
+          "t": 144,
+          "type": "character",
+          "entity": "Real Dimez",
+          "confidence": "confirmed",
+          "note": "Named character, press kit confirmed"
+        },
+        {
+          "t": 150,
+          "type": "location",
+          "entity": "Mount Kalaga",
+          "confidence": "confirmed",
+          "note": "Volcanic landscape, matches Kalaga"
+        },
+        {
+          "t": 156,
+          "type": "audio",
+          "entity": "Vice City FM",
+          "confidence": "confirmed",
+          "note": "Station identified on screen"
+        },
+        {
+          "t": 160,
+          "type": "reveal",
+          "entity": "November 2026",
+          "confidence": "confirmed",
+          "note": "Launch window revealed"
+        },
+        {
+          "t": 163,
+          "type": "audio",
+          "entity": "Hot Together",
+          "confidence": "confirmed",
+          "note": "The Pointer Sisters — confirmed song"
+        }
+      ]
+    },
+    {
+      "id": "extended-look",
+      "youtube_id": "tJbzMqJGH4k",
+      "title": "Grand Theft Auto VI: An Extended Look",
+      "published_at": "2026-08-28",
+      "duration_sec": 1609,
+      "total_entities": 52,
+      "events": [
+        {
+          "t": 0,
+          "type": "character",
+          "entity": "Jason Duval",
+          "confidence": "confirmed",
+          "note": "Protagonist established at open"
+        },
+        {
+          "t": 8,
+          "type": "character",
+          "entity": "Lucia Caminos",
+          "confidence": "confirmed",
+          "note": "Co-protagonist, ankle monitor visible"
+        },
+        {
+          "t": 30,
+          "type": "location",
+          "entity": "Vice City",
+          "confidence": "confirmed",
+          "note": "Establishing city shot"
+        },
+        {
+          "t": 50,
+          "type": "character",
+          "entity": "Raymond",
+          "confidence": "confirmed",
+          "note": "San4San drug lab contact"
+        },
+        {
+          "t": 75,
+          "type": "location",
+          "entity": "Venture Apartments",
+          "confidence": "confirmed",
+          "note": "First mission — Rockridge, Vice City"
+        },
+        {
+          "t": 90,
+          "type": "character",
+          "entity": "Ernesto",
+          "confidence": "confirmed",
+          "note": "Raymond's partner, warns of raid"
+        },
+        {
+          "t": 110,
+          "type": "character",
+          "entity": "Méndez",
+          "confidence": "confirmed",
+          "note": "Task force officer leading raid"
+        },
+        {
+          "t": 125,
+          "type": "reveal",
+          "entity": "6-Star Wanted Level",
+          "confidence": "confirmed",
+          "note": "HUD shows six stars — first confirmed sighting"
+        },
+        {
+          "t": 145,
+          "type": "reveal",
+          "entity": "Criminal Profile",
+          "confidence": "confirmed",
+          "note": "Character-switch wheel shows emoji indicators"
+        },
+        {
+          "t": 160,
+          "type": "character",
+          "entity": "Aunt Tee",
+          "confidence": "confirmed",
+          "note": "Escape via Aunt Tee's apartment window"
+        },
+        {
+          "t": 200,
+          "type": "location",
+          "entity": "Grassrivers",
+          "confidence": "confirmed",
+          "note": "Everglades-style wetlands — fanboat sequence"
+        },
+        {
+          "t": 240,
+          "type": "location",
+          "entity": "Leonida Keys",
+          "confidence": "confirmed",
+          "note": "Tropical island chain shown"
+        },
+        {
+          "t": 270,
+          "type": "location",
+          "entity": "Mount Kalaga",
+          "confidence": "confirmed",
+          "note": "National park — rural landscape"
+        },
+        {
+          "t": 300,
+          "type": "reveal",
+          "entity": "WAINK App",
+          "confidence": "confirmed",
+          "note": "Phone app scans vehicle before theft"
+        },
+        {
+          "t": 320,
+          "type": "vehicle",
+          "entity": "Fanboat",
+          "confidence": "confirmed",
+          "note": "Waterway traversal in Grassrivers"
+        },
+        {
+          "t": 360,
+          "type": "reveal",
+          "entity": "Relationship System",
+          "confidence": "confirmed",
+          "note": "Jason helps Lucia pick a dress — shared activity"
+        },
+        {
+          "t": 380,
+          "type": "location",
+          "entity": "Port Gellhorn",
+          "confidence": "confirmed",
+          "note": "Industrial coastal port region"
+        },
+        {
+          "t": 410,
+          "type": "location",
+          "entity": "Ambrosia",
+          "confidence": "confirmed",
+          "note": "Named region — rural outskirts"
+        },
+        {
+          "t": 440,
+          "type": "character",
+          "entity": "Boobie Ike",
+          "confidence": "confirmed",
+          "note": "Nightclub and recording studio empire"
+        },
+        {
+          "t": 460,
+          "type": "location",
+          "entity": "Jack of Hearts",
+          "confidence": "confirmed",
+          "note": "Boobie Ike's strip club — Vice City"
+        },
+        {
+          "t": 490,
+          "type": "vehicle",
+          "entity": "Grotti Cheetah '95",
+          "confidence": "confirmed",
+          "note": "Ultimate Edition vehicle — first sighting"
+        },
+        {
+          "t": 540,
+          "type": "character",
+          "entity": "Raul Bautista",
+          "confidence": "confirmed",
+          "note": "Bank robber — crew recruiter"
+        },
+        {
+          "t": 560,
+          "type": "reveal",
+          "entity": "Wanted Description Icons",
+          "confidence": "confirmed",
+          "note": "Face/outfit/vehicle icons under wanted stars"
+        },
+        {
+          "t": 590,
+          "type": "vehicle",
+          "entity": "Police cruiser",
+          "confidence": "confirmed",
+          "note": "Vice City police in high-speed pursuit"
+        },
+        {
+          "t": 620,
+          "type": "reveal",
+          "entity": "Bullet Time",
+          "confidence": "confirmed",
+          "note": "Jason activates bullet time in shootout"
+        },
+        {
+          "t": 660,
+          "type": "location",
+          "entity": "Vice City Freeway",
+          "confidence": "confirmed",
+          "note": "Highway chase — dense urban interchange"
+        },
+        {
+          "t": 700,
+          "type": "character",
+          "entity": "Cal Hampton",
+          "confidence": "confirmed",
+          "note": "Jason's friend — conspiracy-minded"
+        },
+        {
+          "t": 730,
+          "type": "character",
+          "entity": "Brian Heder",
+          "confidence": "confirmed",
+          "note": "Smuggler — Brian's Boat Works & Marina"
+        },
+        {
+          "t": 760,
+          "type": "location",
+          "entity": "Brian's Boat Works",
+          "confidence": "confirmed",
+          "note": "Marina in the Leonida Keys"
+        },
+        {
+          "t": 790,
+          "type": "vehicle",
+          "entity": "Shitzu Squalo",
+          "confidence": "confirmed",
+          "note": "Ultimate Edition speedboat — explosives crate visible"
+        },
+        {
+          "t": 820,
+          "type": "vehicle",
+          "entity": "Dinka Enduro",
+          "confidence": "confirmed",
+          "note": "Ultimate Edition motorcycle — safehouse"
+        },
+        {
+          "t": 850,
+          "type": "reveal",
+          "entity": "Scuba Diving",
+          "confidence": "confirmed",
+          "note": "Underwater exploration activity confirmed"
+        },
+        {
+          "t": 880,
+          "type": "reveal",
+          "entity": "Basketball",
+          "confidence": "confirmed",
+          "note": "Street basketball mini-activity shown"
+        },
+        {
+          "t": 910,
+          "type": "character",
+          "entity": "Dre'Quan Priest",
+          "confidence": "confirmed",
+          "note": "Only Raw Records co-founder"
+        },
+        {
+          "t": 940,
+          "type": "character",
+          "entity": "Real Dimez",
+          "confidence": "confirmed",
+          "note": "Rap duo Bae-Luxe and Roxy — at Only Raw Records"
+        },
+        {
+          "t": 970,
+          "type": "location",
+          "entity": "Hamlet",
+          "confidence": "confirmed",
+          "note": "Named rural district — new region"
+        },
+        {
+          "t": 1000,
+          "type": "location",
+          "entity": "Kelly County",
+          "confidence": "confirmed",
+          "note": "Named rural county — new region"
+        },
+        {
+          "t": 1060,
+          "type": "reveal",
+          "entity": "Security Detail Mission",
+          "confidence": "confirmed",
+          "note": "Jason and Lucia run security for a celebrity at corporate gala"
+        },
+        {
+          "t": 1090,
+          "type": "reveal",
+          "entity": "Gala Hostage Sequence",
+          "confidence": "confirmed",
+          "note": "Party taken hostage — Die Hard format"
+        },
+        {
+          "t": 1120,
+          "type": "reveal",
+          "entity": "Shotgun One-Handed (Lucia)",
+          "confidence": "confirmed",
+          "note": "Lucia fires pump-action shotgun with one hand"
+        },
+        {
+          "t": 1150,
+          "type": "reveal",
+          "entity": "Heel Stabbing (Lucia)",
+          "confidence": "confirmed",
+          "note": "Lucia stabs attacker in eye with high heel"
+        },
+        {
+          "t": 1180,
+          "type": "vehicle",
+          "entity": "Private Jet",
+          "confidence": "confirmed",
+          "note": "End sequence — Lucia in black bob, Jason in suit"
+        },
+        {
+          "t": 1220,
+          "type": "reveal",
+          "entity": "600k NPC Animations",
+          "confidence": "confirmed",
+          "note": "Preview coverage confirms 600k+ individually art-directed"
+        },
+        {
+          "t": 1250,
+          "type": "reveal",
+          "entity": "30fps Base PS5",
+          "confidence": "confirmed",
+          "note": "Rockstar confirms footage captured on base PS5"
+        },
+        {
+          "t": 1280,
+          "type": "reveal",
+          "entity": "Chapter Structure",
+          "confidence": "confirmed",
+          "note": "RDR2-style chapters confirmed — small choices accumulate"
+        },
+        {
+          "t": 1310,
+          "type": "reveal",
+          "entity": "80-Hour Story",
+          "confidence": "confirmed",
+          "note": "Rob Nelson confirms ~80hr campaign length"
+        },
+        {
+          "t": 1340,
+          "type": "reveal",
+          "entity": "Trunk Clothes Storage",
+          "confidence": "confirmed",
+          "note": "Safehouse trunk stores spare outfits for police evasion"
+        },
+        {
+          "t": 1370,
+          "type": "reveal",
+          "entity": "Pay n' Spray",
+          "confidence": "confirmed",
+          "note": "Confirmed sale destination for stolen vehicles"
+        },
+        {
+          "t": 1400,
+          "type": "vehicle",
+          "entity": "Vapid Dominator Buggy",
+          "confidence": "confirmed",
+          "note": "Ultimate Edition — off-road buggy in swamplands"
+        },
+        {
+          "t": 1440,
+          "type": "location",
+          "entity": "Vice Beach",
+          "confidence": "confirmed",
+          "note": "Ocean Beach area — Shore Court garage nearby"
+        },
+        {
+          "t": 1480,
+          "type": "audio",
+          "entity": "GTA VI Theme (DRÆVEN)",
+          "confidence": "confirmed",
+          "note": "Rockstar-commissioned original score — new artist"
+        },
+        {
+          "t": 1560,
+          "type": "reveal",
+          "entity": "Map 2x GTA V",
+          "confidence": "confirmed",
+          "note": "Rob Nelson: Leonida ~2x GTA V, ~3x RDR2"
+        }
       ]
     }
   ]

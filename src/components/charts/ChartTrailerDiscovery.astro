@@ -12,9 +12,9 @@ import CardFooter from "../CardFooter.astro";
         <div class="px-5 py-4 border-b border-border-dim flex items-center gap-5 flex-wrap">
           <div class="flex-1">
             <div class="font-semibold text-zinc-200 text-sm mb-0.5">
-              Frame-by-Frame: Information Density Across Both Official Trailers
+              Frame-by-Frame: Information Density Across All Official Releases
             </div>
-            <div class="text-[11px] text-zinc-500 font-mono">Each marker = a new entity confirmed. Colour = entity type. Trailer 2 is information-denser at every quartile.</div>
+            <div class="text-[11px] text-zinc-500 font-mono">Each marker = a new entity confirmed. Colour = entity type. Extended Look (EL) reveals 52 entities across 27 minutes.</div>
           </div>
           <!-- Trailer thumbnails -->
           <div class="flex items-center gap-3 shrink-0">
@@ -25,7 +25,7 @@ import CardFooter from "../CardFooter.astro";
                   alt={t.title} class="w-28 h-16 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
                 <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 50%)"></div>
                 <div class="absolute bottom-1 left-2">
-                  <span class="text-[10px] font-mono text-gta-gold">T{i + 1}</span>
+                  <span class="text-[10px] font-mono text-gta-gold">{i < 2 ? `T${i + 1}` : 'EL'}</span>
                 </div>
               </a>
             ))}
@@ -34,7 +34,7 @@ import CardFooter from "../CardFooter.astro";
         <div id="trailer-discovery-chart" class="w-full px-5 py-4"
           data-trailers={JSON.stringify(trailerAnalysis.trailers)}
         ></div>
-        <CardFooter chartId="trailer-discovery-chart" sources="Source: GTA VI.AI frame-by-frame analysis · official Rockstar trailers" shareText="GTA VI Trailer 2 is the most information-dense Rockstar trailer ever made. Frame-by-frame entity analysis across both trailers." />
+        <CardFooter chartId="trailer-discovery-chart" sources="Source: GTA VI.AI frame-by-frame analysis · official Rockstar trailers + Extended Look" shareText="GTA VI Extended Look confirms 52 entities in 27 minutes — more than T1 and T2 combined. Frame-by-frame entity density analysis on GTAVI.AI" />
       </div>
 
 <script>

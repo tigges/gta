@@ -48,6 +48,12 @@ KNOWN_TRAILERS = [
         "published_at": "2025-05-06",
         "source_url": "https://www.youtube.com/watch?v=VQRLujxTm3c",
     },
+    {
+        "youtube_id": "tJbzMqJGH4k",
+        "title": "Grand Theft Auto VI: An Extended Look",
+        "published_at": "2026-08-28",
+        "source_url": "https://www.youtube.com/watch?v=tJbzMqJGH4k",
+    },
 ]
 
 
