@@ -17,6 +17,7 @@ import HudIcon from "./HudIcon.astro";
 import ChartTeaserSearchSignal from "./charts/ChartTeaserSearchSignal.astro";
 import ChartTeaserCpi from "./charts/ChartTeaserCpi.astro";
 import ChartTeaserRevenueSplit from "./charts/ChartTeaserRevenueSplit.astro";
+import ExtendedLookStills from "./ExtendedLookStills.astro";
 
 import type { TrailersData, Prediction, TrailerVelocityData, TrailerAnalysisData } from "../types/gta";
 
@@ -425,6 +426,8 @@ const keyStats = [
         ))}
       </div>
     </section>
+
+    <ExtendedLookStills compact />
 
     <!-- GTA VI BAND — the main event -->
     <section>

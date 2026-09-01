@@ -10,6 +10,7 @@ import type { TrailersData, Prediction } from "../../types/gta";
 import IncomeCard from "../../components/IncomeCard.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
 import CastCard from "../../components/CastCard.astro";
+import ExtendedLookStills from "../../components/ExtendedLookStills.astro";
 
 import predictionsData, { feedWithPolls } from "../../config/predictions";
 import incomeData from "../../../data/gta-6/income-predictions.json";
@@ -248,6 +249,8 @@ const CAT_THUMBS: Record<string,string> = {
       </div>
     </section>
     )}
+
+    <ExtendedLookStills />
 
     <!-- ═══════════════════════════════════════════════════════
          INCOME PREDICTIONS — GTA VI Online
