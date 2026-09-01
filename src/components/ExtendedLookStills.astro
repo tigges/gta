@@ -23,13 +23,13 @@ import type {
 
 interface Props {
   compact?: boolean;
-  /** Destination for compact covers. Defaults to the intel brief. */
+  /** Destination for compact covers. Defaults to the dedicated brief page. */
   detailHref?: string;
 }
 
 const {
   compact = false,
-  detailHref = "/gta-vi/intel#section-el-stills",
+  detailHref = "/gta-vi/extended-look",
 } = Astro.props;
 
 const data = stillsRaw as ExtendedLookStillsData;

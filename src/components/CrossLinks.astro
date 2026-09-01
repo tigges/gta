@@ -70,6 +70,11 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // GTA VI intel page — bottom strip
   "vi-intel": [
+    { href: "/gta-vi/extended-look", badge: "Extended Look",
+      label: "Visual brief",
+      sub: "6 chapters · official stills timed to the video",
+      thumb: "/assets/gta6/locations/Leonida_Keys_01.jpg",
+      accent: "var(--c-title-vi)" },
     { href: "/database", badge: "Database",
       label: "Entity database",
       sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`,
@@ -284,6 +289,11 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // GTA VI hub
   "gta-vi": [
+    { href: "/gta-vi/extended-look", badge: "Extended Look",
+      label: "Visual brief",
+      sub: "26:49 · map, missions, personas, systems",
+      thumb: "/assets/gta6/locations/Vice_City_01.jpg",
+      accent: "var(--c-title-vi)" },
     { href: "/gta-vi/intel", badge: "GTA VI",
       label: "GTA VI intelligence",
       sub: `${predCount} confidence-scored predictions · cast · locations`,
@@ -363,8 +373,37 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       accent: "var(--c-brand)" },
   ],
 
+  // Dedicated Extended Look page
+  "extended-look": [
+    { href: "/gta-vi/intel", badge: "Predictions",
+      label: "What EL confirmed",
+      sub: `${predCount} confidence-scored calls · map, systems, story`,
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/charts#section-el-timeline-chart", badge: "Charts",
+      label: "Chapter timeline",
+      sub: "52 entities mapped across six chapters",
+      thumb: "/assets/gta6/locations/Leonida_Keys_01.jpg",
+      accent: "var(--c-brand)" },
+    { href: "/gta-vi/income", badge: "Income",
+      label: "EL income sources",
+      sub: "WAINK, robberies, hunting, gala contracts",
+      thumb: "/assets/gta6/locations/Ambrosia_02.jpg",
+      accent: "var(--c-gta-dollar)" },
+    { href: "/database", badge: "Database",
+      label: "Entity database",
+      sub: `${gta6Entities.toLocaleString()} GTA VI entities indexed`,
+      thumb: "/assets/gta6/characters/Jason_Duval_01.jpg",
+      accent: "var(--c-live)" },
+  ],
+
   // Home page
   "home": [
+    { href: "/gta-vi/extended-look", badge: "Extended Look",
+      label: "Visual brief",
+      sub: "Official stills timed to the 26:49 video",
+      thumb: "/assets/gta6/locations/Vice_City_01.jpg",
+      accent: "var(--c-title-vi)" },
     { href: "/gta-vi/intel", badge: "GTA VI",
       label: "GTA VI intelligence",
       sub: `${predCount} predictions · cast · locations · timelines`,

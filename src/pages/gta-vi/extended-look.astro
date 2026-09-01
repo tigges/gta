@@ -1,0 +1,140 @@
+---
+/**
+ * /gta-vi/extended-look — first-class visual brief for An Extended Look.
+ */
+import Base from "../../layouts/Base.astro";
+import Badge from "../../components/Badge.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import ExtendedLookStills from "../../components/ExtendedLookStills.astro";
+import ColorLabel from "../../components/ColorLabel.astro";
+import missionsRaw from "../../../data/gta-6/el-story-missions.json";
+import stillsRaw from "../../../data/gta-6/extended-look-stills.json";
+
+const missions = (missionsRaw as any).missions as Array<{
+  id: string;
+  name: string;
+  chapter_id: string;
+  t_start: number;
+  t_end: number;
+  region: string;
+  cast: string[];
+  confirms: string[];
+  summary: string;
+  thumbnail: string;
+}>;
+
+const stills = stillsRaw as { youtube_id: string; duration_sec: number; chapters: unknown[] };
+const YT = stills.youtube_id;
+
+function fmtTime(t: number): string {
+  return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`;
+}
+---
+
+<Base
+  title="Extended Look — Visual Brief"
+  description="GTA VI: An Extended Look, still by still — official press stills timed to six chapters. Map, missions, personas and systems confirmed in the 26:49 video."
+  titleContext="gta-vi"
+  ogPage="vi-intel"
+  crossLinksContext="extended-look"
+>
+  <section class="relative overflow-hidden border-b border-border-dim" style="min-height:280px;display:flex;align-items:flex-end">
+    <div class="absolute inset-0">
+      <img
+        src="/assets/gta6/locations/Leonida_Keys_01.jpg"
+        alt=""
+        aria-hidden="true"
+        class="w-full h-full object-cover"
+        style="object-position:center 35%"
+        loading="eager"
+      />
+      <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 70%, transparent) 45%, color-mix(in srgb,var(--c-bg) 35%, transparent) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,var(--c-bg) 0%, transparent 30%, transparent 55%, var(--c-bg) 100%)"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-16 w-full">
+      <div class="flex items-center gap-2 mb-3">
+        <Badge variant="gta-vi" />
+        <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">Official footage · Aug 27, 2026</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">An Extended Look</h1>
+      <p class="text-zinc-400 text-sm leading-relaxed max-w-xl">
+        Official Rockstar press stills timed to the 26-minute video — not frames ripped from YouTube.
+        Six chapters, then the map, people and systems the footage confirmed.
+      </p>
+      <div class="flex flex-wrap items-center gap-4 mt-5 text-[10px] font-mono text-zinc-500">
+        <span><span class="text-gta-gold font-bold">{stills.chapters.length}</span> chapters</span>
+        <span>·</span>
+        <span><span class="text-zinc-300 font-bold">{Math.floor(stills.duration_sec / 60)}m {stills.duration_sec % 60}s</span> runtime</span>
+        <span>·</span>
+        <span>{missions.length} story missions shown</span>
+        <span>·</span>
+        <a
+          href={`https://www.youtube.com/watch?v=${YT}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-zinc-400 hover:text-zinc-200 transition-colors"
+        >
+          Watch on YouTube ↗
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-14">
+
+    <section id="section-el-missions" style="scroll-margin-top:80px">
+      <SectionHeader
+        bright
+        label="// Story missions shown in the Extended Look"
+        dotColor="var(--c-alert)"
+        pillHref="/gta-vi/income"
+        pillLabel="Income model →"
+      />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {missions.map((m) => (
+          <a
+            href={`#el-ch-${m.chapter_id}`}
+            class="group rounded-xl border border-border-dim overflow-hidden hover:border-gta-gold/30 transition-all"
+            style="background:var(--c-card-raised)"
+          >
+            <div class="relative aspect-video overflow-hidden">
+              <img
+                src={m.thumbnail}
+                alt={m.name}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 40%, transparent) 45%, transparent 70%)"></div>
+              <div class="absolute top-2 left-2">
+                <Badge variant="mission" surface="opaque" />
+              </div>
+              <div class="absolute top-2 right-2">
+                <span
+                  class="inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5"
+                  style="color:var(--c-text-1);background:var(--c-bg-deep);border-color:color-mix(in srgb,var(--c-text-1) 33%,transparent)"
+                >
+                  {fmtTime(m.t_start)}–{fmtTime(m.t_end)}
+                </span>
+              </div>
+              <div class="absolute bottom-0 left-0 right-0 px-3 pb-3">
+                <div class="text-sm font-bold text-white leading-tight">{m.name}</div>
+                <ColorLabel colorToken="var(--c-live)" label={m.region} />
+              </div>
+            </div>
+            <div class="px-4 py-3">
+              <p class="text-[11px] text-zinc-400 leading-relaxed">{m.summary}</p>
+              <div class="flex flex-wrap gap-1.5 mt-3">
+                {m.confirms.map((c) => (
+                  <Badge variant="confirmed" label={c} />
+                ))}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <ExtendedLookStills />
+
+  </div>
+</Base>
