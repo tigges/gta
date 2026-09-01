@@ -15,6 +15,7 @@ import Countdown from "../../components/Countdown.astro";
 import ChartTeaserCpi          from "../../components/charts/ChartTeaserCpi.astro";
 import ChartTeaserRevenueSplit  from "../../components/charts/ChartTeaserRevenueSplit.astro";
 import ChartTeaserSearchSignal  from "../../components/charts/ChartTeaserSearchSignal.astro";
+import ExtendedLookStills from "../../components/ExtendedLookStills.astro";
 
 import type { Prediction, TrailersData } from "../../types/gta";
 import { getChart } from "../../config/allCharts";
@@ -207,6 +208,8 @@ const featuredIncome = incomeList
         <span id="pred-page-label" class="text-[10px] font-mono text-zinc-600 ml-1">1 / 3</span>
       </div>
     </section>
+
+    <ExtendedLookStills compact />
 
     <!-- ═══════════════════════════════════════════════════════
          LAYER 2: CHARTS — static CSS teasers

@@ -821,6 +821,54 @@ export interface TrailerAnalysisData {
   trailers: TrailerAnalysisEntry[];
 }
 
+// ── Extended Look visual brief (extended-look-stills.json) ────────────────────
+
+export type ElStillKind = "map" | "mission" | "persona" | "system" | "activity";
+export type ElChapterKind = "mission" | "open-world" | "reveals";
+
+export interface ElStill {
+  id: string;
+  src: string;
+  alt: string;
+  caption: string;
+  kind: ElStillKind;
+  t: number;
+  entity: string;
+  note?: string;
+}
+
+export interface ElChapter {
+  id: string;
+  kind: ElChapterKind;
+  label: string;
+  short_label: string;
+  t_start: number;
+  t_end: number;
+  summary: string;
+  cover: string;
+  stills: ElStill[];
+}
+
+export interface ElRegionStill extends ElStill {
+  region: string;
+  first_seen_t: number;
+}
+
+export interface ExtendedLookStillsData {
+  schema_version: string;
+  last_updated: string;
+  youtube_id: string;
+  title: string;
+  published_at: string;
+  duration_sec: number;
+  attribution: string;
+  source: string;
+  chapters: ElChapter[];
+  map: ElRegionStill[];
+  people: ElStill[];
+  systems: ElStill[];
+}
+
 // ── Newswire feed (newswire.json) ─────────────────────────────────────────────
 
 export interface NewswireItem {

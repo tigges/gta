@@ -1,0 +1,344 @@
+---
+/**
+ * ExtendedLookStills — visual brief for GTA VI: An Extended Look.
+ *
+ * Official Rockstar press stills, timed to EL chapters. Not YouTube frame grabs.
+ *
+ *   compact={false}  full chapter + map + people + systems brief (intel)
+ *   compact={true}   six chapter covers linking to the full brief
+ */
+import SectionHeader from "./SectionHeader.astro";
+import Badge from "./Badge.astro";
+import ColorLabel from "./ColorLabel.astro";
+import ReadItBlock from "./ReadItBlock.astro";
+import CardFooter from "./CardFooter.astro";
+import stillsRaw from "../../data/gta-6/extended-look-stills.json";
+import type {
+  ElChapter,
+  ElChapterKind,
+  ElStill,
+  ElStillKind,
+  ExtendedLookStillsData,
+} from "../types/gta";
+
+interface Props {
+  compact?: boolean;
+  /** Destination for compact covers. Defaults to the intel brief. */
+  detailHref?: string;
+}
+
+const {
+  compact = false,
+  detailHref = "/gta-vi/intel#section-el-stills",
+} = Astro.props;
+
+const data = stillsRaw as ExtendedLookStillsData;
+const YT = data.youtube_id;
+
+const KIND_TOKEN: Record<ElStillKind, string> = {
+  map:      "var(--c-live)",
+  mission:  "var(--c-play-mission)",
+  persona:  "var(--c-brand)",
+  system:   "var(--c-economy)",
+  activity: "var(--c-growth)",
+};
+
+const KIND_LABEL: Record<ElStillKind, string> = {
+  map:      "Map",
+  mission:  "Mission",
+  persona:  "Persona",
+  system:   "System",
+  activity: "Activity",
+};
+
+const CHAPTER_KIND_LABEL: Record<ElChapterKind, string> = {
+  mission:     "Mission",
+  "open-world": "Open World",
+  reveals:     "Reveals",
+};
+
+const CHAPTER_KIND_VARIANT: Record<ElChapterKind, "mission" | "confirmed" | "indexed"> = {
+  mission:      "mission",
+  "open-world": "confirmed",
+  reveals:      "indexed",
+};
+
+function fmtTime(t: number): string {
+  return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`;
+}
+
+function ytAt(t: number): string {
+  return `https://www.youtube.com/watch?v=${YT}&t=${t}s`;
+}
+
+const stillCount =
+  data.chapters.reduce((n, ch) => n + ch.stills.length, 0) +
+  data.map.length +
+  data.people.length +
+  data.systems.length;
+---
+
+{compact ? (
+  <section>
+    <SectionHeader
+      bright
+      label="// Extended Look — Visual Brief"
+      dotColor="var(--c-brand)"
+      pillHref={detailHref}
+      pillLabel="Full visual brief →"
+    />
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      {data.chapters.map((ch: ElChapter) => (
+        <a
+          href={`${detailHref.includes("#") ? detailHref.split("#")[0] : detailHref}#el-ch-${ch.id}`}
+          class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-gold/30 transition-all"
+        >
+          <div class="aspect-[4/3] overflow-hidden">
+            <img
+              src={ch.cover}
+              alt={ch.short_label}
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+            <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 50%, transparent) 42%, transparent 70%)"></div>
+          </div>
+          <div class="absolute top-2 left-2">
+            <Badge variant={CHAPTER_KIND_VARIANT[ch.kind]} surface="opaque" label={CHAPTER_KIND_LABEL[ch.kind]} />
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 px-2.5 pb-2.5">
+            <div class="text-[11px] font-bold text-white leading-tight">{ch.short_label}</div>
+            <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{fmtTime(ch.t_start)}–{fmtTime(ch.t_end)}</div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+) : (
+  <section id="section-el-stills" style="scroll-margin-top:80px">
+    <SectionHeader
+      bright
+      label="// Extended Look — Visual Brief"
+      dotColor="var(--c-brand)"
+      pillHref="/charts#section-el-timeline-chart"
+      pillLabel="Chapter chart →"
+    />
+
+    <p class="text-sm text-zinc-400 leading-relaxed mb-5 max-w-3xl">
+      {data.chapters.length} chapters · {Math.floor(data.duration_sec / 60)}m {data.duration_sec % 60}s ·
+      official press stills timed to <span class="text-zinc-200">An Extended Look</span>.
+      Each still jumps to that beat on YouTube. {data.attribution}
+    </p>
+
+    <!-- Jump nav -->
+    <div class="flex flex-wrap gap-2 mb-8">
+      {data.chapters.map((ch: ElChapter) => (
+        <a
+          href={`#el-ch-${ch.id}`}
+          class="inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5 text-zinc-400 border-border-mid hover:text-zinc-200 hover:border-zinc-600 transition-colors"
+        >
+          {ch.short_label}
+        </a>
+      ))}
+      <a href="#el-map" class="inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5 text-zinc-400 border-border-mid hover:text-zinc-200 hover:border-zinc-600 transition-colors">Map</a>
+      <a href="#el-people" class="inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5 text-zinc-400 border-border-mid hover:text-zinc-200 hover:border-zinc-600 transition-colors">People</a>
+      <a href="#el-systems" class="inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5 text-zinc-400 border-border-mid hover:text-zinc-200 hover:border-zinc-600 transition-colors">Systems</a>
+    </div>
+
+    <!-- Chapters -->
+    <div class="flex flex-col gap-12">
+      {data.chapters.map((ch: ElChapter) => (
+        <div id={`el-ch-${ch.id}`} style="scroll-margin-top:80px">
+          <div class="flex items-start justify-between gap-4 flex-wrap mb-4">
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 mb-1.5">
+                <Badge variant={CHAPTER_KIND_VARIANT[ch.kind]} label={CHAPTER_KIND_LABEL[ch.kind]} />
+                <span class="text-[10px] font-mono text-zinc-500">{fmtTime(ch.t_start)}–{fmtTime(ch.t_end)}</span>
+              </div>
+              <h2 class="text-lg font-bold text-white leading-tight">{ch.label}</h2>
+            </div>
+            <a
+              href={ytAt(ch.t_start)}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="shrink-0 text-[10px] font-mono uppercase tracking-widest text-zinc-500 hover:text-zinc-200 border border-border-mid hover:border-zinc-600 px-3 py-1 rounded transition-colors"
+            >
+              Watch chapter →
+            </a>
+          </div>
+
+          <div class="mb-4">
+            <ReadItBlock accentColor="var(--c-brand)">{ch.summary}</ReadItBlock>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {ch.stills.map((s: ElStill) => (
+              <a
+                href={ytAt(s.t)}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-gold/30 transition-all"
+              >
+                <div class="aspect-video overflow-hidden">
+                  <img
+                    src={s.src}
+                    alt={s.alt}
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 48%, transparent) 40%, transparent 70%)"></div>
+                </div>
+                <div class="absolute top-2 left-2">
+                  <Badge variant="gta-vi" surface="opaque" />
+                </div>
+                <div class="absolute top-2 right-2">
+                  <span
+                    class="inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5"
+                    style="color:var(--c-text-1);background:var(--c-bg-deep);border-color:color-mix(in srgb,var(--c-text-1) 33%,transparent)"
+                  >
+                    {fmtTime(s.t)}
+                  </span>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 px-3 pb-3">
+                  <ColorLabel colorToken={KIND_TOKEN[s.kind]} label={KIND_LABEL[s.kind]} />
+                  <div class="text-sm font-bold text-white leading-tight mt-1">{s.entity}</div>
+                  <div class="text-[11px] text-zinc-400 mt-0.5 leading-snug">{s.caption}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Map -->
+    <div id="el-map" class="mt-14" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// Map — Regions named in the Extended Look" dotColor="var(--c-live)" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {data.map.map((s) => (
+          <a
+            href={ytAt(s.first_seen_t)}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-teal/30 transition-all"
+          >
+            <div class="aspect-video overflow-hidden">
+              <img
+                src={s.src}
+                alt={s.alt}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 48%, transparent) 40%, transparent 70%)"></div>
+            </div>
+            <div class="absolute top-2 left-2">
+              <Badge variant="confirmed" surface="opaque" label="Map" />
+            </div>
+            <div class="absolute top-2 right-2">
+              <span
+                class="inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5"
+                style="color:var(--c-text-1);background:var(--c-bg-deep);border-color:color-mix(in srgb,var(--c-text-1) 33%,transparent)"
+              >
+                {fmtTime(s.first_seen_t)}
+              </span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 px-3 pb-3">
+              <div class="text-sm font-bold text-white leading-tight">{s.region}</div>
+              <div class="text-[11px] text-zinc-400 mt-0.5 leading-snug">{s.caption}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- People -->
+    <div id="el-people" class="mt-14" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// People — Personas timed to the video" dotColor="var(--c-brand)" />
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {data.people.map((s: ElStill) => (
+          <a
+            href={ytAt(s.t)}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-gold/30 transition-all"
+          >
+            <div class="aspect-[3/4] overflow-hidden">
+              <img
+                src={s.src}
+                alt={s.alt}
+                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 50%, transparent) 38%, transparent 65%)"></div>
+            </div>
+            <div class="absolute top-2 left-2">
+              <Badge variant="gta-vi" surface="opaque" />
+            </div>
+            <div class="absolute top-2 right-2">
+              <span
+                class="inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5"
+                style="color:var(--c-text-1);background:var(--c-bg-deep);border-color:color-mix(in srgb,var(--c-text-1) 33%,transparent)"
+              >
+                {fmtTime(s.t)}
+              </span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 px-3 pb-3">
+              <div class="text-sm font-bold text-white leading-tight">{s.entity}</div>
+              <div class="text-[11px] text-zinc-400 mt-0.5 leading-snug">{s.caption}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+      <p class="text-[11px] font-mono text-zinc-500 mt-3">
+        Raymond, Ernesto, Méndez and Aunt Tee appear in Mission 1 but have no official press stills.
+      </p>
+    </div>
+
+    <!-- Systems -->
+    <div id="el-systems" class="mt-14" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// Systems — Confirmed in the Extended Look" dotColor="var(--c-economy)" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {data.systems.map((s: ElStill) => (
+          <a
+            href={ytAt(s.t)}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-gold/30 transition-all"
+          >
+            <div class="aspect-video overflow-hidden">
+              <img
+                src={s.src}
+                alt={s.alt}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 48%, transparent) 40%, transparent 70%)"></div>
+            </div>
+            <div class="absolute top-2 left-2">
+              <Badge variant="indexed" surface="opaque" label="System" />
+            </div>
+            <div class="absolute top-2 right-2">
+              <span
+                class="inline-flex items-center border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5"
+                style="color:var(--c-text-1);background:var(--c-bg-deep);border-color:color-mix(in srgb,var(--c-text-1) 33%,transparent)"
+              >
+                {fmtTime(s.t)}
+              </span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 px-3 pb-3">
+              <div class="text-sm font-bold text-white leading-tight">{s.entity}</div>
+              <div class="text-[11px] text-zinc-400 mt-0.5 leading-snug">{s.caption}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-8 rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
+      <CardFooter
+        anchorId="section-el-stills"
+        sources={`Source: ${data.source} · ${stillCount} stills matched to EL timestamps`}
+        shareText="GTA VI Extended Look, still by still — map, missions, personas and systems on GTAVI.AI."
+      />
+    </div>
+  </section>
+)}
