@@ -23,7 +23,7 @@ import CardFooter from "../CardFooter.astro";
                 class="group relative overflow-hidden rounded-lg border border-border-mid hover:border-gta-gold/30 transition-all">
                 <img src={`https://img.youtube.com/vi/${t.youtube_id}/mqdefault.jpg`}
                   alt={t.title} class="w-28 h-16 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
-                <div class="absolute inset-0" style="background:linear-gradient(to top,#0e0e11 0%,transparent 50%)"></div>
+                <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%,transparent 50%)"></div>
                 <div class="absolute bottom-1 left-2">
                   <span class="text-[10px] font-mono text-gta-gold">{i < 2 ? `T${i + 1}` : 'EL'}</span>
                 </div>
@@ -39,6 +39,7 @@ import CardFooter from "../CardFooter.astro";
 
 <script>
   import { cc, op } from "../../assets/chartColors";
+  import { EL_LAYOUT, layoutBilateralLabels } from "../../assets/elTimelineLayout";
 
   import * as d3 from "d3";
   import { registerChart, triggerChart } from "../../assets/chartInit";
@@ -51,15 +52,28 @@ import CardFooter from "../CardFooter.astro";
     const trailers: any[] = JSON.parse(el.dataset.trailers || "[]");
 
     const TYPE_COLORS: Record<string,string> = {
-      vehicle:cc.bar, character:cc.green, location:"#38bdf8",
-      wildlife:"#a3e635", weapon:cc.red, audio:cc.purple, reveal:cc.text0,
+      vehicle:   cc.bar,
+      character: cc.live,
+      location:  cc.online,
+      wildlife:  cc.green,
+      weapon:    cc.red,
+      audio:     cc.purple,
+      reveal:    cc.text1,
     };
 
-    trailers.forEach((trailer, ti) => {
-      const stripH = 48;
-      const labelH = 60;
-      const totalH = stripH + labelH;
+    trailers.forEach((trailer) => {
+      const labeled = trailer.events.filter((ev: any, i: number) =>
+        ev.type === "reveal" || ev.type === "character" || i < 3 || ev.confidence === "confirmed"
+      );
       const W = el.clientWidth - 20;
+      const packed = layoutBilateralLabels(labeled, W, trailer.duration_sec);
+      const rowH = EL_LAYOUT.rowH;
+      const stripH = 40;
+      const aboveH = packed.aboveRows * rowH + 8;
+      const belowH = packed.belowRows * rowH + 8;
+      const axisH = 18;
+      const totalH = aboveH + stripH + belowH + axisH;
+      const stripY = aboveH;
 
       const div = document.createElement("div");
       div.className = "mb-6";
@@ -71,17 +85,17 @@ import CardFooter from "../CardFooter.astro";
       div.appendChild(titleEl);
 
       const svg = d3.select(div).append("svg").attr("width","100%")
-        .attr("viewBox",`0 0 ${el.clientWidth} ${totalH + 20}`)
+        .attr("viewBox",`0 0 ${el.clientWidth} ${totalH}`)
         .append("g").attr("transform","translate(10,0)");
 
       const dur = trailer.duration_sec;
       const x = d3.scaleLinear().domain([0, dur]).range([0, W]);
 
       // Background strip
-      svg.append("rect").attr("x",0).attr("y",16).attr("width",W).attr("height",stripH).attr("rx",4)
+      svg.append("rect").attr("x",0).attr("y",stripY).attr("width",W).attr("height",stripH).attr("rx",4)
         .attr("fill",cc.cardRaised);
 
-      // Density heatmap (count events per 10-second bucket)
+      // Density heatmap (count events per 8-second bucket)
       const buckets = Math.ceil(dur / 8);
       const counts = new Array(buckets).fill(0);
       trailer.events.forEach((ev: any) => { counts[Math.floor(ev.t / 8)]++; });
@@ -90,29 +104,42 @@ import CardFooter from "../CardFooter.astro";
         if (c === 0) return;
         const bx = x(i * 8);
         const bw = x(8) - x(0);
-        svg.append("rect").attr("x",bx).attr("y",16).attr("width",bw).attr("height",stripH).attr("rx",2)
+        svg.append("rect").attr("x",bx).attr("y",stripY).attr("width",bw).attr("height",stripH).attr("rx",2)
           .attr("fill",cc.bar).attr("opacity", 0.05 + (c / maxCount) * 0.25);
       });
 
-      // Event markers
-      trailer.events.forEach((ev: any, i: number) => {
+      const byKey = new Map(packed.placements.map((p) => [`${p.t}|${p.entity}`, p]));
+
+      trailer.events.forEach((ev: any) => {
         const ex = x(ev.t);
         const color = TYPE_COLORS[ev.type] ?? cc.text4;
-        const above = i % 2 === 0;
-        const markerY = above ? 16 : 16 + stripH - 10;
+        const place = byKey.get(`${ev.t}|${ev.entity}`);
+        const above = place ? place.side === "above" : ev.t % 2 === 0;
+        const markerY = above ? stripY + 6 : stripY + stripH - 6;
 
-        svg.append("line").attr("x1",ex).attr("x2",ex).attr("y1",16).attr("y2",16+stripH)
+        const stemY = place
+          ? (place.side === "above"
+              ? stripY - 2 - place.row * rowH
+              : stripY + stripH + 2 + place.row * rowH)
+          : (above ? stripY : stripY + stripH);
+
+        svg.append("line").attr("x1",ex).attr("x2",ex)
+          .attr("y1", above ? stemY : stripY)
+          .attr("y2", above ? stripY + stripH : stemY)
           .attr("stroke",color).attr("stroke-width",1).attr("opacity",op.tertiary);
 
-        svg.append("circle").attr("cx",ex).attr("cy",markerY+5).attr("r",4)
+        svg.append("circle").attr("cx",ex).attr("cy",markerY).attr("r",4)
           .attr("fill",color).attr("stroke",cc.bg).attr("stroke-width",1);
 
-        // Key reveals get labels
-        if (ev.type === "reveal" || ev.type === "character" || (i < 3) || ev.confidence === "confirmed") {
-          const shortName = ev.entity.split(" ").slice(0,2).join(" ");
-          svg.append("text").attr("x",ex).attr("y",above?12:16+stripH+14)
+        if (place) {
+          const labelY = place.side === "above"
+            ? stripY - 6 - place.row * rowH
+            : stripY + stripH + 14 + place.row * rowH;
+          svg.append("text")
+            .attr("x", place.labelX + place.labelW / 2)
+            .attr("y", labelY)
             .attr("text-anchor","middle").attr("fill",color)
-            .attr("font-size","8").attr("font-family","monospace").text(shortName);
+            .attr("font-size","9").attr("font-family","monospace").text(place.text);
         }
       });
 
@@ -120,8 +147,8 @@ import CardFooter from "../CardFooter.astro";
       [0, 0.25, 0.5, 0.75, 1.0].forEach(pct => {
         const tx = pct * W;
         const tSec = Math.round(pct * dur);
-        svg.append("text").attr("x",tx).attr("y",totalH+16)
-          .attr("text-anchor","middle").attr("fill",cc.text7).attr("font-size","9").attr("font-family","monospace")
+        svg.append("text").attr("x",tx).attr("y",totalH - 4)
+          .attr("text-anchor","middle").attr("fill",cc.text5).attr("font-size","9").attr("font-family","monospace")
           .text(`${Math.floor(tSec/60)}:${String(tSec%60).padStart(2,"0")}`);
       });
     });
