@@ -123,6 +123,107 @@ export function layoutSectionLabels(
   return { placements, rowCount, labelAreaH };
 }
 
+export type BilateralPlacement = ElPlacement & { side: "above" | "below" };
+
+/** First two words — the summary discovery chart label. */
+export function shortEntityName(entity: string): string {
+  return entity.split(/\s+/).slice(0, 2).join(" ");
+}
+
+/**
+ * Pack labels onto several rows above and below a single strip.
+ * Used by the all-releases discovery summary so the 52-entity Extended Look
+ * row can stack instead of colliding on two fixed heights.
+ */
+export function layoutBilateralLabels(
+  events: ElEvent[],
+  plotW: number,
+  durationSec: number,
+): { placements: BilateralPlacement[]; aboveRows: number; belowRows: number } {
+  const sorted = [...events].sort((a, b) => a.t - b.t);
+  const dur = Math.max(1, durationSec);
+  const xOf = (t: number) => (t / dur) * plotW;
+  const above: { left: number; right: number }[][] = [[]];
+  const below: { left: number; right: number }[][] = [[]];
+  const placements: BilateralPlacement[] = [];
+  const { pad, maxShift, shiftStep } = EL_LAYOUT;
+
+  const sidesOf = (preferAbove: boolean): ("above" | "below")[] =>
+    preferAbove ? ["above", "below"] : ["below", "above"];
+
+  for (let i = 0; i < sorted.length; i++) {
+    const ev = sorted[i];
+    const pinX = xOf(ev.t);
+    const text = shortEntityName(ev.entity);
+    const w = estimateLabelWidth(text);
+
+    const xCandidates: number[] = [];
+    const preferRight = pinX - w / 2;
+    const preferLeft = pinX - w;
+    const preferFlush = pinX;
+    xCandidates.push(preferRight, preferFlush, preferLeft);
+    for (let d = shiftStep; d <= maxShift; d += shiftStep) {
+      xCandidates.push(preferRight + d, preferRight - d, preferFlush + d, preferLeft - d);
+    }
+
+    let placed: { side: "above" | "below"; row: number; left: number } | null = null;
+
+    const trySide = (side: "above" | "below"): boolean => {
+      const rows = side === "above" ? above : below;
+      const tryPlace = (rowIdx: number): boolean => {
+        for (const raw of xCandidates) {
+          const left = Math.max(0, Math.min(raw, Math.max(0, plotW - w)));
+          const right = left + w;
+          if (fits(rows[rowIdx], left, right, pad)) {
+            placed = { side, row: rowIdx, left };
+            return true;
+          }
+        }
+        return false;
+      };
+      for (let r = 0; r < rows.length; r++) {
+        if (tryPlace(r)) return true;
+      }
+      return false;
+    };
+
+    for (const side of sidesOf(i % 2 === 0)) {
+      if (trySide(side)) break;
+    }
+    if (!placed) {
+      const side: "above" | "below" = above.length <= below.length ? "above" : "below";
+      const rows = side === "above" ? above : below;
+      rows.push([]);
+      trySide(side);
+      if (!placed) {
+        const left = Math.max(0, Math.min(pinX - w / 2, Math.max(0, plotW - w)));
+        placed = { side, row: rows.length - 1, left };
+      }
+    }
+
+    const { side, row, left } = placed;
+    const rows = side === "above" ? above : below;
+    rows[row].push({ left, right: left + w });
+    placements.push({
+      t: ev.t,
+      entity: ev.entity,
+      type: ev.type ?? "",
+      pinX,
+      labelX: left,
+      labelW: w,
+      row,
+      text,
+      side,
+    });
+  }
+
+  return {
+    placements,
+    aboveRows: Math.max(1, above.length),
+    belowRows: Math.max(1, below.length),
+  };
+}
+
 /** Count same-row bounding-box overlaps. 0 means the packer succeeded. */
 export function countOverlaps(placements: ElPlacement[], pad = EL_LAYOUT.pad): number {
   let n = 0;
