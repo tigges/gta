@@ -11,6 +11,7 @@ import IncomeCard from "../../components/IncomeCard.astro";
 import SectionHeader from "../../components/SectionHeader.astro";
 import CastCard from "../../components/CastCard.astro";
 import ExtendedLookStills from "../../components/ExtendedLookStills.astro";
+import Badge from "../../components/Badge.astro";
 
 import predictionsData, { feedWithPolls } from "../../config/predictions";
 import incomeData from "../../../data/gta-6/income-predictions.json";
@@ -250,7 +251,7 @@ const CAT_THUMBS: Record<string,string> = {
     </section>
     )}
 
-    <ExtendedLookStills />
+    <ExtendedLookStills compact detailHref="/gta-vi/extended-look" />
 
     <!-- ═══════════════════════════════════════════════════════
          INCOME PREDICTIONS — GTA VI Online
@@ -299,6 +300,11 @@ const CAT_THUMBS: Record<string,string> = {
         <CastCard name="DreQuan Priest" role="Supporting"  img="DreQuan_Priest_01.jpg" video="DreQuan_Priest_Video_Clip.mp4" />
         <CastCard name="Real Dimez"     role="Supporting"  img="Real_Dimez_01.jpg"     video="Real_Dimez_Video_Clip.mp4"     />
       </div>
+      <p class="text-[11px] font-mono text-zinc-500 mt-3">
+        Also named in the Extended Look, no official portrait still:
+        Raymond · Ernesto · Méndez · Aunt Tee.
+        <a href="/gta-vi/extended-look#el-ch-m1" class="text-zinc-400 hover:text-zinc-200 transition-colors">Mission 1 notes →</a>
+      </p>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -379,15 +385,18 @@ const CAT_THUMBS: Record<string,string> = {
          LEONIDA — LOCATIONS
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader bright label="// Leonida — Confirmed Locations" dotColor="var(--c-live)" />
+      <SectionHeader bright label="// Leonida — Confirmed Locations" dotColor="var(--c-live)" pillHref="/gta-vi/extended-look#el-map" pillLabel="EL map stills →" />
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {([
-          { name: "Vice City",      desc: "Urban hub — streets, nightlife, coast",   img: "Vice_City_04.jpg",                  shots: 9  },
-          { name: "Ambrosia",       desc: "Affluent waterfront district",             img: "Ambrosia_02.jpg",                   shots: 5  },
-          { name: "Grassrivers",    desc: "Wetlands — Leonida Everglades analog",    img: "Grassrivers_02.jpg",                shots: 4  },
-          { name: "Leonida Keys",   desc: "Island chain south of Vice City",          img: "Leonida_Keys_03.jpg",               shots: 5  },
-          { name: "Port Gellhorn",  desc: "Industrial port district",                 img: "Port_Gellhorn_02.jpg",              shots: 5  },
-          { name: "Mount Kalaga",   desc: "National park — mountainous interior",     img: "Mount_Kalaga_National_Park_03.jpg", shots: 6  },
+          { name: "Vice City",      desc: "Urban hub — streets, nightlife, coast",   img: "Vice_City_04.jpg",                  shots: 12, note: null },
+          { name: "Vice Beach",     desc: "Ocean Beach analog — named in EL at 24:00", img: "Vice_City_05.jpg",               shots: 1,  note: "EL" },
+          { name: "Ambrosia",       desc: "Named region — outskirts and industry",    img: "Ambrosia_02.jpg",                   shots: 5,  note: null },
+          { name: "Grassrivers",    desc: "Wetlands — Leonida Everglades analog",    img: "Grassrivers_02.jpg",                shots: 4,  note: null },
+          { name: "Leonida Keys",   desc: "Island chain south of Vice City",          img: "Leonida_Keys_03.jpg",               shots: 5,  note: null },
+          { name: "Port Gellhorn",  desc: "Industrial port district",                 img: "Port_Gellhorn_02.jpg",              shots: 5,  note: null },
+          { name: "Mount Kalaga",   desc: "National park — mountainous interior",     img: "Mount_Kalaga_National_Park_04.jpg", shots: 6,  note: null },
+          { name: "Kelly County",   desc: "Named rural county — EL 16:40",            img: "Mount_Kalaga_National_Park_03.jpg", shots: 0,  note: "EL · nearest still" },
+          { name: "Hamlet",         desc: "Named rural district — EL 16:10",          img: "Grassrivers_01.jpg",                shots: 0,  note: "EL · nearest still" },
         ] as const).map(loc => (
           <div class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-teal/30 transition-all duration-300 cursor-default">
             <div class="aspect-video overflow-hidden">
@@ -401,8 +410,8 @@ const CAT_THUMBS: Record<string,string> = {
             </div>
             <div class="absolute bottom-0 left-0 right-0 px-4 pb-4">
               <div class="flex items-center gap-2 mb-0.5">
-                <span class="text-[10px] font-mono text-gta-teal border border-gta-teal/20 bg-gta-teal/10 px-1.5 py-0.5 rounded uppercase tracking-widest">Confirmed</span>
-                <span class="text-[10px] font-mono text-zinc-500">{loc.shots} official shots</span>
+                <Badge variant="confirmed" />
+                <span class="text-[10px] font-mono text-zinc-500">{loc.note ?? `${loc.shots} official shots`}</span>
               </div>
               <div class="text-sm font-bold text-white leading-tight">{loc.name}</div>
               <div class="text-[11px] text-zinc-400 mt-0.5">{loc.desc}</div>
