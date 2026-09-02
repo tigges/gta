@@ -424,7 +424,7 @@ Bump `src/config/version.ts` when shipping a meaningful release.
 
 ## Cursor Cloud agent rules
 
-- **No autonomous screenshots or screen recordings.** Never use the `computerUse` subagent, `RecordScreen`, or any screenshot tool on your own initiative. If visual confirmation of a UI change is needed, ask the user to share a screenshot instead — this is faster and cheaper.
+- **No autonomous screenshots or screen recordings for QA and testing.** Never use the `computerUse` subagent, `RecordScreen`, or any screenshot tool on your own initiative. If visual confirmation of a UI change is needed, ask the user to share a screenshot instead — this is faster and cheaper.
 - Communicate this rule explicitly in every chat handover note under a "Agent rules" section so the next agent does not repeat the behaviour.
 
 - **Always use the central design token system — no hardcoded values in components.** This rule applies to this project and all other projects. Every visual property — colour, font family, font size, font weight, spacing, and surface — must reference the central token system. Never reach for a raw literal value in a component.
