@@ -5,6 +5,7 @@ Reads the latest scraped data from:
   - data/feeds/newswire.json   → top press articles
   - data/community/reddit.json → top community posts
   - data/gta-6/predictions.json → live prediction snapshot
+  - data/gta-6/official-footage-inbox.json → new official video needs-brief alert
 
 Requires: DISCORD_WEBHOOK_URL environment variable.
 
@@ -32,10 +33,35 @@ def load(path: str) -> dict:
         return json.load(f)
 
 
+def footage_alert_field(inbox: dict) -> dict | None:
+    """Urgent Discord field when official footage still needs a brief."""
+    pending = [v for v in (inbox.get("videos") or []) if v.get("needs_brief")]
+    if not pending:
+        return None
+    lines = []
+    for v in pending:
+        title = v.get("title") or v.get("youtube_id")
+        vid = v.get("youtube_id")
+        url = f"https://www.youtube.com/watch?v={vid}"
+        lines.append(f"• **[{title[:72]}]({url})** — needs brief")
+    n_hints = len(inbox.get("keyword_hints") or [])
+    n_stills = len(inbox.get("press_still_proposals") or [])
+    lines.append(
+        f"\nInbox: {n_hints} keyword hint(s), {n_stills} new press still(s). "
+        f"Do not auto-confirm. Write the brief on gtavi.ai."
+    )
+    return {
+        "name": "🎬 New official footage — needs brief",
+        "value": "\n".join(lines)[:1024],
+        "inline": False,
+    }
+
+
 def build_embed() -> dict:
     news    = load("feeds/newswire.json")
     reddit  = load("community/reddit.json")
     preds   = load("gta-6/predictions.json")
+    inbox   = load("gta-6/official-footage-inbox.json")
 
     today = datetime.now(timezone.utc).strftime("%B %d, %Y")
 
@@ -71,15 +97,11 @@ def build_embed() -> dict:
     if poll_preds:
         poll_lines += f"\n\n[🗳️ Vote now → {polls_url}]({polls_url})"
 
-    return {
-        "username": "GTAVI.AI Intelligence Bot",
-        "avatar_url": f"https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg",
-        "embeds": [
-            {
-                "title": f"📡 GTAVI.AI — Daily Intel Digest · {today}",
-                "url": f"{SITE_URL}/news",
-                "color": 0xF59E0B,  # gta-gold
-                "fields": [
+    fields = []
+    alert = footage_alert_field(inbox)
+    if alert:
+        fields.append(alert)
+    fields.extend([
                     {
                         "name": "📰 Press Coverage",
                         "value": press_lines,
@@ -100,7 +122,16 @@ def build_embed() -> dict:
                         "value": poll_lines,
                         "inline": False,
                     },
-                ],
+    ])
+    return {
+        "username": "GTAVI.AI Intelligence Bot",
+        "avatar_url": f"https://img.youtube.com/vi/VQRLujxTm3c/mqdefault.jpg",
+        "embeds": [
+            {
+                "title": f"📡 GTAVI.AI — Daily Intel Digest · {today}",
+                "url": f"{SITE_URL}/news",
+                "color": 0xF59E0B,  # gta-gold
+                "fields": fields,
                 "footer": {
                     "text": f"gtavi.ai — Data-driven GTA intelligence · Updated nightly",
                     "icon_url": f"https://img.youtube.com/vi/QdBZY2fkU-0/mqdefault.jpg",

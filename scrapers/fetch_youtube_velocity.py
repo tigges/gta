@@ -32,7 +32,9 @@ HEADERS = {
     )
 }
 
-TRAILERS = [
+# Used only if trailers.json is missing or empty. Live list comes from
+# data/gta-6/trailers.json so new official videos are tracked automatically.
+FALLBACK_TRAILERS = [
     {
         "youtube_id":   "QdBZY2fkU-0",
         "title":        "Grand Theft Auto VI — Trailer 1",
@@ -43,7 +45,31 @@ TRAILERS = [
         "title":        "Grand Theft Auto VI — Trailer 2",
         "published_at": "2025-05-06",
     },
+    {
+        "youtube_id":   "tJbzMqJGH4k",
+        "title":        "Grand Theft Auto VI: An Extended Look",
+        "published_at": "2026-08-28",
+    },
 ]
+
+
+def load_trailer_list() -> list[dict]:
+    """Official video IDs from trailers.json (registry), not a second hardcoded list."""
+    data = load_existing("gta-6/trailers.json")
+    out = []
+    for t in data.get("trailers", []):
+        vid = t.get("youtube_id")
+        if not vid:
+            continue
+        out.append({
+            "youtube_id": vid,
+            "title": t.get("title") or vid,
+            "published_at": t.get("published_at"),
+        })
+    if out:
+        return out
+    print("  trailers.json empty — using FALLBACK_TRAILERS")
+    return [dict(t) for t in FALLBACK_TRAILERS]
 
 
 def fetch_via_api(video_id: str, api_key: str) -> dict | None:
@@ -123,7 +149,7 @@ def main() -> None:
     existing = load_existing(OUT_PATH)
     trailers_out = {t["youtube_id"]: t for t in existing.get("trailers", [])}
 
-    for trailer in TRAILERS:
+    for trailer in load_trailer_list():
         vid = trailer["youtube_id"]
         print(f"  [{trailer['title']}]")
 

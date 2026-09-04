@@ -18,21 +18,26 @@ import CardFooter from "../CardFooter.astro";
           </div>
           <!-- Trailer thumbnails -->
           <div class="flex items-center gap-3 shrink-0">
-            {(trailerAnalysis.trailers as any[]).map((t: any, i: number) => (
+            {(trailerAnalysis.trailers as any[]).filter((t: any) => !t.stub && (t.events?.length ?? 0) > 0).map((t: any) => (
               <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
                 class="group relative overflow-hidden rounded-lg border border-border-mid hover:border-gta-gold/30 transition-all">
                 <img src={`https://img.youtube.com/vi/${t.youtube_id}/mqdefault.jpg`}
                   alt={t.title} class="w-28 h-16 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
                 <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%,transparent 50%)"></div>
                 <div class="absolute bottom-1 left-2">
-                  <span class="text-[10px] font-mono text-gta-gold">{i < 2 ? `T${i + 1}` : 'EL'}</span>
+                  <span class="text-[10px] font-mono text-gta-gold">{
+                    /extended look/i.test(t.title) || t.type === "extended_look" || t.id === "extended-look" ? "EL"
+                    : /trailer\s*1/i.test(t.title) ? "T1"
+                    : /trailer\s*2/i.test(t.title) ? "T2"
+                    : (t.id || "VID").slice(0, 4).toUpperCase()
+                  }</span>
                 </div>
               </a>
             ))}
           </div>
         </div>
         <div id="trailer-discovery-chart" class="w-full px-5 py-4"
-          data-trailers={JSON.stringify(trailerAnalysis.trailers)}
+          data-trailers={JSON.stringify((trailerAnalysis.trailers as any[]).filter((t: any) => !t.stub && (t.events?.length ?? 0) > 0))}
         ></div>
         <CardFooter chartId="trailer-discovery-chart" sources="Source: GTA VI.AI frame-by-frame analysis · official Rockstar trailers + Extended Look" shareText="GTA VI Extended Look confirms 52 entities in 27 minutes — more than T1 and T2 combined. Frame-by-frame entity density analysis on GTAVI.AI" />
       </div>

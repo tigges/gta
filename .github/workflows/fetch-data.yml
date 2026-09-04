@@ -220,6 +220,12 @@ jobs:
         continue-on-error: true
         run: python scrapers/fetch_press_assets.py
 
+      - name: Official footage playbook (detect, stub, inbox, Discord alert)
+        continue-on-error: true
+        run: python scrapers/on_new_official_footage.py
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+
       # ── Link health ────────────────────────────────────────────────────────
 
       - name: Check outbound link health (buy page, affiliate stores)
