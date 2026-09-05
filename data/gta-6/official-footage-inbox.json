@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "last_updated": "2026-09-02T09:25:24+00:00",
+  "last_updated": "2026-09-05T03:15:54+00:00",
   "note": "Draft inbox only. Scrapers detect and propose; humans/agents write the brief. Never treat keyword hits as confirmed.",
   "videos": [
     {
@@ -29,10 +29,43 @@
       "analysis_stubbed": false,
       "event_count": 52,
       "checklist": []
+    },
+    {
+      "youtube_id": "qq76pQsI1iw",
+      "title": "Grand Theft Auto VI: An Extended Look Coming August 27",
+      "published_at": null,
+      "needs_brief": true,
+      "analysis_stubbed": true,
+      "event_count": 0,
+      "checklist": [
+        "Fill trailer-analysis.json events from official footage + press stills",
+        "Do not rip YouTube or Netflix frames",
+        "Match press stills to chapters; label them as press stills",
+        "Nav teaser / CrossLinks if this becomes a first-class section",
+        "Review keyword hints before drafting any prediction",
+        "Never auto-flip predicted → confirmed"
+      ]
     }
   ],
-  "needs_brief_count": 0,
-  "keyword_hints": [],
+  "needs_brief_count": 1,
+  "keyword_hints": [
+    {
+      "term": "extended look",
+      "label": "official extended look",
+      "source": "newswire:IGN",
+      "youtube_id": null,
+      "snippet": "Rockstar Censors GTA 6 Extended Look Trailer for China Rockstar Games has published a heavily ce",
+      "note": "Keyword hit only — not a confirmation. Review before drafting a prediction. draft_status must stay needs_review."
+    },
+    {
+      "term": "vice city",
+      "label": "Vice City",
+      "source": "newswire:Rockstar Intel",
+      "youtube_id": null,
+      "snippet": "revealed. You’re going to be able to show off your love for Vice City and more. Last month, it was revealed that Dazed‘s autumn 2",
+      "note": "Keyword hit only — not a confirmation. Review before drafting a prediction. draft_status must stay needs_review."
+    }
+  ],
   "press_still_proposals": [],
   "seen_press_filenames": [
     "Ambrosia_01.jpg",
