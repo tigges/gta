@@ -12,6 +12,8 @@ import SectionHeader from "../../components/SectionHeader.astro";
 import CastCard from "../../components/CastCard.astro";
 import ExtendedLookStills from "../../components/ExtendedLookStills.astro";
 import Badge from "../../components/Badge.astro";
+import GtaViMusic from "../../components/GtaViMusic.astro";
+import OctoberConfirmations from "../../components/OctoberConfirmations.astro";
 
 import predictionsData from "../../config/predictions";
 import incomeData from "../../../data/gta-6/income-predictions.json";
@@ -19,6 +21,7 @@ import trailersDataRaw from "../../../data/gta-6/trailers.json";
 import { MAIN_TRAILERS } from "../../config/trailers";
 import featuresData    from "../../../data/gta-6/features.json";
 import soundtrackData  from "../../../data/gta-6/soundtrack.json";
+import octoberData     from "../../../data/gta-6/october-confirmations.json";
 
 const predictions    = (predictionsData.predictions as Prediction[])
   .slice()
@@ -75,6 +78,11 @@ const PRED_THUMBS: Record<string,string> = {
   "pred-map-size":        "/assets/gta6/locations/Leonida_Keys_02.jpg",
   "pred-vehicles-launch": "/assets/gta6/locations/Port_Gellhorn_04.jpg",
 };
+
+const OCT_BY_CATEGORY = octoberData.items.reduce<Record<string, string[]>>((acc, item) => {
+  if (item.feature_category) (acc[item.feature_category] ??= []).push(item.id);
+  return acc;
+}, {});
 
 const CAT_THUMBS: Record<string,string> = {
   regions:    "/assets/gta6/locations/Vice_City_06.jpg",
@@ -263,6 +271,8 @@ const CAT_THUMBS: Record<string,string> = {
     </section>
     )}
 
+    <GtaViMusic />
+
     <ExtendedLookStills compact detailHref="/gta-vi/extended-look" />
 
     <!-- ═══════════════════════════════════════════════════════
@@ -318,6 +328,8 @@ const CAT_THUMBS: Record<string,string> = {
         <a href="/gta-vi/extended-look#el-ch-m1" class="text-zinc-400 hover:text-zinc-200 transition-colors">Mission 1 notes →</a>
       </p>
     </section>
+
+    <OctoberConfirmations />
 
     <!-- ═══════════════════════════════════════════════════════
          CONFIRMED FEATURE TRACKER
@@ -380,6 +392,11 @@ const CAT_THUMBS: Record<string,string> = {
                   </div>
                   {cat.notes && (
                     <p class="text-[10px] text-zinc-500 mt-2 leading-snug">{cat.notes}</p>
+                  )}
+                  {OCT_BY_CATEGORY[cat.id] && (
+                    <a href={`#${OCT_BY_CATEGORY[cat.id][0]}`} class="inline-block mt-2 text-[10px] font-mono text-gta-gold hover:text-gta-bright transition-colors">
+                      +{OCT_BY_CATEGORY[cat.id].length} October {OCT_BY_CATEGORY[cat.id].length === 1 ? "reveal" : "reveals"} →
+                    </a>
                   )}
                 </div>
               </div>

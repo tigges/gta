@@ -1,0 +1,89 @@
+---
+/**
+ * OctoberConfirmations — pre-launch reveals from October 2026, each tied
+ * to its source. Data: data/gta-6/october-confirmations.json.
+ * Items with a feature_category are counted on the Feature Tracker cards.
+ */
+import SectionHeader from "./SectionHeader.astro";
+import CardFooter from "./CardFooter.astro";
+import Badge from "./Badge.astro";
+import octData from "../../data/gta-6/october-confirmations.json";
+
+type Item = (typeof octData.items)[number] & { quote?: string; anchor?: string };
+const items = octData.items as Item[];
+const sources = octData.sources as Record<string, { label: string; url: string; date: string }>;
+
+const GROUPS: { id: string; label: string }[] = [
+  { id: "systems",   label: "Gameplay systems" },
+  { id: "story",     label: "Story & characters" },
+  { id: "world",     label: "World" },
+  { id: "music",     label: "Music" },
+  { id: "rating",    label: "Age rating details" },
+  { id: "platforms", label: "Platforms" },
+];
+const grouped = GROUPS
+  .map((g) => ({ ...g, items: items.filter((i) => i.group === g.id) }))
+  .filter((g) => g.items.length > 0);
+
+const confirmedCount = items.filter((i) => i.tier === "confirmed").length;
+const reportedCount  = items.length - confirmedCount;
+const fmtDate = (iso: string) =>
+  new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+---
+
+<section id="section-october" style="scroll-margin-top:80px">
+  <SectionHeader bright label={`// ${octData.title}`} dotColor="var(--c-live)" />
+  <div class="rounded-xl border border-border-dim overflow-hidden bg-surface-2">
+    <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
+      <div>
+        <div class="font-semibold text-zinc-200 text-sm">{items.length} new details in the run-up to launch</div>
+        <p class="text-[11px] text-zinc-500 font-mono mt-0.5 max-w-2xl leading-relaxed">
+          Confirmed = Rockstar or a Rockstar developer on record. Reported = third-party (rating board page since removed, journalist paraphrase, anonymous sources). Leaks excluded.
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <Badge variant="confirmed" label={`${confirmedCount} confirmed`} />
+        <Badge variant="reported" label={`${reportedCount} reported`} />
+      </div>
+    </div>
+
+    {grouped.map((g) => (
+      <div class="border-b border-border-dim last:border-b-0">
+        <div class="px-5 pt-4 pb-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500">{g.label}</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-border-dim">
+          {g.items.map((item) => {
+            const s = sources[item.source];
+            return (
+              <div id={item.id} class="bg-surface-1 px-5 py-4 flex flex-col gap-1.5" style="scroll-margin-top:80px">
+                <div class="flex items-start justify-between gap-3">
+                  <span class="text-sm font-semibold text-zinc-200 leading-snug">{item.title}</span>
+                  <Badge variant={item.tier === "confirmed" ? "confirmed" : "reported"} class="shrink-0" />
+                </div>
+                <p class="text-[11px] text-zinc-400 leading-relaxed">{item.detail}</p>
+                {item.quote && (
+                  <blockquote class="text-[11px] text-zinc-300 italic leading-relaxed border-l-2 border-border-mid pl-3">“{item.quote}”</blockquote>
+                )}
+                <div class="mt-auto pt-1 flex items-center justify-between gap-2 flex-wrap">
+                  {s && (
+                    <a href={s.url} target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors">
+                      {s.label} · {fmtDate(s.date)} ↗
+                    </a>
+                  )}
+                  {item.anchor && (
+                    <a href={item.anchor} class="text-[10px] font-mono text-gta-gold hover:text-gta-bright transition-colors">Details →</a>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    ))}
+
+    <CardFooter
+      anchorId="section-october"
+      sources="Sources: Rockstar Games · IGN · LOVE magazine · Bloomberg · PEGI · GamesBeat — each item links to its source"
+      shareText={`GTA VI in October: ${confirmedCount} new confirmed details — texting, podcasts, Lucia's Liberty City roots and more.`}
+    />
+  </div>
+</section>
