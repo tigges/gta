@@ -2,7 +2,9 @@
 /**
  * NewsletterSignup — GTA VI.AI weekly intel digest subscription.
  *
- * Posts to /api/subscribe (Cloudflare Pages Function → Resend Audiences).
+ * Posts to /api/subscribe. The site is static (GitHub Pages) and has no such
+ * endpoint, so this component is not mounted on any public page. Point ENDPOINT
+ * at a hosted signup service before reusing it.
  * Shows success / error / already-subscribed states inline.
  *
  * Variants:

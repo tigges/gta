@@ -64,7 +64,7 @@ const clusters: CardCluster[] = [
     cards: [
       { name: "PredictionCard (full)",    component: "PredictionCard",          sampleUrl: "/gta-vi/intel",       note: "Full analysis view. GamePill top-left, tier top-right, confidence bar, basis, share." },
       { name: "PredictionCard (compact)", component: "PredictionCard compact",  sampleUrl: "/gta-vi",             note: "Teaser mode — thumbnail + title + value + bar only. Links to full." },
-      { name: "VoteCard",                 component: "VoteCard",                sampleUrl: "/community/polls",    note: "Community prediction poll. Options, live vote counts, result bars via Cloudflare KV." },
+      { name: "VoteCard",                 component: "VoteCard",                sampleUrl: "/community/polls",    note: "Community prediction poll. Options and result bars; vote saved in localStorage on the visitor's device." },
       { name: "CastCard",                 component: "CastCard",                sampleUrl: "/gta-vi/intel",       note: "Confirmed character. Inline video toggle on click. GamePill + tier pill over image." },
     ],
   },
@@ -95,10 +95,8 @@ const clusters: CardCluster[] = [
     ],
   },
 ];
-// Staging-only gate — this page must never render on production
-const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
-const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
-if (!IS_STAGING) { return Astro.redirect("/404"); }
+// Dev-only gate — admin pages render under `npm run dev` and never in production builds
+if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
 ---
 
 <Base title="Admin — Card Inventory" description="GTAVI.AI card template visual reference." noindex>

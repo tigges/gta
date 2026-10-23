@@ -1,6 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import NewsletterSignup from "../components/NewsletterSignup.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import feedData from "../../data/feeds/newswire.json";
 import redditData from "../../data/community/reddit.json";
@@ -468,9 +467,6 @@ const sourceCount = new Set(allSignal.map((i: any) => i.source_id)).size + 1;
             ))}
           </div>
         </div>
-
-        <!-- Newsletter -->
-        <NewsletterSignup variant="compact" />
 
         <!-- Note -->
         <p class="text-[10px] font-mono text-zinc-700 leading-relaxed px-1">
