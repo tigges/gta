@@ -1,6 +1,9 @@
 name: Build & Deploy (GitHub Pages)
 
-# gtavi.ai is served by GitHub Pages. Every push to main builds and deploys.
+# The site is served by GitHub Pages. Every push to main builds and deploys.
+# It is temporarily published at https://tigges.github.io/gta/ while gtavi.ai is
+# parked: the "Rehost under /gta" step rewrites the root-relative build output.
+# To move back to gtavi.ai, delete that step (and see AGENTS.md → Deployment).
 # The nightly data commit uses [skip ci], which suppresses push triggers, so
 # the workflow_run trigger redeploys once the nightly fetch has finished.
 
@@ -40,6 +43,12 @@ jobs:
       - run: npm ci
 
       - run: npm run build
+
+      - name: Rehost under /gta
+        run: node scripts/rebase-dist.mjs dist
+        env:
+          PAGES_BASE: /gta
+          PAGES_ORIGIN: https://tigges.github.io
 
       - uses: actions/configure-pages@v5
 
