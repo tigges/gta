@@ -108,15 +108,6 @@ const PAGES: Record<string, PageConfig> = {
     image: "assets/gta5/story/gta-v-cover.jpg",
     accent: "#818cf8",
   },
-  leaderboard: {
-    badge: "Community · Opt-in",
-    badgeColor: "#22c55e",
-    badgeBg: "rgba(34,197,94,0.15)",
-    title: "Income Leaderboard",
-    desc: "GTA Online players sharing their personalised $/hr stacks. Built with the GTAVI.AI Income Adviser. Where do you rank?",
-    image: "assets/gta6/locations/Vice_City_01.jpg",
-    accent: "#22c55e",
-  },
   "gta-iii-eco": {
     badge: "GTA III · 2001",
     badgeColor: "#9898b8",
