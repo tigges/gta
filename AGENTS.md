@@ -213,7 +213,7 @@ Import the data file at the top, add an HTML container (`<div id="my-chart">`), 
 
 ### GTA VI music and pre-launch reveals (hand-curated)
 
-- `data/gta-6/music.json` — official radio stations (hosts, preview tracks from the `/VI/music` page payload), album singles, score. Rendered by `GtaViMusic.astro` on `/gta-vi/intel#section-music`. Trailer-heard licensed songs stay in `soundtrack.json`.
+- `data/gta-6/music.json` — official radio stations (hosts, preview tracks from the `/VI/music` page payload), album singles, score. Rendered by `GtaViMusic.astro` on `/gta-vi/intel#section-music`. Trailer-heard licensed songs stay in `soundtrack.json`. Audio comes only from official players, loaded on click: Rockstar's station embed (`rockstargames.com/VI/music/embed/{embed_key}/simple`) and Spotify embeds (`spotify_id`, taken from Rockstar's `gtavi-thealbum.lnk.to` links). Never re-host station or album audio in `public/`.
 - `data/gta-6/october-confirmations.json` — source-tagged reveals; `tier` is `confirmed` (Rockstar or a Rockstar developer on record) or `reported` (rating boards, journalist paraphrase, anonymous sources). Leaks are never added. `feature_category` adds a "+N October reveals" link on the Feature Tracker card; it does not change the curated counts in `features.json`.
 
 ### GTA VI income predictions
