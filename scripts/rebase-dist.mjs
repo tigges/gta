@@ -10,11 +10,15 @@
  *   - root-relative "/<top-level entry>" paths → PAGES_BASE + "/<entry>"
  *   - href="/" (home links) → PAGES_BASE + "/"
  *   - dist/CNAME is dropped so the artifact doesn't claim the custom domain
+ *   - optional PAGES_HIDE_HOSTS (comma-separated): every page gets a tiny
+ *     head script that hides the document when loaded on one of those hosts
+ *     (or a subdomain), so a parked domain still pointing here shows nothing
  *
  * Only paths whose first segment is a real top-level entry of dist/ are
  * rewritten, so external URLs and protocol-relative URLs are left alone.
  *
- * Usage: PAGES_BASE=/gta PAGES_ORIGIN=https://tigges.github.io node scripts/rebase-dist.mjs [dist]
+ * Usage: PAGES_BASE=/gta PAGES_ORIGIN=https://tigges.github.io PAGES_HIDE_HOSTS=gtavi.ai \
+ *          node scripts/rebase-dist.mjs [dist]
  * A no-op when PAGES_BASE is unset, empty or "/".
  */
 import fs from "node:fs";
@@ -50,6 +54,13 @@ const absSiteEncoded = /https?%3A%2F%2F(?:www\.)?gtavi\.ai/gi;
 // ShareDropdown prints the share URL without its protocol as link text.
 const displaySite = />gtavi\.ai\//g;
 const target = `${ORIGIN}${BASE}`;
+
+const hideHosts = (process.env.PAGES_HIDE_HOSTS ?? "").split(",").map((h) => h.trim().toLowerCase()).filter(Boolean);
+const hideGuard = hideHosts.length
+  ? `<script>if(/(^|\\.)(${hideHosts.map(escapeRe).join("|")})$/i.test(location.hostname))document.documentElement.style.display="none"</script>`
+  : "";
+const headOpen = /<head(\s[^>]*)?>/i;
+const doctype = /^<!doctype html>/i;
 const targetDisplay = target.replace(/^https?:\/\//, "");
 
 let filesChanged = 0;
@@ -64,6 +75,12 @@ function rewrite(file) {
     out = out.replace(absSite, () => { n++; return target; });
     out = out.replace(absSiteEncoded, () => { n++; return encodeURIComponent(target); });
     out = out.replace(displaySite, () => { n++; return `>${targetDisplay}/`; });
+  }
+  if (hideGuard && file.endsWith(".html")) {
+    if (headOpen.test(out)) out = out.replace(headOpen, (m) => m + hideGuard);
+    else if (doctype.test(out)) out = out.replace(doctype, (m) => m + hideGuard);
+    else out = hideGuard + out;
+    n++;
   }
   if (out !== src) {
     fs.writeFileSync(file, out);
