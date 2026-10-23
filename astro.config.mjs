@@ -6,6 +6,9 @@ export default defineConfig({
   output: 'static',
   site: 'https://gtavi.ai',
   integrations: [tailwind(), sitemap()],
+  redirects: {
+    '/community/polls': '/gta-vi/intel',
+  },
   vite: {
     build: {
       rollupOptions: {

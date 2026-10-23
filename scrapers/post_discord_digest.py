@@ -86,17 +86,6 @@ def build_embed() -> dict:
         for p in predictions
     ) or "_No predictions data_"
 
-    # Community polls — top 5 by confidence that have poll_question
-    poll_preds = [p for p in predictions if p.get("poll_question")][:5]
-    polls_url  = f"{SITE_URL}/community/polls"
-    poll_lines = "\n".join(
-        f"• **{p['poll_question']}** — _{p['confidence']}% {p['confidence_tier']}_"
-        f" [{' / '.join(p.get('poll_options', ['Yes', 'No'])[:3])}]"
-        for p in poll_preds
-    ) or "_No polls active_"
-    if poll_preds:
-        poll_lines += f"\n\n[🗳️ Vote now → {polls_url}]({polls_url})"
-
     fields = []
     alert = footage_alert_field(inbox)
     if alert:
@@ -115,11 +104,6 @@ def build_embed() -> dict:
                     {
                         "name": "📊 Live Signal Predictions",
                         "value": pred_lines,
-                        "inline": False,
-                    },
-                    {
-                        "name": "🗳️ Community Polls — What Do You Think?",
-                        "value": poll_lines,
                         "inline": False,
                     },
     ])

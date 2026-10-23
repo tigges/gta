@@ -57,12 +57,12 @@ const pillClusters: PillCluster[] = [
   },
   {
     title: "Confidence, intelligence & status",
-    note: "Evidence quality and status badges. confirmed/reported/predicted/indexed used on predictions, polls, cast cards. alert for breaking news.",
+    note: "Evidence quality and status badges. confirmed/reported/predicted/indexed used on predictions and cast cards. alert for breaking news.",
     surfaceNote: "surface: opaque over thumbnails · tint in rows/context",
     rows: [
       { id: "confirmed", label: "Confirmed", kind: "badge", variant: "confirmed", surface: "opaque", colorToken: "var(--c-live)",   hex: "#0d9488", central: "✅", sampleUrl: "/gta-vi/intel",     usage: "Official/confirmed facts, cast and feature cards. Top-right over thumbnail." },
-      { id: "reported",  label: "Reported",  kind: "badge", variant: "reported",  surface: "opaque", colorToken: "var(--c-brand)",  hex: "#f59e0b", central: "✅", sampleUrl: "/community/polls", usage: "Reported mechanics and externally sourced poll cards." },
-      { id: "predicted", label: "Predicted", kind: "badge", variant: "predicted", surface: "opaque", colorToken: "var(--c-text-2)", hex: "#d4d4d8", central: "✅", sampleUrl: "/community/polls", usage: "Model-derived predictions and speculative polls." },
+      { id: "reported",  label: "Reported",  kind: "badge", variant: "reported",  surface: "opaque", colorToken: "var(--c-brand)",  hex: "#f59e0b", central: "✅", sampleUrl: "/gta-vi/intel",     usage: "Reported mechanics and externally sourced predictions." },
+      { id: "predicted", label: "Predicted", kind: "badge", variant: "predicted", surface: "opaque", colorToken: "var(--c-text-2)", hex: "#d4d4d8", central: "✅", sampleUrl: "/gta-vi/intel",     usage: "Model-derived predictions." },
       { id: "indexed",   label: "Indexed",   kind: "badge", variant: "indexed",   surface: "tint",   colorToken: "var(--c-text-2)", hex: "#d4d4d8", central: "✅", sampleUrl: "/database",        usage: "Database entity state — same visual as predicted." },
       { id: "alert",     label: "Alert",     kind: "badge", variant: "alert",     surface: "tint",   colorToken: "var(--c-alert)",  hex: "#ef4444", central: "✅", sampleUrl: "/news",             usage: "Breaking news, risk or delay status." },
     ],
@@ -101,7 +101,7 @@ const pillClusters: PillCluster[] = [
     rows: [
       { id: "economy-ig",  label: "IG Economy",  kind: "badge", variant: "economy-ig",  surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/charts?title=gta-online", usage: "In-game economy chart category." },
       { id: "economy-rl",  label: "RL Economy",  kind: "badge", variant: "economy-rl",  surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/franchise/economics",     usage: "Real-world economy/franchise comparison category." },
-      { id: "community",   label: "Community",   kind: "badge", variant: "community",   surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/community/polls",         usage: "Community signal/poll grouping." },
+      { id: "community",   label: "Community",   kind: "badge", variant: "community",   surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/news",                    usage: "Community signal grouping." },
       { id: "performance", label: "Performance", kind: "badge", variant: "performance", surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/database",                usage: "Vehicle/performance chart category." },
       { id: "history",     label: "History",     kind: "badge", variant: "history",     surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/franchise/history",               usage: "Historical franchise chart category." },
       { id: "promotions",  label: "Promotions",  kind: "badge", variant: "promotions",  surface: "tint", colorToken: "var(--c-text-4)", hex: "#9898b8", central: "✅", sampleUrl: "/gta-online",              usage: "Weekly event and promotion chart/category context." },

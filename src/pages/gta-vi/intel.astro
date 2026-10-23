@@ -1,6 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import PredictionOrPoll from "../../components/PredictionOrPoll.astro";
+import PredictionCard from "../../components/PredictionCard.astro";
 import HudIcon from "../../components/HudIcon.astro";
 import { FEATURE_CATEGORY_ICON } from "../../config/featureIcons";
 import Countdown from "../../components/Countdown.astro";
@@ -13,7 +13,7 @@ import CastCard from "../../components/CastCard.astro";
 import ExtendedLookStills from "../../components/ExtendedLookStills.astro";
 import Badge from "../../components/Badge.astro";
 
-import predictionsData, { feedWithPolls } from "../../config/predictions";
+import predictionsData from "../../config/predictions";
 import incomeData from "../../../data/gta-6/income-predictions.json";
 import trailersDataRaw from "../../../data/gta-6/trailers.json";
 import featuresData    from "../../../data/gta-6/features.json";
@@ -23,8 +23,7 @@ const predictions    = (predictionsData.predictions as Prediction[])
   .slice()
   .sort((a, b) => (a.display_order ?? 99) - (b.display_order ?? 99));
 
-// Mixed prediction/poll feed; show the first PRED_INITIAL, fold the rest behind "Show all".
-const predFeed    = feedWithPolls(predictions, 3);
+// Show the first PRED_INITIAL predictions, fold the rest behind "Show all".
 const PRED_INITIAL = 9;
 const trailersData   = trailersDataRaw as TrailersData;
 const trailers       = trailersData.trailers;
@@ -178,22 +177,34 @@ const CAT_THUMBS: Record<string,string> = {
          SIGNAL PREDICTIONS
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader bright label="// Economic Predictions & Community Polls" pillHref="/community/polls" pillLabel="All polls →" />
+      <SectionHeader bright label="// Economic Predictions" />
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 items-start">
-        {predFeed.map(({ prediction: p, mode }, i) => (
+        {predictions.map((p, i) => (
           <div class={i >= PRED_INITIAL ? "pred-extra hidden" : ""}>
-            <PredictionOrPoll
-              prediction={p}
-              mode={mode}
+            <PredictionCard
+              id={p.id}
+              title={p.title}
+              value={p.value}
+              confidence={p.confidence}
+              confidence_tier={p.confidence_tier}
+              basis={p.basis}
+              unit={p.unit}
+              trailer_timestamp={p.trailer_timestamp}
+              prediction_method={p.prediction_method}
+              prediction_range={p.prediction_range}
+              source={p.source}
+              source_type={p.source_type}
+              outcome_verified={p.outcome_verified}
+              outcome_actual={p.outcome_actual}
               thumbnail={(p as any).thumbnail ?? PRED_THUMBS[p.id] ?? null}
             />
           </div>
         ))}
       </div>
-      {predFeed.length > PRED_INITIAL && (
+      {predictions.length > PRED_INITIAL && (
         <div class="mt-5 flex justify-center">
           <button id="show-all-preds" type="button" class="inline-flex items-center gap-2 rounded border border-border-mid px-4 py-2 text-[11px] font-mono uppercase tracking-widest text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-all">
-            Show all {predFeed.length} predictions &amp; polls →
+            Show all {predictions.length} predictions →
           </button>
         </div>
       )}
