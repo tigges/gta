@@ -363,6 +363,9 @@ export interface WeeklyBonusesData {
   note?: string;
   bonuses: WeeklyBonusEntry[];
   sales?: WeeklySale[];
+  /** Every multiplier event in the weekly post, including activities with no income profile. */
+  headlines?: { multiplier: number; label: string }[];
+  article_title?: string;
 }
 
 // ── Item catalogue (item-catalogue.json) ────────────────────────────────────

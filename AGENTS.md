@@ -105,7 +105,8 @@ python3 scrapers/fetch_trailers.py
 | `fetch_reddit.py` | `community/reddit.json` | ✅ | Needs Reddit creds for live count; RSS fallback for posts |
 | `fetch_newswire.py` | `feeds/newswire.json` | ✅ | Multi-source: Rockstar, EDGAR 8-K, Kotaku, Rockstar Intel, Variety, The Game Business; GTAForums curated seed fallback |
 | `fetch_conference_news.py` | `feeds/conference-news.json` | ✅ | YouTube conference channel watcher; needs `YOUTUBE_API_KEY` |
-| `fetch_preorder_listings.py` | `feeds/preorder-listings.json` | ✅ | Retailer listing monitor; PS Store wishlist live as of May 2026 |
+| `fetch_preorder_listings.py` | `feeds/preorder-listings.json` | ✅ | Retailer listing monitor. Curated fields (`pre_order_date`, `launch_date`, `editions`, `preorder_bonus`, …) are hand-edited and carried forward. Once pre-orders are confirmed, a retailer never drops below its previous status (store pages are invisible from CI IPs); the raw reading is kept as `scraped_status`. |
+| `fetch_weekly_bonuses.py` | `gta-5/economy/weekly-bonuses.json`, `bonus-history.json` | ✅ | Rockstar Intel GTA Online RSS (Rockstar Newswire is JS-only). Bonuses count only when the activity is named inside an "Nx GTA$ & RP on …" clause; `headlines[]` lists every multiplier event. `week_start` comes from the article title. The nav strip hides data older than 8 days. |
 | `fetch_metacritic.py` | `franchise/metacritic.json` | ❌ | Curated seed — run manually if scores change |
 | `fetch_igdb.py` | `franchise/igdb.json` | ✅ | Needs `TWITCH_CLIENT_ID` + `TWITCH_CLIENT_SECRET` |
 | `fetch_spotify.py` | `franchise/spotify.json` | ✅ | Needs `SPOTIFY_CLIENT_ID` + `SPOTIFY_CLIENT_SECRET` |

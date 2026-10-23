@@ -25,7 +25,8 @@ import json
 import re
 import sys
 import os
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -44,6 +45,9 @@ DATA_DIR    = ROOT / "data"
 OUTPUT_REL  = "gta-5/economy/weekly-bonuses.json"
 HISTORY_REL = "gta-5/economy/bonus-history.json"
 
+# Rockstar's Newswire is JS-rendered and its feed/tag URLs 404 (since mid-2026);
+# Rockstar Intel republishes the weekly post as "GTA Online Event Week: … (Oct 22nd-28th)".
+RI_GTAO_RSS   = "https://rockstarintel.com/category/gta-online/feed/"
 NEWSWIRE_RSS  = "https://www.rockstargames.com/newswire/feed.xml"
 NEWSWIRE_URL  = "https://www.rockstargames.com/newswire/tag/gtaonline"
 
@@ -93,19 +97,48 @@ SALE_RE2 = re.compile(
     re.IGNORECASE,
 )
 
-MULTIPLIER_RE = re.compile(r'(\d+)[xX×]\s*(gta\s*\$|bonus|cash|money|\$)', re.IGNORECASE)
+# One bonus clause: "3x GTA$ & RP on <activities>" / "Double GTA$ and RP on <activities>",
+# running until the next clause or section heading.
+_WORD_MULT = {"double": 2, "triple": 3, "quadruple": 4}
+BONUS_CLAUSE_RE = re.compile(
+    r'\b(\d)\s*[xX×]|\b(double|triple|quadruple)\b',
+    re.IGNORECASE,
+)
+_CLAUSE_HEAD_RE = re.compile(r'\s*(?:GTA\s*\$|cash|rewards?)[^.]{0,20}?\b(?:on|for|from)\b\s+', re.IGNORECASE)
+_CLAUSE_END_RE = re.compile(
+    r'\s(?=\d\s*[xX×]\s*GTA|(?:Double|Triple|Quadruple)\s+GTA|Discounts?\b|Time Trial|Gun Van|Podium|Prize Ride|Premium (?:Race|Deluxe)|Weekly Challenge|Luxury Autos)'
+    r'|\.\s|\(\d+x for GTA\+',
+)
+# Keyword hits that name a different activity sharing the word (e.g. "Cayo Perico Survival").
+_NOT_THE_ACTIVITY = re.compile(r'\s*(survivals?|races?|series|adversary|time trial)\b', re.IGNORECASE)
 
 
-def parse_multiplier(text: str) -> int:
-    m = MULTIPLIER_RE.search(text)
-    if m:
-        val = int(m.group(1))
-        return val if 1 < val <= 4 else 2
-    if "triple" in text.lower():
-        return 3
-    if "double" in text.lower():
-        return 2
-    return 2
+def extract_bonus_clauses(text: str) -> list[tuple[int, str]]:
+    clauses = []
+    for m in BONUS_CLAUSE_RE.finditer(text):
+        mult = int(m.group(1)) if m.group(1) else _WORD_MULT[m.group(2).lower()]
+        head = _CLAUSE_HEAD_RE.match(text, m.end())
+        if not head or not 1 < mult <= 4:
+            continue
+        rest = text[head.end():head.end() + 300]
+        end = _CLAUSE_END_RE.search(rest)
+        clauses.append((mult, rest[:end.start()] if end else rest))
+    return clauses
+
+
+def find_bonuses(text: str) -> dict[str, tuple[int, str]]:
+    """activity_id → (multiplier, keyword) for activities named inside a bonus clause."""
+    found: dict[str, tuple[int, str]] = {}
+    for mult, clause in extract_bonus_clauses(text):
+        low = clause.lower()
+        for keyword, activity_id in ACTIVITY_KEYWORDS.items():
+            for km in re.finditer(re.escape(keyword), low):
+                if _NOT_THE_ACTIVITY.match(low, km.end()):
+                    continue
+                if activity_id not in found or mult > found[activity_id][0]:
+                    found[activity_id] = (mult, keyword)
+                break
+    return found
 
 
 def clean_item_description(raw: str) -> str:
@@ -199,7 +232,7 @@ def fetch_newswire_article(session: "requests.Session") -> tuple[str, str, str]:
     Falls back through RSS → HTML listing → empty string.
     """
     # Try RSS
-    for rss_url in [NEWSWIRE_RSS, NEWSWIRE_RSS.replace("feed.xml", "feed/")]:
+    for rss_url in [RI_GTAO_RSS, NEWSWIRE_RSS, NEWSWIRE_RSS.replace("feed.xml", "feed/")]:
         try:
             resp = session.get(rss_url, headers=HEADERS, timeout=15)
             if resp.status_code == 200:
@@ -210,12 +243,16 @@ def fetch_newswire_article(session: "requests.Session") -> tuple[str, str, str]:
                         continue
                     title_text = title_el.get_text(strip=True)
                     if any(kw in title_text.lower() for kw in [
-                        "this week", "weekly update", "bonuses", "week in gta"
+                        "event week", "this week", "weekly update", "bonuses", "week in gta"
                     ]):
                         link_el = item.find("link")
                         pub_el  = item.find("pubDate")
                         article_url = link_el.get_text(strip=True) if link_el else None
                         pub_date    = pub_el.get_text(strip=True) if pub_el else ""
+                        body_el = item.find("encoded")
+                        if body_el and body_el.get_text(strip=True):
+                            body = BeautifulSoup(body_el.get_text(), "html.parser")
+                            return body.get_text(separator=" ", strip=True), title_text, pub_date
                         if article_url:
                             try:
                                 art = session.get(article_url, headers=HEADERS, timeout=15)
@@ -252,35 +289,61 @@ def fetch_newswire_article(session: "requests.Session") -> tuple[str, str, str]:
     return "", "", ""
 
 
-def fetch_weekly_data(session: "requests.Session", catalogue: dict[str, dict]) -> tuple[list[dict], list[dict], str, str]:
-    """Return (bonuses, sales, title, pub_date)."""
+MONTHS = ["january", "february", "march", "april", "may", "june", "july",
+          "august", "september", "october", "november", "december"]
+
+
+def derive_week_start(title: str, pub_date: str) -> str:
+    """Week key for the article: the start date in the title, else the Thursday on/after pub_date."""
+    try:
+        published = parsedate_to_datetime(pub_date).date() if pub_date else None
+    except (TypeError, ValueError):
+        published = None
+    m = re.search(r"\b(" + "|".join(MONTHS) + r")\s+(\d{1,2})(?:st|nd|rd|th)?", title, re.I)
+    if m:
+        ref = published or datetime.now(timezone.utc).date()
+        month, day = MONTHS.index(m.group(1).lower()) + 1, int(m.group(2))
+        year = ref.year + (1 if month < ref.month - 6 else -1 if month > ref.month + 6 else 0)
+        try:
+            return date(year, month, day).isoformat()
+        except ValueError:
+            pass
+    if published:
+        return (published + timedelta(days=(3 - published.weekday()) % 7)).isoformat()
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+
+def fetch_weekly_data(session: "requests.Session", catalogue: dict[str, dict]) -> tuple[list[dict] | None, list[dict], list[dict], str, str]:
+    """Return (bonuses, sales, headlines, title, pub_date). bonuses is None when no article could be fetched."""
     article_text, title, pub_date = fetch_newswire_article(session)
 
     if not article_text:
         print("[fetch_weekly_bonuses] Could not fetch Newswire article")
-        return [], [], title, pub_date
+        return None, [], [], title, pub_date
 
     # ── Bonuses ──
-    bonuses_map: dict[str, dict] = {}
-    for keyword, activity_id in ACTIVITY_KEYWORDS.items():
-        if keyword.lower() in article_text.lower():
-            idx = article_text.lower().find(keyword.lower())
-            context = article_text[max(0, idx - 120):idx + 200]
-            multiplier = parse_multiplier(context)
-            existing = bonuses_map.get(activity_id)
-            if not existing or multiplier > existing["multiplier"]:
-                bonuses_map[activity_id] = {
-                    "activity_id":   activity_id,
-                    "multiplier":    multiplier,
-                    "keyword_found": keyword,
-                    "source_title":  title,
-                    "pub_date":      pub_date,
-                }
+    bonuses_map = {
+        activity_id: {
+            "activity_id":   activity_id,
+            "multiplier":    multiplier,
+            "keyword_found": keyword,
+            "source_title":  title,
+            "pub_date":      pub_date,
+        }
+        for activity_id, (multiplier, keyword) in find_bonuses(article_text).items()
+    }
 
     # ── Sales ──
     sales = extract_sales(article_text, catalogue)
 
-    return list(bonuses_map.values()), sales, title, pub_date
+    # Every multiplier event in the post, mapped or not — for display only.
+    headlines = []
+    for multiplier, clause in extract_bonus_clauses(article_text):
+        label = re.sub(r"\s+", " ", clause.split(":")[0]).strip(" –-&")
+        if label and not any(h["label"] == label for h in headlines):
+            headlines.append({"multiplier": multiplier, "label": label})
+
+    return list(bonuses_map.values()), sales, headlines, title, pub_date
 
 
 # ── Bonus history time-series ─────────────────────────────────────────────────
@@ -371,15 +434,16 @@ def main() -> None:
     session = requests.Session()
     print("[fetch_weekly_bonuses] Fetching Newswire weekly post…")
 
-    bonuses, sales, title, pub_date = fetch_weekly_data(session, catalogue)
+    bonuses, sales, headlines, title, pub_date = fetch_weekly_data(session, catalogue)
 
     # If fetch failed, preserve existing data and still try to append to history
-    if not bonuses and not sales:
+    if bonuses is None:
         existing = load_existing(OUTPUT_REL)
         if existing.get("bonuses") or existing.get("sales"):
             print("[fetch_weekly_bonuses] Fetch failed — preserving existing data")
             append_to_history(existing)
             return
+        bonuses = []
 
     print(f"[fetch_weekly_bonuses] Bonuses: {len(bonuses)}  |  Sales: {len(sales)}")
     for b in bonuses:
@@ -390,11 +454,12 @@ def main() -> None:
 
     result = {
         "last_updated": now_iso(),
-        "source":       "Rockstar Newswire",
-        "week_start":   datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "source":       "Rockstar weekly GTA Online update (Rockstar Intel RSS, Newswire fallback)",
+        "week_start":   derive_week_start(title, pub_date),
         "note":         "Updated every Thursday. Multipliers apply to net_profit_per_hr in IncomeAdviser. Sales[] resolved against item-catalogue.json.",
         "bonuses":      bonuses,
         "sales":        sales,
+        "headlines":    headlines,
         "article_title": title,
     }
 
