@@ -42,10 +42,8 @@ const gtaForumsBody = featuredPoll
   ? `Hey all,\n\nRunning a community poll this week on a GTA VI prediction from GTAVI.AI's model:\n\n**${featuredPoll.poll_question}**\n\nModel confidence: **${featuredPoll.confidence}%** (tier: ${featuredPoll.confidence_tier})\n\nBasis: ${(featuredPoll.basis ?? "").slice(0, 400)}\n\nCast your vote and see where the community lands:\n🗳️ ${featuredPollUrl}\n\nAll GTA VI predictions + data: https://gtavi.ai/gta-vi/intel\n\n---\n*GTAVI.AI is an independent fan data project — not affiliated with Rockstar Games.*`
   : "";
 
-// Staging-only gate — this page must never render on production
-const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
-const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
-if (!IS_STAGING) { return Astro.redirect("/404"); }
+// Dev-only gate — admin pages render under `npm run dev` and never in production builds
+if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
 ---
 
 <Base title="Admin — Social & Growth Strategy" description="GTAVI.AI social media strategy, Resend email stack, SEO, affiliate and traffic playbook." noindex>
@@ -151,7 +149,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
               { label: "Instagram",                detail: "Tuesday 09:00 UTC — pre-scheduled Monday in Publer" },
               { label: "Resend weekly digest",      detail: "Tuesday 10:00 UTC via GitHub Actions" },
               { label: "Discord nightly digest",   detail: "03:00 UTC daily via CI — post_discord_digest.py" },
-              { label: "Newsletter signup",         detail: "/api/subscribe → Resend Audience (Cloudflare)" },
+              { label: "Newsletter signup",         detail: "Offline — static site has no signup endpoint" },
               { label: "Data refresh",              detail: "Nightly scrapers commit fresh JSON to main" },
               { label: "Poll rotation",             detail: "New featured poll every Monday (week-number based)" },
               { label: "§00 copy generation",       detail: "X, Reddit, GTAForums, Discord copy auto-builds from poll" },
@@ -212,9 +210,9 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
           },
           {
             label:  "Newsletter signup",
-            time:   "On form submit · Cloudflare",
-            status: "running",
-            note:   "/api/subscribe → Resend Audience — RESEND_API_KEY + RESEND_AUDIENCE_ID set in CF Pages ✓",
+            time:   "On form submit",
+            status: "broken",
+            note:   "Form unmounted — /api/subscribe was a Cloudflare Pages Function. Needs a hosted signup service.",
           },
           {
             label:  "Launch blast (manual)",
@@ -526,7 +524,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
       <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
         <div class="px-4 py-2.5 border-b border-border-dim flex items-center justify-between">
           <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">{polls.length} active polls · embed-ready</span>
-          <span class="text-[10px] font-mono text-zinc-600">staging.gtavi.ai/community/polls/embed/[id]</span>
+          <span class="text-[10px] font-mono text-zinc-600">gtavi.ai/community/polls/embed/[id]</span>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-[11px] font-mono">
@@ -670,7 +668,7 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
             {([
               { label: "Site signup form",       note: "NewsletterSignup.astro",            color: "var(--c-text-4)" },
               { label: "→" },
-              { label: "POST /api/subscribe",    note: "Cloudflare Pages Function",         color: "var(--c-brand)" },
+              { label: "POST /api/subscribe",    note: "Removed — no server on GitHub Pages", color: "var(--c-brand)" },
               { label: "→" },
               { label: "Resend Audience",        note: "RESEND_AUDIENCE_ID",                color: "var(--c-gta-dollar)" },
               { label: "→" },
@@ -701,12 +699,12 @@ if (!IS_STAGING) { return Astro.redirect("/404"); }
           {([
             {
               key:   "RESEND_API_KEY",
-              where: ["GitHub repo secrets", "Cloudflare Pages env vars"],
-              used:  "Weekly digest send (CI) + /api/subscribe function",
+              where: ["GitHub repo secrets"],
+              used:  "Weekly digest send (CI)",
             },
             {
               key:   "RESEND_AUDIENCE_ID",
-              where: ["GitHub repo secrets", "Cloudflare Pages env vars"],
+              where: ["GitHub repo secrets"],
               used:  "Audience UUID — get from resend.com → Audiences",
             },
             {

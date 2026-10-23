@@ -11,10 +11,9 @@
  *    for polls not tied to a specific prediction.
  *
  * Voting:
- *   - POSTs to /api/poll/vote with { pollId, option }
- *   - Uses localStorage to track voted state client-side
- *   - Cloudflare KV stores cumulative vote counts (requires POLL_VOTES KV binding)
- *   - Falls back gracefully if KV is unavailable (shows vote UI, counts from 0)
+ *   - Client-side only: the chosen option is stored in localStorage (`vote:{pollId}`)
+ *   - The site is static (GitHub Pages) — there is no shared vote tally.
+ *     The last server-side counts are archived in data/community/poll-votes-archive.json
  *
  * Usage:
  *   <VoteCard predictionId="pred-rdr2-wanted-stars" />
@@ -78,7 +77,7 @@ if (predictionId) {
 if (!question) throw new Error(`VoteCard: no question resolved for pollId="${pollId}"`);
 
 const anchorId  = `vote-${pollId}`;
-const shareText = `${question} — Vote on GTAVI.AI and see what the community thinks.`;
+const shareText = `${question} — Vote on GTAVI.AI.`;
 const cardClass = `vc-card ${thumbnail ? "vc-card--with-thumb" : "vc-card--no-thumb"}`;
 const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:none;border-top:none" : "scroll-margin-top:80px";
 ---
@@ -352,17 +351,13 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
       el.dataset.anchor = pollAnchor;
     });
 
-    // Helper: build personalised share text after voting
-    function buildShareText(chosenOption: string, votes: Record<string, number>): string {
-      const total = Object.values(votes).reduce((s, v) => s + v, 0);
-      const myPct = total > 0 ? Math.round(((votes[chosenOption] ?? 1) / total) * 100) : 100;
-      const agree = myPct >= 50 ? `${myPct}% agree` : `only ${myPct}% agree`;
-      return `I voted "${chosenOption}" — ${agree} (${total} vote${total !== 1 ? "s" : ""}). ${question} → ${pollUrl}`;
+    function buildShareText(chosenOption: string): string {
+      return `I voted "${chosenOption}". ${question} → ${pollUrl}`;
     }
 
     // Helper: update share dropdown links with personalised text
-    function updateShareLinks(chosenOption: string, votes: Record<string, number>) {
-      const shareText = buildShareText(chosenOption, votes);
+    function updateShareLinks(chosenOption: string) {
+      const shareText = buildShareText(chosenOption);
       const tweetUrl  = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText + "\n\n")}&url=${encodeURIComponent(pollUrl)}`;
       const redditUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(pollUrl)}&title=${encodeURIComponent(shareText)}`;
       card.querySelectorAll<HTMLAnchorElement>(".share-x-link").forEach(el => { el.href = tweetUrl; });
@@ -372,7 +367,7 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
 
     const storageKey = `vote:${pollId}`;
 
-    // Helper: animate result bars from fetched data
+    // Helper: animate result bars from a vote map
     function showResults(votes: Record<string, number>, votedOption?: string) {
       const total = Object.values(votes).reduce((s, v) => s + v, 0);
       options.forEach(opt => {
@@ -395,94 +390,30 @@ const cardStyle = embedMode ? "border-radius:0;border-left:none;border-right:non
         if (row)   row.classList.toggle("vc-result-row--voted", !!isVoted);
       });
       const countEl = results.querySelector<HTMLElement>(".vc-vote-count");
-      if (countEl) countEl.textContent = `${total.toLocaleString()} vote${total !== 1 ? "s" : ""}`;
+      if (countEl) countEl.textContent = "Your vote · saved on this device";
     }
 
-    // If already voted (localStorage), show results immediately
-    const storedVote = localStorage.getItem(storageKey);
-    if (storedVote) {
+    function showLocalVote(chosenOption: string) {
       container.classList.add("hidden");
       votedNote.classList.remove("hidden");
-      // Show placeholder immediately — voted option gets 1 vote, others 0
-      const placeholder: Record<string, number> = {};
-      options.forEach(o => { placeholder[o] = o === storedVote ? 1 : 0; });
-      showResults(placeholder, storedVote);
+      const local: Record<string, number> = {};
+      options.forEach(o => { local[o] = o === chosenOption ? 1 : 0; });
+      showResults(local, chosenOption);
       results.classList.remove("hidden");
-      updateShareLinks(storedVote, placeholder);
-      // Fetch live counts — only replace placeholder if server has real data (total > 0)
-      fetch(`/api/poll/${encodeURIComponent(pollId)}/results`)
-        .then(r => r.ok ? r.json() : null)
-        .then(data => {
-          if (data?.votes) {
-            const liveTotal = Object.values(data.votes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0);
-            if (liveTotal > 0) {
-              showResults(data.votes, storedVote);
-              updateShareLinks(storedVote, data.votes);
-            }
-            // If total === 0 (KV broken/empty), keep the local placeholder — never show all-zero bars
-          }
-        })
-        .catch(() => {});
+      updateShareLinks(chosenOption);
+    }
+
+    const storedVote = localStorage.getItem(storageKey);
+    if (storedVote) {
+      showLocalVote(storedVote);
       return;
     }
 
-    // Fallback: always render placeholder if API unavailable
-    function showPlaceholder(chosenOption: string) {
-      const placeholder: Record<string, number> = {};
-      options.forEach(o => { placeholder[o] = o === chosenOption ? 1 : 0; });
-      showResults(placeholder, chosenOption);
-      results.classList.remove("hidden");
-    }
-
-    // Vote button click
     container.querySelectorAll<HTMLButtonElement>(".vc-option").forEach(btn => {
-      btn.addEventListener("click", async () => {
+      btn.addEventListener("click", () => {
         const option = btn.dataset.option!;
-
-        // Optimistic UI — mark as voted, hide options, show note immediately
         localStorage.setItem(storageKey, option);
-        container.classList.add("hidden");
-        votedNote.classList.remove("hidden");
-
-        // Show placeholder immediately so the user always sees something
-        showPlaceholder(option);
-        results.classList.remove("hidden");
-        updateShareLinks(option, { [option]: 1 });
-
-        // Then try to get real counts from the API
-        try {
-          const resp = await fetch(`/api/poll/${encodeURIComponent(pollId)}/vote`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ option }),
-          });
-
-          if (resp.ok || resp.status === 409) {
-            const data = await resp.json().catch(() => null);
-            const liveVotes = data?.votes ?? null;
-            const liveTotal = liveVotes
-              ? Object.values(liveVotes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0)
-              : 0;
-            if (liveVotes && liveTotal > 0) {
-              showResults(liveVotes, option);
-              updateShareLinks(option, liveVotes);
-            } else {
-              // No real data yet — try results endpoint as fallback
-              const r2 = await fetch(`/api/poll/${encodeURIComponent(pollId)}/results`);
-              if (r2.ok) {
-                const d2 = await r2.json().catch(() => null);
-                const t2 = d2?.votes
-                  ? Object.values(d2.votes as Record<string, number>).reduce((s: number, v) => s + (v as number), 0)
-                  : 0;
-                if (d2?.votes && t2 > 0) { showResults(d2.votes, option); updateShareLinks(option, d2.votes); }
-                // If still 0, placeholder remains — never show all-zero bars to the voter
-              }
-            }
-          }
-          // Any other status: placeholder already showing — leave it
-        } catch {
-          // Network error or KV unavailable — placeholder already showing
-        }
+        showLocalVote(option);
 
         // Plausible event
         if (typeof (window as any).plausible === "function") {

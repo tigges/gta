@@ -21,7 +21,7 @@ const { anchorId, shareText, size = "sm" } = Astro.props;
 
 // Build the canonical page URL at build time for X/Reddit link hrefs.
 // The clipboard copy handler overrides this with window.location at runtime
-// so staging.gtavi.ai shares copy the correct staging URL, not production.
+// so local dev and preview builds copy their own origin, not production.
 const pageUrl    = `${Astro.url.origin}${Astro.url.pathname}#${anchorId}`;
 const tweetUrl   = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText + "\n\n")}&url=${encodeURIComponent(pageUrl)}`;
 const redditUrl  = `https://www.reddit.com/submit?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent(shareText)}`;
@@ -196,7 +196,7 @@ const dropId  = `share-drop-${anchorId}`;
   // Copy link handler
   document.querySelectorAll<HTMLButtonElement>(".share-copy-item").forEach(btn => {
     btn.addEventListener("click", async () => {
-      // Build URL at runtime so staging.gtavi.ai copies a staging link, not production.
+      // Build URL at runtime so non-production origins copy their own link.
       const anchor = btn.dataset.anchor ?? "";
       const url = anchor
         ? `${window.location.origin}${window.location.pathname}#${anchor}`

@@ -26,11 +26,6 @@ interface Props {
 
 const SITE_BASE = import.meta.env.SITE ?? "https://gtavi.ai";
 
-// Staging badge is decided at build time from the Cloudflare Pages branch.
-// Production (main) builds omit it entirely; staging/preview branch builds show it.
-const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
-const IS_STAGING_BUILD = CF_BRANCH !== "" && CF_BRANCH !== "main";
-
 // Official GTAVI.AI social accounts — rendered as icon links in the footer.
 // `path` is the brand glyph drawn in a 24×24 viewBox with fill=currentColor.
 const SOCIAL_LINKS = [
@@ -203,7 +198,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
 
     <!-- Canonical -->
     <link rel="canonical" href={canonicalUrl} />
-    {(noindex || IS_STAGING_BUILD) && <meta name="robots" content="noindex,nofollow" />}
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
 
     <!-- Open Graph -->
     <meta property="og:title"            content={fullTitle} />
@@ -271,9 +266,6 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
         <div class="flex items-center gap-2">
           <span class="text-[10px] font-mono text-zinc-500 tracking-widest">GTA VI.AI</span>
           <span class="text-[10px] font-mono text-zinc-500 border border-border-mid rounded px-1">{SITE_VERSION_LABEL}</span>
-          {IS_STAGING_BUILD && (
-            <span class="text-[10px] font-mono text-amber-400 border border-amber-500/40 bg-amber-500/10 rounded px-1.5 tracking-widest">staging</span>
-          )}
         </div>
       </div>
     </div>

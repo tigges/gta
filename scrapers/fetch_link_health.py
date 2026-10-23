@@ -6,7 +6,7 @@ affiliate product links, scraper source endpoints) and writes a
 structured health report to data/feeds/link-health.json.
 
 Runs nightly via fetch-data.yml. Results are displayed on
-/admin/data-health (staging only).
+/admin/data-health (npm run dev only).
 
 Usage:
     python3 scrapers/fetch_link_health.py

@@ -34,10 +34,8 @@ const publicPages = pages
   .filter(p => !p.file.includes("/admin/") && !p.file.includes("/og/") && !p.file.includes("/income/"))
   .map(p => p.file.replace(/.*\/src\/pages/, "").replace(/\.astro$/, "").replace(/\/index$/, "/") || "/")
   .sort();
-// Staging-only gate — this page must never render on production
-const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
-const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
-if (!IS_STAGING) { return Astro.redirect("/404"); }
+// Dev-only gate — admin pages render under `npm run dev` and never in production builds
+if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
 ---
 
 <Base title="Admin — Site Structure" description="GTAVI.AI site structure, design system reference and live inventory." noindex>
@@ -156,7 +154,7 @@ TOKEN STATUS: All game title tokens defined.
     <section>
       <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Site Structure & Hierarchy</div>
       <pre class="font-mono text-xs text-zinc-400 whitespace-pre bg-zinc-900/60 border border-border-dim rounded-xl p-5 overflow-x-auto leading-relaxed">{`META LAYER (every page)
-  OPS BAR     Follow the GTA$ · version · staging badge
+  OPS BAR     Follow the GTA$ · version
   NAV         GTA VI · AI · Data · GTA Online · V
               Hamburger → full-screen tile launcher (mobile)
   FOOTER      Terms · Privacy · Scoring · ● Data refreshed nightly

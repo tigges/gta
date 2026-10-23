@@ -40,7 +40,7 @@ scrapers/
 
 .github/
   workflows/
-    static.yml        Build & deploy to GitHub Pages (triggers on push to main)
+    static.yml        Build & deploy to GitHub Pages (push to main + after nightly fetch)
     fetch-data.yml    Nightly data refresh (cron 03:00 UTC)
 ```
 
@@ -79,8 +79,7 @@ python3 scrapers/fetch_newswire.py
 | `REDDIT_CLIENT_SECRET` | `fetch_reddit.py` | No — RSS fallback active |
 | `DISCORD_WEBHOOK_URL` | `post_discord_digest.py` | No — digest skipped if absent |
 | `RESEND_API_KEY` | `post_weekly_digest_resend.py` | No — digest skipped if absent |
-| `RESEND_AUDIENCE_ID` | `post_weekly_digest_resend.py`, `functions/api/subscribe.ts` | No — skipped if absent. Create at resend.com → Audiences |
-| `POLL_VOTES` (KV) | `functions/api/poll/[pollId]/vote.ts`, `results.ts` | No — polls degrade gracefully. Set up: Cloudflare Pages → Settings → Functions → KV Namespace Bindings → Variable: `POLL_VOTES` |
+| `RESEND_AUDIENCE_ID` | `post_weekly_digest_resend.py` | No — skipped if absent. Create at resend.com → Audiences |
 
 Secrets are configured in: **GitHub repo → Settings → Secrets and variables → Actions**
 
@@ -412,11 +411,15 @@ D3 axis `tickFormat` callbacks require `as any` due to d3 type limitations — t
 
 ## Deployment
 
+gtavi.ai is a fully static site hosted on **GitHub Pages** (custom domain via `public/CNAME`). There is no Cloudflare dependency and no staging environment — `main` is the only deployed branch.
+
 Every push to `main` triggers `.github/workflows/static.yml`:
 1. `npm ci && npm run build` → `dist/`
 2. Uploaded as GitHub Pages artifact and deployed
 
-Nightly at 03:00 UTC, `.github/workflows/fetch-data.yml` runs all active scrapers and commits any changed JSON with `[skip ci]`.
+Nightly at 03:00 UTC, `.github/workflows/fetch-data.yml` runs all active scrapers and commits any changed JSON with `[skip ci]`. Because `[skip ci]` suppresses the push trigger, `static.yml` also runs via `workflow_run` when the nightly fetch succeeds, so fresh data goes live every night.
+
+No server-side code: there are no Pages Functions, Workers or KV. Anything interactive must work client-side (e.g. `VoteCard` stores the visitor's vote in `localStorage`). Admin pages (`/admin/*`) and the parked income calculator render only under `npm run dev`; production builds redirect them.
 
 Bump `src/config/version.ts` when shipping a meaningful release.
 
@@ -445,9 +448,9 @@ Bump `src/config/version.ts` when shipping a meaningful release.
 
 - **Version bump — mandatory on every session, no exceptions.** Every session that touches code, data, UI, or scrapers must bump `src/config/version.ts` before merging to `main`. Patch bump (`x.y.Z+1`) for fixes and minor tweaks; minor bump (`x.Y+1.0`) for new features; major bump (`X+1.0.0`) for full redesigns. Also update `SITE_VERSION_DATE` to today (`YYYY-MM-DD`). The version is displayed in the ops bar on every page — it must always reflect the latest release.
 
-- **Tag the previous release before starting work.** At the start of every session, before creating a feature branch, tag the current `staging` branch with `release/v{current_version}` and push the tag. This bookmarks the last known-good state and makes rollback trivial.
+- **Tag the previous release before starting work.** At the start of every session, before creating a feature branch, tag the current `main` branch with `release/v{current_version}` and push the tag. This bookmarks the last known-good state and makes rollback trivial.
   ```bash
-  git tag release/vX.Y.Z origin/staging && git push origin release/vX.Y.Z
+  git tag release/vX.Y.Z origin/main && git push origin release/vX.Y.Z
   ```
 
 - **Handover note version format.** In chat handover scripts only, the current version must be written in the format `GTAVI_AI_v1_75_0` (project prefix + underscores instead of dots). Example: `GTAVI_AI_v1_76_0`. This applies to the version token in the handover note header and any inline version references within the handover text. It does NOT affect `src/config/version.ts`, git tags, commit messages, or any other file — those continue to use the standard `1.76.0` format.
