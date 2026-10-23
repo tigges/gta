@@ -29,8 +29,10 @@ const viRelease: any =
 // ── Derivations: prediction id → headline value computed from canonical fact ──
 // Returns null when the source field is absent, leaving the curated value intact.
 const DERIVED: Record<string, (vi: any) => string | null> = {
-  "pred-launch-price": (vi) =>
-    vi.price_usd_estimate != null ? `$${Number(vi.price_usd_estimate).toFixed(2)}` : null,
+  "pred-launch-price": (vi) => {
+    const price = vi.price_usd_launch ?? vi.price_usd_estimate;
+    return price != null ? `$${Number(price).toFixed(2)}` : null;
+  },
   "pred-map-size": (vi) =>
     vi.map_size_km2_estimate != null ? `~${vi.map_size_km2_estimate}` : null,
   "pred-vehicles-launch": (vi) =>
