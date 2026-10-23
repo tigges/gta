@@ -11,13 +11,12 @@ const bizProfiles  = (businessProfiles as any).businesses as any[];
 const bonuses      = (weeklyBonuses as any).bonuses as any[];
 const weekStart    = (weeklyBonuses as any).week_start as string;
 
-// Staging-only tool. Production (main) builds render a noindex stub that
-// redirects to /gta-v — the calculator is parked on staging for now.
-const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
-const IS_STAGING_BUILD = CF_BRANCH !== "" && CF_BRANCH !== "main";
+// Dev-only tool. Production builds render a noindex stub that redirects to
+// /gta-v — the calculator is parked behind `npm run dev` for now.
+const IS_DEV_BUILD = import.meta.env.DEV;
 ---
 
-{!IS_STAGING_BUILD && (
+{!IS_DEV_BUILD && (
 <Base
   titleContext="gta-v"
   title="GTA Online Income Calculator"
@@ -34,7 +33,7 @@ const IS_STAGING_BUILD = CF_BRANCH !== "" && CF_BRANCH !== "main";
 </Base>
 )}
 
-{IS_STAGING_BUILD && (
+{IS_DEV_BUILD && (
 <Base
   titleContext="gta-v"
   title="GTA Online Income Calculator — Personalised Money Method Guide"

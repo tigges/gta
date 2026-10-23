@@ -1,10 +1,10 @@
 ---
 import Base from "../../layouts/Base.astro";
+import fs from "node:fs";
+import path from "node:path";
 
 // Hard 404 gate — this page must never render on production
-const CF_BRANCH = (typeof process !== "undefined" ? (process.env.CF_PAGES_BRANCH ?? "") : "").toLowerCase();
-const IS_STAGING = CF_BRANCH !== "" && CF_BRANCH !== "main";
-if (!IS_STAGING) {
+if (!import.meta.env.DEV) {
   return Astro.redirect("/404");
 }
 
@@ -36,9 +36,6 @@ const SCRAPERS = [
   { name: "Conference News",       file: "data/feeds/conference-news.json",              cadence: "nightly" },
   { name: "Pre-order Listings",    file: "data/feeds/preorder-listings.json",            cadence: "nightly" },
 ];
-
-import fs from "node:fs";
-import path from "node:path";
 
 const STALE_HOURS = 26;
 const now = new Date();
@@ -100,7 +97,7 @@ const linkFail = linkResults.filter(r => !r.ok).length;
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
 
     <div class="mb-8">
-      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Staging only · not indexed · auto-refreshes on nightly build</div>
+      <div class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-1">Dev only (npm run dev) · not indexed · auto-refreshes on nightly build</div>
       <h1 class="text-2xl font-bold text-zinc-100 mb-1">Data Health</h1>
       <p class="text-[13px] text-zinc-500 font-mono">Scraper freshness + outbound link status. Stale = nightly source not updated in {STALE_HOURS}h.</p>
     </div>
