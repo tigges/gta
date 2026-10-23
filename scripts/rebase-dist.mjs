@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Rehost a built `dist/` under a sub-path, e.g. https://tigges.github.io/gta/.
+ * Rehost a built `dist/` under a sub-path, e.g. https://tigges.github.io/trilitralitru/.
  *
  * The site is authored for the domain root (gtavi.ai): ~1,100 root-relative
  * paths across src/ and data/. Rather than threading Astro's `base` through all
@@ -17,7 +17,7 @@
  * Only paths whose first segment is a real top-level entry of dist/ are
  * rewritten, so external URLs and protocol-relative URLs are left alone.
  *
- * Usage: PAGES_BASE=/gta PAGES_ORIGIN=https://tigges.github.io PAGES_HIDE_HOSTS=gtavi.ai \
+ * Usage: PAGES_BASE=/trilitralitru PAGES_ORIGIN=https://tigges.github.io PAGES_HIDE_HOSTS=gtavi.ai \
  *          node scripts/rebase-dist.mjs [dist]
  * A no-op when PAGES_BASE is unset, empty or "/".
  */
