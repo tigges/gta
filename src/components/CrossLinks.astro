@@ -289,6 +289,11 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
 
   // GTA VI hub
   "gta-vi": [
+    { href: "/gta-vi/launch-trailer", badge: "Launch Trailer",
+      label: "Beat by beat",
+      sub: "Oct 15 · 90s · prison call, vault, heist",
+      thumb: "/assets/screenshots/Jason_and_Lucia_03.jpg",
+      accent: "var(--c-title-vi)" },
     { href: "/gta-vi/extended-look", badge: "Extended Look",
       label: "Visual brief",
       sub: "26:49 · map, missions, personas, systems",
@@ -373,8 +378,37 @@ const ALL_LINKS: Record<string, CrossLink[]> = {
       accent: "var(--c-brand)" },
   ],
 
+  // Dedicated Launch Trailer page
+  "launch-trailer": [
+    { href: "/gta-vi/extended-look", badge: "Extended Look",
+      label: "The long look",
+      sub: "26:49 · six chapters · map, missions, systems",
+      thumb: "/assets/gta6/locations/Leonida_Keys_01.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/gta-vi/intel", badge: "Predictions",
+      label: "What it changes",
+      sub: `${predCount} confidence-scored calls`,
+      thumb: "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+      accent: "var(--c-title-vi)" },
+    { href: "/charts#section-trailer-discovery-chart", badge: "Charts",
+      label: "Entity discovery",
+      sub: "Every official video, frame by frame",
+      thumb: "/assets/gta6/locations/Vice_City_01.jpg",
+      accent: "var(--c-brand)" },
+    { href: "/franchise/history", badge: "History",
+      label: "Trailer timeline",
+      sub: "T1 → T2 → EL → Launch Trailer",
+      thumb: "/assets/gta6/characters/Jason_Duval_01.jpg",
+      accent: "var(--c-live)" },
+  ],
+
   // Dedicated Extended Look page
   "extended-look": [
+    { href: "/gta-vi/launch-trailer", badge: "Launch Trailer",
+      label: "Beat by beat",
+      sub: "Oct 15 · 90s · prison call, vault, heist",
+      thumb: "/assets/screenshots/Jason_and_Lucia_03.jpg",
+      accent: "var(--c-title-vi)" },
     { href: "/gta-vi/intel", badge: "Predictions",
       label: "What EL confirmed",
       sub: `${predCount} confidence-scored calls · map, systems, story`,

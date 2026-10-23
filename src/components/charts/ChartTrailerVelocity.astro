@@ -5,7 +5,13 @@
  * Pure data display (no D3) — renders server-side.
  */
 import velocityData from "../../../data/gta-6/trailer-velocity.json";
+import trailersData from "../../../data/gta-6/trailers.json";
 import CardFooter from "../CardFooter.astro";
+
+const announcementIds = new Set(
+  (trailersData.trailers as any[]).filter((t) => t.type === "announcement").map((t) => t.youtube_id),
+);
+const series = (velocityData.trailers as any[]).filter((t) => !announcementIds.has(t.youtube_id));
 ---
 
 <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
@@ -16,13 +22,13 @@ import CardFooter from "../CardFooter.astro";
           <div class="text-[11px] text-zinc-500 font-mono">Polled via YouTube Data API · snapshots accumulate over time to build velocity curve</div>
         </div>
         <!-- Trailer thumbnail + stat cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-dim">
-          {(velocityData.trailers as any[]).map((t, i) => {
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-px" style="background:var(--c-border-1)">
+          {series.map((t) => {
             const latest = t.snapshots?.at(-1);
             const views = latest?.views ?? 0;
             const likes = latest?.likes ?? 0;
             return (
-              <div class="flex items-stretch">
+              <div class="flex items-stretch" style="background:var(--c-card)">
                 <!-- YouTube thumbnail -->
                 <a href={`https://www.youtube.com/watch?v=${t.youtube_id}`} target="_blank" rel="noopener noreferrer"
                   class="relative shrink-0 w-36 overflow-hidden group">
@@ -44,6 +50,7 @@ import CardFooter from "../CardFooter.astro";
                     {t.youtube_id === "QdBZY2fkU-0" ? "Trailer 1 · Dec 4 2023"
                       : t.youtube_id === "VQRLujxTm3c" ? "Trailer 2 · May 6 2025"
                       : t.youtube_id === "tJbzMqJGH4k" ? "Extended Look · Aug 27 2026"
+                      : t.youtube_id === "rz1B4B2yBZY" ? "Launch Trailer · Oct 15 2026"
                       : t.title}
                   </div>
                   <div class="text-3xl font-bold font-mono text-gta-bright mb-0.5">
@@ -51,14 +58,15 @@ import CardFooter from "../CardFooter.astro";
                   </div>
                   <div class="text-[11px] text-zinc-500 font-mono mb-3">views</div>
                   <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-600">
-                    <span>👍 {(likes / 1_000_000).toFixed(2)}M</span>
+                    {likes > 0 && <span>👍 {(likes / 1_000_000).toFixed(2)}M</span>}
                     {t.youtube_id === "QdBZY2fkU-0" && <span class="text-gta-teal">24h record</span>}
                     {t.youtube_id === "tJbzMqJGH4k" && <span class="text-gta-gold">Netflix premiere</span>}
+                    {t.youtube_id === "rz1B4B2yBZY" && <span class="text-gta-gold">Captured on PS5</span>}
                   </div>
                 </div>
               </div>
             );
           })}
         </div>
-        <CardFooter chartId="trailer-velocity" sources={`Source: YouTube Data API · polled ${new Date(velocityData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}`} shareText="GTA VI Trailer 1 still holds the 24-hour YouTube record. Trailer 2 and the Aug 27 Extended Look now sit beside it on GTAVI.AI." />
+        <CardFooter chartId="trailer-velocity" sources={`Source: YouTube Data API · polled ${new Date(velocityData.last_updated).toLocaleDateString("en-GB",{month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}`} shareText="GTA VI Trailer 1 still holds the 24-hour YouTube record. Trailer 2, the Extended Look and the Oct 15 Launch Trailer now sit beside it on GTAVI.AI." />
       </div>

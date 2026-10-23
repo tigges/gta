@@ -17,7 +17,7 @@ const scores    = ((metacriticData as any).titles as any[]);
 const releases  = (releasesData as any).releases as any[];
 const vgTitles  = ((vgchartzData as any).titles as any[]).filter((t: any) => t.total_m);
 
-const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).map((trailer: any) => {
+const analysisTrailers = ((trailerAnalysis as any).trailers as any[]).filter((t: any) => !t.stub && (t.events?.length ?? 0) > 0).map((trailer: any) => {
   const byType: Record<string,number> = {};
   for (const e of trailer.events) byType[e.type] = (byType[e.type] ?? 0) + 1;
   const confirmedCount: number = trailer.events.filter((e: any) => e.confidence === "confirmed").length;
@@ -28,6 +28,7 @@ const TRAILER_THUMBS: Record<string,string> = {
   "2023-12-04": "QdBZY2fkU-0",
   "2025-05-06": "VQRLujxTm3c",
   "2026-08-27": "tJbzMqJGH4k",
+  "2026-10-15": "rz1B4B2yBZY",
 };
 const DELAY_THUMBS: Record<string,string> = {
   date_confirmed: "/assets/gta6/locations/Vice_City_07.jpg",
