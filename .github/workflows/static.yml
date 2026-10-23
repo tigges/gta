@@ -1,9 +1,11 @@
 name: Build & Deploy (GitHub Pages)
 
 # The site is served by GitHub Pages. Every push to main builds and deploys.
-# It is temporarily published at https://tigges.github.io/gta/ while gtavi.ai is
-# parked: the "Rehost under /gta" step rewrites the root-relative build output.
-# To move back to gtavi.ai, delete that step (and see AGENTS.md → Deployment).
+# While gtavi.ai is parked the site lives at the project URL
+# https://tigges.github.io/<repo-name>/. The "Rehost under the Pages base path"
+# step reads that path from configure-pages and rewrites the root-relative build
+# output to match, so renaming the repo just needs a redeploy. Once a custom
+# domain is set again the base path is empty and the step is a no-op.
 # The nightly data commit uses [skip ci], which suppresses push triggers, so
 # the workflow_run trigger redeploys once the nightly fetch has finished.
 
@@ -42,17 +44,18 @@ jobs:
 
       - run: npm ci
 
+      - id: pages
+        uses: actions/configure-pages@v5
+
       - run: npm run build
 
-      - name: Rehost under /gta
+      - name: Rehost under the Pages base path
         run: node scripts/rebase-dist.mjs dist
         env:
-          PAGES_BASE: /gta
-          PAGES_ORIGIN: https://tigges.github.io
+          PAGES_BASE: ${{ steps.pages.outputs.base_path }}
+          PAGES_ORIGIN: ${{ steps.pages.outputs.origin }}
           # Parked domain: any page served on gtavi.ai renders blank.
           PAGES_HIDE_HOSTS: gtavi.ai
-
-      - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
