@@ -101,7 +101,7 @@ python3 scrapers/fetch_trailers.py
 | `gtavi/fetch_trailers.py` | `gta-6/trailers.json` | ✅ | Needs `YOUTUBE_API_KEY`. Unions search results with `KNOWN_TRAILERS` + existing file — never drops a known ID. Accepts trailer / Extended Look / gameplay titles. Age-restricted IDs resolved via `videos.list`. |
 | `gtavi/fetch_search_trends.py` | `gta-6/trends/search-interest.json` | ✅ | Google Trends |
 | `fetch_youtube_velocity.py` | `gta-6/trailer-velocity.json` | ✅ | Reads IDs from `trailers.json`; needs `YOUTUBE_API_KEY`; falls back to page scrape |
-| `on_new_official_footage.py` | `gta-6/official-footage-inbox.json` | ✅ | After trailers + press assets. Stubs empty analysis, velocity row, keyword hints, press-still proposals. Discord alerts when `needs_brief`. Never auto-confirms. |
+| `on_new_official_footage.py` | `gta-6/official-footage-inbox.json` | ✅ | After trailers + press assets. Stubs empty analysis, velocity row, keyword hints, press-still proposals. Discord alerts when `needs_brief`. Never auto-confirms. Rows with `type: "announcement"` in `trailers.json` (date cards, premiere teasers) are skipped — no stub, no brief. |
 | `fetch_ttwo_stock.py` | `franchise/ttwo-stock.json` | ✅ | Yahoo Finance; no API key |
 | `fetch_franchise_sales.py` | `franchise/sales.json` | ✅ | Curated seed + VGChartz enrichment |
 | `fetch_reddit.py` | `community/reddit.json` | ✅ | Needs Reddit creds for live count; RSS fallback for posts |

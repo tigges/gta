@@ -1,0 +1,209 @@
+---
+/**
+ * /gta-vi/launch-trailer — visual brief for the GTA VI Launch Trailer (Oct 15, 2026).
+ * Beats come from data/gta-6/launch-trailer.json; stills are official press-kit
+ * screenshots matched to each beat, never frames from the video.
+ */
+import Base from "../../layouts/Base.astro";
+import Badge from "../../components/Badge.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import CardFooter from "../../components/CardFooter.astro";
+import briefRaw from "../../../data/gta-6/launch-trailer.json";
+
+interface Beat { t: number; title: string; detail: string; tier: "confirmed" | "reported" }
+interface Still { src: string; alt: string; caption: string }
+interface Chapter {
+  id: string;
+  label: string;
+  t_start: number;
+  t_end: number;
+  summary: string;
+  beats: Beat[];
+  stills: Still[];
+}
+
+const brief = briefRaw as unknown as {
+  youtube_id: string;
+  title: string;
+  published_at: string;
+  duration_sec: number;
+  shot_count: number;
+  capture: string;
+  song: { title: string; artist: string; album: string };
+  official_blurb: string;
+  attribution: string;
+  sources: { label: string; url: string }[];
+  chapters: Chapter[];
+  confirms: string[];
+  open_questions: string[];
+};
+
+const YT = brief.youtube_id;
+const beatCount = brief.chapters.reduce((n, c) => n + c.beats.length, 0);
+const confirmedCount = brief.chapters.reduce((n, c) => n + c.beats.filter((b) => b.tier === "confirmed").length, 0);
+
+function fmtTime(t: number): string {
+  return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`;
+}
+---
+
+<Base
+  title="Launch Trailer — Visual Brief"
+  description={`GTA VI Launch Trailer, beat by beat — ${beatCount} moments from the 90-second, PS5-captured trailer: Lucia's prison call, Jason's Army past, the vault, the helicopter heist and new Vice City place names.`}
+  titleContext="gta-vi"
+  ogPage="vi-intel"
+  crossLinksContext="launch-trailer"
+>
+  <section class="relative overflow-hidden border-b border-border-dim" style="min-height:280px;display:flex;align-items:flex-end">
+    <div class="absolute inset-0">
+      <img
+        src="/assets/screenshots/Jason_and_Lucia_03.jpg"
+        alt=""
+        aria-hidden="true"
+        class="w-full h-full object-cover"
+        style="object-position:center 40%"
+        loading="eager"
+      />
+      <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 70%, transparent) 45%, color-mix(in srgb,var(--c-bg) 35%, transparent) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to bottom,var(--c-bg) 0%, transparent 30%, transparent 55%, var(--c-bg) 100%)"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-16 w-full">
+      <div class="flex items-center gap-2 mb-3">
+        <Badge variant="gta-vi" />
+        <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">Official footage · Oct 15, 2026</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">Launch Trailer</h1>
+      <p class="text-zinc-400 text-sm leading-relaxed max-w-xl">
+        Ninety seconds, {brief.shot_count} shots, captured on a base PS5. Every beat timed and sourced,
+        with official Rockstar press stills — not frames from the video.
+      </p>
+      <div class="flex flex-wrap items-center gap-4 mt-5 text-[10px] font-mono text-zinc-500">
+        <span><span class="text-zinc-300 font-bold">{brief.duration_sec}s</span> runtime</span>
+        <span>·</span>
+        <span><span class="text-gta-gold font-bold">{beatCount}</span> beats · {confirmedCount} confirmed</span>
+        <span>·</span>
+        <span>{brief.song.title} — Justice</span>
+        <span>·</span>
+        <a
+          href={`https://www.youtube.com/watch?v=${YT}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-zinc-400 hover:text-zinc-200 transition-colors"
+        >
+          Watch on YouTube ↗
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-14">
+
+    <section id="lt-premise" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// Rockstar's premise" dotColor="var(--c-title-vi)" />
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        <blockquote
+          class="lg:col-span-2 rounded-xl border border-border-dim px-5 py-4 text-sm text-zinc-300 leading-relaxed"
+          style="background:var(--c-card);border-left:3px solid var(--c-title-vi)"
+        >
+          {brief.official_blurb}
+          <div class="text-[10px] font-mono text-zinc-500 mt-3 uppercase tracking-widest">Rockstar Games · Launch Trailer description</div>
+        </blockquote>
+        <div class="rounded-xl border border-border-dim px-5 py-4" style="background:var(--c-card)">
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Debut track</div>
+          <div class="text-sm font-semibold text-zinc-200">{brief.song.title}</div>
+          <div class="text-[11px] text-zinc-400 mt-1 leading-relaxed">{brief.song.artist}</div>
+          <div class="text-[10px] font-mono text-zinc-500 mt-3">{brief.song.album}</div>
+          <div class="text-[10px] font-mono text-zinc-500 mt-1">{brief.capture}</div>
+        </div>
+      </div>
+    </section>
+
+    {brief.chapters.map((ch) => (
+      <section id={`lt-ch-${ch.id}`} style="scroll-margin-top:80px">
+        <SectionHeader
+          bright
+          label={`// ${fmtTime(ch.t_start)}–${fmtTime(ch.t_end)} · ${ch.label}`}
+          dotColor="var(--c-title-vi)"
+        />
+        <p class="text-[12px] text-zinc-400 leading-relaxed max-w-3xl mb-5">{ch.summary}</p>
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+          <ol class="lg:col-span-2 rounded-xl border border-border-dim divide-y divide-border-dim overflow-hidden" style="background:var(--c-card)">
+            {ch.beats.map((b) => (
+              <li class="px-4 py-3 flex items-start gap-3">
+                <span class="text-[10px] font-mono text-gta-gold shrink-0 w-9 pt-0.5">{fmtTime(b.t)}</span>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[12px] font-semibold text-zinc-200 leading-snug">{b.title}</div>
+                  <div class="text-[11px] text-zinc-400 mt-0.5 leading-relaxed">{b.detail}</div>
+                </div>
+                <Badge variant={b.tier} />
+              </li>
+            ))}
+          </ol>
+          <div class="lg:col-span-3 grid grid-cols-2 gap-3 content-start">
+            {ch.stills.map((s) => (
+              <figure class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
+                <div class="relative aspect-video overflow-hidden">
+                  <img src={s.src} alt={s.alt} class="w-full h-full object-cover" loading="lazy" />
+                  <div class="absolute top-0 left-0">
+                    <Badge variant="gta-vi" label="Press still" surface="opaque" />
+                  </div>
+                </div>
+                <figcaption class="px-3 py-2 text-[10px] font-mono text-zinc-400">{s.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))}
+
+    <section id="lt-signal" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// What the Launch Trailer settles" dotColor="var(--c-live)" pillHref="/gta-vi/intel" pillLabel="Predictions →" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="rounded-xl border border-border-dim px-5 py-4" style="background:var(--c-card)">
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Confirmed on screen or by Rockstar</div>
+          <ul class="flex flex-col gap-2">
+            {brief.confirms.map((c) => (
+              <li class="flex items-start gap-2 text-[12px] text-zinc-300 leading-snug">
+                <span class="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5" style="background:var(--c-tier-confirmed)"></span>
+                {c}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="rounded-xl border border-border-dim px-5 py-4" style="background:var(--c-card)">
+          <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Still open — not answered by the trailer</div>
+          <ul class="flex flex-col gap-2">
+            {brief.open_questions.map((q) => (
+              <li class="flex items-start gap-2 text-[12px] text-zinc-400 leading-snug">
+                <span class="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5" style="background:var(--c-tier-predicted)"></span>
+                {q}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="lt-sources" class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+      <div class="px-5 py-4">
+        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Sources</div>
+        <ul class="flex flex-wrap gap-x-5 gap-y-1.5">
+          {brief.sources.map((s) => (
+            <li>
+              <a href={s.url} target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors">{s.label} ↗</a>
+            </li>
+          ))}
+        </ul>
+        <p class="text-[10px] font-mono text-zinc-500 mt-3 leading-relaxed">
+          {brief.attribution} Timestamps are approximate. "Reported" marks identifications made by press, not captioned by Rockstar.
+        </p>
+      </div>
+      <CardFooter
+        anchorId="lt-sources"
+        sources="Source: Rockstar Games · IGN · GameSpot · GTAWiki"
+        shareText={`GTA VI Launch Trailer, beat by beat — ${beatCount} moments from 90 seconds. Visual brief on GTAVI.AI`}
+      />
+    </section>
+
+  </div>
+</Base>

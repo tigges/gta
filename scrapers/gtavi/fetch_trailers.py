@@ -80,6 +80,31 @@ KNOWN_TRAILERS = [
             "search.list omits it; videos.list by ID still resolves it."
         ),
     },
+    {
+        "youtube_id": "qq76pQsI1iw",
+        "title": "Grand Theft Auto VI: An Extended Look Coming August 27",
+        "published_at": "2026-08-06",
+        "source_url": "https://www.youtube.com/watch?v=qq76pQsI1iw",
+        "type": "announcement",
+        "duration_sec": 25,
+        "notes": (
+            "25s premiere-date card for An Extended Look (Netflix Aug 27, "
+            "YouTube 9PM ET). No new footage — no visual brief needed."
+        ),
+    },
+    {
+        "youtube_id": "rz1B4B2yBZY",
+        "title": "Grand Theft Auto VI Launch Trailer",
+        "published_at": "2026-10-15",
+        "source_url": "https://www.youtube.com/watch?v=rz1B4B2yBZY",
+        "type": "launch_trailer",
+        "duration_sec": 90,
+        "notes": (
+            "90s, captured entirely in-game on PS5. Debuts Justice — "
+            "'Flower in a Hurricane' feat. Tame Impala, SZA and King Gizzard "
+            "& The Lizard Wizard. Age-restricted on YouTube."
+        ),
+    },
 ]
 
 CURATED_KEYS = ("type", "duration_sec", "notes")

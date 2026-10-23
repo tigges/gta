@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify discovery-chart bilateral packer: zero same-row overlaps on EL."""
+"""Verify discovery-chart bilateral packer: zero same-row overlaps on every briefed video."""
 from __future__ import annotations
 
 import json
@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = json.loads((ROOT / "data/gta-6/trailer-analysis.json").read_text())
-EL = next(t for t in DATA["trailers"] if t.get("youtube_id") == "tJbzMqJGH4k")
+TRAILERS = [t for t in DATA["trailers"] if not t.get("stub") and t.get("events")]
 
 CHAR_W = 6.1
 PAD = 12
@@ -100,19 +100,20 @@ def overlaps(placements):
 
 
 def main() -> int:
-    events = labeled(EL["events"])
     ok = True
-    print(f"EL labeled events: {len(events)}")
-    for w in (640, 960, 1100, 1280):
-        plot = w - 20
-        places, above_n, below_n = layout(events, plot, EL["duration_sec"])
-        n, pairs = overlaps(places)
-        status = "PASS" if n == 0 else "FAIL"
-        if n:
-            ok = False
-        print(f"  {status}  width={w}  above={above_n} below={below_n}  overlaps={n}")
-        for p in pairs[:6]:
-            print(f"         collide: {p}")
+    for trailer in TRAILERS:
+        events = labeled(trailer["events"])
+        print(f"{trailer['id']} labeled events: {len(events)}")
+        for w in (640, 960, 1100, 1280):
+            plot = w - 20
+            places, above_n, below_n = layout(events, plot, trailer["duration_sec"])
+            n, pairs = overlaps(places)
+            status = "PASS" if n == 0 else "FAIL"
+            if n:
+                ok = False
+            print(f"  {status}  width={w}  above={above_n} below={below_n}  overlaps={n}")
+            for p in pairs[:6]:
+                print(f"         collide: {p}")
     print("OK" if ok else "FAILED")
     return 0 if ok else 1
 
