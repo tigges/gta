@@ -121,6 +121,11 @@ python3 scrapers/fetch_trailers.py
 | `post_discord_digest.py` | Discord webhook | ✅ | Runs after commit; needs `DISCORD_WEBHOOK_URL`; `continue-on-error: true` |
 | `fetch_gta_wiki.py` | `gta-6/entities/*.json` | ❌ | Run manually after major reveals |
 | `fetch_press_assets.py` | `gta-6/press-assets.json` | ✅ | Press-kit zips + `SITE_ASSETS` (official in-engine screenshots and key art from rockstargames.com/VI pages and Newswire posts that are not in the zips; hashed asset names resolved each run, resized to 2560px). Add new official images to `SITE_ASSETS` — never fan-site or magazine scans. Keeps earlier rows when a source fails. |
+| `fetch_onlyfarms.py` | `gta-5/economy/community-validation.json` | ❌ | Retired from nightly (v1.135.0): GTABase businesses page 404s, OnlyFarms guide has no tables |
+| `fetch_reddit_meta.py` | `gta-5/economy/reddit-signals.json` | ❌ | Retired from nightly: without Reddit creds the RSS feed has no scores, so nerf flags never fire |
+| `fetch_gtaonline_dlc_art.py` | `gta-5/economy/dlc-trailers.json` | ❌ | Needs `YOUTUBE_API_KEY` (not set in CI) — run manually, or re-add to nightly once the secret exists |
+| `fetch_gta5_assets.py` | `gta-5/assets-registry.json` | ❌ | Needs `YOUTUBE_API_KEY` — as above |
+| — | `gta-6/launch-commercials.json` | ❌ | Curated: Sensor Tower pre-orders, Take-Two guidance, launch-window signals. Rendered by `LaunchCommercials.astro` on `/gta-vi/buy`. Update after each earnings release or pre-order report |
 
 ---
 
