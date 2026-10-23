@@ -120,7 +120,7 @@ python3 scrapers/fetch_trailers.py
 | `fetch_leonida.py` | `gta-6/entities/leonida-intel.json` | ✅ | Leonida Intel public API; no auth |
 | `post_discord_digest.py` | Discord webhook | ✅ | Runs after commit; needs `DISCORD_WEBHOOK_URL`; `continue-on-error: true` |
 | `fetch_gta_wiki.py` | `gta-6/entities/*.json` | ❌ | Run manually after major reveals |
-| `fetch_press_assets.py` | `gta-6/press-assets.json` | ❌ | Run manually after press drops |
+| `fetch_press_assets.py` | `gta-6/press-assets.json` | ✅ | Press-kit zips + `SITE_ASSETS` (official in-engine screenshots and key art from rockstargames.com/VI pages and Newswire posts that are not in the zips; hashed asset names resolved each run, resized to 2560px). Add new official images to `SITE_ASSETS` — never fan-site or magazine scans. Keeps earlier rows when a source fails. |
 
 ---
 
