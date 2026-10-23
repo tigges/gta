@@ -75,15 +75,28 @@ HINT_TERMS = [
 ]
 
 
-def slug_for(trailer: dict) -> str:
+NO_BRIEF_TYPES = {"announcement"}
+
+
+def is_briefable(trailer: dict) -> bool:
+    """Announcement cards (date / premiere teasers) carry no footage to brief."""
+    return trailer.get("type") not in NO_BRIEF_TYPES
+
+
+def slug_for(trailer: dict, taken: set[str] | None = None) -> str:
     title = (trailer.get("title") or "").lower()
-    if "extended look" in title:
-        return "extended-look"
-    m = re.search(r"trailer\s*(\d+)", title)
-    if m:
-        return f"trailer-{m.group(1)}"
     vid = trailer.get("youtube_id") or "unknown"
-    return f"official-{vid[:8]}"
+    if re.fullmatch(r".*an extended look\s*", title):
+        slug = "extended-look"
+    elif "launch trailer" in title:
+        slug = "launch-trailer"
+    elif m := re.search(r"trailer\s*(\d+)", title):
+        slug = f"trailer-{m.group(1)}"
+    else:
+        slug = f"official-{vid[:8]}"
+    if taken and slug in taken:
+        slug = f"{slug}-{vid[:8]}"
+    return slug
 
 
 def analysis_by_id(analysis: dict) -> dict[str, dict]:
@@ -95,6 +108,8 @@ def analysis_by_id(analysis: dict) -> dict[str, dict]:
 
 
 def needs_brief(trailer: dict, analysis_row: dict | None) -> bool:
+    if not is_briefable(trailer):
+        return False
     if not analysis_row:
         return True
     events = analysis_row.get("events") or []
@@ -105,10 +120,11 @@ def ensure_analysis_stub(trailer: dict, analysis: dict) -> bool:
     """Append an empty analysis block. Returns True if a stub was added."""
     by_id = analysis_by_id(analysis)
     vid = trailer["youtube_id"]
-    if vid in by_id:
+    if vid in by_id or not is_briefable(trailer):
         return False
+    taken = {t.get("id") for t in analysis.get("trailers", []) if t.get("id")}
     analysis.setdefault("trailers", []).append({
-        "id": slug_for(trailer),
+        "id": slug_for(trailer, taken),
         "youtube_id": vid,
         "title": trailer.get("title") or vid,
         "published_at": trailer.get("published_at"),

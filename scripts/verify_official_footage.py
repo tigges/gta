@@ -115,6 +115,21 @@ def test_playbook_helpers() -> None:
     check(needs_brief({"youtube_id": "new"}, None), "missing analysis needs brief")
     check(needs_brief({"youtube_id": "new"}, {"events": []}), "empty events needs brief")
     check(not needs_brief({"youtube_id": EL_ID}, {"events": [{"t": 0}]}), "filled analysis quiet")
+    check(
+        slug_for({"title": "Grand Theft Auto VI: An Extended Look Coming August 27", "youtube_id": "qq76pQsI1iw"}) != "extended-look",
+        "EL announcement does not reuse the extended-look slug",
+    )
+    check(slug_for({"title": "Grand Theft Auto VI Launch Trailer", "youtube_id": "rz1B4B2yBZY"}) == "launch-trailer", "Launch Trailer slug")
+    check(
+        slug_for({"title": "Grand Theft Auto VI Launch Trailer", "youtube_id": "zzzzzzzzzzz"}, {"launch-trailer"}) != "launch-trailer",
+        "slug collision gets a suffix",
+    )
+    check(not needs_brief({"youtube_id": "qq76pQsI1iw", "type": "announcement"}, None), "announcement never needs a brief")
+    stub_probe = {"trailers": []}
+    check(
+        not ensure_analysis_stub({"youtube_id": "qq76pQsI1iw", "type": "announcement", "title": "x"}, stub_probe),
+        "announcement gets no analysis stub",
+    )
 
     analysis = {"trailers": []}
     added = ensure_analysis_stub(
