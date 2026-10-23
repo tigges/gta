@@ -1,0 +1,109 @@
+---
+/**
+ * LaunchCommercials — the commercial picture in the GTA VI launch window:
+ * pre-order pace, Take-Two guidance, the stock's reaction and marketing signals.
+ * Data: data/gta-6/launch-commercials.json + data/franchise/ttwo-stock.json.
+ */
+import SectionHeader from "./SectionHeader.astro";
+import StatBox from "./StatBox.astro";
+import Badge from "./Badge.astro";
+import CardFooter from "./CardFooter.astro";
+import ReadItBlock from "./ReadItBlock.astro";
+import ChartTtwoStock from "./charts/ChartTtwoStock.astro";
+import lc from "../../data/gta-6/launch-commercials.json";
+import stock from "../../data/franchise/ttwo-stock.json";
+
+const sources = lc.sources as Record<string, { label: string; url: string; date: string }>;
+const po = lc.preorders;
+const g = lc.guidance;
+
+const prices = stock.prices as { date: string; close: number }[];
+const latest = prices.at(-1)!;
+const preorderMonth = prices.find((p) => p.date.startsWith("2026-06"));
+const peak = prices.reduce((a, b) => (b.close > a.close ? b : a));
+const pct = (from: number, to: number) => Math.round(((to - from) / from) * 100);
+const sincePreorders = preorderMonth ? pct(preorderMonth.close, latest.close) : null;
+const sincePeak = pct(peak.close, latest.close);
+const fmtMonth = (iso: string) =>
+  new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "UTC" });
+const signed = (n: number) => `${n > 0 ? "+" : ""}${n}%`;
+
+const CATEGORY_LABEL: Record<string, string> = {
+  corporate: "Corporate", marketing: "Marketing", retail: "Retail", awards: "Awards", culture: "Culture",
+};
+---
+
+<section id="launch-commercials" style="scroll-margin-top:80px">
+  <SectionHeader bright label="// Launch Commercials — Pre-orders, Guidance & the Market" dotColor="var(--c-growth)" pillHref="/charts?title=franchise" pillLabel="Franchise charts →" />
+
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+    <StatBox value={`${(po.units / 1e6).toFixed(2)}M`} label="US digital pre-orders" sub={`+${(po.weekly_units / 1e3).toFixed(0)}k / week · Sensor Tower`} color="var(--c-growth)" />
+    <StatBox value="+148%" label="vs previous record (MW2 2022)" sub="same 149→45 days-out window" color="var(--c-growth)" />
+    <StatBox value={`$${g.implied_h2_usd_bn.low.toFixed(1)}–${g.implied_h2_usd_bn.high.toFixed(1)}B`} label="Implied Oct–Mar net bookings" sub={`FY27 guide $${g.fy_net_bookings_usd_bn.low.toFixed(1)}–${g.fy_net_bookings_usd_bn.high.toFixed(1)}B`} color="var(--c-brand)" />
+    <StatBox value={sincePreorders === null ? "—" : signed(sincePreorders)} label="TTWO since pre-orders opened" sub={`$${latest.close} · ${signed(sincePeak)} vs ${fmtMonth(peak.date)} peak`} color={sincePreorders !== null && sincePreorders < 0 ? "var(--c-alert)" : "var(--c-growth)"} />
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-4">
+    <div class="rounded-xl border border-border-dim overflow-hidden flex flex-col" style="background:var(--c-card)">
+      <div class="px-5 py-4 flex-1">
+        <div class="flex items-start justify-between gap-3 mb-2">
+          <span class="text-sm font-semibold text-zinc-200">Pre-order pace</span>
+          <Badge variant="reported" />
+        </div>
+        <ul class="text-[11px] text-zinc-400 leading-relaxed space-y-1">
+          <li><span class="text-zinc-200 font-mono">{(po.units / 1e6).toFixed(2)}M</span> copies, est. <span class="text-zinc-200 font-mono">${Math.round(po.revenue_usd_est / 1e6)}M</span> — near GTA V's first-day revenue before GTA VI is out.</li>
+          <li>Still adding ~<span class="text-zinc-200 font-mono">{(po.weekly_units / 1e3).toFixed(0)}k</span> copies (~${Math.round(po.weekly_revenue_usd / 1e6)}M) a week.</li>
+          <li>Platform split: PlayStation <span class="text-zinc-200 font-mono">{po.platform_share.playstation}%</span> · Xbox <span class="text-zinc-200 font-mono">{po.platform_share.xbox}%</span>.</li>
+          <li class="text-zinc-500">{po.scope}.</li>
+        </ul>
+        <p class="text-[10px] font-mono text-zinc-500 mt-3 leading-relaxed">⚠ {po.caveat}</p>
+      </div>
+      <CardFooter anchorId="launch-commercials" sources={`Source: ${sources[po.source].label}`} shareText={`GTA VI: ${(po.units / 1e6).toFixed(2)}M US digital pre-orders — 148% ahead of the previous record.`} />
+    </div>
+
+    <div class="rounded-xl border border-border-dim overflow-hidden flex flex-col" style="background:var(--c-card)">
+      <div class="px-5 py-4 flex-1">
+        <div class="flex items-start justify-between gap-3 mb-2">
+          <span class="text-sm font-semibold text-zinc-200">What Take-Two is guiding</span>
+          <Badge variant="confirmed" />
+        </div>
+        <ul class="text-[11px] text-zinc-400 leading-relaxed space-y-1">
+          <li>FY27 net bookings <span class="text-zinc-200 font-mono">${g.fy_net_bookings_usd_bn.low}–{g.fy_net_bookings_usd_bn.high}B</span>, reiterated Aug 7.</li>
+          <li>Q1 actual <span class="text-zinc-200 font-mono">${g.q1_net_bookings_usd_bn}B</span> ({g.q1_recurrent_share_pct}% recurrent spending) · Q2 guide <span class="text-zinc-200 font-mono">${g.q2_guidance_usd_bn.low}–{g.q2_guidance_usd_bn.high}B</span>.</li>
+          <li>Leaves <span class="text-zinc-200 font-mono">${g.implied_h2_usd_bn.low}–{g.implied_h2_usd_bn.high}B</span> for Oct–Mar — the GTA VI launch window. <span class="text-zinc-500">(our arithmetic)</span></li>
+          <li>Full-year GAAP net income only <span class="text-zinc-200 font-mono">${g.fy_gaap_net_income_usd_m.low}–{g.fy_gaap_net_income_usd_m.high}M</span> on ~$8B — launch, marketing and amortisation land in the same year.</li>
+        </ul>
+      </div>
+      <CardFooter anchorId="launch-commercials" sources={`Source: ${sources[g.source].label}`} shareText="Take-Two's own guidance implies ~$5B of net bookings in GTA VI's launch window." />
+    </div>
+  </div>
+
+  <ReadItBlock accentColor="var(--c-alert)">
+    Record pre-orders, falling stock. TTWO is {sincePreorders === null ? "down" : `${signed(sincePreorders)}`} since pre-orders opened and {signed(sincePeak)} below its {fmtMonth(peak.date)} high — the launch is priced in, and the market is now weighing launch-year costs and whether GTA VI's online layer can sustain revenue after the first wave.
+  </ReadItBlock>
+
+  <div class="mt-4">
+    <ChartTtwoStock />
+  </div>
+
+  <div class="mt-4 rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+    <div class="px-5 pt-4 pb-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500">Launch-window signals</div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-border-dim">
+      {lc.signals.map((s) => {
+        const src = sources[s.source];
+        return (
+          <div class="bg-surface-1 px-5 py-4 flex flex-col gap-1.5">
+            <div class="flex items-start justify-between gap-3">
+              <span class="text-sm font-semibold text-zinc-200 leading-snug">{s.title}</span>
+              <Badge variant={s.tier === "confirmed" ? "confirmed" : "reported"} class="shrink-0" />
+            </div>
+            <p class="text-[11px] text-zinc-400 leading-relaxed">{s.detail}</p>
+            <div class="text-[10px] font-mono text-zinc-500 mt-auto">
+              {CATEGORY_LABEL[s.category] ?? s.category} · <a href={src.url} target="_blank" rel="noopener noreferrer" class="hover:text-zinc-300 underline decoration-dotted">{src.label}</a>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>

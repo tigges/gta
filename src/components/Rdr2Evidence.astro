@@ -1,0 +1,125 @@
+---
+/**
+ * Rdr2Evidence — RDR2 is the lateral reference model for many GTA VI
+ * predictions. Shows the RDR2 mechanics and economy numbers those predictions
+ * cite, linked to the prediction cards. Tier shown is the prediction's current
+ * tier from predictions.json (the RDR2 seed files predate later confirmations).
+ */
+import SectionHeader from "./SectionHeader.astro";
+import Badge from "./Badge.astro";
+import CardFooter from "./CardFooter.astro";
+import predictionsData from "../../data/gta-6/predictions.json";
+import mechanics from "../../data/rdr2/mechanics/index.json";
+import roles from "../../data/rdr2/economy/online-roles.json";
+import shop from "../../data/rdr2/economy/shop-prices.json";
+import hunting from "../../data/rdr2/economy/hunting.json";
+import payouts from "../../data/rdr2/economy/mission-payouts.json";
+
+type Pred = { id: string; title: string; confidence_tier: string | null; prediction_inputs?: string[] };
+const preds = (predictionsData.predictions as unknown as Pred[]);
+const predById = new Map(preds.map((p) => [p.id, p]));
+
+const citing = (needle: string) =>
+  preds.filter((p) => (p.prediction_inputs ?? []).some((i) => String(i).includes("rdr2") && String(i).includes(needle)));
+
+const mechRows = mechanics.mechanics.map((m) => {
+  const linked = new Map<string, Pred>();
+  const direct = m.gta_vi_prediction_id ? predById.get(m.gta_vi_prediction_id) : undefined;
+  if (direct) linked.set(direct.id, direct);
+  citing(m.id).forEach((p) => linked.set(p.id, p));
+  return { ...m, preds: [...linked.values()] };
+});
+
+const roleRows = roles.roles.map((r) => ({ ...r, preds: citing(r.id) }));
+const honour = shop.honour_price_modifier as Record<string, number | string>;
+const huntPred = (hunting as any).gta_vi_income_prediction?.["estimated_gta$_per_hr_range"] as { low: number; high: number } | undefined;
+const crime = (payouts as any).ambient_crime_payouts as Record<string, { low: number; high: number }>;
+const storyTotal = payouts.missions.reduce((s, m) => s + (m["payout_rdr$"] ?? 0), 0);
+const rdrPreds = preds.filter((p) => (p.prediction_inputs ?? []).some((i) => String(i).includes("data/rdr2/")));
+
+const tierVariant = (t: string | null) => (t === "confirmed" ? "confirmed" : t === "reported" ? "reported" : "predicted");
+const pctLabel = (v: number) => `${v > 0 ? "+" : ""}${Math.round(v * 100)}%`;
+const humanise = (k: string) => k.replace(/_/g, " ");
+---
+
+<section id="section-rdr2" style="scroll-margin-top:80px">
+  <SectionHeader bright label="// RDR2 Evidence — the Lateral Model Behind the Predictions" dotColor="var(--c-brand)" />
+  <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">
+    <div class="px-5 py-4 border-b border-border-dim">
+      <p class="text-[11px] text-zinc-400 leading-relaxed max-w-3xl">
+        Red Dead Redemption 2 is Rockstar's most recent open world, and {rdrPreds.length} of our GTA VI predictions cite it directly. These are the RDR2 systems and numbers they rest on — tap a prediction to jump to its card.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-px bg-border-dim">
+      {mechRows.map((m) => (
+        <div class="bg-surface-1 px-5 py-4 flex flex-col gap-1.5">
+          <span class="text-sm font-semibold text-zinc-200 leading-snug">{m.name}</span>
+          <p class="text-[11px] text-zinc-400 leading-relaxed">{m.rdr2_description}</p>
+          <p class="text-[10px] font-mono text-zinc-500 leading-relaxed">Economy: {m.economic_impact}</p>
+          {m.preds.length > 0 && (
+            <div class="flex flex-wrap gap-2 mt-1">
+              {m.preds.map((p) => (
+                <a href={`#${p.id}`} data-pred-link class="inline-flex items-center gap-1.5 text-[10px] font-mono text-zinc-300 hover:text-zinc-100">
+                  <Badge variant={tierVariant(p.confidence_tier)} />
+                  <span class="underline decoration-dotted">{p.title}</span>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-border-dim border-t border-border-dim">
+      <div class="bg-surface-1 px-5 py-4">
+        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-2">RDR Online roles → GTA VI analogue</div>
+        <table class="w-full text-[11px]">
+          <tbody>
+            {roleRows.map((r) => (
+              <tr class="border-b border-border-dim last:border-b-0">
+                <td class="py-1 pr-2 text-zinc-200">{r.name}</td>
+                <td class="py-1 pr-2 text-zinc-500">{r.gta_vi_analogue}</td>
+                <td class="py-1 text-right font-mono text-gta-green whitespace-nowrap">~${r["gta$_per_hr_estimate"]}/hr*</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="bg-surface-1 px-5 py-4">
+        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-2">Honour pricing (shops)</div>
+        <ul class="text-[11px] space-y-0.5">
+          {Object.entries(honour).filter(([, v]) => typeof v === "number").map(([k, v]) => (
+            <li class="flex justify-between gap-2"><span class="text-zinc-400 capitalize">{humanise(k)}</span><span class="font-mono text-zinc-200">{pctLabel(v as number)}</span></li>
+          ))}
+        </ul>
+        <p class="text-[10px] font-mono text-zinc-500 mt-2 leading-relaxed">{honour.note}</p>
+      </div>
+      <div class="bg-surface-1 px-5 py-4">
+        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-2">Where RDR2 money comes from</div>
+        <ul class="text-[11px] space-y-0.5">
+          <li class="flex justify-between gap-2"><span class="text-zinc-400">Story missions (sample of {payouts.missions.length})</span><span class="font-mono text-zinc-200">${storyTotal}</span></li>
+          {Object.entries(crime).map(([k, r]) => (
+            <li class="flex justify-between gap-2"><span class="text-zinc-400 capitalize">{humanise(k)}</span><span class="font-mono text-zinc-200">${r.low}–{r.high}</span></li>
+          ))}
+          <li class="flex justify-between gap-2"><span class="text-zinc-400">Hunting, optimal route</span><span class="font-mono text-zinc-200">${hunting["optimal_route_rdr$_per_hr"]}/hr</span></li>
+        </ul>
+        {huntPred && (
+          <p class="text-[10px] font-mono text-zinc-500 mt-2 leading-relaxed">Scaled to GTA VI: hunting ≈ ${(huntPred.low / 1000).toFixed(0)}k–{(huntPred.high / 1000).toFixed(0)}k GTA$/hr — a low-tier ambient income.</p>
+        )}
+      </div>
+    </div>
+    <p class="px-5 py-2 border-t border-border-dim text-[10px] font-mono text-zinc-500">
+      All RDR2 values in RDR$ (Online roles per hour*: community estimates). Low story pay, high ambient-crime pay is the balance GTA VI's open world may echo.
+    </p>
+    <CardFooter anchorId="section-rdr2" sources="Source: RDR2 Fandom Wiki · community payout benchmarks · GTAVI.AI predictions" shareText="The RDR2 systems behind GTA VI's economy predictions — honour pricing, hunting, roles and more." />
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>("[data-pred-link]").forEach((a) => {
+    a.addEventListener("click", () => {
+      document.querySelectorAll(".pred-extra").forEach((el) => el.classList.remove("hidden"));
+    });
+  });
+</script>

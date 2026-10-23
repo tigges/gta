@@ -55,27 +55,9 @@ jobs:
         continue-on-error: true
         run: python scrapers/fetch_gtabase.py
 
-      - name: Fetch community validation data (OnlyFarms/GTABase cross-check)
-        continue-on-error: true
-        run: python scrapers/fetch_onlyfarms.py
-
-      - name: Monitor r/gtaonline for nerf/buff meta signals
-        continue-on-error: true
-        run: python scrapers/fetch_reddit_meta.py
-        env:
-          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
-          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
-
-      - name: Fetch GTA Online DLC trailer thumbnails (YouTube API)
-        continue-on-error: true
-        run: python scrapers/fetch_gtaonline_dlc_art.py
-        env:
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-
-      - name: Fetch GTA V story/character assets (YouTube API + GTA Wiki)
-        run: python scrapers/fetch_gta5_assets.py
-        env:
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+      # Manual-only (not nightly): fetch_onlyfarms.py (GTABase source 404s),
+      # fetch_reddit_meta.py (RSS has no scores, so nerf flags never fire),
+      # fetch_gtaonline_dlc_art.py + fetch_gta5_assets.py (need YOUTUBE_API_KEY).
 
       - name: Fetch GTA V mission + heist thumbnails (GTA Wiki)
         run: python scrapers/fetch_gta5_mission_thumbs.py

@@ -23,6 +23,8 @@ import CardFooter from "../CardFooter.astro";
             <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gta-gold inline-block"></span>Trailer</span>
             <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gta-teal inline-block"></span>Date set/confirmed</span>
             <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gta-red inline-block"></span>Delay/leak</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full inline-block" style="background:var(--c-growth)"></span>Commercial</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full inline-block" style="background:var(--c-text-4)"></span>Corporate</span>
           </div>
         </div>
         <div id="ttwo-stock-chart" class="w-full" style="height:340px"
@@ -44,7 +46,12 @@ import CardFooter from "../CardFooter.astro";
     if (el.clientWidth === 0) { requestAnimationFrame(init); return; }
 
     const prices: {date:string;close:number}[] = JSON.parse(el.dataset.prices || "[]");
-    const annotations: {date:string;label:string;type:string;color:string}[] = JSON.parse(el.dataset.annotations || "[]");
+    const annotations: {date:string;label:string;type:string}[] = JSON.parse(el.dataset.annotations || "[]");
+    const typeColor: Record<string, string> = {
+      launch: cc.bar, trailer: cc.bar, date_set: cc.teal, confirmed: cc.teal,
+      delay: cc.red, leak: cc.red, commercial: cc.green, corporate: cc.text4,
+    };
+    const annColor = (t: string) => typeColor[t] ?? cc.text4;
 
     const margin = { top: 24, right: 120, bottom: 32, left: 56 };
     const W = el.clientWidth - margin.left - margin.right;
@@ -67,7 +74,7 @@ import CardFooter from "../CardFooter.astro";
     annotations.forEach(a => {
       const ax = x(new Date(a.date));
       svg.append("line").attr("x1",ax).attr("x2",ax).attr("y1",0).attr("y2",H)
-        .attr("stroke",a.color).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",op.tertiary);
+        .attr("stroke",annColor(a.type)).attr("stroke-width",1).attr("stroke-dasharray","3,3").attr("opacity",op.tertiary);
     });
 
     // Gradient fill
@@ -81,21 +88,30 @@ import CardFooter from "../CardFooter.astro";
     svg.append("path").datum(data).attr("fill","none").attr("stroke",cc.bar).attr("stroke-width",2)
       .attr("d",d3.line<any>().x(d=>x(d.date)).y(d=>y(d.close)).curve(d3.curveMonotoneX));
 
-    // Annotation labels (alternating above/below, anchored to stay within chart)
+    // Annotation labels: alternate above/below, then nudge outward until they
+    // clear earlier labels — late-2026 events sit only weeks apart.
+    const placed: {x0:number;x1:number;y:number}[] = [];
+    const CHAR_W = 5, LINE_H = 11;
     annotations.forEach((a, i) => {
       const ax = x(new Date(a.date));
       const nearby = data.find(d => Math.abs(d.date.getTime() - new Date(a.date).getTime()) < 1000*60*60*24*45);
       const ay = nearby ? y(nearby.close) : H/2;
       const above = i % 2 === 0;
-      // Right-half labels anchor left (text goes left of the line to stay in chart)
       const rightHalf = ax > W * 0.6;
+      const w = a.label.length * CHAR_W;
+      const x0 = rightHalf ? ax - 6 - w : ax + 6;
+      const x1 = x0 + w;
+      let ly = above ? ay - 10 : ay + 18;
+      const step = above ? -LINE_H : LINE_H;
+      while (placed.some(p => p.x0 < x1 && x0 < p.x1 && Math.abs(p.y - ly) < LINE_H) && ly > 0 && ly < H) ly += step;
+      placed.push({ x0, x1, y: ly });
       svg.append("circle").attr("cx",ax).attr("cy",ay).attr("r",4)
-        .attr("fill",a.color).attr("stroke",cc.bg).attr("stroke-width",1.5);
+        .attr("fill",annColor(a.type)).attr("stroke",cc.bg).attr("stroke-width",1.5);
       svg.append("text")
         .attr("x", rightHalf ? ax - 6 : ax + 6)
-        .attr("y", above ? ay - 10 : ay + 18)
+        .attr("y", ly)
         .attr("text-anchor", rightHalf ? "end" : "start")
-        .attr("fill",a.color).attr("font-size","8").attr("font-family","monospace")
+        .attr("fill",annColor(a.type)).attr("font-size","9").attr("font-family","monospace")
         .text(a.label);
     });
 
