@@ -1,0 +1,103 @@
+---
+/**
+ * GtaViMusic — official GTA VI radio stations, The Album singles and the
+ * Justice score. Data: data/gta-6/music.json (every item source-tagged).
+ */
+import SectionHeader from "./SectionHeader.astro";
+import CardFooter from "./CardFooter.astro";
+import Badge from "./Badge.astro";
+import musicData from "../../data/gta-6/music.json";
+
+const { radio, album, score, sources } = musicData;
+const src = sources as Record<string, { label: string; url: string; date: string; type: string }>;
+const releaseLabel = new Date(album.release_date + "T00:00:00Z").toLocaleDateString("en-GB", {
+  day: "numeric", month: "short", timeZone: "UTC",
+});
+const hostCount = radio.stations.reduce((n, s) => n + s.hosts.length, 0);
+---
+
+<section id="section-music" style="scroll-margin-top:80px">
+  <SectionHeader
+    bright
+    label="// Music & Radio — Official"
+    dotColor="var(--c-growth)"
+    pillHref="https://www.rockstargames.com/VI/music"
+    pillLabel="rockstargames.com/VI/music →"
+  />
+
+  <div class="rounded-xl border border-border-dim overflow-hidden bg-surface-2">
+    <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
+      <div>
+        <div class="font-semibold text-zinc-200 text-sm">{radio.stations.length} stations revealed · {hostCount} on-air hosts</div>
+        <p class="text-[11px] text-zinc-500 font-mono mt-0.5 max-w-2xl leading-relaxed">{radio.summary}</p>
+      </div>
+      <Badge variant="confirmed" label="Official" />
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border-dim">
+      {radio.stations.map((st) => (
+        <a href={st.page} target="_blank" rel="noopener noreferrer" class="group flex flex-col bg-surface-1 hover:bg-surface-2 transition-colors">
+          <div class="relative overflow-hidden aspect-video">
+            <img src={st.art} alt={`${st.name} station key art`} loading="lazy"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          </div>
+          <div class="px-4 py-3 flex-1 flex flex-col">
+            <div class="flex items-baseline justify-between gap-2">
+              <span class="text-sm font-bold text-zinc-200">{st.name}</span>
+              <span class="text-[10px] font-mono text-zinc-500 text-right">{st.genre}</span>
+            </div>
+            <div class="text-[11px] text-zinc-400 mt-1 leading-snug">
+              {st.hosts.map((h, i) => (
+                <span>{i > 0 && " · "}<span class="text-zinc-300">{h.on_air}</span>{h.on_air !== h.artist && <span class="text-zinc-500"> ({h.artist})</span>}</span>
+              ))}
+            </div>
+            <ul class="mt-2 space-y-0.5">
+              {st.preview_tracks.map((t) => (
+                <li class="text-[10px] font-mono text-zinc-500 truncate">♪ {t.title} — {t.artist}</li>
+              ))}
+            </ul>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="px-5 py-3 border-t border-border-dim text-[11px] text-zinc-400 leading-relaxed">
+      <span class="font-mono text-[10px] uppercase tracking-widest text-gta-green mr-2">Listening</span>{radio.listening.text}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-px bg-border-dim border-t border-border-dim">
+      <div class="lg:col-span-2 bg-surface-1 flex flex-col sm:flex-row">
+        <img src={album.art} alt={`${album.title} cover art`} loading="lazy" class="sm:w-56 aspect-video sm:aspect-auto object-cover shrink-0" />
+        <div class="px-5 py-4 flex-1 min-w-0">
+          <div class="flex items-baseline justify-between gap-2 flex-wrap">
+            <span class="text-sm font-bold text-zinc-200">{album.title}</span>
+            <span class="text-[10px] font-mono text-zinc-500">{album.track_count} tracks · out {releaseLabel}</span>
+          </div>
+          <ol class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
+            {album.singles.map((s) => (
+              <li class="text-[11px] leading-snug flex gap-2 min-w-0">
+                <span class="font-mono text-[10px] text-zinc-500 w-6 shrink-0 text-right">{s.track_number ? String(s.track_number).padStart(2, "0") : "—"}</span>
+                <span class="min-w-0"><span class="text-zinc-200">{s.title}</span> <span class="text-zinc-500">· {s.artist}</span></span>
+              </li>
+            ))}
+          </ol>
+          <p class="text-[10px] font-mono text-zinc-500 mt-2">{album.singles.length} of {album.track_count} singles released · formats: {album.formats.join(", ")}</p>
+        </div>
+      </div>
+      <div class="relative bg-surface-1 overflow-hidden min-h-[180px]">
+        <img src={score.art} alt="Brian Heder's floatplane over the Grassrivers at sunset" loading="lazy" class="absolute inset-0 w-full h-full object-cover opacity-40" />
+        <div class="relative px-5 py-4">
+          <div class="font-mono text-[10px] uppercase tracking-widest text-gta-gold">Original score</div>
+          <div class="text-lg font-bold text-zinc-200 mt-1">{score.composer}</div>
+          <p class="text-[11px] text-zinc-300 mt-2 leading-relaxed">{score.description}</p>
+        </div>
+      </div>
+    </div>
+
+    <CardFooter
+      anchorId="section-music"
+      sources={`Sources: ${src["rs-music"].label} · ${src["rs-radio-post"].label} · album track numbers ${src[album.track_numbers_source].label.split(" — ")[0]}`}
+      shareText={`GTA VI radio: ${radio.stations.map((s) => s.name).join(", ")} — plus a ${album.track_count}-track album and a Justice score.`}
+    />
+  </div>
+</section>
