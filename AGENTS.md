@@ -211,6 +211,11 @@ The version is displayed in the ops bar on every page (`Base.astro`) and in the 
 Charts live in `src/pages/charts.astro` as self-contained D3 sections.
 Import the data file at the top, add an HTML container (`<div id="my-chart">`), and write the D3 initialisation in the `<script>` block using the `data-*` attribute pattern already established.
 
+### GTA VI music and pre-launch reveals (hand-curated)
+
+- `data/gta-6/music.json` — official radio stations (hosts, preview tracks from the `/VI/music` page payload), album singles, score. Rendered by `GtaViMusic.astro` on `/gta-vi/intel#section-music`. Trailer-heard licensed songs stay in `soundtrack.json`.
+- `data/gta-6/october-confirmations.json` — source-tagged reveals; `tier` is `confirmed` (Rockstar or a Rockstar developer on record) or `reported` (rating boards, journalist paraphrase, anonymous sources). Leaks are never added. `feature_category` adds a "+N October reveals" link on the Feature Tracker card; it does not change the curated counts in `features.json`.
+
 ### GTA VI income predictions
 
 Edit `data/gta-6/income-predictions.json`. Schema version `1.0`. Rendered by `IncomePredictionCard.astro` on `/gta-vi/intel`.
