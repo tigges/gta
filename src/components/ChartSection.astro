@@ -86,7 +86,7 @@ const displayMeta = metaOverride !== undefined ? metaOverride : chart.meta;
     if (el) {
       const obs = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          (window as any).plausible("ChartView", { props: { chartId } });
+          window.plausible("ChartView", { props: { chartId } });
           obs.disconnect();
         }
       }, { threshold: 0.3 });

@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "check:scripts": "node --experimental-vm-modules scripts/check-inline-scripts.mjs dist"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.1.6",

@@ -238,7 +238,7 @@ const valueFontClass =
     if (el) {
       const obs = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          (window as any).plausible("PredictionView", { props: { predictionId: predAnchorId } });
+          window.plausible("PredictionView", { props: { predictionId: predAnchorId } });
           obs.disconnect();
         }
       }, { threshold: 0.4 });
