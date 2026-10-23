@@ -36,11 +36,11 @@ const hostCount = radio.stations.reduce((n, s) => n + s.hosts.length, 0);
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border-dim">
       {radio.stations.map((st) => (
-        <a href={st.page} target="_blank" rel="noopener noreferrer" class="group flex flex-col bg-surface-1 hover:bg-surface-2 transition-colors">
-          <div class="relative overflow-hidden aspect-video">
+        <div class="group flex flex-col bg-surface-1">
+          <a href={st.page} target="_blank" rel="noopener noreferrer" class="relative overflow-hidden aspect-video block" aria-label={`${st.name} on rockstargames.com`}>
             <img src={st.art} alt={`${st.name} station key art`} loading="lazy"
               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-          </div>
+          </a>
           <div class="px-4 py-3 flex-1 flex flex-col">
             <div class="flex items-baseline justify-between gap-2">
               <span class="text-sm font-bold text-zinc-200">{st.name}</span>
@@ -56,8 +56,14 @@ const hostCount = radio.stations.reduce((n, s) => n + s.hosts.length, 0);
                 <li class="text-[10px] font-mono text-zinc-500 truncate">♪ {t.title} — {t.artist}</li>
               ))}
             </ul>
+            <div class="mt-3" data-station-slot>
+              <button type="button" data-station-play={st.embed_key} data-station-name={st.name}
+                class="w-full inline-flex items-center justify-center gap-2 rounded border border-border-mid px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest text-zinc-300 hover:text-zinc-100 hover:border-gta-green transition-colors">
+                <span class="text-gta-green">▶</span> Preview station · Rockstar player
+              </button>
+            </div>
           </div>
-        </a>
+        </div>
       ))}
     </div>
 
@@ -73,15 +79,21 @@ const hostCount = radio.stations.reduce((n, s) => n + s.hosts.length, 0);
             <span class="text-sm font-bold text-zinc-200">{album.title}</span>
             <span class="text-[10px] font-mono text-zinc-500">{album.track_count} tracks · out {releaseLabel}</span>
           </div>
+          <div id="album-player" class="mt-3 empty:hidden"></div>
           <ol class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
             {album.singles.map((s) => (
-              <li class="text-[11px] leading-snug flex gap-2 min-w-0">
-                <span class="font-mono text-[10px] text-zinc-500 w-6 shrink-0 text-right">{s.track_number ? String(s.track_number).padStart(2, "0") : "—"}</span>
-                <span class="min-w-0"><span class="text-zinc-200">{s.title}</span> <span class="text-zinc-500">· {s.artist}</span></span>
+              <li class="min-w-0">
+                <button type="button" data-single-play={s.spotify_id} data-single-title={`${s.title} — ${s.artist}`}
+                  class="w-full text-left text-[11px] leading-snug flex gap-2 min-w-0 rounded px-1 py-0.5 hover:bg-surface-2 transition-colors aria-pressed:bg-surface-2"
+                  aria-pressed="false">
+                  <span class="font-mono text-[10px] text-zinc-500 w-6 shrink-0 text-right">{s.track_number ? String(s.track_number).padStart(2, "0") : "—"}</span>
+                  <span class="text-gta-green shrink-0">▶</span>
+                  <span class="min-w-0"><span class="text-zinc-200">{s.title}</span> <span class="text-zinc-500">· {s.artist}</span></span>
+                </button>
               </li>
             ))}
           </ol>
-          <p class="text-[10px] font-mono text-zinc-500 mt-2">{album.singles.length} of {album.track_count} singles released · formats: {album.formats.join(", ")}</p>
+          <p class="text-[10px] font-mono text-zinc-500 mt-2">{album.singles.length} of {album.track_count} singles released · tap a single to play it via Spotify (30s preview unless logged in) · formats: {album.formats.join(", ")}</p>
         </div>
       </div>
       <div class="relative bg-surface-1 overflow-hidden min-h-[180px]">
@@ -96,8 +108,46 @@ const hostCount = radio.stations.reduce((n, s) => n + s.hosts.length, 0);
 
     <CardFooter
       anchorId="section-music"
-      sources={`Sources: ${src["rs-music"].label} · ${src["rs-radio-post"].label} · album track numbers ${src[album.track_numbers_source].label.split(" — ")[0]}`}
+      sources={`Audio: Rockstar's official station player · Spotify. Players load only when you press play. Sources: ${src["rs-music"].label} · ${src["rs-radio-post"].label} · album track numbers ${src[album.track_numbers_source].label.split(" — ")[0]}`}
       shareText={`GTA VI radio: ${radio.stations.map((s) => s.name).join(", ")} — plus a ${album.track_count}-track album and a Justice score.`}
     />
   </div>
 </section>
+
+<script>
+  const ROCKSTAR_EMBED = "https://www.rockstargames.com/VI/music/embed/";
+  const SPOTIFY_EMBED = "https://open.spotify.com/embed/track/";
+
+  function makeFrame(src: string, title: string, height: number): HTMLIFrameElement {
+    const f = document.createElement("iframe");
+    f.src = src;
+    f.title = title;
+    f.width = "100%";
+    f.height = String(height);
+    f.loading = "lazy";
+    f.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+    f.referrerPolicy = "strict-origin-when-cross-origin";
+    f.className = "block w-full rounded-xl border-0";
+    return f;
+  }
+
+  document.querySelectorAll<HTMLButtonElement>("[data-station-play]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.stationPlay;
+      if (!key || !/^[a-z0-9-]+$/.test(key)) return;
+      const slot = btn.closest("[data-station-slot]");
+      slot?.replaceChildren(makeFrame(`${ROCKSTAR_EMBED}${key}/simple`, `${btn.dataset.stationName} preview — Rockstar Games`, 85));
+    });
+  });
+
+  const albumPlayer = document.getElementById("album-player");
+  const singles = document.querySelectorAll<HTMLButtonElement>("[data-single-play]");
+  singles.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.singlePlay;
+      if (!albumPlayer || !id || !/^[A-Za-z0-9]+$/.test(id)) return;
+      albumPlayer.replaceChildren(makeFrame(`${SPOTIFY_EMBED}${id}?theme=0`, `${btn.dataset.singleTitle} — Spotify`, 80));
+      singles.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    });
+  });
+</script>
