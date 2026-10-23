@@ -7,7 +7,6 @@
  */
 import Base from "../../layouts/Base.astro";
 import PredictionCard from "../../components/PredictionCard.astro";
-import VoteCard from "../../components/VoteCard.astro";
 import CastCard from "../../components/CastCard.astro";
 import IncomeCard from "../../components/IncomeCard.astro";
 import ExpenditureCard from "../../components/ExpenditureCard.astro";
@@ -60,11 +59,10 @@ interface CardCluster {
 const clusters: CardCluster[] = [
   {
     title: "Intelligence",
-    note: "Cards with thumbnail + pill overlay. Used on intel, polls and character pages.",
+    note: "Cards with thumbnail + pill overlay. Used on intel and character pages.",
     cards: [
       { name: "PredictionCard (full)",    component: "PredictionCard",          sampleUrl: "/gta-vi/intel",       note: "Full analysis view. GamePill top-left, tier top-right, confidence bar, basis, share." },
       { name: "PredictionCard (compact)", component: "PredictionCard compact",  sampleUrl: "/gta-vi",             note: "Teaser mode — thumbnail + title + value + bar only. Links to full." },
-      { name: "VoteCard",                 component: "VoteCard",                sampleUrl: "/community/polls",    note: "Community prediction poll. Options and result bars; vote saved in localStorage on the visitor's device." },
       { name: "CastCard",                 component: "CastCard",                sampleUrl: "/gta-vi/intel",       note: "Confirmed character. Inline video toggle on click. GamePill + tier pill over image." },
     ],
   },
@@ -177,29 +175,13 @@ if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
                 </div>
               </div>
 
-              {/* VoteCard */}
-              <div class="flex flex-col gap-3">
-                <div class="flex flex-wrap items-baseline gap-4">
-                  <span class="text-[11px] font-mono text-zinc-300">VoteCard</span>
-                  <a href="/community/polls" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/community/polls</a>
-                </div>
-                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[2].note}</p>
-                <div class="max-w-xs">
-                  <VoteCard
-                    question="When will GTA VI release?"
-                    options={["Q3 2025", "Q4 2025", "2026", "2027 or later"]}
-                    game="gta-vi"
-                  />
-                </div>
-              </div>
-
               {/* CastCard */}
               <div class="flex flex-col gap-3">
                 <div class="flex flex-wrap items-baseline gap-4">
                   <span class="text-[11px] font-mono text-zinc-300">CastCard</span>
                   <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi/intel</a>
                 </div>
-                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[3].note}</p>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[2].note}</p>
                 <div class="max-w-xs">
                   <CastCard name="Lucia Caminos" role="Protagonist" img="Lucia_Caminos_01.jpg" video="Lucia_Caminos_Video_Clip.mp4" />
                 </div>
@@ -300,7 +282,7 @@ if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
                   <span class="text-[10px] font-mono text-zinc-600">variant=investment</span>
                   <a href="/gta-online" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-online</a>
                 </div>
-                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[3].note}</p>
+                <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[2].note}</p>
                 <div class="max-w-xs">
                   <ExpenditureCard id="nightclub" />
                 </div>
