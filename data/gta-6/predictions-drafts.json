@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "description": "Intake queue for new GTA VI predictions. Add entries here — never directly to predictions.json. The nightly fetch_predictions_auto.py run promotes each pending draft into a proposal card on /admin/proposals/ for human review before it lands in predictions.json.",
-  "last_updated": "2026-10-23T21:00:00+00:00",
+  "last_updated": "2026-10-23",
   "workflow": [
     "1. Add new prediction draft here (all required fields from predictions.json schema v2.0)",
     "2. Keep draft_status 'needs_review' (ignored by CI) until a human sets confidence_tier; then set 'pending' — note fetch_predictions_auto.py auto-publishes 'pending' drafts that pass its quality gate",
@@ -203,6 +203,33 @@
       "display_order": 99,
       "draft_status": "needs_review",
       "draft_notes": "Suggested tier: predicted. Ties into the Shark Card predictions; resolves when the in-game store opens."
+    },
+    {
+      "id": "pred-vi-launch-week-units",
+      "title": "GTA VI Launch-Week Sales",
+      "value": "~25M copies in the first 7 days (global sell-through)",
+      "unit": null,
+      "confidence": 45,
+      "confidence_tier": null,
+      "basis": "Sensor Tower counts 6.45M US digital pre-orders at 45 days out, growing ~380k a week. Holding that pace to Nov 19 gives ~8.9M US digital copies at launch. US digital has been roughly 35–40% of global launch units for recent AAA releases, implying ~22–25M global pre-orders before day-one walk-in sales. GTA V sold 11.2M in its first 24 hours (2013, PS3/360 only) for comparison.",
+      "source": "Sensor Tower via Rockstar Intel (Oct 21 2026) + GTA V launch record + GTAVI.AI model",
+      "source_type": "predicted",
+      "prediction_range": {
+        "low": "18M (pre-order pace stalls, US share higher than assumed)",
+        "high": "35M (late surge plus boxed and non-US over-index)"
+      },
+      "prediction_method": "Pre-order run-rate extrapolation with an assumed US-digital share of global units",
+      "prediction_inputs": [
+        "data/gta-6/launch-commercials.json → preorders",
+        "data/franchise/sales.json → GTA V launch"
+      ],
+      "pages": [
+        "gta-vi/intel",
+        "gta-vi/buy"
+      ],
+      "display_order": 99,
+      "draft_status": "needs_review",
+      "draft_notes": "Suggested tier: predicted. Resolves when Rockstar/Take-Two announce first-week sales (press release or Q3 FY27 earnings). The US-digital share assumption is the weak link."
     }
   ]
 }

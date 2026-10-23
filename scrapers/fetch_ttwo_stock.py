@@ -27,16 +27,18 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0
 
 # Key GTA VI milestones for chart annotation
 ANNOTATIONS = [
-    { "date": "2013-09-17", "label": "GTA V launch",          "type": "launch",   "color": "#f59e0b" },
-    { "date": "2022-02-14", "label": "Zynga acquired",         "type": "corporate","color": "#52525b" },
-    { "date": "2022-09-18", "label": "Data breach / leak",     "type": "leak",     "color": "#ef4444" },
-    { "date": "2023-11-08", "label": "\"Coming 2025\" (ER)",   "type": "date_set", "color": "#0d9488" },
-    { "date": "2023-12-04", "label": "Trailer 1",              "type": "trailer",  "color": "#f59e0b" },
-    { "date": "2024-10-31", "label": "\"Fall 2025\" (ER)",     "type": "date_set", "color": "#0d9488" },
-    { "date": "2025-02-12", "label": "Delay to 2026",          "type": "delay",    "color": "#ef4444" },
-    { "date": "2025-05-06", "label": "Trailer 2",              "type": "trailer",  "color": "#f59e0b" },
-    { "date": "2026-02-12", "label": "Nov 19 confirmed (ER)",  "type": "confirmed","color": "#0d9488" },
-    { "date": "2026-03-27", "label": "Official launch date",   "type": "confirmed","color": "#f59e0b" },
+    { "date": "2013-09-17", "label": "GTA V launch",          "type": "launch"     },
+    { "date": "2022-02-14", "label": "Zynga acquired",         "type": "corporate"  },
+    { "date": "2022-09-18", "label": "Data breach / leak",     "type": "leak"       },
+    { "date": "2023-11-08", "label": "\"Coming 2025\" (ER)",   "type": "date_set"   },
+    { "date": "2023-12-04", "label": "Trailer 1",              "type": "trailer"    },
+    { "date": "2024-10-31", "label": "\"Fall 2025\" (ER)",     "type": "date_set"   },
+    { "date": "2025-02-12", "label": "Delay to 2026",          "type": "delay"      },
+    { "date": "2025-05-06", "label": "Trailer 2",              "type": "trailer"    },
+    { "date": "2026-02-12", "label": "Nov 19 confirmed (ER)",  "type": "confirmed"  },
+    { "date": "2026-03-27", "label": "Official launch date",   "type": "confirmed"  },
+    { "date": "2026-06-25", "label": "Pre-orders open",        "type": "commercial" },
+    { "date": "2026-09-28", "label": "Xbox licence renewed",   "type": "corporate"  },
 ]
 
 

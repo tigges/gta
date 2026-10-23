@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-10-23",
+  "note": "Curated launch-window commercial signals. Each item cites its source; 'confirmed' = company filing or first-party, 'reported' = third-party estimate. Implied figures are GTAVI.AI arithmetic on the cited numbers, labelled as such.",
+  "sources": {
+    "sensor-tower": {
+      "label": "Sensor Tower via Rockstar Intel / GamesIndustry.biz",
+      "url": "https://rockstarintel.com/gta-6-pre-order-numbers-are-146-more-than-any-other-game/",
+      "date": "2026-10-21"
+    },
+    "ttwo-q1-fy27": {
+      "label": "Take-Two Q1 FY27 earnings release (8-K, Aug 7, 2026)",
+      "url": "https://www.sec.gov/Archives/edgar/data/946581/000162828026054580/ttwo1q27earningsrelease.htm",
+      "date": "2026-08-07"
+    },
+    "ttwo-8k-xbox": {
+      "label": "Take-Two 8-K Item 1.01 (filed Sep 30, 2026)",
+      "url": "https://www.sec.gov/Archives/edgar/data/946581/000162828026064001/ttwo-20260928.htm",
+      "date": "2026-09-30"
+    },
+    "kotaku-tv": {
+      "label": "Kotaku — GTA 6's first TV ad",
+      "url": "https://kotaku.com/gta-6s-first-tv-ad-cuts-the-spicy-shower-scenes-2000748474",
+      "date": "2026-10"
+    },
+    "kotaku-paris": {
+      "label": "Kotaku — Paris banner censors the guns",
+      "url": "https://kotaku.com/massive-gta-6-banner-in-paris-features-some-silly-censorship-2000746458",
+      "date": "2026-10"
+    },
+    "ign-bestbuy": {
+      "label": "IGN × Best Buy giveaways",
+      "url": "https://www.ign.com/articles/ign-is-partnering-with-best-buy-for-3-weeks-of-giveaways-leading-up-to-gta-vis-release",
+      "date": "2026-10"
+    },
+    "eurogamer-tga": {
+      "label": "Eurogamer — Game Awards eligibility",
+      "url": "https://www.eurogamer.net/gta-6-the-game-awards-eligibility-geoff-keighley",
+      "date": "2026-10"
+    },
+    "uswitch": {
+      "label": "Uswitch survey via Rockstar Intel",
+      "url": "https://rockstarintel.com/gta-6-has-millions-of-people-skipping-work-on-launch-day-study-finds/",
+      "date": "2026-10"
+    }
+  },
+  "preorders": {
+    "source": "sensor-tower",
+    "tier": "reported",
+    "scope": "US digital only — excludes boxed copies and all non-US markets",
+    "units": 6450000,
+    "revenue_usd_est": 630000000,
+    "weekly_units": 380000,
+    "weekly_revenue_usd": 36000000,
+    "vs_record": "+148% vs Call of Duty: Modern Warfare 2 (2022), the previous pre-order record, over the same 149→45 days-before-launch window",
+    "platform_share": { "playstation": 74, "xbox": 26 },
+    "caveat": "$630M ÷ 6.45M ≈ $98 per copy, above the $79.99 Standard price even though Sensor Tower says Ultimate ($99.99) sells less than Standard — treat the revenue estimate as soft; the unit count is the firmer number."
+  },
+  "guidance": {
+    "source": "ttwo-q1-fy27",
+    "tier": "confirmed",
+    "fiscal_year": "FY27 (Apr 2026 – Mar 2027)",
+    "fy_net_bookings_usd_bn": { "low": 8.0, "high": 8.2 },
+    "q1_net_bookings_usd_bn": 1.39,
+    "q1_recurrent_share_pct": 84,
+    "q2_guidance_usd_bn": { "low": 1.62, "high": 1.67 },
+    "implied_h2_usd_bn": { "low": 4.94, "high": 5.19 },
+    "implied_note": "GTAVI.AI arithmetic: FY guidance − Q1 actual − Q2 guidance = what Take-Two expects from Oct 2026 – Mar 2027, the GTA VI launch window.",
+    "fy_gaap_net_income_usd_m": { "low": 104, "high": 143 },
+    "fy_non_gaap_ebitda_usd_m": { "low": 993, "high": 1053 }
+  },
+  "signals": [
+    {
+      "id": "xbox-licence",
+      "date": "2026-09-28",
+      "tier": "confirmed",
+      "category": "corporate",
+      "title": "New long-term Xbox publisher licence",
+      "detail": "Take-Two and Microsoft signed a new XBOX Publisher License Agreement (effective Sep 17) replacing all earlier Xbox agreements — wholesale price / revenue share on digital sales, Microsoft approval rights on games and marketing.",
+      "source": "ttwo-8k-xbox"
+    },
+    {
+      "id": "tv-ad",
+      "date": "2026-10",
+      "tier": "confirmed",
+      "category": "marketing",
+      "title": "First TV ad is a broadcast-safe cut",
+      "detail": "The Launch Trailer's TV edit drops the shower scenes — mainstream broadcast reach over fidelity to the online cut.",
+      "source": "kotaku-tv"
+    },
+    {
+      "id": "paris-banner",
+      "date": "2026-10",
+      "tier": "confirmed",
+      "category": "marketing",
+      "title": "Market-specific creative",
+      "detail": "A giant Paris billboard removes every gun from the key art — Rockstar is localising out-of-home creative to local ad standards.",
+      "source": "kotaku-paris"
+    },
+    {
+      "id": "retail-push",
+      "date": "2026-10",
+      "tier": "confirmed",
+      "category": "retail",
+      "title": "Retail and hardware pull-through",
+      "detail": "IGN and Best Buy run three weeks of giveaways to launch, and PlayStation discounts refurbished PS5 bundles ahead of GTA VI.",
+      "source": "ign-bestbuy"
+    },
+    {
+      "id": "tga",
+      "date": "2026-10",
+      "tier": "confirmed",
+      "category": "awards",
+      "title": "Game Awards eligible by one day",
+      "detail": "The Nov 19 release clears The Game Awards 2026 eligibility cut-off by a single day.",
+      "source": "eurogamer-tga"
+    },
+    {
+      "id": "uswitch",
+      "date": "2026-10",
+      "tier": "reported",
+      "category": "culture",
+      "title": "2.56M UK workers expected off on launch day",
+      "detail": "Uswitch extrapolates from a 1,000-person sample of gaming-affine employees — colour, not data.",
+      "source": "uswitch"
+    }
+  ]
+}

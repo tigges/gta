@@ -5,6 +5,7 @@ import ShareDropdown from "../../components/ShareDropdown.astro";
 import Badge from "../../components/Badge.astro";
 import { tagAmazonUrl, PRODUCT_LINKS, nordLink, nordPassLink, GTAVI_STOREFRONTS, ROCKSTAR_STORE_URL, GTAVI_AMAZON, GTAVI_AMAZON_DIRECT, AMAZON_TAG_MAP } from "../../config/affiliates";
 import SectionHeader from "../../components/SectionHeader.astro";
+import LaunchCommercials from "../../components/LaunchCommercials.astro";
 
 // Default storefront URLs rendered server-side (en-US). Client JS rewrites
 // each [data-buy-*] anchor on locale change so visitors get their region's
@@ -701,6 +702,8 @@ const COUNTRIES: Country[] = [
         ))}
       </div>
     </section>
+
+    <LaunchCommercials />
 
     <!-- ══════════════════════════════════════════════════════
          PLAY NOW WHILE YOU WAIT — secondary GTA V upsell
