@@ -11,6 +11,7 @@ import satori from "satori";
 import { Resvg } from "@resvg/resvg-js";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { C_ALERT, C_BG, C_BRAND, C_ECONOMY, C_GROWTH, C_LIVE, C_TEXT_0, C_TEXT_4, C_TEXT_5, withAlpha } from "../../../config/colors";
 
 import bizProfilesRaw  from "../../../../data/gta-5/economy/business-profiles.json";
 import revTiersRaw     from "../../../../data/gta-5/economy/revenue-tiers.json";
@@ -52,13 +53,13 @@ const BIZ_THUMBS: Record<string, string> = {
 };
 
 const PLAY_COLOR: Record<string, string> = {
-  passive:         "#22c55e",
-  "semi-passive":  "#f59e0b",
-  active:          "#ef4444",
-  heist:           "#818cf8",
-  contract:        "#0d9488",
-  mission:         "#0d9488",
-  stack:           "#22c55e",
+  passive:         C_GROWTH,
+  "semi-passive":  C_BRAND,
+  active:          C_ALERT,
+  heist:           C_ECONOMY,
+  contract:        C_LIVE,
+  mission:         C_LIVE,
+  stack:           C_GROWTH,
 };
 
 let fontBold: ArrayBuffer | null = null;
@@ -90,9 +91,9 @@ export const GET: APIRoute = async ({ params }) => {
   const biz = bizProfiles.find((b: any) => b.id === id);
   if (!biz) return new Response("Not found", { status: 404 });
 
-  const tierInfo  = TIER_MAP[id] ?? { tier: "B", color: "#0d9488" };
+  const tierInfo  = TIER_MAP[id] ?? { tier: "B", color: C_LIVE };
   const khr       = Math.round(biz.net_profit_per_hr / 1000);
-  const playColor = PLAY_COLOR[biz.play_type ?? biz.category] ?? "#71717a";
+  const playColor = PLAY_COLOR[biz.play_type ?? biz.category] ?? C_TEXT_4;
   const thumbPath = BIZ_THUMBS[id];
   const thumbUri  = thumbPath ? imageToDataUri(thumbPath) : null;
 
@@ -106,7 +107,7 @@ export const GET: APIRoute = async ({ params }) => {
           display: "flex",
           width: "1200px",
           height: "630px",
-          backgroundColor: "#0e0e11",
+          backgroundColor: C_BG,
           fontFamily: "Inter",
           position: "relative",
           overflow: "hidden",
@@ -127,7 +128,7 @@ export const GET: APIRoute = async ({ params }) => {
               },
               children: [
                 { type: "img", props: { src: thumbUri, style: { width: "580px", height: "630px", objectFit: "cover" } } },
-                { type: "div", props: { style: { position: "absolute", inset: "0", background: "linear-gradient(to right, #0e0e11 0%, rgba(14,14,17,0.6) 50%, rgba(14,14,17,0.2) 100%)", display: "flex" } } },
+                { type: "div", props: { style: { position: "absolute", inset: "0", background: `linear-gradient(to right, ${C_BG} 0%, ${withAlpha(C_BG, 0.6)} 50%, ${withAlpha(C_BG, 0.2)} 100%)`, display: "flex" } } },
               ],
             },
           },
@@ -151,35 +152,35 @@ export const GET: APIRoute = async ({ params }) => {
               children: [
                 // Eyebrow
                 { type: "div", props: { style: { display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }, children: [
-                  { type: "div", props: { style: { fontSize: "11px", color: "#9898b8", letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 400 }, children: "GTA Online · Income Database" } },
+                  { type: "div", props: { style: { fontSize: "11px", color: C_TEXT_4, letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 400 }, children: "GTA Online · Income Database" } },
                 ] } },
 
                 // Tier badge + play type
                 { type: "div", props: { style: { display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }, children: [
                   { type: "div", props: { style: { fontSize: "40px", fontWeight: 900, color: tierInfo.color, lineHeight: 1 }, children: tierInfo.tier } },
                   { type: "div", props: { style: { fontSize: "11px", color: playColor, background: `${playColor}22`, border: `1px solid ${playColor}55`, padding: "4px 10px", borderRadius: "4px", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }, children: (biz.play_type ?? biz.category ?? "").toUpperCase() } },
-                  biz.solo && { type: "div", props: { style: { fontSize: "10px", color: "#0d9488", background: "rgba(13,148,136,0.12)", border: "1px solid rgba(13,148,136,0.3)", padding: "4px 10px", borderRadius: "4px", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }, children: "SOLO" } },
+                  biz.solo && { type: "div", props: { style: { fontSize: "10px", color: C_LIVE, background: withAlpha(C_LIVE, 0.12), border: `1px solid ${withAlpha(C_LIVE, 0.3)}`, padding: "4px 10px", borderRadius: "4px", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }, children: "SOLO" } },
                 ].filter(Boolean) } },
 
                 // Business name
-                { type: "div", props: { style: { fontSize: "46px", fontWeight: 900, color: "#ffffff", lineHeight: 1.1, marginBottom: "24px" }, children: biz.name } },
+                { type: "div", props: { style: { fontSize: "46px", fontWeight: 900, color: C_TEXT_0, lineHeight: 1.1, marginBottom: "24px" }, children: biz.name } },
 
                 // $/hr
                 { type: "div", props: { style: { display: "flex", alignItems: "baseline", gap: "8px", marginBottom: "16px" }, children: [
                   { type: "span", props: { style: { fontSize: "56px", fontWeight: 900, color: tierInfo.color, lineHeight: 1 }, children: `$${khr}K` } },
-                  { type: "span", props: { style: { fontSize: "20px", color: "#9898b8", fontWeight: 400 }, children: "/hr" } },
+                  { type: "span", props: { style: { fontSize: "20px", color: C_TEXT_4, fontWeight: 400 }, children: "/hr" } },
                 ] } },
 
                 // Setup cost if available
                 biz.setup_cost_full && {
                   type: "div",
-                  props: { style: { fontSize: "14px", color: "#71717a" }, children: `Setup: $${(biz.setup_cost_full / 1_000_000).toFixed(1)}M` },
+                  props: { style: { fontSize: "14px", color: C_TEXT_4 }, children: `Setup: $${(biz.setup_cost_full / 1_000_000).toFixed(1)}M` },
                 },
 
                 // Spacer + watermark
                 { type: "div", props: { style: { marginTop: "32px", display: "flex", alignItems: "center", gap: "8px" }, children: [
                   { type: "div", props: { style: { width: "32px", height: "2px", background: tierInfo.color, borderRadius: "2px", display: "flex" } } },
-                  { type: "div", props: { style: { fontSize: "12px", color: "#3f3f46", letterSpacing: "0.15em" }, children: "GTAVI.AI" } },
+                  { type: "div", props: { style: { fontSize: "12px", color: C_TEXT_5, letterSpacing: "0.15em" }, children: "GTAVI.AI" } },
                 ] } },
               ].filter(Boolean),
             },

@@ -32,6 +32,7 @@ import GamePill from "./GamePill.astro";
 import Badge from "./Badge.astro";
 import ShareDropdown from "./ShareDropdown.astro";
 import { playTypeColor, getRegionType, getConfidenceType, pillStyle } from "../config/semanticTypes";
+import { onlineIncomeHref } from "../config/onlineIncomePages";
 
 interface LootTier { loot: string; value: number; frequency?: string; }
 
@@ -169,7 +170,7 @@ const pctDelta     = (peak_gta_per_hr && peak_gta_per_hr > net_profit_per_hr * 1
 
 // ── Deep-link / share ─────────────────────────────────────────────────────
 const fullHref = hrefProp ?? (
-  isOnline ? `/gta-online/income/${id}` :
+  isOnline ? onlineIncomeHref(id) :
   isGtaVI  ? `/gta-vi/intel#income-pred-${id}` :
   undefined
 );
@@ -261,8 +262,8 @@ const showEnrichment = !compact;
     </div>
 
     <!-- Name -->
-    {(!compact && isOnline) ? (
-      <a href={`/gta-online/income/${id}`}
+    {(!compact && isOnline && onlineIncomeHref(id)) ? (
+      <a href={onlineIncomeHref(id)}
          class="font-semibold text-zinc-200 text-sm leading-snug hover:text-white transition-colors">
         {name}
       </a>
