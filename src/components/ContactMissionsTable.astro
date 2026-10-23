@@ -1,0 +1,92 @@
+---
+/**
+ * ContactMissionsTable — every GTA Online contact-mission strand from
+ * data/gta-5/missions/contact-missions-full.json (nightly, GTA Wiki + payout
+ * formula). Collapsed by default under the curated top-8 cards on /database.
+ */
+import cm from "../../data/gta-5/missions/contact-missions-full.json";
+
+type RawStrand = Record<string, unknown> & { missions?: unknown[] };
+
+const num = (v: unknown): number => {
+  const n = typeof v === "number" ? v : parseFloat(String(v ?? ""));
+  return Number.isFinite(n) ? n : 0;
+};
+const range = (v: unknown): [number, number] => {
+  if (Array.isArray(v)) return [num(v[0]), num(v[1])];
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/g) ?? [];
+  return [num(m[0]), num(m[1] ?? m[0])];
+};
+
+const FLAT = num((cm as any).payout_formula?.dlc_flat_payout);
+
+const strands = ((cm as any).strands as RawStrand[]).map((s) => {
+  const title = String(s.title ?? s.id);
+  const paren = title.match(/^(.*?)\s*\((.*)\)\s*$/);
+  const giver = String(s.giver || (paren ? paren[1] : title));
+  const name = paren ? paren[2] : "";
+  const [lo, hi] = range(s.payout_range);
+  const notes = String(s.notes ?? "");
+  return {
+    id: String(s.id),
+    giver,
+    name,
+    dlc: String(s.dlc ?? ""),
+    missions: num(s.mission_count) || (s.missions?.length ?? 0),
+    lo,
+    hi,
+    perHr: num(s.gta_per_hr),
+    solo: String(s.solo).toLowerCase() === "true",
+    estimate: !notes && lo === FLAT && hi === FLAT,
+    notes,
+  };
+}).sort((a, b) => b.perHr - a.perHr);
+
+const fmt$ = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
+const fmtK = (n: number) => (n >= 1000 ? `$${Math.round(n / 1000)}k` : fmt$(n));
+const estimates = strands.filter((s) => s.estimate).length;
+const updated = new Date(cm.last_updated).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+---
+
+<details class="mt-4 rounded-xl border border-border-dim overflow-hidden group" style="background:var(--c-card)">
+  <summary class="px-5 py-3 cursor-pointer select-none flex items-center justify-between gap-3 text-[11px] font-mono text-zinc-400 hover:text-zinc-200">
+    <span>All {strands.length} contact-mission strands · {(cm as any).mission_count} missions · ranked by GTA$/hr</span>
+    <span class="text-zinc-500 group-open:rotate-90 transition-transform">▸</span>
+  </summary>
+  <div class="overflow-x-auto border-t border-border-dim">
+    <table class="w-full text-[11px]">
+      <thead>
+        <tr class="text-left font-mono text-[10px] uppercase tracking-widest text-zinc-500 border-b border-border-dim">
+          <th class="px-4 py-2 font-normal">Contact · strand</th>
+          <th class="px-3 py-2 font-normal">Update</th>
+          <th class="px-3 py-2 font-normal text-right">Missions</th>
+          <th class="px-3 py-2 font-normal text-right">Payout / mission</th>
+          <th class="px-3 py-2 font-normal text-right">GTA$/hr</th>
+          <th class="px-4 py-2 font-normal">Solo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {strands.map((s) => (
+          <tr class="border-b border-border-dim last:border-b-0 hover:bg-surface-2" title={s.notes || undefined}>
+            <td class="px-4 py-1.5">
+              <span class="text-zinc-200">{s.giver}</span>
+              {s.name && <span class="text-zinc-500"> · {s.name}</span>}
+            </td>
+            <td class="px-3 py-1.5 text-zinc-500 whitespace-nowrap">{s.dlc || "—"}</td>
+            <td class="px-3 py-1.5 text-right font-mono text-zinc-400">{s.missions}</td>
+            <td class="px-3 py-1.5 text-right font-mono text-zinc-400 whitespace-nowrap">
+              {s.lo === s.hi ? fmt$(s.lo) : `${fmtK(s.lo)}–${fmtK(s.hi)}`}
+              {s.estimate && <span class="text-zinc-500" title="No published payout — DLC flat-rate formula"> *</span>}
+            </td>
+            <td class="px-3 py-1.5 text-right font-mono text-gta-green">{fmtK(s.perHr)}</td>
+            <td class="px-4 py-1.5 font-mono text-zinc-500">{s.solo ? "Yes" : "Co-op"}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="px-5 py-3 border-t border-border-dim text-[10px] font-mono text-zinc-500 leading-relaxed">
+    * {estimates} strands have no published payout and use Rockstar's post-Arena War flat rate ({fmt$(FLAT)} on Hard) — treat their GTA$/hr as an estimate.
+    Payouts are Hard difficulty at max rank; GTA$/hr assumes optimal solo runs. Source: GTA Wiki + contact-mission payout formula · updated {updated}.
+  </p>
+</details>

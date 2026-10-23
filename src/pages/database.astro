@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import IncomeCard from "../components/IncomeCard.astro";
 import StatBox from "../components/StatBox.astro";
+import ContactMissionsTable from "../components/ContactMissionsTable.astro";
 import type {
   EntityIndex, LeonidaData, VehiclesData, BusinessProfiles,
   OnlineHeistsData, RevenueTiersData, StoryMissionsData, OnlineMissionsData,
@@ -558,6 +559,7 @@ const HEIST_THUMBS: Record<string, string> = {
             </div>
           ))}
         </div>
+        <ContactMissionsTable />
       </div>
     </div>
 
