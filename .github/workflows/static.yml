@@ -57,6 +57,9 @@ jobs:
           # Parked domain: any page served on gtavi.ai renders blank.
           PAGES_HIDE_HOSTS: gtavi.ai
 
+      - name: Check inline scripts are valid JavaScript
+        run: npm run check:scripts
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

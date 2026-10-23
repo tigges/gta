@@ -415,7 +415,8 @@ The site is fully static and hosted on **GitHub Pages**. There is no Cloudflare 
 Every push to `main` triggers `.github/workflows/static.yml`:
 1. `npm ci && npm run build` → `dist/`
 2. `node scripts/rebase-dist.mjs dist` with `PAGES_BASE`/`PAGES_ORIGIN` taken from `actions/configure-pages` outputs (`base_path`, `origin`) — rewrites root-relative paths and `https://gtavi.ai` URLs in the output and drops `dist/CNAME`; `PAGES_HIDE_HOSTS=gtavi.ai` injects a head script that blanks any page loaded on gtavi.ai while the domain is parked
-3. Uploaded as GitHub Pages artifact and deployed
+3. `npm run check:scripts` parses every inline `<script>` in `dist/` and fails the deploy on a syntax error. `is:inline` and `define:vars` scripts are not compiled, so they must be plain JavaScript (no `as` casts, type annotations or `!` assertions).
+4. Uploaded as GitHub Pages artifact and deployed
 
 Keep writing root-relative paths (`/gta-vi/intel`, `/assets/...`) in source — never hand-add the repo-name prefix. Runtime-built paths the rewrite can't see (e.g. `"/" + slug`) will break on the sub-path; prefer literal `"/gta-vi/" + slug` style strings.
 
