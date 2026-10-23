@@ -167,10 +167,19 @@ const navGroups: NavGroup[] = [
 
 // Live GTA Online bonus strip for the mega-panel
 const weeklyBonuses = weeklyBonusesRaw as any;
+const bonusWeekAgeDays = weeklyBonuses.week_start
+  ? (Date.now() - new Date(weeklyBonuses.week_start).getTime()) / 86_400_000
+  : Infinity;
+const bonusWeekCurrent = bonusWeekAgeDays < 8;
 const topBonus = weeklyBonuses.bonuses?.[0];
-const liveStripText = topBonus
-  ? `${topBonus.multiplier}x ${String(topBonus.activity_id).replace(/-/g, " ")} - w/c ${weeklyBonuses.week_start ?? ""}`
-  : "Updated weekly";
+const topHeadline = weeklyBonuses.headlines?.[0];
+const liveStripText = !bonusWeekCurrent
+  ? "Updated weekly"
+  : topBonus
+    ? `${topBonus.multiplier}x ${String(topBonus.activity_id).replace(/-/g, " ")} - w/c ${weeklyBonuses.week_start}`
+    : topHeadline
+      ? `${topHeadline.multiplier}x ${topHeadline.label} - w/c ${weeklyBonuses.week_start}`
+      : "Updated weekly";
 
 function isNavActive(group: NavGroup): boolean {
   return group.activePaths.some(

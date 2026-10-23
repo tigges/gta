@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
   "description": "Intake queue for new GTA VI predictions. Add entries here — never directly to predictions.json. The nightly fetch_predictions_auto.py run promotes each pending draft into a proposal card on /admin/proposals/ for human review before it lands in predictions.json.",
-  "last_updated": "2026-05-30T19:55:00+00:00",
+  "last_updated": "2026-10-23T21:00:00+00:00",
   "workflow": [
     "1. Add new prediction draft here (all required fields from predictions.json schema v2.0)",
-    "2. Set draft_status to 'pending'",
+    "2. Keep draft_status 'needs_review' (ignored by CI) until a human sets confidence_tier; then set 'pending' — note fetch_predictions_auto.py auto-publishes 'pending' drafts that pass its quality gate",
     "3. Nightly CI promotes it to a proposal on /admin/proposals/",
     "4. Reviewer copies the draft into predictions.json and removes/updates this entry",
     "5. Set draft_status to 'promoted' here (or delete the entry) after applying"
@@ -126,6 +126,83 @@
       "display_order": 23,
       "draft_status": "promoted",
       "draft_notes": "Supported by online-roles.json Collector entry with gta_vi_analogue field"
+    },
+    {
+      "id": "pred-vi-pc-release",
+      "title": "GTA VI PC Release by End of Q1 2027",
+      "value": "Jan–Mar 2027",
+      "unit": null,
+      "confidence": 55,
+      "confidence_tier": null,
+      "basis": "GamesBeat cites four industry sources with business ties to Rockstar saying the PC version targets Q1 2027; VGC's Andy Robinson earlier reported industry 'noise' about the PC date being pulled forward. Rockstar has not announced a PC version. GTA V reached PC 19 months after console and RDR2 13 months after; a 2–4 month gap would be a sharp break, consistent with Take-Two's stated PC growth focus.",
+      "source": "GamesBeat (via Rockstar Intel, Oct 13 2026) + VGC + franchise port history",
+      "source_type": "reported",
+      "prediction_range": {
+        "low": "Q1 2027",
+        "high": "Holiday 2027"
+      },
+      "prediction_method": "Source-weighted report + franchise console-to-PC gap history",
+      "prediction_inputs": [
+        "data/gta-6/october-confirmations.json → oct-pc-q1-2027",
+        "data/shared/releases.json"
+      ],
+      "pages": [
+        "gta-vi/intel"
+      ],
+      "display_order": 99,
+      "draft_status": "needs_review",
+      "draft_notes": "Suggested tier: reported. Human sets confidence_tier and flips draft_status to 'pending' only when ready to publish — 'pending' drafts that pass the quality gate are auto-published by fetch_predictions_auto.py."
+    },
+    {
+      "id": "pred-vi-radio-station-count",
+      "title": "Radio Stations at Launch",
+      "value": "~20 stations",
+      "unit": "music + talk stations",
+      "confidence": 50,
+      "confidence_tier": null,
+      "basis": "Rockstar calls GTA VI's lineup 'the biggest and widest-ranging selection of in-game radio and podcasts yet', spanning classic rock to talk radio. Six music stations are previewed so far (Cocoteo FM, Back Country Radio, AfroBank FM, The Chamber 106.6, Flash FM, Dirty South Classics). GTA V launched with 17 stations (15 music + 2 talk) and grew past 20 through updates, so 'biggest yet' points to at least that at launch, with podcasts as a separate on-demand layer.",
+      "source": "Rockstar Games — The Music of GTA VI (Oct 8 2026) + GTA V launch lineup",
+      "source_type": "predicted",
+      "prediction_range": {
+        "low": "18 stations",
+        "high": "26 stations"
+      },
+      "prediction_method": "Official 'biggest yet' claim anchored to GTA V station counts",
+      "prediction_inputs": [
+        "data/gta-6/music.json → radio.stations"
+      ],
+      "pages": [
+        "gta-vi/intel"
+      ],
+      "display_order": 99,
+      "draft_status": "needs_review",
+      "draft_notes": "Suggested tier: predicted. Resolves at launch (Nov 19). Verify the GTA V launch count against a primary source before publishing."
+    },
+    {
+      "id": "pred-vi-launch-purchases",
+      "title": "Launch In-Game Purchases Are Upgrades, Not GTA$",
+      "value": "Edition upgrades / add-on packs until Online launches",
+      "unit": null,
+      "confidence": 60,
+      "confidence_tier": null,
+      "basis": "Rockstar's GTA VI pages carry an 'In-Game Purchases' rating line, and PEGI's removed report noted the game is playable without buying anything. GTA Online is not live on day one (pred-vi-online-day-one), so there is no shared GTA$ economy to sell into. The likeliest launch store is the Ultimate Edition upgrade and cosmetic or vehicle packs, with GTA$ cards arriving alongside Online.",
+      "source": "Rockstar rating line + PEGI (via Rockstar Intel, Oct 2 2026) + GTAVI.AI economy model",
+      "source_type": "predicted",
+      "prediction_range": {
+        "low": "Ultimate Edition upgrade only",
+        "high": "Single-player cash packs at launch"
+      },
+      "prediction_method": "Rating-board signal combined with Online launch timing",
+      "prediction_inputs": [
+        "data/gta-6/october-confirmations.json → oct-pegi-purchases",
+        "data/gta-6/predictions.json → pred-vi-online-day-one"
+      ],
+      "pages": [
+        "gta-vi/intel"
+      ],
+      "display_order": 99,
+      "draft_status": "needs_review",
+      "draft_notes": "Suggested tier: predicted. Ties into the Shark Card predictions; resolves when the in-game store opens."
     }
   ]
 }

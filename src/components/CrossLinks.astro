@@ -16,7 +16,7 @@
 
 import type {
   EntityIndex, LeonidaData, NewswireData, RedditData,
-  VehiclesData, TrailersData, PredictionsData, FeaturesData, FranchiseSalesData,
+  VehiclesData, PredictionsData, FeaturesData, FranchiseSalesData,
 } from "../../types/gta";
 
 import entityIndexRaw  from "../../data/gta-6/entities/index.json";
@@ -24,7 +24,7 @@ import leonidaRaw      from "../../data/gta-6/entities/leonida-intel.json";
 import newswireRaw     from "../../data/feeds/newswire.json";
 import redditRaw       from "../../data/community/reddit.json";
 import vehicleRaw      from "../../data/gta-5/vehicles/performance.json";
-import trailerRaw      from "../../data/gta-6/trailers.json";
+import { MAIN_TRAILERS } from "../config/trailers";
 import predRaw         from "../../data/gta-6/predictions.json";
 import featuresRaw     from "../../data/gta-6/features.json";
 import salesRaw        from "../../data/franchise/sales.json";
@@ -34,7 +34,6 @@ const leonidaData  = leonidaRaw     as unknown as LeonidaData;
 const newswireData = newswireRaw    as unknown as NewswireData;
 const redditData   = redditRaw      as unknown as RedditData;
 const vehicleData  = vehicleRaw     as unknown as VehiclesData;
-const trailerData  = trailerRaw     as unknown as TrailersData;
 const predData     = predRaw        as unknown as PredictionsData;
 const featuresData = featuresRaw    as unknown as FeaturesData;
 const salesData    = salesRaw       as unknown as FranchiseSalesData;
@@ -49,7 +48,7 @@ const { context, class: extraClass = "" } = Astro.props;
 const gta6Entities   = entityIndex.total + (leonidaData.entity_stats?.total ?? 0);
 const newsItems      = newswireData.items.length + (redditData.recent_posts?.length ?? 0);
 const gta5Vehicles   = vehicleData.vehicles.length;
-const trailerCount   = trailerData.trailers.length;
+const trailerCount   = MAIN_TRAILERS.length;
 const predCount      = predData.predictions.length;
 const featuresTotal  = featuresData.categories.reduce(
   (s: number, c) => s + c.confirmed + c.reported, 0

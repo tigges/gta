@@ -16,6 +16,13 @@ Output: data/feeds/preorder-listings.json
   status: "not_live" | "wishlist" | "pre_order" | "available"
   Each retailer tracked independently with its current state.
 
+Curated fields (pre_order_date, launch_date, editions, preorder_bonus, …) are
+hand-maintained in the JSON and carried forward untouched. Once pre-orders are
+confirmed (pre_orders_live + pre_order_date), a retailer's status never drops
+below its previous value: store pages are JS-rendered or bot-gated from CI IPs,
+so a lower scraped status means "couldn't see it", not "withdrawn". The raw
+reading is kept as `scraped_status`.
+
 No API key required. Xbox uses the public Microsoft Catalog API.
 """
 
@@ -25,7 +32,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 sys.path.insert(0, str(Path(__file__).parent))
-from utils import has_changed, now_iso, write_json
+from utils import has_changed, load_existing, now_iso, write_json
 
 import requests
 from bs4 import BeautifulSoup
@@ -245,27 +252,76 @@ def check_xbox_store() -> dict:
         return {"retailer": "Xbox Store", "status": "error", "error": str(e)[:120], "url": XBOX_STORE_URL}
 
 
+STATUS_RANK = {
+    "error": 0, "unknown": 0, "not_live": 0,
+    "wishlist": 1, "pre_order_announced": 2, "pre_order": 3, "available": 4,
+}
+
+CURATED_KEYS = (
+    "pre_order_date", "pre_order_announced", "launch_date", "physical_ship_date",
+    "editions", "preorder_bonus", "physical_format", "official_source",
+)
+
+
+def _rank(listing: dict) -> int:
+    return STATUS_RANK.get(listing.get("status", "unknown"), 0)
+
+
+def build_summary(payload: dict, listings: list[dict]) -> str:
+    if payload.get("pre_orders_live") and payload.get("pre_order_date"):
+        d = datetime.fromisoformat(payload["pre_order_date"])
+        since = f"{d:%b} {d.day}, {d.year}"
+        prices = " · ".join(
+            f"{e['name'].replace(' Edition', '')} ${e['price_usd']:.2f}"
+            for e in payload.get("editions", []) if e.get("price_usd")
+        )
+        return f"Pre-orders live since {since}" + (f" — {prices}" if prices else "")
+    live_count = sum(1 for l in listings if l["status"] in ("pre_order", "wishlist"))
+    return f"{live_count}/{len(listings)} retailers have GTA VI listed"
+
+
+def merge_listings(scraped: list[dict], previous: list[dict], confirmed_live: bool) -> list[dict]:
+    prev_by_name = {l["retailer"]: l for l in previous}
+    merged = []
+    for result in scraped:
+        old = prev_by_name.pop(result["retailer"], None)
+        if confirmed_live and old and _rank(result) < _rank(old):
+            kept = {k: v for k, v in old.items() if k != "scraped_status"}
+            kept["scraped_status"] = result.get("status", "unknown")
+            kept["checked_at"] = result["checked_at"]
+            merged.append(kept)
+        else:
+            merged.append(result)
+    if confirmed_live:
+        merged.extend(prev_by_name.values())  # curated-only retailers, e.g. Rockstar Games Store
+    return merged
+
+
 def main() -> None:
     print("Checking GTA VI retailer listings...")
 
-    listings = []
+    existing = load_existing(OUT_PATH)
+    confirmed_live = bool(existing.get("pre_orders_live") and existing.get("pre_order_date"))
+
+    scraped = []
     for check_fn in [check_psstore, check_xbox_store, check_amazon, check_bestbuy, check_gamestop]:
         result = check_fn()
         status = result.get("status", "unknown")
         icon = "🟢" if status == "pre_order" else "🟡" if status == "wishlist" else "⚪" if status == "not_live" else "🔴"
         print(f"  {icon} {result['retailer']}: {status}")
         result["checked_at"] = now_iso()
-        listings.append(result)
+        scraped.append(result)
 
-    live_count = sum(1 for l in listings if l["status"] in ("pre_order", "wishlist"))
+    listings = merge_listings(scraped, existing.get("listings", []), confirmed_live)
 
     payload = {
         "last_updated": now_iso(),
-        "summary": f"{live_count}/{len(listings)} retailers have GTA VI listed",
-        "pre_orders_live": any(l["status"] == "pre_order" for l in listings),
+        "pre_orders_live": confirmed_live or any(l["status"] == "pre_order" for l in listings),
         "wishlists_live":  any(l["status"] == "wishlist" for l in listings),
         "listings": listings,
+        **{k: existing[k] for k in CURATED_KEYS if k in existing},
     }
+    payload = {"last_updated": payload.pop("last_updated"), "summary": build_summary(payload, listings), **payload}
 
     if has_changed(payload, OUT_PATH):
         write_json(OUT_PATH, payload)

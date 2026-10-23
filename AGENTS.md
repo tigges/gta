@@ -96,16 +96,17 @@ python3 scrapers/fetch_trailers.py
 | `fetch_vehicles.py` | `gta-5/vehicles/performance.json` | ✅ | Needs `BROUGHY_SHEET_ID` |
 | `fetch_steam.py` | `gta-5/meta/steam-players.json` | ✅ | Steam API |
 | `fetch_trends.py` | `gta-5/trends/search-interest.json` | ✅ | Google Trends via pytrends |
-| `gtavi/fetch_trailers.py` | `gta-6/trailers.json` | ✅ | Needs `YOUTUBE_API_KEY`. Unions search results with `KNOWN_TRAILERS` + existing file — never drops a known ID. Accepts trailer / Extended Look / gameplay titles. Age-restricted IDs resolved via `videos.list`. |
+| `gtavi/fetch_trailers.py` | `gta-6/trailers.json` | ✅ | `YOUTUBE_API_KEY` optional — the Rockstar channel RSS (`UC6VcWc1rAoWdBCM0JxrRQ3A`) runs keyless every night. Unions results with `KNOWN_TRAILERS` + existing file — never drops a known ID. Every row has a `type`: only `trailer` / `extended_look` / `launch_trailer` / `gameplay` count as trailers (`src/config/trailers.ts`); `announcement`, `spot` (ad cuts) and `alternate` (re-uploads) are tracked but never counted, charted or briefed. Age-restricted IDs resolved via `videos.list`. |
 | `gtavi/fetch_search_trends.py` | `gta-6/trends/search-interest.json` | ✅ | Google Trends |
 | `fetch_youtube_velocity.py` | `gta-6/trailer-velocity.json` | ✅ | Reads IDs from `trailers.json`; needs `YOUTUBE_API_KEY`; falls back to page scrape |
-| `on_new_official_footage.py` | `gta-6/official-footage-inbox.json` | ✅ | After trailers + press assets. Stubs empty analysis, velocity row, keyword hints, press-still proposals. Discord alerts when `needs_brief`. Never auto-confirms. Rows with `type: "announcement"` in `trailers.json` (date cards, premiere teasers) are skipped — no stub, no brief. |
+| `on_new_official_footage.py` | `gta-6/official-footage-inbox.json` | ✅ | After trailers + press assets. Stubs empty analysis, velocity row, keyword hints, press-still proposals. Discord alerts when `needs_brief`. Never auto-confirms. Rows typed `announcement`, `spot` or `alternate` in `trailers.json` are skipped — no stub, no brief (`alternate` also gets no velocity row). |
 | `fetch_ttwo_stock.py` | `franchise/ttwo-stock.json` | ✅ | Yahoo Finance; no API key |
 | `fetch_franchise_sales.py` | `franchise/sales.json` | ✅ | Curated seed + VGChartz enrichment |
 | `fetch_reddit.py` | `community/reddit.json` | ✅ | Needs Reddit creds for live count; RSS fallback for posts |
 | `fetch_newswire.py` | `feeds/newswire.json` | ✅ | Multi-source: Rockstar, EDGAR 8-K, Kotaku, Rockstar Intel, Variety, The Game Business; GTAForums curated seed fallback |
 | `fetch_conference_news.py` | `feeds/conference-news.json` | ✅ | YouTube conference channel watcher; needs `YOUTUBE_API_KEY` |
-| `fetch_preorder_listings.py` | `feeds/preorder-listings.json` | ✅ | Retailer listing monitor; PS Store wishlist live as of May 2026 |
+| `fetch_preorder_listings.py` | `feeds/preorder-listings.json` | ✅ | Retailer listing monitor. Curated fields (`pre_order_date`, `launch_date`, `editions`, `preorder_bonus`, …) are hand-edited and carried forward. Once pre-orders are confirmed, a retailer never drops below its previous status (store pages are invisible from CI IPs); the raw reading is kept as `scraped_status`. |
+| `fetch_weekly_bonuses.py` | `gta-5/economy/weekly-bonuses.json`, `bonus-history.json` | ✅ | Rockstar Intel GTA Online RSS (Rockstar Newswire is JS-only). Bonuses count only when the activity is named inside an "Nx GTA$ & RP on …" clause; `headlines[]` lists every multiplier event. `week_start` comes from the article title. The nav strip hides data older than 8 days. |
 | `fetch_metacritic.py` | `franchise/metacritic.json` | ❌ | Curated seed — run manually if scores change |
 | `fetch_igdb.py` | `franchise/igdb.json` | ✅ | Needs `TWITCH_CLIENT_ID` + `TWITCH_CLIENT_SECRET` |
 | `fetch_spotify.py` | `franchise/spotify.json` | ✅ | Needs `SPOTIFY_CLIENT_ID` + `SPOTIFY_CLIENT_SECRET` |
@@ -119,7 +120,7 @@ python3 scrapers/fetch_trailers.py
 | `fetch_leonida.py` | `gta-6/entities/leonida-intel.json` | ✅ | Leonida Intel public API; no auth |
 | `post_discord_digest.py` | Discord webhook | ✅ | Runs after commit; needs `DISCORD_WEBHOOK_URL`; `continue-on-error: true` |
 | `fetch_gta_wiki.py` | `gta-6/entities/*.json` | ❌ | Run manually after major reveals |
-| `fetch_press_assets.py` | `gta-6/press-assets.json` | ❌ | Run manually after press drops |
+| `fetch_press_assets.py` | `gta-6/press-assets.json` | ✅ | Press-kit zips + `SITE_ASSETS` (official in-engine screenshots and key art from rockstargames.com/VI pages and Newswire posts that are not in the zips; hashed asset names resolved each run, resized to 2560px). Add new official images to `SITE_ASSETS` — never fan-site or magazine scans. Keeps earlier rows when a source fails. |
 
 ---
 
@@ -209,6 +210,11 @@ The version is displayed in the ops bar on every page (`Base.astro`) and in the 
 
 Charts live in `src/pages/charts.astro` as self-contained D3 sections.
 Import the data file at the top, add an HTML container (`<div id="my-chart">`), and write the D3 initialisation in the `<script>` block using the `data-*` attribute pattern already established.
+
+### GTA VI music and pre-launch reveals (hand-curated)
+
+- `data/gta-6/music.json` — official radio stations (hosts, preview tracks from the `/VI/music` page payload), album singles, score. Rendered by `GtaViMusic.astro` on `/gta-vi/intel#section-music`. Trailer-heard licensed songs stay in `soundtrack.json`.
+- `data/gta-6/october-confirmations.json` — source-tagged reveals; `tier` is `confirmed` (Rockstar or a Rockstar developer on record) or `reported` (rating boards, journalist paraphrase, anonymous sources). Leaks are never added. `feature_category` adds a "+N October reveals" link on the Feature Tracker card; it does not change the curated counts in `features.json`.
 
 ### GTA VI income predictions
 

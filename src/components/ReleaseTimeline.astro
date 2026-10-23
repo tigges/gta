@@ -46,7 +46,11 @@ const maxGap = Math.max(
       <div class="flex flex-col gap-0">
         {games.map((game) => {
           const isPred  = game.is_prediction;
+          const dateConfirmed = !!game.release_date;
           const year    = game.release_year ?? game.release_date_estimate ?? "TBC";
+          const launchLabel = isPred && dateConfirmed
+            ? new Date(game.release_date as string).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })
+            : null;
           const gap     = (game.gap_years_from_prev ?? game.gap_years_from_prev_estimate) as number | null;
           const vehicles= game.vehicle_count ?? game.vehicle_count_estimate;
           const mapSize = game.map_size_km2  ?? game.map_size_km2_estimate;
@@ -58,7 +62,7 @@ const maxGap = Math.max(
               {/* Year */}
               <div class="w-[4.5rem] shrink-0 text-right pr-3">
                 <span class={`text-[11px] font-mono font-bold ${isPred ? "text-gta-gold" : "text-zinc-500"}`}>
-                  {year}{isPred ? "?" : ""}
+                  {year}{isPred && !dateConfirmed ? "?" : ""}
                 </span>
               </div>
 
@@ -67,7 +71,7 @@ const maxGap = Math.max(
                 <div class={`w-2.5 h-2.5 rounded-full border ${
                   isPred
                     ? "border-gta-gold bg-gta-gold/20"
-                    : "border-border-mid bg-[#131316] group-hover:border-zinc-600"
+                    : "border-border-mid bg-surface-1 group-hover:border-zinc-600"
                 } transition-colors`}></div>
               </div>
 
@@ -99,16 +103,16 @@ const maxGap = Math.max(
                   </span>
                   {isPred && (
                     <span class="text-[10px] font-mono bg-gta-gold/10 text-gta-gold/70 border border-gta-gold/15 px-1.5 py-0.5 rounded uppercase tracking-widest">
-                      est
+                      {launchLabel ? `launches ${launchLabel}` : "est"}
                     </span>
                   )}
                 </div>
                 <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-0.5">
                   {vehicles && (
-                    <span class="text-[11px] text-zinc-600 font-mono">{vehicles}{isPred ? "~" : ""} vehicles</span>
+                    <span class="text-[11px] text-zinc-600 font-mono">{vehicles}{game.vehicle_count == null && isPred ? "~" : ""} vehicles</span>
                   )}
                   {mapSize && (
-                    <span class="text-[11px] text-zinc-600 font-mono">{mapSize}{isPred ? "~" : ""} km²</span>
+                    <span class="text-[11px] text-zinc-600 font-mono">{mapSize}{game.map_size_km2 == null && isPred ? "~" : ""} km²</span>
                   )}
                   {game.trailer_youtube_id && (
                     <a href={`https://www.youtube.com/watch?v=${game.trailer_youtube_id}`}
@@ -125,10 +129,10 @@ const maxGap = Math.max(
                     <span class={`text-[10px] font-mono w-8 text-right shrink-0 ${isPred ? "text-gta-gold/80" : "text-zinc-600"}`}>
                       {gap}yr
                     </span>
-                    <div class="flex-1 h-1.5 rounded-full overflow-hidden" style="background:#1e1e23">
+                    <div class="flex-1 h-1.5 rounded-full overflow-hidden" style="background:var(--c-border-1)">
                       <div
                         class="h-full rounded-full transition-all duration-500"
-                        style={`width:${barPct}%;background:${isPred ? "#f59e0b" : "#3f3f46"};opacity:${isPred ? 0.9 : 0.7}`}
+                        style={`width:${barPct}%;background:${isPred ? "var(--c-brand)" : "var(--c-border-2)"};opacity:${isPred ? 0.9 : 0.7}`}
                       ></div>
                     </div>
                   </>
