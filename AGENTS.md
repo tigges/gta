@@ -9,7 +9,7 @@ Agent and developer reference for the [gtavi.ai](https://gtavi.ai) repository.
 **GTAVI.AI** is a static Astro 4 site providing data-driven intelligence about the GTA franchise and GTA VI.
 It is deployed via GitHub Pages on every push to `main`. A nightly GitHub Actions job refreshes live data.
 
-- **Live site:** https://gtavi.ai
+- **Live site:** https://tigges.github.io/gta/ (temporary — gtavi.ai is parked; see Deployment)
 - **Current version:** tracked in `src/config/version.ts`
 - **Stack:** Astro 4 · TypeScript (strict) · Tailwind CSS · D3.js · Python 3.12 (scrapers)
 
@@ -408,11 +408,35 @@ D3 axis `tickFormat` callbacks require `as any` due to d3 type limitations — t
 
 ## Deployment
 
-gtavi.ai is a fully static site hosted on **GitHub Pages** (custom domain via `public/CNAME`). There is no Cloudflare dependency and no staging environment — `main` is the only deployed branch.
+The site is fully static and hosted on **GitHub Pages**. There is no Cloudflare dependency and no staging environment — `main` is the only deployed branch.
+
+**Current address (temporary): https://tigges.github.io/gta/** — gtavi.ai is deliberately parked (empty) while the domain moves off Cloudflare. Source code is still authored for the domain root; the deploy rewrites it.
 
 Every push to `main` triggers `.github/workflows/static.yml`:
 1. `npm ci && npm run build` → `dist/`
-2. Uploaded as GitHub Pages artifact and deployed
+2. `node scripts/rebase-dist.mjs dist` with `PAGES_BASE=/gta`, `PAGES_ORIGIN=https://tigges.github.io` — rewrites root-relative paths and `https://gtavi.ai` URLs in the output and drops `dist/CNAME`
+3. Uploaded as GitHub Pages artifact and deployed
+
+Keep writing root-relative paths (`/gta-vi/intel`, `/assets/...`) in source — do not hand-add `/gta`. Runtime-built paths the rewrite can't see (e.g. `"/" + slug`) will break on the sub-path; prefer literal `"/gta-vi/" + slug` style strings.
+
+### Moving back to gtavi.ai (when the user says so)
+
+1. At GoDaddy (registrar), switch the nameservers from Cloudflare (`anderson`/`izabella.ns.cloudflare.com`) to GoDaddy's defaults. DNSSEC is off, so no DS record to remove first.
+2. Add these records in GoDaddy DNS straight away:
+
+| Type | Name | Value |
+|------|------|-------|
+| A | @ | 185.199.108.153 · 185.199.109.153 · 185.199.110.153 · 185.199.111.153 |
+| AAAA | @ | 2606:50c0:8000::153 · 2606:50c0:8001::153 · 2606:50c0:8002::153 · 2606:50c0:8003::153 |
+| CNAME | www | tigges.github.io |
+| MX | @ | 1 aspmx.l.google.com · 5 alt1.aspmx.l.google.com · 5 alt2.aspmx.l.google.com · 10 alt3.aspmx.l.google.com · 10 alt4.aspmx.l.google.com |
+| TXT | @ | `v=spf1 include:_spf.google.com ~all` |
+| TXT | @ | `google-site-verification=1ZP5gHevpa-M6haiHFaTYeudVvibmmuDT7Fik9FClGE` |
+
+   The old Resend records (`resend._domainkey`, `send` MX/TXT) are no longer needed.
+3. Remove the "Rehost under /gta" step from `static.yml` (patch bump) and merge to `main`. `public/CNAME` (`gtavi.ai`) stays in the repo for this.
+4. GitHub → Settings → Pages → Custom domain: enter `gtavi.ai`, wait for the HTTPS certificate, tick Enforce HTTPS.
+5. Confirm the site (ops bar version) and Google Workspace mail both work, then delete the Cloudflare account and the `CLOUDFLARE_*` and `RESEND_*` repo secrets.
 
 Nightly at 03:00 UTC, `.github/workflows/fetch-data.yml` runs all active scrapers and commits any changed JSON with `[skip ci]`. Because `[skip ci]` suppresses the push trigger, `static.yml` also runs via `workflow_run` when the nightly fetch succeeds, so fresh data goes live every night.
 
