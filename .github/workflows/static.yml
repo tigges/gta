@@ -1,20 +1,36 @@
-name: Build Check
+name: Build & Deploy (GitHub Pages)
 
-# Runs on every push to main and staging.
-# Cloudflare Pages handles the actual deployment automatically
-# when it detects a push to the connected repo — no deploy step needed here.
+# gtavi.ai is served by GitHub Pages. Every push to main builds and deploys.
+# The nightly data commit uses [skip ci], which suppresses push triggers, so
+# the workflow_run trigger redeploys once the nightly fetch has finished.
 
 on:
   push:
-    branches: ["main", "staging"]
+    branches: ["main"]
+  workflow_run:
+    workflows: ["Fetch Data (nightly)"]
+    types: [completed]
+    branches: ["main"]
   workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
-    name: Build & type-check
+    name: Build
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
@@ -23,6 +39,21 @@ jobs:
 
       - run: npm ci
 
-      - run: npx astro check
-
       - run: npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
