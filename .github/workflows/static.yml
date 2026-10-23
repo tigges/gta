@@ -49,6 +49,8 @@ jobs:
         env:
           PAGES_BASE: /gta
           PAGES_ORIGIN: https://tigges.github.io
+          # Parked domain: any page served on gtavi.ai renders blank.
+          PAGES_HIDE_HOSTS: gtavi.ai
 
       - uses: actions/configure-pages@v5
 

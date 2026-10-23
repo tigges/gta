@@ -414,7 +414,7 @@ The site is fully static and hosted on **GitHub Pages**. There is no Cloudflare 
 
 Every push to `main` triggers `.github/workflows/static.yml`:
 1. `npm ci && npm run build` → `dist/`
-2. `node scripts/rebase-dist.mjs dist` with `PAGES_BASE=/gta`, `PAGES_ORIGIN=https://tigges.github.io` — rewrites root-relative paths and `https://gtavi.ai` URLs in the output and drops `dist/CNAME`
+2. `node scripts/rebase-dist.mjs dist` with `PAGES_BASE=/gta`, `PAGES_ORIGIN=https://tigges.github.io` — rewrites root-relative paths and `https://gtavi.ai` URLs in the output and drops `dist/CNAME`; `PAGES_HIDE_HOSTS=gtavi.ai` injects a head script that blanks any page loaded on gtavi.ai while the domain is parked
 3. Uploaded as GitHub Pages artifact and deployed
 
 Keep writing root-relative paths (`/gta-vi/intel`, `/assets/...`) in source — do not hand-add `/gta`. Runtime-built paths the rewrite can't see (e.g. `"/" + slug`) will break on the sub-path; prefer literal `"/gta-vi/" + slug` style strings.
@@ -434,7 +434,7 @@ Keep writing root-relative paths (`/gta-vi/intel`, `/assets/...`) in source — 
 | TXT | @ | `google-site-verification=1ZP5gHevpa-M6haiHFaTYeudVvibmmuDT7Fik9FClGE` |
 
    The old Resend records (`resend._domainkey`, `send` MX/TXT) are no longer needed.
-3. Remove the "Rehost under /gta" step from `static.yml` (patch bump) and merge to `main`. `public/CNAME` (`gtavi.ai`) stays in the repo for this.
+3. Remove the "Rehost under /gta" step from `static.yml` (patch bump) and merge to `main` — this also removes the gtavi.ai blanking guard. `public/CNAME` (`gtavi.ai`) stays in the repo for this.
 4. GitHub → Settings → Pages → Custom domain: enter `gtavi.ai`, wait for the HTTPS certificate, tick Enforce HTTPS.
 5. Confirm the site (ops bar version) and Google Workspace mail both work, then delete the Cloudflare account and the `CLOUDFLARE_*` and `RESEND_*` repo secrets.
 
