@@ -78,8 +78,6 @@ python3 scrapers/fetch_newswire.py
 | `REDDIT_CLIENT_ID` | `fetch_reddit.py` | No — RSS fallback active |
 | `REDDIT_CLIENT_SECRET` | `fetch_reddit.py` | No — RSS fallback active |
 | `DISCORD_WEBHOOK_URL` | `post_discord_digest.py` | No — digest skipped if absent |
-| `RESEND_API_KEY` | `post_weekly_digest_resend.py` | No — digest skipped if absent |
-| `RESEND_AUDIENCE_ID` | `post_weekly_digest_resend.py` | No — skipped if absent. Create at resend.com → Audiences |
 
 Secrets are configured in: **GitHub repo → Settings → Secrets and variables → Actions**
 
@@ -120,7 +118,6 @@ python3 scrapers/fetch_trailers.py
 | `fetch_vgchartz.py` | `franchise/vgchartz.json` | ❌ | Run manually if data drift |
 | `fetch_leonida.py` | `gta-6/entities/leonida-intel.json` | ✅ | Leonida Intel public API; no auth |
 | `post_discord_digest.py` | Discord webhook | ✅ | Runs after commit; needs `DISCORD_WEBHOOK_URL`; `continue-on-error: true` |
-| `post_weekly_digest_resend.py` | Resend email → subscribers | ✅ | Every Tuesday 10:00 UTC via `weekly-digest.yml`; needs `RESEND_API_KEY` + `RESEND_AUDIENCE_ID` |
 | `fetch_gta_wiki.py` | `gta-6/entities/*.json` | ❌ | Run manually after major reveals |
 | `fetch_press_assets.py` | `gta-6/press-assets.json` | ❌ | Run manually after press drops |
 
@@ -419,7 +416,7 @@ Every push to `main` triggers `.github/workflows/static.yml`:
 
 Nightly at 03:00 UTC, `.github/workflows/fetch-data.yml` runs all active scrapers and commits any changed JSON with `[skip ci]`. Because `[skip ci]` suppresses the push trigger, `static.yml` also runs via `workflow_run` when the nightly fetch succeeds, so fresh data goes live every night.
 
-No server-side code: there are no Pages Functions, Workers or KV. Anything interactive must work client-side (e.g. `VoteCard` stores the visitor's vote in `localStorage`). Admin pages (`/admin/*`) and the parked income calculator render only under `npm run dev`; production builds redirect them.
+No server-side code: there are no Pages Functions, Workers or KV. Anything interactive must work client-side. Community polls, the email digest and the community income leaderboard were removed in v1.132.0 — do not reintroduce features that need a server, database or mailing list. Admin pages (`/admin/*`) and the parked income calculator render only under `npm run dev`; production builds redirect them.
 
 Bump `src/config/version.ts` when shipping a meaningful release.
 
