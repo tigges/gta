@@ -15,6 +15,7 @@
 export const C_BRAND        = "#f59e0b";   // amber   — franchise authority
 export const C_BRAND_BRIGHT = "#fbbf24";   // bright  — hero h1, passive flows
 export const C_LIVE         = "#0d9488";   // teal    — confirmed / live
+export const C_LIVE_BRIGHT  = "#2dd4bf";   // bright teal — small teal text on dark/photo surfaces
 export const C_ALERT        = "#ef4444";   // red     — nerf / danger / regression
 export const C_GROWTH       = "#22c55e";   // green   — positive / passive income
 export const C_ECONOMY      = "#818cf8";   // indigo  — capital / complexity
@@ -91,6 +92,12 @@ export const C_FLOW_SPENDING  = "#f97316";  // C — consumption; mirrors --c-fl
 export const C_FLOW_PASSIVE   = "#fbbf24";
 export const C_FLOW_CAPITAL  = "#a78bfa";
 export const C_FLOW_STOCKS   = "#d97706";
+
+/** `#rrggbb` token → `rgba(...)` string, for renderers without color-mix (Satori OG images). */
+export function withAlpha(hex: string, alpha: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${alpha})`;
+}
 
 // ── Convenience maps ──────────────────────────────────────────────────────
 
