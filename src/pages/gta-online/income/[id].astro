@@ -8,30 +8,22 @@ import Base from "../../../layouts/Base.astro";
 import { C_LIVE, C_GROWTH, C_BRAND, C_ALERT, C_CARD_RAISED, C_TEXT_4, C_TEXT_7 } from "../../../config/colors";
 import IncomeCard from "../../../components/IncomeCard.astro";
 import ShareDropdown from "../../../components/ShareDropdown.astro";
+import { ONLINE_INCOME_SOURCES, onlineIncomeHref } from "../../../config/onlineIncomePages";
 import type {
-  BusinessProfiles, Business, OnlineHeistsData, OnlineHeist,
+  Business, OnlineHeist,
   RevenueTiersData, RevenueTier, TierSource,
   SaleFrequencyData, ActivityBonusFreq,
   PerSourceHistoryData, SourceHistory,
   WeeklyBonusesData, WeeklyBonus,
 } from "../../../types/gta";
 
-import businessProfilesRaw  from "../../../../data/gta-5/economy/business-profiles.json";
-import onlineHeistsRaw      from "../../../../data/gta-5/economy/online-heists.json";
 import revenueTiersRaw      from "../../../../data/gta-5/economy/revenue-tiers.json";
 import saleFreqRaw          from "../../../../data/gta-5/economy/sale-frequency.json";
 import sourceHistoryRaw     from "../../../../data/gta-5/economy/per-source-history.json";
 import weeklyBonusesRaw     from "../../../../data/gta-5/economy/weekly-bonuses.json";
 
-export const getStaticPaths: GetStaticPaths = () => {
-  const bp = businessProfilesRaw as unknown as BusinessProfiles;
-  const hd = onlineHeistsRaw     as unknown as OnlineHeistsData;
-  const bizList   = bp.businesses.filter(b => b.net_profit_per_hr > 0);
-  const heistList = hd.heists;
-  const merged: (Business | OnlineHeist)[] = [...bizList];
-  heistList.forEach(h => { if (!merged.find(b => b.id === h.id)) merged.push(h); });
-  return merged.map(biz => ({ params: { id: biz.id }, props: { biz } }));
-};
+export const getStaticPaths: GetStaticPaths = () =>
+  ONLINE_INCOME_SOURCES.map(biz => ({ params: { id: biz.id }, props: { biz } }));
 
 const { id } = Astro.params;
 const { biz } = Astro.props as { biz: Business | OnlineHeist };
@@ -64,13 +56,13 @@ const peakHr = srcHistory ? Math.max(...srcHistory.timeline.map(t => t.gta_per_h
 const activeBonus = (wkBonuses.bonuses ?? []).find((b: WeeklyBonus) => b.activity_id === id);
 
 // ── Related sources (same tier, first 3 excl. self) ───────────────────────
-const related = (tierEntry?.sources ?? []).filter((s: TierSource) => s.id !== id).slice(0, 3);
+const related = (tierEntry?.sources ?? []).filter((s: TierSource) => s.id !== id && onlineIncomeHref(s.id)).slice(0, 3);
 // ── Thumbnail ─────────────────────────────────────────────────────────────
 const BIZ_THUMBS: Record<string,string> = {
   "cayo-perico":          "/assets/gta5/story/blitz-play.jpg",
   "diamond-casino-heist": "/assets/gta5/story/arcade.jpg",
-  "nightclub":            "/assets/gta5/dlc/nightclub.jpg",
-  "bunker":               "/assets/gta5/dlc/bunker.jpg",
+  "nightclub":            "/assets/gta5/dlc/after-hours.jpg",
+  "bunker":               "/assets/gta5/dlc/gunrunning.jpg",
   "acid-lab":             "/assets/gta5/dlc/acid-lab.jpg",
   "agency-vip-contract":  "/assets/gta5/dlc/agency.jpg",
 };
@@ -93,7 +85,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-2 text-[10px] font-mono text-zinc-500">
       <a href="/gta-online" class="hover:text-zinc-400 transition-colors">GTA Online</a>
       <span class="text-zinc-500">›</span>
-      <a href="/gta-online/income" class="hover:text-zinc-400 transition-colors">Income Sources</a>
+      <a href="/database?game=gta-online" class="hover:text-zinc-400 transition-colors">Income Sources</a>
       <span class="text-zinc-500">›</span>
       <span class="text-zinc-500">{bizName}</span>
     </div>
@@ -359,7 +351,7 @@ const description = `${bizName}: $${khr}k/hr net in GTA Online. Full setup guide
 
         <!-- CTA to full database -->
         <div class="flex items-center gap-3 flex-wrap">
-          <a href="/gta-online/income"
+          <a href="/database?game=gta-online"
              class="px-4 py-2 rounded border border-border-mid text-zinc-400 text-[11px] font-mono hover:border-zinc-600 hover:text-zinc-200 transition-all">
             ← All income sources
           </a>

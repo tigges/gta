@@ -8,6 +8,7 @@ export default defineConfig({
   integrations: [tailwind(), sitemap()],
   redirects: {
     '/community/polls': '/gta-vi/intel',
+    '/gta-online/income': '/database?game=gta-online',
   },
   vite: {
     build: {
