@@ -13,11 +13,13 @@
  *   - optional PAGES_HIDE_HOSTS (comma-separated): every page gets a tiny
  *     head script that hides the document when loaded on one of those hosts
  *     (or a subdomain), so a parked domain still pointing here shows nothing
+ *   - optional PAGES_TITLE: replaces the "GTA VI.AI" / "GTAVI.AI" brand inside each page's
+ *     <title> only (the browser tab); og/twitter titles and on-page text keep it
  *
  * Only paths whose first segment is a real top-level entry of dist/ are
  * rewritten, so external URLs and protocol-relative URLs are left alone.
  *
- * Usage: PAGES_BASE=/trilitralitru PAGES_ORIGIN=https://tigges.github.io PAGES_HIDE_HOSTS=gtavi.ai \
+ * Usage: PAGES_BASE=/trilitralitru PAGES_ORIGIN=https://tigges.github.io PAGES_HIDE_HOSTS=gtavi.ai PAGES_TITLE=trilitralitru \
  *          node scripts/rebase-dist.mjs [dist]
  * A no-op when PAGES_BASE is unset, empty or "/".
  */
@@ -59,6 +61,8 @@ const hideHosts = (process.env.PAGES_HIDE_HOSTS ?? "").split(",").map((h) => h.t
 const hideGuard = hideHosts.length
   ? `<script>if(/(^|\\.)(${hideHosts.map(escapeRe).join("|")})$/i.test(location.hostname))document.documentElement.style.display="none"</script>`
   : "";
+const pageTitle = (process.env.PAGES_TITLE ?? "").trim();
+const titleTag = /<title>([^<]*)<\/title>/i;
 const headOpen = /<head(\s[^>]*)?>/i;
 const doctype = /^<!doctype html>/i;
 const targetDisplay = target.replace(/^https?:\/\//, "");
@@ -75,6 +79,14 @@ function rewrite(file) {
     out = out.replace(absSite, () => { n++; return target; });
     out = out.replace(absSiteEncoded, () => { n++; return encodeURIComponent(target); });
     out = out.replace(displaySite, () => { n++; return `>${targetDisplay}/`; });
+  }
+  if (pageTitle && file.endsWith(".html")) {
+    out = out.replace(titleTag, (m, t) => {
+      const renamed = t.replace(/GTA ?VI\.AI/g, pageTitle);
+      if (renamed === t) return m;
+      n++;
+      return `<title>${renamed}</title>`;
+    });
   }
   if (hideGuard && file.endsWith(".html")) {
     if (headOpen.test(out)) out = out.replace(headOpen, (m) => m + hideGuard);

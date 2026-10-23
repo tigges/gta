@@ -420,7 +420,7 @@ The site is fully static and hosted on **GitHub Pages**. There is no Cloudflare 
 
 Every push to `main` triggers `.github/workflows/static.yml`:
 1. `npm ci && npm run build` → `dist/`
-2. `node scripts/rebase-dist.mjs dist` with `PAGES_BASE`/`PAGES_ORIGIN` taken from `actions/configure-pages` outputs (`base_path`, `origin`) — rewrites root-relative paths and `https://gtavi.ai` URLs in the output and drops `dist/CNAME`; `PAGES_HIDE_HOSTS=gtavi.ai` injects a head script that blanks any page loaded on gtavi.ai while the domain is parked
+2. `node scripts/rebase-dist.mjs dist` with `PAGES_BASE`/`PAGES_ORIGIN` taken from `actions/configure-pages` outputs (`base_path`, `origin`) — rewrites root-relative paths and `https://gtavi.ai` URLs in the output and drops `dist/CNAME`; `PAGES_HIDE_HOSTS=gtavi.ai` injects a head script that blanks any page loaded on gtavi.ai while the domain is parked; `PAGES_TITLE` (the repo name) replaces the "GTA VI.AI" brand in each page's `<title>` only — the browser tab — while og/twitter titles and on-page branding stay GTA VI.AI
 3. `npm run check:scripts` parses every inline `<script>` in `dist/` and fails the deploy on a syntax error. `is:inline` and `define:vars` scripts are not compiled, so they must be plain JavaScript (no `as` casts, type annotations or `!` assertions).
 4. Uploaded as GitHub Pages artifact and deployed
 
@@ -441,7 +441,7 @@ Keep writing root-relative paths (`/gta-vi/intel`, `/assets/...`) in source — 
 | TXT | @ | `google-site-verification=1ZP5gHevpa-M6haiHFaTYeudVvibmmuDT7Fik9FClGE` |
 
    The old Resend records (`resend._domainkey`, `send` MX/TXT) are no longer needed.
-3. Nothing to change in code: once the custom domain is set (step 4) `configure-pages` reports an empty base path, so the rehost step and the gtavi.ai blanking guard switch off on the next deploy. Run the deploy workflow after step 4. `public/CNAME` (`gtavi.ai`) stays in the repo for this.
+3. Nothing to change in code: once the custom domain is set (step 4) `configure-pages` reports an empty base path, so the rehost step, the gtavi.ai blanking guard and the repo-name tab title switch off on the next deploy. Run the deploy workflow after step 4. `public/CNAME` (`gtavi.ai`) stays in the repo for this.
 4. GitHub → Settings → Pages → Custom domain: enter `gtavi.ai`, wait for the HTTPS certificate, tick Enforce HTTPS.
 5. Confirm the site (ops bar version) and Google Workspace mail both work. Nothing gtavi-related is left in Cloudflare (Workers `gtavi`/`gtavi-leaderboard`, Pages `gta-staging` and the gtavi.ai zone are deleted; the Cloudflare GitHub app no longer has this repo). **Do not close the Cloudflare account** — it still hosts unrelated live projects (gitbeat.ai, appbazaar.ai, japanride, leon-tigges).
 

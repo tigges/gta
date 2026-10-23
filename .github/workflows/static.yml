@@ -56,6 +56,8 @@ jobs:
           PAGES_ORIGIN: ${{ steps.pages.outputs.origin }}
           # Parked domain: any page served on gtavi.ai renders blank.
           PAGES_HIDE_HOSTS: gtavi.ai
+          # Temporary: browser-tab title shows the repo name instead of "GTA VI.AI".
+          PAGES_TITLE: ${{ github.event.repository.name }}
 
       - name: Check inline scripts are valid JavaScript
         run: npm run check:scripts
