@@ -59,7 +59,7 @@ def load_trailer_list() -> list[dict]:
     out = []
     for t in data.get("trailers", []):
         vid = t.get("youtube_id")
-        if not vid:
+        if not vid or t.get("type") == "alternate":
             continue
         out.append({
             "youtube_id": vid,

@@ -16,12 +16,17 @@ sys.path.insert(0, str(ROOT / "scrapers" / "gtavi"))
 
 from fetch_trailers import (  # noqa: E402
     KNOWN_TRAILERS,
+    ROCKSTAR_CHANNEL_ID,
+    infer_type,
+    is_main,
     is_official_footage,
     merge_registry,
+    parse_channel_rss,
 )
 from fetch_youtube_velocity import load_trailer_list  # noqa: E402
 from on_new_official_footage import (  # noqa: E402
     ensure_analysis_stub,
+    ensure_velocity_row,
     needs_brief,
     propose_press_stills,
     scan_keywords,
@@ -162,6 +167,47 @@ def test_playbook_helpers() -> None:
     check("not a video frame" in (proposals2[0]["attribution"].lower()), "stills labelled as press stills")
 
 
+RSS_SAMPLE = """<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom">
+ <entry><yt:videoId>NEWSPOT01</yt:videoId><title>Grand Theft Auto VI: An Extended Look — Now Playing</title><published>2026-08-28T13:00:00+00:00</published></entry>
+ <entry><yt:videoId>GTAOHEIST1</yt:videoId><title>GTA Online: The Kortz Center Heist Now Available</title><published>2026-07-14T13:00:00+00:00</published></entry>
+ <entry><yt:videoId>NEWTRAIL3</yt:videoId><title>Grand Theft Auto VI Trailer 3</title><published>2027-01-01T13:00:00+00:00</published></entry>
+</feed>"""
+
+
+def test_types_and_rss() -> None:
+    print("video types + channel RSS")
+    check(ROCKSTAR_CHANNEL_ID == "UC6VcWc1rAoWdBCM0JxrRQ3A", "real Rockstar channel id")
+    rss = parse_channel_rss(RSS_SAMPLE)
+    rss_ids = {t["youtube_id"] for t in rss}
+    check(rss_ids == {"NEWSPOT01", "NEWTRAIL3"}, "RSS keeps GTA VI videos, drops GTA Online")
+    check(is_official_footage("Grand Theft Auto VI: Official Cover Art Reveal"), "cover art reveal accepted")
+
+    check(infer_type("Grand Theft Auto VI: An Extended Look — Now Playing") == "spot", "Now Playing → spot")
+    check(infer_type("Grand Theft Auto VI: Official Cover Art Reveal") == "announcement", "cover reveal → announcement")
+    check(infer_type("Grand Theft Auto VI Trailer 3") == "trailer", "Trailer 3 → trailer")
+
+    merged = merge_registry(rss + [
+        {"youtube_id": "DUPE_LT_01", "title": "Grand Theft Auto VI Launch Trailer", "published_at": "2026-10-15"},
+    ], existing=[])
+    by_id = {t["youtube_id"]: t for t in merged}
+    check(all(t.get("type") for t in merged), "every merged row has a type")
+    check(by_id["NEWSPOT01"]["type"] == "spot", "discovered spot typed")
+    check(by_id["NEWTRAIL3"]["type"] == "trailer", "discovered trailer typed")
+    check(by_id["DUPE_LT_01"]["type"] == "alternate", "re-upload of a main title → alternate")
+    main_ids = {t["youtube_id"] for t in merged if is_main(t)}
+    check({T1_ID, T2_ID, EL_ID, "rz1B4B2yBZY"} <= main_ids, "T1, T2, EL, Launch Trailer count as trailers")
+    check("icy-lhqJhMQ" not in main_ids, "4:3 Launch Trailer cut not counted")
+
+    for kind in ("spot", "alternate", "announcement"):
+        check(not needs_brief({"youtube_id": "x", "type": kind}, None), f"{kind} never needs a brief")
+    check(not ensure_velocity_row({"youtube_id": "x", "type": "alternate"}, {"trailers": []}), "alternate gets no velocity row")
+    check(ensure_velocity_row({"youtube_id": "x", "type": "spot"}, {"trailers": []}), "spot gets a velocity row")
+
+    data = json.loads((ROOT / "data/gta-6/trailers.json").read_text())
+    check(all(t.get("type") for t in data["trailers"]), "trailers.json rows all typed")
+
+
 def test_discord_alert() -> None:
     print("discord alert")
     quiet = footage_alert_field({"videos": [{"youtube_id": EL_ID, "needs_brief": False}]})
@@ -181,6 +227,7 @@ def main() -> int:
     test_trailers_json_restored()
     test_velocity_reads_registry()
     test_playbook_helpers()
+    test_types_and_rss()
     test_discord_alert()
     print()
     if failures:

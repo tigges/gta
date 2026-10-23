@@ -75,11 +75,11 @@ HINT_TERMS = [
 ]
 
 
-NO_BRIEF_TYPES = {"announcement"}
+NO_BRIEF_TYPES = {"announcement", "spot", "alternate"}
 
 
 def is_briefable(trailer: dict) -> bool:
-    """Announcement cards (date / premiere teasers) carry no footage to brief."""
+    """Date cards, ad spots and re-uploads carry no new footage to brief."""
     return trailer.get("type") not in NO_BRIEF_TYPES
 
 
@@ -141,6 +141,8 @@ def ensure_analysis_stub(trailer: dict, analysis: dict) -> bool:
 
 
 def ensure_velocity_row(trailer: dict, velocity: dict) -> bool:
+    if trailer.get("type") == "alternate":
+        return False
     rows = velocity.setdefault("trailers", [])
     if any(t.get("youtube_id") == trailer["youtube_id"] for t in rows):
         return False

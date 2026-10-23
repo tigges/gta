@@ -1,10 +1,22 @@
 // Shared TypeScript types for GTA data models
 
+export type TrailerType =
+  | "trailer"
+  | "extended_look"
+  | "launch_trailer"
+  | "gameplay"
+  | "announcement"
+  | "spot"
+  | "alternate";
+
 export interface Trailer {
   youtube_id: string;
   title: string;
   published_at: string | null;
   source_url: string;
+  type?: TrailerType;
+  duration_sec?: number;
+  notes?: string;
 }
 
 export interface TrailersData {

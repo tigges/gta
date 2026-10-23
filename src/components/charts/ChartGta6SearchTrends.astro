@@ -5,11 +5,11 @@
  * Extracted from intel.astro and registered as a reusable chart component.
  */
 import trendsData from "../../../data/gta-6/trends/search-interest.json";
-import trailersData from "../../../data/gta-6/trailers.json";
+import { MAIN_TRAILERS } from "../../config/trailers";
 import CardFooter from "../CardFooter.astro";
 
 const keywords = trendsData.keywords;
-const trailers = (trailersData as any).trailers ?? [];
+const trailers = MAIN_TRAILERS;
 const totalPts = keywords.reduce((s: number, k: any) => s + k.data.length, 0);
 const updatedAt = new Date(trendsData.last_updated).toLocaleDateString("en-GB", { month: "short", year: "numeric" });
 ---

@@ -5,13 +5,10 @@
  * Pure data display (no D3) — renders server-side.
  */
 import velocityData from "../../../data/gta-6/trailer-velocity.json";
-import trailersData from "../../../data/gta-6/trailers.json";
+import { MAIN_TRAILER_IDS } from "../../config/trailers";
 import CardFooter from "../CardFooter.astro";
 
-const announcementIds = new Set(
-  (trailersData.trailers as any[]).filter((t) => t.type === "announcement").map((t) => t.youtube_id),
-);
-const series = (velocityData.trailers as any[]).filter((t) => !announcementIds.has(t.youtube_id));
+const series = (velocityData.trailers as any[]).filter((t) => MAIN_TRAILER_IDS.has(t.youtube_id));
 ---
 
 <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card)">

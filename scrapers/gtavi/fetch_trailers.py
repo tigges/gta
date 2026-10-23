@@ -5,18 +5,23 @@ Strategy (results are always unioned — never replace-only):
 1. YouTube Data API search on the Rockstar channel
 2. YouTube Data API videos.list for known + already-stored IDs
    (age-restricted uploads are missing from search but resolvable by ID)
-3. YouTube search scrape if no API key
-4. KNOWN_TRAILERS + existing trailers.json as a permanent registry floor
+3. Rockstar channel RSS feed (keyless, always runs — last 15 uploads)
+4. YouTube search scrape if no API key
+5. KNOWN_TRAILERS + existing trailers.json as a permanent registry floor
 
-Nightly CI always has YOUTUBE_API_KEY. Before 2026-09-02 a successful
-API hit that returned only T1/T2 overwrote trailers.json and dropped
-Extended Look (9317ecb). This file now unions; it never deletes a known
-or previously stored youtube_id.
+Before 2026-09-02 a successful API hit that returned only T1/T2
+overwrote trailers.json and dropped Extended Look (9317ecb). This file
+now unions; it never deletes a known or previously stored youtube_id.
+
+Every row carries a `type`. Only MAIN_TYPES count as trailers on the
+site; announcement cards, ad spots and alternate uploads are tracked
+but never counted, charted or briefed.
 """
 
 import os
 import re
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import requests
@@ -33,16 +38,22 @@ HEADERS = {
     )
 }
 
-ROCKSTAR_CHANNEL_ID = "UCuKONQfAQZJMKxOvj5XpHbA"
+ROCKSTAR_CHANNEL_ID = "UC6VcWc1rAoWdBCM0JxrRQ3A"
+CHANNEL_RSS_URL = f"https://www.youtube.com/feeds/videos.xml?channel_id={ROCKSTAR_CHANNEL_ID}"
 GTA6_KEYWORDS = ["gta vi", "gta 6", "grand theft auto vi", "grand theft auto 6"]
-# Title must look like official footage — not a merch/audio drop.
+# Title must look like official video — not a merch/audio drop.
 FOOTAGE_KEYWORDS = [
     "trailer",
     "extended look",
     "gameplay",
     "official look",
     "official gameplay",
+    "cover art reveal",
+    "now playing",
 ]
+
+MAIN_TYPES = {"trailer", "extended_look", "launch_trailer", "gameplay"}
+SECONDARY_TYPES = {"announcement", "spot", "alternate"}
 EXCLUDE_KEYWORDS = [
     "soundtrack",
     "playlist",
@@ -60,12 +71,14 @@ KNOWN_TRAILERS = [
         "title": "Grand Theft Auto VI — Trailer 1",
         "published_at": "2023-12-04",
         "source_url": "https://www.youtube.com/watch?v=QdBZY2fkU-0",
+        "type": "trailer",
     },
     {
         "youtube_id": "VQRLujxTm3c",
         "title": "Grand Theft Auto VI — Trailer 2",
         "published_at": "2025-05-06",
         "source_url": "https://www.youtube.com/watch?v=VQRLujxTm3c",
+        "type": "trailer",
     },
     {
         "youtube_id": "tJbzMqJGH4k",
@@ -105,9 +118,74 @@ KNOWN_TRAILERS = [
             "& The Lizard Wizard. Age-restricted on YouTube."
         ),
     },
+    {
+        "youtube_id": "INjHGpMRjRA",
+        "title": "Grand Theft Auto VI: Official Cover Art Reveal",
+        "published_at": "2026-06-18",
+        "source_url": "https://www.youtube.com/watch?v=INjHGpMRjRA",
+        "type": "announcement",
+        "notes": "Official box art reveal ahead of pre-orders. No gameplay footage — no visual brief needed.",
+    },
+    {
+        "youtube_id": "EiQEBYDox_k",
+        "title": "Grand Theft Auto VI: Official Cover Art Reveal",
+        "published_at": "2026-06-18",
+        "source_url": "https://www.youtube.com/watch?v=EiQEBYDox_k",
+        "type": "alternate",
+        "notes": "Second upload of the Cover Art Reveal on the Rockstar channel.",
+    },
+    {
+        "youtube_id": "YmzCydc4qOk",
+        "title": "Grand Theft Auto VI: An Extended Look Coming August 27",
+        "published_at": "2026-08-06",
+        "source_url": "https://www.youtube.com/watch?v=YmzCydc4qOk",
+        "type": "alternate",
+        "notes": "Second upload of the Extended Look premiere-date card.",
+    },
+    *[
+        {
+            "youtube_id": vid,
+            "title": "Grand Theft Auto VI: An Extended Look — Now Playing",
+            "published_at": "2026-08-28",
+            "source_url": f"https://www.youtube.com/watch?v={vid}",
+            "type": "spot",
+            "notes": (
+                f"'Now Playing' ad spot {n} of 6 cut from An Extended Look. "
+                "Re-edited existing footage — no new visual brief."
+            ),
+        }
+        for n, vid in enumerate(
+            ["MJOrsRRa9GM", "53C6gUqRpK4", "mAfR_ybf5WM", "L-9NI3mHZVo", "GVTE_MuInQg", "Xzxv75FjMJk"],
+            start=1,
+        )
+    ],
+    {
+        "youtube_id": "icy-lhqJhMQ",
+        "title": "Grand Theft Auto VI Launch Trailer",
+        "published_at": "2026-10-15",
+        "source_url": "https://www.youtube.com/watch?v=icy-lhqJhMQ",
+        "type": "alternate",
+        "notes": "4:3 cut of the Launch Trailer (rz1B4B2yBZY). Same footage.",
+    },
 ]
 
 CURATED_KEYS = ("type", "duration_sec", "notes")
+
+
+def infer_type(title: str) -> str:
+    """Best-guess type for a newly discovered upload with no curated row."""
+    t = (title or "").lower()
+    if "now playing" in t:
+        return "spot"
+    if "coming" in t or "reveal" in t or "premiere" in t:
+        return "announcement"
+    if "launch trailer" in t:
+        return "launch_trailer"
+    if re.search(r"an extended look\s*$", t):
+        return "extended_look"
+    if "gameplay" in t:
+        return "gameplay"
+    return "trailer"
 
 
 def is_official_footage(title: str) -> bool:
@@ -202,7 +280,30 @@ def merge_registry(discovered: list[dict], existing: list[dict] | None = None) -
             seen.add(vid)
     extras = [by_id[k] for k in by_id if k not in seen]
     extras.sort(key=lambda x: x.get("published_at") or "")
-    return ordered + extras
+    rows = ordered + extras
+
+    main_titles: set[str] = {
+        _norm_title(r.get("title")) for r in rows if r.get("type") in MAIN_TYPES
+    }
+    for r in rows:
+        if r.get("type"):
+            continue
+        inferred = infer_type(r.get("title") or "")
+        key = _norm_title(r.get("title"))
+        if inferred in MAIN_TYPES and key in main_titles:
+            inferred = "alternate"
+        r["type"] = inferred
+        if inferred in MAIN_TYPES:
+            main_titles.add(key)
+    return rows
+
+
+def _norm_title(title: str | None) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", (title or "").lower()).strip()
+
+
+def is_main(trailer: dict) -> bool:
+    return trailer.get("type") in MAIN_TYPES
 
 
 def fetch_from_youtube_api(api_key: str) -> list[dict]:
@@ -261,6 +362,39 @@ def fetch_ids_via_api(api_key: str, youtube_ids: list[str]) -> list[dict]:
         return found
     except Exception as e:
         print(f"  YouTube API videos.list error: {e}")
+        return []
+
+
+RSS_NS = {
+    "atom": "http://www.w3.org/2005/Atom",
+    "yt": "http://www.youtube.com/xml/schemas/2015",
+}
+
+
+def parse_channel_rss(xml_text: str) -> list[dict]:
+    root = ET.fromstring(xml_text)
+    out = []
+    for entry in root.findall("atom:entry", RSS_NS):
+        vid = entry.findtext("yt:videoId", default="", namespaces=RSS_NS)
+        title = entry.findtext("atom:title", default="", namespaces=RSS_NS)
+        published = entry.findtext("atom:published", default="", namespaces=RSS_NS)[:10] or None
+        if vid and is_official_footage(title):
+            out.append(_as_trailer(vid, title, published))
+    return out
+
+
+def fetch_from_channel_rss() -> list[dict]:
+    """Keyless: the channel's public Atom feed lists its 15 latest uploads."""
+    try:
+        resp = requests.get(CHANNEL_RSS_URL, headers=HEADERS, timeout=20)
+        if not resp.ok:
+            print(f"  Channel RSS: HTTP {resp.status_code}")
+            return []
+        trailers = parse_channel_rss(resp.text)
+        print(f"  Channel RSS: found {len(trailers)} official GTA VI video(s)")
+        return trailers
+    except Exception as e:
+        print(f"  Channel RSS error: {e}")
         return []
 
 
@@ -352,6 +486,7 @@ def fetch() -> list[dict]:
     else:
         discovered.extend(fetch_from_youtube_search())
         discovered.extend(fetch_from_known_ids())
+    discovered.extend(fetch_from_channel_rss())
 
     return merge_registry(discovered)
 
@@ -364,9 +499,10 @@ def main() -> None:
         print("  No videos found — keeping existing data unchanged")
         return
 
-    print(f"  Total: {len(trailers)} official video(s)")
+    main_count = sum(1 for t in trailers if is_main(t))
+    print(f"  Total: {len(trailers)} official video(s), {main_count} counted as trailers")
     for t in trailers:
-        print(f"    {t['title']} ({t['youtube_id']}) — {t.get('published_at', 'date unknown')}")
+        print(f"    [{t.get('type')}] {t['title']} ({t['youtube_id']}) — {t.get('published_at', 'date unknown')}")
 
     payload = {
         "last_updated": now_iso(),

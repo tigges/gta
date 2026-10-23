@@ -30,7 +30,7 @@ import regionsDataRaw       from "../../../data/franchise/regions-evidence.json"
 
 const predictions    = predictionsDataRaw.predictions as Prediction[];
 const incomeList     = (incomeDataRaw as any).income_predictions as any[];
-const trailersData   = trailersDataRaw as TrailersData;
+const trailersData   = trailersDataRaw as unknown as TrailersData;
 const trailers       = trailersData.trailers;
 const velocityData   = velocityDataRaw as any;
 const delayData      = delayDataRaw as any;
