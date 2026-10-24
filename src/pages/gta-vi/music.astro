@@ -1,0 +1,123 @@
+---
+/**
+ * /gta-vi/music — official Rockstar radio station players and album singles,
+ * plus every song confirmed in the trailers (30s previews where hosted).
+ */
+import Base from "../../layouts/Base.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import GtaViMusic from "../../components/GtaViMusic.astro";
+import soundtrackData from "../../../data/gta-6/soundtrack.json";
+import musicData from "../../../data/gta-6/music.json";
+
+const confirmedSongs = ((soundtrackData as any).tracks ?? []).map((t: any) => ({
+  title: t.title as string,
+  artist: t.artist as string,
+  trailer: t.source as string,
+  year: t.year as number,
+}));
+
+// 30-second preview clips (trimmed, fade-out) for songs we host audio for.
+// Keyed by exact song title. Full tracks are intentionally not hosted (copyright).
+const SONG_PREVIEWS: Record<string, string> = {
+  "Love Is a Long Road": "/assets/audio/love-is-a-long-road-preview.mp3",
+  "Hot Together":        "/assets/audio/hot-together-preview.mp3",
+};
+
+const stationCount = musicData.radio.stations.length;
+---
+
+<Base
+  titleContext="gta-vi"
+  title="GTA VI Music & Radio"
+  description={`GTA VI's confirmed soundtrack — ${stationCount} official radio stations you can play from Rockstar, the album singles and ${confirmedSongs.length} trailer songs with previews.`}
+  ogPage="vi-intel"
+  crossLinksContext="vi-intel"
+>
+  <section class="border-b border-border-dim">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-10">
+      <span class="text-[11px] font-mono bg-gta-green/10 text-gta-green border border-gta-green/20 px-2 py-0.5 rounded uppercase tracking-widest">Official audio only</span>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mt-3 mb-2">GTA VI Music &amp; Radio</h1>
+      <p class="text-zinc-400 text-sm max-w-lg leading-relaxed">
+        Rockstar's own radio station players, the album singles and every song confirmed in the trailers.
+        Players load only when you press play; nothing is re-hosted beyond 30-second previews.
+      </p>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-14">
+    <GtaViMusic />
+
+    <!-- ═══════════════════════════════════════════════════════
+         GTA VI CONFIRMED SOUNDTRACK — Trailer Songs
+    ═══════════════════════════════════════════════════════ -->
+    {confirmedSongs.length > 0 && (
+    <section id="section-soundtrack" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// Confirmed Soundtrack — Trailers + Extended Look" dotColor="var(--c-growth)" />
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
+        <div class="grid grid-cols-1 md:grid-cols-2">
+          {confirmedSongs.map((song, i) => {
+            const preview = SONG_PREVIEWS[song.title];
+            const sourceBadge = song.trailer === "Extended Look" ? "EL"
+              : song.trailer === "Trailer 1" ? "T1"
+              : song.trailer === "Trailer 2" ? "T2"
+              : song.trailer;
+            return (
+            <div class="px-5 py-3 flex items-center gap-3 border-b border-border-dim">
+              {preview ? (
+                <>
+                  <button
+                    class="song-play w-7 h-7 rounded bg-gta-green/10 border border-gta-green/20 flex items-center justify-center shrink-0 hover:bg-gta-green/20 transition-colors"
+                    data-audio={`song-audio-${i}`}
+                    aria-label={`Play 30-second preview of ${song.title}`}
+                    type="button"
+                  >
+                    <span class="song-play-icon text-gta-green text-[11px] leading-none">▶</span>
+                  </button>
+                  <audio id={`song-audio-${i}`} class="song-audio" src={preview} preload="none"></audio>
+                </>
+              ) : (
+                <div class="w-7 h-7 rounded bg-gta-green/10 border border-gta-green/20 flex items-center justify-center shrink-0">
+                  <span class="text-gta-green text-xs">♪</span>
+                </div>
+              )}
+              <div class="flex-1 min-w-0">
+                <div class="text-sm font-semibold text-zinc-200 leading-tight">{song.title}</div>
+                <div class="text-[11px] font-mono text-zinc-500 mt-0.5">{song.artist} · {song.year}{preview ? " · 30s preview" : ""}</div>
+              </div>
+              <div class="shrink-0 text-right">
+                <span class="text-[10px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">{sourceBadge}</span>
+              </div>
+            </div>
+            );
+          })}
+        </div>
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between">
+          <span class="text-[10px] text-zinc-500 font-mono">Source: official trailers + Extended Look · {confirmedSongs.length} confirmed tracks</span>
+          <span class="text-[11px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span>
+        </div>
+      </div>
+    </section>
+    )}
+
+  </div>
+
+  <script>
+    // Soundtrack preview playback — native <audio>, one clip at a time.
+    document.querySelectorAll<HTMLButtonElement>(".song-play").forEach(btn => {
+      const audio = document.getElementById(btn.dataset.audio ?? "") as HTMLAudioElement | null;
+      const icon  = btn.querySelector<HTMLElement>(".song-play-icon");
+      if (!audio || !icon) return;
+      btn.addEventListener("click", () => {
+        const wasPlaying = !audio.paused;
+        document.querySelectorAll<HTMLAudioElement>(".song-audio").forEach(a => a.pause());
+        document.querySelectorAll<HTMLElement>(".song-play-icon").forEach(i => { i.textContent = "▶"; });
+        if (!wasPlaying) {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+          icon.textContent = "⏸";
+        }
+      });
+      audio.addEventListener("ended", () => { icon.textContent = "▶"; });
+    });
+  </script>
+</Base>

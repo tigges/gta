@@ -1,0 +1,115 @@
+---
+/**
+ * /gta-vi/trailers — index of every official GTA VI video. Main trailers link
+ * to their visual brief where one exists; announcement cards, ad spots and
+ * alternate uploads are listed compactly below.
+ */
+import Base from "../../layouts/Base.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import Badge from "../../components/Badge.astro";
+import CardFooter from "../../components/CardFooter.astro";
+import ExtendedLookStills from "../../components/ExtendedLookStills.astro";
+import { ALL_TRAILERS, MAIN_TRAILERS } from "../../config/trailers";
+import velocityData from "../../../data/gta-6/trailer-velocity.json";
+
+const BRIEFS: Record<string, string> = {
+  rz1B4B2yBZY: "/gta-vi/launch-trailer",
+  tJbzMqJGH4k: "/gta-vi/extended-look",
+};
+
+const latestViews = new Map<string, number>(
+  velocityData.trailers.map((t) => [t.youtube_id, t.snapshots.at(-1)?.views ?? 0]),
+);
+const viewsAsOf = velocityData.trailers[0]?.snapshots.at(-1)?.timestamp?.slice(0, 10) ?? null;
+
+const formatViews = (n: number) =>
+  n >= 1e9 ? `${(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${Math.round(n / 1e6)}M` : n >= 1e3 ? `${Math.round(n / 1e3)}k` : String(n);
+const formatDuration = (s?: number) =>
+  s ? (s >= 60 ? `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s` : `${s}s`) : null;
+const formatDate = (d: string | null) =>
+  d ? new Date(d + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }) : "—";
+
+const mainTrailers = MAIN_TRAILERS.slice().sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
+const totalMainViews = mainTrailers.reduce((n, t) => n + (latestViews.get(t.youtube_id) ?? 0), 0);
+
+const OTHER_LABEL: Record<string, string> = { announcement: "Announcement", spot: "Ad spot", alternate: "Alternate upload" };
+const otherVideos = ALL_TRAILERS
+  .filter((t) => !MAIN_TRAILERS.includes(t))
+  .sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
+---
+
+<Base
+  titleContext="gta-vi"
+  title="GTA VI Trailers"
+  description={`Every official GTA VI trailer in one place — ${mainTrailers.length} trailers with ${formatViews(totalMainViews)} YouTube views, visual briefs for the Launch Trailer and Extended Look, plus every spot and announcement.`}
+  ogPage="vi-intel"
+  crossLinksContext="vi-intel-trailers"
+>
+  <section class="border-b border-border-dim">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-10">
+      <Badge variant="confirmed" />
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mt-3 mb-2">GTA VI Trailers</h1>
+      <p class="text-zinc-400 text-sm max-w-lg leading-relaxed">
+        {mainTrailers.length} official trailers, {formatViews(totalMainViews)} views on Rockstar's YouTube channel.
+        The Launch Trailer and An Extended Look each have a frame-by-frame visual brief.
+      </p>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-14">
+
+    <section id="section-trailers" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// Official Trailers" dotColor="var(--c-title-vi)" pillHref="/charts?title=gta-vi" pillLabel="View velocity chart →" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {mainTrailers.map((t) => {
+          const brief = BRIEFS[t.youtube_id];
+          const views = latestViews.get(t.youtube_id);
+          const duration = formatDuration(t.duration_sec);
+          return (
+            <article class="rounded-xl border border-border-dim overflow-hidden flex flex-col" style="background:var(--c-card)">
+              <a href={brief ?? t.source_url} target={brief ? undefined : "_blank"} rel={brief ? undefined : "noopener noreferrer"} class="group relative block aspect-video overflow-hidden">
+                <img src={`https://img.youtube.com/vi/${t.youtube_id}/hqdefault.jpg`} alt={t.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%,transparent 55%)"></div>
+                <div class="absolute top-0 left-0"><Badge variant="gta-vi" surface="opaque" /></div>
+                {duration && <span class="absolute bottom-2 right-2 text-[10px] font-mono text-zinc-300 rounded px-1.5 py-0.5" style="background:color-mix(in srgb,var(--c-bg-deep) 85%,transparent)">{duration}</span>}
+              </a>
+              <div class="px-4 py-3 flex flex-col gap-1 flex-1">
+                <h2 class="text-sm font-semibold text-zinc-200 leading-snug">{t.title.replace(/^Grand Theft Auto VI:?\s*/, "")}</h2>
+                <div class="text-[11px] font-mono text-zinc-500">
+                  {formatDate(t.published_at)}{views ? ` · ${formatViews(views)} views` : ""}
+                </div>
+                <div class="flex items-center gap-4 mt-auto pt-2">
+                  {brief && <a href={brief} class="text-[11px] font-mono text-gta-gold hover:text-gta-bright transition-colors">Visual brief →</a>}
+                  <a href={t.source_url} target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors">Watch on YouTube ↗</a>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+
+    <ExtendedLookStills compact detailHref="/gta-vi/extended-look" />
+
+    <section id="section-other-videos" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// Spots, Announcements & Alternate Uploads" dotColor="var(--c-text-4)" />
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
+        <ul class="divide-y divide-border-dim">
+          {otherVideos.map((t) => {
+            const views = latestViews.get(t.youtube_id);
+            return (
+              <li class="px-5 py-3 flex items-center gap-3 flex-wrap">
+                <span class="text-[10px] font-mono uppercase tracking-widest text-zinc-500 w-32 shrink-0">{OTHER_LABEL[t.type ?? ""] ?? t.type}</span>
+                <a href={t.source_url} target="_blank" rel="noopener noreferrer" class="text-sm text-zinc-300 hover:text-white transition-colors flex-1 min-w-0">
+                  {t.title.replace(/^Grand Theft Auto VI:?\s*/, "")} ↗
+                </a>
+                <span class="text-[11px] font-mono text-zinc-500 shrink-0">{formatDate(t.published_at)}{views ? ` · ${formatViews(views)}` : ""}</span>
+              </li>
+            );
+          })}
+        </ul>
+        <CardFooter anchorId="section-other-videos" sources={`Source: Rockstar Games YouTube channel${viewsAsOf ? ` · views as of ${viewsAsOf}` : ""}`} shareText="Every official GTA VI video — trailers, spots and announcements — tracked on GTAVI.AI." />
+      </div>
+    </section>
+  </div>
+</Base>

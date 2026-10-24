@@ -115,11 +115,3 @@ const humanise = (k: string) => k.replace(/_/g, " ");
     <CardFooter anchorId="section-rdr2" sources="Source: RDR2 Fandom Wiki · community payout benchmarks · GTAVI.AI predictions" shareText="The RDR2 systems behind GTA VI's economy predictions — honour pricing, hunting, roles and more." />
   </div>
 </section>
-
-<script>
-  document.querySelectorAll<HTMLAnchorElement>("[data-pred-link]").forEach((a) => {
-    a.addEventListener("click", () => {
-      document.querySelectorAll(".pred-extra").forEach((el) => el.classList.remove("hidden"));
-    });
-  });
-</script>
