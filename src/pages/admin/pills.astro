@@ -60,9 +60,9 @@ const pillClusters: PillCluster[] = [
     note: "Evidence quality and status badges. confirmed/reported/predicted/indexed used on predictions and cast cards. alert for breaking news.",
     surfaceNote: "surface: opaque over thumbnails · tint in rows/context",
     rows: [
-      { id: "confirmed", label: "Confirmed", kind: "badge", variant: "confirmed", surface: "opaque", colorToken: "var(--c-live)",   hex: "#0d9488", central: "✅", sampleUrl: "/gta-vi/intel",     usage: "Official/confirmed facts, cast and feature cards. Top-right over thumbnail." },
-      { id: "reported",  label: "Reported",  kind: "badge", variant: "reported",  surface: "opaque", colorToken: "var(--c-brand)",  hex: "#f59e0b", central: "✅", sampleUrl: "/gta-vi/intel",     usage: "Reported mechanics and externally sourced predictions." },
-      { id: "predicted", label: "Predicted", kind: "badge", variant: "predicted", surface: "opaque", colorToken: "var(--c-text-2)", hex: "#d4d4d8", central: "✅", sampleUrl: "/gta-vi/intel",     usage: "Model-derived predictions." },
+      { id: "confirmed", label: "Confirmed", kind: "badge", variant: "confirmed", surface: "opaque", colorToken: "var(--c-live)",   hex: "#0d9488", central: "✅", sampleUrl: "/gta-vi/predictions",     usage: "Official/confirmed facts, cast and feature cards. Top-right over thumbnail." },
+      { id: "reported",  label: "Reported",  kind: "badge", variant: "reported",  surface: "opaque", colorToken: "var(--c-brand)",  hex: "#f59e0b", central: "✅", sampleUrl: "/gta-vi/predictions",     usage: "Reported mechanics and externally sourced predictions." },
+      { id: "predicted", label: "Predicted", kind: "badge", variant: "predicted", surface: "opaque", colorToken: "var(--c-text-2)", hex: "#d4d4d8", central: "✅", sampleUrl: "/gta-vi/predictions",     usage: "Model-derived predictions." },
       { id: "indexed",   label: "Indexed",   kind: "badge", variant: "indexed",   surface: "tint",   colorToken: "var(--c-text-2)", hex: "#d4d4d8", central: "✅", sampleUrl: "/database",        usage: "Database entity state — same visual as predicted." },
       { id: "alert",     label: "Alert",     kind: "badge", variant: "alert",     surface: "tint",   colorToken: "var(--c-alert)",  hex: "#ef4444", central: "✅", sampleUrl: "/news",             usage: "Breaking news, risk or delay status." },
     ],
@@ -81,7 +81,7 @@ const pillClusters: PillCluster[] = [
       { id: "mc",           label: "MC Business",  kind: "local",                          surface: "tint", colorToken: "var(--c-text-4)",       hex: "#9898b8", central: "⚠️", sampleUrl: "/database",                               usage: "Token in semanticTypes.ts; no Badge variant — use ColorLabel." },
       { id: "ceo",          label: "CEO/VIP",      kind: "local",                          surface: "tint", colorToken: "var(--c-text-4)",       hex: "#9898b8", central: "⚠️", sampleUrl: "/database",                               usage: "Token in semanticTypes.ts; no Badge variant — use ColorLabel." },
       { id: "contract",     label: "Contract",     kind: "badge", variant: "contract",     surface: "tint", colorToken: "var(--c-live)",         hex: "#0d9488", central: "✅", sampleUrl: "/gta-online/cayo-perico",                 usage: "Contract-style earning loop." },
-      { id: "business",     label: "Business",     kind: "badge", variant: "business",     surface: "tint", colorToken: "var(--c-live)",         hex: "#0d9488", central: "✅", sampleUrl: "/gta-vi/intel#section-income-predictions", usage: "Business income prediction cards." },
+      { id: "business",     label: "Business",     kind: "badge", variant: "business",     surface: "tint", colorToken: "var(--c-live)",         hex: "#0d9488", central: "✅", sampleUrl: "/gta-vi/predictions#section-income-predictions", usage: "Business income prediction cards." },
     ],
   },
   {

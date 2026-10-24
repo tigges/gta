@@ -271,7 +271,7 @@ def run_draft_publish(updater: PredictionUpdater) -> None:
         obj.setdefault("trailer_timestamp", None)
         obj.setdefault("thumbnail", None)
         obj.setdefault("unit", None)
-        obj.setdefault("pages", ["gta-vi/intel"])
+        obj.setdefault("pages", ["gta-vi/predictions"])
         obj.setdefault("display_order", 99)
 
         ok, reason = passes_quality_gate(obj)

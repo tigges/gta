@@ -3,7 +3,7 @@
  *
  * Maps each features.json category id to a brand HUD pictogram (HudIcon),
  * replacing the emoji icons. Single source of truth so the homepage teaser
- * and the full /gta-vi/intel tracker stay in sync.
+ * and the full /gta-vi/confirmed tracker stay in sync.
  */
 export const FEATURE_CATEGORY_ICON: Record<string, string> = {
   regions:    "map-pin",     // location pin

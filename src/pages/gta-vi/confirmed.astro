@@ -1,0 +1,279 @@
+---
+/**
+ * /gta-vi/confirmed — "What we know": everything Rockstar or Take-Two has
+ * confirmed about GTA VI. October reveals, feature tracker, cast, locations, FAQ.
+ */
+import Base from "../../layouts/Base.astro";
+import HudIcon from "../../components/HudIcon.astro";
+import { FEATURE_CATEGORY_ICON } from "../../config/featureIcons";
+import ShareDropdown from "../../components/ShareDropdown.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import CastCard from "../../components/CastCard.astro";
+import Badge from "../../components/Badge.astro";
+import OctoberConfirmations from "../../components/OctoberConfirmations.astro";
+import Countdown from "../../components/Countdown.astro";
+
+import featuresData from "../../../data/gta-6/features.json";
+import octoberData  from "../../../data/gta-6/october-confirmations.json";
+
+const gtaViFaqs = [
+  {
+    question: "Will GTA VI have Shark Cards?",
+    answer: "Rockstar has not published the final GTA VI Online monetisation model, but GTAVI.AI treats Shark Cards or an equivalent GTA$ purchase rail as highly likely because GTA Online has used real-money GTA$ injection for more than a decade.",
+  },
+  {
+    question: "Will GTA VI have GTA+?",
+    answer: "GTA+ has not been formally detailed for GTA VI, but it is already the live subscription layer for GTA Online. The economy model expects GTA+ or a successor membership to influence recurring rewards, discounts, and player retention.",
+  },
+  {
+    question: "Will GTA VI Online have businesses and passive income?",
+    answer: "Businesses and passive income are predicted because GTA Online's long-term economy relies on properties, enterprises, and repeatable payouts. Confirmed GTA VI locations give Rockstar enough regional variety to reuse and expand that structure.",
+  },
+  {
+    question: "Will GTA VI have fuel, regional prices, or a deeper economy?",
+    answer: "Fuel and regional price divergence are still predictions. The Extended Look and IGN preview do confirm that money matters more: store robberies trade speed against take, specialised fences convert loot, WAINK prices cars before you steal them, and some story beats may gate on raised cash.",
+  },
+  {
+    question: "How much will GTA VI cost at launch?",
+    answer: "The current GTAVI.AI launch-price model tracks the industry shift toward premium pricing and assigns confidence based on Rockstar's release history, platform generation, and comparable AAA launches.",
+  },
+  {
+    question: "Are GTAVI.AI predictions official?",
+    answer: "No. GTAVI.AI separates official, reported, and predicted signals. Each card shows confidence, source type, and the basis used so readers can distinguish confirmed Rockstar information from model-derived forecasts.",
+  },
+] as const;
+
+const OCT_BY_CATEGORY = octoberData.items.reduce<Record<string, string[]>>((acc, item) => {
+  if (item.feature_category) (acc[item.feature_category] ??= []).push(item.id);
+  return acc;
+}, {});
+
+const CAT_THUMBS: Record<string,string> = {
+  regions:    "/assets/gta6/locations/Vice_City_06.jpg",
+  vehicles:   "/assets/gta6/locations/Port_Gellhorn_03.jpg",
+  characters: "/assets/gta6/characters/Lucia_Caminos_01.jpg",
+  weapons:    "/assets/gta6/locations/Grassrivers_03.jpg",
+  businesses: "/assets/gta6/locations/Ambrosia_02.jpg",
+  activities: "/assets/gta6/locations/Leonida_Keys_01.jpg",
+  wildlife:   "/assets/gta6/locations/Grassrivers_01.jpg",
+  online:     "/assets/gta6/locations/Vice_City_03.jpg",
+};
+
+const trackedEntries = featuresData.categories.reduce((s, c) => s + c.confirmed + c.reported, 0);
+
+const JUMP_LINKS = [
+  { href: "#section-october",         label: "October reveals" },
+  { href: "#section-feature-tracker", label: "Feature tracker" },
+  { href: "#section-cast",            label: "Cast" },
+  { href: "#section-locations",       label: "Locations" },
+  { href: "#section-vi-faq",          label: "FAQ" },
+];
+---
+
+<Base
+  titleContext="gta-vi"
+  title="What we know about GTA VI"
+  description={`Everything confirmed about GTA VI so far — ${octoberData.items.length} October reveals, ${trackedEntries} tracked features, the cast, Leonida's regions and answers to the most-asked questions.`}
+  ogPage="vi-intel"
+  crossLinksContext="vi-intel"
+>
+<script is:inline type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": gtaViFaqs.map((faq) => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
+  }))
+})}</script>
+
+  <section class="relative overflow-hidden border-b border-border-dim">
+    <div class="absolute inset-0" aria-hidden="true">
+      <img src="/assets/gta6/locations/Vice_City_06.jpg" alt="" class="w-full h-full object-cover opacity-40" loading="eager" />
+    </div>
+    <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg) 0%,color-mix(in srgb,var(--c-bg) 70%,transparent) 60%,var(--c-bg) 100%)"></div>
+    <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 50%,var(--c-bg) 100%)"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-10">
+      <Badge variant="confirmed" />
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mt-3 mb-2">What we know about GTA VI</h1>
+      <p class="text-zinc-400 text-sm max-w-lg leading-relaxed mb-4">
+        Only what Rockstar or Take-Two has shown or said, with the source on every item.
+        Forecasts live on <a href="/gta-vi/predictions" class="text-zinc-200 underline decoration-zinc-600 hover:decoration-zinc-300">Predictions</a>.
+      </p>
+      <div class="flex flex-wrap gap-2 mb-5">
+        {JUMP_LINKS.map((l) => (
+          <a href={l.href} class="text-[10px] font-mono uppercase tracking-widest border border-border-mid rounded px-2 py-0.5 text-zinc-400 hover:text-zinc-200 transition-colors">{l.label}</a>
+        ))}
+      </div>
+      <Countdown variant="hero" />
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-14">
+
+    <OctoberConfirmations />
+
+    <!-- ═══════════════════════════════════════════════════════
+         CONFIRMED FEATURE TRACKER
+    ═══════════════════════════════════════════════════════ -->
+    <section id="section-feature-tracker" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// GTA VI Confirmed Feature Tracker" dotColor="var(--c-live)" />
+      <div class="rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
+        <div class="px-5 py-4 border-b border-border-dim flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <div class="font-semibold text-zinc-200 text-sm">
+              What's confirmed, reported and indexed so far
+            </div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Progress toward estimated full-game totals · {trackedEntries} entries tracked</div>
+          </div>
+          <div class="flex items-center gap-4 text-[10px] font-mono text-zinc-500">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-gta-gold inline-block"></span>Confirmed</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-zinc-500 inline-block"></span>Reported</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-zinc-800 border border-zinc-700 inline-block"></span>Target</span>
+          </div>
+        </div>
+        <!-- Visual category cards grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-border-dim">
+          {featuresData.categories.map((cat) => {
+            const confirmedPct = Math.round((cat.confirmed / cat.target) * 100);
+            const reportedPct  = Math.round((cat.reported  / cat.target) * 100);
+            const indexedPct   = Math.round((cat.indexed   / cat.target) * 100);
+            const thumb = CAT_THUMBS[cat.id];
+            return (
+              <div class="relative group overflow-hidden">
+                <!-- Background thumbnail -->
+                {thumb && (
+                  <div class="absolute inset-0">
+                    <img src={thumb} alt="" class="w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-500 group-hover:scale-105" loading="lazy" aria-hidden="true" />
+                    <div class="absolute inset-0" style="background:linear-gradient(to bottom,var(--c-card) 0%,transparent 40%,var(--c-card) 100%)"></div>
+                  </div>
+                )}
+                <div class="relative px-5 py-5">
+                  <!-- Icon + label -->
+                  <div class="flex items-center gap-2 mb-3">
+                    <HudIcon name={(FEATURE_CATEGORY_ICON[cat.id] ?? "intel") as any} size={22} class="text-gta-gold" />
+                    <span class="text-sm font-bold text-zinc-200">{cat.label}</span>
+                  </div>
+                  <!-- Stats -->
+                  <div class="flex items-baseline gap-1.5 mb-3">
+                    <span class="text-2xl font-mono font-bold text-gta-gold">{cat.confirmed}</span>
+                    <span class="text-[10px] font-mono text-zinc-500">confirmed</span>
+                    <span class="text-zinc-500 mx-1">·</span>
+                    <span class="text-base font-mono text-zinc-400">{cat.reported}</span>
+                    <span class="text-[10px] font-mono text-zinc-500">reported</span>
+                  </div>
+                  <!-- Progress bar -->
+                  <div class="h-1.5 rounded-full overflow-hidden flex" style="background:var(--c-border-1)">
+                    {confirmedPct > 0 && <div class="h-full bg-gta-gold" style={`width:${confirmedPct}%`}></div>}
+                    {reportedPct  > 0 && <div class="h-full bg-zinc-500 ml-px" style={`width:${reportedPct}%`}></div>}
+                    {indexedPct   > 0 && <div class="h-full bg-zinc-700 ml-px" style={`width:${indexedPct}%`}></div>}
+                  </div>
+                  <div class="flex items-center justify-between mt-1">
+                    <span class="text-[11px] font-mono text-zinc-500">{confirmedPct}% of target</span>
+                    <span class="text-[11px] font-mono text-zinc-500">/ {cat.target}</span>
+                  </div>
+                  {cat.notes && (
+                    <p class="text-[10px] text-zinc-500 mt-2 leading-snug">{cat.notes}</p>
+                  )}
+                  {OCT_BY_CATEGORY[cat.id] && (
+                    <a href={`#${OCT_BY_CATEGORY[cat.id][0]}`} class="inline-block mt-2 text-[10px] font-mono text-gta-gold hover:text-gta-bright transition-colors">
+                      +{OCT_BY_CATEGORY[cat.id].length} October {OCT_BY_CATEGORY[cat.id].length === 1 ? "reveal" : "reveals"} →
+                    </a>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div class="px-5 py-3 border-t border-border-dim flex items-center justify-between gap-3">
+          <span class="text-[10px] text-zinc-500 font-mono">Sources: {featuresData.source}</span>
+          <div class="flex items-center gap-3 shrink-0"><span class="text-[11px] font-mono text-zinc-500 tracking-widest">GTAVI.AI</span><ShareDropdown anchorId="feature-tracker" shareText={`GTA VI Feature Tracker: ${trackedEntries} entries tracked — vehicles, characters, locations, weapons and more confirmed so far.`} size="sm" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CONFIRMED CAST
+    ═══════════════════════════════════════════════════════ -->
+    <section id="section-cast" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// Confirmed Cast" />
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <CastCard name="Lucia Caminos"  role="Protagonist" img="Lucia_Caminos_01.jpg"  video="Lucia_Caminos_Video_Clip.mp4"  />
+        <CastCard name="Jason Duval"    role="Protagonist" img="Jason_Duval_01.jpg"    video="Jason_Duval_Video_Clip.mp4"    />
+        <CastCard name="Raul Bautista"  role="Supporting"  img="Raul_Bautista_01.jpg"  video="Raul_Bautista_Video_Clip.mp4"  />
+        <CastCard name="Boobie Ike"     role="Supporting"  img="Boobie_Ike_01.jpg"     video="Boobie_Ike_Video_Clip.mp4"     />
+        <CastCard name="Brian Heder"    role="Supporting"  img="Brian_Heder_01.jpg"    video="Brian_Heder_Video_Clip.mp4"    />
+        <CastCard name="Cal Hampton"    role="Supporting"  img="Cal_Hampton_01.jpg"    video="Cal_Hampton_Video_Clip.mp4"    />
+        <CastCard name="DreQuan Priest" role="Supporting"  img="DreQuan_Priest_01.jpg" video="DreQuan_Priest_Video_Clip.mp4" />
+        <CastCard name="Real Dimez"     role="Supporting"  img="Real_Dimez_01.jpg"     video="Real_Dimez_Video_Clip.mp4"     />
+      </div>
+      <p class="text-[11px] font-mono text-zinc-500 mt-3">
+        Also named in the Extended Look, no official portrait still:
+        Raymond · Ernesto · Méndez · Aunt Tee.
+        <a href="/gta-vi/extended-look#el-ch-m1" class="text-zinc-400 hover:text-zinc-200 transition-colors">Mission 1 notes →</a>
+      </p>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         LEONIDA — LOCATIONS
+    ═══════════════════════════════════════════════════════ -->
+    <section id="section-locations" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// Leonida — Confirmed Locations" dotColor="var(--c-live)" pillHref="/gta-vi/extended-look#el-map" pillLabel="EL map stills →" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {([
+          { name: "Vice City",      desc: "Urban hub — streets, nightlife, coast",   img: "Vice_City_04.jpg",                  shots: 12, note: null },
+          { name: "Vice Beach",     desc: "Ocean Beach analog — named in EL at 24:00", img: "Vice_City_05.jpg",               shots: 1,  note: "EL" },
+          { name: "Ambrosia",       desc: "Named region — outskirts and industry",    img: "Ambrosia_02.jpg",                   shots: 5,  note: null },
+          { name: "Grassrivers",    desc: "Wetlands — Leonida Everglades analog",    img: "Grassrivers_02.jpg",                shots: 4,  note: null },
+          { name: "Leonida Keys",   desc: "Island chain south of Vice City",          img: "Leonida_Keys_03.jpg",               shots: 5,  note: null },
+          { name: "Port Gellhorn",  desc: "Industrial port district",                 img: "Port_Gellhorn_02.jpg",              shots: 5,  note: null },
+          { name: "Mount Kalaga",   desc: "National park — mountainous interior",     img: "Mount_Kalaga_National_Park_04.jpg", shots: 6,  note: null },
+          { name: "Kelly County",   desc: "Named rural county — EL 16:40",            img: "Mount_Kalaga_National_Park_03.jpg", shots: 0,  note: "EL · nearest still" },
+          { name: "Hamlet",         desc: "Named rural district — EL 16:10",          img: "Grassrivers_01.jpg",                shots: 0,  note: "EL · nearest still" },
+        ] as const).map(loc => (
+          <div class="group relative overflow-hidden rounded-xl border border-border-dim hover:border-gta-teal/30 transition-all duration-300 cursor-default">
+            <div class="aspect-video overflow-hidden">
+              <img
+                src={`/assets/gta6/locations/${loc.img}`}
+                alt={loc.name}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0" style="background:linear-gradient(to top,var(--c-bg) 0%, color-mix(in srgb,var(--c-bg) 44%, transparent) 40%, transparent 70%)"></div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 px-4 pb-4">
+              <div class="flex items-center gap-2 mb-0.5">
+                <Badge variant="confirmed" />
+                <span class="text-[10px] font-mono text-zinc-500">{loc.note ?? `${loc.shots} official shots`}</span>
+              </div>
+              <div class="text-sm font-bold text-white leading-tight">{loc.name}</div>
+              <div class="text-[11px] text-zinc-400 mt-0.5">{loc.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         GTA VI FAQ
+    ═══════════════════════════════════════════════════════ -->
+    <section id="section-vi-faq">
+      <SectionHeader bright label="// GTA VI FAQ" dotColor="var(--c-brand)" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {gtaViFaqs.map((faq) => (
+          <details class="group rounded-xl border border-border-dim overflow-hidden" style="background:var(--c-card-raised)">
+            <summary class="flex items-center justify-between gap-3 px-5 py-4 cursor-pointer list-none marker:content-none [&::-webkit-details-marker]:hidden">
+              <h2 class="text-sm font-bold text-zinc-200 leading-snug">{faq.question}</h2>
+              <span class="text-zinc-500 text-xs font-mono shrink-0 transition-transform duration-150 group-open:rotate-180">&#9662;</span>
+            </summary>
+            <p class="px-5 pb-4 text-sm text-zinc-400 leading-relaxed">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>

@@ -5,9 +5,14 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   output: 'static',
   site: 'https://gtavi.ai',
-  integrations: [tailwind(), sitemap()],
+  integrations: [
+    tailwind(),
+    sitemap({
+      filter: (page) => !/^\/(gta-vi\/intel|predictions)\/$/.test(new URL(page).pathname),
+    }),
+  ],
   redirects: {
-    '/community/polls': '/gta-vi/intel',
+    '/community/polls': '/gta-vi/predictions',
     '/gta-online/income': '/database?game=gta-online',
   },
   vite: {

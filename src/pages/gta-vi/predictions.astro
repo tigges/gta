@@ -1,0 +1,178 @@
+---
+/**
+ * /gta-vi/predictions — every tracked GTA VI prediction, filterable by tier,
+ * plus the RDR2 evidence behind them and the GTA VI Online income teaser.
+ */
+import Base from "../../layouts/Base.astro";
+import PredictionCard from "../../components/PredictionCard.astro";
+import Rdr2Evidence from "../../components/Rdr2Evidence.astro";
+import IncomeCard from "../../components/IncomeCard.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import StatBox from "../../components/StatBox.astro";
+import FilterPill from "../../components/FilterPill.astro";
+import Countdown from "../../components/Countdown.astro";
+
+import type { Prediction } from "../../types/gta";
+import predictionsData from "../../config/predictions";
+import incomeData from "../../../data/gta-6/income-predictions.json";
+
+const TIER_RANK: Record<string, number> = { confirmed: 0, reported: 1, predicted: 2 };
+
+const predictions = (predictionsData.predictions as Prediction[])
+  .slice()
+  .sort((a, b) => (a.display_order ?? 99) - (b.display_order ?? 99));
+
+const countBy = (tier: string) => predictions.filter((p) => p.confidence_tier === tier).length;
+const nConfirmed = countBy("confirmed");
+const nReported  = countBy("reported");
+const nPredicted = countBy("predicted");
+
+const TIER_FILTERS = [
+  { id: "all",       label: `All ${predictions.length}`,   color: "var(--c-text-2)" },
+  { id: "confirmed", label: `Confirmed ${nConfirmed}`,     color: "var(--c-live)" },
+  { id: "reported",  label: `Reported ${nReported}`,       color: "var(--c-brand)" },
+  { id: "predicted", label: `Predicted ${nPredicted}`,     color: "var(--c-text-2)" },
+];
+
+const PRED_THUMBS: Record<string, string> = {
+  "pred-release-window":  "/assets/gta6/characters/Lucia_Caminos_05.jpg",
+  "pred-launch-price":    "/assets/gta6/locations/Ambrosia_01.jpg",
+  "pred-map-size":        "/assets/gta6/locations/Leonida_Keys_02.jpg",
+  "pred-vehicles-launch": "/assets/gta6/locations/Port_Gellhorn_04.jpg",
+};
+
+const incomeList = (incomeData as any).income_predictions as any[];
+const incomeTeaser = incomeList
+  .slice()
+  .sort((a, b) => (TIER_RANK[a.confidence_tier] ?? 2) - (TIER_RANK[b.confidence_tier] ?? 2))
+  .slice(0, 4);
+---
+
+<Base
+  titleContext="gta-vi"
+  title="GTA VI Predictions"
+  description={`${predictions.length} GTA VI predictions, confidence-scored from 30 years of GTA data — ${nConfirmed} confirmed, ${nReported} reported, ${nPredicted} still open. Launch price, sales, PC date, income and Shark Card mechanics.`}
+  ogPage="vi-intel"
+  crossLinksContext="vi-intel"
+>
+  <section class="relative overflow-hidden border-b border-border-dim">
+    <div class="absolute inset-0 flex" aria-hidden="true">
+      <div class="flex-1 relative overflow-hidden">
+        <img src="/assets/gta6/characters/Lucia_Caminos_03.jpg" alt="" class="w-full h-full object-cover object-top opacity-60" loading="eager" />
+      </div>
+      <div class="flex-1 relative overflow-hidden">
+        <img src="/assets/gta6/characters/Jason_Duval_02.jpg" alt="" class="w-full h-full object-cover object-top opacity-60" loading="eager" />
+      </div>
+    </div>
+    <div class="absolute inset-0" style="background:linear-gradient(to right,var(--c-bg) 0%,color-mix(in srgb,var(--c-bg) 70%,transparent) 55%,var(--c-bg) 100%)"></div>
+    <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 50%,var(--c-bg) 100%)"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-10">
+      <span class="text-[11px] font-mono bg-gta-gold/10 text-gta-gold border border-gta-gold/20 px-2 py-0.5 rounded uppercase tracking-widest">Community estimates · not official</span>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mt-3 mb-2">GTA VI Predictions</h1>
+      <p class="text-zinc-400 text-sm max-w-lg leading-relaxed mb-5">
+        Confidence-scored signals, not speculation. Each card shows its tier, its basis and the source,
+        and moves to <em>confirmed</em> only when Rockstar or Take-Two says so.
+      </p>
+      <Countdown variant="hero" />
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-14">
+
+    <section id="section-predictions" style="scroll-margin-top:80px">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+        <StatBox value={predictions.length} label="Predictions tracked" color="var(--c-text-1)" />
+        <StatBox value={nConfirmed} label="Confirmed" sub="Rockstar or Take-Two" color="var(--c-live)" />
+        <StatBox value={nReported} label="Reported" sub="Credible press or filings" color="var(--c-brand)" />
+        <StatBox value={nPredicted} label="Still open" sub="Resolve from Nov 19" color="var(--c-text-2)" />
+      </div>
+
+      <SectionHeader bright label="// All Predictions" dotColor="var(--c-brand)" pillHref="/intelligence" pillLabel="How we score →" />
+      <div class="flex flex-wrap items-center gap-2 mb-4" role="group" aria-label="Filter by tier">
+        {TIER_FILTERS.map((f) => (
+          <FilterPill label={f.label} colorToken={f.color} active={f.id === "all"} data-tier-filter={f.id} />
+        ))}
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 items-start">
+        {predictions.map((p) => (
+          <div data-pred-tier={p.confidence_tier}>
+            <PredictionCard
+              id={p.id}
+              title={p.title}
+              value={p.value}
+              confidence={p.confidence}
+              confidence_tier={p.confidence_tier}
+              basis={p.basis}
+              unit={p.unit}
+              trailer_timestamp={p.trailer_timestamp}
+              prediction_method={p.prediction_method}
+              prediction_range={p.prediction_range}
+              source={p.source}
+              source_type={p.source_type}
+              outcome_verified={p.outcome_verified}
+              outcome_actual={p.outcome_actual}
+              thumbnail={(p as any).thumbnail ?? PRED_THUMBS[p.id] ?? null}
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <Rdr2Evidence />
+
+    <section id="section-income-predictions" style="scroll-margin-top:80px">
+      <SectionHeader bright label="// GTA VI Online — Predicted Income Sources" dotColor="var(--c-title-vi)" pillHref="/gta-vi/income" pillLabel={`All ${incomeList.length} income sources →`} />
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {incomeTeaser.map((p: any) => (
+          <IncomeCard
+            id={p.id}
+            name={p.name}
+            game="gta-vi"
+            category={p.category}
+            region={p.region}
+            confidence_tier={p.confidence_tier}
+            confidence_score={p.confidence_score}
+            thumbnail={p.thumbnail}
+            trailer_evidence={p.trailer_evidence}
+            predicted_payout_per_run={p.predicted_payout_per_run}
+            predicted_gta_per_hr={p.predicted_gta_per_hr}
+            analogous_gta_online={p.analogous_gta_online}
+            basis={p.basis}
+            prediction_range={p.prediction_range}
+          />
+        ))}
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const pills = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-tier-filter]"));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-pred-tier]"));
+
+    function applyTier(tier: string) {
+      pills.forEach((pill) => {
+        const on = pill.dataset.tierFilter === tier;
+        pill.dataset.active = on ? "true" : "false";
+        pill.style.cssText = (on ? pill.dataset.activeStyle : pill.dataset.inactiveStyle) ?? "";
+      });
+      cards.forEach((card) => {
+        card.classList.toggle("hidden", tier !== "all" && card.dataset.predTier !== tier);
+      });
+    }
+
+    pills.forEach((pill) => pill.addEventListener("click", () => applyTier(pill.dataset.tierFilter ?? "all")));
+
+    // A deep link (#pred-…) to a card hidden by the active filter resets the filter first.
+    function revealHashTarget() {
+      const id = decodeURIComponent(location.hash.slice(1));
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (target && target.closest("[data-pred-tier].hidden")) {
+        applyTier("all");
+        target.scrollIntoView();
+      }
+    }
+    window.addEventListener("hashchange", revealHashTarget);
+  </script>
+</Base>
