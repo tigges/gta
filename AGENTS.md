@@ -211,6 +211,22 @@ The version is displayed in the ops bar on every page (`Base.astro`) and in the 
 3. Add a step to `.github/workflows/fetch-data.yml` in the appropriate section
 4. If a new secret is needed, document it in the table above and in this file
 
+### Site structure (v1.136.0)
+
+Top menu has five groups, defined in `navGroups` in `src/layouts/Base.astro`:
+
+| Group | Pages |
+|---|---|
+| GTA VI | `/gta-vi` · `/gta-vi/confirmed` (What we know) · `/gta-vi/predictions` · `/gta-vi/trailers` · `/gta-vi/music` · `/gta-vi/economy` · `/gta-vi/buy` |
+| GTA Online | `/gta-online` · income (database) · `/gta-online/economy` |
+| Franchise | `/franchise/history` · `/franchise/economics` · `/gta-v` |
+| Data | `/charts` · `/database` · `/intelligence` (Methodology) |
+| News | `/news` |
+
+- Every `/gta-vi/*` page gets the `GtaViSubNav.astro` pill row automatically from `Base.astro`. Add new GTA VI pages to the `GTA_VI_PAGES` list in that component and to the GTA VI dropdown.
+- One topic, one home: link to the page that owns a section instead of copying it.
+- `/gta-vi/intel` is retired. `src/pages/gta-vi/intel.astro` is a hash-aware redirect (`#oct-*`, `#feature-tracker`, `#section-cast`, etc. go to `/gta-vi/confirmed`; `#section-music` to `/gta-vi/music`; `#income-pred-*` to `/gta-vi/income`; everything else to `/gta-vi/predictions`). The embed endpoint `/gta-vi/intel/embed/[predId]` keeps its URL. Never link to `/gta-vi/intel` in new code.
+
 ### Adding new charts
 
 Charts live in `src/pages/charts.astro` as self-contained D3 sections.
@@ -218,12 +234,12 @@ Import the data file at the top, add an HTML container (`<div id="my-chart">`), 
 
 ### GTA VI music and pre-launch reveals (hand-curated)
 
-- `data/gta-6/music.json` — official radio stations (hosts, preview tracks from the `/VI/music` page payload), album singles, score. Rendered by `GtaViMusic.astro` on `/gta-vi/intel#section-music`. Trailer-heard licensed songs stay in `soundtrack.json`. Audio comes only from official players, loaded on click: Rockstar's station embed (`rockstargames.com/VI/music/embed/{embed_key}/simple`) and Spotify embeds (`spotify_id`, taken from Rockstar's `gtavi-thealbum.lnk.to` links). Never re-host station or album audio in `public/`.
+- `data/gta-6/music.json` — official radio stations (hosts, preview tracks from the `/VI/music` page payload), album singles, score. Rendered by `GtaViMusic.astro` on `/gta-vi/music`. Trailer-heard licensed songs stay in `soundtrack.json`. Audio comes only from official players, loaded on click: Rockstar's station embed (`rockstargames.com/VI/music/embed/{embed_key}/simple`) and Spotify embeds (`spotify_id`, taken from Rockstar's `gtavi-thealbum.lnk.to` links). Never re-host station or album audio in `public/`.
 - `data/gta-6/october-confirmations.json` — source-tagged reveals; `tier` is `confirmed` (Rockstar or a Rockstar developer on record) or `reported` (rating boards, journalist paraphrase, anonymous sources). Leaks are never added. `feature_category` adds a "+N October reveals" link on the Feature Tracker card; it does not change the curated counts in `features.json`.
 
 ### GTA VI income predictions
 
-Edit `data/gta-6/income-predictions.json`. Schema version `1.0`. Rendered by `IncomePredictionCard.astro` on `/gta-vi/intel`.
+Edit `data/gta-6/income-predictions.json`. Schema version `1.0`. Rendered as `IncomeCard` on `/gta-vi/income` (full list) and `/gta-vi/predictions` (teaser).
 
 ```jsonc
 {
@@ -429,7 +445,7 @@ Every push to `main` triggers `.github/workflows/static.yml`:
 3. `npm run check:scripts` parses every inline `<script>` in `dist/` and fails the deploy on a syntax error. `is:inline` and `define:vars` scripts are not compiled, so they must be plain JavaScript (no `as` casts, type annotations or `!` assertions).
 4. Uploaded as GitHub Pages artifact and deployed
 
-Keep writing root-relative paths (`/gta-vi/intel`, `/assets/...`) in source — never hand-add the repo-name prefix. Runtime-built paths the rewrite can't see (e.g. `"/" + slug`) will break on the sub-path; prefer literal `"/gta-vi/" + slug` style strings.
+Keep writing root-relative paths (`/gta-vi/predictions`, `/assets/...`) in source — never hand-add the repo-name prefix. Runtime-built paths the rewrite can't see (e.g. `"/" + slug`) will break on the sub-path; prefer literal `"/gta-vi/" + slug` style strings.
 
 ### Moving back to gtavi.ai (when the user says so)
 
