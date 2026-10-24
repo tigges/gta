@@ -171,7 +171,7 @@ const pctDelta     = (peak_gta_per_hr && peak_gta_per_hr > net_profit_per_hr * 1
 // ── Deep-link / share ─────────────────────────────────────────────────────
 const fullHref = hrefProp ?? (
   isOnline ? onlineIncomeHref(id) :
-  isGtaVI  ? `/gta-vi/intel#income-pred-${id}` :
+  isGtaVI  ? `/gta-vi/income#income-pred-${id}` :
   undefined
 );
 const khr = net_profit_per_hr ? Math.round(net_profit_per_hr / 1000) : 0;

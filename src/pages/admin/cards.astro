@@ -61,9 +61,9 @@ const clusters: CardCluster[] = [
     title: "Intelligence",
     note: "Cards with thumbnail + pill overlay. Used on intel and character pages.",
     cards: [
-      { name: "PredictionCard (full)",    component: "PredictionCard",          sampleUrl: "/gta-vi/intel",       note: "Full analysis view. GamePill top-left, tier top-right, confidence bar, basis, share." },
+      { name: "PredictionCard (full)",    component: "PredictionCard",          sampleUrl: "/gta-vi/predictions",       note: "Full analysis view. GamePill top-left, tier top-right, confidence bar, basis, share." },
       { name: "PredictionCard (compact)", component: "PredictionCard compact",  sampleUrl: "/gta-vi",             note: "Teaser mode — thumbnail + title + value + bar only. Links to full." },
-      { name: "CastCard",                 component: "CastCard",                sampleUrl: "/gta-vi/intel",       note: "Confirmed character. Inline video toggle on click. GamePill + tier pill over image." },
+      { name: "CastCard",                 component: "CastCard",                sampleUrl: "/gta-vi/predictions",       note: "Confirmed character. Inline video toggle on click. GamePill + tier pill over image." },
     ],
   },
   {
@@ -72,7 +72,7 @@ const clusters: CardCluster[] = [
     cards: [
       { name: "IncomeCard (full — GTA Online)",   component: "IncomeCard game=gta-online",       sampleUrl: "/gta-online/income/[id]",               note: "Full profile: tier S+→D, earnings bar, setup cost, break-even, tips, bonus history." },
       { name: "IncomeCard (compact — GTA Online)", component: "IncomeCard compact game=gta-online", sampleUrl: "/database",                           note: "Teaser: thumbnail + name + GTA$/hr + tier bar. Links to full profile." },
-      { name: "IncomeCard (GTA VI prediction)",   component: "IncomeCard game=gta-vi",           sampleUrl: "/gta-vi/intel#section-income-predictions", note: "Prediction mode: confidence tier + bar, analogue, basis, range." },
+      { name: "IncomeCard (GTA VI prediction)",   component: "IncomeCard game=gta-vi",           sampleUrl: "/gta-vi/predictions#section-income-predictions", note: "Prediction mode: confidence tier + bar, analogue, basis, range." },
       { name: "ExpenditureCard (investment)",     component: "ExpenditureCard variant=investment", sampleUrl: "/gta-online",                         note: "Asset purchase returning Y income. Setup cost, break-even, ROI timeline." },
       { name: "ExpenditureCard (injection)",      component: "ExpenditureCard variant=injection",  sampleUrl: "/gta-online",                         note: "Real-money GTA$ purchase (Shark Card, GTA+). Rate, value, recurring cost." },
     ],
@@ -127,7 +127,7 @@ if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
                 <div class="flex flex-wrap items-baseline gap-4">
                   <span class="text-[11px] font-mono text-zinc-300">PredictionCard</span>
                   <span class="text-[10px] font-mono text-zinc-600">full</span>
-                  <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi/intel</a>
+                  <a href="/gta-vi/predictions" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi/predictions</a>
                 </div>
                 <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[0].note}</p>
                 <div class="max-w-xs">
@@ -170,7 +170,7 @@ if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
                     thumbnail="/assets/gta6/locations/Vice_City_06.jpg"
                     game="gta-vi"
                     compact={true}
-                    detailHref="/gta-vi/intel#pred-real-price-advantage"
+                    detailHref="/gta-vi/predictions#pred-real-price-advantage"
                   />
                 </div>
               </div>
@@ -179,7 +179,7 @@ if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
               <div class="flex flex-col gap-3">
                 <div class="flex flex-wrap items-baseline gap-4">
                   <span class="text-[11px] font-mono text-zinc-300">CastCard</span>
-                  <a href="/gta-vi/intel" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi/intel</a>
+                  <a href="/gta-vi/predictions" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi/predictions</a>
                 </div>
                 <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[2].note}</p>
                 <div class="max-w-xs">
@@ -253,7 +253,7 @@ if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
                 <div class="flex flex-wrap items-baseline gap-4">
                   <span class="text-[11px] font-mono text-zinc-300">IncomeCard</span>
                   <span class="text-[10px] font-mono text-zinc-600">game=gta-vi</span>
-                  <a href="/gta-vi/intel#section-income-predictions" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi/intel</a>
+                  <a href="/gta-vi/predictions#section-income-predictions" class="text-[10px] font-mono text-gta-gold hover:text-zinc-200 transition-colors">/gta-vi/predictions</a>
                 </div>
                 <p class="text-[10px] font-mono text-zinc-600 leading-relaxed">{cluster.cards[2].note}</p>
                 <div class="max-w-xs">

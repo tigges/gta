@@ -59,7 +59,7 @@ if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
           )}
         </div>
         <p class="text-[11px] text-zinc-600 leading-relaxed">
-          Each week one prediction, chart or trailer finding is featured. On Monday, write the X post and Instagram caption, link the relevant /gta-vi/intel or /charts anchor, and schedule both in Publer for Tuesday 09:00 UTC. The Discord nightly digest fires automatically. Reddit and GTAForums are the only live-paste channels (Thursday).
+          Each week one prediction, chart or trailer finding is featured. On Monday, write the X post and Instagram caption, link the relevant /gta-vi/predictions or /charts anchor, and schedule both in Publer for Tuesday 09:00 UTC. The Discord nightly digest fires automatically. Reddit and GTAForums are the only live-paste channels (Thursday).
         </p>
       </div>
 
@@ -205,7 +205,7 @@ if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
           {
             tier: "Tier 1 — Money pages",
             color: "var(--c-live)",
-            pages: ["/gta-vi/intel", "/gta-vi/economy", "/predictions", "/charts", "/buy"],
+            pages: ["/gta-vi/predictions", "/gta-vi/economy", "/predictions", "/charts", "/buy"],
             strategy: "Target transactional + informational intent. H1 = primary KW. Each page needs unique meta description including 'GTA VI' + intent modifier.",
           },
           {
@@ -217,7 +217,7 @@ if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
           {
             tier: "Tier 3 — Long tail",
             color: "var(--c-economy)",
-            pages: ["/gta-vi/intel (individual predictions)", "/gta-vi/intel/embed/[id]"],
+            pages: ["/gta-vi/predictions (individual predictions)", "/gta-vi/intel/embed/[id]"],
             strategy: "Individual prediction anchors rank for 'will GTA VI have X?' queries — give each a rich og:title and og:description.",
           },
         ].map(t => (
@@ -239,10 +239,10 @@ if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
         </div>
         <div class="divide-y divide-border-dim/40">
           {[
-            { action: "Add FAQ schema to /gta-vi/intel", priority: "High", status: "pending", note: "Each prediction = a FAQ item. Adds rich snippets to SERPs." },
+            { action: "Add FAQ schema to /gta-vi/predictions", priority: "High", status: "pending", note: "Each prediction = a FAQ item. Adds rich snippets to SERPs." },
             { action: "Internal links from /gta-vi to every intel prediction", priority: "High", status: "done", note: "Hub → spoke structure already in place." },
             { action: "Target 'GTA 6 release date 2026' with dedicated section on /gta-vi", priority: "High", status: "done", note: "pred-release-window prominently placed." },
-            { action: "Add canonical tags to prediction embed pages pointing to /gta-vi/intel", priority: "Medium", status: "pending", note: "Prevents embed iframe URL from competing with the main intel page." },
+            { action: "Add canonical tags to prediction embed pages pointing to /gta-vi/predictions", priority: "Medium", status: "pending", note: "Prevents embed iframe URL from competing with the main intel page." },
             { action: "Build 'GTA VI vs GTA V economy' comparison page", priority: "Medium", status: "pending", note: "High-intent informational query. Maps to franchise/sales + economy data." },
           ].map(r => (
             <div class="flex items-start gap-3 px-4 py-2.5">
@@ -326,7 +326,7 @@ if (!import.meta.env.DEV) { return Astro.redirect("/404"); }
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { where: "/buy page (primary)", when: "Live now", desc: "Central conversion page. Add CDKeys + Eneba links as 'Best price' options above Amazon. A/B test button copy: 'Best price' vs 'Pre-order now'." },
-            { where: "Inline CTAs on /gta-vi/intel", when: "Launch", desc: "Below 'Launch Price $79.99' prediction card — 'Pre-order from $X → CDKeys'. Contextual placement converts at 3–5× vs footer links." },
+            { where: "Inline CTAs on /gta-vi/predictions", when: "Launch", desc: "Below 'Launch Price $79.99' prediction card — 'Pre-order from $X → CDKeys'. Contextual placement converts at 3–5× vs footer links." },
           ].map(pl => (
             <div>
               <div class="text-[11px] font-semibold text-zinc-400 mb-1">{pl.where}</div>

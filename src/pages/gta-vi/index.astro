@@ -149,7 +149,7 @@ const featuredIncome = incomeList
          LAYER 1: SIGNAL PREDICTIONS — 3-page carousel, 4 per page
     ═══════════════════════════════════════════════════════ -->
     <section>
-      <SectionHeader bright label="// Signal Intelligence" pillHref="/gta-vi/intel" pillLabel={`All ${predictions.length} predictions →`} />
+      <SectionHeader bright label="// Signal Intelligence" pillHref="/gta-vi/predictions" pillLabel={`All ${predictions.length} predictions →`} />
 
       <!-- Carousel viewport: overflow-hidden clips pages 2 and 3 -->
       <div id="pred-viewport" class="overflow-hidden">
@@ -177,7 +177,7 @@ const featuredIncome = incomeList
                   compact={true}
                   game="gta-vi"
                   short_value={(p as any).short_value ?? null}
-                  detailHref={`/gta-vi/intel#${p.id}`}
+                  detailHref={`/gta-vi/predictions#${p.id}`}
                 />
               ))}
             </div>
@@ -244,7 +244,7 @@ const featuredIncome = incomeList
           <div class="flex items-center gap-2 mb-3">
             <span class="text-[10px] font-mono uppercase tracking-widest" style="color:var(--c-income)">Y — Income</span>
             <div class="flex-1 h-px" style="background:color-mix(in srgb,var(--c-income) 20%,transparent)"></div>
-            <a href="/gta-vi/intel#section-income-predictions"
+            <a href="/gta-vi/predictions#section-income-predictions"
                class="text-[10px] font-mono uppercase tracking-widest transition-colors"
                style="color:var(--c-live);opacity:var(--o-tertiary)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
               All Income Cards →

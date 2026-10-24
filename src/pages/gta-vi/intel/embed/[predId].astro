@@ -34,7 +34,7 @@ const pred = (predRaw as any).predictions.find((p: any) => p.id === predId);
 if (!pred) return Astro.redirect("/404");
 
 const SITE_BASE  = import.meta.env.SITE ?? "https://gtavi.ai";
-const detailHref = `${SITE_BASE}/gta-vi/intel#${pred.id}`;
+const detailHref = `${SITE_BASE}/gta-vi/predictions#${pred.id}`;
 ---
 
 <EmbedBase title={`${pred.title} — GTAVI.AI Prediction`}>
