@@ -1,0 +1,42 @@
+---
+/**
+ * GtaViSubNav.astro — sideways navigation between GTA VI section pages.
+ * Rendered by Base.astro under the main header on every /gta-vi/* page.
+ */
+import { pillStyle, FILTER_INACTIVE_STYLE } from "../config/semanticTypes";
+
+const GTA_VI_PAGES = [
+  { href: "/gta-vi",             label: "Overview",      match: ["/gta-vi"] },
+  { href: "/gta-vi/confirmed",   label: "What we know",  match: ["/gta-vi/confirmed"] },
+  { href: "/gta-vi/predictions", label: "Predictions",   match: ["/gta-vi/predictions", "/gta-vi/income"] },
+  { href: "/gta-vi/trailers",    label: "Trailers",      match: ["/gta-vi/trailers", "/gta-vi/launch-trailer", "/gta-vi/extended-look"] },
+  { href: "/gta-vi/music",       label: "Music & radio", match: ["/gta-vi/music"] },
+  { href: "/gta-vi/economy",     label: "Economy",       match: ["/gta-vi/economy"] },
+  { href: "/gta-vi/buy",         label: "Buy",           match: ["/gta-vi/buy"] },
+] as const;
+
+interface Props {
+  path: string;
+}
+
+const path = Astro.props.path.replace(/\/$/, "") || "/";
+const activeStyle = pillStyle("var(--c-title-vi)", "tint");
+---
+
+<nav aria-label="GTA VI sections" class="border-b border-border-dim" style="background:var(--c-bg)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-2 overflow-x-auto" style="scrollbar-width:none">
+    {GTA_VI_PAGES.map((p) => {
+      const active = (p.match as readonly string[]).includes(path);
+      return (
+        <a
+          href={p.href}
+          aria-current={active ? "page" : undefined}
+          class="inline-flex items-center shrink-0 border rounded font-mono uppercase tracking-widest text-[10px] px-2 py-0.5 transition-opacity hover:opacity-80"
+          style={active ? activeStyle : FILTER_INACTIVE_STYLE}
+        >
+          {p.label}
+        </a>
+      );
+    })}
+  </div>
+</nav>

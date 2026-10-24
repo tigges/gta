@@ -3,6 +3,7 @@ import { SITE_VERSION_LABEL, SITE_VERSION_DATE } from "../config/version";
 import "../styles/tokens.css";
 import HudIcon from "../components/HudIcon.astro";
 import CrossLinks from "../components/CrossLinks.astro";
+import GtaViSubNav from "../components/GtaViSubNav.astro";
 import weeklyBonusesRaw from "../../data/gta-5/economy/weekly-bonuses.json";
 
 interface Props {
@@ -101,22 +102,22 @@ const navGroups: NavGroup[] = [
   {
     href: "/gta-vi",
     label: "GTA VI",
-    activePaths: ["/gta-vi", "/gta-vi/intel", "/gta-vi/launch-trailer", "/gta-vi/extended-look", "/gta-vi/economy", "/gta-vi/buy"],
+    activePaths: ["/gta-vi"],
     identityColor: "var(--c-title-vi)",
     dropdown: [
-      { href: "/gta-vi",          iconName: "intel",   label: "GTA VI",         sub: "Hub · predictions · charts · economy · overview" },
-      { href: "/gta-vi/intel",    iconName: "intel",   label: "Predictions",    sub: "Confidence-scored signals · confirmed & reported" },
-      { href: "/gta-vi/launch-trailer", iconName: "trailer", label: "Launch Trailer", sub: "Oct 15 · 90s beat by beat · press stills" },
-      { href: "/gta-vi/extended-look", iconName: "trailer", label: "Extended Look", sub: "Visual brief · 6 chapters · map, missions, systems" },
-      { href: "/charts?title=gta-vi", iconName: "chart", label: "Charts",       sub: "GTA VI data charts · trends · release analysis" },
-      { href: "/gta-vi/economy",  iconName: "economy", label: "Economy",        sub: "Circular model · income sources · Shark Card" },
-      { href: "/gta-vi/buy",      iconName: "buy",     label: "Buy",            sub: "PS5 · Xbox Series X|S · edition comparison" },
+      { href: "/gta-vi",             iconName: "intel",   label: "Overview",      sub: "Countdown · latest reveals · what to read first" },
+      { href: "/gta-vi/confirmed",   iconName: "star",    label: "What we know",  sub: "October reveals · feature tracker · cast · places · FAQ" },
+      { href: "/gta-vi/predictions", iconName: "chart",   label: "Predictions",   sub: "Confidence-scored · confirmed, reported, predicted" },
+      { href: "/gta-vi/trailers",    iconName: "trailer", label: "Trailers",      sub: "Launch Trailer · Extended Look · Trailers 1–2 · spots" },
+      { href: "/gta-vi/music",       iconName: "nightclub", label: "Music & radio", sub: "Trailer songs · Rockstar station players · album" },
+      { href: "/gta-vi/economy",     iconName: "economy", label: "Economy",       sub: "Circular model · income sources · Shark Card" },
+      { href: "/gta-vi/buy",         iconName: "buy",     label: "Buy",           sub: "PS5 · Xbox Series X|S · editions · pre-orders" },
     ],
   },
   {
     href: "/gta-online",
     label: "GTA Online",
-    activePaths: ["/gta-online", "/gta-online/economy", "/gta-online/income", "/database"],
+    activePaths: ["/gta-online"],
     identityColor: "var(--c-title-online)",
     dropdown: [
       { href: "/gta-online",              iconName: "intel",   label: "GTA Online",        sub: "Hub · economy · income · charts · overview" },
@@ -126,34 +127,25 @@ const navGroups: NavGroup[] = [
     ],
   },
   {
-    href: "/gta-v",
-    label: "GTA V",
-    activePaths: ["/gta-v"],
-    identityColor: "var(--c-title-v)",
-    dropdown: null,
-  },
-  {
-    href: "/charts",
-    label: "Charts",
-    activePaths: ["/charts"],
-    identityColor: "var(--c-text-4)",
-    dropdown: null,
-  },
-  {
-    href: "/database",
-    label: "Database",
-    activePaths: ["/database"],
-    identityColor: "var(--c-text-4)",
-    dropdown: null,
-  },
-  {
     href: "/franchise/history",
     label: "Franchise",
-    activePaths: ["/franchise/economics", "/franchise/history", "/gta-iii", "/gta-vc", "/gta-sa", "/gta-iv"],
+    activePaths: ["/franchise", "/gta-v", "/gta-iv", "/gta-sa", "/gta-vc", "/gta-iii", "/gta-1-2"],
     identityColor: "var(--c-brand)",
     dropdown: [
       { href: "/franchise/history",   iconName: "history",  label: "History & Sales",  sub: "30 years · 8 titles · sales · Metacritic" },
-      { href: "/franchise/economics", iconName: "economy",  label: "Economic History", sub: "Ten economies · circular flow · 1997–2026" },
+      { href: "/franchise/economics", iconName: "economy",  label: "Economies 1997–2026", sub: "Ten economies · circular flow · per-title pages" },
+      { href: "/gta-v",               iconName: "car",      label: "GTA V",            sub: "Story-mode economy · stock market · vehicles" },
+    ],
+  },
+  {
+    href: "/charts",
+    label: "Data",
+    activePaths: ["/charts", "/database", "/intelligence"],
+    identityColor: "var(--c-text-4)",
+    dropdown: [
+      { href: "/charts",       iconName: "chart",   label: "Charts",      sub: "Every chart · trends · sales · stock · velocity" },
+      { href: "/database",     iconName: "database", label: "Database",    sub: "GTA VI entities · vehicles · income · heists" },
+      { href: "/intelligence", iconName: "intel",   label: "Methodology", sub: "How confidence scores and sources work" },
     ],
   },
   {
@@ -188,11 +180,12 @@ function isNavActive(group: NavGroup): boolean {
 }
 
 const currentPath = Astro.url.pathname;
+const showViSubNav = /^\/gta-vi(\/|$)/.test(currentPath) && !currentPath.startsWith("/gta-vi/intel");
 const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`;
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth" style="background:var(--c-bg);color:#fafafa">
+<html lang="en" class="scroll-smooth" style="background:var(--c-bg);color:var(--c-text-1)">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -257,7 +250,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
   >
 
     <!-- Ops status bar -->
-    <div class="border-b border-border-dim bg-[#0a0a0d]">
+    <div class="border-b border-border-dim" style="background:var(--c-bg-deep)">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-7">
         <div class="flex items-center gap-4">
           <span class="flex items-center gap-1.5">
@@ -278,7 +271,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
          Desktop: 64px bar · all tabs always visible · mega-panel on click
          Mobile:  logo + grid icon → full-screen 2-col tile launcher
     ═══════════════════════════════════════════════════════ -->
-    <header id="main-nav" class="border-b border-border-dim sticky top-0 z-50" style="background:rgba(14,14,17,0.97);backdrop-filter:blur(16px)">
+    <header id="main-nav" class="border-b border-border-dim sticky top-0 z-50" style="background:color-mix(in srgb,var(--c-bg) 97%,transparent);backdrop-filter:blur(16px)">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center h-16 gap-6">
 
         <!-- Wordmark -->
@@ -366,7 +359,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       <!-- GTA VI panel -->
       <div id="nav-panel-GTA VI"
            class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-border-dim shadow-2xl shadow-black/70"
-           style="top:64px;background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
+           style="top:64px;background:color-mix(in srgb,var(--c-bg-deep) 98%,transparent);backdrop-filter:blur(20px)">
         <div class="h-0.5" style="background:linear-gradient(90deg,var(--c-title-vi),transparent)"></div>
         <div class="max-w-7xl mx-auto px-6 py-6">
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -388,7 +381,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       <!-- GTA Online panel -->
       <div id="nav-panel-GTA Online"
            class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-border-dim shadow-2xl shadow-black/70"
-           style="top:64px;background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
+           style="top:64px;background:color-mix(in srgb,var(--c-bg-deep) 98%,transparent);backdrop-filter:blur(20px)">
         <div class="h-0.5" style="background:linear-gradient(90deg,var(--c-title-online),transparent)"></div>
         <div class="max-w-7xl mx-auto px-6 py-6">
           <div class="grid grid-cols-3 gap-4 mb-4">
@@ -407,7 +400,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
           <!-- Live strip (MCT status bar) -->
           <a href="/gta-online"
              class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg border border-border-dim hover:border-gta-teal/30 hover:bg-gta-teal/[0.03] transition-all group/ls"
-             style="background:#0e1a0e">
+             style="background:color-mix(in srgb,var(--c-live) 6%,var(--c-bg-deep))">
             <span class="w-1.5 h-1.5 rounded-full bg-gta-teal animate-pulse shrink-0"></span>
             <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-widest">Live this week</span>
             <span class="text-[11px] font-mono text-gta-teal capitalize">{liveStripText}</span>
@@ -419,10 +412,10 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
       <!-- Franchise panel -->
       <div id="nav-panel-Franchise"
            class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-border-dim shadow-2xl shadow-black/70"
-           style="top:64px;background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
+           style="top:64px;background:color-mix(in srgb,var(--c-bg-deep) 98%,transparent);backdrop-filter:blur(20px)">
         <div class="h-0.5" style="background:linear-gradient(90deg,var(--c-brand),transparent)"></div>
         <div class="max-w-7xl mx-auto px-6 py-6">
-          <div class="grid grid-cols-2 gap-4 mb-5">
+          <div class="grid grid-cols-3 gap-4 mb-5">
             {navGroups.find(g => g.label === "Franchise")?.dropdown?.map(item => (
               <a href={item.href}
                  class="group/pt flex items-start gap-4 p-4 rounded-xl border border-border-dim hover:border-border-mid hover:bg-white/[0.02] transition-all"
@@ -458,11 +451,35 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
         </div>
       </div>
 
+      <!-- Data panel -->
+      <div id="nav-panel-Data"
+           class="nav-mega-panel hidden fixed left-0 right-0 z-[49] border-b border-border-dim shadow-2xl shadow-black/70"
+           style="top:64px;background:color-mix(in srgb,var(--c-bg-deep) 98%,transparent);backdrop-filter:blur(20px)">
+        <div class="h-0.5" style="background:linear-gradient(90deg,var(--c-text-4),transparent)"></div>
+        <div class="max-w-7xl mx-auto px-6 py-6">
+          <div class="grid grid-cols-3 gap-4">
+            {navGroups.find(g => g.label === "Data")?.dropdown?.map(item => (
+              <a href={item.href}
+                 class="group/pt flex items-start gap-4 p-4 rounded-xl border border-border-dim hover:border-border-mid hover:bg-white/[0.02] transition-all"
+                 style="background:var(--c-card)">
+                <HudIcon name={item.iconName as any} size={20} class="text-zinc-500 group-hover/pt:text-zinc-300 transition-colors mt-0.5 shrink-0" />
+                <div>
+                  <div class="text-sm font-semibold text-zinc-200 group-hover/pt:text-white transition-colors mb-1">{item.label}</div>
+                  <div class="text-xs font-mono text-zinc-600 leading-snug">{item.sub}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <!-- Shared backdrop — dims page content behind open panel -->
       <div id="nav-panel-backdrop"
            class="hidden fixed inset-0 z-[48]"
-           style="top:64px;background:rgba(0,0,0,0.55)"></div>
+           style="top:64px;background:color-mix(in srgb,var(--c-bg-deep) 60%,transparent)"></div>
     </header>
+
+    {showViSubNav && <GtaViSubNav path={currentPath} />}
 
     <!-- Main content area with background grid -->
     <main class="flex-1 bg-grid">
@@ -508,7 +525,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
           <div class="flex items-center gap-4">
             <a href="/terms"       class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Terms</a>
             <a href="/privacy"     class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Privacy</a>
-            <a href="/intelligence" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Scoring</a>
+            <a href="/intelligence" class="text-[10px] font-mono text-zinc-600 hover:text-zinc-400 transition-colors uppercase tracking-widest">Methodology</a>
           </div>
           <!-- Data note — right -->
           <div class="flex items-center gap-1.5">
@@ -527,7 +544,7 @@ const fullTitle = title === "GTA VI.AI" ? "GTA VI.AI" : `${title} — GTA VI.AI`
          Direct link tiles: navigate immediately
     ═══════════════════════════════════════════════════════ -->
     <div id="mobile-nav" class="fixed inset-0 z-[100] hidden flex-col" role="dialog" aria-label="Navigation menu"
-         style="background:rgba(10,10,13,0.98);backdrop-filter:blur(20px)">
+         style="background:color-mix(in srgb,var(--c-bg-deep) 98%,transparent);backdrop-filter:blur(20px)">
 
       <!-- Mobile nav header bar -->
       <div class="flex items-center justify-between px-4 h-16 border-b border-border-dim shrink-0">
